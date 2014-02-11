@@ -20,4 +20,12 @@ Gem::Specification.new do |s|
   s.add_dependency "arel", "4.0.0"
 
   s.add_development_dependency "pg"
+  s.add_development_dependency "haml-rails"
+  s.add_development_dependency "sass-rails"
+  s.add_development_dependency "coffee-rails"
+  s.add_development_dependency "uglifier"
+  s.add_development_dependency "modernizr-rails"
+  s.add_development_dependency "jquery-rails"
+  s.add_development_dependency "jquery-ui-rails"
+  s.add_development_dependency "bootstrap-generators"
 end
