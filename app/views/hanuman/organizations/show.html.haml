@@ -1,0 +1,20 @@
+- content_for :navbar_organizations do
+  active
+
+.page-header
+  = link_to edit_organization_path(@organization), class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-pencil
+    Edit Organization
+  %h1 Organization Details
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %tbody
+      %tr
+        %td Name
+        %td
+          %b= @organization.name
+      %tr
+        %td Status
+        %td
+          %b= @organization.status

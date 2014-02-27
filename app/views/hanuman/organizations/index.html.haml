@@ -1,0 +1,25 @@
+- content_for :navbar_organizations do
+  active
+
+.page-header
+  = link_to new_organization_path, class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-plus
+    New Organization
+  %h1 Organizations
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %thead
+      %tr
+        %th Name
+        %th Status
+        %th
+
+    %tbody
+      - @organizations.each do |organization|
+        %tr
+          %td= link_to organization.name, organization
+          %td= link_to organization.status, organization
+          %td
+            = link_to organization, data: {confirm: "Are you sure you want to delete this Organization?"}, method: :delete do
+              %span.glyphicon.glyphicon-trash
