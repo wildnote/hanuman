@@ -1,0 +1,7 @@
+- content_for :navbar_<%= plural_table_name %> do
+  active
+
+.page-header
+  %h1 Edit <%= singular_table_name.titleize %> Details
+
+= render "form"

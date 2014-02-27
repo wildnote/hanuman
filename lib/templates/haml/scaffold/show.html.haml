@@ -1,0 +1,18 @@
+- content_for :navbar_<%= plural_table_name %> do
+  active
+
+.page-header
+  = link_to edit_<%= singular_table_name %>_path(@<%= singular_table_name %>), class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-pencil
+    Edit <%= human_name.titleize %>
+  %h1 <%= singular_table_name.titleize %> Details
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %tbody
+      <%- for attribute in attributes -%>
+      %tr
+        %td <%= attribute.human_name %>
+        %td
+          %b= @<%= singular_table_name %>.<%= attribute.name %>
+      <%- end -%>
