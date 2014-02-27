@@ -18,14 +18,15 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails', '4.0.0'
   s.add_dependency 'arel', '4.0.0'
+  s.add_dependency 'haml-rails'
+  s.add_dependency 'sass-rails'
+  s.add_dependency 'coffee-rails'
+  s.add_dependency 'uglifier'
+  s.add_dependency 'modernizr-rails'
+  s.add_dependency 'jquery-rails'
+  s.add_dependency 'jquery-ui-rails'
+  s.add_dependency 'bootstrap-generators'
+  s.add_dependency 'animate-rails'
 
   s.add_development_dependency 'pg'
-  s.add_development_dependency 'haml-rails'
-  s.add_development_dependency 'sass-rails'
-  s.add_development_dependency 'coffee-rails'
-  s.add_development_dependency 'uglifier'
-  s.add_development_dependency 'modernizr-rails'
-  s.add_development_dependency 'jquery-rails'
-  s.add_development_dependency 'jquery-ui-rails'
-  s.add_development_dependency 'bootstrap-generators'
 end
