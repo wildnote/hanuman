@@ -21,8 +21,8 @@
     %tbody
       - @survey_questions.each do |survey_question|
         %tr
-          %td= link_to survey_question.survey_template, survey_question
-          %td= link_to survey_question.question, survey_question
+          %td= link_to survey_question.survey_template.name, survey_question
+          %td= link_to survey_question.question.question_text, survey_question
           %td= link_to survey_question.order, survey_question
           %td= link_to survey_question.group, survey_question
           %td= link_to survey_question.duplicator, survey_question
