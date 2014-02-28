@@ -1,0 +1,25 @@
+- content_for :navbar_answer_types do
+  active
+
+.page-header
+  = link_to new_answer_type_path, class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-plus
+    New Answer Type
+  %h1 Answer Types
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %thead
+      %tr
+        %th Name
+        %th Status
+        %th
+
+    %tbody
+      - @answer_types.each do |answer_type|
+        %tr
+          %td= link_to answer_type.name, answer_type
+          %td= link_to answer_type.status, answer_type
+          %td
+            = link_to answer_type, data: {confirm: "Are you sure you want to delete this Answer Type?"}, method: :delete do
+              %span.glyphicon.glyphicon-trash

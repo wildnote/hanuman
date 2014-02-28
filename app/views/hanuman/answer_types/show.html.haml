@@ -1,0 +1,20 @@
+- content_for :navbar_answer_types do
+  active
+
+.page-header
+  = link_to edit_answer_type_path(@answer_type), class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-pencil
+    Edit Answer Type
+  %h1 Answer Type Details
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %tbody
+      %tr
+        %td Name
+        %td
+          %b= @answer_type.name
+      %tr
+        %td Status
+        %td
+          %b= @answer_type.status
