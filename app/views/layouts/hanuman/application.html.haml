@@ -2,7 +2,7 @@
 %html
   %head
     %meta{:charset => "utf-8"}
-    %title Starter Template for Bootstrap
+    %title Hanuman
     %meta{:content => "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no", :name => "viewport"}
     %meta{:content => "", :name => "description"}
     %meta{:content => "", :name => "author"}
@@ -11,7 +11,7 @@
     /[if lt IE 9]
       = javascript_include_tag "https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js", "https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"
 
-    = stylesheet_link_tag    "application", :media => "all"
+    = stylesheet_link_tag "application", :media => "all"
     = javascript_include_tag "application"
     = csrf_meta_tags
   %body
@@ -23,13 +23,15 @@
             %span.icon-bar
             %span.icon-bar
             %span.icon-bar
-          = link_to "hanuman", "#", :class => "navbar-brand"
+          = link_to "hanuman", home_index_path, :class => "navbar-brand"
         .collapse.navbar-collapse
           %ul.nav.navbar-nav
             %li.active
-              = link_to "main_app.Home", main_app.root_path
+              = link_to "Home", root_path
             %li
-              = link_to "Organizations", hanuman.organizations_path
+              = link_to "Organizations", organizations_path
+            %li
+              = link_to "main_app Home", main_app.root_path
     .container
       - flash.each do |name, msg|
         = content_tag :div, :class => "alert alert-#{name == :error ? "danger" : "success" } alert-dismissable" do
