@@ -5,7 +5,7 @@ class CreateHanumanSurveyQuestions < ActiveRecord::Migration
       t.references :question, index: true
       t.integer :order
       t.string :group
-      t.boolean :duplicator
+      t.boolean :duplicator, default: false
 
       t.timestamps
     end
