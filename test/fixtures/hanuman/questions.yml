@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  question_text: MyText
+  answer_type_id: 
+
+two:
+  question_text: MyText
+  answer_type_id: 

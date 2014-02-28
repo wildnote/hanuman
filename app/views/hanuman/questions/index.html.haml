@@ -1,0 +1,25 @@
+- content_for :navbar_questions do
+  active
+
+.page-header
+  = link_to new_question_path, class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-plus
+    New Question
+  %h1 Questions
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %thead
+      %tr
+        %th Question Text
+        %th Answer Type
+        %th
+
+    %tbody
+      - @questions.each do |question|
+        %tr
+          %td= link_to question.question_text, question
+          %td= link_to question.answer_type, question
+          %td
+            = link_to question, data: {confirm: "Are you sure you want to delete this Question?"}, method: :delete do
+              %span.glyphicon.glyphicon-trash

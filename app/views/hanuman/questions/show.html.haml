@@ -1,0 +1,20 @@
+- content_for :navbar_questions do
+  active
+
+.page-header
+  = link_to edit_question_path(@question), class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-pencil
+    Edit Question
+  %h1 Question Details
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %tbody
+      %tr
+        %td Question text
+        %td
+          %b= @question.question_text
+      %tr
+        %td Answer type
+        %td
+          %b= @question.answer_type
