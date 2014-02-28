@@ -1,0 +1,25 @@
+- content_for :navbar_answer_choices do
+  active
+
+.page-header
+  = link_to new_answer_choice_path, class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-plus
+    New Answer Choice
+  %h1 Answer Choices
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %thead
+      %tr
+        %th Question
+        %th Option Text
+        %th
+
+    %tbody
+      - @answer_choices.each do |answer_choice|
+        %tr
+          %td= link_to answer_choice.question, answer_choice
+          %td= link_to answer_choice.option_text, answer_choice
+          %td
+            = link_to answer_choice, data: {confirm: "Are you sure you want to delete this Answer Choice?"}, method: :delete do
+              %span.glyphicon.glyphicon-trash

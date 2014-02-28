@@ -1,0 +1,20 @@
+- content_for :navbar_answer_choices do
+  active
+
+.page-header
+  = link_to edit_answer_choice_path(@answer_choice), class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-pencil
+    Edit Answer Choice
+  %h1 Answer Choice Details
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %tbody
+      %tr
+        %td Question
+        %td
+          %b= @answer_choice.question
+      %tr
+        %td Option text
+        %td
+          %b= @answer_choice.option_text
