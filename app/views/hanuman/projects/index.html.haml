@@ -1,0 +1,27 @@
+- content_for :navbar_projects do
+  active
+
+.page-header
+  = link_to new_project_path, class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-plus
+    New Project
+  %h1 Projects
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %thead
+      %tr
+        %th Name
+        %th Organization
+        %th Status
+        %th
+
+    %tbody
+      - @projects.each do |project|
+        %tr
+          %td= link_to project.name, project
+          %td= link_to project.organization, project
+          %td= link_to project.status, project
+          %td
+            = link_to project, data: {confirm: "Are you sure you want to delete this Project?"}, method: :delete do
+              %span.glyphicon.glyphicon-trash
