@@ -1,0 +1,29 @@
+- content_for :navbar_survey_templates do
+  active
+
+.page-header
+  = link_to new_survey_template_path, class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-plus
+    New Survey Template
+  %h1 Survey Templates
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %thead
+      %tr
+        %th Name
+        %th Status
+        %th Organization
+        %th Survey Type
+        %th
+
+    %tbody
+      - @survey_templates.each do |survey_template|
+        %tr
+          %td= link_to survey_template.name, survey_template
+          %td= link_to survey_template.status, survey_template
+          %td= link_to survey_template.organization, survey_template
+          %td= link_to survey_template.survey_type, survey_template
+          %td
+            = link_to survey_template, data: {confirm: "Are you sure you want to delete this Survey Template?"}, method: :delete do
+              %span.glyphicon.glyphicon-trash
