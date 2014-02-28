@@ -1,4 +1,6 @@
 Hanuman::Engine.routes.draw do
+  resources :surveys
+
   resources :survey_questions
 
   resources :answer_choices

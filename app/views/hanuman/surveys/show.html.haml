@@ -1,0 +1,20 @@
+- content_for :navbar_surveys do
+  active
+
+.page-header
+  = link_to edit_survey_path(@survey), class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-pencil
+    Edit Survey
+  %h1 Survey Details
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %tbody
+      %tr
+        %td Survey template
+        %td
+          %b= @survey.survey_template
+      %tr
+        %td Project
+        %td
+          %b= @survey.project

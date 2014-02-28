@@ -1,0 +1,17 @@
+- if @survey.errors.any?
+  - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
+
+= form_for @survey, html: {class: "form-horizontal"} do |f|
+
+  .form-group
+    = f.label :survey_template, class: "col-sm-2 control-label"
+    .col-sm-10
+      = f.text_field :survey_template, class: "form-control"
+  .form-group
+    = f.label :project, class: "col-sm-2 control-label"
+    .col-sm-10
+      = f.text_field :project, class: "form-control"
+  .form-group
+    .col-sm-offset-2.col-sm-10
+      = f.submit "Save", class: "btn btn-primary"
+      = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"

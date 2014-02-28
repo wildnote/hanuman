@@ -1,0 +1,9 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  survey_template_id: 
+  project_id: 
+
+two:
+  survey_template_id: 
+  project_id: 
