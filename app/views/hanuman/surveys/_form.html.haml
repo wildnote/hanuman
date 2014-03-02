@@ -3,14 +3,28 @@
 
 = form_for @survey, html: {class: "form-horizontal"} do |f|
 
-  .form-group
-    = f.label :survey_template, class: "col-sm-2 control-label"
-    .col-sm-10
-      = f.text_field :survey_template, class: "form-control"
-  .form-group
-    = f.label :project, class: "col-sm-2 control-label"
-    .col-sm-10
-      = f.text_field :project, class: "form-control"
+  .col-sm-12
+    = f.object.survey_template.name
+  .col-sm-12
+    = f.object.project.name
+  .col-sm-12
+    = f.object.project.organization.name
+
+  = f.hidden_field :project_id
+  = f.hidden_field :survey_template_id
+
+  -# loop through survey questions and display
+  = f.fields_for :observations do |ff|
+    = ff.hidden_field :survey_question_id
+    .form-group
+      = ff.label :answer, ff.object.order.to_s + '. ' + ff.object.question_text, class: "col-sm-2 control-label"
+      .col-sm-8
+        = ff.text_field :answer, class: "form-control"
+      .col-sm-1
+        = ff.object.group.to_s
+      .col-sm-1
+        = ff.object.answer_type
+
   .form-group
     .col-sm-offset-2.col-sm-10
       = f.submit "Save", class: "btn btn-primary"
