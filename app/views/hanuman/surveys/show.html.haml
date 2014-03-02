@@ -13,8 +13,15 @@
       %tr
         %td Survey template
         %td
-          %b= @survey.survey_template
+          %b= @survey.survey_template.name
       %tr
         %td Project
         %td
-          %b= @survey.project
+          %b= @survey.project.name
+      - @survey.observations.each do |o|
+        %tr
+          %td
+            = o.survey_question.question.question_text
+          %td
+            %b= o.answer
+
