@@ -29,9 +29,9 @@
       .col-sm-8
         = ff.text_field :answer, class: "form-control"
       .col-sm-1
-        = ff.object.group.to_s
+        = ff.object.survey_question.group.to_s
       .col-sm-1
-        = ff.object.answer_type
+        = ff.object.survey_question.question.answer_type.name
 
   .form-group
     .col-sm-offset-2.col-sm-10
