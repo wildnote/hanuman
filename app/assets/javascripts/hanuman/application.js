@@ -16,3 +16,4 @@
 //= require bootstrap
 //= require_tree .
 
+alert("alert from 'hanuman/application.js' (this is last)");
