@@ -24,12 +24,7 @@ module Hanuman
       @survey = Survey.new(project_id: project_id, survey_template_id: survey_template_id)
       survey_template.survey_questions.each do |sq|
         @survey.observations.build(
-          survey_question_id: sq.id,
-          question_text: sq.question.question_text,
-          answer_type: sq.question.answer_type.name,
-          order: sq.order,
-          duplicator: sq.duplicator,
-          group: sq.group
+          survey_question_id: sq.id
         )
       end
     end
