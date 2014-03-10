@@ -26,12 +26,14 @@
 
     .form-group
       = ff.label :answer, ff.object.survey_question.order.to_s + '. ' + ff.object.survey_question.question.question_text, class: "col-sm-2 control-label"
-      .col-sm-6
+      .col-sm-5
         = render field_type(ff.object.survey_question.question.answer_type.name), ff: ff
       .col-sm-1
         = ff.object.survey_question.group.to_s
       .col-sm-2
         = ff.object.survey_question.question.answer_type.name
+      .col-sm-1
+        = ff.object.survey_question.duplicator
       .col-sm-1
         - ff.object.survey_question.question.answer_choices.each do |ao|
           = ao.option_text
