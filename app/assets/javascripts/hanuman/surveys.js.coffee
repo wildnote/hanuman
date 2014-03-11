@@ -3,6 +3,7 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $ ->
+  # typeahead
   # instantiate the bloodhound suggestion engine
   colors = new Bloodhound(
     datumTokenizer: (d) ->
@@ -41,3 +42,11 @@ $ ->
   $(".typeahead").typeahead null,
     displayKey: "color"
     source: colors.ttAdapter()
+
+  # chosen
+  $(".chosen-select").chosen
+    no_results_text: "No results matched"
+
+  $(".chosen-multiselect").chosen
+    allow_single_deselect: true
+    no_results_text: "No results matched"

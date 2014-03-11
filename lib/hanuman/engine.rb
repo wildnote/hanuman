@@ -9,6 +9,7 @@ module Hanuman
     require 'uglifier'
     require 'bootstrap-generators'
     require 'twitter-typeahead-rails'
+    require 'chosen-rails'
 
     config.generators.templates.unshift File.expand_path("lib/templates", root)
   end
