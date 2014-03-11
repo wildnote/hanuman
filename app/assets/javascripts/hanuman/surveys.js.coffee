@@ -3,6 +3,41 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $ ->
-  colors = ["red", "blue", "green", "yellow", "brown", "black"];
- 
-  $('.typeahead').typeahead({source: colors});
+  # instantiate the bloodhound suggestion engine
+  colors = new Bloodhound(
+    datumTokenizer: (d) ->
+      Bloodhound.tokenizers.whitespace d.color
+
+    queryTokenizer: Bloodhound.tokenizers.whitespace
+    local: [
+      {
+        color: "white"
+      }
+      {
+        color: "red"
+      }
+      {
+        color: "blue"
+      }
+      {
+        color: "green"
+      }
+      {
+        color: "yellow"
+      }
+      {
+        color: "brown"
+      }
+      {
+        color: "black"
+      }
+    ]
+  )
+
+  # initialize the bloodhound suggestion engine
+  colors.initialize()
+
+  # instantiate the typeahead UI
+  $(".typeahead").typeahead null,
+    displayKey: "color"
+    source: colors.ttAdapter()
