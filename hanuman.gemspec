@@ -26,6 +26,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'jquery-rails'
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'bootstrap-generators'
+  s.add_dependency 'twitter-typeahead-rails'
   s.add_dependency 'animate-rails'
 
   s.add_development_dependency 'pg'

@@ -1,0 +1,7 @@
+- if ff.object.survey_question.question.answer_choices.blank?
+  = ff.text_field :answer, value: "There are no available Answer Options!", class: "form-control", readonly: true
+- else
+  - ff.object.survey_question.question.answer_choices.each do |ao|
+    = radio_button_tag :answer_ids, ao.id, @survey.observations.include?(ao), name: "survey[answer_ids][]"
+    = label_tag :answer_ids, ao.option_text
+    %br/

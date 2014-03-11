@@ -1,0 +1,2 @@
+= select_tag "survey[answer_ids][]", options_from_collection_for_select(ff.object.survey_question.question.answer_choices, :option_text, :option_text, @survey.observations), {multiple: true, size: 10}
+= ff.text_field :answer, value: ff.object.survey_question.question.answer_type.name.titleize + " field not supported!", class: "form-control", readonly: true

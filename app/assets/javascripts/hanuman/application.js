@@ -14,6 +14,5 @@
 //= require jquery.ui.all
 //= require jquery_ujs
 //= require bootstrap
+//= require twitter/typeahead
 //= require_tree .
-
-alert("alert from 'hanuman/application.js' (this is last)");
