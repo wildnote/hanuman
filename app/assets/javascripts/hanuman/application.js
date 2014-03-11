@@ -15,4 +15,5 @@
 //= require jquery_ujs
 //= require bootstrap
 //= require twitter/typeahead
+//= require chosen-jquery
 //= require_tree .

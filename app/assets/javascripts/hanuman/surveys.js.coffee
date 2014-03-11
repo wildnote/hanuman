@@ -6,3 +6,10 @@ $ ->
   colors = ["red", "blue", "green", "yellow", "brown", "black"];
  
   $('.typeahead').typeahead({source: colors});
+  
+  $(".chosen-select").chosen
+    no_results_text: "No results matched"
+  
+  $(".chosen-multiselect").chosen
+    allow_single_deselect: true
+    no_results_text: "No results matched"
