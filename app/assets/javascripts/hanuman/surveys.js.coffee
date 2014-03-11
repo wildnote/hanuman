@@ -46,7 +46,9 @@ $ ->
   # chosen
   $(".chosen-select").chosen
     no_results_text: "No results matched"
+    size: "100%"
 
   $(".chosen-multiselect").chosen
     allow_single_deselect: true
     no_results_text: "No results matched"
+    size: "100%"
