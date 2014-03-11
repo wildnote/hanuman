@@ -8,13 +8,8 @@
  * You're free to add application-wide styles to this file and they'll appear at the top of the
  * compiled file, but it's generally better to create a new file per style scope.
  *
- *= require boilerplate-a
  *= require_self
- *= require bootstrap-generators
- *= require bootstrap-variables
- *= require jquery.ui.all
- *= require chosen
- *= require animate
+ *= require typeahead/typeahead
+ *= require chosen/chosen
  *= require_tree .
- *= require boilerplate-z
  */

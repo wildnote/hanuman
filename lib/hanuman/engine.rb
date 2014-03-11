@@ -7,9 +7,8 @@ module Hanuman
     require 'sass-rails'
     require 'coffee-rails'
     require 'uglifier'
-    require 'bootstrap-generators'
-    require 'twitter-typeahead-rails'
-    require 'chosen-rails'
+    require 'modernizr-rails'
+    require 'jquery-rails'
 
     config.generators.templates.unshift File.expand_path("lib/templates", root)
   end

@@ -10,10 +10,6 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery
-//= require jquery.ui.all
-//= require jquery_ujs
-//= require bootstrap
-//= require twitter/typeahead
-//= require chosen-jquery
+//= require typeahead/typeahead.bundle
+//= require chosen/chosen.jquery
 //= require_tree .

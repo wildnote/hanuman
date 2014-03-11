@@ -13,7 +13,7 @@ Gem::Specification.new do |s|
   s.summary     = "Hanuman. The Hindu monkey god. An open source rails clone of survey monkey."
   s.description = "Hanuman. The Hindu monkey god. An open source rails clone of survey monkey."
 
-  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
+  s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency 'rails', '4.0.0'
@@ -24,11 +24,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'uglifier'
   s.add_dependency 'modernizr-rails'
   s.add_dependency 'jquery-rails'
-  s.add_dependency 'jquery-ui-rails'
-  s.add_dependency 'bootstrap-generators'
-  s.add_dependency 'twitter-typeahead-rails'
-  s.add_dependency 'chosen-rails'
-  s.add_dependency 'animate-rails'
 
   s.add_development_dependency 'pg'
 end
