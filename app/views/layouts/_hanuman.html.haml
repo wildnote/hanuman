@@ -1,0 +1,22 @@
+%li{class: yield(:navbar_hanuman_surveys)}
+  = link_to "Surveys", hanuman.surveys_path
+%li{class: yield(:navbar_hanuman_organizations)}
+  = link_to "Organizations", hanuman.organizations_path
+%li{class: yield(:navbar_hanuman_projects)}
+  = link_to "Projects", hanuman.projects_path
+%li.divider
+%li{class: yield(:navbar_hanuman_survey_templates)}
+  = link_to "Survey Templates", hanuman.survey_templates_path
+%li{class: yield(:navbar_hanuman_survey_questions)}
+  = link_to "Survey Questions", hanuman.survey_questions_path
+%li.divider
+%li{class: yield(:navbar_hanuman_questions)}
+  = link_to "Questions", hanuman.questions_path
+%li.divider
+%li{class: yield(:navbar_hanuman_answer_types)}
+  = link_to "Answer Types", hanuman.answer_types_path
+%li{class: yield(:navbar_hanuman_answer_choices)}
+  = link_to "Answer Choices", hanuman.answer_choices_path
+%li.divider
+%li{class: yield(:navbar_hanuman_about)}
+  = link_to "About Hanuman", hanuman.about_path

@@ -1,4 +1,5 @@
 Hanuman::Engine.routes.draw do
+  
   resources :surveys
 
   resources :survey_questions
@@ -12,9 +13,11 @@ Hanuman::Engine.routes.draw do
   resources :survey_templates
 
   resources :projects
-
-  get "home/index"
-  root 'home#index'
+  
   resources :organizations
-
+  
+  get 'about' => 'about#index'
+  
+  #root 'about#index'
+  
 end
