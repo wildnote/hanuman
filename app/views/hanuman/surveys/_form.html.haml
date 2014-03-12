@@ -16,27 +16,28 @@
 
 
   -# loop through survey questions and display
-  = f.fields_for :observations do |ff|
-    = ff.hidden_field :survey_question_id
+  - @survey.observations.each_with_index do |observation, index|
+    = f.fields_for :observations, observation do |ff|
+      = ff.hidden_field :survey_question_id
 
-    -#debug
-    -#.col-sm-12
-    -#  = debug ff.object
-    -#end debug
+      -#debug
+      -#.col-sm-12
+      -#  = debug ff.object
+      -#end debug
 
-    .form-group
-      = ff.label :answer, ff.object.survey_question.order.to_s + '. ' + ff.object.survey_question.question.question_text, class: "col-sm-2 control-label"
-      .col-sm-5
-        = render field_type(ff.object.survey_question.question.answer_type.name), ff: ff
-      .col-sm-1
-        = ff.object.survey_question.group.to_s
-      .col-sm-2
-        = ff.object.survey_question.question.answer_type.name
-      .col-sm-1
-        = ff.object.survey_question.duplicator
-      .col-sm-1
-        - ff.object.survey_question.question.answer_choices.each do |ao|
-          = ao.option_text
+      .form-group
+        = ff.label :answer, ff.object.survey_question.order.to_s + '. ' + ff.object.survey_question.question.question_text, class: "col-sm-2 control-label"
+        .col-sm-5
+          = render field_type(ff.object.survey_question.question.answer_type.name), ff: ff, index: index
+        .col-sm-1
+          = ff.object.survey_question.group.to_s
+        .col-sm-2
+          = ff.object.survey_question.question.answer_type.name
+        .col-sm-1
+          = ff.object.survey_question.duplicator
+        .col-sm-1
+          - ff.object.survey_question.question.answer_choices.each do |ao|
+            = ao.option_text
           %br/
 
 
