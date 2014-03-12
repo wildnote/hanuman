@@ -23,6 +23,7 @@
       - @survey.observations.each do |o|
         %tr
           %td
+            = o.survey_question.order
             = o.survey_question.question.question_text
           %td
             %b= o.answer
