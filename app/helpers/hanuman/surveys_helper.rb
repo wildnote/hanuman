@@ -14,7 +14,7 @@ module Hanuman
       when "checkbox"
         "field_check_box"
       when "checkboxlist"
-        "field_check_box_list"
+        "field_collection_check_boxes"
       when "radio"
         "field_radio_button"
       when "select"
