@@ -20,13 +20,13 @@ module Hanuman
       when "select"
         "field_collection_select"
       when "multiselect"
-        "field_select_list"
+        "field_collection_multiselect"
       when "typeahead"
         "field_type_ahead"
       when "chosenselect"
         "field_chosen_collection_select"
       when "chosenmultiselect"
-        "field_chosen_select_list"
+        "field_chosen_collection_multiselect"
       else
         "field_not_supported"
       end
