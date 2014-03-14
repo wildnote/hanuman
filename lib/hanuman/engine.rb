@@ -3,6 +3,7 @@ module Hanuman
     isolate_namespace Hanuman
 
     require 'rubygems'
+    require 'ancestry'
     require 'haml-rails'
     require 'sass-rails'
     require 'coffee-rails'
