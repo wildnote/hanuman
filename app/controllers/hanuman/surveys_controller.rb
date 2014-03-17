@@ -71,8 +71,8 @@ module Hanuman
                                        :survey_template_id,
                                        observations_attributes: [:id,
                                                                  :survey_question_id,
-                                                                 :answer#,
-                                                                 #answer: []
+                                                                 :answer,
+                                                                 answer_choice_ids: []
                                        ]
         )
       end
