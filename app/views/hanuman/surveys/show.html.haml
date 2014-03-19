@@ -21,6 +21,5 @@
         %td
           %b= @survey.project.name
       - @survey.observations.each do |o|
-        %tr
-          %td= o.survey_question.order.to_s + ". " + o.survey_question.question.question_text
-          %td= output_answers o.survey_question.question.answer_type.name, o
+        
+        = render ("show_" + o.survey_question.question.answer_type.name), o: o rescue render "show_notsupported", o: o

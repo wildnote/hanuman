@@ -1,0 +1,4 @@
+.form-group
+  = render "field_label", ff: ff, index: index
+  .col-sm-10
+    = ff.text_area :answer, rows: 3, class: "form-control"
