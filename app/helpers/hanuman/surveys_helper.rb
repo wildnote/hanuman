@@ -1,6 +1,26 @@
 module Hanuman
   module SurveysHelper
     
+    def needs_field? field_type
+      case field_type
+      when "static", "line"
+        false
+      else
+        true
+      end
+    end
+    
+    def render_non_field field_type, text
+      case field_type
+      when "static"        
+        ('<div class="form-center-message">' + text + '</div>').html_safe
+      when "line"
+        ('<div class="page-header"></div>').html_safe
+      else
+        nil
+      end
+    end
+    
     def field_type field_type
       case field_type
       when "text"
