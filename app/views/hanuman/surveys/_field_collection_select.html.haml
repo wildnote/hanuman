@@ -1,2 +1,6 @@
-=# ff.collection_select :answer, ff.object.survey_question.question.answer_choices, :option_text, :option_text,
-                        {prompt: false}, {class: 'form-control'}
+- if ff.object.survey_question.question.answer_choices.blank?
+  = ff.text_field :answer, value: "There are no available Answer Options!", class: "form-control", readonly: true
+- else
+  = select_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
+                options_from_collection_for_select(ff.object.survey_question.question.answer_choices, :id, :option_text, @survey.observations),
+                {class: 'form-control'}

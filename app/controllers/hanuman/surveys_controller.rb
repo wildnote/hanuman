@@ -69,10 +69,11 @@ module Hanuman
       def survey_params
         params.require(:survey).permit(:project_id,
                                        :survey_template_id,
-                                       observations_attributes: [:id,
-                                                                 :survey_question_id,
-                                                                 :answer,
-                                                                 answer_choice_ids: []
+                                       observations_attributes: [
+                                         :id,
+                                         :survey_question_id,
+                                         :answer,
+                                         answer_choice_ids: []
                                        ]
         )
       end

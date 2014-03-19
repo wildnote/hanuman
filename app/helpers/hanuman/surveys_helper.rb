@@ -52,5 +52,21 @@ module Hanuman
       end
     end
     
+    def output_answers field_type, observation
+      output = "<b>"
+      case field_type
+      when "text", "textarea", "date", "time", "typeahead"
+        output += observation.answer
+      when "checkbox"
+        output += observation.answer == 1 ? "Checked" : "Not Checked"
+      when "checkboxlist", "radio", "select", "multiselect", "chosenselect", "chosenmultiselect"
+        observation.observation_answers.each do |oa|
+          output += oa.answer_choice.option_text + "<br />"
+        end
+      end
+      output += "</b>"
+      output.html_safe
+    end
+    
   end
 end

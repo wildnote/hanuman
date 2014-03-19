@@ -13,7 +13,7 @@
   %table.table.table-striped.table-hover
     %tbody
       %tr
-        %td Survey template
+        %td Survey Template
         %td
           %b= @survey.survey_template.name
       %tr
@@ -22,9 +22,5 @@
           %b= @survey.project.name
       - @survey.observations.each do |o|
         %tr
-          %td
-            = o.survey_question.order
-            = o.survey_question.question.question_text
-          %td
-            %b= o.answer
-
+          %td= o.survey_question.order.to_s + ". " + o.survey_question.question.question_text
+          %td= output_answers o.survey_question.question.answer_type.name, o
