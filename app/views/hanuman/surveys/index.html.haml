@@ -4,9 +4,12 @@
   active
 
 .page-header
-  = link_to new_survey_path, class: "btn btn-primary" do
-    %span.glyphicon.glyphicon-plus
-    New Survey
+  = form_tag new_survey_path, method: 'get' do
+    = submit_tag "Enter Data", class: "btn btn-primary"
+    = select_tag :survey_template_id,
+                  options_from_collection_for_select(Hanuman::SurveyTemplate.all, :id, :name, params[:survey_template_id]),
+                  {class: 'form-control'}
+    = label_tag "Select Survey:"
   %h1 Surveys
 
 .table-responsive

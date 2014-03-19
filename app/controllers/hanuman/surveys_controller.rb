@@ -18,7 +18,7 @@ module Hanuman
 
       # hard code these for now just to test out CRUD
       project_id = 1
-      survey_template_id = 1
+      survey_template_id = params[:survey_template_id]
 
       survey_template = SurveyTemplate.find survey_template_id
       @survey = Survey.new(project_id: project_id, survey_template_id: survey_template_id)
@@ -67,14 +67,15 @@ module Hanuman
 
       # Only allow a trusted parameter "white list" through.
       def survey_params
-        params.require(:survey).permit(:project_id,
-                                       :survey_template_id,
-                                       observations_attributes: [
-                                         :id,
-                                         :survey_question_id,
-                                         :answer,
-                                         answer_choice_ids: []
-                                       ]
+        params.require(:survey).permit(
+          :project_id,
+          :survey_template_id,
+          observations_attributes: [
+            :id,
+            :survey_question_id,
+            :answer,
+            answer_choice_ids: []
+          ]
         )
       end
   end

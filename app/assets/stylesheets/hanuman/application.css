@@ -13,3 +13,20 @@
  *= require chosen/chosen
  *= require_tree .
  */
+
+.page-header input.btn {
+  float: right;
+}
+
+.page-header select.form-control {
+  float: right;
+  width: auto;
+  margin-right: 5px;
+}
+
+.page-header label {
+  float: right;
+  margin-top: 6px;
+  margin-right: 5px;
+  text-transform: capitalize;
+}
