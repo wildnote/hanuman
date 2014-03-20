@@ -22,4 +22,4 @@
           %b= @survey.project.name
       - @survey.observations.each do |o|
         
-        = render ("show_" + o.survey_question.question.answer_type.name), o: o rescue render "show_notsupported", o: o
+        = render ("show_" + o.survey_question.question.answer_type.name), o: o rescue render "rescue_show_notsupported", o: o

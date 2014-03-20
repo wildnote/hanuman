@@ -1,5 +1,5 @@
 .form-group
-  = render "field_label", ff: ff, index: index
+  = render "shared_field_label", ff: ff, index: index
   .col-sm-10    
     - if ff.object.survey_question.question.answer_choices.blank?
       = ff.text_field :answer, value: "There are no available Answer Options!", class: "form-control", readonly: true
