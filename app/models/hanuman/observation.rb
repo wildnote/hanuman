@@ -5,6 +5,6 @@ module Hanuman
     has_many :observation_answers
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
     has_many :answer_choices, through: :observation_answers
-    default_scope  includes(:survey_question).order('hanuman_survey_questions.order asc')
+    default_scope  includes(:survey_question).order('hanuman_survey_questions.sort_order asc')
   end
 end

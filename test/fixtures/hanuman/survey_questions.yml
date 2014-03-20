@@ -3,13 +3,13 @@
 one:
   survey_template_id: 
   question_id: 
-  order: 1
+  sort_order: 1
   group: MyString
   duplicator: false
 
 two:
   survey_template_id: 
   question_id: 
-  order: 1
+  sort_order: 1
   group: MyString
   duplicator: false

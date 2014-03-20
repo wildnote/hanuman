@@ -15,7 +15,7 @@
       %tr
         %th Survey Template
         %th Question
-        %th Order
+        %th Sort Order
         %th Group
         %th Duplicator
         %th
@@ -25,7 +25,7 @@
         %tr
           %td= link_to survey_question.survey_template.name, survey_question
           %td= link_to survey_question.question.question_text, survey_question
-          %td= link_to survey_question.order, survey_question
+          %td= link_to survey_question.sort_order, survey_question
           %td= link_to survey_question.group, survey_question
           %td= link_to survey_question.duplicator.to_s, survey_question
           %td
