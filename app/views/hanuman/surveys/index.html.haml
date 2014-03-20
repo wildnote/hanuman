@@ -5,7 +5,7 @@
 
 .page-header
   = form_tag new_survey_path, method: 'get' do
-    = submit_tag "Enter Data", class: "btn btn-primary"
+    = submit_tag "Start Entry", class: "btn btn-primary"
     = select_tag :survey_template_id,
                   options_from_collection_for_select(Hanuman::SurveyTemplate.all, :id, :name, params[:survey_template_id]),
                   {class: 'form-control'}

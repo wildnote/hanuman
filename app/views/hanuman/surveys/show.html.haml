@@ -6,20 +6,18 @@
 .page-header
   = link_to edit_survey_path(@survey), class: "btn btn-primary" do
     %span.glyphicon.glyphicon-pencil
-    Edit Survey
-  %h1 Survey Details
+    Edit
+  %h5
+    = @survey.project.organization.name + ": "
+    %i= @survey.project.name
+    |
+    Mode:
+    %i Review
+  %h1= @survey.survey_template.name
 
 .table-responsive
   %table.table.table-striped.table-hover
     %tbody
-      %tr
-        %td Survey Template
-        %td
-          %b= @survey.survey_template.name
-      %tr
-        %td Project
-        %td
-          %b= @survey.project.name
       - @survey.observations.each do |o|
         
         = render ("show_" + o.survey_question.question.answer_type.name), o: o rescue render "rescue_show_notsupported", o: o

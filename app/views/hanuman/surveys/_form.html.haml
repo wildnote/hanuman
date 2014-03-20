@@ -3,17 +3,17 @@
 
 = form_for @survey, html: {class: "form-horizontal"} do |f|
 
-  .col-sm-12
-    = f.object.survey_template.name
-  .col-sm-12
-    = f.object.project.name
-  .col-sm-12
-    = f.object.project.organization.name
-
+  .page-header
+    %h5
+      = f.object.project.organization.name + ": "
+      %i= f.object.project.name
+      |
+      Mode:
+      %i= yield :survey_form_state
+    %h1= f.object.survey_template.name
+    
   = f.hidden_field :project_id
   = f.hidden_field :survey_template_id
-
-  - question_number_offset = 0
 
   -# loop through survey questions and display
   - @survey.observations.each_with_index do |observation, index|
@@ -23,6 +23,6 @@
       = render ("field_" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "rescue_field_notsupported", ff: ff, index: index
       
   .form-group
-    .col-sm-offset-2.col-sm-10
+    .col-sm-offset-5.col-sm-7
       = f.submit "Save", class: "btn btn-primary"
       = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
