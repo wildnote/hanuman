@@ -1,7 +1,7 @@
 - if @survey.errors.any?
   - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
 
-= form_for @survey, html: {class: "form-horizontal"} do |f|
+= form_for @survey, builder: CustomFieldsFormBuilder, html: {class: "form-horizontal"} do |f|
 
   .page-header
     %h5
@@ -20,7 +20,7 @@
     = f.fields_for :observations, observation do |ff|
       = ff.hidden_field :survey_question_id
       
-      = render ("field_" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "rescue_field_notsupported", ff: ff, index: index
+      = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
       
   .form-group
     .col-sm-offset-5.col-sm-7
