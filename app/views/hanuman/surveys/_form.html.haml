@@ -20,7 +20,7 @@
     = f.fields_for :observations, observation do |ff|
       = ff.hidden_field :survey_question_id
       
-      = render ("field_" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "rescue_field_notsupported", ff: ff, index: index
+      = render "hanuman/shared/field_" + ff.object.survey_question.question.answer_type.name, ff: ff, index: index rescue render "hanuman/shared/rescue_field_notsupported", ff: ff, index: index
       
   .form-group
     .col-sm-offset-5.col-sm-7

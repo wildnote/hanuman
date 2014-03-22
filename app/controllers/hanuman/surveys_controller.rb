@@ -15,14 +15,13 @@ module Hanuman
 
     # GET /surveys/new
     def new
-
       # hard code these for now just to test out CRUD
       project_id = 1
       survey_template_id = params[:survey_template_id]
 
       survey_template = SurveyTemplate.find survey_template_id
       @survey = Survey.new(project_id: project_id, survey_template_id: survey_template_id)
-      survey_template.survey_questions.each do |sq|
+      survey_template.survey_questions.by_step('step_1').each do |sq|
         @survey.observations.build(
           survey_question_id: sq.id
         )
@@ -38,7 +37,11 @@ module Hanuman
       @survey = Survey.new(survey_params)
 
       if @survey.save
-        redirect_to @survey, notice: 'Survey was successfully created.'
+        #redirect_to @survey, notice: 'Survey was successfully created.'
+        session[:survey_id] = @survey.id
+        session[:survey_template_id] = @survey.survey_template_id
+        #redirect_to survey_steps_path, survey_template_id: @survey.survey_template_id
+        redirect_to survey_steps_path
       else
         render action: 'new'
       end
@@ -48,6 +51,8 @@ module Hanuman
     def update
       if @survey.update(survey_params)
         redirect_to @survey, notice: 'Survey was successfully updated.'
+        #redirect_to survey_steps_path, survey_template_id: @survey.survey_template_id
+        #redirect_to controller: 'survey_steps', survey_template_id: @survey.survey_template.to_param
       else
         render action: 'edit'
       end

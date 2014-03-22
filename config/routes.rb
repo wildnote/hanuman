@@ -15,6 +15,8 @@ Hanuman::Engine.routes.draw do
   resources :projects
   
   resources :organizations
+
+  resources :survey_steps
   
   get 'about' => 'about#index'
   

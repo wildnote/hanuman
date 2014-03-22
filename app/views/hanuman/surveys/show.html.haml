@@ -19,5 +19,4 @@
   %table.table.table-striped.table-hover
     %tbody
       - @survey.observations.each do |o|
-        
-        = render ("show_" + o.survey_question.question.answer_type.name), o: o rescue render "rescue_show_notsupported", o: o
+        = render ("hanuman/shared/show_" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/shared/rescue_show_notsupported", o: o
