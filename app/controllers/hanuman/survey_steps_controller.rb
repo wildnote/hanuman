@@ -30,11 +30,11 @@ module Hanuman
       #sign_in(current_user, :bypass => true) # needed for devise
 
       if params[:commit].eql? 'Save + Add Another'
+        @survey.save
         survey_template = @survey.survey_template
         survey_template.survey_questions.by_step('step_2').each do |sq|
           @survey.observations.build(survey_question_id: sq.id)
         end
-        @survey.save
         render_wizard
       else
         render_wizard @survey
