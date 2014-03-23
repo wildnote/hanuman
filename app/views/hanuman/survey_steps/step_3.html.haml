@@ -25,7 +25,7 @@ Step 3
         = render ("hanuman/shared/show_" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/shared/rescue_show_notsupported", o: o
       - else
         = render ("hanuman/shared/field_" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/shared/rescue_field_notsupported", ff: ff, index: index
-        = debug o
+        =# debug o
 
       =# render ("hanuman/shared/field_" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/shared/rescue_field_notsupported", ff: ff, index: index
 
