@@ -1,0 +1,10 @@
+.form-group
+  = render "hanuman/surveys/_form/shared/label", ff: ff, index: index
+  .col-sm-7    
+    - if ff.object.survey_question.question.answer_choices.blank?
+      = ff.text_field :answer, value: "There are no available Answer Options!", class: "form-control", readonly: true
+    - else
+      = select_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
+                    options_from_collection_for_select(ff.object.survey_question.question.answer_choices, :id, :option_text,
+                    ff.object.observation_answers.map{|oa| oa.answer_choice_id}),
+                    {multiple: true, size: 10, class: 'chosen-multiselect form-control'}

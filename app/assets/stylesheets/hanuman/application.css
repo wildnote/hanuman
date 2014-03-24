@@ -30,3 +30,25 @@
   margin-right: 5px;
   text-transform: capitalize;
 }
+
+.form-section {
+  background-color: #def;
+  text-align: center;
+}
+
+.form-section,
+.form-static {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 25px;
+}
+
+.form-group.helperabove {
+  margin-bottom: 0;
+}
+
+.form-group.helperbelow {
+  margin-top: -15px;
+}
+

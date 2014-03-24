@@ -21,15 +21,22 @@ Step 3
   - @survey.observations.each_with_index do |o, index|
     = f.fields_for :observations, o do |ff|
       = ff.hidden_field :survey_question_id
+      -# trying to show previous steps and submitted data as readonly
       - if ['step_1','step_2'].include?(o.survey_question.group)
-        = render ("hanuman/shared/show_" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/shared/rescue_show_notsupported", o: o
+    
+        = render ("hanuman/surveys/show/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/show/rescue/notsupported", o: o
+      
       - else
+        -# if repeating observation is new, then show form
         - if o.id.blank?
-          = render ("hanuman/shared/field_" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/shared/rescue_field_notsupported", ff: ff, index: index
+    
+          = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
+      
         - else
-          = render ("hanuman/shared/show_" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/shared/rescue_show_notsupported", o: o
+  
+          = render ("hanuman/surveys/show/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/show/rescue/notsupported", o: o
+      
         =# debug o
-
   .form-group
     .col-sm-offset-5.col-sm-7
       = f.submit "Save", class: "btn btn-primary"

@@ -1,0 +1,4 @@
+.form-group
+  = render "hanuman/surveys/_form/shared/label", ff: ff, index: index
+  .col-sm-7
+    = ff.datalist_tag :answer, options_for_select(ff.object.survey_question.question.answer_choices.map{|ac| ac.option_text}), list_id: "datalist_" + index.to_s + "_list", class: "form-control"
