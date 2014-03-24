@@ -25,6 +25,7 @@ Step 2
       - if o.survey_question.group.eql? 'step_1'
         = render ("hanuman/shared/show_" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/shared/rescue_show_notsupported", o: o
       - else
+        -# if repeating observation is new, then show form
         - if o.id.blank?
           = render ("hanuman/shared/field_" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/shared/rescue_field_notsupported", ff: ff, index: index
         - else

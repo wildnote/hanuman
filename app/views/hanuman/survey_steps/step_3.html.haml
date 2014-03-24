@@ -21,13 +21,14 @@ Step 3
   - @survey.observations.each_with_index do |o, index|
     = f.fields_for :observations, o do |ff|
       = ff.hidden_field :survey_question_id
-      - if o.survey_question.group.eql? 'step_1'
+      - if ['step_1','step_2'].include?(o.survey_question.group)
         = render ("hanuman/shared/show_" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/shared/rescue_show_notsupported", o: o
       - else
-        = render ("hanuman/shared/field_" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/shared/rescue_field_notsupported", ff: ff, index: index
+        - if o.id.blank?
+          = render ("hanuman/shared/field_" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/shared/rescue_field_notsupported", ff: ff, index: index
+        - else
+          = render ("hanuman/shared/show_" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/shared/rescue_show_notsupported", o: o
         =# debug o
-
-      =# render ("hanuman/shared/field_" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/shared/rescue_field_notsupported", ff: ff, index: index
 
   .form-group
     .col-sm-offset-5.col-sm-7
