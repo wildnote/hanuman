@@ -15,29 +15,46 @@
   = f.hidden_field :project_id
   = f.hidden_field :survey_template_id
   
-  - eval_steps_array = build_eval_steps_array yield(:current_step)
+  -# eval_steps_array = build_eval_steps_array yield(:current_step)
   
-  -# loop through survey questions and display
-  - @survey.observations.each_with_index do |o, index|
-    = f.fields_for :observations, o do |ff|
-      = ff.hidden_field :survey_question_id
-      -# trying to show previous steps and submitted data as readonly
-      - if eval_steps_array.include?(o.survey_question.group)
-      
-        = render ("hanuman/surveys/show/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/show/rescue/notsupported", o: o
+  - if yield(:survey_form_state).strip == "Edit"
+  
+    -# loop through survey questions and display
+    - @survey.observations.each_with_index do |o, index|
+      = f.fields_for :observations, o do |ff|
+        = ff.hidden_field :survey_question_id
 
-      - else
+        = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
+  
+  - else
+  
+    -# loop through survey questions and display
+    - @survey.observations.each_with_index do |o, index|
+      = f.fields_for :observations, o do |ff|
+        = ff.hidden_field :survey_question_id
+        -# trying to show previous steps and submitted data as readonly
+        -# if eval_steps_array.include?(o.survey_question.group)
       
+          =# render ("hanuman/surveys/show/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/show/rescue/notsupported", o: o
+
+        -# else
+      
+          -# if repeating observation is new, then show form
+          -# if o.id.blank?
+  
+            =# render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
+  
+          -# else
+
+            =# render ("hanuman/surveys/show/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/show/rescue/notsupported", o: o
+  
+          =# debug o
+
         -# if repeating observation is new, then show form
         - if o.id.blank?
-  
+
           = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
   
-        - else
-
-          = render ("hanuman/surveys/show/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/show/rescue/notsupported", o: o
-  
-        =# debug o
   .form-group
     .col-sm-offset-5.col-sm-7
       - if yield(:current_step).strip == "step_2"
