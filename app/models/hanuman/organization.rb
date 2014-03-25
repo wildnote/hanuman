@@ -1,5 +1,5 @@
 module Hanuman
   class Organization < ActiveRecord::Base
-    has_many :organizations
+    has_many :projects
   end
 end
