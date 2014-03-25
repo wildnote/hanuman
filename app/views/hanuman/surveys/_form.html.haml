@@ -1,7 +1,7 @@
 - if @survey.errors.any?
   - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
 
-= form_for @survey, builder: CustomFieldsFormBuilder, html: {class: "form-horizontal"} do |f|
+= form_for @survey, builder: CustomFieldsFormBuilder, url: survey_form_url(yield(:current_step).strip), method: survey_form_method(yield(:current_step).strip), html: {class: "form-horizontal"} do |f|
 
   .page-header
     %h5
@@ -11,18 +11,41 @@
       Mode:
       %i= yield :survey_form_state
     %h1= f.object.survey_template.name
-    
+
   = f.hidden_field :project_id
   = f.hidden_field :survey_template_id
-
+  
+  - eval_steps_array = build_eval_steps_array yield(:current_step)
+  
   -# loop through survey questions and display
-  - @survey.observations.each_with_index do |observation, index|
-    = f.fields_for :observations, observation do |ff|
+  - @survey.observations.each_with_index do |o, index|
+    = f.fields_for :observations, o do |ff|
       = ff.hidden_field :survey_question_id
+      -# trying to show previous steps and submitted data as readonly
+      - if eval_steps_array.include?(o.survey_question.group)
       
-      = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
+        = render ("hanuman/surveys/show/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/show/rescue/notsupported", o: o
+
+      - else
       
+        -# if repeating observation is new, then show form
+        - if o.id.blank?
+  
+          = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
+  
+        - else
+
+          = render ("hanuman/surveys/show/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/show/rescue/notsupported", o: o
+  
+        =# debug o
   .form-group
     .col-sm-offset-5.col-sm-7
-      = f.submit "Next", class: "btn btn-primary"
-      = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
+      - if yield(:current_step).strip == "step_2"
+        = f.submit "Save + Add Another", class: "btn btn-primary", data: {repeat: true}
+        = f.submit "Next", class: "btn btn-primary"
+        = link_to "Skip", next_wizard_path, class: "btn btn-default"
+        =# link_to "Previous", previous_wizard_path, class: "btn btn-default"
+        = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
+      - else
+        = f.submit (yield(:current_step).strip == "step_1" ? "Next" : "Save"), class: "btn btn-primary"
+        = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"

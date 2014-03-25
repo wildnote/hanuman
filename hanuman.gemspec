@@ -16,8 +16,8 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency 'rails', '4.0.0'
-  s.add_dependency 'arel', '4.0.0'
+  s.add_dependency 'rails', '4.0.2'
+  s.add_dependency 'arel', '4.0.2'
   s.add_dependency 'ancestry'
   s.add_dependency 'wicked'
   s.add_dependency 'haml-rails'
