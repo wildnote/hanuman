@@ -14,6 +14,10 @@
  *= require_tree .
  */
 
+body {
+  line-height: 1.42857143 !important;
+}
+
 .page-header input.btn {
   float: right;
 }

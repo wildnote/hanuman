@@ -3,51 +3,40 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $ ->
-  # typeahead
-  # instantiate the bloodhound suggestion engine
-  colors = new Bloodhound(
+  # typeahead - build answers array from answers list string
+  answers_list_string = $(".typeahead").attr "data-answer-choices"
+  answers_array = answers_list_string.split("||")
+  
+  # typeahead - instantiate the bloodhound suggestion engine
+  answers = new Bloodhound(
     datumTokenizer: (d) ->
-      Bloodhound.tokenizers.whitespace d.color
+      Bloodhound.tokenizers.whitespace d.answer
 
     queryTokenizer: Bloodhound.tokenizers.whitespace
-    local: [
-      {
-        color: "white"
-      }
-      {
-        color: "red"
-      }
-      {
-        color: "blue"
-      }
-      {
-        color: "green"
-      }
-      {
-        color: "yellow"
-      }
-      {
-        color: "brown"
-      }
-      {
-        color: "black"
-      }
-    ]
+    local: $.map(answers_array, (answer) ->
+      answer: answer
+    )
   )
 
-  # initialize the bloodhound suggestion engine
-  colors.initialize()
+  # typeahead - initialize the bloodhound suggestion engine
+  answers.initialize()
 
-  # instantiate the typeahead UI
-  $(".typeahead").typeahead null,
-    displayKey: "color"
-    source: colors.ttAdapter()
+  # typeahead - instantiate the typeahead ui
+  $(".typeahead").typeahead
+    hint: true
+    highlight: true
+    minLength: 1
+  ,
+    name: "answers"
+    displayKey: "answer"
+    source: answers.ttAdapter()
 
   # chosen
   $(".chosen-select").chosen
     no_results_text: "No results matched"
     size: "100%"
 
+  # chosen multiselect
   $(".chosen-multiselect").chosen
     allow_single_deselect: true
     no_results_text: "No results matched"
