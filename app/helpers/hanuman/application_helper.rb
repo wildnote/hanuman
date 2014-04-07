@@ -8,18 +8,6 @@ module Hanuman
       end
     end
     
-    def build_eval_steps_array step
-      array = []
-      case step
-      when 'step_2'
-        array << 'step_1'
-      when 'step_3'
-        array << 'step_1'
-        array << 'step 2'
-      end
-      array
-    end
-    
     def survey_form_url step
       case step
       when 'step_2', 'step_3'
@@ -29,15 +17,31 @@ module Hanuman
       end
     end
     
-    def survey_form_method step
+    def survey_form_method step, mode
       case step
       when 'step_2', 'step_3'
         :put
-      when 'step_1',
-        :post
+      when 'step_1'
+        if mode.include? 'Edit'
+          :patch
+        else
+          :post
+        end
       else
         :patch
       end
+    end
+    
+    def survey_excluded_steps_render step
+      array = []
+      case step
+      when 'step_1'
+        array << 'step_2'
+        array << 'step_3'
+      when 'step_2'
+        array << 'step_3'
+      end
+      array
     end
   end
 end

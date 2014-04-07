@@ -1,7 +1,7 @@
 require_dependency "hanuman/application_controller"
 
 module Hanuman
-  class SurveyStepsController < ApplicationController
+  class SurveyEditStepsController < ApplicationController
     include Wicked::Wizard
     steps :step_2, :step_3
 
@@ -13,10 +13,6 @@ module Hanuman
       case step
       when :step_2
         survey_template.survey_questions.by_step('step_2').each do |sq|
-          @survey.observations.build(survey_question_id: sq.id)
-        end
-      when :step_3
-        survey_template.survey_questions.by_step('step_3').each do |sq|
           @survey.observations.build(survey_question_id: sq.id)
         end
       end

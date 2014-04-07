@@ -2,7 +2,7 @@ require_dependency "hanuman/application_controller"
 
 module Hanuman
   class SurveysController < ApplicationController
-    before_action :set_survey, only: [:show, :edit, :update, :destroy]
+    before_action :set_survey, only: [:show, :edit, :update, :destroy, :duplicate]
 
     # GET /surveys
     def index
@@ -40,7 +40,6 @@ module Hanuman
         #redirect_to @survey, notice: 'Survey was successfully created.'
         session[:survey_id] = @survey.id
         session[:survey_template_id] = @survey.survey_template_id
-        #redirect_to survey_steps_path, survey_template_id: @survey.survey_template_id
         redirect_to survey_steps_path
       else
         render action: 'new'
@@ -50,9 +49,10 @@ module Hanuman
     # PATCH/PUT /surveys/1
     def update
       if @survey.update(survey_params)
-        redirect_to @survey, notice: 'Survey was successfully updated.'
-        #redirect_to survey_steps_path, survey_template_id: @survey.survey_template_id
-        #redirect_to controller: 'survey_steps', survey_template_id: @survey.survey_template.to_param
+        #redirect_to @survey, notice: 'Survey was successfully updated.'
+        session[:survey_id] = @survey.id
+        session[:survey_template_id] = @survey.survey_template_id
+        redirect_to survey_edit_steps_path
       else
         render action: 'edit'
       end
@@ -62,6 +62,13 @@ module Hanuman
     def destroy
       @survey.destroy
       redirect_to surveys_url, notice: 'Survey was successfully destroyed.'
+    end
+
+    # PATCH/PUT /users/1
+    def duplicate
+      survey_copy = @survey.amoeba_dup
+      survey_copy.save!
+      redirect_to survey_copy, notice: 'Survey was successfully duplicated.'
     end
 
     private

@@ -5,5 +5,9 @@ module Hanuman
     has_many :observations, dependent: :destroy
     accepts_nested_attributes_for :observations, :allow_destroy => true#, reject_if: lambda {|attributes| attributes['answer'].blank?}
     validates :survey_template_id, :project_id, presence: true
+
+    amoeba do
+      enable
+    end
   end
 end

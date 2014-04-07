@@ -1,7 +1,10 @@
 - if @survey.errors.any?
   - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
+  
+- current_step = yield(:current_step).strip
+- survey_form_state = yield(:survey_form_state).strip
 
-= form_for @survey, builder: CustomFieldsFormBuilder, url: survey_form_url(yield(:current_step).strip), method: survey_form_method(yield(:current_step).strip), html: {class: "form-horizontal"} do |f|
+= form_for @survey, builder: CustomFieldsFormBuilder, url: survey_form_url(current_step), method: survey_form_method(current_step, survey_form_state), html: {class: "form-horizontal"} do |f|
 
   .page-header
     %h5
@@ -9,22 +12,48 @@
       %i= f.object.project.name
       |
       Mode:
-      %i= yield :survey_form_state
+      %i= survey_form_state
     %h1= f.object.survey_template.name
 
   = f.hidden_field :project_id
   = f.hidden_field :survey_template_id
   
-  - eval_steps_array = build_eval_steps_array yield(:current_step)
+  - if survey_form_state.include? "Edit"
   
-  - if yield(:survey_form_state).strip == "Edit"
+    .well
+      .form-group
+        = label_tag nil, "Survey ID", class: "col-sm-5 control-label"
+        .col-sm-7
+          %p.form-control-static= @survey.id
+      .form-group
+        = label_tag nil, "Created At", class: "col-sm-5 control-label"
+        .col-sm-7
+          %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
+      .form-group
+        = label_tag nil, "Updated At", class: "col-sm-5 control-label"
+        .col-sm-7
+          %p.form-control-static= @survey.updated_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
+  
+    - excluded_steps = survey_excluded_steps_render current_step
   
     -# loop through survey questions and display
     - @survey.observations.each_with_index do |o, index|
       = f.fields_for :observations, o do |ff|
         = ff.hidden_field :survey_question_id
+        
+        -# render observation form field if current step matches on group
+        - if current_step == o.survey_question.group
+        
+          = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
 
-        = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
+        - else
+          
+          -# otherwise render observation as readonly as long as it is not in an excluded step
+          - unless excluded_steps.include? o.survey_question.group
+        
+            = render ("hanuman/surveys/_form/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/_form/readonly/rescue/notsupported", o: o
+  
+        =# debug o
   
   - else
   
@@ -32,37 +61,28 @@
     - @survey.observations.each_with_index do |o, index|
       = f.fields_for :observations, o do |ff|
         = ff.hidden_field :survey_question_id
-        -# trying to show previous steps and submitted data as readonly
-        - if eval_steps_array.include?(o.survey_question.group)
       
-          = render ("hanuman/surveys/_form/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/_form/readonly/rescue/notsupported", o: o
+        -# render observation form field if observation is new
+        - if o.id.blank?
+        
+          = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
 
         - else
-      
-          -# if repeating observation is new, then show form
-          - if o.id.blank?
-  
-            = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
-  
-          - else
+        
+          -# otherwise render observation as readonly
+          = render ("hanuman/surveys/_form/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/_form/readonly/rescue/notsupported", o: o
 
-            = render ("hanuman/surveys/_form/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/_form/readonly/rescue/notsupported", o: o
-  
-          =# debug o
-
-        -# if repeating observation is new, then show form
-        -# if o.id.blank?
-
-          =# render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
+        =# debug o
   
   .form-group
     .col-sm-offset-5.col-sm-7
-      - if yield(:current_step).strip == "step_2"
+      - if current_step == "step_2"
         = f.submit "Save + Add Another", class: "btn btn-primary", data: {repeat: true}
         = f.submit "Next", class: "btn btn-primary"
         = link_to "Skip", next_wizard_path, class: "btn btn-default"
-        = link_to "Previous", previous_wizard_path, class: "btn btn-default"
-        = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
+        =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
       - else
-        = f.submit (yield(:current_step).strip == "step_1" ? "Next" : "Save"), class: "btn btn-primary"
-        = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
+        = f.submit (current_step == "step_1" ? "Next" : "Save"), class: "btn btn-primary"
+        -# if current_step == "step_3"
+          =# link_to "Previous", previous_wizard_path, class: "btn btn-default"
+        =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"

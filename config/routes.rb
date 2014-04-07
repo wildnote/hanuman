@@ -1,8 +1,14 @@
 Hanuman::Engine.routes.draw do
   
-  resources :surveys
+  resources :surveys do
+    member do
+      patch :duplicate
+    end
+  end
 
   resources :survey_questions
+  
+  resources :observations
 
   resources :answer_choices
 
@@ -17,6 +23,8 @@ Hanuman::Engine.routes.draw do
   resources :organizations
 
   resources :survey_steps
+  
+  resources :survey_edit_steps
   
   get 'about' => 'about#index'
   

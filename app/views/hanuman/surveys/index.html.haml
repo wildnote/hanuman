@@ -16,17 +16,51 @@
   %table.table.table-striped.table-hover
     %thead
       %tr
-        %th Survey ID
-        %th Survey Template
-        %th Project
+        %th
+          Project /
+          %br/
+          Survey Template
+        %th
+          ID
+        %th{colspan: "3"} Identifying Information
+        %th Created
+        %th Updated
         %th
 
     %tbody
       - @surveys.each do |survey|
         %tr
-          %td= link_to survey.id, survey
-          %td= link_to survey.survey_template.name, survey
-          %td= link_to survey.project.name, survey
           %td
-            = link_to survey, data: {confirm: "Are you sure you want to delete this Survey?"}, method: :delete do
+            = link_to survey, class: "small" do
+              = survey.project.name + " / "
+              %br/
+              = survey.survey_template.name
+          %td= link_to survey.id, survey, class: "small"
+          %td
+            = link_to survey, class: "small" do
+              %b= survey.observations[0].survey_question.question.question_text + ":"
+              %br/
+              %i= survey.observations[0].answer
+          %td
+            = link_to survey, class: "small" do
+              %b= survey.observations[2].survey_question.question.question_text + ":"
+              %br/
+              %i= survey.observations[2].answer
+          %td
+            = link_to survey, class: "small" do
+              %b= survey.observations.includes(:survey_question).where("hanuman_survey_questions.group = 'step_2'")[0].survey_question.question.question_text + ":"
+              %br/
+              %i= survey.observations.includes(:survey_question).where("hanuman_survey_questions.group = 'step_2'")[0].answer.gsub("( ", "(").gsub(" )", ")")
+          %td
+            = link_to survey, class: "small" do
+              = survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%m/%d/%Y")
+              %br/
+              = survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%I:%M %p")
+          %td
+            = link_to survey, class: "small" do
+              = survey.updated_at.in_time_zone("Pacific Time (US & Canada)").strftime("%m/%d/%Y")
+              %br/
+              = survey.updated_at.in_time_zone("Pacific Time (US & Canada)").strftime("%I:%M %p")
+          %td
+            = link_to survey, data: {confirm: "Are you sure you want to delete this Survey?"}, method: :delete, class: "btn btn-xs btn-danger" do
               %span.glyphicon.glyphicon-trash

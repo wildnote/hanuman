@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'arel', '4.0.2'
   s.add_dependency 'ancestry'
   s.add_dependency 'wicked'
+  s.add_dependency 'amoeba'
   s.add_dependency 'haml-rails'
   s.add_dependency 'sass-rails'
   s.add_dependency 'coffee-rails'
