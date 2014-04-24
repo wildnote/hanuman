@@ -9,3 +9,4 @@
         = check_box_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
                            a.id, cbl_answers.include?(a.id), {class: 'form-control'}
         = a.option_text
+    = ff.hidden_field :group

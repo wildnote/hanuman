@@ -5,7 +5,7 @@ module Hanuman
     has_many :observation_answers
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
     has_many :answer_choices, through: :observation_answers
-    default_scope {includes(:survey_question).order('hanuman_survey_questions.group ASC, hanuman_observations.created_at ASC, hanuman_survey_questions.sort_order ASC').references(:survey_question)}
+    default_scope {includes(:survey_question).order('hanuman_survey_questions."group" ASC, hanuman_observations."group" ASC, hanuman_survey_questions."sort_order" ASC').references(:survey_question)}
     
     before_save :strip_and_squish_answer
 

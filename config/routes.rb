@@ -1,5 +1,7 @@
 Hanuman::Engine.routes.draw do
   
+  get 'surveys/:id/edit/:group' => 'surveys#edit', as: :edit_survey
+  
   resources :surveys do
     member do
       patch :duplicate
@@ -23,8 +25,6 @@ Hanuman::Engine.routes.draw do
   resources :organizations
 
   resources :survey_steps
-  
-  resources :survey_edit_steps
   
   get 'about' => 'about#index'
   

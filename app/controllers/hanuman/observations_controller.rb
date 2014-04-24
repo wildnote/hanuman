@@ -6,9 +6,9 @@ module Hanuman
 
     # DELETE /observations/1
     def destroy
-      survey_id = @observation.survey.id
-      @observation.destroy
-      redirect_to survey_path(survey_id), notice: 'Observation was successfully destroyed.'
+      s = Hanuman::Survey.find(@observation.survey.id)
+      s.observations.where('hanuman_observations."group" = ?', @observation.group).each{|o| o.destroy}
+      redirect_to survey_path(s), notice: 'Entry was successfully destroyed.'
     end
 
     private

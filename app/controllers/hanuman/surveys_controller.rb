@@ -23,13 +23,17 @@ module Hanuman
       @survey = Survey.new(project_id: project_id, survey_template_id: survey_template_id)
       survey_template.survey_questions.by_step('step_1').each do |sq|
         @survey.observations.build(
-          survey_question_id: sq.id
+          survey_question_id: sq.id,
+          group: 0
         )
       end
     end
 
     # GET /surveys/1/edit
     def edit
+      if @survey.observations.where('hanuman_observations."group" = ?', params[:group]).count < 1
+        redirect_to survey_path(@survey)
+      end
     end
 
     # POST /surveys
@@ -52,7 +56,7 @@ module Hanuman
         #redirect_to @survey, notice: 'Survey was successfully updated.'
         session[:survey_id] = @survey.id
         session[:survey_template_id] = @survey.survey_template_id
-        redirect_to survey_edit_steps_path
+        redirect_to survey_path(@survey)
       else
         render action: 'edit'
       end
@@ -74,7 +78,7 @@ module Hanuman
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_survey
-        @survey = Survey.find(params[:id])
+        @survey = Survey.includes(:observations => [:survey_question => [:question => [:answer_type]]]).find(params[:id])
       end
 
       # Only allow a trusted parameter "white list" through.
@@ -86,6 +90,7 @@ module Hanuman
             :id,
             :survey_question_id,
             :answer,
+            :group,
             answer_choice_ids: []
           ]
         )

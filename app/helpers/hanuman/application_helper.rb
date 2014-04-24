@@ -31,17 +31,5 @@ module Hanuman
         :patch
       end
     end
-    
-    def survey_excluded_steps_render step
-      array = []
-      case step
-      when 'step_1'
-        array << 'step_2'
-        array << 'step_3'
-      when 'step_2'
-        array << 'step_3'
-      end
-      array
-    end
   end
 end

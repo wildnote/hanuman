@@ -22,7 +22,6 @@
           Survey Template
         %th
           ID
-        %th{colspan: "3"} Identifying Information
         %th Created
         %th Updated
         %th
@@ -36,30 +35,6 @@
               %br/
               = survey.survey_template.name
           %td= link_to survey.id, survey, class: "small"
-          %td
-            = link_to survey, class: "small" do
-              - if survey.observations[0].blank?
-                %b (no observations found)
-              - else
-                %b= survey.observations[0].survey_question.question.question_text + ":"
-                %br/
-                %i= survey.observations[0].answer
-          %td
-            = link_to survey, class: "small" do
-              - if survey.observations[2].blank?
-                %b (no observations found)
-              - else
-                %b= survey.observations[2].survey_question.question.question_text + ":"
-                %br/
-                %i= survey.observations[2].answer
-          %td
-            = link_to survey, class: "small" do
-              - if survey.observations.includes(:survey_question).where("hanuman_survey_questions.group = 'step_2'")[0].blank?
-                %b (no observations found)
-              - else
-                %b= survey.observations.includes(:survey_question).where("hanuman_survey_questions.group = 'step_2'")[0].survey_question.question.question_text + ":"
-                %br/
-                %i= survey.observations.includes(:survey_question).where("hanuman_survey_questions.group = 'step_2'")[0].answer.gsub("( ", "(").gsub(" )", ")")
           %td
             = link_to survey, class: "small" do
               = survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%m/%d/%Y")

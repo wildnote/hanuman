@@ -1,6 +1,0 @@
-- if o.survey_question.group == "step_2"
-  %td{width: "1%"}
-    = link_to o, data: {confirm: "Are you sure you want to delete this " + o.survey_question.question.question_text + "?"}, method: :delete, class: "btn btn-xs btn-danger" do
-      %span.glyphicon.glyphicon-trash
-- else
-  %td{width: "1%"}
