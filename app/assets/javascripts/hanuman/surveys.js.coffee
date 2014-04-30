@@ -16,6 +16,7 @@ $ ->
     local: $.map(answers_array, (answer) ->
       answer: answer
     )
+    limit: 10
   )
 
   # typeahead - initialize the bloodhound suggestion engine
@@ -41,3 +42,34 @@ $ ->
     allow_single_deselect: true
     no_results_text: "No results matched"
     size: "100%"
+
+  # ajax update from step_2
+  $('.ajax-submit').click (e) ->
+    e.preventDefault()
+    $form = $('form')
+    survey_id = $('#survey_id').val()
+
+    $.ajax(
+      type:     "PUT"
+      url:      "/hanuman/surveys/" + survey_id,
+      data:     $form.serialize(),
+      dataType: "json",
+      success: (response) ->
+        # add observation to end of observation section
+
+        # clear out observation field
+
+        #newRow = Mustache.to_html($("#member-row-template").html(), data)
+        #$('#members tr[data-user-id="' +data.user_id + '"]').replaceWith(newRow)
+
+    ).fail (jqXHR, textStatus, errorThrown) ->
+        #$this.trigger("kitfox.returnFromAjaxCall")
+        #$form.find(".alert").last().text(window.ProjectAdmin.parseErrors(jqXHR.responseText)).show()
+        #$('#loading-container').hide('slow')
+        #$('#loading-opposite').show('slow')
+    #.done (data) ->
+        #$('#loading-container').hide('slow')
+        #$('#loading-opposite').show('slow')
+        #$this.trigger("kitfox.returnFromAjaxCall")
+        #$form.find(".alert").first().hide('slow').addClass("alert-success").removeClass("alert-error").text("User details were successfully updated.").show('slow')
+        #window.ProjectAdmin.closeModal($form)

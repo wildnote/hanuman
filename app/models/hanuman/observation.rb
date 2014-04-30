@@ -30,5 +30,9 @@ module Hanuman
       a = answer.split(' ( ')[1]
       a.blank? ? '' : a.gsub(' )', '')
     end
+
+    def self.filtered_by_group(observations_group)
+      where('hanuman_observations."group" = ?', observations_group)
+    end
   end
 end

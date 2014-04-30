@@ -31,7 +31,7 @@ module Hanuman
 
     # GET /surveys/1/edit
     def edit
-      if @survey.observations.where('hanuman_observations."group" = ?', params[:group]).count < 1
+      if @survey.observations.filtered_by_group(params[:group]).count < 1
         redirect_to survey_path(@survey)
       end
     end
@@ -52,13 +52,20 @@ module Hanuman
 
     # PATCH/PUT /surveys/1
     def update
-      if @survey.update(survey_params)
-        #redirect_to @survey, notice: 'Survey was successfully updated.'
-        session[:survey_id] = @survey.id
-        session[:survey_template_id] = @survey.survey_template_id
-        redirect_to survey_path(@survey)
-      else
-        render action: 'edit'
+      session[:survey_id] = @survey.id
+      session[:survey_template_id] = @survey.survey_template_id
+      group = params[:survey][:observations_attributes]['0'][:group]
+
+      respond_to do |format|
+        if @survey.update(survey_params)
+          format.html { redirect_to @survey, notice: 'Survey was successfully updated.' }
+          format.json {
+            render json: @survey.observations.filtered_by_group(group)
+          }
+        else
+          format.html { render action: 'edit' }
+          format.json { render json: @survey.errors, status: :unprocessable_entity }
+        end
       end
     end
 

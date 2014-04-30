@@ -17,7 +17,9 @@
 
   = f.hidden_field :project_id
   = f.hidden_field :survey_template_id
-  
+  = f.hidden_field :id unless @survey.new_record?
+
+  -# survey edit
   - if survey_form_state.include? "Edit"
   
     .well
@@ -38,29 +40,27 @@
     - observations_group ||= 0
   
     -# loop through survey questions and display
-    - @survey.observations.where('hanuman_observations."group" = ?', observations_group).each_with_index do |o, index|
+    - @survey.observations.filtered_by_group(observations_group).each_with_index do |o, index|
       = f.fields_for :observations, o do |ff|
         = ff.hidden_field :survey_question_id
-        
         = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
   
   - else
+    -# survey new and survey steps
   
     -# loop through survey questions and display
     - @survey.observations.each_with_index do |o, index|
-      = f.fields_for :observations, o do |ff|
-        = ff.hidden_field :survey_question_id
+
       
-        -# render observation form field if observation is new
-        - if o.id.blank?
-        
+      -# render observation form field if observation is new
+      - if o.id.blank?
+        = f.fields_for :observations, o do |ff|
+          = ff.hidden_field :survey_question_id
           = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
 
-        - else
-        
-          -# otherwise render observation as readonly
-          = render ("hanuman/surveys/_form/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/_form/readonly/rescue/notsupported", o: o
-
+      - else
+        -# otherwise render observation as readonly
+        = render ("hanuman/surveys/_form/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/_form/readonly/rescue/notsupported", o: o
         =# debug o
   
   .form-group
@@ -71,6 +71,7 @@
       - else
         - if current_step == "step_2"
           = f.submit "Save + Add Another", class: "btn btn-primary", data: {repeat: true}
+          = link_to "Save + Add Another AJAX", "#", class: "btn btn-primary ajax-submit"
           = f.submit "Next", class: "btn btn-primary"
           = link_to "Skip", next_wizard_path, class: "btn btn-default"
           =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
