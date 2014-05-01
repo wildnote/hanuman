@@ -12,6 +12,7 @@ module Hanuman
     require 'uglifier'
     require 'modernizr-rails'
     require 'jquery-rails'
+    require 'handlebars_assets'
 
     config.generators.templates.unshift File.expand_path("lib/templates", root)
   end

@@ -27,6 +27,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'uglifier'
   s.add_dependency 'modernizr-rails'
   s.add_dependency 'jquery-rails'
+  s.add_dependency 'handlebars_assets'
 
   s.add_development_dependency 'pg'
 end

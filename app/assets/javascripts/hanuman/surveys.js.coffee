@@ -56,20 +56,20 @@ $ ->
       dataType: "json",
       success: (response) ->
         # add observation to end of observation section
+        newRow = HandlebarsTemplates['hanuman/templates/survey/observation'](response[0])
+        $lastRow = $('.form-group')[$('.form-group').size() - 3]
+        $(newRow).insertAfter( $lastRow )
 
         # clear out observation field
+        $('#survey_observations_attributes_0_answer').val("")
 
-        #newRow = Mustache.to_html($("#member-row-template").html(), data)
-        #$('#members tr[data-user-id="' +data.user_id + '"]').replaceWith(newRow)
+        # increment group value
+        $group = $('#survey_observations_attributes_0_group')
+        groupVal = parseInt $group.val()
+        $group.val(groupVal + 1)
 
     ).fail (jqXHR, textStatus, errorThrown) ->
         #$this.trigger("kitfox.returnFromAjaxCall")
         #$form.find(".alert").last().text(window.ProjectAdmin.parseErrors(jqXHR.responseText)).show()
         #$('#loading-container').hide('slow')
         #$('#loading-opposite').show('slow')
-    #.done (data) ->
-        #$('#loading-container').hide('slow')
-        #$('#loading-opposite').show('slow')
-        #$this.trigger("kitfox.returnFromAjaxCall")
-        #$form.find(".alert").first().hide('slow').addClass("alert-success").removeClass("alert-error").text("User details were successfully updated.").show('slow')
-        #window.ProjectAdmin.closeModal($form)
