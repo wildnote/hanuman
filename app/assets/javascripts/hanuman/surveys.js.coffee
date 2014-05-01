@@ -48,6 +48,7 @@ $ ->
     e.preventDefault()
     $form = $('form')
     survey_id = $('#survey_id').val()
+    $lastRow = $('.form-group')[$('.form-group').size() - 3]
 
     $.ajax(
       type:     "PUT"
@@ -57,7 +58,6 @@ $ ->
       success: (response) ->
         # add observation to end of observation section
         newRow = HandlebarsTemplates['hanuman/templates/survey/observation'](response[0])
-        $lastRow = $('.form-group')[$('.form-group').size() - 3]
         $(newRow).insertAfter( $lastRow )
 
         # clear out observation field
@@ -69,7 +69,5 @@ $ ->
         $group.val(groupVal + 1)
 
     ).fail (jqXHR, textStatus, errorThrown) ->
-        #$this.trigger("kitfox.returnFromAjaxCall")
-        #$form.find(".alert").last().text(window.ProjectAdmin.parseErrors(jqXHR.responseText)).show()
-        #$('#loading-container').hide('slow')
-        #$('#loading-opposite').show('slow')
+      errorRow = HandlebarsTemplates['hanuman/templates/survey/error'](errorThrown)
+      $(errorRow).insertAfter( $lastRow )
