@@ -14,5 +14,11 @@ module Hanuman
     require 'jquery-rails'
 
     config.generators.templates.unshift File.expand_path("lib/templates", root)
+
+    config.to_prepare do
+      Dir.glob(Rails.root + "app/decorators/**/*_decorator*.rb").each do |c|
+        require_dependency(c)
+      end
+    end
   end
 end
