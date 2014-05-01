@@ -1,0 +1,4 @@
+.form-group
+  %label.col-sm-5.control-label Observation
+  .col-sm-7
+    = hb 'answer'
