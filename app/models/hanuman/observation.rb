@@ -34,5 +34,9 @@ module Hanuman
     def self.filtered_by_group(observations_group)
       where('hanuman_observations."group" = ?', observations_group)
     end
+
+    def question_text
+      self.survey_question.question.question_text
+    end
   end
 end

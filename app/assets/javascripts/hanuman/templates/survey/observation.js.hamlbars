@@ -1,4 +1,5 @@
 .form-group.bg-success
-  %label.col-sm-5.control-label Observation
+  %label.col-sm-5.control-label
+    = hb 'question_text'
   .col-sm-7
     = hb 'answer'

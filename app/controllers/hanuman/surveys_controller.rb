@@ -60,7 +60,7 @@ module Hanuman
         if @survey.update(survey_params)
           format.html { redirect_to @survey, notice: 'Survey was successfully updated.' }
           format.json {
-            render json: @survey.observations.filtered_by_group(group)
+            render json: @survey.observations.filtered_by_group(group), :methods => [:question_text]
           }
         else
           format.html { render action: 'edit' }
