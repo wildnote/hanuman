@@ -49,7 +49,6 @@ $ ->
     $form = $('form')
     survey_id = $('#survey_id').val()
     $lastRow = $('.form-group')[$('.form-group').size() - 3]
-
     $.ajax(
       type:     "PUT"
       url:      "/hanuman/surveys/" + survey_id,
@@ -71,3 +70,4 @@ $ ->
     ).fail (jqXHR, textStatus, errorThrown) ->
       errorRow = HandlebarsTemplates['hanuman/templates/survey/error'](errorThrown)
       $(errorRow).insertAfter( $lastRow )
+      # todo add honeybadger notification

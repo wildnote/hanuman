@@ -38,5 +38,6 @@ module Hanuman
     def question_text
       self.survey_question.question.question_text
     end
+
   end
 end
