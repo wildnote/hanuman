@@ -19,7 +19,7 @@ module Hanuman
     end
 
     def formatted_answer_choice
-      answer_choice = scientific_text.blank? ? option_text : option_text + ' [' + scientific_text + ']'
+      answer_choice = scientific_text.blank? ? option_text : scientific_text +  ' / ' + option_text
       #this is a very nice convenience but it's causing massive n+1 queries on biosurvey
       #answer_choice += self.parent.blank? ? '' : ' ( ' + self.parent.option_text + ' )'
     end
