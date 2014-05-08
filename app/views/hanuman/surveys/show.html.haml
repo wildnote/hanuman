@@ -54,6 +54,9 @@
               %td{width: "1%"}
                 = link_to o, data: {confirm: "Are you sure you want to delete this entry?"}, method: :delete, class: "btn btn-xs btn-danger" do
                   %span.glyphicon.glyphicon-trash
+              %td{width: "1%"}
+                = link_to survey_step_path("step_2"), class: "btn btn-xs btn-primary" do
+                  %span.glyphicon.glyphicon-plus
           - else
             %tr
               %td
