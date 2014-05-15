@@ -46,11 +46,11 @@
         = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
   
   - else
+  
     -# survey new and survey steps
   
     -# loop through survey questions and display
     - @survey.observations.each_with_index do |o, index|
-
       
       -# render observation form field if observation is new
       - if o.id.blank?
