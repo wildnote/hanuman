@@ -43,25 +43,32 @@
     - @survey.observations.filtered_by_group(observations_group).each_with_index do |o, index|
       = f.fields_for :observations, o do |ff|
         = ff.hidden_field :survey_question_id
-        = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
+        = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
   
   - else
-  
-    -# survey new and survey steps
-  
-    -# loop through survey questions and display
+
+    - observation_groups = @survey.observation_groups
+    - first_observation_group = observation_groups.min
+    - last_observation_group = observation_groups.max
+    - observation_groups.each do |og|
+      -# check to see if the current observation group is the last observation group
+      - if og != last_observation_group
+        -# if the current observation group isn't the last observation group render observations as readonly
+        - observations = @survey.observations.filtered_by_group(og)
+        - if observations.count > 1
+          -# do panel
+          = render ("hanuman/surveys/fields/readonly/shared/panel"), s: @survey, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false) 
+        - else
+          -# do single
+          - @survey.observations.filtered_by_group(og).each do |o|
+            = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+      - else        
     - @survey.observations.each_with_index do |o, index|
-      
-      -# render observation form field if observation is new
+      -# if the current observation group is the last observation group render observations as form fields
       - if o.id.blank?
         = f.fields_for :observations, o do |ff|
           = ff.hidden_field :survey_question_id
-          = render ("hanuman/surveys/_form/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/_form/rescue/notsupported", ff: ff, index: index
-
-      - else
-        -# otherwise render observation as readonly
-        = render ("hanuman/surveys/_form/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/_form/readonly/rescue/notsupported", o: o
-        =# debug o
+          = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
   
   .form-group
     .col-sm-offset-5.col-sm-7

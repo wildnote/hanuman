@@ -1,0 +1,15 @@
+.panel.panel-default
+  .panel-heading
+    %h4.panel-title
+      %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{og}"}
+        - if ogf
+          First Section
+        - elsif ogl
+          Last Section
+        - else
+          Entry No.
+          = og
+  .panel-collapse.collapse.in{:id => "collapse_#{og}"}
+    .panel-body
+      - s.observations.filtered_by_group(og).each do |o|
+        = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o

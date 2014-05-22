@@ -1,0 +1,5 @@
+.form-group
+  = render "hanuman/surveys/fields/shared/label", ff: ff
+  .col-sm-7
+    = ff.number_field :answer, class: "form-control"
+    = ff.hidden_field :group

@@ -1,0 +1,5 @@
+.form-group
+  = render "hanuman/surveys/fields/shared/label", ff: ff
+  .col-sm-7
+    = ff.text_field :answer, class: "typeahead form-control", :"data-answer-choices" => Hanuman::Question.find(ff.object.survey_question.question.id).typeahead_answer_choices_list_string
+    = ff.hidden_field :group

@@ -1,0 +1,9 @@
+.form-group
+  = render "hanuman/surveys/fields/shared/label", ff: ff
+  .col-sm-7    
+    - if ff.object.survey_question.question.answer_choices.blank?
+      = ff.text_field :answer, value: "There are no available Answer Options!", class: "form-control", readonly: true
+    - else
+      = ff.collection_select :answer, ff.object.survey_question.question.answer_choices, :option_text_plus_scientific_text, :option_text_plus_scientific_text,
+                             {prompt: true}, {class: 'chosen-select form-control'}
+    = ff.hidden_field :group

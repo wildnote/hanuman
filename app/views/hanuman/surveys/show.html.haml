@@ -15,56 +15,43 @@
     %i Review
   %h1= @survey.survey_template.name
 
-- current_group = 0
+.form-horizontal
 
-.table-responsive
-  %table.table.table-striped.table-hover
-    %thead
-      %tr
-        %th{colspan: "3", style: "background-color: black; padding: 1px;"}
-      %tr
-        %th Survey ID
-        %th= @survey.id
-      %tr
-        %th Survey Created
-        %th= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A, %B %e, %Y %l:%M %p")
-      %tr
-        %th Survey Updated
-        %th= @survey.updated_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A, %B %e, %Y %l:%M %p")
-    %tbody
-      %tr
-        %td{colspan: "3", style: "background-color: black; padding: 1px;;"}
-      %tr
-        %td
-        %td{style: "text-align: right;"}
-          = link_to edit_survey_path(@survey.id, 0), class: "btn btn-xs btn-primary" do
+  .well
+    .form-group
+      = label_tag nil, "Survey ID", class: "col-sm-5 control-label"
+      .col-sm-7
+        %p.form-control-static= @survey.id
+    .form-group
+      = label_tag nil, "Created At", class: "col-sm-5 control-label"
+      .col-sm-7
+        %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
+    .form-group
+      = label_tag nil, "Updated At", class: "col-sm-5 control-label"
+      .col-sm-7
+        %p.form-control-static= @survey.updated_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")        
+
+  - observation_groups = @survey.observation_groups
+  - first_observation_group = observation_groups.min
+  - last_observation_group = observation_groups.max
+  - observation_groups.each do |og|
+    .well
+      - observations = @survey.observations.filtered_by_group(og)
+      .form-group
+        .col-sm-12.text-right
+          = link_to edit_survey_path(@survey.id, og), class: "btn btn-xs btn-primary" do
             %span.glyphicon.glyphicon-pencil
             Edit
-      - @survey.observations.each do |o|
-        - if current_group != o.group
-          %tr
-            %td{colspan: "3", style: "background-color: black; padding: 1px;"}
-          - if o.survey_question.group == ("step_2" || "step_2_ajax")
-            %tr
-              %td
-              %td{style: "text-align: right;"}
-                = link_to edit_survey_path(@survey.id, o.group), class: "btn btn-xs btn-primary" do
-                  %span.glyphicon.glyphicon-pencil
-                  Edit
-              %td{width: "1%"}
-                = link_to o, data: {confirm: "Are you sure you want to delete this entry?"}, method: :delete, class: "btn btn-xs btn-danger" do
-                  %span.glyphicon.glyphicon-trash
-              %td{width: "1%"}
-                = link_to survey_step_path("step_2"), class: "btn btn-xs btn-primary" do
-                  %span.glyphicon.glyphicon-plus
-          - else
-            %tr
-              %td
-              %td{style: "text-align: right;"}
-                = link_to edit_survey_path(@survey.id, o.group), class: "btn btn-xs btn-primary" do
-                  %span.glyphicon.glyphicon-pencil
-                  Edit
-        - current_group = o.group
-        = render ("hanuman/surveys/show/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/show/rescue/notsupported", o: o
-      %tr
-        %td{colspan: "3", style: "background-color: black; padding: 1px;"}
+          - if observations.first.survey_question.group == ("step_2" || "step_2_ajax")
+            -# we are in a step 2 so we need a delete and add button
+            = link_to observations.first, data: {confirm: "Are you sure you want to delete this entry?"}, method: :delete, class: "btn btn-xs btn-danger" do
+              %span.glyphicon.glyphicon-trash
+            = link_to survey_step_path("step_2"), class: "btn btn-xs btn-primary" do
+              %span.glyphicon.glyphicon-plus
+      - if observations.count > 1
+        -# do panel
+        = render ("hanuman/surveys/fields/readonly/shared/panel"), s: @survey, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false) 
+      - else
+        -# do single
+        - @survey.observations.filtered_by_group(og).each do |o|
+          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o

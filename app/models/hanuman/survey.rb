@@ -9,5 +9,9 @@ module Hanuman
     amoeba do
       enable
     end
+    
+    def observation_groups
+      self.observations.collect(&:group).uniq
+    end
   end
 end

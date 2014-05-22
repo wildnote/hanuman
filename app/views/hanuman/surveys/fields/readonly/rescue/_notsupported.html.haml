@@ -1,0 +1,5 @@
+.form-group
+  = render "hanuman/surveys/fields/readonly/shared/label", o: o
+  .col-sm-7
+    %p.form-control-static.bg-danger= o.survey_question.question.answer_type.name.titleize + " show not supported!"
+    
