@@ -43,10 +43,6 @@
             %span.glyphicon.glyphicon-plus
             Add Entry
     - observations = @survey.observations.filtered_by_group(og)
-    - if observations.count > 1
+    - if observations.count > 0
       -# do panel
       = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, s: @survey, o: observations, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false)
-    - else
-      -# do single
-      - @survey.observations.filtered_by_group(og).each do |o|
-        = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
