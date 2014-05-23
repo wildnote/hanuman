@@ -1,6 +1,6 @@
-.panel.panel-default
+.panel.panel-info
   .panel-heading
-    %h4.panel-title
+    %h4.panel-title.pull-left
       %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{og}"}
         - if ogf
           First Section
@@ -9,6 +9,16 @@
         - else
           Entry No.
           = og
+    - if show
+      .pull-right
+        = link_to edit_survey_path(@survey.id, og), class: "btn btn-xs btn-primary" do
+          %span.glyphicon.glyphicon-pencil
+          Edit      
+        - if o.first.survey_question.group == "step_2"
+          -# we are in a step 2 so we need a delete and add button
+          = link_to o.first, data: {confirm: "Are you sure you want to delete this entry?"}, method: :delete, class: "btn btn-xs btn-danger" do
+            %span.glyphicon.glyphicon-trash
+    .clearfix
   .panel-collapse.collapse.in{:id => "collapse_#{og}"}
     .panel-body
       - s.observations.filtered_by_group(og).each do |o|

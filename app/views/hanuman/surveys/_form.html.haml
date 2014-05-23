@@ -57,7 +57,7 @@
         - observations = @survey.observations.filtered_by_group(og)
         - if observations.count > 1
           -# do panel
-          = render ("hanuman/surveys/fields/readonly/shared/panel"), s: @survey, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false) 
+          = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, s: @survey, o: observations, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false) 
         - else
           -# do single
           - @survey.observations.filtered_by_group(og).each do |o|
@@ -78,14 +78,14 @@
       - else
         - if current_step == "step_2"
           =# f.submit "Save", class: "btn btn-primary", data: {repeat: true}
-          = link_to "#", class: "btn btn-primary ajax-submit" do
+          = link_to "#", class: "btn btn-primary ajax-submit" do 
             %span.glyphicon.glyphicon-plus
-            Save
-          = f.submit "Finish", class: "btn btn-primary"
+            Save & Add Entry
+          = f.submit "Save & Continue", class: "btn btn-primary"
           =# link_to "Skip", next_wizard_path, class: "btn btn-default"
           =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
         - else
-          = f.submit (current_step == "step_1" ? "Next" : "Save"), class: "btn btn-primary"
+          = f.submit (current_step == "step_1" ? "Save & Continue" : "Finish"), class: "btn btn-primary"
           -# if current_step == "step_3"
             =# link_to "Previous", previous_wizard_path, class: "btn btn-default"
           =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"

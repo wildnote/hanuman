@@ -35,23 +35,18 @@
   - first_observation_group = observation_groups.min
   - last_observation_group = observation_groups.max
   - observation_groups.each do |og|
-    .well
-      - observations = @survey.observations.filtered_by_group(og)
-      .form-group
-        .col-sm-12.text-right
-          = link_to edit_survey_path(@survey.id, og), class: "btn btn-xs btn-primary" do
-            %span.glyphicon.glyphicon-pencil
-            Edit
-          - if observations.first.survey_question.group == ("step_2" || "step_2_ajax")
-            -# we are in a step 2 so we need a delete and add button
-            = link_to observations.first, data: {confirm: "Are you sure you want to delete this entry?"}, method: :delete, class: "btn btn-xs btn-danger" do
-              %span.glyphicon.glyphicon-trash
-            = link_to survey_step_path("step_2"), class: "btn btn-xs btn-primary" do
-              %span.glyphicon.glyphicon-plus
-      - if observations.count > 1
-        -# do panel
-        = render ("hanuman/surveys/fields/readonly/shared/panel"), s: @survey, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false) 
-      - else
-        -# do single
-        - @survey.observations.filtered_by_group(og).each do |o|
-          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+    - if og == last_observation_group
+      -# do panel line for add an entry if last observation group
+      .panel.panel-success
+        .panel-body.text-right
+          = link_to survey_step_path("step_2"), class: "btn btn-xs btn-success" do
+            %span.glyphicon.glyphicon-plus
+            Add Entry
+    - observations = @survey.observations.filtered_by_group(og)
+    - if observations.count > 1
+      -# do panel
+      = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, s: @survey, o: observations, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false)
+    - else
+      -# do single
+      - @survey.observations.filtered_by_group(og).each do |o|
+        = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
