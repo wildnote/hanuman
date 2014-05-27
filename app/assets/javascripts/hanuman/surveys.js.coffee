@@ -3,6 +3,9 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
 $ ->
+  # webshim lib polyfill
+  webshims.polyfill()
+  
   # typeahead
   if $(".typeahead").length > 0
     # typeahead - build answers array from answers list string

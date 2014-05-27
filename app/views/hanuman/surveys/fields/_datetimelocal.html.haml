@@ -1,5 +1,5 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    = ff.datetime_local_field :answer, class: "form-control"
+    = ff.text_field :answer, class: "form-control", type: "datetime-local"
     = ff.hidden_field :group

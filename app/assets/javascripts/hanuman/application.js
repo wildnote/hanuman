@@ -13,5 +13,6 @@
 //= require typeahead/typeahead.bundle
 //= require chosen/chosen.jquery
 //= require handlebars/handlebars
+//= require js-webshim/dev/polyfiller
 //= require_tree ./templates
 //= require_tree .
