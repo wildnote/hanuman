@@ -1,5 +1,6 @@
 module Hanuman
   class AnswerChoice < ActiveRecord::Base
+    has_paper_trail
     has_ancestry
     belongs_to :question
     

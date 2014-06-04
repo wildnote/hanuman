@@ -3,6 +3,7 @@ module Hanuman
     isolate_namespace Hanuman
 
     require 'rubygems'
+    require 'paper_trail'
     require 'ancestry'
     require 'wicked'
     require 'amoeba'

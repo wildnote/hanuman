@@ -1,5 +1,6 @@
 module Hanuman
   class Survey < ActiveRecord::Base
+    has_paper_trail
     belongs_to :survey_template
     belongs_to :project
     has_many :observations, dependent: :destroy

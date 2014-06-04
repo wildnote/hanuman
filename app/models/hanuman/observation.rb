@@ -1,5 +1,6 @@
 module Hanuman
   class Observation < ActiveRecord::Base
+    has_paper_trail
     belongs_to :survey
     belongs_to :survey_question
     has_many :observation_answers
