@@ -18,74 +18,46 @@
   = f.hidden_field :project_id
   = f.hidden_field :survey_template_id
   = f.hidden_field :id unless @survey.new_record?
+  
+  -# if step_1 then call form extension partial to include any survey level fields extended by the parent app
+  - if current_step == 'step_1'  
+    = render ("hanuman/surveys/formextension"), f: f
 
-  -# survey edit
-  - if survey_form_state.include? "Edit"
-  
-    .well
-      .form-group
-        = label_tag nil, "Survey ID", class: "col-sm-5 control-label"
-        .col-sm-7
-          %p.form-control-static= @survey.id
-      .form-group
-        = label_tag nil, "Created At", class: "col-sm-5 control-label"
-        .col-sm-7
-          %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
-      .form-group
-        = label_tag nil, "Updated At", class: "col-sm-5 control-label"
-        .col-sm-7
-          %p.form-control-static= @survey.updated_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
-    
-    - observations_group = params[:group]
-    - observations_group ||= 0
-  
-    -# loop through survey questions and display
-    - @survey.observations.filtered_by_group(observations_group).each_with_index do |o, index|
+  - observation_groups = @survey.observation_groups
+  - first_observation_group = observation_groups.min
+  - last_observation_group = observation_groups.max
+  - observation_groups.each do |og|
+    -# check to see if the current observation group is the last observation group
+    - if og != last_observation_group
+      -# if the current observation group isn't the last observation group render observations as readonly
+      - observations = @survey.observations.filtered_by_group(og)
+      - if observations.count > 1
+        -# do panel
+        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, s: @survey, o: observations, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false) 
+      - else
+        -# do single
+        - @survey.observations.filtered_by_group(og).each do |o|
+          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+    - else        
+  - @survey.observations.each_with_index do |o, index|
+    -# if the current observation group is the last observation group render observations as form fields
+    - if o.id.blank?
       = f.fields_for :observations, o do |ff|
         = ff.hidden_field :survey_question_id
         = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
-  
-  - else
 
-    - observation_groups = @survey.observation_groups
-    - first_observation_group = observation_groups.min
-    - last_observation_group = observation_groups.max
-    - observation_groups.each do |og|
-      -# check to see if the current observation group is the last observation group
-      - if og != last_observation_group
-        -# if the current observation group isn't the last observation group render observations as readonly
-        - observations = @survey.observations.filtered_by_group(og)
-        - if observations.count > 1
-          -# do panel
-          = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, s: @survey, o: observations, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false) 
-        - else
-          -# do single
-          - @survey.observations.filtered_by_group(og).each do |o|
-            = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
-      - else        
-    - @survey.observations.each_with_index do |o, index|
-      -# if the current observation group is the last observation group render observations as form fields
-      - if o.id.blank?
-        = f.fields_for :observations, o do |ff|
-          = ff.hidden_field :survey_question_id
-          = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
-  
   .form-group
     .col-sm-offset-5.col-sm-7
-      - if survey_form_state.include? "Edit"
-        = f.submit "Save", class: "btn btn-primary"
-        = link_to "Cancel", survey_path(@survey), data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
+      - if current_step == "step_2"
+        =# f.submit "Save", class: "btn btn-primary", data: {repeat: true}
+        = link_to "#", class: "btn btn-primary ajax-submit" do 
+          %span.glyphicon.glyphicon-plus
+          Save & Add Entry
+        = f.submit "Save & Continue", class: "btn btn-primary"
+        =# link_to "Skip", next_wizard_path, class: "btn btn-default"
+        =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
       - else
-        - if current_step == "step_2"
-          =# f.submit "Save", class: "btn btn-primary", data: {repeat: true}
-          = link_to "#", class: "btn btn-primary ajax-submit" do 
-            %span.glyphicon.glyphicon-plus
-            Save & Add Entry
-          = f.submit "Save & Continue", class: "btn btn-primary"
-          =# link_to "Skip", next_wizard_path, class: "btn btn-default"
-          =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
-        - else
-          = f.submit (current_step == "step_1" ? "Save & Continue" : "Finish"), class: "btn btn-primary"
-          -# if current_step == "step_3"
-            =# link_to "Previous", previous_wizard_path, class: "btn btn-default"
-          =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
+        = f.submit (current_step == "step_1" ? "Save & Continue" : "Finish"), class: "btn btn-primary"
+        -# if current_step == "step_3"
+          =# link_to "Previous", previous_wizard_path, class: "btn btn-default"
+        =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"

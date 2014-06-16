@@ -7,4 +7,51 @@
 - content_for :current_step do
   step_1
 
-= render "form"
+- if @survey.errors.any?
+  - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
+  
+- current_step = yield(:current_step).strip
+- survey_form_state = yield(:survey_form_state).strip
+
+= form_for @survey, builder: CustomFieldsFormBuilder, url: survey_form_url(current_step), method: survey_form_method(current_step, survey_form_state), html: {class: "form-horizontal"} do |f|
+
+  .page-header
+    %h5
+      = f.object.project.organization.name + ": "
+      %i= f.object.project.name
+      |
+      Mode:
+      %i= survey_form_state
+    %h1= f.object.survey_template.name
+
+  = f.hidden_field :project_id
+  = f.hidden_field :survey_template_id
+  = f.hidden_field :id unless @survey.new_record?
+  
+  .well
+    .form-group
+      = label_tag nil, "Author", class: "col-sm-5 control-label"
+      .col-sm-7
+        %p.form-control-static= @survey.author
+    .form-group
+      = label_tag nil, "Created", class: "col-sm-5 control-label"
+      .col-sm-7
+        %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
+
+  - observations_group = params[:group].to_i
+  - observations_group ||= 0
+  
+  -# if observations_group 0 then call form extension partial to include any survey level fields extended by the parent app
+  - if observations_group == 0
+    = render ("hanuman/surveys/formextension"), f: f
+
+  -# loop through survey questions and display
+  - @survey.observations.filtered_by_group(observations_group).each_with_index do |o, index|
+    = f.fields_for :observations, o do |ff|
+      = ff.hidden_field :survey_question_id
+      = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
+
+  .form-group
+    .col-sm-offset-5.col-sm-7
+      = f.submit "Save", class: "btn btn-primary"
+      = link_to "Cancel", survey_path(@survey), data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"

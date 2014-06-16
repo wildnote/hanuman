@@ -19,17 +19,13 @@
 
   .well
     .form-group
-      = label_tag nil, "Survey ID", class: "col-sm-5 control-label"
+      = label_tag nil, "Author", class: "col-sm-5 control-label"
       .col-sm-7
-        %p.form-control-static= @survey.id
+        %p.form-control-static= @survey.author
     .form-group
-      = label_tag nil, "Created At", class: "col-sm-5 control-label"
+      = label_tag nil, "Created", class: "col-sm-5 control-label"
       .col-sm-7
         %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
-    .form-group
-      = label_tag nil, "Updated At", class: "col-sm-5 control-label"
-      .col-sm-7
-        %p.form-control-static= @survey.updated_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")        
 
   - observation_groups = @survey.observation_groups
   - first_observation_group = observation_groups.min

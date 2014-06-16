@@ -14,5 +14,9 @@ module Hanuman
     def observation_groups
       self.observations.collect(&:group).uniq
     end
+    
+    def author
+      self.versions.first.whodunnit unless self.versions.blank?
+    end
   end
 end

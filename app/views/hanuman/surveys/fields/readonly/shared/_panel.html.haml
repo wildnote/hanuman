@@ -21,5 +21,7 @@
     .clearfix
   .panel-collapse.collapse.in{:id => "collapse_#{og}"}
     .panel-body
+      - if og == 0
+        = render ("hanuman/surveys/formextensionreadonly"), s: s
       - s.observations.filtered_by_group(og).each do |o|
         = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
