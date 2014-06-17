@@ -24,7 +24,7 @@
         %tr
           %td= link_to survey_template.name, survey_template
           %td= link_to survey_template.status, survey_template
-          %td= link_to survey_template.organization.name, survey_template
+          %td= link_to survey_template.organization.name, survey_template unless survey_template.organization.blank?
           %td= link_to survey_template.survey_type, survey_template
           %td
             = link_to survey_template, data: {confirm: "Are you sure you want to delete this Survey Template?"}, method: :delete do

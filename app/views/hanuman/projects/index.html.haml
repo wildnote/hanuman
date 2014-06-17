@@ -20,7 +20,7 @@
       - @projects.each do |project|
         %tr
           %td= link_to project.name, project
-          %td= link_to project.organization.name, project
+          %td= link_to project.organization.name, project unless project.organization.blank?
           %td= link_to project.status, project
           %td
             = link_to project, data: {confirm: "Are you sure you want to delete this Project?"}, method: :delete do

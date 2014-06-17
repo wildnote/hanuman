@@ -23,8 +23,8 @@
     %tbody
       - @survey_questions.each do |survey_question|
         %tr
-          %td= link_to survey_question.survey_template.name, survey_question
-          %td= link_to survey_question.question.question_text, survey_question
+          %td= link_to survey_question.survey_template.name, survey_question unless survey_question.survey_template.blank?
+          %td= link_to survey_question.question.question_text, survey_question unless survey_question.question.blank?
           %td= link_to survey_question.sort_order, survey_question
           %td= link_to survey_question.group, survey_question
           %td= link_to survey_question.duplicator.to_s, survey_question
