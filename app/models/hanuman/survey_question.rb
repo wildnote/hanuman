@@ -8,5 +8,9 @@ module Hanuman
     def self.by_step(step)
       where(group: step)
     end
+    
+    def answer_type
+      self.question.answer_type.name
+    end
   end
 end

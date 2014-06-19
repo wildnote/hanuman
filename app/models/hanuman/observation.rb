@@ -33,6 +33,7 @@ module Hanuman
     end
 
     def self.filtered_by_group(observations_group)
+      includes(:survey_question => [:question => [:answer_type]]).
       where('hanuman_observations."group" = ?', observations_group)
     end
 

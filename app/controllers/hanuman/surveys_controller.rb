@@ -93,6 +93,7 @@ module Hanuman
         params.require(:survey).permit(
           :project_id,
           :survey_template_id,
+          :survey_date,
           observations_attributes: [
             :id,
             :survey_question_id,
