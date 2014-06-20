@@ -13,7 +13,7 @@ module Hanuman
       end
       respond_to do |format|
         format.html # index.html.erb
-        format.json { render json: @answer_choices}
+        format.json { render json: @answer_choices.to_json(methods: :formatted_answer_choice)}
       end
     end
 

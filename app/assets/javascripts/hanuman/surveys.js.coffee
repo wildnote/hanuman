@@ -11,17 +11,18 @@ $ ->
 
   if $(".typeahead").length > 0
     # instantiate bloodhound engine
-    engine = new Bloodhound(
+    taxonomy = new Bloodhound(
       name: "taxonomy"
-      remote: "/hanuman/answer_choices.json?question_id=7"
+      #local: [{"id":22,"option_text":"Adoxaceae","scientific_text":null},{"id":42,"option_text":"Agavaceae","scientific_text":null},{"id":913,"option_text":"Allen's hummingbird","scientific_text":"Selasphorus sasin"},{"id":230,"option_text":"Alliaceae","scientific_text":null},{"id":914,"option_text":"American coot","scientific_text":"Fulica americana"},{"id":915,"option_text":"American crow","scientific_text":"Corvus brachyrhynchos"},{"id":916,"option_text":"American goldfinch","scientific_text":"Carduelis tristis"},{"id":917,"option_text":"American kestrel","scientific_text":"Falco sparverius"},{"id":918,"option_text":"American robin","scientific_text":"Turdus migratorius"},{"id":919,"option_text":"American wigeon","scientific_text":"Anas amercana"},{"id":895,"option_text":"Amphibians","scientific_text":null},{"id":25,"option_text":"Anacardiaceae","scientific_text":null},{"id":920,"option_text":"Anna's hummingbird","scientific_text":"Calypte anna"},{"id":99,"option_text":"Apiaceae","scientific_text":null},{"id":407,"option_text":"Apocynaceae","scientific_text":null},{"id":1097,"option_text":"Aquatic garter snake","scientific_text":"Thamnophis aquaticus"},{"id":63,"option_text":"Araliaceae","scientific_text":null},{"id":921,"option_text":"Ash-throated flycatcher","scientific_text":"Myiarchus cinerascens"},{"id":32,"option_text":"Asteraceae","scientific_text":null},{"id":1055,"option_text":"Audubon's cottontail","scientific_text":"Sylvilagus audubonii"},{"id":922,"option_text":"Band-tailed pigeon","scientific_text":"Columbia fasciata"},{"id":923,"option_text":"Barn owl","scientific_text":"Tyto alba"},{"id":924,"option_text":"Barn swallow","scientific_text":"Hirundo rustica"},{"id":925,"option_text":"Belted kingfisher","scientific_text":"Ceryle alcyon"},{"id":389,"option_text":"Bermuda buttercup","scientific_text":"Oxalis pes-caprae"},{"id":196,"option_text":"Bermuda grass","scientific_text":"Cynodon dactylon"},{"id":61,"option_text":"Betulaceae","scientific_text":null}]
+      prefetch: "/hanuman/answer_choices.json?question_id=7"
       datumTokenizer: (d) ->
-        Bloodhound.tokenizers.whitespace d.val
+        Bloodhound.tokenizers.whitespace d.formatted_answer_choice
 
       queryTokenizer: Bloodhound.tokenizers.whitespace
     )
 
-    # typeahead - initialize the bloodhound suggestion engine
-    promise = engine.initialize()
+    # initialize the bloodhound suggestion engine
+    promise = taxonomy.initialize()
 
     promise
     .done ->
@@ -29,15 +30,15 @@ $ ->
     .fail ->
       console.log 'err!'
 
-    # typeahead - instantiate the typeahead ui
+    # instantiate the typeahead ui
     $(".typeahead").typeahead(
       hint: true
       highlight: true
       minLength: 1
     ,
-      name: "taxanomy"
-      displayKey: "option_text"
-      source: engine.ttAdapter()
+      name: "taxonomy"
+      displayKey: "formatted_answer_choice"
+      source: taxonomy.ttAdapter()
     )
 
   # END TYPEAHEAD
