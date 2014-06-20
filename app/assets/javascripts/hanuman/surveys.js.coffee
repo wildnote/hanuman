@@ -41,6 +41,13 @@ $ ->
       source: taxonomy.ttAdapter()
     )
 
+    # custom event to capture answer_choice_id
+    $(".typeahead").bind "typeahead:selected", (obj, datum, name) ->
+      # set answer_choice_id from typeahead selected datum object
+      $('#' + this.id + '_choice_id').val(datum['id'])
+
+  # outputs, e.g., "my_dataset"
+
   # END TYPEAHEAD
 
 

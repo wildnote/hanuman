@@ -99,6 +99,7 @@ module Hanuman
             :survey_question_id,
             :answer,
             :group,
+            :answer_choice_id,
             answer_choice_ids: []
           ]
         )
