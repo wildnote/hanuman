@@ -4,40 +4,46 @@
 
 $ ->
   # webshim lib polyfill
+  # html5 fallback support for form fields
   webshims.polyfill()
   
-  # typeahead
+  # TYPEAHEAD
+
   if $(".typeahead").length > 0
-    # typeahead - build answers array from answers list string
-    answers_list_string = $(".typeahead").attr "data-answer-choices"
-    answers_array = answers_list_string.split("||")
-  
-    # typeahead - instantiate the bloodhound suggestion engine
-    answers = new Bloodhound(
+    # instantiate bloodhound engine
+    engine = new Bloodhound(
+      name: "taxonomy"
+      remote: "/hanuman/answer_choices.json?question_id=7"
       datumTokenizer: (d) ->
-        Bloodhound.tokenizers.whitespace d.answer
+        Bloodhound.tokenizers.whitespace d.val
 
       queryTokenizer: Bloodhound.tokenizers.whitespace
-      local: $.map(answers_array, (answer) ->
-        answer: answer
-      )
-      limit: 10
     )
 
     # typeahead - initialize the bloodhound suggestion engine
-    answers.initialize()
+    promise = engine.initialize()
+
+    promise
+    .done ->
+      console.log 'success!'
+    .fail ->
+      console.log 'err!'
 
     # typeahead - instantiate the typeahead ui
-    $(".typeahead").typeahead
+    $(".typeahead").typeahead(
       hint: true
       highlight: true
       minLength: 1
     ,
-      name: "answers"
-      displayKey: "answer"
-      source: answers.ttAdapter()
+      name: "taxanomy"
+      displayKey: "option_text"
+      source: engine.ttAdapter()
+    )
 
-  # chosen
+  # END TYPEAHEAD
+
+
+  # CHOSEN
   $(".chosen-select").chosen
     no_results_text: "No results matched"
     size: "100%"
@@ -48,7 +54,10 @@ $ ->
     no_results_text: "No results matched"
     size: "100%"
 
-  # ajax update from step_2
+  # END CHOSEN
+
+
+  # AJAX UPDATE FROM STEP_2
   $('.ajax-submit').on 'click', (e) ->
     e.preventDefault()
     $form = $('form')

@@ -5,6 +5,12 @@ module Hanuman
     belongs_to :question
     
     before_save :protect_split
+
+    def self.filtered_by_question_id(question_id)
+      select(:id, :option_text, :scientific_text).
+        where('question_id = ?', question_id).
+        order('option_text')
+    end
     
     def protect_split
       #ensures that we can count on ' / ' (space forward-slash space)
@@ -20,9 +26,7 @@ module Hanuman
     end
 
     def formatted_answer_choice
-      answer_choice = scientific_text.blank? ? option_text : scientific_text +  ' / ' + option_text
-      #this is a very nice convenience but it's causing massive n+1 queries on biosurvey
-      #answer_choice += self.parent.blank? ? '' : ' ( ' + self.parent.option_text + ' )'
+      scientific_text.blank? ? option_text : scientific_text +  ' / ' + option_text
     end
   end
 end

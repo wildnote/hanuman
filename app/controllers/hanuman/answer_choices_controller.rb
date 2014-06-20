@@ -6,7 +6,15 @@ module Hanuman
 
     # GET /answer_choices
     def index
-      @answer_choices = AnswerChoice.all
+      if params[:question_id]
+        @answer_choices = AnswerChoice.filtered_by_question_id(params[:question_id])
+      else
+        @answer_choices = AnswerChoice.all
+      end
+      respond_to do |format|
+        format.html # index.html.erb
+        format.json { render json: @answer_choices}
+      end
     end
 
     # GET /answer_choices/1
