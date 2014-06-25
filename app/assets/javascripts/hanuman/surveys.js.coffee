@@ -4,7 +4,16 @@
 
 $ ->
   # webshim lib polyfill
-  webshims.polyfill()
+  webshims.setOptions "forms-ext",
+    date:
+      startView: 2
+      openOnFocus: true
+
+    "datetime-local":
+      startView: 3
+      openOnFocus: true
+
+  webshims.polyfill "forms forms-ext"
   
   # typeahead
   if $(".typeahead").length > 0
