@@ -56,3 +56,36 @@ body {
   margin-top: -15px;
 }
 
+[class*="animate-"] .ws-popover {
+    overflow: visible;
+}
+
+[class*="animate-"] .ws-popover.ws-po-visible .ws-po-outerbox {
+    opacity: 1;
+    -webkit-transform: translate(0, 0) scale(1);
+    transform: translate(0, 0) scale(1);
+}
+
+.animate-2 .ws-popover {
+    overflow: visible;
+    -webkit-perspective: 600px;
+    -webkit-transform-style: preserve-3d;
+    perspective: 600px;
+    transform-style: preserve-3d;
+}
+
+.animate-2 .ws-po-outerbox {
+    -webkit-transform: rotateX(-60deg);
+    -webkit-transform-origin: 50% 0 0;
+    transform: rotateX(-60deg);
+    transform-origin: 50% 0 0;
+}
+
+.animate-2[data-vertical="bottom"] .ws-po-outerbox {
+    -webkit-transform-origin: -50% 0 0;
+    transform-origin: -50% 0 0;
+}
+
+input[type="checkbox"] {
+  display: inline-block;
+}
