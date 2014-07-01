@@ -47,9 +47,10 @@
 
   -# loop through survey questions and display
   - @survey.observations.filtered_by_group(observations_group).each_with_index do |o, index|
-    = f.fields_for :observations, o do |ff|
-      = ff.hidden_field :survey_question_id
-      = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
+    .form-entry-item-container
+      = f.fields_for :observations, o do |ff|
+        = ff.hidden_field :survey_question_id
+        = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
 
   .form-group
     .col-sm-offset-5.col-sm-7

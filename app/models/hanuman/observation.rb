@@ -40,5 +40,9 @@ module Hanuman
     def question_text
       self.survey_question.question.question_text
     end
+    
+    def answer_type
+      
+    end
   end
 end
