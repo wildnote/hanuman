@@ -22,6 +22,7 @@ module Hanuman
       survey_template = SurveyTemplate.find survey_template_id
       @survey = Survey.new(project_id: project_id, survey_template_id: survey_template_id)
       survey_template.survey_questions.by_step('step_1').each do |sq|
+        @survey.build_survey_extension
         @survey.observations.build(
           survey_question_id: sq.id,
           group: 0
@@ -94,6 +95,9 @@ module Hanuman
           :project_id,
           :survey_template_id,
           :survey_date,
+          survey_extension_attributes: [
+            :id
+          ],
           observations_attributes: [
             :id,
             :survey_question_id,

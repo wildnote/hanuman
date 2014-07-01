@@ -58,6 +58,10 @@ module Hanuman
         params.require(:survey).permit(
           :project_id,
           :survey_template_id,
+          :survey_date,
+          survey_extension_attributes: [
+            :id
+          ],
           observations_attributes: [
             :id,
             :survey_question_id,
@@ -67,6 +71,5 @@ module Hanuman
           ]
         )
       end
-
   end
 end

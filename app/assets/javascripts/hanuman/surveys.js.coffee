@@ -4,8 +4,20 @@
 
 $ ->
   # webshim lib polyfill
-  # html5 fallback support for form fields
-  webshims.polyfill()
+  webshims.setOptions "forms-ext",
+    date:
+      startView: 2
+      openOnFocus: true
+      popover:
+        appendTo: "body"
+
+    "datetime-local":
+      startView: 3
+      openOnFocus: true
+      popover:
+        appendTo: "body"
+
+  webshims.polyfill "forms forms-ext"
   
   # TYPEAHEAD
 
