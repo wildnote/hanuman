@@ -18,7 +18,7 @@ module Hanuman
         end
       when :step_3
         survey_template.survey_questions.by_step('step_3').each do |sq|
-          @survey.observations.build(survey_question_id: sq.id, group: group)
+          @survey.observations.build(survey_question_id: sq.id, group: 9999)
         end
       end
       render_wizard
