@@ -56,7 +56,7 @@ module Hanuman
 
       # Only allow a trusted parameter "white list" through.
       def survey_template_params
-        params.require(:survey_template).permit(:name, :status, :organization_id, :survey_type)
+        params.require(:survey_template).permit(:name, :status, :survey_type)
       end
   end
 end
