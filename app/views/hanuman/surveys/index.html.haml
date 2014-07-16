@@ -17,8 +17,6 @@
     %thead
       %tr
         %th
-          Project /
-          %br/
           Survey Template
         %th Author
         %th Created
@@ -29,8 +27,6 @@
         %tr
           %td
             = link_to survey, class: "small" do
-              = survey.project.name + " / " unless survey.project.blank?
-              %br/
               = survey.survey_template.name unless survey.survey_template.blank?
           %td= link_to survey.author, survey, class: "small" unless survey.author.blank?
           %td

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140624211319) do
+ActiveRecord::Schema.define(version: 20140706013616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -63,16 +63,6 @@ ActiveRecord::Schema.define(version: 20140624211319) do
     t.datetime "updated_at"
   end
 
-  create_table "hanuman_projects", force: true do |t|
-    t.string   "name"
-    t.integer  "organization_id"
-    t.string   "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "hanuman_projects", ["organization_id"], name: "index_hanuman_projects_on_organization_id", using: :btree
-
   create_table "hanuman_questions", force: true do |t|
     t.text     "question_text"
     t.integer  "answer_type_id"
@@ -114,13 +104,11 @@ ActiveRecord::Schema.define(version: 20140624211319) do
 
   create_table "hanuman_surveys", force: true do |t|
     t.integer  "survey_template_id"
-    t.integer  "project_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "survey_date"
   end
 
-  add_index "hanuman_surveys", ["project_id"], name: "index_hanuman_surveys_on_project_id", using: :btree
   add_index "hanuman_surveys", ["survey_template_id"], name: "index_hanuman_surveys_on_survey_template_id", using: :btree
 
   create_table "versions", force: true do |t|

@@ -1,6 +1,6 @@
 - if @survey.errors.any?
   - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
-  
+
 - current_step = yield(:current_step).strip
 - survey_form_state = yield(:survey_form_state).strip
 
@@ -8,19 +8,15 @@
 
   .page-header
     %h5
-      = f.object.project.organization.name + ": "
-      %i= f.object.project.name
-      |
       Mode:
       %i= survey_form_state
     %h1= f.object.survey_template.name
 
-  = f.hidden_field :project_id
   = f.hidden_field :survey_template_id
   = f.hidden_field :id unless @survey.new_record?
-  
+
   -# if step_1 then call form extension partial to include any survey level fields extended by the parent app
-  - if current_step == 'step_1'  
+  - if current_step == 'step_1'
     = render ("hanuman/surveys/formextension"), f: f
 
   - observation_groups = @survey.observation_groups
@@ -33,7 +29,7 @@
       - observations = @survey.observations.filtered_by_group(og)
       - if observations.count > 1
         -# do panel
-        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, s: @survey, o: observations, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false) 
+        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, s: @survey, o: observations, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false)
       - else
         -# do single
         - @survey.observations.filtered_by_group(og).each do |o|
@@ -54,7 +50,7 @@
     .col-sm-offset-5.col-sm-7
       - if current_step == "step_2"
         =# f.submit "Save", class: "btn btn-primary", data: {repeat: true}
-        = link_to "#", class: "btn btn-primary ajax-submit" do 
+        = link_to "#", class: "btn btn-primary ajax-submit" do
           %span.glyphicon.glyphicon-plus
           Save & Add Entry
         = f.submit "Save & Continue", class: "btn btn-primary"

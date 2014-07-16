@@ -15,12 +15,9 @@ module Hanuman
 
     # GET /surveys/new
     def new
-      # hard code these for now just to test out CRUD
-      project_id = 1
       survey_template_id = params[:survey_template_id]
-
       survey_template = SurveyTemplate.find survey_template_id
-      @survey = Survey.new(project_id: project_id, survey_template_id: survey_template_id)
+      @survey = Survey.new(survey_template_id: survey_template_id)
       survey_template.survey_questions.by_step('step_1').each do |sq|
         @survey.build_survey_extension
         @survey.observations.build(
@@ -92,7 +89,6 @@ module Hanuman
       # Only allow a trusted parameter "white list" through.
       def survey_params
         params.require(:survey).permit(
-          :project_id,
           :survey_template_id,
           :survey_date,
           survey_extension_attributes: [

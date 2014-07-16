@@ -19,7 +19,7 @@ module Hanuman
 
     test "should create survey" do
       assert_difference('Survey.count') do
-        post :create, survey: { project_id: @survey.project_id, survey_template_id: @survey.survey_template_id }
+        post :create, survey: { survey_template_id: @survey.survey_template_id }
       end
 
       assert_redirected_to survey_path(assigns(:survey))
@@ -36,7 +36,7 @@ module Hanuman
     end
 
     test "should update survey" do
-      patch :update, id: @survey, survey: { project_id: @survey.project_id, survey_template_id: @survey.survey_template_id }
+      patch :update, id: @survey, survey: { survey_template_id: @survey.survey_template_id }
       assert_redirected_to survey_path(assigns(:survey))
     end
 

@@ -19,8 +19,6 @@ Hanuman::Engine.routes.draw do
   resources :answer_types
 
   resources :survey_templates
-
-  resources :projects
   
   resources :organizations
 

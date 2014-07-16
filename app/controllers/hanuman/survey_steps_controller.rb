@@ -6,7 +6,6 @@ module Hanuman
     steps :step_2, :step_3
 
     def show
-      # hard code project_id for now until we setup project context
       # doesn't feel right to set survey_id in session here
       @survey = Survey.includes(:observations => [:survey_question => [:question => [:answer_type]]]).find session[:survey_id]
       group = @survey.observations.maximum(:group) + 1
@@ -56,7 +55,6 @@ module Hanuman
       # Only allow a trusted parameter "white list" through.
       def survey_params
         params.require(:survey).permit(
-          :project_id,
           :survey_template_id,
           :survey_date,
           survey_extension_attributes: [
