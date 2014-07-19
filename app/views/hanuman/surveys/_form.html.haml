@@ -50,9 +50,10 @@
     .col-sm-offset-5.col-sm-7
       - if current_step == "step_2"
         =# f.submit "Save", class: "btn btn-primary", data: {repeat: true}
-        = link_to "#", class: "btn btn-primary ajax-submit" do
-          %span.glyphicon.glyphicon-plus
-          Save & Add Entry
+        = link_to "#", class: "btn btn-primary ajax-submit ladda-button", :"data-style" => "zoom-out" do
+          %span.ladda-label
+            %span.glyphicon.glyphicon-plus
+            Save & Add Entry
         = f.submit "Save & Continue", class: "btn btn-primary"
         =# link_to "Skip", next_wizard_path, class: "btn btn-default"
         =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"

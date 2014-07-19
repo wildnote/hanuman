@@ -2,25 +2,25 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
+# webshim lib polyfill
+webshims.setOptions "forms-ext",
+  date:
+    startView: 2
+    openOnFocus: true
+    popover:
+      appendTo: "body"
+
+  "datetime-local":
+    startView: 3
+    openOnFocus: true
+    popover:
+      appendTo: "body"
+
+webshims.polyfill "forms forms-ext"
+
 $ ->
-  # webshim lib polyfill
-  webshims.setOptions "forms-ext",
-    date:
-      startView: 2
-      openOnFocus: true
-      popover:
-        appendTo: "body"
-
-    "datetime-local":
-      startView: 3
-      openOnFocus: true
-      popover:
-        appendTo: "body"
-
-  webshims.polyfill "forms forms-ext"
   
   # TYPEAHEAD
-
   if $(".typeahead").length > 0
     # instantiate bloodhound engine
     taxonomy = new Bloodhound(
@@ -83,6 +83,7 @@ $ ->
     e.preventDefault()
     $form = $('form')
     survey_id = $('#survey_id').val()
+    l = Ladda.create this
     $.ajax(
       type:     "PUT"
       url:      "/hanuman/surveys/" + survey_id,
@@ -128,6 +129,9 @@ $ ->
             do (observation) ->
               newRow = HandlebarsTemplates['hanuman/templates/survey/observation'](observation)
               $(newRow).insertAfter($('.panel, .form-control-static').not('.panel .form-control-static').last().closest('.panel, .form-group'))
+        
+        # reset save button
+        l.stop()
 
         # clear out observation field(s)
         $('input[type!=hidden][type!=radio][type!=submit]').val("")
