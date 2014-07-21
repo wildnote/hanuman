@@ -5,7 +5,7 @@
 - content_for :survey_form_state do
   Edit Report Entry
 - content_for :current_step do
-  step_1
+  1
 
 - if @survey.errors.any?
   - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
@@ -42,7 +42,7 @@
     = render ("hanuman/surveys/formextension"), f: f
 
   -# loop through survey questions and display
-  - @survey.observations.filtered_by_group(observations_group).each_with_index do |o, index|
+  - @survey.observations.filtered_by_set(observations_group).each_with_index do |o, index|
     .form-entry-item-container
       = f.fields_for :observations, o do |ff|
         = ff.hidden_field :survey_question_id

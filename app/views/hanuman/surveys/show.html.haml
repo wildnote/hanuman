@@ -24,18 +24,18 @@
       .col-sm-7
         %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
 
-  - observation_groups = @survey.observation_groups
-  - first_observation_group = observation_groups.min
-  - last_observation_group = observation_groups.max
-  - observation_groups.each do |og|
-    - if og == last_observation_group
+  - sets = @survey.sets
+  - first_set = sets.min
+  - last_set = sets.max
+  - sets.each do |set|
+    - if set == last_set
       -# do panel line for add an entry if last observation group
       .panel.panel-success
         .panel-body.text-right
           = link_to survey_step_path("step_2"), class: "btn btn-xs btn-success" do
             %span.glyphicon.glyphicon-plus
             Add Entry
-    - observations = @survey.observations.filtered_by_group(og)
+    - observations = @survey.observations.filtered_by_set(set)
     - if observations.count > 0
       -# do panel
-      = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, s: @survey, o: observations, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false)
+      = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, s: @survey, o: observations, set: set, setf: (set == first_set ? true : false), setl: (set == last_set ? true : false)

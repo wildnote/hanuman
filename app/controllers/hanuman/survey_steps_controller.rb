@@ -8,16 +8,16 @@ module Hanuman
     def show
       # doesn't feel right to set survey_id in session here
       @survey = Survey.includes(:observations => [:survey_question => [:question => [:answer_type]]]).find session[:survey_id]
-      group = @survey.observations.maximum(:group) + 1
+      set = @survey.observations.maximum(:set) + 1
       survey_template = @survey.survey_template
       case step
       when :step_2
         survey_template.survey_questions.by_step('step_2').each do |sq|
-          @survey.observations.build(survey_question_id: sq.id, group: group)
+          @survey.observations.build(survey_question_id: sq.id, set: set)
         end
       when :step_3
         survey_template.survey_questions.by_step('step_3').each do |sq|
-          @survey.observations.build(survey_question_id: sq.id, group: 9999)
+          @survey.observations.build(survey_question_id: sq.id, set: 9999)
         end
       end
       render_wizard
@@ -31,10 +31,10 @@ module Hanuman
 
       if params[:commit].eql? 'Save + Add Another'
         @survey.save
-        group = @survey.observations.maximum(:group) + 1
+        set = @survey.observations.maximum(:set) + 1
         survey_template = @survey.survey_template
         survey_template.survey_questions.by_step('step_2').each do |sq|
-          @survey.observations.build(survey_question_id: sq.id, group: group)
+          @survey.observations.build(survey_question_id: sq.id, set: set)
         end
         render_wizard
       else
@@ -64,7 +64,7 @@ module Hanuman
             :id,
             :survey_question_id,
             :answer,
-            :group,
+            :set,
             answer_choice_ids: []
           ]
         )

@@ -6,8 +6,8 @@ module Hanuman
 
     # DELETE /observations/1
     def destroy
-      s = Hanuman::Survey.find(@observation.survey.id)
-      s.observations.where('hanuman_observations."group" = ?', @observation.group).each{|o| o.destroy}
+      s = @observation.survey
+      s.observations.where(set:, @observation.set).each{|o| o.destroy}
       redirect_to survey_path(s), notice: 'Entry was successfully destroyed.'
     end
 

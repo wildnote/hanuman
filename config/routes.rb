@@ -1,7 +1,7 @@
 Hanuman::Engine.routes.draw do
-  
-  get 'surveys/:id/edit/:group' => 'surveys#edit', as: :edit_survey
-  
+
+  get 'surveys/:id/edit/:step/:set' => 'surveys#edit', as: :edit_survey
+
   resources :surveys do
     member do
       patch :duplicate
@@ -9,7 +9,7 @@ Hanuman::Engine.routes.draw do
   end
 
   resources :survey_questions
-  
+
   resources :observations
 
   resources :answer_choices
@@ -19,11 +19,11 @@ Hanuman::Engine.routes.draw do
   resources :answer_types
 
   resources :survey_templates
-  
+
   resources :survey_steps
-  
+
   get 'about' => 'about#index'
-  
+
   #root 'about#index'
-  
+
 end

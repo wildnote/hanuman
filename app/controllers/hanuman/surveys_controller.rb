@@ -18,19 +18,24 @@ module Hanuman
       survey_template_id = params[:survey_template_id]
       survey_template = SurveyTemplate.find survey_template_id
       @survey = Survey.new(survey_template_id: survey_template_id)
-      survey_template.survey_questions.by_step('step_1').each do |sq|
+      survey_template.survey_questions.by_step(1).each do |sq|
         @survey.build_survey_extension
         @survey.observations.build(
           survey_question_id: sq.id,
-          group: 0
+          set: 0
         )
       end
     end
 
     # GET /surveys/1/edit
     def edit
-      if @survey.observations.filtered_by_group(params[:group]).count < 1
-        redirect_to survey_path(@survey)
+      # if @survey.observations.filtered_by_set(params[:set]).count < 1
+      #   redirect_to survey_path(@survey)
+      # end
+      step = params[:step]
+      set = params[:set]
+      @survey.survey_template.survey_questions.by_step(step).each do |sq|
+        @survey.observations.build(survey_question_id: sq.id, set: set)
       end
     end
 
@@ -42,7 +47,7 @@ module Hanuman
         #redirect_to @survey, notice: 'Survey was successfully created.'
         session[:survey_id] = @survey.id
         session[:survey_template_id] = @survey.survey_template_id
-        redirect_to survey_steps_path
+        redirect_to edit_survey_path(@survey.id, "1", "0")
       else
         render action: 'new'
       end
@@ -52,13 +57,13 @@ module Hanuman
     def update
       session[:survey_id] = @survey.id
       session[:survey_template_id] = @survey.survey_template_id
-      group = params[:survey][:observations_attributes]['0'][:group]
+      set = params[:survey][:observations_attributes]['0'][:set]
 
       respond_to do |format|
         if @survey.update(survey_params)
           format.html { redirect_to @survey, notice: 'Survey was successfully updated.' }
           format.json {
-            render json: @survey.observations.filtered_by_group(group).as_json(:include => {:observation_answers => {:methods => [:answer_choice_text, :jkdljakldjs]}}, :methods => [:question_text])
+            render json: @survey.observations.filtered_by_set(set).as_json(:include => {:observation_answers => {:methods => [:answer_choice_text, :jkdljakldjs]}}, :methods => [:question_text])
           }
         else
           format.html { render action: 'edit' }
@@ -98,7 +103,7 @@ module Hanuman
             :id,
             :survey_question_id,
             :answer,
-            :group,
+            :set,
             :answer_choice_id,
             answer_choice_ids: []
           ]

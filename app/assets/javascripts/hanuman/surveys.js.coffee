@@ -18,7 +18,7 @@ $ ->
         appendTo: "body"
 
   webshims.polyfill "forms forms-ext"
-  
+
   # TYPEAHEAD
 
   if $(".typeahead").length > 0
@@ -92,10 +92,10 @@ $ ->
         # clear previous entry highlighting
         $('.panel-body.bg-success').removeClass('bg-success')
         $('.form-group.bg-success').removeClass('bg-success')
-        
+
         # determine response count
         $responseCount = response.length
-        
+
         # if we have more than one response object
         if $responseCount > 1
           # create a collapsible panel
@@ -137,7 +137,7 @@ $ ->
         $('.search-choice-close').click()
 
         # increment group value(s)
-        $group = $('input[type=hidden][name*=\\[group\\]]')
+        $group = $('input[type=hidden][name*=\\[set\\]]')
         groupVal = parseInt $($group[0]).val()
         $group.val(groupVal + 1)
 
@@ -145,7 +145,7 @@ $ ->
       errorRow = HandlebarsTemplates['hanuman/templates/survey/error'](errorThrown)
       $(errorRow).insertAfter($('.form-control-static').last().closest('.form-group'))
       # todo add honeybadger notification
-    
+
   # hide all collapsible panels at start of step_2 and step_3
   if $('form[action*=\\/hanuman\\/survey_steps\\/step_2], form[action*=\\/hanuman\\/survey_steps\\/step_3]').length > 0
     if $(".panel-collapse").length > 0

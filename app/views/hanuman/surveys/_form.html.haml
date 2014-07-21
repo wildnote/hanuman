@@ -4,7 +4,7 @@
 - current_step = yield(:current_step).strip
 - survey_form_state = yield(:survey_form_state).strip
 
-= form_for @survey, builder: CustomFieldsFormBuilder, url: survey_form_url(current_step), method: survey_form_method(current_step, survey_form_state), html: {class: "form-horizontal"} do |f|
+= form_for @survey, builder: CustomFieldsFormBuilder, html: {class: "form-horizontal"} do |f|
 
   .page-header
     %h5
@@ -15,24 +15,24 @@
   = f.hidden_field :survey_template_id
   = f.hidden_field :id unless @survey.new_record?
 
-  -# if step_1 then call form extension partial to include any survey level fields extended by the parent app
-  - if current_step == 'step_1'
+  -# if step 1 then call form extension partial to include any survey level fields extended by the parent app
+  - if current_step == "1"
     = render ("hanuman/surveys/formextension"), f: f
 
-  - observation_groups = @survey.observation_groups
-  - first_observation_group = observation_groups.min
-  - last_observation_group = observation_groups.max
-  - observation_groups.each do |og|
-    -# check to see if the current observation group is the last observation group
-    - if og != last_observation_group
-      -# if the current observation group isn't the last observation group render observations as readonly
-      - observations = @survey.observations.filtered_by_group(og)
+  - sets = @survey.sets
+  - first_set = sets.min
+  - last_set = sets.max
+  - sets.each do |set|
+    -# check to see if the current observation set is the last observation set
+    - if set != last_set
+      -# if the current observation set isn't the last observation set render observations as readonly
+      - observations = @survey.observations.filtered_by_set(set)
       - if observations.count > 1
         -# do panel
-        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, s: @survey, o: observations, og: og, ogf: (og == first_observation_group ? true : false), ogl: (og == last_observation_group ? true : false)
+        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, s: @survey, o: observations, set: set, setf: (set == first_set ? true : false), setl: (set == last_set ? true : false)
       - else
         -# do single
-        - @survey.observations.filtered_by_group(og).each do |o|
+        - @survey.observations.filtered_by_set(set).each do |o|
           = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
     - else
       -# start index_offset counter to be increased by 1 for each non blank observation and then ultimately subtracted from the index
@@ -48,7 +48,7 @@
           - index_offset += 1
   .form-group
     .col-sm-offset-5.col-sm-7
-      - if current_step == "step_2"
+      - if current_step == "2"
         =# f.submit "Save", class: "btn btn-primary", data: {repeat: true}
         = link_to "#", class: "btn btn-primary ajax-submit" do
           %span.glyphicon.glyphicon-plus
@@ -57,7 +57,7 @@
         =# link_to "Skip", next_wizard_path, class: "btn btn-default"
         =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
       - else
-        = f.submit (current_step == "step_1" ? "Save & Continue" : "Finish"), class: "btn btn-primary"
-        -# if current_step == "step_3"
+        = f.submit (current_step == "1" ? "Save & Continue" : "Finish"), class: "btn btn-primary"
+        -# if current_step == "3"
           =# link_to "Previous", previous_wizard_path, class: "btn btn-default"
         =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
