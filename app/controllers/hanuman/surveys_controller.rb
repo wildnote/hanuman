@@ -34,8 +34,10 @@ module Hanuman
       # end
       step = params[:step]
       set = params[:set]
-      @survey.survey_template.survey_questions.by_step(step).each do |sq|
-        @survey.observations.build(survey_question_id: sq.id, set: set)
+      if @survey.observations.filtered_by_set(set).count < 1
+        @survey.survey_template.survey_questions.by_step(step).each do |sq|
+          @survey.observations.build(survey_question_id: sq.id, set: set)
+        end
       end
     end
 
