@@ -4,16 +4,15 @@
   active
 - content_for :survey_form_state do
   Edit Report Entry
-- content_for :current_step do
-  1
 
 - if @survey.errors.any?
   - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
 
-- current_step = yield(:current_step).strip
+- current_step = params[:step]
+- current_set = params[:set]
 - survey_form_state = yield(:survey_form_state).strip
 
-= form_for @survey, builder: CustomFieldsFormBuilder, url: survey_form_url(current_step), method: survey_form_method(current_step, survey_form_state), html: {class: "form-horizontal"} do |f|
+= form_for @survey, builder: CustomFieldsFormBuilder, html: {class: "form-horizontal"} do |f|
 
   .page-header
     %h5
@@ -24,31 +23,46 @@
   = f.hidden_field :survey_template_id
   = f.hidden_field :id unless @survey.new_record?
 
-  .well
-    .form-group
-      = label_tag nil, "Author", class: "col-sm-5 control-label"
-      .col-sm-7
-        %p.form-control-static= @survey.author
-    .form-group
-      = label_tag nil, "Created", class: "col-sm-5 control-label"
-      .col-sm-7
-        %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
-
-  - observations_group = params[:group].to_i
-  - observations_group ||= 0
-
-  -# if observations_group 0 then call form extension partial to include any survey level fields extended by the parent app
-  - if observations_group == 0
+  -# if step 1 then call form extension partial to include any survey level fields extended by the parent app
+  - if current_step == "1"
     = render ("hanuman/surveys/formextension"), f: f
 
-  -# loop through survey questions and display
-  - @survey.observations.filtered_by_set(observations_group).each_with_index do |o, index|
-    .form-entry-item-container
-      = f.fields_for :observations, o do |ff|
-        = ff.hidden_field :survey_question_id
-        = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
-
+  - sets = @survey.sets
+  - first_set = sets.min
+  - last_set = sets.max
+  - sets.each do |set|
+    -# check to see if the current observation set is the last observation set
+    - if set != last_set
+      -# if the current observation set isn't the last observation set render observations as readonly
+      - observations = @survey.observations.filtered_by_set(set)
+      - if observations.count > 1
+        -# do panel
+        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, s: @survey, o: observations, set: set, setf: (set == first_set ? true : false), setl: (set == last_set ? true : false)
+      - else
+        -# do single
+        - @survey.observations.filtered_by_set(set).each do |o|
+          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+    - else
+      -# start index_offset counter to be increased by 1 for each non blank observation and then ultimately subtracted from the index
+      - index_offset = 0
+      - @survey.observations.each_with_index do |o, index|
+        -# if the current observation group is the last observation group render observations as form fields
+        =# debug o
+        =# debug o.set
+        =# debug current_set
+        - if o.set.eql? current_set.to_i
+          = f.fields_for :observations, o do |ff|
+            .form-entry-item-container
+              = ff.hidden_field :survey_question_id
+              = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+        - else
+          - index_offset += 1
   .form-group
     .col-sm-offset-5.col-sm-7
-      = f.submit "Save", class: "btn btn-primary"
-      = link_to "Cancel", survey_path(@survey), data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
+      - if current_step == "2"
+        = link_to "#", class: "btn btn-primary ajax-submit" do
+          %span.glyphicon.glyphicon-plus
+          Save & Add Entry
+        = f.submit "Save & Continue", class: "btn btn-primary"
+      - else
+        = f.submit (current_step == "1" ? "Save & Continue" : "Finish"), class: "btn btn-primary"
