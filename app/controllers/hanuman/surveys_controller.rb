@@ -49,7 +49,8 @@ module Hanuman
         #redirect_to @survey, notice: 'Survey was successfully created.'
         session[:survey_id] = @survey.id
         session[:survey_template_id] = @survey.survey_template_id
-        redirect_to edit_survey_path(@survey.id, "1", "0")
+        # redirect to edit survey step 2, set 1
+        redirect_to edit_survey_path(@survey.id, "2", "1")
       else
         render action: 'new'
       end

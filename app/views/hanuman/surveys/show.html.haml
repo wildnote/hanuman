@@ -32,7 +32,7 @@
       -# do panel line for add an entry if last observation group
       .panel.panel-success
         .panel-body.text-right
-          = link_to survey_step_path("step_2"), class: "btn btn-xs btn-success" do
+          = link_to edit_survey_path(@survey.id,@survey.observations.filtered_by_set(set).last.survey_question.step,set+1), class: "btn btn-xs btn-success" do
             %span.glyphicon.glyphicon-plus
             Add Entry
     - observations = @survey.observations.filtered_by_set(set)

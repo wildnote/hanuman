@@ -54,10 +54,7 @@
           %span.glyphicon.glyphicon-plus
           Save & Add Entry
         = f.submit "Save & Continue", class: "btn btn-primary"
-        =# link_to "Skip", next_wizard_path, class: "btn btn-default"
         =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
       - else
         = f.submit (current_step == "1" ? "Save & Continue" : "Finish"), class: "btn btn-primary"
-        -# if current_step == "3"
-          =# link_to "Previous", previous_wizard_path, class: "btn btn-default"
         =# link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
