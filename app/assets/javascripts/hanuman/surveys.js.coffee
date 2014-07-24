@@ -19,7 +19,7 @@ webshims.setOptions "forms-ext",
 webshims.polyfill "forms forms-ext"
 
 $ ->
-  
+
   # TYPEAHEAD
   if $(".typeahead").length > 0
     $(".typeahead").each ->
@@ -59,6 +59,14 @@ $ ->
     $(".typeahead").bind "typeahead:selected", (obj, datum, name) ->
       # set answer_choice_id from typeahead selected datum object
       $('#' + this.id + '_choice_id').val(datum['id'])
+
+    $(".typeahead").bind "typeahead:autocompleted", (obj, datum, name) ->
+      # set answer_choice_id from typeahead selected datum object
+      $('#' + this.id + '_choice_id').val(datum['id'])
+
+    # clear out answer_choice_id setting if user changes typeahead selection
+    $(".typeahead").change ->
+      $('#' + this.id + '_choice_id').val('')
 
   # outputs, e.g., "my_dataset"
 
@@ -130,7 +138,7 @@ $ ->
             do (observation) ->
               newRow = HandlebarsTemplates['hanuman/templates/survey/observation'](observation)
               $(newRow).insertAfter($('.panel, .form-control-static').not('.panel .form-control-static').last().closest('.panel, .form-group'))
-        
+
         # reset save button
         l.stop()
 
