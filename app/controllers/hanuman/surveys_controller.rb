@@ -15,6 +15,7 @@ module Hanuman
 
     # GET /surveys/new
     def new
+      # new handles step 1 of survey, all other steps handled in edit
       survey_template_id = params[:survey_template_id]
       survey_template = SurveyTemplate.find survey_template_id
       @survey = Survey.new(survey_template_id: survey_template_id)
@@ -22,19 +23,17 @@ module Hanuman
         @survey.build_survey_extension
         @survey.observations.build(
           survey_question_id: sq.id,
-          set: 0
+          set: 1
         )
       end
     end
 
     # GET /surveys/1/edit
     def edit
-      # if @survey.observations.filtered_by_set(params[:set]).count < 1
-      #   redirect_to survey_path(@survey)
-      # end
       step = params[:step]
       set = params[:set]
-      if @survey.observations.filtered_by_set(set).count < 1
+      # build empty set on edit to deal with first time entering data for that step/set
+      if @survey.observations.filtered_by_step_and_set(step, set).count < 1
         @survey.survey_template.survey_questions.by_step(step).each do |sq|
           @survey.observations.build(survey_question_id: sq.id, set: set)
         end
@@ -47,8 +46,6 @@ module Hanuman
 
       if @survey.save
         #redirect_to @survey, notice: 'Survey was successfully created.'
-        session[:survey_id] = @survey.id
-        session[:survey_template_id] = @survey.survey_template_id
         # redirect to edit survey step 2, set 1
         redirect_to edit_survey_path(@survey.id, "2", "1")
       else
@@ -58,15 +55,21 @@ module Hanuman
 
     # PATCH/PUT /surveys/1
     def update
-      session[:survey_id] = @survey.id
-      session[:survey_template_id] = @survey.survey_template_id
       set = params[:survey][:observations_attributes]['0'][:set]
+      survey_question = SurveyQuestion.find params[:survey][:observations_attributes]['0'][:survey_question_id]
+      step = survey_question.step
 
       respond_to do |format|
         if @survey.update(survey_params)
-          format.html { redirect_to @survey, notice: 'Survey was successfully updated.' }
+          format.html {
+            if step.eql? 2
+              redirect_to edit_survey_path(@survey.id, "3", "1"), notice: 'Survey was successfully updated.'
+            else
+              redirect_to @survey, notice: 'Survey was successfully updated.'
+            end
+          }
           format.json {
-            render json: @survey.observations.filtered_by_set(set).as_json(:include => {:observation_answers => {:methods => [:answer_choice_text, :jkdljakldjs]}}, :methods => [:question_text])
+            render json: @survey.observations.filtered_by_set(set).as_json(:include => {:observation_answers => {:methods => [:answer_choice_text]}}, :methods => [:question_text])
           }
         else
           format.html { render action: 'edit' }

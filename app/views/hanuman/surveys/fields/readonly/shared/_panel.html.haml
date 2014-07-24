@@ -2,26 +2,24 @@
   .panel-heading
     %h4.panel-title.pull-left
       %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{set}"}
-        - if setf
-          First Section
-        - elsif setl
-          Last Section
-        - else
-          Entry No.
-          = set
+        Step
+        = step
+        Entry
+        = set
     - if show
       .pull-right
-        = link_to edit_survey_path(@survey.id, o.first.survey_question.step, set), class: "btn btn-xs btn-primary" do
+        = link_to edit_survey_path(@survey.id, observations.first.survey_question.step, set), class: "btn btn-xs btn-primary" do
           %span.glyphicon.glyphicon-pencil
           Edit
-        - if o.first.survey_question.step == "2"
+        - if step == 2
           -# we are in a step 2 so we need a delete and add button
-          = link_to o.first, data: {confirm: "Are you sure you want to delete this entry?"}, method: :delete, class: "btn btn-xs btn-danger" do
+          = link_to observations.first, data: {confirm: "Are you sure you want to delete this entry?"}, method: :delete, class: "btn btn-xs btn-danger" do
             %span.glyphicon.glyphicon-trash
     .clearfix
   .panel-collapse.collapse.in{:id => "collapse_#{set}"}
     .panel-body
-      - if set == 0
-        = render ("hanuman/surveys/formextensionreadonly"), s: s
-      - s.observations.filtered_by_set(set).each do |o|
+      - if step == 1 and set == 1
+        = render ("hanuman/surveys/formextensionreadonly"), s: survey
+      - observations.each do |o|
+        =# debug o.inspect
         = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o

@@ -37,12 +37,22 @@ module Hanuman
       where(set: set)
     end
 
+    def self.filtered_by_step(step)
+      includes(:survey_question => [:question => [:answer_type]]).
+      where("hanuman_survey_questions.step = ?", step)
+    end
+
+    def self.filtered_by_step_and_set(step, set)
+      includes(:survey_question => [:question => [:answer_type]]).
+      where("hanuman_survey_questions.step = ? AND hanuman_observations.set = ?", step, set)
+    end
+
     def question_text
       self.survey_question.question.question_text
     end
 
-    def answer_type
-
+    def self.sets
+      self.pluck(:set).uniq
     end
   end
 end

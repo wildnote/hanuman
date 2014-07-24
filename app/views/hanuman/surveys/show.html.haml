@@ -24,18 +24,20 @@
       .col-sm-7
         %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
 
-  - sets = @survey.sets
-  - first_set = sets.min
-  - last_set = sets.max
-  - sets.each do |set|
-    - if set == last_set
-      -# do panel line for add an entry if last observation group
-      .panel.panel-success
-        .panel-body.text-right
-          = link_to edit_survey_path(@survey.id,@survey.observations.filtered_by_set(set).last.survey_question.step,set+1), class: "btn btn-xs btn-success" do
-            %span.glyphicon.glyphicon-plus
-            Add Entry
-    - observations = @survey.observations.filtered_by_set(set)
-    - if observations.count > 0
-      -# do panel
-      = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, s: @survey, o: observations, set: set, setf: (set == first_set ? true : false), setl: (set == last_set ? true : false)
+  - steps = @survey.survey_template.steps
+  - steps.each do |step|
+    - step_observations = @survey.observations.filtered_by_step(step)
+    - unless step_observations.blank?
+      - if step_observations.first.survey_question.duplicator
+        - sets = @survey.observations.filtered_by_step(step).sets
+        - sets.each do |set|
+          - set_observations = @survey.observations.filtered_by_step_and_set(step, set)
+          = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: set_observations, step: step, set: set
+        .panel.panel-success
+          .panel-body.text-right
+            = link_to edit_survey_path(@survey.id,step,step_observations.last.set+1), class: "btn btn-xs btn-success" do
+              %span.glyphicon.glyphicon-plus
+              Add Entry
+      - else
+        - set = step_observations.first.set
+        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: step_observations, step: step, set: set
