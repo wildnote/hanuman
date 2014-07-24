@@ -1,3 +1,4 @@
+- step = observations.first.survey_question.step
 .panel.panel-info
   .panel-heading
     %h4.panel-title.pull-left
@@ -8,7 +9,7 @@
         = set
     - if show
       .pull-right
-        = link_to edit_survey_path(@survey.id, observations.first.survey_question.step, set), class: "btn btn-xs btn-primary" do
+        = link_to edit_survey_path(@survey.id, step, set), class: "btn btn-xs btn-primary" do
           %span.glyphicon.glyphicon-pencil
           Edit
         - if step == 2
@@ -16,10 +17,20 @@
           = link_to observations.first, data: {confirm: "Are you sure you want to delete this entry?"}, method: :delete, class: "btn btn-xs btn-danger" do
             %span.glyphicon.glyphicon-trash
     .clearfix
-  .panel-collapse.collapse.in{:id => "collapse_#{set}"}
-    .panel-body
-      - if step == 1 and set == 1
-        = render ("hanuman/surveys/formextensionreadonly"), s: survey
-      - observations.each do |o|
-        =# debug o.inspect
-        = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+  -# i know there is a better way to do this, if show just adds the .in class to the collapse, else no .in class
+  - if show
+    .panel-collapse.collapse.in{:id => "collapse_#{step}_#{set}"}
+      .panel-body
+        - if step == 1 and set == 1
+          = render ("hanuman/surveys/formextensionreadonly"), s: survey
+        - observations.each do |o|
+          =# debug o.inspect
+          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+  - else
+    .panel-collapse.collapse{:id => "collapse_#{step}_#{set}"}
+      .panel-body
+        - if step == 1 and set == 1
+          = render ("hanuman/surveys/formextensionreadonly"), s: survey
+        - observations.each do |o|
+          =# debug o.inspect
+          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
