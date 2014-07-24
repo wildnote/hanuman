@@ -14,5 +14,11 @@
 //= require chosen/chosen.jquery
 //= require handlebars/handlebars
 //= require js-webshim/dev/polyfiller
+//= require ladda/spin
+//= require ladda/ladda
 //= require_tree ./templates
 //= require_tree .
+
+
+// Ladda
+Ladda.bind('.ladda-button');
