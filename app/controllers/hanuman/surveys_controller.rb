@@ -69,7 +69,8 @@ module Hanuman
             end
           }
           format.json {
-            render json: @survey.observations.filtered_by_set(set).as_json(:include => {:observation_answers => {:methods => [:answer_choice_text]}}, :methods => [:question_text])
+            render json: @survey.observations.filtered_by_step_and_set(step, set).
+              as_json(:include => {:observation_answers => {:methods => [:answer_choice_text]}}, :methods => [:question_text])
           }
         else
           format.html { render action: 'edit' }
