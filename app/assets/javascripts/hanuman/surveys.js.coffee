@@ -95,10 +95,10 @@ $ ->
         $('.form-group.bg-success').removeClass('bg-success')
 
         # determine response count
-        $responseCount = response.length
+        responseCount = response.length
 
-        # if we have more than one response object
-        if $responseCount > 1
+        # if we have more than one response object, meaning more than one field in the response?-kdh
+        if responseCount > 1
           # create a collapsible panel
           panel = HandlebarsTemplates['hanuman/templates/survey/panel'](response[0])
           # check to see if any panels already exist
@@ -137,10 +137,10 @@ $ ->
           this.selectedIndex = 0
         $('.search-choice-close').click()
 
-        # increment group value(s)
-        $group = $('input[type=hidden][name*=\\[set\\]]')
-        groupVal = parseInt $($group[0]).val()
-        $group.val(groupVal + 1)
+        # increment set value(s)
+        $set = $('input[type=hidden][name*=\\[set\\]]')
+        setVal = parseInt $($set[0]).val()
+        $set.val(setVal + 1)
 
     ).fail (jqXHR, textStatus, errorThrown) ->
       errorRow = HandlebarsTemplates['hanuman/templates/survey/error'](errorThrown)
