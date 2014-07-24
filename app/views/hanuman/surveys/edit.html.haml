@@ -80,3 +80,4 @@
         = f.submit "Save & Continue", class: "btn btn-primary"
       - else
         = f.submit (current_step == 1 ? "Save & Continue" : "Finish"), class: "btn btn-primary"
+      = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
