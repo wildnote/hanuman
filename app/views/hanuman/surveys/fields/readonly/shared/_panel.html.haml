@@ -1,27 +1,36 @@
+- step = observations.first.survey_question.step
 .panel.panel-info
   .panel-heading
     %h4.panel-title.pull-left
-      %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{og}"}
-        - if ogf
-          First Section
-        - elsif ogl
-          Last Section
-        - else
-          Entry No.
-          = og
+      %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{set}"}
+        Step
+        = step
+        Entry
+        = set
     - if show
       .pull-right
-        = link_to edit_survey_path(@survey.id, og), class: "btn btn-xs btn-primary" do
+        = link_to edit_survey_path(@survey.id, step, set), class: "btn btn-xs btn-primary" do
           %span.glyphicon.glyphicon-pencil
-          Edit      
-        - if o.first.survey_question.group == "step_2"
+          Edit
+        - if step == 2
           -# we are in a step 2 so we need a delete and add button
-          = link_to o.first, data: {confirm: "Are you sure you want to delete this entry?"}, method: :delete, class: "btn btn-xs btn-danger" do
+          = link_to observations.first, data: {confirm: "Are you sure you want to delete this entry?"}, method: :delete, class: "btn btn-xs btn-danger" do
             %span.glyphicon.glyphicon-trash
     .clearfix
-  .panel-collapse.collapse.in{:id => "collapse_#{og}"}
-    .panel-body
-      - if og == 0
-        = render ("hanuman/surveys/formextensionreadonly"), s: s
-      - s.observations.filtered_by_group(og).each do |o|
-        = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+  -# i know there is a better way to do this, if show just adds the .in class to the collapse, else no .in class
+  - if show
+    .panel-collapse.collapse.in{:id => "collapse_#{step}_#{set}"}
+      .panel-body
+        - if step == 1 and set == 1
+          = render ("hanuman/surveys/formextensionreadonly"), s: survey
+        - observations.each do |o|
+          =# debug o.inspect
+          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+  - else
+    .panel-collapse.collapse{:id => "collapse_#{step}_#{set}"}
+      .panel-body
+        - if step == 1 and set == 1
+          = render ("hanuman/surveys/formextensionreadonly"), s: survey
+        - observations.each do |o|
+          =# debug o.inspect
+          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o

@@ -1,6 +1,6 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
-  .col-sm-7    
+  .col-sm-7
     - if ff.object.survey_question.question.answer_choices.blank?
       = ff.text_field :answer, value: "There are no available Answer Options!", class: "form-control", readonly: true
     - else
@@ -10,4 +10,4 @@
                            a.id, cbl_answers.include?(a.id), {class: 'form-control'}
         = label_tag nil, a.option_text
         %br/
-    = ff.hidden_field :group
+    = ff.hidden_field :set

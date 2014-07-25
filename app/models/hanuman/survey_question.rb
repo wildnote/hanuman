@@ -6,9 +6,9 @@ module Hanuman
     has_many :observations
 
     def self.by_step(step)
-      where(group: step)
+      where(step: step)
     end
-    
+
     def answer_type
       self.question.answer_type.name
     end

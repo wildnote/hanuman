@@ -5,7 +5,6 @@ module Hanuman
     require 'rubygems'
     require 'paper_trail'
     require 'ancestry'
-    require 'wicked'
     require 'amoeba'
     require 'haml-rails'
     require 'sass-rails'

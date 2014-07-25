@@ -4,16 +4,15 @@
   active
 - content_for :survey_form_state do
   Edit Report Entry
-- content_for :current_step do
-  step_1
 
 - if @survey.errors.any?
   - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
 
-- current_step = yield(:current_step).strip
+- current_step = params[:step].to_i
+- current_set = params[:set].to_i
 - survey_form_state = yield(:survey_form_state).strip
 
-= form_for @survey, builder: CustomFieldsFormBuilder, url: survey_form_url(current_step), method: survey_form_method(current_step, survey_form_state), html: {class: "form-horizontal"} do |f|
+= form_for @survey, builder: CustomFieldsFormBuilder, html: {class: "form-horizontal"} do |f|
 
   .page-header
     %h5
@@ -24,31 +23,61 @@
   = f.hidden_field :survey_template_id
   = f.hidden_field :id unless @survey.new_record?
 
-  .well
-    .form-group
-      = label_tag nil, "Author", class: "col-sm-5 control-label"
-      .col-sm-7
-        %p.form-control-static= @survey.author
-    .form-group
-      = label_tag nil, "Created", class: "col-sm-5 control-label"
-      .col-sm-7
-        %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
-
-  - observations_group = params[:group].to_i
-  - observations_group ||= 0
-
-  -# if observations_group 0 then call form extension partial to include any survey level fields extended by the parent app
-  - if observations_group == 0
+  -# if step 1 then call form extension partial to include any survey level fields extended by the parent app
+  - if current_step == 1
     = render ("hanuman/surveys/formextension"), f: f
 
-  -# loop through survey questions and display
-  - @survey.observations.filtered_by_group(observations_group).each_with_index do |o, index|
-    .form-entry-item-container
+  -# loop through observations
+  -# if current step and set = observation step and set make editable, otherwise make readonly
+  - index_offset = 0
+
+  -# this section handles edit on already saved data (a true edit)
+  - steps = @survey.survey_template.steps
+  - steps.each do |step|
+    - step_observations = @survey.observations.filtered_by_step(step)
+    - unless step_observations.blank?
+      - if step_observations.first.survey_question.duplicator
+        - sets = @survey.observations.filtered_by_step(step).sets
+        - sets.each do |set|
+          - set_observations = @survey.observations.filtered_by_step_and_set(step, set)
+          - if current_step == step and current_set == set
+            - set_observations.each_with_index do |o, index|
+              = f.fields_for :observations, o do |ff|
+                .form-entry-item-container
+                  = ff.hidden_field :survey_question_id
+                  = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+          - else
+            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: set_observations, step: step, set: set
+      - else
+        - set = step_observations.first.set
+        - if current_step == step
+          - step_observations.each_with_index do |o, index|
+            = f.fields_for :observations, o do |ff|
+              .form-entry-item-container
+                = ff.hidden_field :survey_question_id
+                = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+        - else
+          = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: step_observations, step: step, set: set
+
+  -# this section handles edit on newly created data for steps 2, 3, ... as part of our hacked in step by step wizard
+  - @survey.observations.each_with_index do |o, index|
+    -# if the current observation group is the last observation group render observations as form fields
+    - if o.id.blank?
       = f.fields_for :observations, o do |ff|
-        = ff.hidden_field :survey_question_id
-        = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
+        .form-entry-item-container
+          = ff.hidden_field :survey_question_id
+          = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+    - else
+      - index_offset += 1
+
 
   .form-group
     .col-sm-offset-5.col-sm-7
-      = f.submit "Save", class: "btn btn-primary"
-      = link_to "Cancel", survey_path(@survey), data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
+      - if current_step == 2
+        = link_to "#", class: "btn btn-primary ajax-submit" do
+          %span.glyphicon.glyphicon-plus
+          Save & Add Entry
+        = f.submit "Save & Continue", class: "btn btn-primary"
+      - else
+        = f.submit (current_step == 1 ? "Save & Continue" : "Finish"), class: "btn btn-primary"
+      = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"

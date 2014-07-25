@@ -1,15 +1,15 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
 
 one:
-  survey_template_id: 
-  question_id: 
+  survey_template_id:
+  question_id:
   sort_order: 1
-  group: MyString
+  step: MyString
   duplicator: false
 
 two:
-  survey_template_id: 
-  question_id: 
+  survey_template_id:
+  question_id:
   sort_order: 1
-  group: MyString
+  step: MyString
   duplicator: false

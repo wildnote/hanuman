@@ -21,7 +21,7 @@ module Hanuman
       case step
       when 'step_2', 'step_3'
         :put
-      when 'step_1'
+      when 1
         if mode.include? 'Edit'
           :patch
         else

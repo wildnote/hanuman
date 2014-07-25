@@ -6,4 +6,4 @@
     - else
       = ff.collection_select :answer, ff.object.survey_question.question.answer_choices, :option_text, :option_text,
                              {prompt: false}, {class: 'form-control'}
-    = ff.hidden_field :group
+    = ff.hidden_field :set

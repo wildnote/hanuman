@@ -12,8 +12,8 @@ module Hanuman
       enable
     end
 
-    def observation_groups
-      self.observations.collect(&:group).uniq
+    def sets
+      self.observations.collect(&:set).uniq
     end
 
     def author
