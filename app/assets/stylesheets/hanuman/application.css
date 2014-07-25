@@ -19,7 +19,7 @@ body {
   line-height: 1.42857143 !important;
 }
 
-.page-header input.btn {
+.page-header input.btn, .page-header button.btn {
   float: right;
 }
 
