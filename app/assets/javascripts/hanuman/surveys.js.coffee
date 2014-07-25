@@ -158,9 +158,3 @@ $ ->
       errorRow = HandlebarsTemplates['survey/error'](errorThrown)
       $(errorRow).insertAfter($('.form-control-static').last().closest('.form-group'))
       # todo add honeybadger notification
-
-  # hide all collapsible panels at start of step_2 and step_3
-  # if $('form[action*=\\/hanuman\\/survey_steps\\/step_2], form[action*=\\/hanuman\\/survey_steps\\/step_3]').length > 0
-  #   if $(".panel-collapse").length > 0
-  #     # hide all existing panels
-  #     $('.panel-collapse').collapse()

@@ -18,19 +18,10 @@
             %span.glyphicon.glyphicon-trash
     .clearfix
   -# i know there is a better way to do this, if show just adds the .in class to the collapse, else no .in class
-  - if show
-    .panel-collapse.collapse.in{:id => "collapse_#{step}_#{set}"}
-      .panel-body
-        - if step == 1 and set == 1
-          = render ("hanuman/surveys/formextensionreadonly"), s: survey
-        - observations.each do |o|
-          =# debug o.inspect
-          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
-  - else
-    .panel-collapse.collapse{:id => "collapse_#{step}_#{set}"}
-      .panel-body
-        - if step == 1 and set == 1
-          = render ("hanuman/surveys/formextensionreadonly"), s: survey
-        - observations.each do |o|
-          =# debug o.inspect
-          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+  %div{:id => "collapse_#{step}_#{set}", :class => "panel-collapse collapse #{show ? 'in' : false}"}
+    .panel-body
+      - if step == 1 and set == 1
+        = render ("hanuman/surveys/formextensionreadonly"), s: survey
+      - observations.each do |o|
+        =# debug o.inspect
+        = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
