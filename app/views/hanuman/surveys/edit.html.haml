@@ -9,7 +9,7 @@
   - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
 
 - current_step = params[:step].to_i
-- current_set = params[:set].to_i
+- current_entry = params[:entry].to_i
 - survey_form_state = yield(:survey_form_state).strip
 
 = form_for @survey, builder: CustomFieldsFormBuilder, html: {class: "form-horizontal"} do |f|
@@ -28,7 +28,7 @@
     = render ("hanuman/surveys/formextension"), f: f
 
   -# loop through observations
-  -# if current step and set = observation step and set make editable, otherwise make readonly
+  -# if current step and entry = observation step and entry make editable, otherwise make readonly
   - index_offset = 0
 
   -# this section handles edit on already saved data (a true edit)
@@ -37,19 +37,19 @@
     - step_observations = @survey.observations.filtered_by_step(step)
     - unless step_observations.blank?
       - if step_observations.first.survey_question.duplicator
-        - sets = @survey.observations.filtered_by_step(step).sets
-        - sets.each do |set|
-          - set_observations = @survey.observations.filtered_by_step_and_set(step, set)
-          - if current_step == step and current_set == set
-            - set_observations.each_with_index do |o, index|
+        - entries = @survey.observations.filtered_by_step(step).entries
+        - entries.each do |entry|
+          - entry_observations = @survey.observations.filtered_by_step_and_entry(step, entry)
+          - if current_step == step and current_entry == entry
+            - entry_observations.each_with_index do |o, index|
               = f.fields_for :observations, o do |ff|
                 .form-entry-item-container
                   = ff.hidden_field :survey_question_id
                   = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
           - else
-            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: set_observations, step: step, set: set
+            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: entry_observations, step: step, entry: entry
       - else
-        - set = step_observations.first.set
+        - entry = step_observations.first.entry
         - if current_step == step
           - step_observations.each_with_index do |o, index|
             = f.fields_for :observations, o do |ff|
@@ -57,7 +57,7 @@
                 = ff.hidden_field :survey_question_id
                 = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
         - else
-          = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: step_observations, step: step, set: set
+          = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: step_observations, step: step, entry: entry
 
   -# this section handles edit on newly created data for steps 2, 3, ... as part of our hacked in step by step wizard
   - @survey.observations.each_with_index do |o, index|

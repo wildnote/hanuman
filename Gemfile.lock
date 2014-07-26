@@ -14,7 +14,6 @@ PATH
       rails (= 4.0.3)
       sass-rails
       uglifier
-      wicked
 
 GEM
   remote: https://rubygems.org/
@@ -134,8 +133,6 @@ GEM
     uglifier (2.5.0)
       execjs (>= 0.3.0)
       json (>= 1.8.0)
-    wicked (1.0.3)
-      rails (>= 3.0.7)
 
 PLATFORMS
   ruby

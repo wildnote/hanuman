@@ -6,10 +6,10 @@
         Step
         = step
         Entry
-        = set
+        = entry
     - if show
       .pull-right
-        = link_to edit_survey_path(@survey.id, step, set), class: "btn btn-xs btn-primary" do
+        = link_to edit_survey_path(@survey.id, step, entry), class: "btn btn-xs btn-primary" do
           %span.glyphicon.glyphicon-pencil
           Edit
         - if step == 2
@@ -19,17 +19,17 @@
     .clearfix
   -# i know there is a better way to do this, if show just adds the .in class to the collapse, else no .in class
   - if show
-    .panel-collapse.collapse.in{:id => "collapse_#{step}_#{set}"}
+    .panel-collapse.collapse.in{:id => "collapse_#{step}_#{entry}"}
       .panel-body
-        - if step == 1 and set == 1
+        - if step == 1 and entry == 1
           = render ("hanuman/surveys/formextensionreadonly"), s: survey
         - observations.each do |o|
           =# debug o.inspect
           = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
   - else
-    .panel-collapse.collapse{:id => "collapse_#{step}_#{set}"}
+    .panel-collapse.collapse{:id => "collapse_#{step}_#{entry}"}
       .panel-body
-        - if step == 1 and set == 1
+        - if step == 1 and entry == 1
           = render ("hanuman/surveys/formextensionreadonly"), s: survey
         - observations.each do |o|
           =# debug o.inspect

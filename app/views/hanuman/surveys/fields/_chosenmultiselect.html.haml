@@ -8,4 +8,4 @@
                     options_from_collection_for_select(ff.object.survey_question.question.answer_choices, :id, :option_text,
                     ff.object.observation_answers.map{|oa| oa.answer_choice_id}),
                     {multiple: true, size: 10, class: 'chosen-multiselect form-control'}
-    = ff.hidden_field :set
+    = ff.hidden_field :entry

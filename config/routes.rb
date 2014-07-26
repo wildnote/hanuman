@@ -1,6 +1,6 @@
 Hanuman::Engine.routes.draw do
 
-  get 'surveys/:id/edit/:step/:set' => 'surveys#edit', as: :edit_survey
+  get 'surveys/:id/edit/:step/:entry' => 'surveys#edit', as: :edit_survey
 
   resources :surveys do
     member do
