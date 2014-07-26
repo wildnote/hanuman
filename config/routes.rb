@@ -20,8 +20,6 @@ Hanuman::Engine.routes.draw do
 
   resources :survey_templates
 
-  resources :survey_steps
-
   get 'about' => 'about#index'
 
   #root 'about#index'
