@@ -74,9 +74,10 @@
   .form-group
     .col-sm-offset-5.col-sm-7
       - if current_step == 2
-        = link_to "#", class: "btn btn-primary ajax-submit" do
-          %span.glyphicon.glyphicon-plus
-          Save & Add Entry
+        = link_to "#", class: "btn btn-primary ajax-submit ladda-button", :"data-style" => "zoom-out" do
+          %span.ladda-label
+            %span.glyphicon.glyphicon-plus
+            Save & Add Entry
         = f.submit "Save & Continue", class: "btn btn-primary"
       - else
         = f.submit (current_step == 1 ? "Save & Continue" : "Finish"), class: "btn btn-primary"
