@@ -12,7 +12,7 @@ module Hanuman
       enable
     end
 
-    def entries
+    def observation_entries
       self.observations.collect(&:entry).uniq
     end
 
