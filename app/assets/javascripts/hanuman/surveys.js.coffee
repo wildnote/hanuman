@@ -149,10 +149,10 @@ $ ->
           this.selectedIndex = 0
         $('.search-choice-close').click()
 
-        # increment set value(s)
-        $set = $('input[type=hidden][name*=\\[set\\]]')
-        setVal = parseInt $($set[0]).val()
-        $set.val(setVal + 1)
+        # increment entry value(s)
+        $entry = $('input[type=hidden][name*=\\[entry\\]]')
+        entryVal = parseInt $($entry[0]).val()
+        $entry.val(entryVal + 1)
 
     ).fail (jqXHR, textStatus, errorThrown) ->
       errorRow = HandlebarsTemplates['survey/error'](errorThrown)

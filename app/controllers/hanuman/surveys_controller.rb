@@ -23,7 +23,7 @@ module Hanuman
         @survey.build_survey_extension
         @survey.observations.build(
           survey_question_id: sq.id,
-          set: 1
+          entry: 1
         )
       end
     end
@@ -31,11 +31,11 @@ module Hanuman
     # GET /surveys/1/edit
     def edit
       step = params[:step]
-      set = params[:set]
-      # build empty set on edit to deal with first time entering data for that step/set
-      if @survey.observations.filtered_by_step_and_set(step, set).count < 1
+      entry = params[:entry]
+      # build empty entry on edit to deal with first time entering data for that step/entry
+      if @survey.observations.filtered_by_step_and_entry(step, entry).count < 1
         @survey.survey_template.survey_questions.by_step(step).each do |sq|
-          @survey.observations.build(survey_question_id: sq.id, set: set)
+          @survey.observations.build(survey_question_id: sq.id, entry: entry)
         end
       end
     end
@@ -46,7 +46,7 @@ module Hanuman
 
       if @survey.save
         #redirect_to @survey, notice: 'Survey was successfully created.'
-        # redirect to edit survey step 2, set 1
+        # redirect to edit survey step 2, entry 1
         redirect_to edit_survey_path(@survey.id, "2", "1")
       else
         render action: 'new'
@@ -55,7 +55,7 @@ module Hanuman
 
     # PATCH/PUT /surveys/1
     def update
-      set = params[:survey][:observations_attributes]['0'][:set]
+      entry = params[:survey][:observations_attributes]['0'][:entry]
       survey_question = SurveyQuestion.find params[:survey][:observations_attributes]['0'][:survey_question_id]
       step = survey_question.step
 
@@ -69,7 +69,7 @@ module Hanuman
             end
           }
           format.json {
-            render json: @survey.observations.filtered_by_step_and_set(step, set).
+            render json: @survey.observations.filtered_by_step_and_entry(step, entry).
               as_json(:include => {:observation_answers => {:methods => [:answer_choice_text]}}, :methods => [:question_text])
           }
         else
@@ -110,7 +110,7 @@ module Hanuman
             :id,
             :survey_question_id,
             :answer,
-            :set,
+            :entry,
             :answer_choice_id,
             answer_choice_ids: []
           ]

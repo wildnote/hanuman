@@ -6,7 +6,7 @@ module Hanuman
     has_many :observation_answers
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
     has_many :answer_choices, through: :observation_answers
-    default_scope {includes(:survey_question).order('hanuman_survey_questions.step ASC, hanuman_observations.set ASC, hanuman_survey_questions.sort_order ASC').references(:survey_question)}
+    default_scope {includes(:survey_question).order('hanuman_survey_questions.step ASC, hanuman_observations.entry ASC, hanuman_survey_questions.sort_order ASC').references(:survey_question)}
 
     before_save :strip_and_squish_answer
 
@@ -32,9 +32,9 @@ module Hanuman
       a.blank? ? '' : a.gsub(' )', '')
     end
 
-    def self.filtered_by_set(set)
+    def self.filtered_by_entry(entry)
       includes(:survey_question => [:question => [:answer_type]]).
-      where(set: set)
+      where(entry: entry)
     end
 
     def self.filtered_by_step(step)
@@ -42,17 +42,17 @@ module Hanuman
       where("hanuman_survey_questions.step = ?", step)
     end
 
-    def self.filtered_by_step_and_set(step, set)
+    def self.filtered_by_step_and_entry(step, entry)
       includes(:survey_question => [:question => [:answer_type]]).
-      where("hanuman_survey_questions.step = ? AND hanuman_observations.set = ?", step, set)
+      where("hanuman_survey_questions.step = ? AND hanuman_observations.entry = ?", step, entry)
     end
 
     def question_text
       self.survey_question.question.question_text
     end
 
-    def self.sets
-      self.pluck(:set).uniq
+    def self.entries
+      self.pluck(:entry).uniq
     end
   end
 end
