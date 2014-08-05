@@ -24,3 +24,12 @@
         %td Survey type
         %td
           %b= @survey_template.survey_type
+      -# need to add partial for survey extension here
+      = render "hanuman/survey_templates/formextensionreadonly"
+      -# loop through survey questions
+      - @survey_template.survey_questions.each do |sq|
+        %tr
+          %td
+            = sq.question.question_text
+          %td
+            = sq.question.answer_type.name
