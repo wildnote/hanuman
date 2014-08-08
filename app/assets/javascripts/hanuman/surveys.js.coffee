@@ -109,7 +109,7 @@ $ ->
         # if we have more than one response object, meaning more than one field in the response?-kdh
         if responseCount > 1
           # create a collapsible panel
-          panel = HandlebarsTemplates['survey/panel'](response[0])
+          panel = HandlebarsTemplates['surveys/panel'](response[0])
           # check to see if any panels already exist
           if $(".panel-collapse").length > 0
             # hide all existing panels
@@ -126,17 +126,17 @@ $ ->
               # check for collapsible panel presense
               if $(".panel-collapse").length > 0
                 # if so render observation template inside last collapsible panel
-                newRow = HandlebarsTemplates['survey/observation'](observation)
+                newRow = HandlebarsTemplates['surveys/observation'](observation)
                 $('.panel-body').last().append(newRow)
               else
                 # if not render observation template after the last static row
-                newRow = HandlebarsTemplates['survey/observation'](observation)
+                newRow = HandlebarsTemplates['surveys/observation'](observation)
                 $(newRow).insertAfter($('.form-control-static').last().closest('.form-group'))
         else
           # add observation to end of the last collapsible panel or form group with a form control static
           for observation in response
             do (observation) ->
-              newRow = HandlebarsTemplates['survey/observation'](observation)
+              newRow = HandlebarsTemplates['surveys/observation'](observation)
               $(newRow).insertAfter($('.panel, .form-control-static').not('.panel .form-control-static').last().closest('.panel, .form-group'))
 
         # reset save button
@@ -155,6 +155,6 @@ $ ->
         $entry.val(entryVal + 1)
 
     ).fail (jqXHR, textStatus, errorThrown) ->
-      errorRow = HandlebarsTemplates['survey/error'](errorThrown)
+      errorRow = HandlebarsTemplates['surveys/error'](errorThrown)
       $(errorRow).insertAfter($('.form-control-static').last().closest('.form-group'))
       # todo add honeybadger notification

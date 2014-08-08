@@ -12,12 +12,12 @@
 //
 //= require typeahead/typeahead.bundle
 //= require chosen/chosen.jquery
-//= require handlebars/handlebars
 //= require js-webshim/dev/polyfiller
+//= require handlebars
 //= require ladda/spin
 //= require ladda/ladda
+//= require ./surveys
 //= require_tree ./templates
-//= require_tree .
 
 
 // Ladda

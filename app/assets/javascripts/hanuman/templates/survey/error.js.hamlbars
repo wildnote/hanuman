@@ -1,4 +1,0 @@
-.form-group.bg-danger
-  %label.col-sm-5.control-label Error
-  .col-sm-7
-    = hb 'errorThrown'
