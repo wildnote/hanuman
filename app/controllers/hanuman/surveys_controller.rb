@@ -70,7 +70,7 @@ module Hanuman
           }
           format.json {
             render json: @survey.observations.filtered_by_step_and_entry(step, entry).
-              as_json(:include => {:observation_answers => {:methods => [:answer_choice_text]}}, :methods => [:question_text])
+              to_json(:include => {:observation_answers => {:methods => [:answer_choice_text]}}, :methods => [:question_text])
           }
         else
           format.html { render action: 'edit' }
