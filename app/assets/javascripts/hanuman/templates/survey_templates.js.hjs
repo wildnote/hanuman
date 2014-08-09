@@ -1,0 +1,3 @@
+<h1>Survey Templates from inside templates!</h1>
+
+{{outlet}}

@@ -1,8 +1,0 @@
-.form-group.bg-success
-  %label.col-sm-5.control-label
-    = hb 'question_text'
-  .col-sm-7
-    %p.form-control-static= hb 'answer'
-    = hb 'each observation_answers' do
-      = hb 'answer_choice_text'
-      %br/

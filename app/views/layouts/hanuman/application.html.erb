@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Emberengine</title>
+  <%= stylesheet_link_tag    "hanuman/application", media: "all" %>
+  <%= javascript_include_tag "hanuman/application" %>
+  <%= javascript_include_tag "hanuman/templates/all" %>
+  <%= csrf_meta_tags %>
+</head>
+<body>
+
+<%= yield %>
+
+</body>
+</html>

@@ -1,8 +1,0 @@
-.panel.panel-default
-  .panel-heading
-    %h4.panel-title
-      %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{hb 'group'}"}
-        Entry No.
-        = hb 'group'
-  .panel-collapse.collapse.in{:id => "collapse_#{hb 'group'}"}
-    .panel-body.bg-success

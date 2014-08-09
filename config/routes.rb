@@ -1,5 +1,8 @@
 Hanuman::Engine.routes.draw do
 
+  get 'admin' => 'admin#index'
+  get 'admin/show'
+
   get 'surveys/:id/edit/:step/:entry' => 'surveys#edit', as: :edit_survey
 
   resources :surveys do
