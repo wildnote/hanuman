@@ -1,7 +1,7 @@
 require 'paper_trail'
 require 'amoeba'
 require 'ancestry'
-# require 'handlebars_assets'
+require 'handlebars_assets'
 # require 'hamlbars'
 require 'ember-rails'
 
