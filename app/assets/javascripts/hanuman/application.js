@@ -12,7 +12,7 @@
 //
 //= require typeahead/typeahead.bundle
 //= require chosen/chosen.jquery
-//= require_tree js-webshim
+//= require_tree ./js-webshim
 //= require handlebars
 //= require ladda/spin
 //= require ladda/ladda
