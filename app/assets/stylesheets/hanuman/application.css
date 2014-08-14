@@ -12,5 +12,6 @@
  *= require typeahead/typeahead
  *= require chosen/chosen
  *= require ladda/ladda-themeless
+ *= require hanuman/global
  *= require_tree .
  */
