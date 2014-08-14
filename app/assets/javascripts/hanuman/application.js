@@ -12,7 +12,6 @@
 //
 //= require typeahead/typeahead.bundle
 //= require chosen/chosen.jquery
-//= require_tree ./js-webshim
 //= require ladda/spin
 //= require ladda/ladda
 //= require jquery
@@ -23,7 +22,6 @@
 //= require ./hanuman_ember
 //= require ./surveys
 //= require ./templates/all
-
 
 // Ladda
 Ladda.bind('.ladda-button');

@@ -2,22 +2,6 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 
-# webshim lib polyfill
-webshims.setOptions "forms-ext",
-  date:
-    startView: 2
-    openOnFocus: true
-    popover:
-      appendTo: "body"
-
-  "datetime-local":
-    startView: 3
-    openOnFocus: true
-    popover:
-      appendTo: "body"
-
-webshims.polyfill "forms forms-ext"
-
 $ ->
 
   # TYPEAHEAD
