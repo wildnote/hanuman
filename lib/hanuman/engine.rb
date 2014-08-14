@@ -16,9 +16,5 @@ module Hanuman
         require_dependency(c)
       end
     end
-    
-    initializer "hanuman.assets.precompile" do |app|
-      app.config.assets.precompile += %w(hanuman.css hanuman.js)
-    end
   end
 end
