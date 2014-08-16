@@ -11,9 +11,17 @@ module Hanuman
     amoeba do
       enable
     end
-
-    def observation_entries
-      self.observations.collect(&:entry).uniq
+    
+    def survey_steps
+      self.survey_template.survey_questions.collect(&:step).uniq
+    end
+    
+    def survey_step_is_duplicator?(step)
+      self.survey_template.survey_questions.by_step(step).first.duplicator
+    end
+    
+    def observation_entries_by_step(step)
+      self.observations.filtered_by_step(step).collect(&:entry).uniq
     end
 
     def author

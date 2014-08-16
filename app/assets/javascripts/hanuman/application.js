@@ -12,19 +12,16 @@
 //
 //= require typeahead/typeahead.bundle
 //= require chosen/chosen.jquery
-//= require js-webshim/dev/polyfiller
-//= require handlebars
 //= require ladda/spin
 //= require ladda/ladda
 //= require jquery
-//= require handlebars
+//= require handlebars/handlebars
 //= require ember
 //= require ember-data
 //= require_self
 //= require ./hanuman_ember
 //= require ./surveys
 //= require ./templates/all
-
 
 // Ladda
 Ladda.bind('.ladda-button');
