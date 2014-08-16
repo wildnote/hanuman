@@ -2,11 +2,16 @@ require_dependency "hanuman/application_controller"
 
 module Hanuman
   class SurveyTemplatesController < ApplicationController
+    respond_to :json, :html
     before_action :set_survey_template, only: [:show, :edit, :update, :destroy]
 
     # GET /survey_templates
     def index
       @survey_templates = SurveyTemplate.all
+      respond_to do |format|
+        format.html
+        format.json {render json: @survey_templates}
+      end
     end
 
     # GET /survey_templates/1

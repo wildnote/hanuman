@@ -1,3 +1,7 @@
 <h1>Survey Templates from inside templates!</h1>
 
-{{outlet}}
+{{#each}}
+  {{#link-to 'survey_template' this}}
+    {{name}}
+  {{/link-to}}
+{{/each}}

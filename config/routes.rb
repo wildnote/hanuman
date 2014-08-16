@@ -1,5 +1,15 @@
 Hanuman::Engine.routes.draw do
 
+  namespace :api do
+    namespace :v1 do
+      resources :answer_choices
+      resources :answer_types
+      resources :questions
+      resources :survey_questions
+      resources :survey_templates
+    end
+  end
+
   get 'admin' => 'admin#index'
   get 'admin/show'
 
