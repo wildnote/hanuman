@@ -70,15 +70,18 @@
     - else
       - index_offset += 1
 
+  - if current_step == 2
+    .panel.panel-success
+      .panel-body.text-right
+        = f.submit "Add Entry", name: "next_step", class: "btn btn-xs btn-success" do
+          %span.glyphicon.glyphicon-plus
+          Add Entry
+
 
   .form-group
     .col-sm-offset-5.col-sm-7
       - if current_step == 2
-        = link_to "#", class: "btn btn-primary ajax-submit ladda-button", :"data-style" => "zoom-out" do
-          %span.ladda-label
-            %span.glyphicon.glyphicon-plus
-            Save & Add Entry
-        = f.submit "Save & Continue", class: "btn btn-primary"
+        = f.submit "Next Step", class: "btn btn-primary"
       - else
-        = f.submit (current_step == 1 ? "Save & Continue" : "Finish"), class: "btn btn-primary"
+        = f.submit (current_step == 1 ? "Next Step" : "Finish"), class: "btn btn-primary"
       = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
