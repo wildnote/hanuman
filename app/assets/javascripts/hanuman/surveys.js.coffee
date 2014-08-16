@@ -119,7 +119,6 @@ $ ->
           else
             # create first panel after last static row
             $(panel).insertAfter($('.form-control-static').last().closest('.form-group'))
-
           # add observation to end of observation section
           for observation in response
             do (observation) ->
