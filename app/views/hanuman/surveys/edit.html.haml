@@ -4,6 +4,8 @@
   active
 - content_for :survey_form_state do
   Edit Report Entry
+- content_for :title do
+  Edit Survey
 
 - if @survey.errors.any?
   - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
