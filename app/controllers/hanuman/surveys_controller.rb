@@ -11,6 +11,7 @@ module Hanuman
 
     # GET /surveys/1
     def show
+      @survey_show_duplicator = Setting.enable?("survey_show_duplicator")
     end
 
     # GET /surveys/new

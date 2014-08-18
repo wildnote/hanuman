@@ -14,5 +14,8 @@
 %li{class: yield(:navbar_hanuman_answer_choices)}
   = link_to "Answer Choices", hanuman.answer_choices_path
 %li.divider
+%li{class: yield(:navbar_hanuman_settings)}
+  = link_to "Settings", hanuman.settings_path
+%li.divider
 %li{class: yield(:navbar_hanuman_about)}
   = link_to "About Hanuman", hanuman.about_path

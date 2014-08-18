@@ -1,0 +1,22 @@
+- content_for :navbar_hanuman do
+  active
+- content_for :navbar_hanuman_settings do
+  active
+
+.page-header
+  = link_to edit_setting_path(@setting), class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-pencil
+    Edit Setting
+  %h1 Setting Details
+
+.table-responsive
+  %table.table.table-striped.table-hover
+    %tbody
+      %tr
+        %td Key
+        %td
+          %b= @setting.key
+      %tr
+        %td Value
+        %td
+          %b= @setting.value

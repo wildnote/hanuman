@@ -1,5 +1,7 @@
 Hanuman::Engine.routes.draw do
 
+  resources :settings
+
   namespace :api do
     namespace :v1 do
       resources :answer_choices
