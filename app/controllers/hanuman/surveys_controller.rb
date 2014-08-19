@@ -63,7 +63,9 @@ module Hanuman
       respond_to do |format|
         if @survey.update(survey_params)
           format.html {
-            if step.eql? 2
+            if step.eql? 1
+              redirect_to edit_survey_path(@survey.id, "2", "1"), notice: 'Survey was successfully updated.'
+            elsif step.eql? 2
               # repeat step 2
               if params[:next_step]
                 redirect_to edit_survey_path(@survey.id, "2", entry.to_i + 1), notice: 'Survey was successfully updated.'
