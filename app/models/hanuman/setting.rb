@@ -1,5 +1,6 @@
 module Hanuman
   class Setting < ActiveRecord::Base
+    validates_uniqueness_of :key
     def self.enable?(key)
       k = find_by_key(key)
       if k.blank?
@@ -8,7 +9,7 @@ module Hanuman
         k.value == 'true' ? true : false
       end
     end
-    
+
     def self.value(key)
       k = find_by_key(key)
       if k.blank?

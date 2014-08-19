@@ -5,7 +5,7 @@
       = ff.text_field :answer, value: "There are no available Answer Options!", class: "form-control", readonly: true
     - else
       - cbl_answers = ff.object.observation_answers.map{|oa| oa.answer_choice_id}
-      - ff.object.survey_question.question.answer_choices.each do |a|
+      - ff.object.survey_question.question.answer_choices.sorted.each do |a|
         = check_box_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
                            a.id, cbl_answers.include?(a.id), {class: 'form-control'}
         = label_tag nil, a.option_text
