@@ -25,7 +25,7 @@ module Hanuman
     end
 
     def author
-      self.versions.first.whodunnit unless self.versions.blank?
+      self.versions.first.whodunnit unless self.versions.blank? rescue nil
     end
     
     def survey_step_has_observations?(step)
