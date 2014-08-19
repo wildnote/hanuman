@@ -17,6 +17,18 @@
 
 .form-horizontal
 
+  - steps = @survey.survey_template.steps
+  
+  .panel.panel-default
+    .panel-heading
+      %h5.text-center Survey Progress
+    .panel-body  
+      .survey-progress
+        - steps.each do |step|
+          .col-sm-4{class: "#{false ? 'current' : ''}"}
+            %span.glyphicon.progress-mark{class: "#{step_status(@survey, step)}"}
+            = "Step " + step.to_s
+
   .well
     .form-group
       = label_tag nil, "Author", class: "col-sm-5 control-label"
@@ -27,7 +39,6 @@
       .col-sm-7
         %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
 
-  - steps = @survey.survey_template.steps
   - steps.each do |step|
     - step_observations = @survey.observations.filtered_by_step(step)
     - unless step_observations.blank?

@@ -24,6 +24,18 @@
       %i= survey_form_state
     %h1= f.object.survey_template.name
 
+  - steps = @survey.survey_template.steps
+  
+  .panel.panel-default
+    .panel-heading
+      %h5.text-center Survey Progress
+    .panel-body  
+      .survey-progress
+        - steps.each do |step|
+          .col-sm-4{class: "#{step == 1 ? 'current' : ''}"}
+            %span.glyphicon.progress-mark{class: "#{step_status(@survey, step, current_step)}"}
+            = "Step " + step.to_s
+
   = f.hidden_field :survey_template_id
 
   -# if step 1 then call form extension partial to include any survey level fields extended by the parent app

@@ -27,5 +27,14 @@ module Hanuman
     def author
       self.versions.first.whodunnit unless self.versions.blank?
     end
+    
+    def survey_step_has_observations?(step)
+      survey_id = self.id
+      if self.survey_template.survey_questions.by_step(step).first.observations.where('hanuman_observations.survey_id = ?', survey_id).count > 0
+        true
+      else
+        false
+      end
+    end
   end
 end
