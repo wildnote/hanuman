@@ -16,17 +16,6 @@
 //= require ladda/ladda
 //= require jquery
 //= require handlebars/handlebars
-//= require ember
-//= require ember-data
 //= require_self
-//= require ./hanuman_ember
-//= require ./surveys
-//= require ./templates/all
-
 // Ladda
 Ladda.bind('.ladda-button');
-
-// for more details see: http://emberjs.com/guides/application/
-window.App = Ember.Application.create({
-  LOG_TRANSITIONS: true
-})
