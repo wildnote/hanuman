@@ -48,10 +48,14 @@
           - entry_observations = @survey.observations.filtered_by_step_and_entry(step, entry)
           = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: entry_observations, step: step, entry: entry
         .panel.panel-success
-          .panel-body.text-right
-            = link_to edit_survey_path(@survey.id,step,step_observations.last.entry+1), class: "btn btn-xs btn-success" do
-              %span.glyphicon.glyphicon-plus
-              Add Entry
+          .panel-heading
+            .pull-left
+              %h5= Hanuman::Setting.value("add_entry_helper_text")
+            .pull-right
+              = link_to edit_survey_path(@survey.id, step, step_observations.last.entry + 1), class: "btn btn-success" do
+                %span.glyphicon.glyphicon-plus
+                Add Entry
+            .clearfix
       - else
         - entry = step_observations.first.entry
         = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: step_observations, step: step, entry: entry

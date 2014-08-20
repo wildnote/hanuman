@@ -23,6 +23,10 @@ module Hanuman
     def observation_entries_by_step(step)
       self.observations.filtered_by_step(step).collect(&:entry).uniq
     end
+    
+    def max_observation_entry_by_step(step)
+      self.observations.filtered_by_step(step).collect(&:entry).uniq.max
+    end
 
     def author
       self.versions.first.whodunnit unless self.versions.blank? rescue nil

@@ -120,12 +120,16 @@
               - index_offset += 1
 
   - if current_step == 2
+    - max_entry = @survey.max_observation_entry_by_step(current_step)
     .panel.panel-success
-      .panel-body.text-right
-        = f.submit "Add Entry", name: "next_step", class: "btn btn-xs btn-success" do
-          %span.glyphicon.glyphicon-plus
-          Add Entry
-
+      .panel-heading
+        .pull-left
+          %h5= add_entry_helper_text(current_entry, max_entry)
+        .pull-right
+          = button_tag type: "submit", class: "btn btn-success", name: "next_step" do
+            = add_entry_label(current_entry, max_entry)          
+        .clearfix
+  
   .form-group
     .col-sm-offset-5.col-sm-7
       - if current_step == 2
