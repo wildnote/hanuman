@@ -25,9 +25,7 @@
   - steps = @survey.survey_template.steps
   
   .panel.panel-default
-    .panel-heading
-      %h5.text-center Survey Progress
-    .panel-body  
+    .panel-body
       .survey-progress
         - steps.each do |step|
           .col-sm-4{class: "#{step.to_i == current_step.to_i ? 'current' : ''}"}
@@ -37,13 +35,11 @@
   = f.hidden_field :survey_template_id
   = f.hidden_field :id unless @survey.new_record?
 
-  -# if step 1 then call form extension partial to include any survey level fields extended by the parent app
-  - if current_step == 1
-    = render ("hanuman/surveys/formextension"), f: f
-
   -# loop through observations
   -# if current step and entry = observation step and entry make editable, otherwise make readonly
   - index_offset = 0
+  
+  - step_edit = false
 
   -# this section handles edit on already saved data (a true edit)
   - steps.each do |step|
@@ -54,35 +50,74 @@
         - entries.each do |entry|
           - entry_observations = @survey.observations.filtered_by_step_and_entry(step, entry)
           - if current_step == step and current_entry == entry
-            - entry_observations.each_with_index do |o, index|
-              = f.fields_for :observations, o do |ff|
-                .form-entry-item-container
-                  = ff.hidden_field :survey_question_id
-                  = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+            - step_edit = true
+            .panel.panel-info
+              .panel-heading{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+                %h4.panel-title.pull-left
+                  %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+                    Step
+                    = step
+                    Entry
+                    = entry
+                .clearfix
+              .panel-collapse.in{:id => "collapse_#{step}_#{entry}"}
+                .panel-body
+                  - entry_observations.each_with_index do |o, index|
+                    = f.fields_for :observations, o do |ff|
+                      .form-entry-item-container
+                        = ff.hidden_field :survey_question_id
+                        = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
           - else
             = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: entry_observations, step: step, entry: entry
       - else
         - entry = step_observations.first.entry
         - if current_step == step
-          - step_observations.each_with_index do |o, index|
-            = f.fields_for :observations, o do |ff|
-              .form-entry-item-container
-                = ff.hidden_field :survey_question_id
-                = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+          - step_edit = true
+          .panel.panel-info
+            .panel-heading{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+              %h4.panel-title.pull-left
+                %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+                  Step
+                  = step
+                  Entry
+                  = entry
+              .clearfix
+            .panel-collapse.in{:id => "collapse_#{step}_#{entry}"}
+              .panel-body                          
+                -# if step 1 then call form extension partial to include any survey level fields extended by the parent app
+                - if current_step == 1
+                  = render ("hanuman/surveys/formextension"), f: f
+                - step_observations.each_with_index do |o, index|
+                  = f.fields_for :observations, o do |ff|
+                    .form-entry-item-container
+                      = ff.hidden_field :survey_question_id
+                      = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
         - else
           - unless step == 3
             = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: step_observations, step: step, entry: entry
 
   -# this section handles edit on newly created data for steps 2, 3, ... as part of our hacked in step by step wizard
-  - @survey.observations.each_with_index do |o, index|
-    -# if the current observation group is the last observation group render observations as form fields
-    - if o.id.blank?
-      = f.fields_for :observations, o do |ff|
-        .form-entry-item-container
-          = ff.hidden_field :survey_question_id
-          = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
-    - else
-      - index_offset += 1
+  - unless step_edit
+    .panel.panel-info
+      .panel-heading{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{current_step}_#{current_entry}"}
+        %h4.panel-title.pull-left
+          %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{current_step}_#{current_entry}"}
+            Step
+            = current_step
+            Entry
+            = current_entry
+        .clearfix
+      .panel-collapse.in{:id => "collapse_#{current_step}_#{current_entry}"}
+        .panel-body
+          - @survey.observations.each_with_index do |o, index|
+            -# if the current observation group is the last observation group render observations as form fields
+            - if o.id.blank?
+              = f.fields_for :observations, o do |ff|
+                .form-entry-item-container
+                  = ff.hidden_field :survey_question_id
+                  = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+            - else
+              - index_offset += 1
 
   - if current_step == 2
     .panel.panel-success
@@ -91,11 +126,10 @@
           %span.glyphicon.glyphicon-plus
           Add Entry
 
-
   .form-group
     .col-sm-offset-5.col-sm-7
       - if current_step == 2
         = f.submit "Next Step", class: "btn btn-primary"
       - else
         = f.submit (current_step == 1 ? "Next Step" : "Finish"), class: "btn btn-primary"
-      = link_to "Cancel", surveys_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
+      = link_to "Cancel", root_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
