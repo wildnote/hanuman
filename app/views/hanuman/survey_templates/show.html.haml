@@ -6,32 +6,45 @@
   Survey Template Details
 
 .page-header
-  = link_to edit_survey_template_path(@survey_template), class: "btn btn-primary" do
-    %span.glyphicon.glyphicon-pencil
-    Edit Survey Template
+  - if current_user.superuser?
+    = link_to edit_survey_template_path(@survey_template), class: "btn btn-primary" do
+      %span.glyphicon.glyphicon-pencil
+      Edit Survey Template
   %h1 Survey Template Details
 
-.table-responsive
-  %table.table.table-striped.table-hover
-    %tbody
-      %tr
-        %td Name
-        %td
-          %b= @survey_template.name
-      %tr
-        %td Status
-        %td
-          %b= @survey_template.status
-      %tr
-        %td Survey type
-        %td
-          %b= @survey_template.survey_type
-      -# need to add partial for survey extension here
-      = render "hanuman/survey_templates/formextensionreadonly"
-      -# loop through survey questions
-      - @survey_template.survey_questions.each do |sq|
-        %tr
-          %td
-            = sq.question.question_text
-          %td
-            = sq.question.answer_type.name
+.form-horizontal
+
+  .well
+    .form-group
+      = label_tag nil, "Name", class: "col-sm-1 control-label"
+      .col-sm-4
+        %p.form-control-static= @survey_template.name
+      = label_tag nil, "Type", class: "col-sm-1 control-label"
+      .col-sm-3
+        %p.form-control-static= @survey_template.survey_type
+      = label_tag nil, "Status", class: "col-sm-1 control-label"
+      .col-sm-2
+        %p.form-control-static= @survey_template.status
+  
+  - steps = @survey_template.steps
+
+  - steps.each do |step|
+    .panel.panel-info
+      .panel-heading{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}"}
+        .panel-title
+          .pull-left
+            %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}"}
+              Step
+              = step
+          - if @survey_template.survey_step_is_duplicator?(step)
+            .pull-right
+              %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}"}
+                Duplicator
+          .clearfix
+      .panel-collapse.collapse.in{:id => "collapse_#{step}"}
+        .panel-body
+          - if step == 1
+            = render ("hanuman/survey_templates/formextensionreadonly")
+          - @survey_template.survey_questions.by_step(step).each do |sq|
+            = render ("hanuman/survey_templates/dynamicfield"), sq: sq
+            

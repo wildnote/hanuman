@@ -8,9 +8,16 @@ module Hanuman
       order("name ASC")
     end
 
+    def self.all_active_sorted
+      where("status = 'active'").order("name ASC")
+    end
+
     def steps
       self.survey_questions.collect(&:step).uniq
     end
+    
+    def survey_step_is_duplicator?(step)
+      self.survey_questions.by_step(step).first.duplicator
+    end
   end
-
 end

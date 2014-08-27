@@ -10,7 +10,7 @@
     = button_tag type: 'submit', class: "btn btn-primary" do
       Start Entry
     = select_tag :survey_template_id,
-                  options_from_collection_for_select(Hanuman::SurveyTemplate.all, :id, :name, params[:survey_template_id]),
+                  options_from_collection_for_select(Hanuman::SurveyTemplate.all_active_sorted, :id, :name, params[:survey_template_id]),
                   {class: 'form-control'}
     = label_tag "Select Survey:"
   %h1 Surveys

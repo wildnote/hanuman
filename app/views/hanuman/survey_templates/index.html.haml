@@ -6,9 +6,10 @@
   Survey Templates
 
 .page-header
-  = link_to new_survey_template_path, class: "btn btn-primary" do
-    %span.glyphicon.glyphicon-plus
-    New Survey Template
+  - if current_user.superuser?
+    = link_to new_survey_template_path, class: "btn btn-primary" do
+      %span.glyphicon.glyphicon-plus
+      New Survey Template
   %h1 Survey Templates
 
 .table-responsive
@@ -16,16 +17,18 @@
     %thead
       %tr
         %th Name
+        %th Type
         %th Status
-        %th Survey Type
-        %th
+        - if current_user.superuser?
+          %th
 
     %tbody
       - @survey_templates.each do |survey_template|
         %tr
           %td= link_to survey_template.name, survey_template
-          %td= link_to survey_template.status, survey_template
           %td= link_to survey_template.survey_type, survey_template
-          %td
-            = link_to survey_template, data: {confirm: "Are you sure you want to delete this Survey Template?"}, method: :delete do
-              %span.glyphicon.glyphicon-trash
+          %td= link_to survey_template.status, survey_template
+          - if current_user.superuser?
+            %td
+              = link_to survey_template, data: {confirm: "Are you sure you want to delete this Survey Template?"}, method: :delete, class: "btn btn-xs btn-danger" do
+                %span.glyphicon.glyphicon-trash

@@ -1,0 +1,194 @@
+- question_text = sq.question.question_text
+- answer_type = sq.question.answer_type.name
+
+
+
+
+- if answer_type == "section"
+  .form-section
+    = question_text
+
+- elsif answer_type == "static"
+  .form-static
+    = question_text
+
+- elsif answer_type == "helperabove"
+  .form-group.helperabove
+    .col-sm-offset-5.col-sm-7
+      = question_text
+
+- elsif answer_type == "helperbelow"
+  .form-group.helperbelow
+    .col-sm-offset-5.col-sm-7
+      = question_text
+
+- elsif answer_type == "line"
+  .page-header
+
+
+
+
+- elsif answer_type == "checkbox"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = check_box_tag nil, nil, false, {disabled: true}
+
+
+
+
+- elsif answer_type == "checkboxlist"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      - if sq.question.answer_choices.blank?
+        = text_field_tag nil, "There are no available Answer Options!", class: "form-control", readonly: true
+      - else
+        - sq.question.answer_choices.sorted.each do |a|
+          = check_box_tag nil, nil, false, {disabled: true}
+          = label_tag nil, a.option_text
+          %br/    
+
+
+
+
+- elsif answer_type == "chosenmultiselect"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      - if sq.question.answer_choices.blank?
+        = text_field_tag nil, "There are no available Answer Options!", class: "form-control", readonly: true
+      - else
+        = select_tag nil, options_from_collection_for_select(sq.question.answer_choices.sorted, :id, :option_text, nil), {multiple: true, size: 10, class: 'chosen-multiselect form-control'}
+
+
+
+
+- elsif answer_type == "chosenmultiselectgrouped"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      - if sq.question.answer_choices.blank?
+        = text_field_tag nil, "There are no available Answer Options!", class: "form-control", readonly: true
+      - else
+        = select_tag nil, option_groups_from_collection_for_select(sq.question.answer_choices.roots.sorted, :children, :option_text, :id, :option_text, nil), {multiple: true, size: 10, class: 'chosen-multiselect form-control'}
+      
+
+
+
+- elsif answer_type == "chosenselect"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      - if sq.question.answer_choices.blank?
+        = text_field_tag nil, "There are no available Answer Options!", class: "form-control", readonly: true
+      - else
+        = select_tag nil, options_from_collection_for_select(sq.question.answer_choices.sorted, :id, :option_text, nil), prompt: 'Please select', class: 'chosen-select form-control'
+
+
+
+
+- elsif answer_type == "datalist"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      = form_for "", builder: CustomFieldsFormBuilder, html: {class: "form-horizontal"} do |f|
+        = f.datalist_tag nil, options_for_select(sq.question.answer_choices.map{|ac| ac.option_text}), {list_id: "datalist_" + sq.id.to_s + "_list", class: "form-control", readonly: true}
+
+
+
+
+- elsif answer_type == "file"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      = file_field_tag nil, {disabled: true, class: "form-control"}
+
+
+
+
+- elsif answer_type == "multiselect"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      - if sq.question.answer_choices.blank?
+        = text_field_tag nil, "There are no available Answer Options!", class: "form-control", readonly: true
+      - else
+        = select_tag nil, options_from_collection_for_select(sq.question.answer_choices.sorted, :id, :option_text, nil), {multiple: true, size: 10, class: 'form-control'}
+
+
+
+
+- elsif answer_type == "multiselectgrouped"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      - if sq.question.answer_choices.blank?
+        = text_field_tag nil, "There are no available Answer Options!", class: "form-control", readonly: true
+      - else
+        = select_tag nil, option_groups_from_collection_for_select(sq.question.answer_choices.roots.sorted, :children, :option_text, :id, :option_text, nil), {multiple: true, size: 10, class: 'form-control'}
+
+
+
+
+- elsif answer_type == "radio"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      - if sq.question.answer_choices.blank?
+        = text_field_tag nil, "There are no available Answer Options!", class: "form-control", readonly: true
+      - else
+        - sq.question.answer_choices.sorted.each do |ac|
+          = radio_button_tag sq.id, ac.option_text, false, disabled: true
+          = label_tag ac.option_text
+          %br/
+
+
+
+
+- elsif answer_type == "range"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      = range_field nil, class: "form-control"
+
+
+
+
+- elsif answer_type == "select"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+      - if sq.question.answer_choices.blank?
+        = text_field_tag nil, "There are no available Answer Options!", class: "form-control", readonly: true
+      - else
+        = select_tag nil, options_from_collection_for_select(sq.question.answer_choices.sorted, :id, :option_text, nil), prompt: 'Please select', class: 'form-control'
+
+
+
+
+- elsif answer_type == "textarea"
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_area_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
+
+
+
+
+- else
+  .form-group
+    = label_tag nil, question_text, class: "col-sm-5 control-label"
+    .col-sm-7
+      = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
