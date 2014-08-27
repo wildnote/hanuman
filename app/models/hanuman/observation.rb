@@ -13,6 +13,10 @@ module Hanuman
     amoeba do
       enable
     end
+    
+    def step
+      survey_question.step
+    end
 
     def strip_and_squish_answer
       answer = answer.strip.squish unless answer.blank?
