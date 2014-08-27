@@ -25,7 +25,8 @@ module Hanuman
     end
     
     def max_observation_entry_by_step(step)
-      self.observations.filtered_by_step(step).collect(&:entry).uniq.max
+      max = self.observations.filtered_by_step(step).collect(&:entry).uniq.max
+      max.blank? ? 0 : max
     end
 
     def author

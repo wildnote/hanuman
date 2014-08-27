@@ -68,7 +68,7 @@ module Hanuman
             elsif step.eql? 2
               # repeat step 2
               if params[:next_step]
-                redirect_to edit_survey_path(@survey.id, "2", entry.to_i + 1), notice: 'Survey was successfully updated.'
+                redirect_to edit_survey_path(@survey.id, "2", @survey.max_observation_entry_by_step(2) + 1), notice: 'Survey was successfully updated.'
               else # done with step 2 go to step 3
                 redirect_to edit_survey_path(@survey.id, "3", "1"), notice: 'Survey was successfully updated.'
               end

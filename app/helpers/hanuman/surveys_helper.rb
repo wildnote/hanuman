@@ -22,21 +22,5 @@ module Hanuman
       end
     end
     
-    def add_entry_label(current_entry, max_entry)
-      if current_entry.to_i < max_entry.to_i
-        "<span class='glyphicon glyphicon-pencil'></span> Next Entry".html_safe
-      else
-        "<span class='glyphicon glyphicon-plus'></span> Add Entry".html_safe
-      end
-    end
-    
-    def add_entry_helper_text(current_entry, max_entry)
-      if current_entry.to_i < max_entry.to_i
-        Hanuman::Setting.value("next_entry_helper_text")
-      else
-        Hanuman::Setting.value("add_entry_helper_text")
-      end
-    end
-    
   end
 end

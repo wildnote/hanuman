@@ -124,10 +124,11 @@
     .panel.panel-success
       .panel-heading
         .pull-left
-          %h5= add_entry_helper_text(current_entry, max_entry)
+          %h5= Hanuman::Setting.value("add_entry_helper_text")
         .pull-right
           = button_tag type: "submit", class: "btn btn-success", name: "next_step" do
-            = add_entry_label(current_entry, max_entry)          
+            %span.glyphicon.glyphicon-plus
+            Add Entry
         .clearfix
   
   .form-group
