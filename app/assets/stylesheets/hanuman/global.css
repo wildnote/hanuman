@@ -109,3 +109,7 @@ input[type="checkbox"] {
   background-color: rgba(252, 221, 63, 0.5);
 }
 
+
+.panel-body .pull-right.edit-delete {
+  padding: 0 0 15px;
+}
