@@ -61,7 +61,7 @@ module Hanuman
       step = survey_question.step
 
       respond_to do |format|
-        if @survey.update(survey_params)
+        if @survey.update(survey_params_update)
           format.html {
             if step.eql? 1
               redirect_to edit_survey_path(@survey.id, "2", "1"), notice: 'Survey was successfully updated.'
@@ -108,6 +108,25 @@ module Hanuman
 
       # Only allow a trusted parameter "white list" through.
       def survey_params
+        params.require(:survey).permit(
+          :survey_template_id,
+          :survey_date,
+          survey_extension_attributes: [
+            :id
+          ],
+          observations_attributes: [
+            :id,
+            :survey_question_id,
+            :answer,
+            :entry,
+            :answer_choice_id,
+            answer_choice_ids: []
+          ]
+        )
+      end
+
+      #this parameter white list is specifically for scenarios where we want to block fields on update in survey extension
+      def survey_params_update
         params.require(:survey).permit(
           :survey_template_id,
           :survey_date,
