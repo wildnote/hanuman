@@ -6,7 +6,7 @@ module Hanuman
 
     # GET /settings
     def index
-      @settings = Setting.all
+      @settings = Setting.all.order("hanuman_settings.key ASC").page(params[:page])
     end
 
     # GET /settings/1

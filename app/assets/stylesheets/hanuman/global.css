@@ -113,3 +113,14 @@ input[type="checkbox"] {
 .panel-body .pull-right.edit-delete {
   padding: 0 0 15px;
 }
+
+.panel-body.kaminari,
+.panel-footer.kaminari {
+  padding: 2px 15px;
+}
+
+.panel-body.kaminari .pagination,
+.panel-footer.kaminari .pagination {
+  margin: 0;
+  float: right;
+}

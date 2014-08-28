@@ -7,7 +7,7 @@ module Hanuman
 
     # GET /survey_templates
     def index
-      @survey_templates = SurveyTemplate.all
+      @survey_templates = SurveyTemplate.all.order("hanuman_survey_templates.name ASC").page(params[:page])
       respond_to do |format|
         format.html
         format.json {render json: @survey_templates}

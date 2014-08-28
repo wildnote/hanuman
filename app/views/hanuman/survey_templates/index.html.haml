@@ -12,6 +12,8 @@
       New Survey Template
   %h1 Survey Templates
 
+.pull-right= paginate @survey_templates
+
 .table-responsive
   %table.table.table-striped.table-hover
     %thead
@@ -32,3 +34,5 @@
             %td
               = link_to survey_template, data: {confirm: "Are you sure you want to delete this Survey Template?"}, method: :delete, class: "btn btn-xs btn-danger" do
                 %span.glyphicon.glyphicon-trash
+
+.pull-right= paginate @survey_templates

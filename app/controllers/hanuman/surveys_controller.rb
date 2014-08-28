@@ -6,7 +6,7 @@ module Hanuman
 
     # GET /surveys
     def index
-      @surveys = Survey.all
+      @surveys = Survey.all.order("hanuman_surveys.id DESC").page(params[:page])
     end
 
     # GET /surveys/1

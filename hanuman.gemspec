@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'handlebars_assets'
   s.add_dependency 'ember-rails'
   s.add_dependency 'ember-source'
+  s.add_dependency 'kaminari'
 
   s.add_development_dependency 'pg'
 end

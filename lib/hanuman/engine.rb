@@ -3,6 +3,7 @@ require 'amoeba'
 require 'ancestry'
 require 'handlebars_assets'
 require 'ember-rails'
+require 'kaminari'
 
 module Hanuman
   class Engine < ::Rails::Engine
