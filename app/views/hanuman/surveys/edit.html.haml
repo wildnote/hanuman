@@ -52,9 +52,11 @@
           - if current_step == step and current_entry == entry
             - step_edit = true
             .panel.panel-info
-              .panel-heading{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+              .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
                 %h4.panel-title.pull-left
-                  %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+                  %span.glyphicon.glyphicon-chevron-right
+                  %span.glyphicon.glyphicon-chevron-down
+                  %a.btn.btn-xs.btn-primary
                     Step
                     = step
                     Entry
@@ -74,9 +76,11 @@
         - if current_step == step
           - step_edit = true
           .panel.panel-info
-            .panel-heading{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+            .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
               %h4.panel-title.pull-left
-                %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+                %span.glyphicon.glyphicon-chevron-right
+                %span.glyphicon.glyphicon-chevron-down
+                %a.btn.btn-xs.btn-primary{readonly: true}
                   Step
                   = step
                   Entry
@@ -99,9 +103,11 @@
   -# this section handles edit on newly created data for steps 2, 3, ... as part of our hacked in step by step wizard
   - unless step_edit
     .panel.panel-info
-      .panel-heading{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{current_step}_#{current_entry}"}
+      .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{current_step}_#{current_entry}"}
         %h4.panel-title.pull-left
-          %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{current_step}_#{current_entry}"}
+          %span.glyphicon.glyphicon-chevron-right
+          %span.glyphicon.glyphicon-chevron-down
+          %a.btn.btn-xs.btn-primary{readonly: true}
             Step
             = current_step
             Entry

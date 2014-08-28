@@ -37,9 +37,11 @@
   = f.hidden_field :survey_template_id
 
   .panel.panel-info
-    .panel-heading{:"data-toggle" => "collapse", :"data-target" => "#collapse_1_1"}
+    .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_1_1"}
       %h4.panel-title.pull-left
-        %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_1_1"}
+        %span.glyphicon.glyphicon-chevron-right
+        %span.glyphicon.glyphicon-chevron-down
+        %a.btn.btn-xs.btn-primary
           Step 1 Entry 1
       .clearfix
     .panel-collapse.in{:id => "collapse_1_1"}

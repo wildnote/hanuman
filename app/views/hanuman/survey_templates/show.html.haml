@@ -30,10 +30,12 @@
 
   - steps.each do |step|
     .panel.panel-info
-      .panel-heading{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}"}
+      .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}"}
         .panel-title
           .pull-left
-            %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}"}
+            %span.glyphicon.glyphicon-chevron-right
+            %span.glyphicon.glyphicon-chevron-down
+            %button.btn.btn-xs.btn-primary
               Step
               = step
           - if @survey_template.survey_step_is_duplicator?(step)

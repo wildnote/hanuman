@@ -1,8 +1,10 @@
 - step = observations.first.survey_question.step
 .panel.panel-info
-  .panel-heading{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+  .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}", class: "#{'collapsed' unless show}"}
     %h4.panel-title
-      %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+      %span.glyphicon.glyphicon-chevron-right
+      %span.glyphicon.glyphicon-chevron-down
+      %button.btn.btn-xs.btn-primary
         Step
         = step
         Entry
