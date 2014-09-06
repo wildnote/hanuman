@@ -1,14 +1,8 @@
 # For more information see: http://emberjs.com/guides/routing/
 
 App.Router.map ()->
-  # @resource('posts')
-  @resource 'survey_templates', ->
-    @resource('survey_template', { path: '/:survey_template_id' })
-
-App.IndexRoute = Ember.Route.extend(
-  model: ->
-    return ['red', 'yellow', 'blue']
-)
+  @resource 'survey_templates'
+  @resource('survey_template', { path: 'survey_templates/:survey_template_id' })
 
 App.SurveyTemplatesRoute = Ember.Route.extend({
   model: ->
@@ -17,5 +11,6 @@ App.SurveyTemplatesRoute = Ember.Route.extend({
 
 App.SurveyTemplateRoute = Ember.Route.extend({
   model: (params) ->
+    console.log(params)
     @store.find('survey_template', params.survey_template_id)
 })

@@ -1,7 +1,12 @@
-<h1>Survey Templates from inside templates!</h1>
-
-{{#each}}
-  {{#link-to 'survey_template' this}}
-    {{name}}
-  {{/link-to}}
-{{/each}}
+<div>
+  {{#each}}
+    <div>
+      {{#link-to 'survey_template' this}}
+        {{name}}
+      {{/link-to}}
+      </div>
+  {{/each}}
+</div>
+<div>
+  {{outlet}}
+</div>

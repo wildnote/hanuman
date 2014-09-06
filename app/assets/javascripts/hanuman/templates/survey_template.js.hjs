@@ -1,0 +1,5 @@
+<h2>Inside Survey Template</h2>
+
+{{name}}
+{{status}}
+{{survey_type}}
