@@ -1,10 +1,4 @@
-App.SurveyTemplates = DS.Model.extend({
-  name: DS.attr('string'),
-  status: DS.attr('string'),
-  survey_type: DS.attr('string')
-})
-
-App.SurveyTemplates.FIXTURES = [
+App.SurveyTemplate.FIXTURES = [
   {
     id: 1
     name: 'General Outbreak Animal'
@@ -35,4 +29,4 @@ App.SurveyTemplates.FIXTURES = [
     status: 'active'
     survey_type: 'School'
   }
-];
+]

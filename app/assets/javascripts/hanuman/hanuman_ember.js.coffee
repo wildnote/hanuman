@@ -5,5 +5,6 @@
 #= require_tree ./helpers
 #= require_tree ./components
 #= require_tree ./routes
+#= require_tree ./fixtures
 #= require ./router
 #= require_self

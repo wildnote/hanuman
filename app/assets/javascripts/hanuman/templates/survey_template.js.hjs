@@ -3,3 +3,9 @@
 {{name}}
 {{status}}
 {{survey_type}}
+
+<h2>Looping</h2>
+{{#each survey_question in survey_questions}}
+  {{debugger}}
+  {{id}}
+{{/each}}
