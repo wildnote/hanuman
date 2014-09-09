@@ -1,7 +1,7 @@
 App.AnswerChoice.FIXTURES = [
   {
     id:1,
-    question_id:2,
+    question:2,
     option_text:"All Ages",
     created_at:"2014-09-05T21:59:21.545Z",
     updated_at:"2014-09-05T21:59:21.545Z",
@@ -10,7 +10,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:2,
-    question_id:2,
+    question:2,
     option_text:"Preschool",
     created_at:"2014-09-05T21:59:21.594Z",
     updated_at:"2014-09-05T21:59:21.594Z",
@@ -19,7 +19,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:3,
-    question_id:2,
+    question:2,
     option_text:"Elementary",
     created_at:"2014-09-05T21:59:21.604Z",
     updated_at:"2014-09-05T21:59:21.604Z",
@@ -28,7 +28,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:4,
-    question_id:2,
+    question:2,
     option_text:"Middle School",
     created_at:"2014-09-05T21:59:21.613Z",
     updated_at:"2014-09-05T21:59:21.613Z",
@@ -37,7 +37,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:5,
-    question_id:2,
+    question:2,
     option_text:"Intermediate",
     created_at:"2014-09-05T21:59:21.623Z",
     updated_at:"2014-09-05T21:59:21.623Z",
@@ -46,7 +46,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:6,
-    question_id:2,
+    question:2,
     option_text:"High School",
     created_at:"2014-09-05T21:59:21.635Z",
     updated_at:"2014-09-05T21:59:21.635Z",
@@ -55,7 +55,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:7,
-    question_id:2,
+    question:2,
     option_text:"Post Secondary",
     created_at:"2014-09-05T21:59:21.647Z",
     updated_at:"2014-09-05T21:59:21.647Z",
@@ -64,7 +64,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:8,
-    question_id:3,
+    question:3,
     option_text:"All Ages",
     created_at:"2014-09-05T21:59:21.657Z",
     updated_at:"2014-09-05T21:59:21.657Z",
@@ -73,7 +73,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:9,
-    question_id:3,
+    question:3,
     option_text:"Preschool",
     created_at:"2014-09-05T21:59:21.667Z",
     updated_at:"2014-09-05T21:59:21.667Z",
@@ -82,7 +82,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:10,
-    question_id:3,
+    question:3,
     option_text:"Elementary",
     created_at:"2014-09-05T21:59:21.676Z",
     updated_at:"2014-09-05T21:59:21.676Z",
@@ -91,7 +91,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:11,
-    question_id:3,
+    question:3,
     option_text:"Middle School",
     created_at:"2014-09-05T21:59:21.686Z",
     updated_at:"2014-09-05T21:59:21.686Z",
@@ -100,7 +100,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:12,
-    question_id:3,
+    question:3,
     option_text:"Intermediate",
     created_at:"2014-09-05T21:59:21.696Z",
     updated_at:"2014-09-05T21:59:21.696Z",
@@ -109,7 +109,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:13,
-    question_id:3,
+    question:3,
     option_text:"High School",
     created_at:"2014-09-05T21:59:21.706Z",
     updated_at:"2014-09-05T21:59:21.706Z",
@@ -118,7 +118,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:14,
-    question_id:3,
+    question:3,
     option_text:"Post Secondary",
     created_at:"2014-09-05T21:59:21.716Z",
     updated_at:"2014-09-05T21:59:21.716Z",
@@ -127,7 +127,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:15,
-    question_id:4,
+    question:4,
     option_text:"Skin",
     created_at:"2014-09-05T21:59:21.725Z",
     updated_at:"2014-09-05T21:59:21.725Z",
@@ -136,7 +136,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:16,
-    question_id:4,
+    question:4,
     option_text:"GI",
     created_at:"2014-09-05T21:59:21.736Z",
     updated_at:"2014-09-05T21:59:21.736Z",
@@ -145,7 +145,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:17,
-    question_id:4,
+    question:4,
     option_text:"Respiratory",
     created_at:"2014-09-05T21:59:21.746Z",
     updated_at:"2014-09-05T21:59:21.746Z",
@@ -154,7 +154,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:18,
-    question_id:4,
+    question:4,
     option_text:"Neurologic",
     created_at:"2014-09-05T21:59:21.756Z",
     updated_at:"2014-09-05T21:59:21.756Z",
@@ -163,7 +163,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:19,
-    question_id:4,
+    question:4,
     option_text:"Other",
     created_at:"2014-09-05T21:59:21.766Z",
     updated_at:"2014-09-05T21:59:21.766Z",
@@ -172,7 +172,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:20,
-    question_id:5,
+    question:5,
     option_text:"Not a Case",
     created_at:"2014-09-05T21:59:21.775Z",
     updated_at:"2014-09-05T21:59:21.775Z",
@@ -181,7 +181,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:21,
-    question_id:5,
+    question:5,
     option_text:"Suspected",
     created_at:"2014-09-05T21:59:21.786Z",
     updated_at:"2014-09-05T21:59:21.786Z",
@@ -190,7 +190,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:22,
-    question_id:5,
+    question:5,
     option_text:"Probable",
     created_at:"2014-09-05T21:59:21.797Z",
     updated_at:"2014-09-05T21:59:21.797Z",
@@ -199,7 +199,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:23,
-    question_id:5,
+    question:5,
     option_text:"Confirmed",
     created_at:"2014-09-05T21:59:21.806Z",
     updated_at:"2014-09-05T21:59:21.806Z",
@@ -208,7 +208,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:24,
-    question_id:7,
+    question:7,
     option_text:"Staff",
     created_at:"2014-09-05T21:59:21.816Z",
     updated_at:"2014-09-05T21:59:21.816Z",
@@ -217,7 +217,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:25,
-    question_id:7,
+    question:7,
     option_text:"Student",
     created_at:"2014-09-05T21:59:21.825Z",
     updated_at:"2014-09-05T21:59:21.825Z",
@@ -226,7 +226,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:26,
-    question_id:15,
+    question:15,
     option_text:"Male",
     created_at:"2014-09-05T21:59:21.836Z",
     updated_at:"2014-09-05T21:59:21.836Z",
@@ -235,7 +235,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:27,
-    question_id:15,
+    question:15,
     option_text:"Female",
     created_at:"2014-09-05T21:59:21.846Z",
     updated_at:"2014-09-05T21:59:21.846Z",
@@ -244,7 +244,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:28,
-    question_id:15,
+    question:15,
     option_text:"Transgender",
     created_at:"2014-09-05T21:59:21.857Z",
     updated_at:"2014-09-05T21:59:21.857Z",
@@ -253,7 +253,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:29,
-    question_id:16,
+    question:16,
     option_text:"Hispanic",
     created_at:"2014-09-05T21:59:21.866Z",
     updated_at:"2014-09-05T21:59:21.866Z",
@@ -262,7 +262,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:30,
-    question_id:16,
+    question:16,
     option_text:"Caucasian",
     created_at:"2014-09-05T21:59:21.876Z",
     updated_at:"2014-09-05T21:59:21.876Z",
@@ -271,7 +271,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:31,
-    question_id:16,
+    question:16,
     option_text:"African American",
     created_at:"2014-09-05T21:59:21.885Z",
     updated_at:"2014-09-05T21:59:21.885Z",
@@ -280,7 +280,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:32,
-    question_id:16,
+    question:16,
     option_text:"Alaskan Native",
     created_at:"2014-09-05T21:59:21.896Z",
     updated_at:"2014-09-05T21:59:21.896Z",
@@ -289,7 +289,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:33,
-    question_id:16,
+    question:16,
     option_text:"Asian",
     created_at:"2014-09-05T21:59:21.906Z",
     updated_at:"2014-09-05T21:59:21.906Z",
@@ -298,7 +298,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:34,
-    question_id:16,
+    question:16,
     option_text:"Pacific Islander",
     created_at:"2014-09-05T21:59:21.916Z",
     updated_at:"2014-09-05T21:59:21.916Z",
@@ -307,7 +307,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:35,
-    question_id:16,
+    question:16,
     option_text:"Other",
     created_at:"2014-09-05T21:59:21.927Z",
     updated_at:"2014-09-05T21:59:21.927Z",
@@ -316,7 +316,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:36,
-    question_id:19,
+    question:19,
     option_text:"GI",
     created_at:"2014-09-05T21:59:21.939Z",
     updated_at:"2014-09-05T21:59:21.939Z",
@@ -325,7 +325,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:37,
-    question_id:19,
+    question:19,
     option_text:"Abdominal Pain",
     created_at:"2014-09-05T21:59:21.953Z",
     updated_at:"2014-09-05T21:59:21.953Z",
@@ -334,7 +334,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:38,
-    question_id:19,
+    question:19,
     option_text:"Diarrhea",
     created_at:"2014-09-05T21:59:21.965Z",
     updated_at:"2014-09-05T21:59:21.965Z",
@@ -343,7 +343,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:39,
-    question_id:19,
+    question:19,
     option_text:"Nausea",
     created_at:"2014-09-05T21:59:21.975Z",
     updated_at:"2014-09-05T21:59:21.975Z",
@@ -352,7 +352,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:40,
-    question_id:19,
+    question:19,
     option_text:"Vomiting",
     created_at:"2014-09-05T21:59:21.984Z",
     updated_at:"2014-09-05T21:59:21.984Z",
@@ -361,7 +361,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:41,
-    question_id:19,
+    question:19,
     option_text:"Neurologic",
     created_at:"2014-09-05T21:59:21.988Z",
     updated_at:"2014-09-05T21:59:21.988Z",
@@ -370,7 +370,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:42,
-    question_id:19,
+    question:19,
     option_text:"Ascending",
     created_at:"2014-09-05T21:59:21.993Z",
     updated_at:"2014-09-05T21:59:21.993Z",
@@ -379,7 +379,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:43,
-    question_id:19,
+    question:19,
     option_text:"Blurred Vision",
     created_at:"2014-09-05T21:59:21.999Z",
     updated_at:"2014-09-05T21:59:21.999Z",
@@ -388,7 +388,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:44,
-    question_id:19,
+    question:19,
     option_text:"Decending",
     created_at:"2014-09-05T21:59:22.004Z",
     updated_at:"2014-09-05T21:59:22.004Z",
@@ -397,7 +397,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:45,
-    question_id:19,
+    question:19,
     option_text:"Delirium",
     created_at:"2014-09-05T21:59:22.008Z",
     updated_at:"2014-09-05T21:59:22.008Z",
@@ -406,7 +406,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:46,
-    question_id:19,
+    question:19,
     option_text:"Dysphagia",
     created_at:"2014-09-05T21:59:22.013Z",
     updated_at:"2014-09-05T21:59:22.013Z",
@@ -415,7 +415,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:47,
-    question_id:19,
+    question:19,
     option_text:"Headache",
     created_at:"2014-09-05T21:59:22.017Z",
     updated_at:"2014-09-05T21:59:22.017Z",
@@ -424,7 +424,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:48,
-    question_id:19,
+    question:19,
     option_text:"Pain",
     created_at:"2014-09-05T21:59:22.023Z",
     updated_at:"2014-09-05T21:59:22.023Z",
@@ -433,7 +433,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:49,
-    question_id:19,
+    question:19,
     option_text:"Paralysis",
     created_at:"2014-09-05T21:59:22.027Z",
     updated_at:"2014-09-05T21:59:22.027Z",
@@ -442,7 +442,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:50,
-    question_id:19,
+    question:19,
     option_text:"Photophobia",
     created_at:"2014-09-05T21:59:22.032Z",
     updated_at:"2014-09-05T21:59:22.032Z",
@@ -451,7 +451,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:51,
-    question_id:19,
+    question:19,
     option_text:"Seizures",
     created_at:"2014-09-05T21:59:22.036Z",
     updated_at:"2014-09-05T21:59:22.036Z",
@@ -460,7 +460,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:52,
-    question_id:19,
+    question:19,
     option_text:"Slurred Speech",
     created_at:"2014-09-05T21:59:22.047Z",
     updated_at:"2014-09-05T21:59:22.047Z",
@@ -469,7 +469,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:53,
-    question_id:19,
+    question:19,
     option_text:"Weakness",
     created_at:"2014-09-05T21:59:22.057Z",
     updated_at:"2014-09-05T21:59:22.057Z",
@@ -478,7 +478,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:54,
-    question_id:19,
+    question:19,
     option_text:"Non Specific",
     created_at:"2014-09-05T21:59:22.068Z",
     updated_at:"2014-09-05T21:59:22.068Z",
@@ -487,7 +487,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:55,
-    question_id:19,
+    question:19,
     option_text:"Diaphoresis",
     created_at:"2014-09-05T21:59:22.072Z",
     updated_at:"2014-09-05T21:59:22.072Z",
@@ -496,7 +496,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:56,
-    question_id:19,
+    question:19,
     option_text:"Fever",
     created_at:"2014-09-05T21:59:22.076Z",
     updated_at:"2014-09-05T21:59:22.076Z",
@@ -505,7 +505,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:57,
-    question_id:19,
+    question:19,
     option_text:"Malaise",
     created_at:"2014-09-05T21:59:22.079Z",
     updated_at:"2014-09-05T21:59:22.079Z",
@@ -514,7 +514,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:58,
-    question_id:19,
+    question:19,
     option_text:"Nodes",
     created_at:"2014-09-05T21:59:22.084Z",
     updated_at:"2014-09-05T21:59:22.084Z",
@@ -523,7 +523,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:59,
-    question_id:19,
+    question:19,
     option_text:"Rigors",
     created_at:"2014-09-05T21:59:22.088Z",
     updated_at:"2014-09-05T21:59:22.088Z",
@@ -532,7 +532,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:60,
-    question_id:19,
+    question:19,
     option_text:"Respiratory",
     created_at:"2014-09-05T21:59:22.092Z",
     updated_at:"2014-09-05T21:59:22.092Z",
@@ -541,7 +541,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:61,
-    question_id:19,
+    question:19,
     option_text:"Chest Pain",
     created_at:"2014-09-05T21:59:22.096Z",
     updated_at:"2014-09-05T21:59:22.096Z",
@@ -550,7 +550,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:62,
-    question_id:19,
+    question:19,
     option_text:"Cough",
     created_at:"2014-09-05T21:59:22.100Z",
     updated_at:"2014-09-05T21:59:22.100Z",
@@ -559,7 +559,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:63,
-    question_id:19,
+    question:19,
     option_text:"Cyanosis",
     created_at:"2014-09-05T21:59:22.105Z",
     updated_at:"2014-09-05T21:59:22.105Z",
@@ -568,7 +568,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:64,
-    question_id:19,
+    question:19,
     option_text:"Dyspnea",
     created_at:"2014-09-05T21:59:22.123Z",
     updated_at:"2014-09-05T21:59:22.123Z",
@@ -577,7 +577,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:65,
-    question_id:19,
+    question:19,
     option_text:"Haemoptysis",
     created_at:"2014-09-05T21:59:22.129Z",
     updated_at:"2014-09-05T21:59:22.129Z",
@@ -586,7 +586,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:66,
-    question_id:19,
+    question:19,
     option_text:"Productive",
     created_at:"2014-09-05T21:59:22.135Z",
     updated_at:"2014-09-05T21:59:22.135Z",
@@ -595,7 +595,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:67,
-    question_id:19,
+    question:19,
     option_text:"X-Ray",
     created_at:"2014-09-05T21:59:22.141Z",
     updated_at:"2014-09-05T21:59:22.141Z",
@@ -604,7 +604,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:68,
-    question_id:19,
+    question:19,
     option_text:"Skin",
     created_at:"2014-09-05T21:59:22.147Z",
     updated_at:"2014-09-05T21:59:22.147Z",
@@ -613,7 +613,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:69,
-    question_id:19,
+    question:19,
     option_text:"Bleedig Gums",
     created_at:"2014-09-05T21:59:22.153Z",
     updated_at:"2014-09-05T21:59:22.153Z",
@@ -622,7 +622,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:70,
-    question_id:19,
+    question:19,
     option_text:"Blisters",
     created_at:"2014-09-05T21:59:22.166Z",
     updated_at:"2014-09-05T21:59:22.166Z",
@@ -631,7 +631,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:71,
-    question_id:19,
+    question:19,
     option_text:"Bruising",
     created_at:"2014-09-05T21:59:22.170Z",
     updated_at:"2014-09-05T21:59:22.170Z",
@@ -640,7 +640,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:72,
-    question_id:19,
+    question:19,
     option_text:"Eschar",
     created_at:"2014-09-05T21:59:22.174Z",
     updated_at:"2014-09-05T21:59:22.174Z",
@@ -649,7 +649,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:73,
-    question_id:19,
+    question:19,
     option_text:"Masculopapular",
     created_at:"2014-09-05T21:59:22.178Z",
     updated_at:"2014-09-05T21:59:22.178Z",
@@ -658,7 +658,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:74,
-    question_id:19,
+    question:19,
     option_text:"Peeling",
     created_at:"2014-09-05T21:59:22.183Z",
     updated_at:"2014-09-05T21:59:22.183Z",
@@ -667,7 +667,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:75,
-    question_id:19,
+    question:19,
     option_text:"Petechiae",
     created_at:"2014-09-05T21:59:22.187Z",
     updated_at:"2014-09-05T21:59:22.187Z",
@@ -676,7 +676,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:76,
-    question_id:19,
+    question:19,
     option_text:"Point of Origin",
     created_at:"2014-09-05T21:59:22.192Z",
     updated_at:"2014-09-05T21:59:22.192Z",
@@ -685,7 +685,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:77,
-    question_id:19,
+    question:19,
     option_text:"Progression",
     created_at:"2014-09-05T21:59:22.196Z",
     updated_at:"2014-09-05T21:59:22.196Z",
@@ -694,7 +694,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:78,
-    question_id:19,
+    question:19,
     option_text:"Rash",
     created_at:"2014-09-05T21:59:22.201Z",
     updated_at:"2014-09-05T21:59:22.201Z",
@@ -703,7 +703,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:79,
-    question_id:33,
+    question:33,
     option_text:"GI",
     created_at:"2014-09-05T21:59:22.206Z",
     updated_at:"2014-09-05T21:59:22.206Z",
@@ -712,7 +712,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:80,
-    question_id:33,
+    question:33,
     option_text:"Abdominal Pain",
     created_at:"2014-09-05T21:59:22.210Z",
     updated_at:"2014-09-05T21:59:22.210Z",
@@ -721,7 +721,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:81,
-    question_id:33,
+    question:33,
     option_text:"Diarrhea",
     created_at:"2014-09-05T21:59:22.215Z",
     updated_at:"2014-09-05T21:59:22.215Z",
@@ -730,7 +730,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:82,
-    question_id:33,
+    question:33,
     option_text:"Nausea",
     created_at:"2014-09-05T21:59:22.219Z",
     updated_at:"2014-09-05T21:59:22.219Z",
@@ -739,7 +739,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:83,
-    question_id:33,
+    question:33,
     option_text:"Vomiting",
     created_at:"2014-09-05T21:59:22.225Z",
     updated_at:"2014-09-05T21:59:22.225Z",
@@ -748,7 +748,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:84,
-    question_id:33,
+    question:33,
     option_text:"Neurologic",
     created_at:"2014-09-05T21:59:22.229Z",
     updated_at:"2014-09-05T21:59:22.229Z",
@@ -757,7 +757,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:85,
-    question_id:33,
+    question:33,
     option_text:"Ascending",
     created_at:"2014-09-05T21:59:22.233Z",
     updated_at:"2014-09-05T21:59:22.233Z",
@@ -766,7 +766,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:86,
-    question_id:33,
+    question:33,
     option_text:"Blurred Vision",
     created_at:"2014-09-05T21:59:22.239Z",
     updated_at:"2014-09-05T21:59:22.239Z",
@@ -775,7 +775,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:87,
-    question_id:33,
+    question:33,
     option_text:"Decending",
     created_at:"2014-09-05T21:59:22.245Z",
     updated_at:"2014-09-05T21:59:22.245Z",
@@ -784,7 +784,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:88,
-    question_id:33,
+    question:33,
     option_text:"Delirium",
     created_at:"2014-09-05T21:59:22.253Z",
     updated_at:"2014-09-05T21:59:22.253Z",
@@ -793,7 +793,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:89,
-    question_id:33,
+    question:33,
     option_text:"Dysphagia",
     created_at:"2014-09-05T21:59:22.263Z",
     updated_at:"2014-09-05T21:59:22.263Z",
@@ -802,7 +802,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:90,
-    question_id:33,
+    question:33,
     option_text:"Headache",
     created_at:"2014-09-05T21:59:22.280Z",
     updated_at:"2014-09-05T21:59:22.280Z",
@@ -811,7 +811,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:91,
-    question_id:33,
+    question:33,
     option_text:"Pain",
     created_at:"2014-09-05T21:59:22.286Z",
     updated_at:"2014-09-05T21:59:22.286Z",
@@ -820,7 +820,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:92,
-    question_id:33,
+    question:33,
     option_text:"Paralysis",
     created_at:"2014-09-05T21:59:22.291Z",
     updated_at:"2014-09-05T21:59:22.291Z",
@@ -829,7 +829,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:93,
-    question_id:33,
+    question:33,
     option_text:"Photophobia",
     created_at:"2014-09-05T21:59:22.296Z",
     updated_at:"2014-09-05T21:59:22.296Z",
@@ -838,7 +838,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:94,
-    question_id:33,
+    question:33,
     option_text:"Seizures",
     created_at:"2014-09-05T21:59:22.300Z",
     updated_at:"2014-09-05T21:59:22.300Z",
@@ -847,7 +847,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:95,
-    question_id:33,
+    question:33,
     option_text:"Slurred Speech",
     created_at:"2014-09-05T21:59:22.306Z",
     updated_at:"2014-09-05T21:59:22.306Z",
@@ -856,7 +856,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:96,
-    question_id:33,
+    question:33,
     option_text:"Weakness",
     created_at:"2014-09-05T21:59:22.310Z",
     updated_at:"2014-09-05T21:59:22.310Z",
@@ -865,7 +865,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:97,
-    question_id:33,
+    question:33,
     option_text:"Non Specific",
     created_at:"2014-09-05T21:59:22.314Z",
     updated_at:"2014-09-05T21:59:22.314Z",
@@ -874,7 +874,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:98,
-    question_id:33,
+    question:33,
     option_text:"Diaphoresis",
     created_at:"2014-09-05T21:59:22.319Z",
     updated_at:"2014-09-05T21:59:22.319Z",
@@ -883,7 +883,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:99,
-    question_id:33,
+    question:33,
     option_text:"Fever",
     created_at:"2014-09-05T21:59:22.325Z",
     updated_at:"2014-09-05T21:59:22.325Z",
@@ -892,7 +892,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:100,
-    question_id:33,
+    question:33,
     option_text:"Malaise",
     created_at:"2014-09-05T21:59:22.329Z",
     updated_at:"2014-09-05T21:59:22.329Z",
@@ -901,7 +901,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:101,
-    question_id:33,
+    question:33,
     option_text:"Nodes",
     created_at:"2014-09-05T21:59:22.334Z",
     updated_at:"2014-09-05T21:59:22.334Z",
@@ -910,7 +910,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:102,
-    question_id:33,
+    question:33,
     option_text:"Rigors",
     created_at:"2014-09-05T21:59:22.338Z",
     updated_at:"2014-09-05T21:59:22.338Z",
@@ -919,7 +919,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:103,
-    question_id:33,
+    question:33,
     option_text:"Respiratory",
     created_at:"2014-09-05T21:59:22.342Z",
     updated_at:"2014-09-05T21:59:22.342Z",
@@ -928,7 +928,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:104,
-    question_id:33,
+    question:33,
     option_text:"Chest Pain",
     created_at:"2014-09-05T21:59:22.346Z",
     updated_at:"2014-09-05T21:59:22.346Z",
@@ -937,7 +937,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:105,
-    question_id:33,
+    question:33,
     option_text:"Cough",
     created_at:"2014-09-05T21:59:22.350Z",
     updated_at:"2014-09-05T21:59:22.350Z",
@@ -946,7 +946,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:106,
-    question_id:33,
+    question:33,
     option_text:"Cyanosis",
     created_at:"2014-09-05T21:59:22.355Z",
     updated_at:"2014-09-05T21:59:22.355Z",
@@ -955,7 +955,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:107,
-    question_id:33,
+    question:33,
     option_text:"Dyspnea",
     created_at:"2014-09-05T21:59:22.359Z",
     updated_at:"2014-09-05T21:59:22.359Z",
@@ -964,7 +964,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:108,
-    question_id:33,
+    question:33,
     option_text:"Haemoptysis",
     created_at:"2014-09-05T21:59:22.364Z",
     updated_at:"2014-09-05T21:59:22.364Z",
@@ -973,7 +973,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:109,
-    question_id:33,
+    question:33,
     option_text:"Productive",
     created_at:"2014-09-05T21:59:22.368Z",
     updated_at:"2014-09-05T21:59:22.368Z",
@@ -982,7 +982,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:110,
-    question_id:33,
+    question:33,
     option_text:"X-Ray",
     created_at:"2014-09-05T21:59:22.373Z",
     updated_at:"2014-09-05T21:59:22.373Z",
@@ -991,7 +991,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:111,
-    question_id:33,
+    question:33,
     option_text:"Skin",
     created_at:"2014-09-05T21:59:22.376Z",
     updated_at:"2014-09-05T21:59:22.376Z",
@@ -1000,7 +1000,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:112,
-    question_id:33,
+    question:33,
     option_text:"Bleedig Gums",
     created_at:"2014-09-05T21:59:22.380Z",
     updated_at:"2014-09-05T21:59:22.380Z",
@@ -1009,7 +1009,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:113,
-    question_id:33,
+    question:33,
     option_text:"Blisters",
     created_at:"2014-09-05T21:59:22.384Z",
     updated_at:"2014-09-05T21:59:22.384Z",
@@ -1018,7 +1018,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:114,
-    question_id:33,
+    question:33,
     option_text:"Bruising",
     created_at:"2014-09-05T21:59:22.388Z",
     updated_at:"2014-09-05T21:59:22.388Z",
@@ -1027,7 +1027,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:115,
-    question_id:33,
+    question:33,
     option_text:"Eschar",
     created_at:"2014-09-05T21:59:22.392Z",
     updated_at:"2014-09-05T21:59:22.392Z",
@@ -1036,7 +1036,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:116,
-    question_id:33,
+    question:33,
     option_text:"Masculopapular",
     created_at:"2014-09-05T21:59:22.396Z",
     updated_at:"2014-09-05T21:59:22.396Z",
@@ -1045,7 +1045,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:117,
-    question_id:33,
+    question:33,
     option_text:"Peeling",
     created_at:"2014-09-05T21:59:22.400Z",
     updated_at:"2014-09-05T21:59:22.400Z",
@@ -1054,7 +1054,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:118,
-    question_id:33,
+    question:33,
     option_text:"Petechiae",
     created_at:"2014-09-05T21:59:22.405Z",
     updated_at:"2014-09-05T21:59:22.405Z",
@@ -1063,7 +1063,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:119,
-    question_id:33,
+    question:33,
     option_text:"Point of Origin",
     created_at:"2014-09-05T21:59:22.410Z",
     updated_at:"2014-09-05T21:59:22.410Z",
@@ -1072,7 +1072,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:120,
-    question_id:33,
+    question:33,
     option_text:"Progression",
     created_at:"2014-09-05T21:59:22.415Z",
     updated_at:"2014-09-05T21:59:22.415Z",
@@ -1081,7 +1081,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:121,
-    question_id:33,
+    question:33,
     option_text:"Rash",
     created_at:"2014-09-05T21:59:22.419Z",
     updated_at:"2014-09-05T21:59:22.419Z",
@@ -1090,7 +1090,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:122,
-    question_id:34,
+    question:34,
     option_text:"GI",
     created_at:"2014-09-05T21:59:22.424Z",
     updated_at:"2014-09-05T21:59:22.424Z",
@@ -1099,7 +1099,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:123,
-    question_id:34,
+    question:34,
     option_text:"Abdominal Pain",
     created_at:"2014-09-05T21:59:22.430Z",
     updated_at:"2014-09-05T21:59:22.430Z",
@@ -1108,7 +1108,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:124,
-    question_id:34,
+    question:34,
     option_text:"Diarrhea",
     created_at:"2014-09-05T21:59:22.435Z",
     updated_at:"2014-09-05T21:59:22.435Z",
@@ -1117,7 +1117,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:125,
-    question_id:34,
+    question:34,
     option_text:"Nausea",
     created_at:"2014-09-05T21:59:22.439Z",
     updated_at:"2014-09-05T21:59:22.439Z",
@@ -1126,7 +1126,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:126,
-    question_id:34,
+    question:34,
     option_text:"Vomiting",
     created_at:"2014-09-05T21:59:22.443Z",
     updated_at:"2014-09-05T21:59:22.443Z",
@@ -1135,7 +1135,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:127,
-    question_id:34,
+    question:34,
     option_text:"Neurologic",
     created_at:"2014-09-05T21:59:22.448Z",
     updated_at:"2014-09-05T21:59:22.448Z",
@@ -1144,7 +1144,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:128,
-    question_id:34,
+    question:34,
     option_text:"Ascending",
     created_at:"2014-09-05T21:59:22.452Z",
     updated_at:"2014-09-05T21:59:22.452Z",
@@ -1153,7 +1153,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:129,
-    question_id:34,
+    question:34,
     option_text:"Blurred Vision",
     created_at:"2014-09-05T21:59:22.456Z",
     updated_at:"2014-09-05T21:59:22.456Z",
@@ -1162,7 +1162,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:130,
-    question_id:34,
+    question:34,
     option_text:"Decending",
     created_at:"2014-09-05T21:59:22.460Z",
     updated_at:"2014-09-05T21:59:22.460Z",
@@ -1171,7 +1171,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:131,
-    question_id:34,
+    question:34,
     option_text:"Delirium",
     created_at:"2014-09-05T21:59:22.465Z",
     updated_at:"2014-09-05T21:59:22.465Z",
@@ -1180,7 +1180,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:132,
-    question_id:34,
+    question:34,
     option_text:"Dysphagia",
     created_at:"2014-09-05T21:59:22.468Z",
     updated_at:"2014-09-05T21:59:22.468Z",
@@ -1189,7 +1189,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:133,
-    question_id:34,
+    question:34,
     option_text:"Headache",
     created_at:"2014-09-05T21:59:22.473Z",
     updated_at:"2014-09-05T21:59:22.473Z",
@@ -1198,7 +1198,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:134,
-    question_id:34,
+    question:34,
     option_text:"Pain",
     created_at:"2014-09-05T21:59:22.477Z",
     updated_at:"2014-09-05T21:59:22.477Z",
@@ -1207,7 +1207,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:135,
-    question_id:34,
+    question:34,
     option_text:"Paralysis",
     created_at:"2014-09-05T21:59:22.481Z",
     updated_at:"2014-09-05T21:59:22.481Z",
@@ -1216,7 +1216,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:136,
-    question_id:34,
+    question:34,
     option_text:"Photophobia",
     created_at:"2014-09-05T21:59:22.487Z",
     updated_at:"2014-09-05T21:59:22.487Z",
@@ -1225,7 +1225,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:137,
-    question_id:34,
+    question:34,
     option_text:"Seizures",
     created_at:"2014-09-05T21:59:22.494Z",
     updated_at:"2014-09-05T21:59:22.494Z",
@@ -1234,7 +1234,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:138,
-    question_id:34,
+    question:34,
     option_text:"Slurred Speech",
     created_at:"2014-09-05T21:59:22.501Z",
     updated_at:"2014-09-05T21:59:22.501Z",
@@ -1243,7 +1243,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:139,
-    question_id:34,
+    question:34,
     option_text:"Weakness",
     created_at:"2014-09-05T21:59:22.509Z",
     updated_at:"2014-09-05T21:59:22.509Z",
@@ -1252,7 +1252,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:140,
-    question_id:34,
+    question:34,
     option_text:"Non Specific",
     created_at:"2014-09-05T21:59:22.516Z",
     updated_at:"2014-09-05T21:59:22.516Z",
@@ -1261,7 +1261,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:141,
-    question_id:34,
+    question:34,
     option_text:"Diaphoresis",
     created_at:"2014-09-05T21:59:22.523Z",
     updated_at:"2014-09-05T21:59:22.523Z",
@@ -1270,7 +1270,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:142,
-    question_id:34,
+    question:34,
     option_text:"Fever",
     created_at:"2014-09-05T21:59:22.530Z",
     updated_at:"2014-09-05T21:59:22.530Z",
@@ -1279,7 +1279,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:143,
-    question_id:34,
+    question:34,
     option_text:"Malaise",
     created_at:"2014-09-05T21:59:22.537Z",
     updated_at:"2014-09-05T21:59:22.537Z",
@@ -1288,7 +1288,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:144,
-    question_id:34,
+    question:34,
     option_text:"Nodes",
     created_at:"2014-09-05T21:59:22.544Z",
     updated_at:"2014-09-05T21:59:22.544Z",
@@ -1297,7 +1297,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:145,
-    question_id:34,
+    question:34,
     option_text:"Rigors",
     created_at:"2014-09-05T21:59:22.550Z",
     updated_at:"2014-09-05T21:59:22.550Z",
@@ -1306,7 +1306,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:146,
-    question_id:34,
+    question:34,
     option_text:"Respiratory",
     created_at:"2014-09-05T21:59:22.555Z",
     updated_at:"2014-09-05T21:59:22.555Z",
@@ -1315,7 +1315,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:147,
-    question_id:34,
+    question:34,
     option_text:"Chest Pain",
     created_at:"2014-09-05T21:59:22.561Z",
     updated_at:"2014-09-05T21:59:22.561Z",
@@ -1324,7 +1324,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:148,
-    question_id:34,
+    question:34,
     option_text:"Cough",
     created_at:"2014-09-05T21:59:22.569Z",
     updated_at:"2014-09-05T21:59:22.569Z",
@@ -1333,7 +1333,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:149,
-    question_id:34,
+    question:34,
     option_text:"Cyanosis",
     created_at:"2014-09-05T21:59:22.578Z",
     updated_at:"2014-09-05T21:59:22.578Z",
@@ -1342,7 +1342,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:150,
-    question_id:34,
+    question:34,
     option_text:"Dyspnea",
     created_at:"2014-09-05T21:59:22.587Z",
     updated_at:"2014-09-05T21:59:22.587Z",
@@ -1351,7 +1351,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:151,
-    question_id:34,
+    question:34,
     option_text:"Haemoptysis",
     created_at:"2014-09-05T21:59:22.593Z",
     updated_at:"2014-09-05T21:59:22.593Z",
@@ -1360,7 +1360,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:152,
-    question_id:34,
+    question:34,
     option_text:"Productive",
     created_at:"2014-09-05T21:59:22.599Z",
     updated_at:"2014-09-05T21:59:22.599Z",
@@ -1369,7 +1369,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:153,
-    question_id:34,
+    question:34,
     option_text:"X-Ray",
     created_at:"2014-09-05T21:59:22.605Z",
     updated_at:"2014-09-05T21:59:22.605Z",
@@ -1378,7 +1378,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:154,
-    question_id:34,
+    question:34,
     option_text:"Skin",
     created_at:"2014-09-05T21:59:22.609Z",
     updated_at:"2014-09-05T21:59:22.609Z",
@@ -1387,7 +1387,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:155,
-    question_id:34,
+    question:34,
     option_text:"Bleedig Gums",
     created_at:"2014-09-05T21:59:22.613Z",
     updated_at:"2014-09-05T21:59:22.613Z",
@@ -1396,7 +1396,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:156,
-    question_id:34,
+    question:34,
     option_text:"Blisters",
     created_at:"2014-09-05T21:59:22.618Z",
     updated_at:"2014-09-05T21:59:22.618Z",
@@ -1405,7 +1405,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:157,
-    question_id:34,
+    question:34,
     option_text:"Bruising",
     created_at:"2014-09-05T21:59:22.622Z",
     updated_at:"2014-09-05T21:59:22.622Z",
@@ -1414,7 +1414,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:158,
-    question_id:34,
+    question:34,
     option_text:"Eschar",
     created_at:"2014-09-05T21:59:22.629Z",
     updated_at:"2014-09-05T21:59:22.629Z",
@@ -1423,7 +1423,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:159,
-    question_id:34,
+    question:34,
     option_text:"Masculopapular",
     created_at:"2014-09-05T21:59:22.634Z",
     updated_at:"2014-09-05T21:59:22.634Z",
@@ -1432,7 +1432,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:160,
-    question_id:34,
+    question:34,
     option_text:"Peeling",
     created_at:"2014-09-05T21:59:22.639Z",
     updated_at:"2014-09-05T21:59:22.639Z",
@@ -1441,7 +1441,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:161,
-    question_id:34,
+    question:34,
     option_text:"Petechiae",
     created_at:"2014-09-05T21:59:22.645Z",
     updated_at:"2014-09-05T21:59:22.645Z",
@@ -1450,7 +1450,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:162,
-    question_id:34,
+    question:34,
     option_text:"Point of Origin",
     created_at:"2014-09-05T21:59:22.649Z",
     updated_at:"2014-09-05T21:59:22.649Z",
@@ -1459,7 +1459,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:163,
-    question_id:34,
+    question:34,
     option_text:"Progression",
     created_at:"2014-09-05T21:59:22.653Z",
     updated_at:"2014-09-05T21:59:22.653Z",
@@ -1468,7 +1468,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:164,
-    question_id:34,
+    question:34,
     option_text:"Rash",
     created_at:"2014-09-05T21:59:22.657Z",
     updated_at:"2014-09-05T21:59:22.657Z",
@@ -1477,7 +1477,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:165,
-    question_id:38,
+    question:38,
     option_text:"GI",
     created_at:"2014-09-05T21:59:22.661Z",
     updated_at:"2014-09-05T21:59:22.661Z",
@@ -1486,7 +1486,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:166,
-    question_id:38,
+    question:38,
     option_text:"Abdominal Pain",
     created_at:"2014-09-05T21:59:22.665Z",
     updated_at:"2014-09-05T21:59:22.665Z",
@@ -1495,7 +1495,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:167,
-    question_id:38,
+    question:38,
     option_text:"Diarrhea",
     created_at:"2014-09-05T21:59:22.669Z",
     updated_at:"2014-09-05T21:59:22.669Z",
@@ -1504,7 +1504,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:168,
-    question_id:38,
+    question:38,
     option_text:"Nausea",
     created_at:"2014-09-05T21:59:22.674Z",
     updated_at:"2014-09-05T21:59:22.674Z",
@@ -1513,7 +1513,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:169,
-    question_id:38,
+    question:38,
     option_text:"Vomiting",
     created_at:"2014-09-05T21:59:22.678Z",
     updated_at:"2014-09-05T21:59:22.678Z",
@@ -1522,7 +1522,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:170,
-    question_id:38,
+    question:38,
     option_text:"Neurologic",
     created_at:"2014-09-05T21:59:22.682Z",
     updated_at:"2014-09-05T21:59:22.682Z",
@@ -1531,7 +1531,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:171,
-    question_id:38,
+    question:38,
     option_text:"Ascending",
     created_at:"2014-09-05T21:59:22.686Z",
     updated_at:"2014-09-05T21:59:22.686Z",
@@ -1540,7 +1540,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:172,
-    question_id:38,
+    question:38,
     option_text:"Blurred Vision",
     created_at:"2014-09-05T21:59:22.690Z",
     updated_at:"2014-09-05T21:59:22.690Z",
@@ -1549,7 +1549,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:173,
-    question_id:38,
+    question:38,
     option_text:"Decending",
     created_at:"2014-09-05T21:59:22.694Z",
     updated_at:"2014-09-05T21:59:22.694Z",
@@ -1558,7 +1558,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:174,
-    question_id:38,
+    question:38,
     option_text:"Delirium",
     created_at:"2014-09-05T21:59:22.698Z",
     updated_at:"2014-09-05T21:59:22.698Z",
@@ -1567,7 +1567,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:175,
-    question_id:38,
+    question:38,
     option_text:"Dysphagia",
     created_at:"2014-09-05T21:59:22.704Z",
     updated_at:"2014-09-05T21:59:22.704Z",
@@ -1576,7 +1576,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:176,
-    question_id:38,
+    question:38,
     option_text:"Headache",
     created_at:"2014-09-05T21:59:22.708Z",
     updated_at:"2014-09-05T21:59:22.708Z",
@@ -1585,7 +1585,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:177,
-    question_id:38,
+    question:38,
     option_text:"Pain",
     created_at:"2014-09-05T21:59:22.713Z",
     updated_at:"2014-09-05T21:59:22.713Z",
@@ -1594,7 +1594,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:178,
-    question_id:38,
+    question:38,
     option_text:"Paralysis",
     created_at:"2014-09-05T21:59:22.717Z",
     updated_at:"2014-09-05T21:59:22.717Z",
@@ -1603,7 +1603,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:179,
-    question_id:38,
+    question:38,
     option_text:"Photophobia",
     created_at:"2014-09-05T21:59:22.721Z",
     updated_at:"2014-09-05T21:59:22.721Z",
@@ -1612,7 +1612,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:180,
-    question_id:38,
+    question:38,
     option_text:"Seizures",
     created_at:"2014-09-05T21:59:22.727Z",
     updated_at:"2014-09-05T21:59:22.727Z",
@@ -1621,7 +1621,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:181,
-    question_id:38,
+    question:38,
     option_text:"Slurred Speech",
     created_at:"2014-09-05T21:59:22.732Z",
     updated_at:"2014-09-05T21:59:22.732Z",
@@ -1630,7 +1630,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:182,
-    question_id:38,
+    question:38,
     option_text:"Weakness",
     created_at:"2014-09-05T21:59:22.737Z",
     updated_at:"2014-09-05T21:59:22.737Z",
@@ -1639,7 +1639,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:183,
-    question_id:38,
+    question:38,
     option_text:"Non Specific",
     created_at:"2014-09-05T21:59:22.741Z",
     updated_at:"2014-09-05T21:59:22.741Z",
@@ -1648,7 +1648,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:184,
-    question_id:38,
+    question:38,
     option_text:"Diaphoresis",
     created_at:"2014-09-05T21:59:22.745Z",
     updated_at:"2014-09-05T21:59:22.745Z",
@@ -1657,7 +1657,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:185,
-    question_id:38,
+    question:38,
     option_text:"Fever",
     created_at:"2014-09-05T21:59:22.750Z",
     updated_at:"2014-09-05T21:59:22.750Z",
@@ -1666,7 +1666,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:186,
-    question_id:38,
+    question:38,
     option_text:"Malaise",
     created_at:"2014-09-05T21:59:22.754Z",
     updated_at:"2014-09-05T21:59:22.754Z",
@@ -1675,7 +1675,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:187,
-    question_id:38,
+    question:38,
     option_text:"Nodes",
     created_at:"2014-09-05T21:59:22.758Z",
     updated_at:"2014-09-05T21:59:22.758Z",
@@ -1684,7 +1684,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:188,
-    question_id:38,
+    question:38,
     option_text:"Rigors",
     created_at:"2014-09-05T21:59:22.763Z",
     updated_at:"2014-09-05T21:59:22.763Z",
@@ -1693,7 +1693,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:189,
-    question_id:38,
+    question:38,
     option_text:"Respiratory",
     created_at:"2014-09-05T21:59:22.766Z",
     updated_at:"2014-09-05T21:59:22.766Z",
@@ -1702,7 +1702,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:190,
-    question_id:38,
+    question:38,
     option_text:"Chest Pain",
     created_at:"2014-09-05T21:59:22.770Z",
     updated_at:"2014-09-05T21:59:22.770Z",
@@ -1711,7 +1711,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:191,
-    question_id:38,
+    question:38,
     option_text:"Cough",
     created_at:"2014-09-05T21:59:22.775Z",
     updated_at:"2014-09-05T21:59:22.775Z",
@@ -1720,7 +1720,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:192,
-    question_id:38,
+    question:38,
     option_text:"Cyanosis",
     created_at:"2014-09-05T21:59:22.779Z",
     updated_at:"2014-09-05T21:59:22.779Z",
@@ -1729,7 +1729,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:193,
-    question_id:38,
+    question:38,
     option_text:"Dyspnea",
     created_at:"2014-09-05T21:59:22.783Z",
     updated_at:"2014-09-05T21:59:22.783Z",
@@ -1738,7 +1738,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:194,
-    question_id:38,
+    question:38,
     option_text:"Haemoptysis",
     created_at:"2014-09-05T21:59:22.787Z",
     updated_at:"2014-09-05T21:59:22.787Z",
@@ -1747,7 +1747,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:195,
-    question_id:38,
+    question:38,
     option_text:"Productive",
     created_at:"2014-09-05T21:59:22.791Z",
     updated_at:"2014-09-05T21:59:22.791Z",
@@ -1756,7 +1756,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:196,
-    question_id:38,
+    question:38,
     option_text:"X-Ray",
     created_at:"2014-09-05T21:59:22.796Z",
     updated_at:"2014-09-05T21:59:22.796Z",
@@ -1765,7 +1765,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:197,
-    question_id:38,
+    question:38,
     option_text:"Skin",
     created_at:"2014-09-05T21:59:22.800Z",
     updated_at:"2014-09-05T21:59:22.800Z",
@@ -1774,7 +1774,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:198,
-    question_id:38,
+    question:38,
     option_text:"Bleedig Gums",
     created_at:"2014-09-05T21:59:22.806Z",
     updated_at:"2014-09-05T21:59:22.806Z",
@@ -1783,7 +1783,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:199,
-    question_id:38,
+    question:38,
     option_text:"Blisters",
     created_at:"2014-09-05T21:59:22.810Z",
     updated_at:"2014-09-05T21:59:22.810Z",
@@ -1792,7 +1792,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:200,
-    question_id:38,
+    question:38,
     option_text:"Bruising",
     created_at:"2014-09-05T21:59:22.815Z",
     updated_at:"2014-09-05T21:59:22.815Z",
@@ -1801,7 +1801,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:201,
-    question_id:38,
+    question:38,
     option_text:"Eschar",
     created_at:"2014-09-05T21:59:22.819Z",
     updated_at:"2014-09-05T21:59:22.819Z",
@@ -1810,7 +1810,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:202,
-    question_id:38,
+    question:38,
     option_text:"Masculopapular",
     created_at:"2014-09-05T21:59:22.823Z",
     updated_at:"2014-09-05T21:59:22.823Z",
@@ -1819,7 +1819,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:203,
-    question_id:38,
+    question:38,
     option_text:"Peeling",
     created_at:"2014-09-05T21:59:22.830Z",
     updated_at:"2014-09-05T21:59:22.830Z",
@@ -1828,7 +1828,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:204,
-    question_id:38,
+    question:38,
     option_text:"Petechiae",
     created_at:"2014-09-05T21:59:22.836Z",
     updated_at:"2014-09-05T21:59:22.836Z",
@@ -1837,7 +1837,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:205,
-    question_id:38,
+    question:38,
     option_text:"Point of Origin",
     created_at:"2014-09-05T21:59:22.840Z",
     updated_at:"2014-09-05T21:59:22.840Z",
@@ -1846,7 +1846,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:206,
-    question_id:38,
+    question:38,
     option_text:"Progression",
     created_at:"2014-09-05T21:59:22.844Z",
     updated_at:"2014-09-05T21:59:22.844Z",
@@ -1855,7 +1855,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:207,
-    question_id:38,
+    question:38,
     option_text:"Rash",
     created_at:"2014-09-05T21:59:22.849Z",
     updated_at:"2014-09-05T21:59:22.849Z",
@@ -1864,7 +1864,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:208,
-    question_id:40,
+    question:40,
     option_text:"Skin",
     created_at:"2014-09-05T21:59:40.664Z",
     updated_at:"2014-09-05T21:59:40.664Z",
@@ -1873,7 +1873,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:209,
-    question_id:40,
+    question:40,
     option_text:"GI",
     created_at:"2014-09-05T21:59:40.676Z",
     updated_at:"2014-09-05T21:59:40.676Z",
@@ -1882,7 +1882,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:210,
-    question_id:40,
+    question:40,
     option_text:"Respiratory",
     created_at:"2014-09-05T21:59:40.680Z",
     updated_at:"2014-09-05T21:59:40.680Z",
@@ -1891,7 +1891,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:211,
-    question_id:40,
+    question:40,
     option_text:"Neurologic",
     created_at:"2014-09-05T21:59:40.684Z",
     updated_at:"2014-09-05T21:59:40.684Z",
@@ -1900,7 +1900,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:212,
-    question_id:40,
+    question:40,
     option_text:"Other",
     created_at:"2014-09-05T21:59:40.689Z",
     updated_at:"2014-09-05T21:59:40.689Z",
@@ -1909,7 +1909,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:213,
-    question_id:41,
+    question:41,
     option_text:"Not a Case",
     created_at:"2014-09-05T21:59:40.696Z",
     updated_at:"2014-09-05T21:59:40.696Z",
@@ -1918,7 +1918,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:214,
-    question_id:41,
+    question:41,
     option_text:"Suspected",
     created_at:"2014-09-05T21:59:40.700Z",
     updated_at:"2014-09-05T21:59:40.700Z",
@@ -1927,7 +1927,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:215,
-    question_id:41,
+    question:41,
     option_text:"Probable",
     created_at:"2014-09-05T21:59:40.705Z",
     updated_at:"2014-09-05T21:59:40.705Z",
@@ -1936,7 +1936,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:216,
-    question_id:41,
+    question:41,
     option_text:"Confirmed",
     created_at:"2014-09-05T21:59:40.709Z",
     updated_at:"2014-09-05T21:59:40.709Z",
@@ -1945,7 +1945,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:217,
-    question_id:64,
+    question:64,
     option_text:"Male",
     created_at:"2014-09-05T21:59:40.713Z",
     updated_at:"2014-09-05T21:59:40.713Z",
@@ -1954,7 +1954,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:218,
-    question_id:64,
+    question:64,
     option_text:"Female",
     created_at:"2014-09-05T21:59:40.717Z",
     updated_at:"2014-09-05T21:59:40.717Z",
@@ -1963,7 +1963,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:219,
-    question_id:64,
+    question:64,
     option_text:"Unknown",
     created_at:"2014-09-05T21:59:40.721Z",
     updated_at:"2014-09-05T21:59:40.721Z",
@@ -1972,7 +1972,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:220,
-    question_id:65,
+    question:65,
     option_text:"Intact",
     created_at:"2014-09-05T21:59:40.726Z",
     updated_at:"2014-09-05T21:59:40.726Z",
@@ -1981,7 +1981,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:221,
-    question_id:65,
+    question:65,
     option_text:"Neutered/Spayed",
     created_at:"2014-09-05T21:59:40.730Z",
     updated_at:"2014-09-05T21:59:40.730Z",
@@ -1990,7 +1990,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:222,
-    question_id:65,
+    question:65,
     option_text:"Unknown",
     created_at:"2014-09-05T21:59:40.734Z",
     updated_at:"2014-09-05T21:59:40.734Z",
@@ -1999,7 +1999,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:223,
-    question_id:66,
+    question:66,
     option_text:"Pet",
     created_at:"2014-09-05T21:59:40.738Z",
     updated_at:"2014-09-05T21:59:40.738Z",
@@ -2008,7 +2008,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:224,
-    question_id:66,
+    question:66,
     option_text:"Stray",
     created_at:"2014-09-05T21:59:40.742Z",
     updated_at:"2014-09-05T21:59:40.742Z",
@@ -2017,7 +2017,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:225,
-    question_id:66,
+    question:66,
     option_text:"Feral",
     created_at:"2014-09-05T21:59:40.746Z",
     updated_at:"2014-09-05T21:59:40.746Z",
@@ -2026,7 +2026,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:226,
-    question_id:66,
+    question:66,
     option_text:"Livestock",
     created_at:"2014-09-05T21:59:40.750Z",
     updated_at:"2014-09-05T21:59:40.750Z",
@@ -2035,7 +2035,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:227,
-    question_id:66,
+    question:66,
     option_text:"Wild, Unowned",
     created_at:"2014-09-05T21:59:40.754Z",
     updated_at:"2014-09-05T21:59:40.754Z",
@@ -2044,7 +2044,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:228,
-    question_id:66,
+    question:66,
     option_text:"Wild, Captive",
     created_at:"2014-09-05T21:59:40.758Z",
     updated_at:"2014-09-05T21:59:40.758Z",
@@ -2053,7 +2053,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:229,
-    question_id:66,
+    question:66,
     option_text:"Unknown",
     created_at:"2014-09-05T21:59:40.762Z",
     updated_at:"2014-09-05T21:59:40.762Z",
@@ -2062,7 +2062,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:230,
-    question_id:73,
+    question:73,
     option_text:"GI",
     created_at:"2014-09-05T21:59:40.766Z",
     updated_at:"2014-09-05T21:59:40.766Z",
@@ -2071,7 +2071,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:231,
-    question_id:73,
+    question:73,
     option_text:"Abdominal Pain",
     created_at:"2014-09-05T21:59:40.770Z",
     updated_at:"2014-09-05T21:59:40.770Z",
@@ -2080,7 +2080,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:232,
-    question_id:73,
+    question:73,
     option_text:"Diarrhea",
     created_at:"2014-09-05T21:59:40.774Z",
     updated_at:"2014-09-05T21:59:40.774Z",
@@ -2089,7 +2089,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:233,
-    question_id:73,
+    question:73,
     option_text:"Nausea",
     created_at:"2014-09-05T21:59:40.778Z",
     updated_at:"2014-09-05T21:59:40.778Z",
@@ -2098,7 +2098,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:234,
-    question_id:73,
+    question:73,
     option_text:"Vomiting",
     created_at:"2014-09-05T21:59:40.782Z",
     updated_at:"2014-09-05T21:59:40.782Z",
@@ -2107,7 +2107,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:235,
-    question_id:73,
+    question:73,
     option_text:"Neurologic",
     created_at:"2014-09-05T21:59:40.786Z",
     updated_at:"2014-09-05T21:59:40.786Z",
@@ -2116,7 +2116,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:236,
-    question_id:73,
+    question:73,
     option_text:"Ascending",
     created_at:"2014-09-05T21:59:40.790Z",
     updated_at:"2014-09-05T21:59:40.790Z",
@@ -2125,7 +2125,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:237,
-    question_id:73,
+    question:73,
     option_text:"Blurred Vision",
     created_at:"2014-09-05T21:59:40.794Z",
     updated_at:"2014-09-05T21:59:40.794Z",
@@ -2134,7 +2134,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:238,
-    question_id:73,
+    question:73,
     option_text:"Decending",
     created_at:"2014-09-05T21:59:40.798Z",
     updated_at:"2014-09-05T21:59:40.798Z",
@@ -2143,7 +2143,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:239,
-    question_id:73,
+    question:73,
     option_text:"Delirium",
     created_at:"2014-09-05T21:59:40.804Z",
     updated_at:"2014-09-05T21:59:40.804Z",
@@ -2152,7 +2152,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:240,
-    question_id:73,
+    question:73,
     option_text:"Dysphagia",
     created_at:"2014-09-05T21:59:40.808Z",
     updated_at:"2014-09-05T21:59:40.808Z",
@@ -2161,7 +2161,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:241,
-    question_id:73,
+    question:73,
     option_text:"Headache",
     created_at:"2014-09-05T21:59:40.813Z",
     updated_at:"2014-09-05T21:59:40.813Z",
@@ -2170,7 +2170,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:242,
-    question_id:73,
+    question:73,
     option_text:"Pain",
     created_at:"2014-09-05T21:59:40.817Z",
     updated_at:"2014-09-05T21:59:40.817Z",
@@ -2179,7 +2179,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:243,
-    question_id:73,
+    question:73,
     option_text:"Paralysis",
     created_at:"2014-09-05T21:59:40.821Z",
     updated_at:"2014-09-05T21:59:40.821Z",
@@ -2188,7 +2188,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:244,
-    question_id:73,
+    question:73,
     option_text:"Photophobia",
     created_at:"2014-09-05T21:59:40.827Z",
     updated_at:"2014-09-05T21:59:40.827Z",
@@ -2197,7 +2197,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:245,
-    question_id:73,
+    question:73,
     option_text:"Seizures",
     created_at:"2014-09-05T21:59:40.832Z",
     updated_at:"2014-09-05T21:59:40.832Z",
@@ -2206,7 +2206,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:246,
-    question_id:73,
+    question:73,
     option_text:"Slurred Speech",
     created_at:"2014-09-05T21:59:40.836Z",
     updated_at:"2014-09-05T21:59:40.836Z",
@@ -2215,7 +2215,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:247,
-    question_id:73,
+    question:73,
     option_text:"Weakness",
     created_at:"2014-09-05T21:59:40.840Z",
     updated_at:"2014-09-05T21:59:40.840Z",
@@ -2224,7 +2224,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:248,
-    question_id:73,
+    question:73,
     option_text:"Non Specific",
     created_at:"2014-09-05T21:59:40.844Z",
     updated_at:"2014-09-05T21:59:40.844Z",
@@ -2233,7 +2233,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:249,
-    question_id:73,
+    question:73,
     option_text:"Diaphoresis",
     created_at:"2014-09-05T21:59:40.848Z",
     updated_at:"2014-09-05T21:59:40.848Z",
@@ -2242,7 +2242,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:250,
-    question_id:73,
+    question:73,
     option_text:"Fever",
     created_at:"2014-09-05T21:59:40.853Z",
     updated_at:"2014-09-05T21:59:40.853Z",
@@ -2251,7 +2251,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:251,
-    question_id:73,
+    question:73,
     option_text:"Malaise",
     created_at:"2014-09-05T21:59:40.857Z",
     updated_at:"2014-09-05T21:59:40.857Z",
@@ -2260,7 +2260,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:252,
-    question_id:73,
+    question:73,
     option_text:"Nodes",
     created_at:"2014-09-05T21:59:40.861Z",
     updated_at:"2014-09-05T21:59:40.861Z",
@@ -2269,7 +2269,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:253,
-    question_id:73,
+    question:73,
     option_text:"Rigors",
     created_at:"2014-09-05T21:59:40.865Z",
     updated_at:"2014-09-05T21:59:40.865Z",
@@ -2278,7 +2278,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:254,
-    question_id:73,
+    question:73,
     option_text:"Respiratory",
     created_at:"2014-09-05T21:59:40.869Z",
     updated_at:"2014-09-05T21:59:40.869Z",
@@ -2287,7 +2287,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:255,
-    question_id:73,
+    question:73,
     option_text:"Chest Pain",
     created_at:"2014-09-05T21:59:40.874Z",
     updated_at:"2014-09-05T21:59:40.874Z",
@@ -2296,7 +2296,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:256,
-    question_id:73,
+    question:73,
     option_text:"Cough",
     created_at:"2014-09-05T21:59:40.878Z",
     updated_at:"2014-09-05T21:59:40.878Z",
@@ -2305,7 +2305,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:257,
-    question_id:73,
+    question:73,
     option_text:"Cyanosis",
     created_at:"2014-09-05T21:59:40.882Z",
     updated_at:"2014-09-05T21:59:40.882Z",
@@ -2314,7 +2314,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:258,
-    question_id:73,
+    question:73,
     option_text:"Dyspnea",
     created_at:"2014-09-05T21:59:40.925Z",
     updated_at:"2014-09-05T21:59:40.925Z",
@@ -2323,7 +2323,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:259,
-    question_id:73,
+    question:73,
     option_text:"Haemoptysis",
     created_at:"2014-09-05T21:59:40.932Z",
     updated_at:"2014-09-05T21:59:40.932Z",
@@ -2332,7 +2332,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:260,
-    question_id:73,
+    question:73,
     option_text:"Productive",
     created_at:"2014-09-05T21:59:40.940Z",
     updated_at:"2014-09-05T21:59:40.940Z",
@@ -2341,7 +2341,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:261,
-    question_id:73,
+    question:73,
     option_text:"X-Ray",
     created_at:"2014-09-05T21:59:40.945Z",
     updated_at:"2014-09-05T21:59:40.945Z",
@@ -2350,7 +2350,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:262,
-    question_id:73,
+    question:73,
     option_text:"Skin",
     created_at:"2014-09-05T21:59:40.952Z",
     updated_at:"2014-09-05T21:59:40.952Z",
@@ -2359,7 +2359,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:263,
-    question_id:73,
+    question:73,
     option_text:"Bleedig Gums",
     created_at:"2014-09-05T21:59:40.956Z",
     updated_at:"2014-09-05T21:59:40.956Z",
@@ -2368,7 +2368,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:264,
-    question_id:73,
+    question:73,
     option_text:"Blisters",
     created_at:"2014-09-05T21:59:40.961Z",
     updated_at:"2014-09-05T21:59:40.961Z",
@@ -2377,7 +2377,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:265,
-    question_id:73,
+    question:73,
     option_text:"Bruising",
     created_at:"2014-09-05T21:59:40.965Z",
     updated_at:"2014-09-05T21:59:40.965Z",
@@ -2386,7 +2386,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:266,
-    question_id:73,
+    question:73,
     option_text:"Eschar",
     created_at:"2014-09-05T21:59:40.969Z",
     updated_at:"2014-09-05T21:59:40.969Z",
@@ -2395,7 +2395,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:267,
-    question_id:73,
+    question:73,
     option_text:"Masculopapular",
     created_at:"2014-09-05T21:59:40.973Z",
     updated_at:"2014-09-05T21:59:40.973Z",
@@ -2404,7 +2404,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:268,
-    question_id:73,
+    question:73,
     option_text:"Peeling",
     created_at:"2014-09-05T21:59:40.977Z",
     updated_at:"2014-09-05T21:59:40.977Z",
@@ -2413,7 +2413,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:269,
-    question_id:73,
+    question:73,
     option_text:"Petechiae",
     created_at:"2014-09-05T21:59:40.981Z",
     updated_at:"2014-09-05T21:59:40.981Z",
@@ -2422,7 +2422,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:270,
-    question_id:73,
+    question:73,
     option_text:"Point of Origin",
     created_at:"2014-09-05T21:59:40.986Z",
     updated_at:"2014-09-05T21:59:40.986Z",
@@ -2431,7 +2431,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:271,
-    question_id:73,
+    question:73,
     option_text:"Progression",
     created_at:"2014-09-05T21:59:40.992Z",
     updated_at:"2014-09-05T21:59:40.992Z",
@@ -2440,7 +2440,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:272,
-    question_id:73,
+    question:73,
     option_text:"Rash",
     created_at:"2014-09-05T21:59:40.996Z",
     updated_at:"2014-09-05T21:59:40.996Z",
@@ -2449,7 +2449,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:273,
-    question_id:114,
+    question:114,
     option_text:"Skin",
     created_at:"2014-09-05T22:34:17.086Z",
     updated_at:"2014-09-05T22:34:17.086Z",
@@ -2458,7 +2458,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:274,
-    question_id:114,
+    question:114,
     option_text:"GI",
     created_at:"2014-09-05T22:34:17.101Z",
     updated_at:"2014-09-05T22:34:17.101Z",
@@ -2467,7 +2467,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:275,
-    question_id:114,
+    question:114,
     option_text:"Respiratory",
     created_at:"2014-09-05T22:34:17.108Z",
     updated_at:"2014-09-05T22:34:17.108Z",
@@ -2476,7 +2476,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:276,
-    question_id:114,
+    question:114,
     option_text:"Neurologic",
     created_at:"2014-09-05T22:34:17.115Z",
     updated_at:"2014-09-05T22:34:17.115Z",
@@ -2485,7 +2485,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:277,
-    question_id:114,
+    question:114,
     option_text:"Other",
     created_at:"2014-09-05T22:34:17.120Z",
     updated_at:"2014-09-05T22:34:17.120Z",
@@ -2494,7 +2494,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:278,
-    question_id:115,
+    question:115,
     option_text:"Not a Case",
     created_at:"2014-09-05T22:34:17.124Z",
     updated_at:"2014-09-05T22:34:17.124Z",
@@ -2503,7 +2503,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:279,
-    question_id:115,
+    question:115,
     option_text:"Suspected",
     created_at:"2014-09-05T22:34:17.128Z",
     updated_at:"2014-09-05T22:34:17.128Z",
@@ -2512,7 +2512,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:280,
-    question_id:115,
+    question:115,
     option_text:"Probable",
     created_at:"2014-09-05T22:34:17.131Z",
     updated_at:"2014-09-05T22:34:17.131Z",
@@ -2521,7 +2521,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:281,
-    question_id:115,
+    question:115,
     option_text:"Confirmed",
     created_at:"2014-09-05T22:34:17.135Z",
     updated_at:"2014-09-05T22:34:17.135Z",
@@ -2530,7 +2530,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:282,
-    question_id:117,
+    question:117,
     option_text:"Type A",
     created_at:"2014-09-05T22:34:17.140Z",
     updated_at:"2014-09-05T22:34:17.140Z",
@@ -2539,7 +2539,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:283,
-    question_id:117,
+    question:117,
     option_text:"Type B",
     created_at:"2014-09-05T22:34:17.143Z",
     updated_at:"2014-09-05T22:34:17.143Z",
@@ -2548,7 +2548,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:284,
-    question_id:125,
+    question:125,
     option_text:"Male",
     created_at:"2014-09-05T22:34:17.147Z",
     updated_at:"2014-09-05T22:34:17.147Z",
@@ -2557,7 +2557,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:285,
-    question_id:125,
+    question:125,
     option_text:"Female",
     created_at:"2014-09-05T22:34:17.151Z",
     updated_at:"2014-09-05T22:34:17.151Z",
@@ -2566,7 +2566,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:286,
-    question_id:125,
+    question:125,
     option_text:"Transgender",
     created_at:"2014-09-05T22:34:17.154Z",
     updated_at:"2014-09-05T22:34:17.154Z",
@@ -2575,7 +2575,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:287,
-    question_id:126,
+    question:126,
     option_text:"Hispanic",
     created_at:"2014-09-05T22:34:17.158Z",
     updated_at:"2014-09-05T22:34:17.158Z",
@@ -2584,7 +2584,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:288,
-    question_id:126,
+    question:126,
     option_text:"Caucasian",
     created_at:"2014-09-05T22:34:17.161Z",
     updated_at:"2014-09-05T22:34:17.161Z",
@@ -2593,7 +2593,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:289,
-    question_id:126,
+    question:126,
     option_text:"African American",
     created_at:"2014-09-05T22:34:17.165Z",
     updated_at:"2014-09-05T22:34:17.165Z",
@@ -2602,7 +2602,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:290,
-    question_id:126,
+    question:126,
     option_text:"Alaskan Native",
     created_at:"2014-09-05T22:34:17.169Z",
     updated_at:"2014-09-05T22:34:17.169Z",
@@ -2611,7 +2611,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:291,
-    question_id:126,
+    question:126,
     option_text:"Asian",
     created_at:"2014-09-05T22:34:17.173Z",
     updated_at:"2014-09-05T22:34:17.173Z",
@@ -2620,7 +2620,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:292,
-    question_id:126,
+    question:126,
     option_text:"Pacific Islander",
     created_at:"2014-09-05T22:34:17.176Z",
     updated_at:"2014-09-05T22:34:17.176Z",
@@ -2629,7 +2629,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:293,
-    question_id:126,
+    question:126,
     option_text:"Other",
     created_at:"2014-09-05T22:34:17.180Z",
     updated_at:"2014-09-05T22:34:17.180Z",
@@ -2638,7 +2638,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:294,
-    question_id:129,
+    question:129,
     option_text:"GI",
     created_at:"2014-09-05T22:34:17.184Z",
     updated_at:"2014-09-05T22:34:17.184Z",
@@ -2647,7 +2647,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:295,
-    question_id:129,
+    question:129,
     option_text:"Abdominal Pain",
     created_at:"2014-09-05T22:34:17.188Z",
     updated_at:"2014-09-05T22:34:17.188Z",
@@ -2656,7 +2656,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:296,
-    question_id:129,
+    question:129,
     option_text:"Diarrhea",
     created_at:"2014-09-05T22:34:17.192Z",
     updated_at:"2014-09-05T22:34:17.192Z",
@@ -2665,7 +2665,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:297,
-    question_id:129,
+    question:129,
     option_text:"Nausea",
     created_at:"2014-09-05T22:34:17.196Z",
     updated_at:"2014-09-05T22:34:17.196Z",
@@ -2674,7 +2674,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:298,
-    question_id:129,
+    question:129,
     option_text:"Vomiting",
     created_at:"2014-09-05T22:34:17.200Z",
     updated_at:"2014-09-05T22:34:17.200Z",
@@ -2683,7 +2683,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:299,
-    question_id:129,
+    question:129,
     option_text:"Neurologic",
     created_at:"2014-09-05T22:34:17.203Z",
     updated_at:"2014-09-05T22:34:17.203Z",
@@ -2692,7 +2692,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:300,
-    question_id:129,
+    question:129,
     option_text:"Ascending",
     created_at:"2014-09-05T22:34:17.207Z",
     updated_at:"2014-09-05T22:34:17.207Z",
@@ -2701,7 +2701,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:301,
-    question_id:129,
+    question:129,
     option_text:"Blurred Vision",
     created_at:"2014-09-05T22:34:17.211Z",
     updated_at:"2014-09-05T22:34:17.211Z",
@@ -2710,7 +2710,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:302,
-    question_id:129,
+    question:129,
     option_text:"Decending",
     created_at:"2014-09-05T22:34:17.215Z",
     updated_at:"2014-09-05T22:34:17.215Z",
@@ -2719,7 +2719,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:303,
-    question_id:129,
+    question:129,
     option_text:"Delirium",
     created_at:"2014-09-05T22:34:17.220Z",
     updated_at:"2014-09-05T22:34:17.220Z",
@@ -2728,7 +2728,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:304,
-    question_id:129,
+    question:129,
     option_text:"Dysphagia",
     created_at:"2014-09-05T22:34:17.224Z",
     updated_at:"2014-09-05T22:34:17.224Z",
@@ -2737,7 +2737,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:305,
-    question_id:129,
+    question:129,
     option_text:"Headache",
     created_at:"2014-09-05T22:34:17.227Z",
     updated_at:"2014-09-05T22:34:17.227Z",
@@ -2746,7 +2746,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:306,
-    question_id:129,
+    question:129,
     option_text:"Pain",
     created_at:"2014-09-05T22:34:17.231Z",
     updated_at:"2014-09-05T22:34:17.231Z",
@@ -2755,7 +2755,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:307,
-    question_id:129,
+    question:129,
     option_text:"Paralysis",
     created_at:"2014-09-05T22:34:17.235Z",
     updated_at:"2014-09-05T22:34:17.235Z",
@@ -2764,7 +2764,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:308,
-    question_id:129,
+    question:129,
     option_text:"Photophobia",
     created_at:"2014-09-05T22:34:17.239Z",
     updated_at:"2014-09-05T22:34:17.239Z",
@@ -2773,7 +2773,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:309,
-    question_id:129,
+    question:129,
     option_text:"Seizures",
     created_at:"2014-09-05T22:34:17.244Z",
     updated_at:"2014-09-05T22:34:17.244Z",
@@ -2782,7 +2782,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:310,
-    question_id:129,
+    question:129,
     option_text:"Slurred Speech",
     created_at:"2014-09-05T22:34:17.250Z",
     updated_at:"2014-09-05T22:34:17.250Z",
@@ -2791,7 +2791,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:311,
-    question_id:129,
+    question:129,
     option_text:"Weakness",
     created_at:"2014-09-05T22:34:17.256Z",
     updated_at:"2014-09-05T22:34:17.256Z",
@@ -2800,7 +2800,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:312,
-    question_id:129,
+    question:129,
     option_text:"Non Specific",
     created_at:"2014-09-05T22:34:17.261Z",
     updated_at:"2014-09-05T22:34:17.261Z",
@@ -2809,7 +2809,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:313,
-    question_id:129,
+    question:129,
     option_text:"Diaphoresis",
     created_at:"2014-09-05T22:34:17.265Z",
     updated_at:"2014-09-05T22:34:17.265Z",
@@ -2818,7 +2818,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:314,
-    question_id:129,
+    question:129,
     option_text:"Fever",
     created_at:"2014-09-05T22:34:17.269Z",
     updated_at:"2014-09-05T22:34:17.269Z",
@@ -2827,7 +2827,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:315,
-    question_id:129,
+    question:129,
     option_text:"Malaise",
     created_at:"2014-09-05T22:34:17.274Z",
     updated_at:"2014-09-05T22:34:17.274Z",
@@ -2836,7 +2836,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:316,
-    question_id:129,
+    question:129,
     option_text:"Nodes",
     created_at:"2014-09-05T22:34:17.278Z",
     updated_at:"2014-09-05T22:34:17.278Z",
@@ -2845,7 +2845,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:317,
-    question_id:129,
+    question:129,
     option_text:"Rigors",
     created_at:"2014-09-05T22:34:17.283Z",
     updated_at:"2014-09-05T22:34:17.283Z",
@@ -2854,7 +2854,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:318,
-    question_id:129,
+    question:129,
     option_text:"Respiratory",
     created_at:"2014-09-05T22:34:17.286Z",
     updated_at:"2014-09-05T22:34:17.286Z",
@@ -2863,7 +2863,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:319,
-    question_id:129,
+    question:129,
     option_text:"Chest Pain",
     created_at:"2014-09-05T22:34:17.290Z",
     updated_at:"2014-09-05T22:34:17.290Z",
@@ -2872,7 +2872,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:320,
-    question_id:129,
+    question:129,
     option_text:"Cough",
     created_at:"2014-09-05T22:34:17.294Z",
     updated_at:"2014-09-05T22:34:17.294Z",
@@ -2881,7 +2881,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:321,
-    question_id:129,
+    question:129,
     option_text:"Cyanosis",
     created_at:"2014-09-05T22:34:17.298Z",
     updated_at:"2014-09-05T22:34:17.298Z",
@@ -2890,7 +2890,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:322,
-    question_id:129,
+    question:129,
     option_text:"Dyspnea",
     created_at:"2014-09-05T22:34:17.302Z",
     updated_at:"2014-09-05T22:34:17.302Z",
@@ -2899,7 +2899,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:323,
-    question_id:129,
+    question:129,
     option_text:"Haemoptysis",
     created_at:"2014-09-05T22:34:17.306Z",
     updated_at:"2014-09-05T22:34:17.306Z",
@@ -2908,7 +2908,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:324,
-    question_id:129,
+    question:129,
     option_text:"Productive",
     created_at:"2014-09-05T22:34:17.310Z",
     updated_at:"2014-09-05T22:34:17.310Z",
@@ -2917,7 +2917,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:325,
-    question_id:129,
+    question:129,
     option_text:"X-Ray",
     created_at:"2014-09-05T22:34:17.314Z",
     updated_at:"2014-09-05T22:34:17.314Z",
@@ -2926,7 +2926,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:326,
-    question_id:129,
+    question:129,
     option_text:"Skin",
     created_at:"2014-09-05T22:34:17.318Z",
     updated_at:"2014-09-05T22:34:17.318Z",
@@ -2935,7 +2935,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:327,
-    question_id:129,
+    question:129,
     option_text:"Bleedig Gums",
     created_at:"2014-09-05T22:34:17.322Z",
     updated_at:"2014-09-05T22:34:17.322Z",
@@ -2944,7 +2944,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:328,
-    question_id:129,
+    question:129,
     option_text:"Blisters",
     created_at:"2014-09-05T22:34:17.326Z",
     updated_at:"2014-09-05T22:34:17.326Z",
@@ -2953,7 +2953,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:329,
-    question_id:129,
+    question:129,
     option_text:"Bruising",
     created_at:"2014-09-05T22:34:17.331Z",
     updated_at:"2014-09-05T22:34:17.331Z",
@@ -2962,7 +2962,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:330,
-    question_id:129,
+    question:129,
     option_text:"Eschar",
     created_at:"2014-09-05T22:34:17.335Z",
     updated_at:"2014-09-05T22:34:17.335Z",
@@ -2971,7 +2971,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:331,
-    question_id:129,
+    question:129,
     option_text:"Masculopapular",
     created_at:"2014-09-05T22:34:17.340Z",
     updated_at:"2014-09-05T22:34:17.340Z",
@@ -2980,7 +2980,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:332,
-    question_id:129,
+    question:129,
     option_text:"Peeling",
     created_at:"2014-09-05T22:34:17.344Z",
     updated_at:"2014-09-05T22:34:17.344Z",
@@ -2989,7 +2989,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:333,
-    question_id:129,
+    question:129,
     option_text:"Petechiae",
     created_at:"2014-09-05T22:34:17.348Z",
     updated_at:"2014-09-05T22:34:17.348Z",
@@ -2998,7 +2998,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:334,
-    question_id:129,
+    question:129,
     option_text:"Point of Origin",
     created_at:"2014-09-05T22:34:17.352Z",
     updated_at:"2014-09-05T22:34:17.352Z",
@@ -3007,7 +3007,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:335,
-    question_id:129,
+    question:129,
     option_text:"Progression",
     created_at:"2014-09-05T22:34:17.356Z",
     updated_at:"2014-09-05T22:34:17.356Z",
@@ -3016,7 +3016,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:336,
-    question_id:129,
+    question:129,
     option_text:"Rash",
     created_at:"2014-09-05T22:34:17.360Z",
     updated_at:"2014-09-05T22:34:17.360Z",
@@ -3025,7 +3025,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:337,
-    question_id:154,
+    question:154,
     option_text:"Skin",
     created_at:"2014-09-05T22:34:40.836Z",
     updated_at:"2014-09-05T22:34:40.836Z",
@@ -3034,7 +3034,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:338,
-    question_id:154,
+    question:154,
     option_text:"GI",
     created_at:"2014-09-05T22:34:40.850Z",
     updated_at:"2014-09-05T22:34:40.850Z",
@@ -3043,7 +3043,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:339,
-    question_id:154,
+    question:154,
     option_text:"Respiratory",
     created_at:"2014-09-05T22:34:40.856Z",
     updated_at:"2014-09-05T22:34:40.856Z",
@@ -3052,7 +3052,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:340,
-    question_id:154,
+    question:154,
     option_text:"Neurologic",
     created_at:"2014-09-05T22:34:40.861Z",
     updated_at:"2014-09-05T22:34:40.861Z",
@@ -3061,7 +3061,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:341,
-    question_id:154,
+    question:154,
     option_text:"Other",
     created_at:"2014-09-05T22:34:40.867Z",
     updated_at:"2014-09-05T22:34:40.867Z",
@@ -3070,7 +3070,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:342,
-    question_id:155,
+    question:155,
     option_text:"Not a Case",
     created_at:"2014-09-05T22:34:40.873Z",
     updated_at:"2014-09-05T22:34:40.873Z",
@@ -3079,7 +3079,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:343,
-    question_id:155,
+    question:155,
     option_text:"Suspected",
     created_at:"2014-09-05T22:34:40.878Z",
     updated_at:"2014-09-05T22:34:40.878Z",
@@ -3088,7 +3088,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:344,
-    question_id:155,
+    question:155,
     option_text:"Probable",
     created_at:"2014-09-05T22:34:40.882Z",
     updated_at:"2014-09-05T22:34:40.882Z",
@@ -3097,7 +3097,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:345,
-    question_id:155,
+    question:155,
     option_text:"Confirmed",
     created_at:"2014-09-05T22:34:40.886Z",
     updated_at:"2014-09-05T22:34:40.886Z",
@@ -3106,7 +3106,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:346,
-    question_id:157,
+    question:157,
     option_text:"Staff",
     created_at:"2014-09-05T22:34:40.890Z",
     updated_at:"2014-09-05T22:34:40.890Z",
@@ -3115,7 +3115,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:347,
-    question_id:157,
+    question:157,
     option_text:"Patient",
     created_at:"2014-09-05T22:34:40.894Z",
     updated_at:"2014-09-05T22:34:40.894Z",
@@ -3124,7 +3124,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:348,
-    question_id:165,
+    question:165,
     option_text:"Male",
     created_at:"2014-09-05T22:34:40.897Z",
     updated_at:"2014-09-05T22:34:40.897Z",
@@ -3133,7 +3133,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:349,
-    question_id:165,
+    question:165,
     option_text:"Female",
     created_at:"2014-09-05T22:34:40.901Z",
     updated_at:"2014-09-05T22:34:40.901Z",
@@ -3142,7 +3142,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:350,
-    question_id:165,
+    question:165,
     option_text:"Transgender",
     created_at:"2014-09-05T22:34:40.905Z",
     updated_at:"2014-09-05T22:34:40.905Z",
@@ -3151,7 +3151,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:351,
-    question_id:166,
+    question:166,
     option_text:"Hispanic",
     created_at:"2014-09-05T22:34:40.908Z",
     updated_at:"2014-09-05T22:34:40.908Z",
@@ -3160,7 +3160,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:352,
-    question_id:166,
+    question:166,
     option_text:"Caucasian",
     created_at:"2014-09-05T22:34:40.912Z",
     updated_at:"2014-09-05T22:34:40.912Z",
@@ -3169,7 +3169,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:353,
-    question_id:166,
+    question:166,
     option_text:"African American",
     created_at:"2014-09-05T22:34:40.916Z",
     updated_at:"2014-09-05T22:34:40.916Z",
@@ -3178,7 +3178,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:354,
-    question_id:166,
+    question:166,
     option_text:"Alaskan Native",
     created_at:"2014-09-05T22:34:40.922Z",
     updated_at:"2014-09-05T22:34:40.922Z",
@@ -3187,7 +3187,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:355,
-    question_id:166,
+    question:166,
     option_text:"Asian",
     created_at:"2014-09-05T22:34:40.926Z",
     updated_at:"2014-09-05T22:34:40.926Z",
@@ -3196,7 +3196,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:356,
-    question_id:166,
+    question:166,
     option_text:"Pacific Islander",
     created_at:"2014-09-05T22:34:40.929Z",
     updated_at:"2014-09-05T22:34:40.929Z",
@@ -3205,7 +3205,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:357,
-    question_id:166,
+    question:166,
     option_text:"Other",
     created_at:"2014-09-05T22:34:40.933Z",
     updated_at:"2014-09-05T22:34:40.933Z",
@@ -3214,7 +3214,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:358,
-    question_id:169,
+    question:169,
     option_text:"GI",
     created_at:"2014-09-05T22:34:40.937Z",
     updated_at:"2014-09-05T22:34:40.937Z",
@@ -3223,7 +3223,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:359,
-    question_id:169,
+    question:169,
     option_text:"Abdominal Pain",
     created_at:"2014-09-05T22:34:40.941Z",
     updated_at:"2014-09-05T22:34:40.941Z",
@@ -3232,7 +3232,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:360,
-    question_id:169,
+    question:169,
     option_text:"Diarrhea",
     created_at:"2014-09-05T22:34:40.945Z",
     updated_at:"2014-09-05T22:34:40.945Z",
@@ -3241,7 +3241,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:361,
-    question_id:169,
+    question:169,
     option_text:"Nausea",
     created_at:"2014-09-05T22:34:40.950Z",
     updated_at:"2014-09-05T22:34:40.950Z",
@@ -3250,7 +3250,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:362,
-    question_id:169,
+    question:169,
     option_text:"Vomiting",
     created_at:"2014-09-05T22:34:40.955Z",
     updated_at:"2014-09-05T22:34:40.955Z",
@@ -3259,7 +3259,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:363,
-    question_id:169,
+    question:169,
     option_text:"Neurologic",
     created_at:"2014-09-05T22:34:40.959Z",
     updated_at:"2014-09-05T22:34:40.959Z",
@@ -3268,7 +3268,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:364,
-    question_id:169,
+    question:169,
     option_text:"Ascending",
     created_at:"2014-09-05T22:34:40.963Z",
     updated_at:"2014-09-05T22:34:40.963Z",
@@ -3277,7 +3277,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:365,
-    question_id:169,
+    question:169,
     option_text:"Blurred Vision",
     created_at:"2014-09-05T22:34:40.967Z",
     updated_at:"2014-09-05T22:34:40.967Z",
@@ -3286,7 +3286,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:366,
-    question_id:169,
+    question:169,
     option_text:"Decending",
     created_at:"2014-09-05T22:34:40.971Z",
     updated_at:"2014-09-05T22:34:40.971Z",
@@ -3295,7 +3295,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:367,
-    question_id:169,
+    question:169,
     option_text:"Delirium",
     created_at:"2014-09-05T22:34:40.975Z",
     updated_at:"2014-09-05T22:34:40.975Z",
@@ -3304,7 +3304,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:368,
-    question_id:169,
+    question:169,
     option_text:"Dysphagia",
     created_at:"2014-09-05T22:34:40.979Z",
     updated_at:"2014-09-05T22:34:40.979Z",
@@ -3313,7 +3313,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:369,
-    question_id:169,
+    question:169,
     option_text:"Headache",
     created_at:"2014-09-05T22:34:40.982Z",
     updated_at:"2014-09-05T22:34:40.982Z",
@@ -3322,7 +3322,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:370,
-    question_id:169,
+    question:169,
     option_text:"Pain",
     created_at:"2014-09-05T22:34:40.986Z",
     updated_at:"2014-09-05T22:34:40.986Z",
@@ -3331,7 +3331,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:371,
-    question_id:169,
+    question:169,
     option_text:"Paralysis",
     created_at:"2014-09-05T22:34:40.990Z",
     updated_at:"2014-09-05T22:34:40.990Z",
@@ -3340,7 +3340,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:372,
-    question_id:169,
+    question:169,
     option_text:"Photophobia",
     created_at:"2014-09-05T22:34:40.994Z",
     updated_at:"2014-09-05T22:34:40.994Z",
@@ -3349,7 +3349,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:373,
-    question_id:169,
+    question:169,
     option_text:"Seizures",
     created_at:"2014-09-05T22:34:41.000Z",
     updated_at:"2014-09-05T22:34:41.000Z",
@@ -3358,7 +3358,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:374,
-    question_id:169,
+    question:169,
     option_text:"Slurred Speech",
     created_at:"2014-09-05T22:34:41.007Z",
     updated_at:"2014-09-05T22:34:41.007Z",
@@ -3367,7 +3367,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:375,
-    question_id:169,
+    question:169,
     option_text:"Weakness",
     created_at:"2014-09-05T22:34:41.013Z",
     updated_at:"2014-09-05T22:34:41.013Z",
@@ -3376,7 +3376,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:376,
-    question_id:169,
+    question:169,
     option_text:"Non Specific",
     created_at:"2014-09-05T22:34:41.017Z",
     updated_at:"2014-09-05T22:34:41.017Z",
@@ -3385,7 +3385,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:377,
-    question_id:169,
+    question:169,
     option_text:"Diaphoresis",
     created_at:"2014-09-05T22:34:41.021Z",
     updated_at:"2014-09-05T22:34:41.021Z",
@@ -3394,7 +3394,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:378,
-    question_id:169,
+    question:169,
     option_text:"Fever",
     created_at:"2014-09-05T22:34:41.027Z",
     updated_at:"2014-09-05T22:34:41.027Z",
@@ -3403,7 +3403,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:379,
-    question_id:169,
+    question:169,
     option_text:"Malaise",
     created_at:"2014-09-05T22:34:41.031Z",
     updated_at:"2014-09-05T22:34:41.031Z",
@@ -3412,7 +3412,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:380,
-    question_id:169,
+    question:169,
     option_text:"Nodes",
     created_at:"2014-09-05T22:34:41.035Z",
     updated_at:"2014-09-05T22:34:41.035Z",
@@ -3421,7 +3421,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:381,
-    question_id:169,
+    question:169,
     option_text:"Rigors",
     created_at:"2014-09-05T22:34:41.039Z",
     updated_at:"2014-09-05T22:34:41.039Z",
@@ -3430,7 +3430,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:382,
-    question_id:169,
+    question:169,
     option_text:"Respiratory",
     created_at:"2014-09-05T22:34:41.043Z",
     updated_at:"2014-09-05T22:34:41.043Z",
@@ -3439,7 +3439,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:383,
-    question_id:169,
+    question:169,
     option_text:"Chest Pain",
     created_at:"2014-09-05T22:34:41.048Z",
     updated_at:"2014-09-05T22:34:41.048Z",
@@ -3448,7 +3448,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:384,
-    question_id:169,
+    question:169,
     option_text:"Cough",
     created_at:"2014-09-05T22:34:41.052Z",
     updated_at:"2014-09-05T22:34:41.052Z",
@@ -3457,7 +3457,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:385,
-    question_id:169,
+    question:169,
     option_text:"Cyanosis",
     created_at:"2014-09-05T22:34:41.056Z",
     updated_at:"2014-09-05T22:34:41.056Z",
@@ -3466,7 +3466,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:386,
-    question_id:169,
+    question:169,
     option_text:"Dyspnea",
     created_at:"2014-09-05T22:34:41.061Z",
     updated_at:"2014-09-05T22:34:41.061Z",
@@ -3475,7 +3475,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:387,
-    question_id:169,
+    question:169,
     option_text:"Haemoptysis",
     created_at:"2014-09-05T22:34:41.066Z",
     updated_at:"2014-09-05T22:34:41.066Z",
@@ -3484,7 +3484,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:388,
-    question_id:169,
+    question:169,
     option_text:"Productive",
     created_at:"2014-09-05T22:34:41.069Z",
     updated_at:"2014-09-05T22:34:41.069Z",
@@ -3493,7 +3493,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:389,
-    question_id:169,
+    question:169,
     option_text:"X-Ray",
     created_at:"2014-09-05T22:34:41.074Z",
     updated_at:"2014-09-05T22:34:41.074Z",
@@ -3502,7 +3502,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:390,
-    question_id:169,
+    question:169,
     option_text:"Skin",
     created_at:"2014-09-05T22:34:41.078Z",
     updated_at:"2014-09-05T22:34:41.078Z",
@@ -3511,7 +3511,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:391,
-    question_id:169,
+    question:169,
     option_text:"Bleedig Gums",
     created_at:"2014-09-05T22:34:41.083Z",
     updated_at:"2014-09-05T22:34:41.083Z",
@@ -3520,7 +3520,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:392,
-    question_id:169,
+    question:169,
     option_text:"Blisters",
     created_at:"2014-09-05T22:34:41.088Z",
     updated_at:"2014-09-05T22:34:41.088Z",
@@ -3529,7 +3529,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:393,
-    question_id:169,
+    question:169,
     option_text:"Bruising",
     created_at:"2014-09-05T22:34:41.091Z",
     updated_at:"2014-09-05T22:34:41.091Z",
@@ -3538,7 +3538,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:394,
-    question_id:169,
+    question:169,
     option_text:"Eschar",
     created_at:"2014-09-05T22:34:41.095Z",
     updated_at:"2014-09-05T22:34:41.095Z",
@@ -3547,7 +3547,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:395,
-    question_id:169,
+    question:169,
     option_text:"Masculopapular",
     created_at:"2014-09-05T22:34:41.099Z",
     updated_at:"2014-09-05T22:34:41.099Z",
@@ -3556,7 +3556,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:396,
-    question_id:169,
+    question:169,
     option_text:"Peeling",
     created_at:"2014-09-05T22:34:41.103Z",
     updated_at:"2014-09-05T22:34:41.103Z",
@@ -3565,7 +3565,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:397,
-    question_id:169,
+    question:169,
     option_text:"Petechiae",
     created_at:"2014-09-05T22:34:41.107Z",
     updated_at:"2014-09-05T22:34:41.107Z",
@@ -3574,7 +3574,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:398,
-    question_id:169,
+    question:169,
     option_text:"Point of Origin",
     created_at:"2014-09-05T22:34:41.113Z",
     updated_at:"2014-09-05T22:34:41.113Z",
@@ -3583,7 +3583,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:399,
-    question_id:169,
+    question:169,
     option_text:"Progression",
     created_at:"2014-09-05T22:34:41.120Z",
     updated_at:"2014-09-05T22:34:41.120Z",
@@ -3592,7 +3592,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:400,
-    question_id:169,
+    question:169,
     option_text:"Rash",
     created_at:"2014-09-05T22:34:41.125Z",
     updated_at:"2014-09-05T22:34:41.125Z",
@@ -3601,7 +3601,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:401,
-    question_id:187,
+    question:187,
     option_text:"Skin",
     created_at:"2014-09-05T22:35:03.565Z",
     updated_at:"2014-09-05T22:35:03.565Z",
@@ -3610,7 +3610,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:402,
-    question_id:187,
+    question:187,
     option_text:"GI",
     created_at:"2014-09-05T22:35:03.578Z",
     updated_at:"2014-09-05T22:35:03.578Z",
@@ -3619,7 +3619,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:403,
-    question_id:187,
+    question:187,
     option_text:"Respiratory",
     created_at:"2014-09-05T22:35:03.584Z",
     updated_at:"2014-09-05T22:35:03.584Z",
@@ -3628,7 +3628,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:404,
-    question_id:187,
+    question:187,
     option_text:"Neurologic",
     created_at:"2014-09-05T22:35:03.588Z",
     updated_at:"2014-09-05T22:35:03.588Z",
@@ -3637,7 +3637,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:405,
-    question_id:187,
+    question:187,
     option_text:"Other",
     created_at:"2014-09-05T22:35:03.593Z",
     updated_at:"2014-09-05T22:35:03.593Z",
@@ -3646,7 +3646,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:406,
-    question_id:188,
+    question:188,
     option_text:"Not a Case",
     created_at:"2014-09-05T22:35:03.599Z",
     updated_at:"2014-09-05T22:35:03.599Z",
@@ -3655,7 +3655,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:407,
-    question_id:188,
+    question:188,
     option_text:"Suspected",
     created_at:"2014-09-05T22:35:03.603Z",
     updated_at:"2014-09-05T22:35:03.603Z",
@@ -3664,7 +3664,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:408,
-    question_id:188,
+    question:188,
     option_text:"Probable",
     created_at:"2014-09-05T22:35:03.608Z",
     updated_at:"2014-09-05T22:35:03.608Z",
@@ -3673,7 +3673,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:409,
-    question_id:188,
+    question:188,
     option_text:"Confirmed",
     created_at:"2014-09-05T22:35:03.613Z",
     updated_at:"2014-09-05T22:35:03.613Z",
@@ -3682,7 +3682,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:410,
-    question_id:190,
+    question:190,
     option_text:"Employee",
     created_at:"2014-09-05T22:35:03.616Z",
     updated_at:"2014-09-05T22:35:03.616Z",
@@ -3691,7 +3691,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:411,
-    question_id:190,
+    question:190,
     option_text:"Resident",
     created_at:"2014-09-05T22:35:03.621Z",
     updated_at:"2014-09-05T22:35:03.621Z",
@@ -3700,7 +3700,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:412,
-    question_id:198,
+    question:198,
     option_text:"Male",
     created_at:"2014-09-05T22:35:03.624Z",
     updated_at:"2014-09-05T22:35:03.624Z",
@@ -3709,7 +3709,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:413,
-    question_id:198,
+    question:198,
     option_text:"Female",
     created_at:"2014-09-05T22:35:03.628Z",
     updated_at:"2014-09-05T22:35:03.628Z",
@@ -3718,7 +3718,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:414,
-    question_id:198,
+    question:198,
     option_text:"Transgender",
     created_at:"2014-09-05T22:35:03.632Z",
     updated_at:"2014-09-05T22:35:03.632Z",
@@ -3727,7 +3727,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:415,
-    question_id:199,
+    question:199,
     option_text:"Hispanic",
     created_at:"2014-09-05T22:35:03.635Z",
     updated_at:"2014-09-05T22:35:03.635Z",
@@ -3736,7 +3736,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:416,
-    question_id:199,
+    question:199,
     option_text:"Caucasian",
     created_at:"2014-09-05T22:35:03.638Z",
     updated_at:"2014-09-05T22:35:03.638Z",
@@ -3745,7 +3745,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:417,
-    question_id:199,
+    question:199,
     option_text:"African American",
     created_at:"2014-09-05T22:35:03.642Z",
     updated_at:"2014-09-05T22:35:03.642Z",
@@ -3754,7 +3754,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:418,
-    question_id:199,
+    question:199,
     option_text:"Alaskan Native",
     created_at:"2014-09-05T22:35:03.646Z",
     updated_at:"2014-09-05T22:35:03.646Z",
@@ -3763,7 +3763,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:419,
-    question_id:199,
+    question:199,
     option_text:"Asian",
     created_at:"2014-09-05T22:35:03.650Z",
     updated_at:"2014-09-05T22:35:03.650Z",
@@ -3772,7 +3772,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:420,
-    question_id:199,
+    question:199,
     option_text:"Pacific Islander",
     created_at:"2014-09-05T22:35:03.653Z",
     updated_at:"2014-09-05T22:35:03.653Z",
@@ -3781,7 +3781,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:421,
-    question_id:199,
+    question:199,
     option_text:"Other",
     created_at:"2014-09-05T22:35:03.657Z",
     updated_at:"2014-09-05T22:35:03.657Z",
@@ -3790,7 +3790,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:422,
-    question_id:202,
+    question:202,
     option_text:"GI",
     created_at:"2014-09-05T22:35:03.660Z",
     updated_at:"2014-09-05T22:35:03.660Z",
@@ -3799,7 +3799,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:423,
-    question_id:202,
+    question:202,
     option_text:"Abdominal Pain",
     created_at:"2014-09-05T22:35:03.665Z",
     updated_at:"2014-09-05T22:35:03.665Z",
@@ -3808,7 +3808,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:424,
-    question_id:202,
+    question:202,
     option_text:"Diarrhea",
     created_at:"2014-09-05T22:35:03.669Z",
     updated_at:"2014-09-05T22:35:03.669Z",
@@ -3817,7 +3817,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:425,
-    question_id:202,
+    question:202,
     option_text:"Nausea",
     created_at:"2014-09-05T22:35:03.673Z",
     updated_at:"2014-09-05T22:35:03.673Z",
@@ -3826,7 +3826,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:426,
-    question_id:202,
+    question:202,
     option_text:"Vomiting",
     created_at:"2014-09-05T22:35:03.677Z",
     updated_at:"2014-09-05T22:35:03.677Z",
@@ -3835,7 +3835,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:427,
-    question_id:202,
+    question:202,
     option_text:"Neurologic",
     created_at:"2014-09-05T22:35:03.681Z",
     updated_at:"2014-09-05T22:35:03.681Z",
@@ -3844,7 +3844,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:428,
-    question_id:202,
+    question:202,
     option_text:"Ascending",
     created_at:"2014-09-05T22:35:03.685Z",
     updated_at:"2014-09-05T22:35:03.685Z",
@@ -3853,7 +3853,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:429,
-    question_id:202,
+    question:202,
     option_text:"Blurred Vision",
     created_at:"2014-09-05T22:35:03.689Z",
     updated_at:"2014-09-05T22:35:03.689Z",
@@ -3862,7 +3862,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:430,
-    question_id:202,
+    question:202,
     option_text:"Decending",
     created_at:"2014-09-05T22:35:03.692Z",
     updated_at:"2014-09-05T22:35:03.692Z",
@@ -3871,7 +3871,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:431,
-    question_id:202,
+    question:202,
     option_text:"Delirium",
     created_at:"2014-09-05T22:35:03.696Z",
     updated_at:"2014-09-05T22:35:03.696Z",
@@ -3880,7 +3880,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:432,
-    question_id:202,
+    question:202,
     option_text:"Dysphagia",
     created_at:"2014-09-05T22:35:03.700Z",
     updated_at:"2014-09-05T22:35:03.700Z",
@@ -3889,7 +3889,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:433,
-    question_id:202,
+    question:202,
     option_text:"Headache",
     created_at:"2014-09-05T22:35:03.704Z",
     updated_at:"2014-09-05T22:35:03.704Z",
@@ -3898,7 +3898,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:434,
-    question_id:202,
+    question:202,
     option_text:"Pain",
     created_at:"2014-09-05T22:35:03.708Z",
     updated_at:"2014-09-05T22:35:03.708Z",
@@ -3907,7 +3907,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:435,
-    question_id:202,
+    question:202,
     option_text:"Paralysis",
     created_at:"2014-09-05T22:35:03.714Z",
     updated_at:"2014-09-05T22:35:03.714Z",
@@ -3916,7 +3916,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:436,
-    question_id:202,
+    question:202,
     option_text:"Photophobia",
     created_at:"2014-09-05T22:35:03.718Z",
     updated_at:"2014-09-05T22:35:03.718Z",
@@ -3925,7 +3925,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:437,
-    question_id:202,
+    question:202,
     option_text:"Seizures",
     created_at:"2014-09-05T22:35:03.724Z",
     updated_at:"2014-09-05T22:35:03.724Z",
@@ -3934,7 +3934,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:438,
-    question_id:202,
+    question:202,
     option_text:"Slurred Speech",
     created_at:"2014-09-05T22:35:03.727Z",
     updated_at:"2014-09-05T22:35:03.727Z",
@@ -3943,7 +3943,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:439,
-    question_id:202,
+    question:202,
     option_text:"Weakness",
     created_at:"2014-09-05T22:35:03.731Z",
     updated_at:"2014-09-05T22:35:03.731Z",
@@ -3952,7 +3952,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:440,
-    question_id:202,
+    question:202,
     option_text:"Non Specific",
     created_at:"2014-09-05T22:35:03.735Z",
     updated_at:"2014-09-05T22:35:03.735Z",
@@ -3961,7 +3961,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:441,
-    question_id:202,
+    question:202,
     option_text:"Diaphoresis",
     created_at:"2014-09-05T22:35:03.739Z",
     updated_at:"2014-09-05T22:35:03.739Z",
@@ -3970,7 +3970,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:442,
-    question_id:202,
+    question:202,
     option_text:"Fever",
     created_at:"2014-09-05T22:35:03.743Z",
     updated_at:"2014-09-05T22:35:03.743Z",
@@ -3979,7 +3979,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:443,
-    question_id:202,
+    question:202,
     option_text:"Malaise",
     created_at:"2014-09-05T22:35:03.746Z",
     updated_at:"2014-09-05T22:35:03.746Z",
@@ -3988,7 +3988,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:444,
-    question_id:202,
+    question:202,
     option_text:"Nodes",
     created_at:"2014-09-05T22:35:03.750Z",
     updated_at:"2014-09-05T22:35:03.750Z",
@@ -3997,7 +3997,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:445,
-    question_id:202,
+    question:202,
     option_text:"Rigors",
     created_at:"2014-09-05T22:35:03.755Z",
     updated_at:"2014-09-05T22:35:03.755Z",
@@ -4006,7 +4006,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:446,
-    question_id:202,
+    question:202,
     option_text:"Respiratory",
     created_at:"2014-09-05T22:35:03.758Z",
     updated_at:"2014-09-05T22:35:03.758Z",
@@ -4015,7 +4015,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:447,
-    question_id:202,
+    question:202,
     option_text:"Chest Pain",
     created_at:"2014-09-05T22:35:03.762Z",
     updated_at:"2014-09-05T22:35:03.762Z",
@@ -4024,7 +4024,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:448,
-    question_id:202,
+    question:202,
     option_text:"Cough",
     created_at:"2014-09-05T22:35:03.766Z",
     updated_at:"2014-09-05T22:35:03.766Z",
@@ -4033,7 +4033,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:449,
-    question_id:202,
+    question:202,
     option_text:"Cyanosis",
     created_at:"2014-09-05T22:35:03.771Z",
     updated_at:"2014-09-05T22:35:03.771Z",
@@ -4042,7 +4042,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:450,
-    question_id:202,
+    question:202,
     option_text:"Dyspnea",
     created_at:"2014-09-05T22:35:03.776Z",
     updated_at:"2014-09-05T22:35:03.776Z",
@@ -4051,7 +4051,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:451,
-    question_id:202,
+    question:202,
     option_text:"Haemoptysis",
     created_at:"2014-09-05T22:35:03.779Z",
     updated_at:"2014-09-05T22:35:03.779Z",
@@ -4060,7 +4060,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:452,
-    question_id:202,
+    question:202,
     option_text:"Productive",
     created_at:"2014-09-05T22:35:03.783Z",
     updated_at:"2014-09-05T22:35:03.783Z",
@@ -4069,7 +4069,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:453,
-    question_id:202,
+    question:202,
     option_text:"X-Ray",
     created_at:"2014-09-05T22:35:03.787Z",
     updated_at:"2014-09-05T22:35:03.787Z",
@@ -4078,7 +4078,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:454,
-    question_id:202,
+    question:202,
     option_text:"Skin",
     created_at:"2014-09-05T22:35:03.791Z",
     updated_at:"2014-09-05T22:35:03.791Z",
@@ -4087,7 +4087,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:455,
-    question_id:202,
+    question:202,
     option_text:"Bleedig Gums",
     created_at:"2014-09-05T22:35:03.795Z",
     updated_at:"2014-09-05T22:35:03.795Z",
@@ -4096,7 +4096,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:456,
-    question_id:202,
+    question:202,
     option_text:"Blisters",
     created_at:"2014-09-05T22:35:03.799Z",
     updated_at:"2014-09-05T22:35:03.799Z",
@@ -4105,7 +4105,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:457,
-    question_id:202,
+    question:202,
     option_text:"Bruising",
     created_at:"2014-09-05T22:35:03.803Z",
     updated_at:"2014-09-05T22:35:03.803Z",
@@ -4114,7 +4114,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:458,
-    question_id:202,
+    question:202,
     option_text:"Eschar",
     created_at:"2014-09-05T22:35:03.807Z",
     updated_at:"2014-09-05T22:35:03.807Z",
@@ -4123,7 +4123,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:459,
-    question_id:202,
+    question:202,
     option_text:"Masculopapular",
     created_at:"2014-09-05T22:35:03.811Z",
     updated_at:"2014-09-05T22:35:03.811Z",
@@ -4132,7 +4132,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:460,
-    question_id:202,
+    question:202,
     option_text:"Peeling",
     created_at:"2014-09-05T22:35:03.814Z",
     updated_at:"2014-09-05T22:35:03.814Z",
@@ -4141,7 +4141,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:461,
-    question_id:202,
+    question:202,
     option_text:"Petechiae",
     created_at:"2014-09-05T22:35:03.818Z",
     updated_at:"2014-09-05T22:35:03.818Z",
@@ -4150,7 +4150,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:462,
-    question_id:202,
+    question:202,
     option_text:"Point of Origin",
     created_at:"2014-09-05T22:35:03.823Z",
     updated_at:"2014-09-05T22:35:03.823Z",
@@ -4159,7 +4159,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:463,
-    question_id:202,
+    question:202,
     option_text:"Progression",
     created_at:"2014-09-05T22:35:03.830Z",
     updated_at:"2014-09-05T22:35:03.830Z",
@@ -4168,7 +4168,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:464,
-    question_id:202,
+    question:202,
     option_text:"Rash",
     created_at:"2014-09-05T22:35:03.834Z",
     updated_at:"2014-09-05T22:35:03.834Z",
@@ -4177,7 +4177,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:465,
-    question_id:220,
+    question:220,
     option_text:"All Ages",
     created_at:"2014-09-05T22:35:42.154Z",
     updated_at:"2014-09-05T22:35:42.154Z",
@@ -4186,7 +4186,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:466,
-    question_id:220,
+    question:220,
     option_text:"Preschool",
     created_at:"2014-09-05T22:35:42.168Z",
     updated_at:"2014-09-05T22:35:42.168Z",
@@ -4195,7 +4195,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:467,
-    question_id:220,
+    question:220,
     option_text:"Elementary",
     created_at:"2014-09-05T22:35:42.171Z",
     updated_at:"2014-09-05T22:35:42.171Z",
@@ -4204,7 +4204,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:468,
-    question_id:220,
+    question:220,
     option_text:"Middle School",
     created_at:"2014-09-05T22:35:42.176Z",
     updated_at:"2014-09-05T22:35:42.176Z",
@@ -4213,7 +4213,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:469,
-    question_id:220,
+    question:220,
     option_text:"Intermediate",
     created_at:"2014-09-05T22:35:42.180Z",
     updated_at:"2014-09-05T22:35:42.180Z",
@@ -4222,7 +4222,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:470,
-    question_id:220,
+    question:220,
     option_text:"High School",
     created_at:"2014-09-05T22:35:42.185Z",
     updated_at:"2014-09-05T22:35:42.185Z",
@@ -4231,7 +4231,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:471,
-    question_id:220,
+    question:220,
     option_text:"Post Secondary",
     created_at:"2014-09-05T22:35:42.188Z",
     updated_at:"2014-09-05T22:35:42.188Z",
@@ -4240,7 +4240,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:472,
-    question_id:221,
+    question:221,
     option_text:"Skin",
     created_at:"2014-09-05T22:35:42.192Z",
     updated_at:"2014-09-05T22:35:42.192Z",
@@ -4249,7 +4249,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:473,
-    question_id:221,
+    question:221,
     option_text:"GI",
     created_at:"2014-09-05T22:35:42.196Z",
     updated_at:"2014-09-05T22:35:42.196Z",
@@ -4258,7 +4258,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:474,
-    question_id:221,
+    question:221,
     option_text:"Respiratory",
     created_at:"2014-09-05T22:35:42.200Z",
     updated_at:"2014-09-05T22:35:42.200Z",
@@ -4267,7 +4267,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:475,
-    question_id:221,
+    question:221,
     option_text:"Neurologic",
     created_at:"2014-09-05T22:35:42.205Z",
     updated_at:"2014-09-05T22:35:42.205Z",
@@ -4276,7 +4276,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:476,
-    question_id:221,
+    question:221,
     option_text:"Other",
     created_at:"2014-09-05T22:35:42.208Z",
     updated_at:"2014-09-05T22:35:42.208Z",
@@ -4285,7 +4285,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:477,
-    question_id:222,
+    question:222,
     option_text:"Not a Case",
     created_at:"2014-09-05T22:35:42.212Z",
     updated_at:"2014-09-05T22:35:42.212Z",
@@ -4294,7 +4294,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:478,
-    question_id:222,
+    question:222,
     option_text:"Suspected",
     created_at:"2014-09-05T22:35:42.215Z",
     updated_at:"2014-09-05T22:35:42.215Z",
@@ -4303,7 +4303,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:479,
-    question_id:222,
+    question:222,
     option_text:"Probable",
     created_at:"2014-09-05T22:35:42.219Z",
     updated_at:"2014-09-05T22:35:42.219Z",
@@ -4312,7 +4312,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:480,
-    question_id:222,
+    question:222,
     option_text:"Confirmed",
     created_at:"2014-09-05T22:35:42.223Z",
     updated_at:"2014-09-05T22:35:42.223Z",
@@ -4321,7 +4321,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:481,
-    question_id:224,
+    question:224,
     option_text:"Staff",
     created_at:"2014-09-05T22:35:42.226Z",
     updated_at:"2014-09-05T22:35:42.226Z",
@@ -4330,7 +4330,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:482,
-    question_id:224,
+    question:224,
     option_text:"Student",
     created_at:"2014-09-05T22:35:42.230Z",
     updated_at:"2014-09-05T22:35:42.230Z",
@@ -4339,7 +4339,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:483,
-    question_id:232,
+    question:232,
     option_text:"Male",
     created_at:"2014-09-05T22:35:42.234Z",
     updated_at:"2014-09-05T22:35:42.234Z",
@@ -4348,7 +4348,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:484,
-    question_id:232,
+    question:232,
     option_text:"Female",
     created_at:"2014-09-05T22:35:42.238Z",
     updated_at:"2014-09-05T22:35:42.238Z",
@@ -4357,7 +4357,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:485,
-    question_id:232,
+    question:232,
     option_text:"Transgender",
     created_at:"2014-09-05T22:35:42.242Z",
     updated_at:"2014-09-05T22:35:42.242Z",
@@ -4366,7 +4366,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:486,
-    question_id:233,
+    question:233,
     option_text:"Hispanic",
     created_at:"2014-09-05T22:35:42.245Z",
     updated_at:"2014-09-05T22:35:42.245Z",
@@ -4375,7 +4375,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:487,
-    question_id:233,
+    question:233,
     option_text:"Caucasian",
     created_at:"2014-09-05T22:35:42.249Z",
     updated_at:"2014-09-05T22:35:42.249Z",
@@ -4384,7 +4384,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:488,
-    question_id:233,
+    question:233,
     option_text:"African American",
     created_at:"2014-09-05T22:35:42.252Z",
     updated_at:"2014-09-05T22:35:42.252Z",
@@ -4393,7 +4393,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:489,
-    question_id:233,
+    question:233,
     option_text:"Alaskan Native",
     created_at:"2014-09-05T22:35:42.256Z",
     updated_at:"2014-09-05T22:35:42.256Z",
@@ -4402,7 +4402,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:490,
-    question_id:233,
+    question:233,
     option_text:"Asian",
     created_at:"2014-09-05T22:35:42.260Z",
     updated_at:"2014-09-05T22:35:42.260Z",
@@ -4411,7 +4411,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:491,
-    question_id:233,
+    question:233,
     option_text:"Pacific Islander",
     created_at:"2014-09-05T22:35:42.263Z",
     updated_at:"2014-09-05T22:35:42.263Z",
@@ -4420,7 +4420,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:492,
-    question_id:233,
+    question:233,
     option_text:"Other",
     created_at:"2014-09-05T22:35:42.267Z",
     updated_at:"2014-09-05T22:35:42.267Z",
@@ -4429,7 +4429,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:493,
-    question_id:236,
+    question:236,
     option_text:"GI",
     created_at:"2014-09-05T22:35:42.270Z",
     updated_at:"2014-09-05T22:35:42.270Z",
@@ -4438,7 +4438,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:494,
-    question_id:236,
+    question:236,
     option_text:"Abdominal Pain",
     created_at:"2014-09-05T22:35:42.274Z",
     updated_at:"2014-09-05T22:35:42.274Z",
@@ -4447,7 +4447,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:495,
-    question_id:236,
+    question:236,
     option_text:"Diarrhea",
     created_at:"2014-09-05T22:35:42.279Z",
     updated_at:"2014-09-05T22:35:42.279Z",
@@ -4456,7 +4456,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:496,
-    question_id:236,
+    question:236,
     option_text:"Nausea",
     created_at:"2014-09-05T22:35:42.284Z",
     updated_at:"2014-09-05T22:35:42.284Z",
@@ -4465,7 +4465,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:497,
-    question_id:236,
+    question:236,
     option_text:"Vomiting",
     created_at:"2014-09-05T22:35:42.288Z",
     updated_at:"2014-09-05T22:35:42.288Z",
@@ -4474,7 +4474,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:498,
-    question_id:236,
+    question:236,
     option_text:"Neurologic",
     created_at:"2014-09-05T22:35:42.292Z",
     updated_at:"2014-09-05T22:35:42.292Z",
@@ -4483,7 +4483,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:499,
-    question_id:236,
+    question:236,
     option_text:"Ascending",
     created_at:"2014-09-05T22:35:42.296Z",
     updated_at:"2014-09-05T22:35:42.296Z",
@@ -4492,7 +4492,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:500,
-    question_id:236,
+    question:236,
     option_text:"Blurred Vision",
     created_at:"2014-09-05T22:35:42.299Z",
     updated_at:"2014-09-05T22:35:42.299Z",
@@ -4501,7 +4501,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:501,
-    question_id:236,
+    question:236,
     option_text:"Decending",
     created_at:"2014-09-05T22:35:42.303Z",
     updated_at:"2014-09-05T22:35:42.303Z",
@@ -4510,7 +4510,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:502,
-    question_id:236,
+    question:236,
     option_text:"Delirium",
     created_at:"2014-09-05T22:35:42.307Z",
     updated_at:"2014-09-05T22:35:42.307Z",
@@ -4519,7 +4519,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:503,
-    question_id:236,
+    question:236,
     option_text:"Dysphagia",
     created_at:"2014-09-05T22:35:42.312Z",
     updated_at:"2014-09-05T22:35:42.312Z",
@@ -4528,7 +4528,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:504,
-    question_id:236,
+    question:236,
     option_text:"Headache",
     created_at:"2014-09-05T22:35:42.316Z",
     updated_at:"2014-09-05T22:35:42.316Z",
@@ -4537,7 +4537,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:505,
-    question_id:236,
+    question:236,
     option_text:"Pain",
     created_at:"2014-09-05T22:35:42.320Z",
     updated_at:"2014-09-05T22:35:42.320Z",
@@ -4546,7 +4546,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:506,
-    question_id:236,
+    question:236,
     option_text:"Paralysis",
     created_at:"2014-09-05T22:35:42.324Z",
     updated_at:"2014-09-05T22:35:42.324Z",
@@ -4555,7 +4555,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:507,
-    question_id:236,
+    question:236,
     option_text:"Photophobia",
     created_at:"2014-09-05T22:35:42.328Z",
     updated_at:"2014-09-05T22:35:42.328Z",
@@ -4564,7 +4564,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:508,
-    question_id:236,
+    question:236,
     option_text:"Seizures",
     created_at:"2014-09-05T22:35:42.332Z",
     updated_at:"2014-09-05T22:35:42.332Z",
@@ -4573,7 +4573,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:509,
-    question_id:236,
+    question:236,
     option_text:"Slurred Speech",
     created_at:"2014-09-05T22:35:42.337Z",
     updated_at:"2014-09-05T22:35:42.337Z",
@@ -4582,7 +4582,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:510,
-    question_id:236,
+    question:236,
     option_text:"Weakness",
     created_at:"2014-09-05T22:35:42.341Z",
     updated_at:"2014-09-05T22:35:42.341Z",
@@ -4591,7 +4591,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:511,
-    question_id:236,
+    question:236,
     option_text:"Non Specific",
     created_at:"2014-09-05T22:35:42.345Z",
     updated_at:"2014-09-05T22:35:42.345Z",
@@ -4600,7 +4600,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:512,
-    question_id:236,
+    question:236,
     option_text:"Diaphoresis",
     created_at:"2014-09-05T22:35:42.349Z",
     updated_at:"2014-09-05T22:35:42.349Z",
@@ -4609,7 +4609,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:513,
-    question_id:236,
+    question:236,
     option_text:"Fever",
     created_at:"2014-09-05T22:35:42.354Z",
     updated_at:"2014-09-05T22:35:42.354Z",
@@ -4618,7 +4618,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:514,
-    question_id:236,
+    question:236,
     option_text:"Malaise",
     created_at:"2014-09-05T22:35:42.359Z",
     updated_at:"2014-09-05T22:35:42.359Z",
@@ -4627,7 +4627,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:515,
-    question_id:236,
+    question:236,
     option_text:"Nodes",
     created_at:"2014-09-05T22:35:42.363Z",
     updated_at:"2014-09-05T22:35:42.363Z",
@@ -4636,7 +4636,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:516,
-    question_id:236,
+    question:236,
     option_text:"Rigors",
     created_at:"2014-09-05T22:35:42.367Z",
     updated_at:"2014-09-05T22:35:42.367Z",
@@ -4645,7 +4645,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:517,
-    question_id:236,
+    question:236,
     option_text:"Respiratory",
     created_at:"2014-09-05T22:35:42.371Z",
     updated_at:"2014-09-05T22:35:42.371Z",
@@ -4654,7 +4654,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:518,
-    question_id:236,
+    question:236,
     option_text:"Chest Pain",
     created_at:"2014-09-05T22:35:42.374Z",
     updated_at:"2014-09-05T22:35:42.374Z",
@@ -4663,7 +4663,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:519,
-    question_id:236,
+    question:236,
     option_text:"Cough",
     created_at:"2014-09-05T22:35:42.379Z",
     updated_at:"2014-09-05T22:35:42.379Z",
@@ -4672,7 +4672,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:520,
-    question_id:236,
+    question:236,
     option_text:"Cyanosis",
     created_at:"2014-09-05T22:35:42.383Z",
     updated_at:"2014-09-05T22:35:42.383Z",
@@ -4681,7 +4681,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:521,
-    question_id:236,
+    question:236,
     option_text:"Dyspnea",
     created_at:"2014-09-05T22:35:42.387Z",
     updated_at:"2014-09-05T22:35:42.387Z",
@@ -4690,7 +4690,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:522,
-    question_id:236,
+    question:236,
     option_text:"Haemoptysis",
     created_at:"2014-09-05T22:35:42.391Z",
     updated_at:"2014-09-05T22:35:42.391Z",
@@ -4699,7 +4699,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:523,
-    question_id:236,
+    question:236,
     option_text:"Productive",
     created_at:"2014-09-05T22:35:42.394Z",
     updated_at:"2014-09-05T22:35:42.394Z",
@@ -4708,7 +4708,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:524,
-    question_id:236,
+    question:236,
     option_text:"X-Ray",
     created_at:"2014-09-05T22:35:42.398Z",
     updated_at:"2014-09-05T22:35:42.398Z",
@@ -4717,7 +4717,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:525,
-    question_id:236,
+    question:236,
     option_text:"Skin",
     created_at:"2014-09-05T22:35:42.402Z",
     updated_at:"2014-09-05T22:35:42.402Z",
@@ -4726,7 +4726,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:526,
-    question_id:236,
+    question:236,
     option_text:"Bleedig Gums",
     created_at:"2014-09-05T22:35:42.406Z",
     updated_at:"2014-09-05T22:35:42.406Z",
@@ -4735,7 +4735,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:527,
-    question_id:236,
+    question:236,
     option_text:"Blisters",
     created_at:"2014-09-05T22:35:42.410Z",
     updated_at:"2014-09-05T22:35:42.410Z",
@@ -4744,7 +4744,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:528,
-    question_id:236,
+    question:236,
     option_text:"Bruising",
     created_at:"2014-09-05T22:35:42.417Z",
     updated_at:"2014-09-05T22:35:42.417Z",
@@ -4753,7 +4753,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:529,
-    question_id:236,
+    question:236,
     option_text:"Eschar",
     created_at:"2014-09-05T22:35:42.422Z",
     updated_at:"2014-09-05T22:35:42.422Z",
@@ -4762,7 +4762,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:530,
-    question_id:236,
+    question:236,
     option_text:"Masculopapular",
     created_at:"2014-09-05T22:35:42.426Z",
     updated_at:"2014-09-05T22:35:42.426Z",
@@ -4771,7 +4771,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:531,
-    question_id:236,
+    question:236,
     option_text:"Peeling",
     created_at:"2014-09-05T22:35:42.431Z",
     updated_at:"2014-09-05T22:35:42.431Z",
@@ -4780,7 +4780,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:532,
-    question_id:236,
+    question:236,
     option_text:"Petechiae",
     created_at:"2014-09-05T22:35:42.435Z",
     updated_at:"2014-09-05T22:35:42.435Z",
@@ -4789,7 +4789,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:533,
-    question_id:236,
+    question:236,
     option_text:"Point of Origin",
     created_at:"2014-09-05T22:35:42.441Z",
     updated_at:"2014-09-05T22:35:42.441Z",
@@ -4798,7 +4798,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:534,
-    question_id:236,
+    question:236,
     option_text:"Progression",
     created_at:"2014-09-05T22:35:42.445Z",
     updated_at:"2014-09-05T22:35:42.445Z",
@@ -4807,7 +4807,7 @@ App.AnswerChoice.FIXTURES = [
   },
   {
     id:535,
-    question_id:236,
+    question:236,
     option_text:"Rash",
     created_at:"2014-09-05T22:35:42.449Z",
     updated_at:"2014-09-05T22:35:42.449Z",

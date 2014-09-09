@@ -3,7 +3,8 @@ App.SurveyTemplate.FIXTURES = [
     id: 1
     name: 'General Outbreak Animal'
     status: 'active'
-    survey_type: 'Animal'
+    survey_type: 'Animal',
+    survey_questions: [1,2,3,4,5]
   },
   {
     id: 2
