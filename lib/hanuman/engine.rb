@@ -4,6 +4,7 @@ require 'ancestry'
 require 'handlebars_assets'
 require 'ember-rails'
 require 'kaminari'
+require 'active_model_serializers'
 
 module Hanuman
   class Engine < ::Rails::Engine
