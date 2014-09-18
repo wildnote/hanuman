@@ -1,0 +1,14 @@
+<h2>
+  Questions partial
+</h2>
+
+{{#each}}
+  <div>
+    question text {{question_text}}
+  </div>
+  
+  <div>
+    {{render 'answer_type' answer_type}}
+  </div>
+  
+{{/each}}

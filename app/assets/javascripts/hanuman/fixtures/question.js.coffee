@@ -2,30 +2,30 @@ App.Question.FIXTURES = [
   {
     id:1,
     question_text:"Enter Outbreak Details",
-    answer_type:1
+    answer_type:"1"
   },
   {
     id:2,
     question_text:"School Type",
-    answer_type:6,
+    answer_type:"6",
     answer_choices: [1,2,3,4,5,6,7]
   },
   {
     id:3,
     question_text:"School Type",
-    answer_type:6,
+    answer_type:"6",
     answer_choices: [8,9,10,11,12,13,14]
   },
   {
     id:4,
     question_text:"Syndrome Type",
-    answer_type:11,
+    answer_type:"11",
     answer_choices: [15,16,17,18,19,20]
   },
   {
     id:5,
     question_text:"Report Status",
-    answer_type:10
+    answer_type:"10"
   },
   {
     id:6,

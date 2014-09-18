@@ -1,0 +1,16 @@
+<div>
+  <h2>
+    Survey Question render
+  </h2>
+  <div>
+    step: {{step}}
+  </div>
+  <div>
+    sort order: {{sort_order}}
+  </div>
+  
+  <div>
+    {{render 'question' question}}
+  </div>
+  
+</div>

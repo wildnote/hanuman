@@ -1,0 +1,16 @@
+<h2>
+  Question render
+</h2>
+<div>
+  question text: {{question_text}}
+</div>
+<div>
+  {{render 'answer_type' answer_type}}
+</div>
+<div>
+  {{#each 'answer_choice' in answer_choices}}
+    <div>
+      option text: {{answer_choice.option_text}}
+    </div>
+  {{/each}}
+</div>
