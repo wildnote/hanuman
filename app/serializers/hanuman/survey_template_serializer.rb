@@ -3,7 +3,5 @@ module Hanuman
     attributes :id, :name, :status, :survey_type
     has_many :survey_questions
     embed :ids
-    
-    
   end
 end
