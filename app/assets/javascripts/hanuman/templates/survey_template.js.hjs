@@ -34,7 +34,7 @@
     {{!log 'answer_type is:' survey_question.question.answer_type}}
     {{!log 'answer_choices are:' survey_question.question.answer_choices}}
     
-    {{render 'survey_question' survey_question}}
+    {{render 'question' survey_question.question}}
     
   {{/each}}
   
