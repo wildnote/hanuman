@@ -51,7 +51,7 @@
 <div class="form-group">
   <label for="" class="col-sm-5 control-label">{{question_text}}</label>
   <div class="col-sm-7">
-    {{input type="text" value=answer_type.name disabled="true" class="form-control"}}
+    {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
     {{#if answer_choices}}
       {{view Ember.Select
          content=answer_choices
@@ -70,7 +70,7 @@
 <div class="form-group">
   <label for="" class="col-sm-5 control-label">{{question_text}}</label>
   <div class="col-sm-7">
-    {{input type="text" value=answer_type.name disabled="true" class="form-control"}}
+    {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
     {{#each answer_choices}}
       <label>{{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{option_text}}</label>
     {{else}}
@@ -85,7 +85,7 @@
 <div class="form-group">
   <label for="" class="col-sm-5 control-label">{{question_text}}</label>
   <div class="col-sm-7">
-    {{input type="text" value=answer_type.name class="form-control" readonly=true}}
+    {{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}
   </div>
 </div>
 {{/if}}
@@ -95,7 +95,7 @@
 <div class="form-group">
   <label for="" class="col-sm-5 control-label">{{question_text}}</label>
   <div class="col-sm-7">
-    {{input type="text" value=answer_type.name class="form-control" readonly=true}}
+    {{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}
   </div>
 </div>
 {{/if}}
@@ -105,7 +105,7 @@
 <div class="form-group">
   <label for="" class="col-sm-5 control-label">{{question_text}}</label>
   <div class="col-sm-7">
-    {{textarea value=answer_type.name class="form-control" readonly=true}}
+    {{textarea value=answer_type.nameUpcase class="form-control" readonly=true}}
   </div>
 </div>
 {{/if}}

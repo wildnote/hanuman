@@ -2,7 +2,11 @@ App.AnswerType = DS.Model.extend({
   name: DS.attr('string'),
   status: DS.attr('string'),
   questions: DS.hasMany('question', {async: true})
-  # computed properties for anser type
+  # can't get the handlebars helper to work so doing in model
+  nameUpcase: (->
+    return @.get('name').toUpperCase()
+  ).property('name')
+  # computed properties for anwser type
   checkboxlist: (->
     if @.get('name') == 'checkboxlist'
       return true
