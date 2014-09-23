@@ -29,14 +29,12 @@
   {{#each survey_question in survey_questions}}
   
   
-    {{log 'survey_question is:' survey_question}}
-    {{log 'question is:' survey_question.question}}
-    {{log 'answer_type is:' survey_question.question.answer_type}}
-    {{log 'answer_choices are:' survey_question.question.answer_choices}}
+    {{!log 'survey_question is:' survey_question}}
+    {{!log 'question is:' survey_question.question}}
+    {{!log 'answer_type is:' survey_question.question.answer_type}}
+    {{!log 'answer_choices are:' survey_question.question.answer_choices}}
     
     {{render 'survey_question' survey_question}}
-    
-    <hr/>
     
   {{/each}}
   
