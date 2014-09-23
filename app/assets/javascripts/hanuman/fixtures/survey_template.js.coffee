@@ -4,6 +4,7 @@ App.SurveyTemplate.FIXTURES = [
     "name":"Development Test Survey",
     "status":"active",
     "survey_type":"School",
+    "steps":[1,2,3],
     "survey_questions":[
       1,
       2,
@@ -50,6 +51,7 @@ App.SurveyTemplate.FIXTURES = [
     "name":"General Outbreak Animal",
     "status":"active",
     "survey_type":"Animal",
+    "steps":[1,2,3],
     "survey_questions":[
       39,
       40,
@@ -132,6 +134,7 @@ App.SurveyTemplate.FIXTURES = [
     "name":"General Outbreak Environmental Health",
     "status":"active",
     "survey_type":"Environmental Health",
+    "steps":[1,2,3],
     "survey_questions":[
       113,
       114,
@@ -180,6 +183,7 @@ App.SurveyTemplate.FIXTURES = [
     "name":"General Outbreak Hospital/Clinic",
     "status":"active",
     "survey_type":"Hospital/Clinic",
+    "steps":[1,2,3],
     "survey_questions":[
       153,
       154,
@@ -221,6 +225,7 @@ App.SurveyTemplate.FIXTURES = [
     "name":"General Outbreak Long Term Care",
     "status":"active",
     "survey_type":"Long Term Care",
+    "steps":[1,2,3],
     "survey_questions":[
       186,
       187,
@@ -262,6 +267,7 @@ App.SurveyTemplate.FIXTURES = [
     "name":"General Outbreak School",
     "status":"active",
     "survey_type":"School",
+    "steps":[1,2,3],
     "survey_questions":[
       219,
       220,
