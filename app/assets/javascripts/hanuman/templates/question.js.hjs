@@ -1,16 +1,121 @@
-<h2>
-  Question render
-</h2>
-<div>
-  question text: {{question_text}}
-</div>
-<div>
-  {{render 'answer_type' answer_type}}
-</div>
-<div>
-  {{#each 'answer_choice' in answer_choices}}
-    <div>
-      option text: {{answer_choice.option_text}}
+<!-- section -->
+{{#if answer_type.section}}
+  <div class="form-section">
+    {{question_text}}
+  </div>
+{{/if}}
+
+<!-- static -->
+{{#if answer_type.static}}
+  <div class="form-static">
+    {{question_text}}
+  </div>
+{{/if}}
+
+<!-- helperabove -->
+{{#if answer_type.helperabove}}
+  <div class="form-group helperabove">
+    <div class="col-sm-offset-5 col-sm-7">
+      {{question_text}}
     </div>
-  {{/each}}
+  </div>
+{{/if}}
+
+<!-- helperbelow -->
+{{#if answer_type.helperbelow}}
+  <div class="form-group helperbelow">
+    <div class="col-sm-offset-5 col-sm-7">
+      {{question_text}}
+    </div>
+  </div>
+{{/if}}
+
+<!-- line -->
+{{#if answer_type.line}}
+  <div class="page-header">
+  </div>
+{{/if}}
+
+<!-- checkbox -->
+{{#if answer_type.checkbox}}
+<div class="form-group">
+  <label for="" class="col-sm-5 control-label">{{question_text}}</label>
+  <div class="col-sm-7">
+    {{input type="checkbox" name="" disabled=true}}
+  </div>
 </div>
+{{/if}}
+
+<!-- select -->
+{{#if answer_type.select}}
+<div class="form-group">
+  <label for="" class="col-sm-5 control-label">{{question_text}}</label>
+  <div class="col-sm-7">
+    {{input type="text" value=answer_type.name disabled="true" class="form-control"}}
+    {{#if answer_choices}}
+      {{view Ember.Select
+         content=answer_choices
+         optionValuePath="content.id"
+         optionLabelPath="content.option_text"
+         class="form-control"}}
+    {{else}}
+      {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
+    {{/if}}
+  </div>
+</div>
+{{/if}}
+
+<!-- radiobutton -->
+{{#if answer_type.radio}}
+<div class="form-group">
+  <label for="" class="col-sm-5 control-label">{{question_text}}</label>
+  <div class="col-sm-7">
+    {{input type="text" value=answer_type.name disabled="true" class="form-control"}}
+    {{#each answer_choices}}
+      <label>{{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{option_text}}</label>
+    {{else}}
+      {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
+    {{/each}}
+  </div>
+</div>
+{{/if}}
+
+<!-- text -->
+{{#if answer_type.text}}
+<div class="form-group">
+  <label for="" class="col-sm-5 control-label">{{question_text}}</label>
+  <div class="col-sm-7">
+    {{input type="text" value=answer_type.name class="form-control" readonly=true}}
+  </div>
+</div>
+{{/if}}
+
+<!-- date -->
+{{#if answer_type.date}}
+<div class="form-group">
+  <label for="" class="col-sm-5 control-label">{{question_text}}</label>
+  <div class="col-sm-7">
+    {{input type="text" value=answer_type.name class="form-control" readonly=true}}
+  </div>
+</div>
+{{/if}}
+
+<!-- textarea -->
+{{#if answer_type.textarea}}
+<div class="form-group">
+  <label for="" class="col-sm-5 control-label">{{question_text}}</label>
+  <div class="col-sm-7">
+    {{textarea value=answer_type.name class="form-control" readonly=true}}
+  </div>
+</div>
+{{/if}}
+
+<!-- chosenmultiselectgroup -->
+{{#if answer_type.chosenmultiselectgrouped}}
+<div class="form-group">
+  <label for="" class="col-sm-5 control-label">{{question_text}}</label>
+  <div class="col-sm-7">
+    <label for="" class="col-sm-5 control-label">{{question_text}}</label>
+  </div>
+</div>
+{{/if}}
