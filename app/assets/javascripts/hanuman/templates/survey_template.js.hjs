@@ -25,8 +25,48 @@
     </div>
   </div>
   
+  {{#each step in steps}}
+    <div class="panel panel-info">
+      <div class="panel-heading chevron" data-target="#collapse_<%= step %>" data-toggle="collapse">
+        <div class="panel-title">
+          <div class="pull-left">
+            <span class="glyphicon glyphicon-chevron-right"></span>
+            <span class="glyphicon glyphicon-chevron-down"></span>
+            <button class="btn btn-xs btn-primary">
+              Step
+              {{step}}
+            </button>
+          </div>
+          <!-- <% if @survey_template.survey_step_is_duplicator?(step) %> -->
+            <div class="pull-right">
+              <button class="btn btn-xs btn-primary" data-target="#collapse_<%= step %>" data-toggle="collapse" type="button">
+                Duplicator
+              </button>
+            </div>
+          <!-- <% end %> -->
+          <div class="clearfix"></div>
+        </div>
+      </div>
+      <div class="panel-collapse collapse in" id="collapse_<%= step %>">
+        <div class="panel-body">
+          <!-- <% if step == 1 %>
+            <%= render ("hanuman/survey_templates/formextensionreadonly") %>
+          <% end %>
+          <% @survey_template.survey_questions.by_step(step).each do |sq| %>
+            <%= render ("hanuman/survey_templates/dynamicfield"), sq: sq %>
+          <% end %> -->
+          {{!debugger}}
+          {{!render 'survey_questions' survey_questions stepId=@index}}
+          {{outlet}}
+        </div>
+      </div>
+    </div>
+  {{/each}}
   
-  {{#each survey_question in survey_questions}}
+
+  
+  
+  {{!#each survey_question in survey_questions}}
   
   
     {{!log 'survey_question is:' survey_question}}
@@ -34,9 +74,9 @@
     {{!log 'answer_type is:' survey_question.question.answer_type}}
     {{!log 'answer_choices are:' survey_question.question.answer_choices}}
     
-    {{render 'question' survey_question.question}}
+    {{!render 'question' survey_question.question}}
     
-  {{/each}}
+  {{!/each}}
   
   
 </div>

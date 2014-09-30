@@ -24,3 +24,8 @@ App.SurveyTemplateRoute = Ember.Route.extend({
     @store.find('survey_template', params.survey_template_id)
 })
 
+App.StepsRoute = Ember.Route.extend({
+  model: ->
+    console.log("in Steps Route")
+    @store.find('survey_question').filterBy('step', 1)
+})
