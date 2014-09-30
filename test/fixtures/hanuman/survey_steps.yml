@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  survey_template_id: 1
+  step: 1
+  duplicator: false
+
+two:
+  survey_template_id: 1
+  step: 1
+  duplicator: false

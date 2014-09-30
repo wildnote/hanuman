@@ -1,5 +1,7 @@
 Hanuman::Engine.routes.draw do
 
+  resources :survey_steps
+
   resources :settings
 
   namespace :api do
