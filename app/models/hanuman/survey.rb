@@ -13,11 +13,11 @@ module Hanuman
     end
     
     def survey_steps
-      self.survey_template.survey_questions.collect(&:step).uniq
+      self.survey_template.survey_steps.collect(&:step).uniq
     end
     
     def survey_step_is_duplicator?(step)
-      self.survey_template.survey_questions.by_step(step).first.duplicator
+      self.survey_template.survey_steps.by_step(step).first.duplicator
     end
     
     def observation_entries_by_step(step)
@@ -35,7 +35,7 @@ module Hanuman
     
     def survey_step_has_observations?(step)
       survey_id = self.id
-      if self.survey_template.survey_questions.by_step(step).first.observations.where('hanuman_observations.survey_id = ?', survey_id).count > 0
+      if self.survey_template.survey_steps.where(step: step).first.questions.first.observations.where('hanuman_observations.survey_id = ?', survey_id).count > 0
         true
       else
         false

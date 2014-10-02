@@ -1,0 +1,29 @@
+<h1>Listing survey_steps</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Survey template</th>
+      <th>Step</th>
+      <th>Duplicator</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @survey_steps.each do |survey_step| %>
+      <tr>
+        <td><%= survey_step.survey_template %></td>
+        <td><%= survey_step.step %></td>
+        <td><%= survey_step.duplicator %></td>
+        <td><%= link_to 'Show', survey_step %></td>
+        <td><%= link_to 'Edit', edit_survey_step_path(survey_step) %></td>
+        <td><%= link_to 'Destroy', survey_step, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Survey step', new_survey_step_path %>

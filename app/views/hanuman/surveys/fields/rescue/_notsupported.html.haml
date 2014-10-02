@@ -1,4 +1,4 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    = ff.text_field :answer, value: ff.object.survey_question.question.answer_type.name.titleize + " field not supported!", class: "form-control bg-danger", readonly: true
+    = ff.text_field :answer, value: ff.object.question.answer_type.name.titleize + " field not supported!", class: "form-control bg-danger", readonly: true

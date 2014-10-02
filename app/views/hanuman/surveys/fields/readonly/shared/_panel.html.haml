@@ -1,4 +1,4 @@
-- step = observations.first.survey_question.step
+- step = observations.first.question.survey_step.step
 .panel.panel-info
   .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}", class: "#{'collapsed' unless show}"}
     %h4.panel-title
@@ -27,7 +27,7 @@
           = render ("hanuman/surveys/formextensionreadonly"), s: survey
         - observations.each do |o|
           =# debug o.inspect
-          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+          = render ("hanuman/surveys/fields/readonly/" + o.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
   - else
     .panel-collapse.collapse{:id => "collapse_#{step}_#{entry}"}
       .panel-body
@@ -35,4 +35,4 @@
           = render ("hanuman/surveys/formextensionreadonly"), s: survey
         - observations.each do |o|
           =# debug o.inspect
-          = render ("hanuman/surveys/fields/readonly/" + o.survey_question.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o
+          = render ("hanuman/surveys/fields/readonly/" + o.question.answer_type.name), o: o rescue render "hanuman/surveys/fields/readonly/rescue/notsupported", o: o

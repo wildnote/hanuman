@@ -22,15 +22,15 @@
       %i= survey_form_state
     %h1= f.object.survey_template.name
 
-  - steps = @survey.survey_template.steps
+  - steps = @survey.survey_template.survey_steps
   
   .panel.panel-default
     .panel-body
       .survey-progress
         - steps.each do |step|
-          .col-sm-4{class: "#{step.to_i == current_step.to_i ? 'current' : ''}"}
-            %span.glyphicon.progress-mark{class: "#{step_status(@survey, step, current_step)}"}
-            = "Step " + step.to_s
+          .col-sm-4{class: "#{step.step.to_i == current_step.to_i ? 'current' : ''}"}
+            %span.glyphicon.progress-mark{class: "#{step_status(@survey, step.step, current_step)}"}
+            = "Step " + step.step.to_s
 
   = f.hidden_field :survey_template_id
   = f.hidden_field :id unless @survey.new_record?
@@ -43,37 +43,37 @@
 
   -# this section handles edit on already saved data (a true edit)
   - steps.each do |step|
-    - step_observations = @survey.observations.filtered_by_step(step)
+    - step_observations = @survey.observations.filtered_by_step(step.step)
     - unless step_observations.blank?
-      - if step_observations.first.survey_question.duplicator
-        - entries = @survey.observations.filtered_by_step(step).entries
+      - if step.duplicator
+        - entries = @survey.observations.filtered_by_step(step.step).entries
         - entries.each do |entry|
-          - entry_observations = @survey.observations.filtered_by_step_and_entry(step, entry)
-          - if current_step == step and current_entry == entry
+          - entry_observations = @survey.observations.filtered_by_step_and_entry(step.step, entry)
+          - if current_step == step.step and current_entry == entry
             - step_edit = true
             .panel.panel-info
-              .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
+              .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step.step}_#{entry}"}
                 %h4.panel-title.pull-left
                   %span.glyphicon.glyphicon-chevron-right
                   %span.glyphicon.glyphicon-chevron-down
                   %a.btn.btn-xs.btn-primary
                     Step
-                    = step
+                    = step.step
                     Entry
                     = entry
                 .clearfix
-              .panel-collapse.in{:id => "collapse_#{step}_#{entry}"}
+              .panel-collapse.in{:id => "collapse_#{step.step}_#{entry}"}
                 .panel-body
                   - entry_observations.each_with_index do |o, index|
                     = f.fields_for :observations, o do |ff|
                       .form-entry-item-container
-                        = ff.hidden_field :survey_question_id
-                        = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+                        = ff.hidden_field :question_id
+                        = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
           - else
-            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: entry_observations, step: step, entry: entry
+            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: entry_observations, step: step.step, entry: entry
       - else
         - entry = step_observations.first.entry
-        - if current_step == step
+        - if current_step == step.step
           - step_edit = true
           .panel.panel-info
             .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
@@ -82,7 +82,7 @@
                 %span.glyphicon.glyphicon-chevron-down
                 %a.btn.btn-xs.btn-primary{readonly: true}
                   Step
-                  = step
+                  = step.step
                   Entry
                   = entry
               .clearfix
@@ -94,11 +94,11 @@
                 - step_observations.each_with_index do |o, index|
                   = f.fields_for :observations, o do |ff|
                     .form-entry-item-container
-                      = ff.hidden_field :survey_question_id
-                      = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+                      = ff.hidden_field :question_id
+                      = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
         - else
-          - unless step == 3
-            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: step_observations, step: step, entry: entry
+          - unless step.step == 3
+            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: step_observations, step: step.step, entry: entry
 
   -# this section handles edit on newly created data for steps 2, 3, ... as part of our hacked in step by step wizard
   - unless step_edit
@@ -120,8 +120,8 @@
             - if o.id.blank?
               = f.fields_for :observations, o do |ff|
                 .form-entry-item-container
-                  = ff.hidden_field :survey_question_id
-                  = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+                  = ff.hidden_field :question_id
+                  = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
             - else
               - index_offset += 1
 
