@@ -1,0 +1,4 @@
+<div class="col-sm-1">
+  <a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-sort"></span></a>
+  {{sort_order}}
+</div>

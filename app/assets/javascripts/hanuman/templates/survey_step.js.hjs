@@ -1,0 +1,43 @@
+<div class="form-horizontal">
+  <div class="well">
+    <div class="form-group">
+      <label class="col-sm-1 control-label">Survey Template</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">
+          {{this.survey_template.name}}
+        </p>
+      </div>
+      <label class="col-sm-1 control-label">Step</label>
+      <div class="col-sm-3">
+        <p class="form-control-static">
+          {{step}}
+        </p>
+      </div>
+      <label class="col-sm-1 control-label">Duplicator</label>
+      <div class="col-sm-2">
+        <p class="form-control-static">
+          {{duplicator}}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <div class="panel panel-info">
+    <div class="panel-heading">
+      {{step}}
+      {{duplicator}}
+    </div>
+    <div class="panel-body">
+
+      {{#each question in questions}}
+        <div class="row question-border">
+          {{render 'question' question}}
+        </div>
+      {{/each}}
+      
+    </div>
+  </div>
+
+</div>

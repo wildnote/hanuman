@@ -9,7 +9,7 @@ Hanuman::Engine.routes.draw do
       resources :answer_choices
       resources :answer_types
       resources :questions
-      resources :survey_questions
+      resources :survey_steps
       resources :survey_templates
     end
   end

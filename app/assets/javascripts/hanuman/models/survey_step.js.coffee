@@ -1,7 +1,6 @@
-App.SurveyQuestion = DS.Model.extend({
+App.SurveyStep = DS.Model.extend({
   survey_template: DS.belongsTo('survey_template'),
-  question: DS.belongsTo('question'),
-  sort_order: DS.attr('integer'),
+  questions: DS.hasMany('question', {async: true}),
   duplicator: DS.attr('boolean'),
   step: DS.attr('integer')
 })

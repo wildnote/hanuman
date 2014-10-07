@@ -1,0 +1,4 @@
+<div class="col-sm-1">
+  <a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-pencil"></span></a>
+  <a class="btn btn-xs btn-danger" href="#"><span class="glyphicon glyphicon-trash"></span></a>
+</div>

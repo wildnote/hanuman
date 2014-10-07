@@ -4,10 +4,8 @@ App.Router.map ()->
   @resource 'survey_templates'
   @resource 'survey_template', 
     path: 'survey_templates/:survey_template_id'
-  , ->
-    @resource 'steps',
-    path: 'steps/:step'
-  return
+  @resource 'survey_step',
+    path: 'survey_templates/:survey_template_id/survey_steps/:survey_step_id'
 
   
 
@@ -28,4 +26,10 @@ App.StepsRoute = Ember.Route.extend({
   model: ->
     console.log("in Steps Route")
     @store.find('survey_question').filterBy('step', 1)
+})
+
+App.SurveyStepRoute = Ember.Route.extend({
+  model: (params) ->
+    console.log("in SurveyStepRoute")
+    @store.find('survey_step', params.survey_step_id)
 })
