@@ -26,7 +26,7 @@
       .col-sm-2
         %p.form-control-static= @survey_template.status
   
-  - steps = @survey_template.steps
+  - steps = @survey_template.survey_steps
 
   - steps.each do |step|
     .panel.panel-info
@@ -37,16 +37,16 @@
             %span.glyphicon.glyphicon-chevron-down
             %button.btn.btn-xs.btn-primary
               Step
-              = step
-          - if @survey_template.survey_step_is_duplicator?(step)
+              = step.step
+          - if step.duplicator?
             .pull-right
               %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}"}
                 Duplicator
           .clearfix
       .panel-collapse.collapse.in{:id => "collapse_#{step}"}
         .panel-body
-          - if step == 1
+          - if step.step == 1
             = render ("hanuman/survey_templates/formextensionreadonly")
-          - @survey_template.survey_questions.by_step(step).each do |sq|
-            = render ("hanuman/survey_templates/dynamicfield"), sq: sq
+          - step.questions.each do |q|
+            = render ("hanuman/survey_templates/dynamicfield"), q: q
             

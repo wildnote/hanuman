@@ -20,15 +20,15 @@
 
 .form-horizontal
 
-  - steps = @survey.survey_template.steps
+  - steps = @survey.survey_template.survey_steps
   
   .panel.panel-default
     .panel-body  
       .survey-progress
         - steps.each do |step|
           .col-sm-4{class: "#{false ? 'current' : ''}"}
-            %span.glyphicon.progress-mark{class: "#{step_status(@survey, step)}"}
-            = "Step " + step.to_s
+            %span.glyphicon.progress-mark{class: "#{step_status(@survey, step.step)}"}
+            = "Step " + step.step.to_s
 
   .well
     .form-group
@@ -43,23 +43,23 @@
         %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
 
   - steps.each do |step|
-    - step_observations = @survey.observations.filtered_by_step(step)
+    - step_observations = @survey.observations.filtered_by_step(step.step)
     - unless step_observations.blank?
-      - if step_observations.first.survey_question.duplicator
-        - entries = @survey.observations.filtered_by_step(step).entries
+      - if step.duplicator
+        - entries = @survey.observations.filtered_by_step(step.step).entries
         - entries.each do |entry|
-          - entry_observations = @survey.observations.filtered_by_step_and_entry(step, entry)
-          = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: entry_observations, step: step, entry: entry
+          - entry_observations = @survey.observations.filtered_by_step_and_entry(step.step, entry)
+          = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: entry_observations, step: step.step, entry: entry
       - else
         - entry = step_observations.first.entry
-        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: step_observations, step: step, entry: entry
-    - if @survey.survey_step_is_duplicator?(step)
+        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: step_observations, step: step.step, entry: entry
+    - if @survey.survey_step_is_duplicator?(step.step)
       .panel.panel-success
         .panel-heading
           .pull-left
             %h5= Hanuman::Setting.value("add_entry_helper_text")
           .pull-right
-            = link_to edit_survey_path(@survey.id, step, @survey.max_observation_entry_by_step(step) + 1), class: "btn btn-success" do
+            = link_to edit_survey_path(@survey.id, step.step, @survey.max_observation_entry_by_step(step.step) + 1), class: "btn btn-success" do
               %span.glyphicon.glyphicon-plus
               Add Entry
           .clearfix

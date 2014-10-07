@@ -24,15 +24,15 @@
       %i= survey_form_state
     %h1= f.object.survey_template.name
 
-  - steps = @survey.survey_template.steps
+  - steps = @survey.survey_template.survey_steps
   
   .panel.panel-default
     .panel-body  
       .survey-progress
         - steps.each do |step|
-          .col-sm-4{class: "#{step == 1 ? 'current' : ''}"}
-            %span.glyphicon.progress-mark{class: "#{step_status(@survey, step, current_step)}"}
-            = "Step " + step.to_s
+          .col-sm-4{class: "#{step.step == 1 ? 'current' : ''}"}
+            %span.glyphicon.progress-mark{class: "#{step_status(@survey, step.step, current_step)}"}
+            = "Step " + step.step.to_s
 
   = f.hidden_field :survey_template_id
 
@@ -53,8 +53,8 @@
         - @survey.observations.each_with_index do |o, index|
           = f.fields_for :observations, o do |ff|
             .form-entry-item-container
-              = ff.hidden_field :survey_question_id
-              = render ("hanuman/surveys/fields/" + ff.object.survey_question.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
+              = ff.hidden_field :question_id
+              = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
 
   .form-group
     .col-sm-offset-5.col-sm-7

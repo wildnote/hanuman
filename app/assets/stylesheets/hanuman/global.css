@@ -144,3 +144,7 @@ input[type="checkbox"] {
 .panel-heading.chevron.collapsed .glyphicon-chevron-right {
   display: inline-block;
 }
+
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+  height: 25px;
+}
