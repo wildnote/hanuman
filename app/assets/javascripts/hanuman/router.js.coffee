@@ -22,14 +22,20 @@ App.SurveyTemplateRoute = Ember.Route.extend({
     @store.find('survey_template', params.survey_template_id)
 })
 
-App.StepsRoute = Ember.Route.extend({
-  model: ->
-    console.log("in Steps Route")
-    @store.find('survey_question').filterBy('step', 1)
-})
-
 App.SurveyStepRoute = Ember.Route.extend({
   model: (params) ->
     console.log("in SurveyStepRoute")
     @store.find('survey_step', params.survey_step_id)
+    
+  # need to populate allAnswerTypes in SurveyStepsController to populate a select
+  # since pulling from a different model than survey_step must do it from here
+  setupController: (controller, model) ->
+    @_super controller, model
+    @controllerFor("answer_types").set "content", @store.find("answer_type")
+    return
+})
+
+App.AnswerTypesRoute = Ember.Route.extend({
+  model: ->
+    @store.find('answer_type')
 })

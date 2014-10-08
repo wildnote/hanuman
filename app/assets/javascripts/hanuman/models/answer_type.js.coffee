@@ -6,6 +6,7 @@ App.AnswerType = DS.Model.extend({
   nameUpcase: (->
     return @.get('name').toUpperCase()
   ).property('name')
+  
   # computed properties for anwser type
   checkboxlist: (->
     if @.get('name') == 'checkboxlist'
