@@ -31,7 +31,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'ember-rails'
   s.add_dependency 'ember-source'
   s.add_dependency 'kaminari'
-  s.add_dependency 'active_model_serializers'
+  s.add_dependency 'active_model_serializers', '~> 0.8.1'
 
   s.add_development_dependency 'pg'
 end
