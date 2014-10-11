@@ -9,5 +9,28 @@ module Hanuman
     def show
       respond_with Question.find(params[:id])
     end
+    
+    def create
+      respond_with :api, :v1, Question.create(question_params)
+    end
+
+    def update
+      respond_with question.update(question_params)
+    end
+
+    def destroy
+      respond_with question.destroy
+    end
+
+    private
+
+    def question
+      Question.find(params[:id])
+    end
+
+    def question_params
+      params.require(:question).permit(:question_text, :answer_type_id, :sort_order, :survey_step_id)
+    end
+    
   end
 end
