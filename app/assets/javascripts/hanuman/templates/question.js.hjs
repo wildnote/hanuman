@@ -105,10 +105,11 @@
       <div class="col-sm-5">{{input type="text" value=question_text class="form-control"}}</div>
       <div class="col-sm-5">
         {{view Ember.Select
-           content=controllers.answer_types.content
+           content=all_answer_types
            optionValuePath="content.id"
            optionLabelPath="content.name"
            valueBinding="answer_type.id"
+           selection=answer_type
            class="form-control"}}
            
       </div>
@@ -119,7 +120,7 @@
       {{partial "question_sort"}}
       <div class="col-sm-5">{{question_text}}</div>
       <div class="col-sm-5">
-        {{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}
+        {{input type="text" value=answer_type.name class="form-control" readonly=true}}
       </div>
       {{partial "question_edit"}}
     </div>

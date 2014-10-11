@@ -1,17 +1,11 @@
 App.QuestionController = Ember.ObjectController.extend({
-  needs: ["answer_choices", "answer_types"]
+  needs: ["answer_choices", "survey_step"]
   
   answer_choices: (->
     Ember.ArrayProxy.createWithMixins Ember.SortableMixin,
       sortProperties: ["option_text"],
       content: @get("content.answer_choices")
   ).property("content.answer_choices")
-  
-  allAnswerTypes: (-> 
-    @get('controllers.answer_types');
-  ).property()
-  
-  selectedAnswerType: "12"
   
   actions:
     editQuestion: ->
@@ -22,8 +16,10 @@ App.QuestionController = Ember.ObjectController.extend({
       return
     saveQuestion: ->
       question = @get('model')
-      question_text = @get('question_text')
-      question.set('question_text', question_text)
+      # new_answer_type_id = question.get('selectedAnswerType').get('id')
+      # @store.find("answer_type", new_answer_type_id).then (answer_type) ->
+      #   question.set 'answer_type', answer_type
+      question.save()
       @set "isEditing", false
       return
     deleteQuestion: ->
