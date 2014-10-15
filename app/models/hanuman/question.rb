@@ -6,5 +6,8 @@ module Hanuman
     #has_many :survey_questions
     has_many :answer_choices
     has_many :observations
+    
+    validates_associated :answer_type
+    validates_associated :survey_step
   end
 end

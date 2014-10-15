@@ -37,6 +37,50 @@
         </div>
       {{/each}}
       
+      <div class="row question-border">
+          <!-- new question -->
+          {{#if isNewQuestion}}
+          <div class="row">
+            <div class="col-sm-1">
+            </div>
+            <div class="col-sm-5">
+              {{input type="text" valueBinding='question_text' class="form-control"}}
+            </div>
+            <div class="col-sm-5">
+              {{view Ember.Select
+                 content=controllers.answer_types.content
+                 optionValuePath="content.id"
+                 optionLabelPath="content.name"
+                 selectionBinding="selectedAnswerType"
+                 class="form-control"}}
+            </div>
+            <div class="col-sm-1">
+              <a class="btn btn-xs btn-primary" href="#" {{action "createQuestion" on="click"}}>
+                <span class="glyphicon glyphicon-check"></span>
+              </a>
+              <a class="btn btn-xs btn-info" href="#" {{action "exitCreateQuestion" on="click"}}>
+                <span class="glyphicon glyphicon-remove-circle"></span>
+              </a>
+            </div>
+          </div>
+          {{else}}
+            <!-- new question button -->
+            <div class="row">
+              <div class="col-sm-1">
+                <a class="btn btn-xs btn-primary" href="#" {{action "newQuestion" on="click"}}>
+                  <span class="glyphicon glyphicon-plus"></span>
+                </a>
+              </div>
+              <div class="col-sm-5">
+              </div>
+              <div class="col-sm-5">
+              </div>
+              <div class="col-sm-1">
+              </div>
+            </div>
+          {{/if}}
+          
+      </div>
     </div>
   </div>
 

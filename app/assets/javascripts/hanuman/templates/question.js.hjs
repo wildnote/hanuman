@@ -105,13 +105,11 @@
       <div class="col-sm-5">{{input type="text" value=question_text class="form-control"}}</div>
       <div class="col-sm-5">
         {{view Ember.Select
-           content=all_answer_types
+           content=controllers.answer_types.content
            optionValuePath="content.id"
            optionLabelPath="content.name"
-           valueBinding="answer_type.id"
-           selection=answer_type
+           selectionBinding="content.answer_type.content"
            class="form-control"}}
-           
       </div>
       {{partial "question_edit"}}
     </div>
@@ -139,12 +137,28 @@
 
 <!-- textarea -->
 {{#if answer_type.textarea}}
-<div class="row">
-  {{partial "question_sort"}}
-  <div class="col-sm-5">{{question_text}}</div>
-  <div class="col-sm-5">{{textarea value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
-  {{partial "question_edit"}}
-</div>
+  {{#if isEditing}}
+    <div class="row">
+      <div class="col-sm-1"></div>
+      <div class="col-sm-5">{{input type="text" value=question_text class="form-control"}}</div>
+      <div class="col-sm-5">
+        {{view Ember.Select
+           content=controllers.answer_types.content
+           optionValuePath="content.id"
+           optionLabelPath="content.name"
+           selectionBinding="content.answer_type.content"
+           class="form-control"}}
+      </div>
+      {{partial "question_edit"}}
+    </div>
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5">{{textarea value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
+      {{partial "question_edit"}}
+    </div>
+  {{/if}}
 {{/if}}
 
 <!-- chosenmultiselectgroup -->
