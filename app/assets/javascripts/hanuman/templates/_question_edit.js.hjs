@@ -1,17 +1,13 @@
-<div class="col-sm-1">
-  {{#if isEditing}}
-    <a class="btn btn-xs btn-primary" href="#" {{action "saveQuestion" on="click"}}>
-      <span class="glyphicon glyphicon-check"></span>
-    </a>
-    <a class="btn btn-xs btn-info" href="#" {{action "exitEditQuestion" on="click"}}>
-      <span class="glyphicon glyphicon-remove-circle"></span>
-    </a>
-  {{else}}
-    <a class="btn btn-xs btn-primary" href="#" {{action "editQuestion" on="click"}}>
-      <span class="glyphicon glyphicon-pencil"></span>
-    </a>
-    <a class="btn btn-xs btn-danger" href="#">
-      <span class="glyphicon glyphicon-trash" {{action "deleteQuestion" on="click"}}></span>
-    </a>
-  {{/if}}
+<div class="row">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-5">{{input type="text" value=question_text class="form-control"}}</div>
+  <div class="col-sm-5">
+    {{view Ember.Select
+       content=controllers.answer_types.content
+       optionValuePath="content.id"
+       optionLabelPath="content.name"
+       selectionBinding="content.answer_type.content"
+       class="form-control"}}
+  </div>
+  {{partial "question_edit_buttons"}}
 </div>

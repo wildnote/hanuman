@@ -1,118 +1,138 @@
 <!-- section -->
 {{#if answer_type.section}}
-  <div class="row">
-    {{partial "question_sort"}}
-    <div class="col-sm-5">{{question_text}}</div>
-    <div class="col-sm-5 form-section">{{answer_type.name}}</div>
+  {{#if isEditing}}
     {{partial "question_edit"}}
-  </div>
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5 form-section">{{answer_type.name}}</div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/if}}
 {{/if}}
 
 <!-- static -->
 {{#if answer_type.static}}
-  <div class="row">
-    {{partial "question_sort"}}
-    <div class="col-sm-5">{{question_text}}</div>
-    <div class="col-sm-5 form-static">{{answer_type.name}}</div>
+  {{#if isEditing}}
     {{partial "question_edit"}}
-  </div>
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5 form-static">{{answer_type.name}}</div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/if}}
 {{/if}}
 
 <!-- helperabove -->
 {{#if answer_type.helperabove}}
-  <div class="row">
-    {{partial "question_sort"}}
-    <div class="col-sm-5">{{question_text}}</div>
-    <div class="col-sm-5 helperabove">{{answer_type.name}}</div>
+  {{#if isEditing}}
     {{partial "question_edit"}}
-  </div>
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5 helperabove">{{answer_type.name}}</div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/if}}
 {{/if}}
 
 <!-- helperbelow -->
 {{#if answer_type.helperbelow}}
-  <div class="row">
-    {{partial "question_sort"}}
-    <div class="col-sm-5">{{question_text}}</div>
-    <div class="col-sm-5 helperbelow">{{answer_type.name}}</div>
+  {{#if isEditing}}
     {{partial "question_edit"}}
-  </div>
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5 helperbelow">{{answer_type.name}}</div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/if}}
 {{/if}}
 
 <!-- line -->
 {{#if answer_type.line}}
-  <div class="row">
-    {{partial "question_sort"}}
-    <div class="col-sm-5">{{question_text}}</div>
-    <div class="col-sm-5 page-header">{{answer_type.name}}</div>
+  {{#if isEditing}}
     {{partial "question_edit"}}
-  </div>
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5 page-header">{{answer_type.name}}</div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/if}}
 {{/if}}
 
 <!-- checkbox -->
 {{#if answer_type.checkbox}}
-  <div class="row">
-    {{partial "question_sort"}}
-    <div class="col-sm-5">{{question_text}}</div>
-    <div class="col-sm-5">{{input type="checkbox" name="" disabled=true}}</div>
+  {{#if isEditing}}
     {{partial "question_edit"}}
-  </div>
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5">{{input type="checkbox" name="" disabled=true}}</div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/if}}
 {{/if}}
 
 <!-- select -->
 {{#if answer_type.select}}
-<div class="row">
-  {{partial "question_sort"}}
-  <div class="col-sm-5">{{question_text}}</div>
-  <div class="col-sm-5">
-    {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
-    {{#if answer_choices}}
-      {{view Ember.Select
-         content=answer_choices
-         optionValuePath="content.id"
-         optionLabelPath="content.option_text"
-         class="form-control"
-         prompt="Please select"}}
-    {{else}}
-      {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
-    {{/if}}
-  </div>
-  {{partial "question_edit"}}
-</div>
+  {{#if isEditing}}
+    {{partial "question_edit"}}
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5">
+        {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
+        {{#if answer_choices}}
+          {{view Ember.Select
+             content=answer_choices
+             optionValuePath="content.id"
+             optionLabelPath="content.option_text"
+             class="form-control"
+             prompt="Please select"}}
+        {{else}}
+          {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
+        {{/if}}
+      </div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/if}}
 {{/if}}
 
 <!-- radiobutton -->
 {{#if answer_type.radio}}
-<div class="row">
-  {{partial "question_sort"}}
-  <div class="col-sm-5">{{question_text}}</div>
-  <div class="col-sm-5">
-    {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
-    {{#each answer_choices}}
-      <label>{{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{option_text}}</label>
-    {{else}}
-      {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
-    {{/each}}
-  </div>
-  {{partial "question_edit"}}
-</div>
+  {{#if isEditing}}
+    {{partial "question_edit"}}
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5">
+        {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
+        {{#each answer_choices}}
+          <label>{{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{option_text}}</label>
+        {{else}}
+          {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
+        {{/each}}
+      </div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/if}}
 {{/if}}
 
 <!-- text -->
 {{#if answer_type.text}}
   {{#if isEditing}}
-    <div class="row">
-      <div class="col-sm-1"></div>
-      <div class="col-sm-5">{{input type="text" value=question_text class="form-control"}}</div>
-      <div class="col-sm-5">
-        {{view Ember.Select
-           content=controllers.answer_types.content
-           optionValuePath="content.id"
-           optionLabelPath="content.name"
-           selectionBinding="content.answer_type.content"
-           class="form-control"}}
-      </div>
-      {{partial "question_edit"}}
-    </div>
+    {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_sort"}}
@@ -120,53 +140,49 @@
       <div class="col-sm-5">
         {{input type="text" value=answer_type.name class="form-control" readonly=true}}
       </div>
-      {{partial "question_edit"}}
+      {{partial "question_edit_buttons"}}
     </div>
   {{/if}}
 {{/if}}
 
 <!-- date -->
 {{#if answer_type.date}}
-<div class="row">
-  {{partial "question_sort"}}
-  <div class="col-sm-5">{{question_text}}</div>
-  <div class="col-sm-5">{{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
-  {{partial "question_edit"}}
-</div>
+  {{#if isEditing}}
+    {{partial "question_edit"}}
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5">{{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/if}}
 {{/if}}
 
 <!-- textarea -->
 {{#if answer_type.textarea}}
   {{#if isEditing}}
-    <div class="row">
-      <div class="col-sm-1"></div>
-      <div class="col-sm-5">{{input type="text" value=question_text class="form-control"}}</div>
-      <div class="col-sm-5">
-        {{view Ember.Select
-           content=controllers.answer_types.content
-           optionValuePath="content.id"
-           optionLabelPath="content.name"
-           selectionBinding="content.answer_type.content"
-           class="form-control"}}
-      </div>
-      {{partial "question_edit"}}
-    </div>
+    {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_sort"}}
       <div class="col-sm-5">{{question_text}}</div>
       <div class="col-sm-5">{{textarea value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
-      {{partial "question_edit"}}
+      {{partial "question_edit_buttons"}}
     </div>
   {{/if}}
 {{/if}}
 
 <!-- chosenmultiselectgroup -->
 {{#if answer_type.chosenmultiselectgrouped}}
-<div class="row">
-  {{partial "question_sort"}}
-  <div class="col-sm-5">{{question_text}}</div>
-  <div class="col-sm-5">{{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
-  {{partial "question_edit"}}
-</div>
+  {{#if isEditing}}
+    {{partial "question_edit"}}
+  {{else}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-5">{{question_text}}</div>
+      <div class="col-sm-5">{{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/if}}
 {{/if}}

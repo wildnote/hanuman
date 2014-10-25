@@ -25,6 +25,9 @@ App.QuestionController = Ember.ObjectController.extend({
       @set "isEditing", false
       return
     deleteQuestion: ->
+      question = @get('model')
+      question.deleteRecord()
+      question.save()
       return
   
   isEditing: false
