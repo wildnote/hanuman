@@ -17,9 +17,8 @@ App.SurveyStepController = Ember.ObjectController.extend(
       )
       question.set('answer_type', @get('selectedAnswerType'))
       question.save().then (question) ->
+        # need to add new question to bottom of listing with the right sort order
         survey_step.get('questions').addObject(question)
-      
-      # need to add new question to bottom of listing with the right sort order
       
       @set "isNewQuestion", false
       return
