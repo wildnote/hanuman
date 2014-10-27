@@ -38,6 +38,7 @@
             %button.btn.btn-xs.btn-primary
               Step
               = step.step
+            = link_to "Edit", admin_path + "/#/survey_steps/" + step.id.to_s
           - if step.duplicator?
             .pull-right
               %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}"}
