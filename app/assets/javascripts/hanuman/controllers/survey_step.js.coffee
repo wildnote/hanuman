@@ -19,7 +19,6 @@ App.SurveyStepController = Ember.ObjectController.extend(
       question.save().then (question) ->
         # need to add new question to bottom of listing with the right sort order
         survey_step.get('questions').addObject(question)
-      
       @set "isNewQuestion", false
       return
     exitCreateQuestion: ->
@@ -30,12 +29,9 @@ App.SurveyStepController = Ember.ObjectController.extend(
   updateSortOrder: (indexes) ->
     console.log "in updateSortOrder"
     @beginPropertyChanges()
-    @get('questions').forEach ((item) ->
+    @get('questions').forEach (item) ->
       index = indexes[item.get("id")]
       item.set "sort_order", index + 1
       item.save()
-      return
-    ), this
     @endPropertyChanges()
-    return
 )
