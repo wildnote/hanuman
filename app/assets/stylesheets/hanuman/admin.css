@@ -7,3 +7,5 @@
   border: 1px dashed grey;
   padding: 10px;
 }
+
+.ui-sortable { list-style-type: none; margin: 0; padding: 0; }

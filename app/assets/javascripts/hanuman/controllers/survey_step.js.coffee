@@ -26,4 +26,16 @@ App.SurveyStepController = Ember.ObjectController.extend(
       @set "isNewQuestion", false
       
   isNewQuestion: false
+  
+  updateSortOrder: (indexes) ->
+    console.log "in updateSortOrder"
+    @beginPropertyChanges()
+    @get('questions').forEach ((item) ->
+      index = indexes[item.get("id")]
+      item.set "sort_order", index + 1
+      item.save()
+      return
+    ), this
+    @endPropertyChanges()
+    return
 )

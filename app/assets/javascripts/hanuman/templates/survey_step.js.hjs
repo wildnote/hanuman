@@ -30,16 +30,18 @@
       {{duplicator}}
     </div>
     <div class="panel-body">
-
-      {{#each question in questions}}
-        <div class="row question-border">
-          {{render 'question' question}}
-        </div>
-      {{/each}}
+      
+      <ul class="sortable">
+        {{#each question in questions}}
+          <li class="row question-border item" data-id="{{unbound question.id}}">
+            {{render 'question' question}}
+          </li>
+        {{/each}}
+      </ul>
       
       <div class="row question-border">
-          <!-- new question -->
-          {{#if isNewQuestion}}
+        <!-- new question -->
+        {{#if isNewQuestion}}
           <div class="row">
             <div class="col-sm-1">
             </div>
@@ -63,23 +65,22 @@
               </a>
             </div>
           </div>
-          {{else}}
-            <!-- new question button -->
-            <div class="row">
-              <div class="col-sm-1">
-                <a class="btn btn-xs btn-primary" href="#" {{action "newQuestion" on="click"}}>
-                  <span class="glyphicon glyphicon-plus"></span>
-                </a>
-              </div>
-              <div class="col-sm-5">
-              </div>
-              <div class="col-sm-5">
-              </div>
-              <div class="col-sm-1">
-              </div>
+        {{else}}
+          <!-- new question button -->
+          <div class="row">
+            <div class="col-sm-1">
+              <a class="btn btn-xs btn-primary" href="#" {{action "newQuestion" on="click"}}>
+                <span class="glyphicon glyphicon-plus"></span>
+              </a>
             </div>
-          {{/if}}
-          
+            <div class="col-sm-5">
+            </div>
+            <div class="col-sm-5">
+            </div>
+            <div class="col-sm-1">
+            </div>
+          </div>
+        {{/if}}
       </div>
     </div>
   </div>
