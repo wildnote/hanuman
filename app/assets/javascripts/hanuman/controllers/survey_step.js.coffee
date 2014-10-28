@@ -4,6 +4,10 @@ App.SurveyStepController = Ember.ObjectController.extend(
   question_text: null
   selected_answer_type_id: null
   
+  questionsCount: (->
+    return @get('questions').get('length')
+  ).property()
+  
   actions:
     newQuestion: ->
       @set "isNewQuestion", true
@@ -13,7 +17,7 @@ App.SurveyStepController = Ember.ObjectController.extend(
       question = @store.createRecord('question',
         question_text: @get('question_text')
         survey_step: @get('model')
-        sort_order: 100
+        sort_order: @get('questionsCount') + 1
       )
       question.set('answer_type', @get('selectedAnswerType'))
       question.save().then (question) ->
