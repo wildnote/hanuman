@@ -7,6 +7,8 @@ module Hanuman
     # this method is only needed for architecture migration
     has_many :survey_questions, -> { order :sort_order }
     has_many :questions, through: :survey_questions
+    
+    validates_presence_of :name
 
     def self.all_sorted
       order("name ASC")

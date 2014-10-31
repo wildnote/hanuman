@@ -7,7 +7,8 @@ module Hanuman
     has_many :answer_choices
     has_many :observations
     
-    validates_associated :answer_type
-    validates_associated :survey_step
+    validates_presence_of :answer_type_id
+    # wait until after migration for these validations
+    #validates_presence_of :sort_order, :survey_step_id
   end
 end
