@@ -1,3 +1,9 @@
+
+<div class="row">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-5 bg-info">Question Text</div>
+  <div class="col-sm-5 bg-info">Answer Type</div>
+</div>
 <div class="row">
   <div class="col-sm-1"></div>
   <div class="col-sm-5">{{input type="text" value=question_text class="form-control"}}</div>
@@ -11,3 +17,51 @@
   </div>
   {{partial "question_edit_buttons"}}
 </div>
+
+<!-- answer choices -->
+{{#if answer_choices}}
+  <div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-5"></div>
+    <div class="col-sm-5 bg-info">Answer Choices</div>
+  </div>
+  {{#each answer_choice in answer_choices}}
+    {{render 'answer_choice' answer_choice}}
+  {{/each}}
+  <!-- new answer choice -->
+  {{#if isNewAnswerChoice}}
+    <div class="row">
+      <div class="col-sm-1">
+      </div>
+      <div class="col-sm-5">
+      </div>
+      <div class="col-sm-5">
+        {{input type="text" valueBinding='option_text' class="form-control"}}
+      </div>
+      <div class="col-sm-1">
+        <a class="btn btn-xs btn-primary" href="#" {{action "createAnswerChoice" on="click"}}>
+          <span class="glyphicon glyphicon-check"></span>
+        </a>
+        <a class="btn btn-xs btn-info" href="#" {{action "exitCreateAnswerChoice" on="click"}}>
+          <span class="glyphicon glyphicon-remove-circle"></span>
+        </a>
+      </div>
+    </div>
+  {{else}}
+    <!-- new answer choice button -->
+    <div class="row">
+      <div class="col-sm-1">
+      </div>
+      <div class="col-sm-5">
+      </div>
+      <div class="col-sm-5">
+        <a class="btn btn-xs btn-primary" href="#" {{action "newAnswerChoice" on="click"}}>
+          <span class="glyphicon glyphicon-plus"></span>
+        </a>
+      </div>
+      <div class="col-sm-1">
+      </div>
+    </div>
+  {{/if}}
+{{/if}}
+

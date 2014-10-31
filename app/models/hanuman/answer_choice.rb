@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
     has_ancestry
     belongs_to :question
-    validates_presence_of :option_text
+    validates_presence_of :option_text, :question_id
 
     before_save :protect_split
 

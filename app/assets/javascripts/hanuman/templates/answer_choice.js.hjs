@@ -1,0 +1,17 @@
+<div class="row">
+  <div class="col-sm-1"></div>
+  <div class="col-sm-5"></div>
+  <div class="col-sm-5">
+    <div>
+      {{input type="text" value=option_text class="form-control"}}
+    </div>
+  </div>
+  <div class="col-sm-1">
+    <a class="btn btn-xs btn-primary" href="#" {{action "saveAnswerChoice" on="click"}}>
+      <span class="glyphicon glyphicon-check"></span>
+    </a>
+    <a class="btn btn-xs btn-danger" href="#" {{action "deleteAnswerChoice" on="click"}}>
+      <span class="glyphicon glyphicon-trash"></span>
+    </a>
+  </div>
+</div>

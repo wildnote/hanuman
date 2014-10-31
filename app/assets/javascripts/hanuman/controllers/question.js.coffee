@@ -10,25 +10,41 @@ App.QuestionController = Ember.ObjectController.extend({
   actions:
     editQuestion: ->
       @set "isEditing", true
-      return
+      
     exitEditQuestion: ->
       @set "isEditing", false
-      return
+      
     saveQuestion: ->
       question = @get('model')
-      # new_answer_type_id = question.get('selectedAnswerType').get('id')
-      # @store.find("answer_type", new_answer_type_id).then (answer_type) ->
-      #   question.set 'answer_type', answer_type
-      #selectedAnswerType = @get('selectedAnswerType')
-      #question.set('answer_type', selectedAnswerType)
       question.save()
       @set "isEditing", false
-      return
+      
     deleteQuestion: ->
       question = @get('model')
       question.deleteRecord()
       question.save()
-      return
+      
+    editAnswerChoices: ->
+      @set "isEditingAnswerChoices", true
+      
+    newAnswerChoice: ->
+      @set "isNewAnswerChoice", true
+      
+    exitCreateAnswerChoice: ->
+      @set "isNewAnswerChoice", false
+      
+    createAnswerChoice: ->
+      question = @get('model')
+      answer_choice = @store.createRecord('answer_choice',
+        option_text: @get('option_text')
+        question: @get('model')
+      )
+      controller = @
+      answer_choice.save().then (answer_choice) ->
+        controller.set('option_text', '')
+        question.get('answer_choices').addObject(answer_choice)
+      @set "isNewAnswerChoice", false
   
   isEditing: false
+  isNewAnswerChoice: false
 })
