@@ -1,17 +1,37 @@
-<div class="row">
-  <div class="col-sm-1"></div>
-  <div class="col-sm-5"></div>
-  <div class="col-sm-5">
-    <div>
-      {{input type="text" value=option_text class="form-control"}}
+{{#if isEditingAnswerChoice}}
+  <div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-5"></div>
+    <div class="col-sm-5">
+      <div>
+        {{input type="text" value=option_text class="form-control"}}
+      </div>
+    </div>
+    <div class="col-sm-1">
+      <a class="btn btn-xs btn-primary" href="#" {{action "saveAnswerChoice" on="click"}}>
+        <span class="glyphicon glyphicon-check"></span>
+      </a>
+      <a class="btn btn-xs btn-info" href="#" {{action "exitEditAnswerChoice" on="click"}}>
+        <span class="glyphicon glyphicon-remove-circle"></span>
+      </a>
     </div>
   </div>
-  <div class="col-sm-1">
-    <a class="btn btn-xs btn-primary" href="#" {{action "saveAnswerChoice" on="click"}}>
-      <span class="glyphicon glyphicon-check"></span>
-    </a>
-    <a class="btn btn-xs btn-danger" href="#" {{action "deleteAnswerChoice" on="click"}}>
-      <span class="glyphicon glyphicon-trash"></span>
-    </a>
+{{else}}
+  <div class="row">
+    <div class="col-sm-1"></div>
+    <div class="col-sm-5"></div>
+    <div class="col-sm-5">
+      <div>
+        {{option_text}}
+      </div>
+    </div>
+    <div class="col-sm-1">
+      <a class="btn btn-xs btn-primary" href="#" {{action "editAnswerChoice" on="click"}}>
+        <span class="glyphicon glyphicon-pencil"></span>
+      </a>
+      <a class="btn btn-xs btn-danger" href="#" {{action "deleteAnswerChoice" on="click"}}>
+        <span class="glyphicon glyphicon-trash"></span>
+      </a>
+    </div>
   </div>
-</div>
+{{/if}}

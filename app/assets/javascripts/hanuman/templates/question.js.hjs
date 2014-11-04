@@ -133,9 +133,6 @@
         {{/each}}
       </div>
       <div class="col-sm-1">
-        <a class="btn btn-xs btn-primary" href="#" {{action "editAnswerChoices" on="click"}}>
-          <span class="glyphicon glyphicon-pencil"></span>
-        </a>
       </div>
     </div>
   {{/unless}}

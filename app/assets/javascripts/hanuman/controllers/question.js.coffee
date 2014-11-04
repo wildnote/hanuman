@@ -24,9 +24,6 @@ App.QuestionController = Ember.ObjectController.extend({
       question.deleteRecord()
       question.save()
       
-    editAnswerChoices: ->
-      @set "isEditingAnswerChoices", true
-      
     newAnswerChoice: ->
       @set "isNewAnswerChoice", true
       
