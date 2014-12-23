@@ -82,6 +82,25 @@
   {{/if}}
 {{/if}}
 
+<!-- checkboxlist -->
+{{#if answer_type.checkboxlist}}
+  {{#if isEditing}}
+    {{partial "question_edit"}}
+  {{else}}
+  <div class="row">
+    {{partial "question_sort"}}
+    <div class="col-sm-5">{{question_text}}</div>
+    <div class="col-sm-5">
+      {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
+      {{#each answer_choices}}
+        {{input type="checkbox" name="" disabled=true}}{{option_text}}<br/>
+      {{/each}}
+    </div>
+    {{partial "question_edit_buttons"}}
+  </div>
+  {{/if}}
+{{/if}}
+
 <!-- select -->
 {{#if answer_type.select}}
   {{#if isEditing}}
@@ -127,7 +146,7 @@
       <div class="col-sm-5"></div>
       <div class="col-sm-5">      
         {{#each answer_choices}}
-          <label>{{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{option_text}}</label>
+          <label>{{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{option_text}}</label><br/>
         {{else}}
           {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
         {{/each}}
