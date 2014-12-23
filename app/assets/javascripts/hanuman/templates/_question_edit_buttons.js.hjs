@@ -1,4 +1,4 @@
-<div class="col-sm-1">
+<div class="col-sm-2">
   {{#if isEditing}}
     <a class="btn btn-xs btn-primary" href="#" {{action "saveQuestion" on="click"}}>
       <span class="glyphicon glyphicon-check"></span>

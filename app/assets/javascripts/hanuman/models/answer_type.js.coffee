@@ -9,107 +9,47 @@ App.AnswerType = DS.Model.extend({
   
   # computed properties for anwser type
   checkboxlist: (->
-    if @.get('name') == 'checkboxlist'
+    if @.get('name') in ['checkboxlist', 'hiddencheckboxlist']
       return true
   ).property('name')
   chosenmultiselect: (->
-    if @.get('name') == 'chosenmultiselect'
+    if @.get('name') in ['chosenmultiselect', 'hiddenchosenmultiselect']
       return true
   ).property('name')
   chosenmultiselectgrouped: (->
-    if @.get('name') == 'chosenmultiselectgrouped'
+    if @.get('name') in ['chosenmultiselectgrouped', 'hiddenchosenmultiselectgrouped']
       return true
   ).property('name')
-  date: (->
-    if @.get('name') == 'date'
-      return true
-  ).property('name')
-  helperabove: (->
-    if @.get('name') == 'helperabove'
-      return true
-  ).property('name')
-  helperbelow: (->
-    if @.get('name') == 'helperbelow'
+  helper: (->
+    if @.get('name') in ['helperabove', 'hiddenhelperabove', 'helperbelow', 'hiddenhelperbelow']
       return true
   ).property('name')
   line: (->
-    if @.get('name') == 'line'
+    if @.get('name') in ['line', 'hiddenline']
       return true
   ).property('name')
   radio: (->
-    if @.get('name') == 'radio'
+    if @.get('name') in ['radio', 'hiddenradio']
       return true
   ).property('name')
   section: (->
-    if @.get('name') == 'section'
+    if @.get('name') in ['section', 'hiddenselect']
       return true
   ).property('name')
   select: (->
-    if @.get('name') == 'select'
+    if @.get('name') in ['select', 'hiddensection']
       return true
   ).property('name')
   static: (->
-    if @.get('name') == 'static'
+    if @.get('name') in ['static', 'hiddenstatic']
       return true
   ).property('name')
   text: (->
-    if @.get('name') == 'text'
+    if @.get('name') in ['text', 'hiddentext', 'date', 'hiddendate']
       return true
   ).property('name')
   textarea: (->
-    if @.get('name') == 'textarea'
-      return true
-  ).property('name')
-  hiddendate: (->
-    if @.get('name') == 'hiddendate'
-      return true
-  ).property('name')
-  hiddensection: (->
-    if @.get('name') == 'hiddensection'
-      return true
-  ).property('name')
-  hiddenstatic: (->
-    if @.get('name') == 'hiddenstatic'
-      return true
-  ).property('name')
-  hiddenline: (->
-    if @.get('name') == 'hiddenline'
-      return true
-  ).property('name')
-  hiddenhelperabove: (->
-    if @.get('name') == 'hiddenhelperabove'
-      return true
-  ).property('name')
-  hiddenhelperbelow: (->
-    if @.get('name') == 'hiddenhelperbelow'
-      return true
-  ).property('name')
-  hiddencheckboxlist: (->
-    if @.get('name') == 'hiddencheckboxlist'
-      return true
-  ).property('name')
-  hiddenchosenmultiselect: (->
-    if @.get('name') == 'hiddenchosenmultiselect'
-      return true
-  ).property('name')
-  hiddenchosenmultiselectgrouped: (->
-    if @.get('name') == 'hiddenchosenmultiselectgrouped'
-      return true
-  ).property('name')
-  hiddenradio: (->
-    if @.get('name') == 'hiddenradio'
-      return true
-  ).property('name')
-  hiddenselect: (->
-    if @.get('name') == 'hiddenselect'
-      return true
-  ).property('name')
-  hiddentext: (->
-    if @.get('name') == 'hiddentext'
-      return true
-  ).property('name')
-  hiddentextarea: (->
-    if @.get('name') == 'hiddentextarea'
+    if @.get('name') in ['textarea', 'hiddentextarea']
       return true
   ).property('name')
 })

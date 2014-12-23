@@ -1,54 +1,53 @@
-<!-- section -->
-{{#if answer_type.section}}
+<!-- checkboxlist -->
+{{#if answer_type.checkboxlist}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
-    <div class="row">
-      {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5 form-section">{{answer_type.name}}</div>
-      {{partial "question_edit_buttons"}}
+  <div class="row">
+    {{partial "question_sort"}}
+    <div class="col-sm-3">{{question_text}}</div>
+    <div class="col-sm-3">
+      {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
     </div>
+    <div class="col-sm-3">
+      {{#each answer_choices}}
+        {{input type="checkbox" name="" disabled=true}}{{option_text}}<br/>
+      {{/each}}
+    </div>
+    {{partial "question_edit_buttons"}}
+  </div>
   {{/if}}
 {{/if}}
 
-<!-- static -->
-{{#if answer_type.static}}
+<!-- chosenmultiselectgroup -->
+{{#if answer_type.chosenmultiselectgrouped}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
-    <div class="row">
-      {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5 form-static">{{answer_type.name}}</div>
-      {{partial "question_edit_buttons"}}
+  <div class="row">
+    {{partial "question_sort"}}
+    <div class="col-sm-3">{{question_text}}</div>
+    <div class="col-sm-3">
+      {{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}
     </div>
+    <div class="col-sm-3"></div>
+    {{partial "question_edit_buttons"}}
+  </div>
   {{/if}}
 {{/if}}
 
-<!-- helperabove -->
-{{#if answer_type.helperabove}}
+<!-- helper -->
+{{#if answer_type.helper}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5 helperabove">{{answer_type.name}}</div>
-      {{partial "question_edit_buttons"}}
-    </div>
-  {{/if}}
-{{/if}}
-
-<!-- helperbelow -->
-{{#if answer_type.helperbelow}}
-  {{#if isEditing}}
-    {{partial "question_edit"}}
-  {{else}}
-    <div class="row">
-      {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5 helperbelow">{{answer_type.name}}</div>
+      <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3 helperabove">
+        {{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}
+      </div>
+      <div class="col-sm-3">{{question_text}}</div>
       {{partial "question_edit_buttons"}}
     </div>
   {{/if}}
@@ -61,43 +60,52 @@
   {{else}}
     <div class="row">
       {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5 page-header">{{answer_type.name}}</div>
+      <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3 page-header">{{answer_type.name}}</div>
+      <div class="col-sm-3"></div>
       {{partial "question_edit_buttons"}}
     </div>
   {{/if}}
 {{/if}}
 
-<!-- checkbox -->
-{{#if answer_type.checkbox}}
+<!-- radio -->
+{{#if answer_type.radio}}
+  {{#if isEditing}}
+    {{partial "question_edit"}}
+  {{/if}}
+  {{#unless isEditing}}
+    <div class="row">
+      {{partial "question_sort"}}
+      <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3">
+        {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
+      </div>
+      <div class="col-sm-3">      
+        {{#each answer_choices}}
+          {{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{option_text}}<br/>
+        {{else}}
+          {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
+        {{/each}}
+      </div>
+      {{partial "question_edit_buttons"}}
+    </div>
+  {{/unless}}
+{{/if}}
+
+<!-- section -->
+{{#if answer_type.section}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5">{{input type="checkbox" name="" disabled=true}}</div>
+      <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3">
+        {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
+      </div>
+      <div class="col-sm-3 form-section">{{question_text}}</div>
       {{partial "question_edit_buttons"}}
     </div>
-  {{/if}}
-{{/if}}
-
-<!-- checkboxlist -->
-{{#if answer_type.checkboxlist}}
-  {{#if isEditing}}
-    {{partial "question_edit"}}
-  {{else}}
-  <div class="row">
-    {{partial "question_sort"}}
-    <div class="col-sm-5">{{question_text}}</div>
-    <div class="col-sm-5">
-      {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
-      {{#each answer_choices}}
-        {{input type="checkbox" name="" disabled=true}}{{option_text}}<br/>
-      {{/each}}
-    </div>
-    {{partial "question_edit_buttons"}}
-  </div>
   {{/if}}
 {{/if}}
 
@@ -108,9 +116,11 @@
   {{else}}
     <div class="row">
       {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5">
+      <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3">
         {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
+      </div>  
+      <div class="col-sm-3">
         {{#if answer_choices}}
           {{view Ember.Select
              content=answer_choices
@@ -127,34 +137,19 @@
   {{/if}}
 {{/if}}
 
-<!-- radiobutton -->
-{{#if answer_type.radio}}
+<!-- static -->
+{{#if answer_type.static}}
   {{#if isEditing}}
     {{partial "question_edit"}}
-  {{/if}}
-  {{#unless isEditing}}
+  {{else}}
     <div class="row">
       {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5">
-        {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
-      </div>
+      <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3 form-static">{{answer_type.name}}</div>
+      <div class="col-sm-3"></div>
       {{partial "question_edit_buttons"}}
     </div>
-    <div class="row">
-      <div class="col-sm-1"></div>
-      <div class="col-sm-5"></div>
-      <div class="col-sm-5">      
-        {{#each answer_choices}}
-          <label>{{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{option_text}}</label><br/>
-        {{else}}
-          {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
-        {{/each}}
-      </div>
-      <div class="col-sm-1">
-      </div>
-    </div>
-  {{/unless}}
+  {{/if}}
 {{/if}}
 
 <!-- text -->
@@ -164,24 +159,13 @@
   {{else}}
     <div class="row">
       {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5">
-        {{input type="text" value=answer_type.name class="form-control" readonly=true}}
+      <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3">
+        {{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}
       </div>
-      {{partial "question_edit_buttons"}}
-    </div>
-  {{/if}}
-{{/if}}
-
-<!-- date -->
-{{#if answer_type.date}}
-  {{#if isEditing}}
-    {{partial "question_edit"}}
-  {{else}}
-    <div class="row">
-      {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5">{{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
+      <div class="col-sm-3">
+        {{input type="text" class="form-control"}}
+      </div>
       {{partial "question_edit_buttons"}}
     </div>
   {{/if}}
@@ -194,22 +178,26 @@
   {{else}}
     <div class="row">
       {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5">{{textarea value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
+      <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3">{{textarea value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
+      <div class="col-sm-3"></div>
       {{partial "question_edit_buttons"}}
     </div>
   {{/if}}
 {{/if}}
 
-<!-- chosenmultiselectgroup -->
-{{#if answer_type.chosenmultiselectgrouped}}
+
+
+<!-- checkbox -->
+{{#if answer_type.checkbox}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_sort"}}
-      <div class="col-sm-5">{{question_text}}</div>
-      <div class="col-sm-5">{{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
+      <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3">{{input type="checkbox" name="" disabled=true}}</div>
+      <div class="col-sm-3"></div>
       {{partial "question_edit_buttons"}}
     </div>
   {{/if}}

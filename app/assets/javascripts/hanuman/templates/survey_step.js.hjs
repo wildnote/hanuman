@@ -26,10 +26,19 @@
 
   <div class="panel panel-info">
     <div class="panel-heading">
-      {{step}}
-      {{duplicator}}
     </div>
+    
     <div class="panel-body">
+      
+      <div class="row">
+        
+        <div class="col-sm-1">Order</div>
+        <div class="col-sm-3">Question Text</div>
+        <div class="col-sm-3">Question/Answer Type</div>
+        <div class="col-sm-3">Preview</div>
+        <div class="col-sm-2">Edit Actions</div>
+        
+      </div>
       
       <ul class="sortable">
         {{#each question in questions}}
@@ -43,12 +52,11 @@
         <!-- new question -->
         {{#if isNewQuestion}}
           <div class="row">
-            <div class="col-sm-1">
-            </div>
-            <div class="col-sm-5">
+            <div class="col-sm-1"></div>
+            <div class="col-sm-3">
               {{input type="text" valueBinding='question_text' class="form-control"}}
             </div>
-            <div class="col-sm-5">
+            <div class="col-sm-3">
               {{view Ember.Select
                  content=controllers.answer_types.content
                  optionValuePath="content.id"
@@ -56,7 +64,8 @@
                  selectionBinding="selectedAnswerType"
                  class="form-control"}}
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-3"></div>
+            <div class="col-sm-2">
               <a class="btn btn-xs btn-primary" href="#" {{action "createQuestion" on="click"}}>
                 <span class="glyphicon glyphicon-check"></span>
               </a>
@@ -73,12 +82,9 @@
                 <span class="glyphicon glyphicon-plus"></span>
               </a>
             </div>
-            <div class="col-sm-5">
-            </div>
-            <div class="col-sm-5">
-            </div>
-            <div class="col-sm-1">
-            </div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-3"></div>
+            <div class="col-sm-1"></div>
           </div>
         {{/if}}
       </div>
