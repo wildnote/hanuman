@@ -12,6 +12,10 @@ App.AnswerType = DS.Model.extend({
     if @.get('name') == 'checkboxlist'
       return true
   ).property('name')
+  chosenmultiselect: (->
+    if @.get('name') == 'chosenmultiselect'
+      return true
+  ).property('name')
   chosenmultiselectgrouped: (->
     if @.get('name') == 'chosenmultiselectgrouped'
       return true
@@ -24,8 +28,8 @@ App.AnswerType = DS.Model.extend({
     if @.get('name') == 'helperabove'
       return true
   ).property('name')
-  hiddendate: (->
-    if @.get('name') == 'hiddendate'
+  helperbelow: (->
+    if @.get('name') == 'helperbelow'
       return true
   ).property('name')
   line: (->
@@ -54,6 +58,58 @@ App.AnswerType = DS.Model.extend({
   ).property('name')
   textarea: (->
     if @.get('name') == 'textarea'
+      return true
+  ).property('name')
+  hiddendate: (->
+    if @.get('name') == 'hiddendate'
+      return true
+  ).property('name')
+  hiddensection: (->
+    if @.get('name') == 'hiddensection'
+      return true
+  ).property('name')
+  hiddenstatic: (->
+    if @.get('name') == 'hiddenstatic'
+      return true
+  ).property('name')
+  hiddenline: (->
+    if @.get('name') == 'hiddenline'
+      return true
+  ).property('name')
+  hiddenhelperabove: (->
+    if @.get('name') == 'hiddenhelperabove'
+      return true
+  ).property('name')
+  hiddenhelperbelow: (->
+    if @.get('name') == 'hiddenhelperbelow'
+      return true
+  ).property('name')
+  hiddencheckboxlist: (->
+    if @.get('name') == 'hiddencheckboxlist'
+      return true
+  ).property('name')
+  hiddenchosenmultiselect: (->
+    if @.get('name') == 'hiddenchosenmultiselect'
+      return true
+  ).property('name')
+  hiddenchosenmultiselectgrouped: (->
+    if @.get('name') == 'hiddenchosenmultiselectgrouped'
+      return true
+  ).property('name')
+  hiddenradio: (->
+    if @.get('name') == 'hiddenradio'
+      return true
+  ).property('name')
+  hiddenselect: (->
+    if @.get('name') == 'hiddenselect'
+      return true
+  ).property('name')
+  hiddentext: (->
+    if @.get('name') == 'hiddentext'
+      return true
+  ).property('name')
+  hiddentextarea: (->
+    if @.get('name') == 'hiddentextarea'
       return true
   ).property('name')
 })
