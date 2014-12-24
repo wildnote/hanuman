@@ -64,7 +64,7 @@ module Hanuman
 
       # Only allow a trusted parameter "white list" through.
       def answer_choice_params
-        params.require(:answer_choice).permit(:question_id, :option_text)
+        params.require(:answer_choice).permit(:question_id, :option_text, :scientific_text)
       end
   end
 end
