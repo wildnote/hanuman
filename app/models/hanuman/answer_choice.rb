@@ -30,7 +30,11 @@ module Hanuman
     end
 
     def formatted_answer_choice
-      scientific_text.blank? ? option_text : scientific_text +  ' / ' + option_text
+      if option_text == scientific_text
+        option_text
+      else
+        scientific_text.blank? ? option_text : scientific_text +  ' / ' + option_text
+      end
     end
   end
 end

@@ -8,6 +8,6 @@
       - ff.object.survey_question.question.answer_choices.sorted.each do |a|
         = check_box_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
                            a.id, cbl_answers.include?(a.id)
-        = label_tag nil, a.option_text
+        = label_tag nil, a.formatted_answer_choice
         %br/
     = ff.hidden_field :entry
