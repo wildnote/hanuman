@@ -29,6 +29,10 @@ module Hanuman
     def self.sorted
       order("option_text")
     end
+    
+    def self.second_level
+      where(ancestry: nil)
+    end
 
     def formatted_answer_choice
       scientific_text.blank? ? option_text : scientific_text +  ' / ' + option_text

@@ -1,4 +1,7 @@
-<div class="col-sm-1">
-  <a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-sort"></span></a>
+<div class="col-sm-2">
   {{sort_order}}
+  <a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-sort"></span></a>
+  <a class="btn btn-xs btn-primary" href="#" {{action "editQuestion" on="click"}}>
+    <span class="glyphicon glyphicon-pencil"></span>
+  </a>
 </div>

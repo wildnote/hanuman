@@ -1,17 +1,7 @@
-<div class="col-sm-2">
-  {{#if isEditing}}
-    <a class="btn btn-xs btn-primary" href="#" {{action "saveQuestion" on="click"}}>
-      <span class="glyphicon glyphicon-check"></span>
-    </a>
-    <a class="btn btn-xs btn-info" href="#" {{action "exitEditQuestion" on="click"}}>
-      <span class="glyphicon glyphicon-remove-circle"></span>
-    </a>
-  {{else}}
-    <a class="btn btn-xs btn-primary" href="#" {{action "editQuestion" on="click"}}>
-      <span class="glyphicon glyphicon-pencil"></span>
-    </a>
+<div class="col-sm-1">
+  {{#unless isEditing}}
     <a class="btn btn-xs btn-danger" href="#">
       <span class="glyphicon glyphicon-trash" {{action "deleteQuestion" on="click"}}></span>
     </a>
-  {{/if}}
+  {{/unless}}
 </div>

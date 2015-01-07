@@ -1,17 +1,25 @@
 
-<div class="row">
+{{!-- <div class="row">
   <div class="col-sm-1"></div>
   <div class="col-sm-3 bg-info">Question Text</div>
   <div class="col-sm-3 bg-info">Answer Type</div>
   <div class="col-sm-3 bg-info">Answer Choices</div>
   <div class="col-sm-2"></div>
-</div>
+</div> --}}
 <div class="row">
-  <div class="col-sm-1"></div>
+  <div class="col-sm-2">
+    {{sort_order}}
+    <a class="btn btn-xs btn-primary" href="#" {{action "saveQuestion" on="click"}}>
+      <span class="glyphicon glyphicon-check"></span>
+    </a>
+    <a class="btn btn-xs btn-info" href="#" {{action "exitEditQuestion" on="click"}}>
+      <span class="glyphicon glyphicon-remove-circle"></span>
+    </a>
+  </div>
   <div class="col-sm-3">{{input type="text" value=question_text class="form-control"}}</div>
   <div class="col-sm-3">
     {{view Ember.Select
-       content=controllers.answer_types.content
+       content=controllers.answer_types.arrangedContent
        optionValuePath="content.id"
        optionLabelPath="content.name"
        selectionBinding="content.answer_type.content"
@@ -29,13 +37,13 @@
 <!-- new answer choice -->
 {{#if isNewAnswerChoice}}
   <div class="row">
-    <div class="col-sm-1"></div>
+    <div class="col-sm-2"></div>
     <div class="col-sm-3"></div>
     <div class="col-sm-3"></div>
     <div class="col-sm-3">
       {{input type="text" valueBinding='option_text' class="form-control"}}
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-1">
       <a class="btn btn-xs btn-primary" href="#" {{action "createAnswerChoice" on="click"}}>
         <span class="glyphicon glyphicon-check"></span>
       </a>
@@ -47,7 +55,7 @@
 {{else}}
   <!-- new answer choice button -->
   <div class="row">
-    <div class="col-sm-1">
+    <div class="col-sm-2">
     </div>
     <div class="col-sm-3">
     </div>
@@ -58,7 +66,7 @@
         <span class="glyphicon glyphicon-plus"></span>
       </a>
     </div>
-    <div class="col-sm-2">
+    <div class="col-sm-1">
     </div>
   </div>
 {{/if}}

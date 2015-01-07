@@ -6,9 +6,7 @@
   <div class="row">
     {{partial "question_sort"}}
     <div class="col-sm-3">{{question_text}}</div>
-    <div class="col-sm-3">
-      {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
-    </div>
+    <div class="col-sm-3">{{answer_type.name}}</div>
     <div class="col-sm-3">
       {{#each answer_choices}}
         {{input type="checkbox" name="" disabled=true}}{{option_text}}<br/>
@@ -27,10 +25,19 @@
   <div class="row">
     {{partial "question_sort"}}
     <div class="col-sm-3">{{question_text}}</div>
+    <div class="col-sm-3">{{answer_type.name}}</div>
     <div class="col-sm-3">
-      {{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}
+      {{#if answer_choices}}
+        {{view App.ChosenMultiSelect
+          content=grouped_answer_choices
+          optionValuePath="content.id"
+          optionLabelPath="content.option_text"
+          optionGroupPath="group_text"
+        }}
+      {{else}}
+        {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
+      {{/if}}
     </div>
-    <div class="col-sm-3"></div>
     {{partial "question_edit_buttons"}}
   </div>
   {{/if}}
@@ -44,10 +51,8 @@
     <div class="row">
       {{partial "question_sort"}}
       <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3 helperabove">
-        {{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}
-      </div>
-      <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3">{{answer_type.name}}</div>
+      <div class="col-sm-3 helperabove">{{question_text}}</div>
       {{partial "question_edit_buttons"}}
     </div>
   {{/if}}
@@ -77,8 +82,7 @@
     <div class="row">
       {{partial "question_sort"}}
       <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">
-        {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
+      <div class="col-sm-3">{{answer_type.name}}
       </div>
       <div class="col-sm-3">      
         {{#each answer_choices}}
@@ -100,9 +104,7 @@
     <div class="row">
       {{partial "question_sort"}}
       <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">
-        {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
-      </div>
+      <div class="col-sm-3">{{answer_type.name}}</div>
       <div class="col-sm-3 form-section">{{question_text}}</div>
       {{partial "question_edit_buttons"}}
     </div>
@@ -117,9 +119,7 @@
     <div class="row">
       {{partial "question_sort"}}
       <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">
-        {{input type="text" value=answer_type.nameUpcase disabled="true" class="form-control"}}
-      </div>  
+      <div class="col-sm-3">{{answer_type.name}}</div>  
       <div class="col-sm-3">
         {{#if answer_choices}}
           {{view Ember.Select
@@ -160,9 +160,7 @@
     <div class="row">
       {{partial "question_sort"}}
       <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">
-        {{input type="text" value=answer_type.nameUpcase class="form-control" readonly=true}}
-      </div>
+      <div class="col-sm-3">{{answer_type.name}}</div>
       <div class="col-sm-3">
         {{input type="text" class="form-control"}}
       </div>
@@ -179,8 +177,8 @@
     <div class="row">
       {{partial "question_sort"}}
       <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">{{textarea value=answer_type.nameUpcase class="form-control" readonly=true}}</div>
-      <div class="col-sm-3"></div>
+      <div class="col-sm-3">{{answer_type.name}}</div>
+      <div class="col-sm-3">{{textarea class="form-control"}}</div>
       {{partial "question_edit_buttons"}}
     </div>
   {{/if}}
@@ -196,8 +194,8 @@
     <div class="row">
       {{partial "question_sort"}}
       <div class="col-sm-3">{{question_text}}</div>
+      <div class="col-sm-3">{{answer_type.name}}</div>
       <div class="col-sm-3">{{input type="checkbox" name="" disabled=true}}</div>
-      <div class="col-sm-3"></div>
       {{partial "question_edit_buttons"}}
     </div>
   {{/if}}
