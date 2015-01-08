@@ -16,7 +16,9 @@
       <span class="glyphicon glyphicon-remove-circle"></span>
     </a>
   </div>
-  <div class="col-sm-3">{{input type="text" value=question_text class="form-control"}}</div>
+  <div class="col-sm-3">
+    {{input type="text" value=question_text class="form-control"}}
+  </div>
   <div class="col-sm-3">
     {{view Ember.Select
        content=controllers.answer_types.arrangedContent
@@ -35,38 +37,40 @@
 </div>
 
 <!-- new answer choice -->
-{{#if isNewAnswerChoice}}
-  <div class="row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3">
-      {{input type="text" valueBinding='option_text' class="form-control"}}
+{{#if showAnswerChoices}}
+  {{#if isNewAnswerChoice}}
+    <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3">
+        {{input type="text" valueBinding='option_text' class="form-control"}}
+      </div>
+      <div class="col-sm-1">
+        <a class="btn btn-xs btn-primary" href="#" {{action "createAnswerChoice" on="click"}}>
+          <span class="glyphicon glyphicon-check"></span>
+        </a>
+        <a class="btn btn-xs btn-info" href="#" {{action "exitCreateAnswerChoice" on="click"}}>
+          <span class="glyphicon glyphicon-remove-circle"></span>
+        </a>
+      </div>
     </div>
-    <div class="col-sm-1">
-      <a class="btn btn-xs btn-primary" href="#" {{action "createAnswerChoice" on="click"}}>
-        <span class="glyphicon glyphicon-check"></span>
-      </a>
-      <a class="btn btn-xs btn-info" href="#" {{action "exitCreateAnswerChoice" on="click"}}>
-        <span class="glyphicon glyphicon-remove-circle"></span>
-      </a>
+  {{else}}
+    <!-- new answer choice button -->
+    <div class="row">
+      <div class="col-sm-2">
+      </div>
+      <div class="col-sm-3">
+      </div>
+      <div class="col-sm-3">
+      </div>
+      <div class="col-sm-3">
+        <a class="btn btn-xs btn-primary" href="#" {{action "newAnswerChoice" on="click"}}>
+          <span class="glyphicon glyphicon-plus"></span>
+        </a>
+      </div>
+      <div class="col-sm-1">
+      </div>
     </div>
-  </div>
-{{else}}
-  <!-- new answer choice button -->
-  <div class="row">
-    <div class="col-sm-2">
-    </div>
-    <div class="col-sm-3">
-    </div>
-    <div class="col-sm-3">
-    </div>
-    <div class="col-sm-3">
-      <a class="btn btn-xs btn-primary" href="#" {{action "newAnswerChoice" on="click"}}>
-        <span class="glyphicon glyphicon-plus"></span>
-      </a>
-    </div>
-    <div class="col-sm-1">
-    </div>
-  </div>
+  {{/if}}
 {{/if}}

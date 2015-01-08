@@ -88,7 +88,7 @@
         {{#each answer_choices}}
           {{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{option_text}}<br/>
         {{else}}
-          {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
+          <p class="bg-danger">There are no available Answer Options defined. Edit question to add new answer choices.</p>
         {{/each}}
       </div>
       {{partial "question_edit_buttons"}}

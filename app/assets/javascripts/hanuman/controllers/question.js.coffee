@@ -20,12 +20,14 @@ App.QuestionController = Ember.ObjectController.extend({
   
   root_level_answer_choices: (-> 
     return @.get("content.answer_choices").filterBy('group_text', '')
-    #return @.get('model').filterBy('step', 1)
   ).property("content.answer_choices")
   
   actions:
     editQuestion: ->
       @set "isEditing", true
+      question = @get('model')
+      if question.get('answer_type').get('hasAnswerChoices')
+        @set "showAnswerChoices", true
       
     exitEditQuestion: ->
       @set "isEditing", false
@@ -60,4 +62,5 @@ App.QuestionController = Ember.ObjectController.extend({
   
   isEditing: false
   isNewAnswerChoice: false
+  showAnswerChoices: false
 })

@@ -33,11 +33,11 @@ App.AnswerType = DS.Model.extend({
       return true
   ).property('name')
   section: (->
-    if @.get('name') in ['section', 'hiddenselect']
+    if @.get('name') in ['section', 'hiddensection']
       return true
   ).property('name')
   select: (->
-    if @.get('name') in ['select', 'hiddensection']
+    if @.get('name') in ['select', 'hiddenselect']
       return true
   ).property('name')
   static: (->
@@ -50,6 +50,14 @@ App.AnswerType = DS.Model.extend({
   ).property('name')
   textarea: (->
     if @.get('name') in ['textarea', 'hiddentextarea']
+      return true
+  ).property('name')
+  
+  hasAnswerChoices: (->
+    if @.get('name') in ['checkboxlist', 'hiddencheckboxlist', 'chosenmultiselect', 
+      'hiddenchosenmultiselect', 'chosenmultiselectgrouped', 
+      'hiddenchosenmultiselectgrouped', 'radio', 'hiddenradio', 'select', 
+      'hiddenselect']
       return true
   ).property('name')
 })
