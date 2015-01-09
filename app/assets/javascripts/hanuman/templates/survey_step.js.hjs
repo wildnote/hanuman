@@ -59,7 +59,14 @@
             <div class="col-sm-1"></div>
           </div>
           <div class="row">
-            <div class="col-sm-2"></div>
+            <div class="col-sm-2">
+              <a class="btn btn-xs btn-primary" href="#" {{action "createQuestion" on="click"}}>
+                <span class="glyphicon glyphicon-check"></span>
+              </a>
+              <a class="btn btn-xs btn-info" href="#" {{action "exitCreateQuestion" on="click"}}>
+                <span class="glyphicon glyphicon-remove-circle"></span>
+              </a>
+            </div>
             <div class="col-sm-3">
               {{input type="text" valueBinding='question_text' class="form-control"}}
             </div>
@@ -72,14 +79,7 @@
                  class="form-control"}}
             </div>
             <div class="col-sm-3"></div>
-            <div class="col-sm-1">
-              <a class="btn btn-xs btn-primary" href="#" {{action "createQuestion" on="click"}}>
-                <span class="glyphicon glyphicon-check"></span>
-              </a>
-              <a class="btn btn-xs btn-info" href="#" {{action "exitCreateQuestion" on="click"}}>
-                <span class="glyphicon glyphicon-remove-circle"></span>
-              </a>
-            </div>
+            <div class="col-sm-1"></div>
           </div>
         {{else}}
           <!-- new question button -->
