@@ -1,0 +1,5 @@
+<div class="col-sm-1">
+  <a class="btn btn-xs btn-danger" href="#">
+    <span class="glyphicon glyphicon-trash" {{action "deleteQuestion" on="click"}}></span>
+  </a>
+</div>

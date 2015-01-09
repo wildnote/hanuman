@@ -1,3 +1,4 @@
+{{!-- edit question row --}}
 <div class="row bg-primary">
   <div class="col-sm-2"></div>
   <div class="col-sm-3">Question Text</div>
@@ -32,7 +33,7 @@
       {{render 'answer_choice' answer_choice}}
     {{/each}}
   </div>
-  {{partial "question_edit_buttons"}}
+  {{partial "question_delete_button"}}
 </div>
 
 <!-- new answer choice -->

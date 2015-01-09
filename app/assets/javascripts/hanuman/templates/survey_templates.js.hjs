@@ -1,9 +1,0 @@
-<div>
-  {{#each}}
-    <div>
-      {{#link-to 'survey_template' this}}
-        {{name}}
-      {{/link-to}}
-      </div>
-  {{/each}}
-</div>

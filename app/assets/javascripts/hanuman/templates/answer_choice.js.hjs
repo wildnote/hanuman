@@ -1,4 +1,4 @@
-
+{{!-- template for each answer choice row --}}
 {{#if isEditingAnswerChoice}}
   <a class="btn btn-xs btn-primary" href="#" {{action "saveAnswerChoice" on="click"}}>
     <span class="glyphicon glyphicon-check"></span>

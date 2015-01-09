@@ -1,10 +1,11 @@
+{{!-- called from survey_step and dislpays each answer type as readonly --}}
 <!-- checkboxlist -->
 {{#if answer_type.checkboxlist}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
   <div class="row">
-    {{partial "question_sort"}}
+    {{partial "question_edit_buttons"}}
     <div class="col-sm-3">{{question_text}}</div>
     <div class="col-sm-3">{{answer_type.name}}</div>
     <div class="col-sm-3">
@@ -12,7 +13,7 @@
         {{input type="checkbox" name="" disabled=true}}{{option_text}}<br/>
       {{/each}}
     </div>
-    {{partial "question_edit_buttons"}}
+    {{partial "question_delete_button"}}
   </div>
   {{/if}}
 {{/if}}
@@ -23,7 +24,7 @@
     {{partial "question_edit"}}
   {{else}}
   <div class="row">
-    {{!partial "question_sort"}}
+    {{!partial "question_edit_buttons"}}
     {{!-- not using partial above for now because don't want to show the edit button for grouped multiselect for now-kdh --}}
     <div class="col-sm-2">
       {{sort_order}}
@@ -43,7 +44,7 @@
         {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
       {{/if}}
     </div>
-    {{partial "question_edit_buttons"}}
+    {{partial "question_delete_button"}}
   </div>
   {{/if}}
 {{/if}}
@@ -54,11 +55,11 @@
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
-      {{partial "question_sort"}}
+      {{partial "question_edit_buttons"}}
       <div class="col-sm-3">{{question_text}}</div>
       <div class="col-sm-3">{{answer_type.name}}</div>
       <div class="col-sm-3 helperabove">{{question_text}}</div>
-      {{partial "question_edit_buttons"}}
+      {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
@@ -69,11 +70,11 @@
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
-      {{partial "question_sort"}}
+      {{partial "question_edit_buttons"}}
       <div class="col-sm-3">{{question_text}}</div>
       <div class="col-sm-3">{{answer_type.name}}</div>
       <div class="col-sm-3 page-header"></div>
-      {{partial "question_edit_buttons"}}
+      {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
@@ -85,7 +86,7 @@
   {{/if}}
   {{#unless isEditing}}
     <div class="row">
-      {{partial "question_sort"}}
+      {{partial "question_edit_buttons"}}
       <div class="col-sm-3">{{question_text}}</div>
       <div class="col-sm-3">{{answer_type.name}}
       </div>
@@ -96,7 +97,7 @@
           <p class="bg-danger">There are no available Answer Options defined. Edit question to add new answer choices.</p>
         {{/each}}
       </div>
-      {{partial "question_edit_buttons"}}
+      {{partial "question_delete_button"}}
     </div>
   {{/unless}}
 {{/if}}
@@ -107,11 +108,11 @@
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
-      {{partial "question_sort"}}
+      {{partial "question_edit_buttons"}}
       <div class="col-sm-3">{{question_text}}</div>
       <div class="col-sm-3">{{answer_type.name}}</div>
       <div class="col-sm-3 form-section">{{question_text}}</div>
-      {{partial "question_edit_buttons"}}
+      {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
@@ -122,7 +123,7 @@
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
-      {{partial "question_sort"}}
+      {{partial "question_edit_buttons"}}
       <div class="col-sm-3">{{question_text}}</div>
       <div class="col-sm-3">{{answer_type.name}}</div>  
       <div class="col-sm-3">
@@ -137,7 +138,7 @@
           {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
         {{/if}}
       </div>
-      {{partial "question_edit_buttons"}}
+      {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
@@ -148,11 +149,11 @@
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
-      {{partial "question_sort"}}
+      {{partial "question_edit_buttons"}}
       <div class="col-sm-3">{{question_text}}</div>
       <div class="col-sm-3">{{answer_type.name}}</div>
       <div class="col-sm-3 form-static">{{question_text}}</div>
-      {{partial "question_edit_buttons"}}
+      {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
@@ -163,13 +164,13 @@
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
-      {{partial "question_sort"}}
+      {{partial "question_edit_buttons"}}
       <div class="col-sm-3">{{question_text}}</div>
       <div class="col-sm-3">{{answer_type.name}}</div>
       <div class="col-sm-3">
         {{input type="text" class="form-control"}}
       </div>
-      {{partial "question_edit_buttons"}}
+      {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
@@ -180,11 +181,11 @@
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
-      {{partial "question_sort"}}
+      {{partial "question_edit_buttons"}}
       <div class="col-sm-3">{{question_text}}</div>
       <div class="col-sm-3">{{answer_type.name}}</div>
       <div class="col-sm-3">{{textarea class="form-control"}}</div>
-      {{partial "question_edit_buttons"}}
+      {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
@@ -197,11 +198,11 @@
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
-      {{partial "question_sort"}}
+      {{partial "question_edit_buttons"}}
       <div class="col-sm-3">{{question_text}}</div>
       <div class="col-sm-3">{{answer_type.name}}</div>
       <div class="col-sm-3">{{input type="checkbox" name="" disabled=true}}</div>
-      {{partial "question_edit_buttons"}}
+      {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
