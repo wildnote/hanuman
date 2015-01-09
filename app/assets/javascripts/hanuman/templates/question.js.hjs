@@ -23,7 +23,12 @@
     {{partial "question_edit"}}
   {{else}}
   <div class="row">
-    {{partial "question_sort"}}
+    {{!partial "question_sort"}}
+    {{!-- not using partial above for now because don't want to show the edit button for grouped multiselect for now-kdh --}}
+    <div class="col-sm-2">
+      {{sort_order}}
+      <a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-sort"></span></a>
+    </div>
     <div class="col-sm-3">{{question_text}}</div>
     <div class="col-sm-3">{{answer_type.name}}</div>
     <div class="col-sm-3">
