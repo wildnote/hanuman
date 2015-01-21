@@ -7,7 +7,7 @@ module Hanuman
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
     has_many :answer_choices, through: :observation_answers
     
-    validates_presence_of :question_id, :survey_id
+    validates_presence_of :question_id
     # no validation for answer - because of structure of data we need empty 
     # rows in database for editing of survey - kdh - 10.30.14
     

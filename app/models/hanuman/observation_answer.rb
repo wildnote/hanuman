@@ -4,7 +4,7 @@ module Hanuman
     belongs_to :observation
     belongs_to :answer_choice
     
-    validates_presence_of :observation_id, :answer_choice_id
+    validates_presence_of :answer_choice_id
   
     def answer_choice_text
       self.answer_choice.option_text
