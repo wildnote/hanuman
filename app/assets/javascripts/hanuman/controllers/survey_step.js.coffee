@@ -4,7 +4,10 @@ App.SurveyStepController = Ember.ObjectController.extend(
   question_text: null
   selected_answer_type_id: null
   isNewQuestion: false
-  # isFullyEditable: true
+  
+  isFullyEditable: (->
+    return @get('survey_template').get('fully_editable')
+  ).property('survey_template.fully_editable')
   
   # questionsCount used to determine next sort_order value when adding a new question to a step
   questionsCount: (->
