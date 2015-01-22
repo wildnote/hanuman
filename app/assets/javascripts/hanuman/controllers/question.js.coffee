@@ -22,6 +22,7 @@ App.QuestionController = Ember.ObjectController.extend({
     return @.get("content.answer_choices").filterBy('group_text', '')
   ).property("content.answer_choices")
   
+  # retrieve fully editable flag from survey template to determine editing rules
   isFullyEditable: (->
     return @get('survey_step').get('survey_template').get('fully_editable')
   ).property('survey_step.survey_template.fully_editable')
@@ -32,8 +33,6 @@ App.QuestionController = Ember.ObjectController.extend({
       question = @get('model')
       if question.get('answer_type').get('hasAnswerChoices')
         @set "showAnswerChoices", true
-      # if question.get('survey_step').get('survey_template').get('fully_editable')
-      #   @set "isFullyEditable", true
       
     exitEditQuestion: ->
       @set "isEditing", false

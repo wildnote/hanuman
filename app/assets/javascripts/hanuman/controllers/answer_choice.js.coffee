@@ -14,8 +14,9 @@ App.AnswerChoiceController = Ember.ObjectController.extend(
     
     deleteAnswerChoice: ->
       answer_choice = @get('model')
+      answer_choice.get('question').get('answer_choices').removeObject(answer_choice)
       answer_choice.deleteRecord()
       answer_choice.save()
-      @set "isEditingAnswerChoice", false
+      #@set "isEditingAnswerChoice", false
       
 )

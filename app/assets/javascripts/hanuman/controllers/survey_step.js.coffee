@@ -5,6 +5,7 @@ App.SurveyStepController = Ember.ObjectController.extend(
   selected_answer_type_id: null
   isNewQuestion: false
   
+  # retrieve fully editable flag from survey template to determine editing rules
   isFullyEditable: (->
     return @get('survey_template').get('fully_editable')
   ).property('survey_template.fully_editable')
