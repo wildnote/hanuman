@@ -28,6 +28,8 @@ App.QuestionController = Ember.ObjectController.extend({
       question = @get('model')
       if question.get('answer_type').get('hasAnswerChoices')
         @set "showAnswerChoices", true
+      if question.get('survey_step').get('survey_template').get('fully_editable')
+        @set "isFullyEditable", true
       
     exitEditQuestion: ->
       @set "isEditing", false
@@ -63,4 +65,5 @@ App.QuestionController = Ember.ObjectController.extend({
   isEditing: false
   isNewAnswerChoice: false
   showAnswerChoices: false
+  isFullyEditable: false
 })

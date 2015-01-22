@@ -3,6 +3,7 @@ module Hanuman
     has_paper_trail
     has_many :survey_steps, -> { order :step }
     has_many :questions, through: :survey_steps
+    has_many :surveys
     
     # this method is only needed for architecture migration
     has_many :survey_questions, -> { order :sort_order }
@@ -25,6 +26,15 @@ module Hanuman
     
     def survey_step_is_duplicator?(step)
       self.survey_steps.by_step(step).first.duplicator
+    end
+    
+    def num_reports_submitted
+      self.surveys.count
+    end
+    
+    # a survey template
+    def fully_editable
+      num_reports_submitted < 1 ? true : false
     end
   end
 end

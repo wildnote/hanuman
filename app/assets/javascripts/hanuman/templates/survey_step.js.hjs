@@ -1,22 +1,28 @@
 <div class="form-horizontal">
   <div class="well">
     <div class="form-group">
-      <label class="col-sm-1 control-label">Survey Template</label>
+      <label class="col-sm-2 control-label">Survey Template</label>
       <div class="col-sm-4">
         <p class="form-control-static">
           {{this.survey_template.name}}
         </p>
       </div>
-      <label class="col-sm-1 control-label">Step</label>
-      <div class="col-sm-3">
+      <label class="col-sm-2 control-label">Step</label>
+      <div class="col-sm-4">
         <p class="form-control-static">
           {{step}}
         </p>
       </div>
-      <label class="col-sm-1 control-label">Duplicator</label>
-      <div class="col-sm-2">
+      <label class="col-sm-2 control-label">Duplicator</label>
+      <div class="col-sm-4">
         <p class="form-control-static">
           {{duplicator}}
+        </p>
+      </div>
+      <label class="col-sm-2 control-label">Fully Editable</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">
+          {{this.survey_template.fully_editable}}
         </p>
       </div>
     </div>
@@ -83,16 +89,25 @@
           </div>
         {{else}}
           <!-- new question button -->
-          <div class="row">
-            <div class="col-sm-2">
-              <a class="btn btn-xs btn-primary" href="#" {{action "newQuestion" on="click"}}>
-                <span class="glyphicon glyphicon-plus"></span>
-              </a>
+          {{#if isFullyEditable}}
+            <div class="row">
+              <div class="col-sm-2">
+                <a class="btn btn-xs btn-primary" href="#" {{action "newQuestion" on="click"}}>
+                  <span class="glyphicon glyphicon-plus"></span>
+                </a>
+              </div>
+              <div class="col-sm-3"></div>
+              <div class="col-sm-3"></div>
+              <div class="col-sm-1"></div>
             </div>
-            <div class="col-sm-3"></div>
-            <div class="col-sm-3"></div>
-            <div class="col-sm-1"></div>
-          </div>
+          {{else}}
+            <div class="row">
+              <div class="col-sm-12 bg-danger">
+                Adding a question to this survey is unavailable because there have been surveys submitted. 
+                To add a question duplicate the survey template and make changes to the new template.
+              </div>
+            </div>
+          {{/if}}
         {{/if}}
       </div>
     </div>

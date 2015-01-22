@@ -4,6 +4,7 @@ App.SurveyStepController = Ember.ObjectController.extend(
   question_text: null
   selected_answer_type_id: null
   isNewQuestion: false
+  # isFullyEditable: true
   
   # questionsCount used to determine next sort_order value when adding a new question to a step
   questionsCount: (->
@@ -43,4 +44,5 @@ App.SurveyStepController = Ember.ObjectController.extend(
       question.set "sort_order", index + 1
       question.save()
     @endPropertyChanges()
+    
 )

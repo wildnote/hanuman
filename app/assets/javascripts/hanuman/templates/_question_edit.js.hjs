@@ -20,12 +20,19 @@
     {{input type="text" value=question_text class="form-control"}}
   </div>
   <div class="col-sm-3">
-    {{view Ember.Select
-       content=controllers.answer_types.arrangedContent
-       optionValuePath="content.id"
-       optionLabelPath="content.name"
-       selectionBinding="content.answer_type.content"
-       class="form-control"}}
+    {{#if isFullyEditable}}
+      {{view Ember.Select
+         content=controllers.answer_types.arrangedContent
+         optionValuePath="content.id"
+         optionLabelPath="content.name"
+         selectionBinding="content.answer_type.content"
+         class="form-control"}}
+    {{else}}
+      <p class="bg-danger">
+        Answer type cannot be changed because there are surveys submitted for this template. 
+        To change the answer type duplicate the survey template and make changes to the new template.
+      </p>
+    {{/if}}
   </div>
   <div class="col-sm-3">
     <br/>
@@ -33,7 +40,7 @@
       {{render 'answer_choice' answer_choice}}
     {{/each}}
   </div>
-  {{partial "question_delete_button"}}
+    {{partial "question_delete_button"}}
 </div>
 
 <!-- new answer choice -->
