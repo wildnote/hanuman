@@ -12,7 +12,7 @@ App.SurveyStepController = Ember.ObjectController.extend(
   # questionsCount used to determine next sort_order value when adding a new question to a step
   questionsCount: (->
     return @get('questions').get('length')
-  ).property()
+  ).property('questions.length')
   
   actions:
     newQuestion: ->
