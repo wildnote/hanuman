@@ -1,4 +1,4 @@
 %p.form-control-static
   - o.observation_answers.each do |oa|
-    = oa.answer_choice.option_text
+    = oa.answer_choice.formatted_answer_choice
     %br/

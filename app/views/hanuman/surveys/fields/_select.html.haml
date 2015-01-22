@@ -4,6 +4,6 @@
     - if ff.object.question.answer_choices.blank?
       = ff.text_field :answer, value: "There are no available Answer Options!", class: "form-control", readonly: true
     - else
-      = ff.collection_select :answer, ff.object.question.answer_choices.sorted, :option_text, :option_text,
+      = ff.collection_select :answer, ff.object.question.answer_choices.sorted, :formatted_answer_choice, :formatted_answer_choice,
                              {prompt: true}, {class: 'form-control'}
     = ff.hidden_field :entry

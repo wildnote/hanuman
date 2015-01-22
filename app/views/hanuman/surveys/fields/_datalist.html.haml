@@ -1,5 +1,5 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    = ff.datalist_tag :answer, options_for_select(ff.object.question.answer_choices.map{|ac| ac.option_text}), list_id: "datalist_" + index.to_s + "_list", class: "form-control"
+    = ff.datalist_tag :answer, options_for_select(ff.object.question.answer_choices.map{|ac| ac.formatted_answer_choice}), list_id: "datalist_" + index.to_s + "_list", class: "form-control"
     = ff.hidden_field :entry

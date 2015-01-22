@@ -20,3 +20,7 @@
         %td Option text
         %td
           %b= @answer_choice.option_text
+      %tr
+        %td Scientific text
+        %td
+          %b= @answer_choice.scientific_text unless @answer_choice.scientific_text.blank?
