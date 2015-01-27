@@ -6,6 +6,7 @@ module Hanuman
     has_many :observation_answers
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
     has_many :answer_choices, through: :observation_answers
+    belongs_to :selectable, polymorphic: true
     
     validates_presence_of :question_id
     # no validation for answer - because of structure of data we need empty 
