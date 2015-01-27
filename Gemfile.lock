@@ -2,21 +2,22 @@ PATH
   remote: .
   specs:
     hanuman (0.0.1)
-      active_model_serializers
-      amoeba
-      ancestry
-      coffee-rails
-      ember-rails
-      ember-source
-      haml-rails
-      handlebars_assets
-      jquery-rails
-      kaminari
-      modernizr-rails
+      active_model_serializers (= 0.8.1)
+      amoeba (= 2.0.0)
+      ancestry (= 2.1.0)
+      coffee-rails (= 4.0.1)
+      ember-data-source (= 1.0.0.beta.9)
+      ember-rails (= 0.15)
+      ember-source (= 1.7)
+      haml-rails (= 0.5.3)
+      handlebars_assets (= 0.17.1)
+      jquery-rails (= 3.1.1)
+      kaminari (= 0.16.1)
+      modernizr-rails (= 2.7.1)
       paper_trail (~> 3.0.2)
       rails (= 4.1.4)
       sass-rails (= 4.0.3)
-      uglifier
+      uglifier (= 2.5.3)
 
 GEM
   remote: https://rubygems.org/
@@ -34,8 +35,8 @@ GEM
       activesupport (= 4.1.4)
       builder (~> 3.1)
       erubis (~> 2.7.0)
-    active_model_serializers (0.9.0)
-      activemodel (>= 3.2)
+    active_model_serializers (0.8.1)
+      activemodel (>= 3.0)
     activemodel (4.1.4)
       activesupport (= 4.1.4)
       builder (~> 3.1)
@@ -49,15 +50,15 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
-    amoeba (2.1.0)
-      activerecord (>= 3.2.6, < 5)
+    amoeba (2.0.0)
+      activerecord (>= 3.0)
     ancestry (2.1.0)
       activerecord (>= 3.0.0)
     arel (5.0.1.20140414130214)
-    barber (0.4.2)
+    barber (0.6.0)
       ember-source
       execjs
-      handlebars-source
+      handlebars-source (>= 1.0.0.rc.4)
     builder (3.2.2)
     coffee-rails (4.0.1)
       coffee-script (>= 2.2.0)
@@ -80,8 +81,8 @@ GEM
     ember-source (1.7.0)
       handlebars-source (~> 1.0)
     erubis (2.7.0)
-    execjs (2.2.1)
-    haml (4.0.5)
+    execjs (2.2.2)
+    haml (4.0.6)
       tilt
     haml-rails (0.5.3)
       actionpack (>= 4.0.1)
@@ -89,17 +90,17 @@ GEM
       haml (>= 3.1, < 5.0)
       railties (>= 4.0.1)
     handlebars-source (1.3.0)
-    handlebars_assets (0.18)
+    handlebars_assets (0.17.1)
       execjs (>= 1.2.9)
       multi_json
       sprockets (>= 2.0.3)
       tilt
     hike (1.2.3)
-    i18n (0.6.11)
-    jquery-rails (3.1.2)
+    i18n (0.7.0)
+    jquery-rails (3.1.1)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
-    json (1.8.1)
+    json (1.8.2)
     kaminari (0.16.1)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -107,16 +108,16 @@ GEM
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     mime-types (1.25.1)
-    minitest (5.4.1)
+    minitest (5.5.1)
     modernizr-rails (2.7.1)
     multi_json (1.10.1)
-    paper_trail (3.0.5)
+    paper_trail (3.0.6)
       activerecord (>= 3.0, < 5.0)
       activesupport (>= 3.0, < 5.0)
     pg (0.17.1)
     polyglot (0.3.5)
     rack (1.5.2)
-    rack-test (0.6.2)
+    rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.1.4)
       actionmailer (= 4.1.4)
@@ -133,7 +134,7 @@ GEM
       activesupport (= 4.1.4)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rake (10.3.2)
+    rake (10.4.2)
     sass (3.2.19)
     sass-rails (4.0.3)
       railties (>= 4.0.0, < 5.0)
@@ -145,10 +146,10 @@ GEM
       multi_json (~> 1.0)
       rack (~> 1.0)
       tilt (~> 1.1, != 1.3.0)
-    sprockets-rails (2.1.4)
+    sprockets-rails (2.2.4)
       actionpack (>= 3.0)
       activesupport (>= 3.0)
-      sprockets (~> 2.8)
+      sprockets (>= 2.8, < 4.0)
     thor (0.19.1)
     thread_safe (0.3.4)
     tilt (1.4.1)
@@ -166,4 +167,4 @@ PLATFORMS
 
 DEPENDENCIES
   hanuman!
-  pg
+  pg (= 0.17.1)
