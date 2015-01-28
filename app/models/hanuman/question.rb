@@ -10,5 +10,11 @@ module Hanuman
     validates_presence_of :answer_type_id
     # wait until after migration for these validations
     #validates_presence_of :sort_order, :survey_step_id
+    
+    validates :question_text, presence: true, unless: :no_text_on_that_answer_type
+    
+    def no_text_on_that_answer_type
+      answer_type.name.eql? "line"
+    end
   end
 end
