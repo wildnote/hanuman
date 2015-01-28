@@ -15,18 +15,17 @@ module Hanuman
     end
 
     def update
-      respond_with question.update(question_params)
+      question = Question.find(params[:id])
+      question.update_attributes(question_params)
+      respond_with question
     end
 
     def destroy
+      question = Question.find(params[:id])
       respond_with question.destroy
     end
 
     private
-
-    def question
-      Question.find(params[:id])
-    end
 
     def question_params
       params.require(:question).permit(:question_text, :answer_type_id, :sort_order, :survey_step_id)
