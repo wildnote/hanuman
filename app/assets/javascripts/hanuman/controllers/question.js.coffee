@@ -39,11 +39,17 @@ App.QuestionController = Ember.ObjectController.extend({
       
     saveQuestion: ->
       question = @get('model')
-      question.save()
-      @set "isEditing", false
-      
+      controller = @
+      question.save().then ->
+        console.log "saved"
+        controller.set "isEditing", false
+      , (response) ->
+        console.log "failed"
+        # for error handling
+        
     deleteQuestion: ->
       question = @get('model')
+      question.get('survey_step').get('questions').removeObject(question)
       question.deleteRecord()
       question.save()
       

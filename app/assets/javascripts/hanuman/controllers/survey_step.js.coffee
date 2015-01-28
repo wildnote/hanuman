@@ -4,6 +4,7 @@ App.SurveyStepController = Ember.ObjectController.extend(
   question_text: null
   selected_answer_type_id: null
   isNewQuestion: false
+  validationError: false
   
   # retrieve fully editable flag from survey template to determine editing rules
   isFullyEditable: (->
@@ -30,11 +31,15 @@ App.SurveyStepController = Ember.ObjectController.extend(
       question.set('answer_type', @get('selectedAnswerType'))
       question.save().then (question) ->
         # clear out form
-        controller.set('question_text', '')
-        controller.set('answer_type', '')
+        controller.set 'question_text', ''
+        controller.set 'answer_type', ''
         # need to add new question to bottom of listing with the right sort order
         survey_step.get('questions').addObject(question)
-      @set "isNewQuestion", false
+        controller.set "isNewQuestion", false
+        controller.set "validationError", false
+      , (failure) ->
+        console.log "failed"
+        controller.set "validationError", true
       
     exitCreateQuestion: ->
       @set "isNewQuestion", false
