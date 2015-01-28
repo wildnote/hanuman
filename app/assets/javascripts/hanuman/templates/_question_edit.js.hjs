@@ -42,6 +42,20 @@
   </div>
     {{partial "question_delete_button"}}
 </div>
+{{#if errors.length}}
+<div class="row">
+  <div class="col-sm-12">
+    <div class='alert alert-danger'>
+      <h4>There was a problem</h4>
+      <p>The question could not be saved due to validation errors</p>
+    </div>
+  </div>
+</div>
+{{/if}}
+
+{{#each error in errors.question_text}}
+  {{error.message}}
+{{/each}}
 
 <!-- new answer choice -->
 {{#if showAnswerChoices}}
