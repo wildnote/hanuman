@@ -8,7 +8,7 @@
 </div>
 <div class="row">
   <div class="col-sm-2">
-    {{sort_order}}
+    {{sortOrder}}
     <a class="btn btn-xs btn-primary" href="#" {{action "saveQuestion" on="click"}}>
       <span class="glyphicon glyphicon-check"></span>
     </a>
@@ -17,15 +17,15 @@
     </a>
   </div>
   <div class="col-sm-3">
-    {{input type="text" value=question_text class="form-control"}}
+    {{input type="text" value=questionText class="form-control"}}
   </div>
   <div class="col-sm-3">
     {{#if isFullyEditable}}
       {{view Ember.Select
-         content=controllers.answer_types.arrangedContent
+         content=controllers.answerTypes.arrangedContent
          optionValuePath="content.id"
          optionLabelPath="content.name"
-         selectionBinding="content.answer_type.content"
+         selectionBinding="content.answerType.content"
          class="form-control"}}
     {{else}}
       <p class="bg-danger">
@@ -36,12 +36,13 @@
   </div>
   <div class="col-sm-3">
     <br/>
-    {{#each answer_choice in answer_choices}}
+    {{#each answer_choice in answerChoices}}
       {{render 'answer_choice' answer_choice}}
     {{/each}}
   </div>
     {{partial "question_delete_button"}}
 </div>
+
 {{#if errors.length}}
 <div class="row">
   <div class="col-sm-12">
@@ -53,7 +54,7 @@
 </div>
 {{/if}}
 
-{{#each error in errors.question_text}}
+{{#each error in errors.questionText}}
   {{error.message}}
 {{/each}}
 
@@ -65,7 +66,7 @@
       <div class="col-sm-3"></div>
       <div class="col-sm-3"></div>
       <div class="col-sm-3">
-        {{input type="text" valueBinding='option_text' class="form-control"}}
+        {{input type="text" valueBinding='optionText' class="form-control"}}
       </div>
       <div class="col-sm-1">
         <a class="btn btn-xs btn-primary" href="#" {{action "createAnswerChoice" on="click"}}>

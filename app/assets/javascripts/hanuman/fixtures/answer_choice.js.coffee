@@ -1,2602 +1,2602 @@
 App.AnswerChoice.FIXTURES = [
    {
       "id":1,
-      "option_text":"Skin",
-      "scientific_text":null
+      "optionText":"Skin",
+      "scientificText":null
    },
    {
       "id":2,
-      "option_text":"GI",
-      "scientific_text":null
+      "optionText":"GI",
+      "scientificText":null
    },
    {
       "id":3,
-      "option_text":"Respiratory",
-      "scientific_text":null
+      "optionText":"Respiratory",
+      "scientificText":null
    },
    {
       "id":4,
-      "option_text":"Neurologic",
-      "scientific_text":null
+      "optionText":"Neurologic",
+      "scientificText":null
    },
    {
       "id":5,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":6,
-      "option_text":"Not a Case",
-      "scientific_text":null
+      "optionText":"Not a Case",
+      "scientificText":null
    },
    {
       "id":7,
-      "option_text":"Suspected",
-      "scientific_text":null
+      "optionText":"Suspected",
+      "scientificText":null
    },
    {
       "id":8,
-      "option_text":"Probable",
-      "scientific_text":null
+      "optionText":"Probable",
+      "scientificText":null
    },
    {
       "id":9,
-      "option_text":"Confirmed",
-      "scientific_text":null
+      "optionText":"Confirmed",
+      "scientificText":null
    },
    {
       "id":10,
-      "option_text":"No",
-      "scientific_text":null
+      "optionText":"No",
+      "scientificText":null
    },
    {
       "id":11,
-      "option_text":"Yes",
-      "scientific_text":null
+      "optionText":"Yes",
+      "scientificText":null
    },
    {
       "id":12,
-      "option_text":"Employee",
-      "scientific_text":null
+      "optionText":"Employee",
+      "scientificText":null
    },
    {
       "id":13,
-      "option_text":"Resident",
-      "scientific_text":null
+      "optionText":"Resident",
+      "scientificText":null
    },
    {
       "id":14,
-      "option_text":"Male",
-      "scientific_text":null
+      "optionText":"Male",
+      "scientificText":null
    },
    {
       "id":15,
-      "option_text":"Female",
-      "scientific_text":null
+      "optionText":"Female",
+      "scientificText":null
    },
    {
       "id":16,
-      "option_text":"Transgender",
-      "scientific_text":null
+      "optionText":"Transgender",
+      "scientificText":null
    },
    {
       "id":17,
-      "option_text":"Hispanic",
-      "scientific_text":null
+      "optionText":"Hispanic",
+      "scientificText":null
    },
    {
       "id":18,
-      "option_text":"Caucasian",
-      "scientific_text":null
+      "optionText":"Caucasian",
+      "scientificText":null
    },
    {
       "id":19,
-      "option_text":"African American",
-      "scientific_text":null
+      "optionText":"African American",
+      "scientificText":null
    },
    {
       "id":20,
-      "option_text":"Alaskan Native",
-      "scientific_text":null
+      "optionText":"Alaskan Native",
+      "scientificText":null
    },
    {
       "id":21,
-      "option_text":"Asian",
-      "scientific_text":null
+      "optionText":"Asian",
+      "scientificText":null
    },
    {
       "id":22,
-      "option_text":"Pacific Islander",
-      "scientific_text":null
+      "optionText":"Pacific Islander",
+      "scientificText":null
    },
    {
       "id":23,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":24,
-      "option_text":"GI",
-      "scientific_text":"GI"
+      "optionText":"GI",
+      "scientificText":"GI"
    },
    {
       "id":25,
-      "option_text":"Abdominal Pain",
-      "scientific_text":"Abdominal Pain"
+      "optionText":"Abdominal Pain",
+      "scientificText":"Abdominal Pain"
    },
    {
       "id":26,
-      "option_text":"Diarrhea",
-      "scientific_text":"Diarrhea"
+      "optionText":"Diarrhea",
+      "scientificText":"Diarrhea"
    },
    {
       "id":27,
-      "option_text":"Nausea",
-      "scientific_text":"Nausea"
+      "optionText":"Nausea",
+      "scientificText":"Nausea"
    },
    {
       "id":28,
-      "option_text":"Vomiting",
-      "scientific_text":"Vomiting"
+      "optionText":"Vomiting",
+      "scientificText":"Vomiting"
    },
    {
       "id":29,
-      "option_text":"Neurologic",
-      "scientific_text":"Neurologic"
+      "optionText":"Neurologic",
+      "scientificText":"Neurologic"
    },
    {
       "id":30,
-      "option_text":"Ascending",
-      "scientific_text":"Ascending"
+      "optionText":"Ascending",
+      "scientificText":"Ascending"
    },
    {
       "id":31,
-      "option_text":"Blurred Vision",
-      "scientific_text":"Blurred Vision"
+      "optionText":"Blurred Vision",
+      "scientificText":"Blurred Vision"
    },
    {
       "id":32,
-      "option_text":"Decending",
-      "scientific_text":"Decending"
+      "optionText":"Decending",
+      "scientificText":"Decending"
    },
    {
       "id":33,
-      "option_text":"Delirium",
-      "scientific_text":"Delirium"
+      "optionText":"Delirium",
+      "scientificText":"Delirium"
    },
    {
       "id":34,
-      "option_text":"Dysphagia",
-      "scientific_text":"Dysphagia"
+      "optionText":"Dysphagia",
+      "scientificText":"Dysphagia"
    },
    {
       "id":35,
-      "option_text":"Headache",
-      "scientific_text":"Headache"
+      "optionText":"Headache",
+      "scientificText":"Headache"
    },
    {
       "id":36,
-      "option_text":"Pain",
-      "scientific_text":"Pain"
+      "optionText":"Pain",
+      "scientificText":"Pain"
    },
    {
       "id":37,
-      "option_text":"Paralysis",
-      "scientific_text":"Paralysis"
+      "optionText":"Paralysis",
+      "scientificText":"Paralysis"
    },
    {
       "id":38,
-      "option_text":"Photophobia",
-      "scientific_text":"Photophobia"
+      "optionText":"Photophobia",
+      "scientificText":"Photophobia"
    },
    {
       "id":39,
-      "option_text":"Seizures",
-      "scientific_text":"Seizures"
+      "optionText":"Seizures",
+      "scientificText":"Seizures"
    },
    {
       "id":40,
-      "option_text":"Slurred Speech",
-      "scientific_text":"Slurred Speech"
+      "optionText":"Slurred Speech",
+      "scientificText":"Slurred Speech"
    },
    {
       "id":41,
-      "option_text":"Weakness",
-      "scientific_text":"Weakness"
+      "optionText":"Weakness",
+      "scientificText":"Weakness"
    },
    {
       "id":42,
-      "option_text":"Non Specific",
-      "scientific_text":"Non Specific"
+      "optionText":"Non Specific",
+      "scientificText":"Non Specific"
    },
    {
       "id":43,
-      "option_text":"Diaphoresis",
-      "scientific_text":"Diaphoresis"
+      "optionText":"Diaphoresis",
+      "scientificText":"Diaphoresis"
    },
    {
       "id":44,
-      "option_text":"Fever",
-      "scientific_text":"Fever"
+      "optionText":"Fever",
+      "scientificText":"Fever"
    },
    {
       "id":45,
-      "option_text":"Malaise",
-      "scientific_text":"Malaise"
+      "optionText":"Malaise",
+      "scientificText":"Malaise"
    },
    {
       "id":46,
-      "option_text":"Nodes",
-      "scientific_text":"Nodes"
+      "optionText":"Nodes",
+      "scientificText":"Nodes"
    },
    {
       "id":47,
-      "option_text":"Rigors",
-      "scientific_text":"Rigors"
+      "optionText":"Rigors",
+      "scientificText":"Rigors"
    },
    {
       "id":48,
-      "option_text":"Respiratory",
-      "scientific_text":"Respiratory"
+      "optionText":"Respiratory",
+      "scientificText":"Respiratory"
    },
    {
       "id":49,
-      "option_text":"Chest Pain",
-      "scientific_text":"Chest Pain"
+      "optionText":"Chest Pain",
+      "scientificText":"Chest Pain"
    },
    {
       "id":50,
-      "option_text":"Cough",
-      "scientific_text":"Cough"
+      "optionText":"Cough",
+      "scientificText":"Cough"
    },
    {
       "id":51,
-      "option_text":"Cyanosis",
-      "scientific_text":"Cyanosis"
+      "optionText":"Cyanosis",
+      "scientificText":"Cyanosis"
    },
    {
       "id":52,
-      "option_text":"Dyspnea",
-      "scientific_text":"Dyspnea"
+      "optionText":"Dyspnea",
+      "scientificText":"Dyspnea"
    },
    {
       "id":53,
-      "option_text":"Haemoptysis",
-      "scientific_text":"Coughing Up Blood"
+      "optionText":"Haemoptysis",
+      "scientificText":"Coughing Up Blood"
    },
    {
       "id":54,
-      "option_text":"Productive",
-      "scientific_text":"Productive"
+      "optionText":"Productive",
+      "scientificText":"Productive"
    },
    {
       "id":55,
-      "option_text":"X-Ray",
-      "scientific_text":"X-Ray"
+      "optionText":"X-Ray",
+      "scientificText":"X-Ray"
    },
    {
       "id":56,
-      "option_text":"Skin",
-      "scientific_text":"Skin"
+      "optionText":"Skin",
+      "scientificText":"Skin"
    },
    {
       "id":57,
-      "option_text":"Bleedig Gums",
-      "scientific_text":"Bleedig Gums"
+      "optionText":"Bleedig Gums",
+      "scientificText":"Bleedig Gums"
    },
    {
       "id":58,
-      "option_text":"Blisters",
-      "scientific_text":"Blisters"
+      "optionText":"Blisters",
+      "scientificText":"Blisters"
    },
    {
       "id":59,
-      "option_text":"Bruising",
-      "scientific_text":"Bruising"
+      "optionText":"Bruising",
+      "scientificText":"Bruising"
    },
    {
       "id":60,
-      "option_text":"Eschar",
-      "scientific_text":"Eschar"
+      "optionText":"Eschar",
+      "scientificText":"Eschar"
    },
    {
       "id":61,
-      "option_text":"Masculopapular",
-      "scientific_text":"Masculopapular"
+      "optionText":"Masculopapular",
+      "scientificText":"Masculopapular"
    },
    {
       "id":62,
-      "option_text":"Peeling",
-      "scientific_text":"Peeling"
+      "optionText":"Peeling",
+      "scientificText":"Peeling"
    },
    {
       "id":63,
-      "option_text":"Petechiae",
-      "scientific_text":"Petechiae"
+      "optionText":"Petechiae",
+      "scientificText":"Petechiae"
    },
    {
       "id":64,
-      "option_text":"Point of Origin",
-      "scientific_text":"Point of Origin"
+      "optionText":"Point of Origin",
+      "scientificText":"Point of Origin"
    },
    {
       "id":65,
-      "option_text":"Progression",
-      "scientific_text":"Progression"
+      "optionText":"Progression",
+      "scientificText":"Progression"
    },
    {
       "id":66,
-      "option_text":"Rash",
-      "scientific_text":"Rash"
+      "optionText":"Rash",
+      "scientificText":"Rash"
    },
    {
       "id":67,
-      "option_text":"No",
-      "scientific_text":null
+      "optionText":"No",
+      "scientificText":null
    },
    {
       "id":68,
-      "option_text":"Yes",
-      "scientific_text":null
+      "optionText":"Yes",
+      "scientificText":null
    },
    {
       "id":69,
-      "option_text":"No",
-      "scientific_text":null
+      "optionText":"No",
+      "scientificText":null
    },
    {
       "id":70,
-      "option_text":"Yes",
-      "scientific_text":null
+      "optionText":"Yes",
+      "scientificText":null
    },
    {
       "id":71,
-      "option_text":"VCPH Laboratory",
-      "scientific_text":null
+      "optionText":"VCPH Laboratory",
+      "scientificText":null
    },
    {
       "id":72,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":73,
-      "option_text":"Indeterminate",
-      "scientific_text":null
+      "optionText":"Indeterminate",
+      "scientificText":null
    },
    {
       "id":74,
-      "option_text":"Negative",
-      "scientific_text":null
+      "optionText":"Negative",
+      "scientificText":null
    },
    {
       "id":75,
-      "option_text":"Positive",
-      "scientific_text":null
+      "optionText":"Positive",
+      "scientificText":null
    },
    {
       "id":76,
-      "option_text":"VCPH Laboratory",
-      "scientific_text":null
+      "optionText":"VCPH Laboratory",
+      "scientificText":null
    },
    {
       "id":77,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":78,
-      "option_text":"Indeterminate",
-      "scientific_text":null
+      "optionText":"Indeterminate",
+      "scientificText":null
    },
    {
       "id":79,
-      "option_text":"Negative",
-      "scientific_text":null
+      "optionText":"Negative",
+      "scientificText":null
    },
    {
       "id":80,
-      "option_text":"Positive",
-      "scientific_text":null
+      "optionText":"Positive",
+      "scientificText":null
    },
    {
       "id":81,
-      "option_text":"Skin",
-      "scientific_text":null
+      "optionText":"Skin",
+      "scientificText":null
    },
    {
       "id":82,
-      "option_text":"GI",
-      "scientific_text":null
+      "optionText":"GI",
+      "scientificText":null
    },
    {
       "id":83,
-      "option_text":"Respiratory",
-      "scientific_text":null
+      "optionText":"Respiratory",
+      "scientificText":null
    },
    {
       "id":84,
-      "option_text":"Neurologic",
-      "scientific_text":null
+      "optionText":"Neurologic",
+      "scientificText":null
    },
    {
       "id":85,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":86,
-      "option_text":"Not a Case",
-      "scientific_text":null
+      "optionText":"Not a Case",
+      "scientificText":null
    },
    {
       "id":87,
-      "option_text":"Suspected",
-      "scientific_text":null
+      "optionText":"Suspected",
+      "scientificText":null
    },
    {
       "id":88,
-      "option_text":"Probable",
-      "scientific_text":null
+      "optionText":"Probable",
+      "scientificText":null
    },
    {
       "id":89,
-      "option_text":"Confirmed",
-      "scientific_text":null
+      "optionText":"Confirmed",
+      "scientificText":null
    },
    {
       "id":90,
-      "option_text":"Staff",
-      "scientific_text":null
+      "optionText":"Staff",
+      "scientificText":null
    },
    {
       "id":91,
-      "option_text":"Patient",
-      "scientific_text":null
+      "optionText":"Patient",
+      "scientificText":null
    },
    {
       "id":92,
-      "option_text":"Male",
-      "scientific_text":null
+      "optionText":"Male",
+      "scientificText":null
    },
    {
       "id":93,
-      "option_text":"Female",
-      "scientific_text":null
+      "optionText":"Female",
+      "scientificText":null
    },
    {
       "id":94,
-      "option_text":"Transgender",
-      "scientific_text":null
+      "optionText":"Transgender",
+      "scientificText":null
    },
    {
       "id":95,
-      "option_text":"Hispanic",
-      "scientific_text":null
+      "optionText":"Hispanic",
+      "scientificText":null
    },
    {
       "id":96,
-      "option_text":"Caucasian",
-      "scientific_text":null
+      "optionText":"Caucasian",
+      "scientificText":null
    },
    {
       "id":97,
-      "option_text":"African American",
-      "scientific_text":null
+      "optionText":"African American",
+      "scientificText":null
    },
    {
       "id":98,
-      "option_text":"Alaskan Native",
-      "scientific_text":null
+      "optionText":"Alaskan Native",
+      "scientificText":null
    },
    {
       "id":99,
-      "option_text":"Asian",
-      "scientific_text":null
+      "optionText":"Asian",
+      "scientificText":null
    },
    {
       "id":100,
-      "option_text":"Pacific Islander",
-      "scientific_text":null
+      "optionText":"Pacific Islander",
+      "scientificText":null
    },
    {
       "id":101,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":102,
-      "option_text":"GI",
-      "scientific_text":"GI"
+      "optionText":"GI",
+      "scientificText":"GI"
    },
    {
       "id":103,
-      "option_text":"Abdominal Pain",
-      "scientific_text":"Abdominal Pain"
+      "optionText":"Abdominal Pain",
+      "scientificText":"Abdominal Pain"
    },
    {
       "id":104,
-      "option_text":"Diarrhea",
-      "scientific_text":"Diarrhea"
+      "optionText":"Diarrhea",
+      "scientificText":"Diarrhea"
    },
    {
       "id":105,
-      "option_text":"Nausea",
-      "scientific_text":"Nausea"
+      "optionText":"Nausea",
+      "scientificText":"Nausea"
    },
    {
       "id":106,
-      "option_text":"Vomiting",
-      "scientific_text":"Vomiting"
+      "optionText":"Vomiting",
+      "scientificText":"Vomiting"
    },
    {
       "id":107,
-      "option_text":"Neurologic",
-      "scientific_text":"Neurologic"
+      "optionText":"Neurologic",
+      "scientificText":"Neurologic"
    },
    {
       "id":108,
-      "option_text":"Ascending",
-      "scientific_text":"Ascending"
+      "optionText":"Ascending",
+      "scientificText":"Ascending"
    },
    {
       "id":109,
-      "option_text":"Blurred Vision",
-      "scientific_text":"Blurred Vision"
+      "optionText":"Blurred Vision",
+      "scientificText":"Blurred Vision"
    },
    {
       "id":110,
-      "option_text":"Decending",
-      "scientific_text":"Decending"
+      "optionText":"Decending",
+      "scientificText":"Decending"
    },
    {
       "id":111,
-      "option_text":"Delirium",
-      "scientific_text":"Delirium"
+      "optionText":"Delirium",
+      "scientificText":"Delirium"
    },
    {
       "id":112,
-      "option_text":"Dysphagia",
-      "scientific_text":"Dysphagia"
+      "optionText":"Dysphagia",
+      "scientificText":"Dysphagia"
    },
    {
       "id":113,
-      "option_text":"Headache",
-      "scientific_text":"Headache"
+      "optionText":"Headache",
+      "scientificText":"Headache"
    },
    {
       "id":114,
-      "option_text":"Pain",
-      "scientific_text":"Pain"
+      "optionText":"Pain",
+      "scientificText":"Pain"
    },
    {
       "id":115,
-      "option_text":"Paralysis",
-      "scientific_text":"Paralysis"
+      "optionText":"Paralysis",
+      "scientificText":"Paralysis"
    },
    {
       "id":116,
-      "option_text":"Photophobia",
-      "scientific_text":"Photophobia"
+      "optionText":"Photophobia",
+      "scientificText":"Photophobia"
    },
    {
       "id":117,
-      "option_text":"Seizures",
-      "scientific_text":"Seizures"
+      "optionText":"Seizures",
+      "scientificText":"Seizures"
    },
    {
       "id":118,
-      "option_text":"Slurred Speech",
-      "scientific_text":"Slurred Speech"
+      "optionText":"Slurred Speech",
+      "scientificText":"Slurred Speech"
    },
    {
       "id":119,
-      "option_text":"Weakness",
-      "scientific_text":"Weakness"
+      "optionText":"Weakness",
+      "scientificText":"Weakness"
    },
    {
       "id":120,
-      "option_text":"Non Specific",
-      "scientific_text":"Non Specific"
+      "optionText":"Non Specific",
+      "scientificText":"Non Specific"
    },
    {
       "id":121,
-      "option_text":"Diaphoresis",
-      "scientific_text":"Diaphoresis"
+      "optionText":"Diaphoresis",
+      "scientificText":"Diaphoresis"
    },
    {
       "id":122,
-      "option_text":"Fever",
-      "scientific_text":"Fever"
+      "optionText":"Fever",
+      "scientificText":"Fever"
    },
    {
       "id":123,
-      "option_text":"Malaise",
-      "scientific_text":"Malaise"
+      "optionText":"Malaise",
+      "scientificText":"Malaise"
    },
    {
       "id":124,
-      "option_text":"Nodes",
-      "scientific_text":"Nodes"
+      "optionText":"Nodes",
+      "scientificText":"Nodes"
    },
    {
       "id":125,
-      "option_text":"Rigors",
-      "scientific_text":"Rigors"
+      "optionText":"Rigors",
+      "scientificText":"Rigors"
    },
    {
       "id":126,
-      "option_text":"Respiratory",
-      "scientific_text":"Respiratory"
+      "optionText":"Respiratory",
+      "scientificText":"Respiratory"
    },
    {
       "id":127,
-      "option_text":"Chest Pain",
-      "scientific_text":"Chest Pain"
+      "optionText":"Chest Pain",
+      "scientificText":"Chest Pain"
    },
    {
       "id":128,
-      "option_text":"Cough",
-      "scientific_text":"Cough"
+      "optionText":"Cough",
+      "scientificText":"Cough"
    },
    {
       "id":129,
-      "option_text":"Cyanosis",
-      "scientific_text":"Cyanosis"
+      "optionText":"Cyanosis",
+      "scientificText":"Cyanosis"
    },
    {
       "id":130,
-      "option_text":"Dyspnea",
-      "scientific_text":"Dyspnea"
+      "optionText":"Dyspnea",
+      "scientificText":"Dyspnea"
    },
    {
       "id":131,
-      "option_text":"Haemoptysis",
-      "scientific_text":"Coughing Up Blood"
+      "optionText":"Haemoptysis",
+      "scientificText":"Coughing Up Blood"
    },
    {
       "id":132,
-      "option_text":"Productive",
-      "scientific_text":"Productive"
+      "optionText":"Productive",
+      "scientificText":"Productive"
    },
    {
       "id":133,
-      "option_text":"X-Ray",
-      "scientific_text":"X-Ray"
+      "optionText":"X-Ray",
+      "scientificText":"X-Ray"
    },
    {
       "id":134,
-      "option_text":"Skin",
-      "scientific_text":"Skin"
+      "optionText":"Skin",
+      "scientificText":"Skin"
    },
    {
       "id":135,
-      "option_text":"Bleedig Gums",
-      "scientific_text":"Bleedig Gums"
+      "optionText":"Bleedig Gums",
+      "scientificText":"Bleedig Gums"
    },
    {
       "id":136,
-      "option_text":"Blisters",
-      "scientific_text":"Blisters"
+      "optionText":"Blisters",
+      "scientificText":"Blisters"
    },
    {
       "id":137,
-      "option_text":"Bruising",
-      "scientific_text":"Bruising"
+      "optionText":"Bruising",
+      "scientificText":"Bruising"
    },
    {
       "id":138,
-      "option_text":"Eschar",
-      "scientific_text":"Eschar"
+      "optionText":"Eschar",
+      "scientificText":"Eschar"
    },
    {
       "id":139,
-      "option_text":"Masculopapular",
-      "scientific_text":"Masculopapular"
+      "optionText":"Masculopapular",
+      "scientificText":"Masculopapular"
    },
    {
       "id":140,
-      "option_text":"Peeling",
-      "scientific_text":"Peeling"
+      "optionText":"Peeling",
+      "scientificText":"Peeling"
    },
    {
       "id":141,
-      "option_text":"Petechiae",
-      "scientific_text":"Petechiae"
+      "optionText":"Petechiae",
+      "scientificText":"Petechiae"
    },
    {
       "id":142,
-      "option_text":"Point of Origin",
-      "scientific_text":"Point of Origin"
+      "optionText":"Point of Origin",
+      "scientificText":"Point of Origin"
    },
    {
       "id":143,
-      "option_text":"Progression",
-      "scientific_text":"Progression"
+      "optionText":"Progression",
+      "scientificText":"Progression"
    },
    {
       "id":144,
-      "option_text":"Rash",
-      "scientific_text":"Rash"
+      "optionText":"Rash",
+      "scientificText":"Rash"
    },
    {
       "id":145,
-      "option_text":"VCPH Laboratory",
-      "scientific_text":null
+      "optionText":"VCPH Laboratory",
+      "scientificText":null
    },
    {
       "id":146,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":147,
-      "option_text":"Indeterminate",
-      "scientific_text":null
+      "optionText":"Indeterminate",
+      "scientificText":null
    },
    {
       "id":148,
-      "option_text":"Negative",
-      "scientific_text":null
+      "optionText":"Negative",
+      "scientificText":null
    },
    {
       "id":149,
-      "option_text":"Positive",
-      "scientific_text":null
+      "optionText":"Positive",
+      "scientificText":null
    },
    {
       "id":150,
-      "option_text":"VCPH Laboratory",
-      "scientific_text":null
+      "optionText":"VCPH Laboratory",
+      "scientificText":null
    },
    {
       "id":151,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":152,
-      "option_text":"Indeterminate",
-      "scientific_text":null
+      "optionText":"Indeterminate",
+      "scientificText":null
    },
    {
       "id":153,
-      "option_text":"Negative",
-      "scientific_text":null
+      "optionText":"Negative",
+      "scientificText":null
    },
    {
       "id":154,
-      "option_text":"Positive",
-      "scientific_text":null
+      "optionText":"Positive",
+      "scientificText":null
    },
    {
       "id":155,
-      "option_text":"Parent/Guardian",
-      "scientific_text":null
+      "optionText":"Parent/Guardian",
+      "scientificText":null
    },
    {
       "id":156,
-      "option_text":"Self",
-      "scientific_text":null
+      "optionText":"Self",
+      "scientificText":null
    },
    {
       "id":157,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":158,
-      "option_text":"All Ages",
-      "scientific_text":null
+      "optionText":"All Ages",
+      "scientificText":null
    },
    {
       "id":159,
-      "option_text":"Preschool",
-      "scientific_text":null
+      "optionText":"Preschool",
+      "scientificText":null
    },
    {
       "id":160,
-      "option_text":"Elementary",
-      "scientific_text":null
+      "optionText":"Elementary",
+      "scientificText":null
    },
    {
       "id":161,
-      "option_text":"Middle School",
-      "scientific_text":null
+      "optionText":"Middle School",
+      "scientificText":null
    },
    {
       "id":162,
-      "option_text":"Intermediate",
-      "scientific_text":null
+      "optionText":"Intermediate",
+      "scientificText":null
    },
    {
       "id":163,
-      "option_text":"High School",
-      "scientific_text":null
+      "optionText":"High School",
+      "scientificText":null
    },
    {
       "id":164,
-      "option_text":"Post Secondary",
-      "scientific_text":null
+      "optionText":"Post Secondary",
+      "scientificText":null
    },
    {
       "id":165,
-      "option_text":"Skin",
-      "scientific_text":null
+      "optionText":"Skin",
+      "scientificText":null
    },
    {
       "id":166,
-      "option_text":"GI",
-      "scientific_text":null
+      "optionText":"GI",
+      "scientificText":null
    },
    {
       "id":167,
-      "option_text":"Respiratory",
-      "scientific_text":null
+      "optionText":"Respiratory",
+      "scientificText":null
    },
    {
       "id":168,
-      "option_text":"Neurologic",
-      "scientific_text":null
+      "optionText":"Neurologic",
+      "scientificText":null
    },
    {
       "id":169,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":170,
-      "option_text":"Not a Case",
-      "scientific_text":null
+      "optionText":"Not a Case",
+      "scientificText":null
    },
    {
       "id":171,
-      "option_text":"Suspected",
-      "scientific_text":null
+      "optionText":"Suspected",
+      "scientificText":null
    },
    {
       "id":172,
-      "option_text":"Probable",
-      "scientific_text":null
+      "optionText":"Probable",
+      "scientificText":null
    },
    {
       "id":173,
-      "option_text":"Confirmed",
-      "scientific_text":null
+      "optionText":"Confirmed",
+      "scientificText":null
    },
    {
       "id":174,
-      "option_text":"Staff",
-      "scientific_text":null
+      "optionText":"Staff",
+      "scientificText":null
    },
    {
       "id":175,
-      "option_text":"Student",
-      "scientific_text":null
+      "optionText":"Student",
+      "scientificText":null
    },
    {
       "id":176,
-      "option_text":"Male",
-      "scientific_text":null
+      "optionText":"Male",
+      "scientificText":null
    },
    {
       "id":177,
-      "option_text":"Female",
-      "scientific_text":null
+      "optionText":"Female",
+      "scientificText":null
    },
    {
       "id":178,
-      "option_text":"Transgender",
-      "scientific_text":null
+      "optionText":"Transgender",
+      "scientificText":null
    },
    {
       "id":179,
-      "option_text":"Hispanic",
-      "scientific_text":null
+      "optionText":"Hispanic",
+      "scientificText":null
    },
    {
       "id":180,
-      "option_text":"Caucasian",
-      "scientific_text":null
+      "optionText":"Caucasian",
+      "scientificText":null
    },
    {
       "id":181,
-      "option_text":"African American",
-      "scientific_text":null
+      "optionText":"African American",
+      "scientificText":null
    },
    {
       "id":182,
-      "option_text":"Alaskan Native",
-      "scientific_text":null
+      "optionText":"Alaskan Native",
+      "scientificText":null
    },
    {
       "id":183,
-      "option_text":"Asian",
-      "scientific_text":null
+      "optionText":"Asian",
+      "scientificText":null
    },
    {
       "id":184,
-      "option_text":"Pacific Islander",
-      "scientific_text":null
+      "optionText":"Pacific Islander",
+      "scientificText":null
    },
    {
       "id":185,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":186,
-      "option_text":"GI",
-      "scientific_text":"GI"
+      "optionText":"GI",
+      "scientificText":"GI"
    },
    {
       "id":187,
-      "option_text":"Abdominal Pain",
-      "scientific_text":"Abdominal Pain"
+      "optionText":"Abdominal Pain",
+      "scientificText":"Abdominal Pain"
    },
    {
       "id":188,
-      "option_text":"Diarrhea",
-      "scientific_text":"Diarrhea"
+      "optionText":"Diarrhea",
+      "scientificText":"Diarrhea"
    },
    {
       "id":189,
-      "option_text":"Nausea",
-      "scientific_text":"Nausea"
+      "optionText":"Nausea",
+      "scientificText":"Nausea"
    },
    {
       "id":190,
-      "option_text":"Vomiting",
-      "scientific_text":"Vomiting"
+      "optionText":"Vomiting",
+      "scientificText":"Vomiting"
    },
    {
       "id":191,
-      "option_text":"Neurologic",
-      "scientific_text":"Neurologic"
+      "optionText":"Neurologic",
+      "scientificText":"Neurologic"
    },
    {
       "id":192,
-      "option_text":"Ascending",
-      "scientific_text":"Ascending"
+      "optionText":"Ascending",
+      "scientificText":"Ascending"
    },
    {
       "id":193,
-      "option_text":"Blurred Vision",
-      "scientific_text":"Blurred Vision"
+      "optionText":"Blurred Vision",
+      "scientificText":"Blurred Vision"
    },
    {
       "id":194,
-      "option_text":"Decending",
-      "scientific_text":"Decending"
+      "optionText":"Decending",
+      "scientificText":"Decending"
    },
    {
       "id":195,
-      "option_text":"Delirium",
-      "scientific_text":"Delirium"
+      "optionText":"Delirium",
+      "scientificText":"Delirium"
    },
    {
       "id":196,
-      "option_text":"Dysphagia",
-      "scientific_text":"Dysphagia"
+      "optionText":"Dysphagia",
+      "scientificText":"Dysphagia"
    },
    {
       "id":197,
-      "option_text":"Headache",
-      "scientific_text":"Headache"
+      "optionText":"Headache",
+      "scientificText":"Headache"
    },
    {
       "id":198,
-      "option_text":"Pain",
-      "scientific_text":"Pain"
+      "optionText":"Pain",
+      "scientificText":"Pain"
    },
    {
       "id":199,
-      "option_text":"Paralysis",
-      "scientific_text":"Paralysis"
+      "optionText":"Paralysis",
+      "scientificText":"Paralysis"
    },
    {
       "id":200,
-      "option_text":"Photophobia",
-      "scientific_text":"Photophobia"
+      "optionText":"Photophobia",
+      "scientificText":"Photophobia"
    },
    {
       "id":201,
-      "option_text":"Seizures",
-      "scientific_text":"Seizures"
+      "optionText":"Seizures",
+      "scientificText":"Seizures"
    },
    {
       "id":202,
-      "option_text":"Slurred Speech",
-      "scientific_text":"Slurred Speech"
+      "optionText":"Slurred Speech",
+      "scientificText":"Slurred Speech"
    },
    {
       "id":203,
-      "option_text":"Weakness",
-      "scientific_text":"Weakness"
+      "optionText":"Weakness",
+      "scientificText":"Weakness"
    },
    {
       "id":204,
-      "option_text":"Non Specific",
-      "scientific_text":"Non Specific"
+      "optionText":"Non Specific",
+      "scientificText":"Non Specific"
    },
    {
       "id":205,
-      "option_text":"Diaphoresis",
-      "scientific_text":"Diaphoresis"
+      "optionText":"Diaphoresis",
+      "scientificText":"Diaphoresis"
    },
    {
       "id":206,
-      "option_text":"Fever",
-      "scientific_text":"Fever"
+      "optionText":"Fever",
+      "scientificText":"Fever"
    },
    {
       "id":207,
-      "option_text":"Malaise",
-      "scientific_text":"Malaise"
+      "optionText":"Malaise",
+      "scientificText":"Malaise"
    },
    {
       "id":208,
-      "option_text":"Nodes",
-      "scientific_text":"Nodes"
+      "optionText":"Nodes",
+      "scientificText":"Nodes"
    },
    {
       "id":209,
-      "option_text":"Rigors",
-      "scientific_text":"Rigors"
+      "optionText":"Rigors",
+      "scientificText":"Rigors"
    },
    {
       "id":210,
-      "option_text":"Respiratory",
-      "scientific_text":"Respiratory"
+      "optionText":"Respiratory",
+      "scientificText":"Respiratory"
    },
    {
       "id":211,
-      "option_text":"Chest Pain",
-      "scientific_text":"Chest Pain"
+      "optionText":"Chest Pain",
+      "scientificText":"Chest Pain"
    },
    {
       "id":212,
-      "option_text":"Cough",
-      "scientific_text":"Cough"
+      "optionText":"Cough",
+      "scientificText":"Cough"
    },
    {
       "id":213,
-      "option_text":"Cyanosis",
-      "scientific_text":"Cyanosis"
+      "optionText":"Cyanosis",
+      "scientificText":"Cyanosis"
    },
    {
       "id":214,
-      "option_text":"Dyspnea",
-      "scientific_text":"Dyspnea"
+      "optionText":"Dyspnea",
+      "scientificText":"Dyspnea"
    },
    {
       "id":215,
-      "option_text":"Haemoptysis",
-      "scientific_text":"Coughing Up Blood"
+      "optionText":"Haemoptysis",
+      "scientificText":"Coughing Up Blood"
    },
    {
       "id":216,
-      "option_text":"Productive",
-      "scientific_text":"Productive"
+      "optionText":"Productive",
+      "scientificText":"Productive"
    },
    {
       "id":217,
-      "option_text":"X-Ray",
-      "scientific_text":"X-Ray"
+      "optionText":"X-Ray",
+      "scientificText":"X-Ray"
    },
    {
       "id":218,
-      "option_text":"Skin",
-      "scientific_text":"Skin"
+      "optionText":"Skin",
+      "scientificText":"Skin"
    },
    {
       "id":219,
-      "option_text":"Bleedig Gums",
-      "scientific_text":"Bleedig Gums"
+      "optionText":"Bleedig Gums",
+      "scientificText":"Bleedig Gums"
    },
    {
       "id":220,
-      "option_text":"Blisters",
-      "scientific_text":"Blisters"
+      "optionText":"Blisters",
+      "scientificText":"Blisters"
    },
    {
       "id":221,
-      "option_text":"Bruising",
-      "scientific_text":"Bruising"
+      "optionText":"Bruising",
+      "scientificText":"Bruising"
    },
    {
       "id":222,
-      "option_text":"Eschar",
-      "scientific_text":"Eschar"
+      "optionText":"Eschar",
+      "scientificText":"Eschar"
    },
    {
       "id":223,
-      "option_text":"Masculopapular",
-      "scientific_text":"Masculopapular"
+      "optionText":"Masculopapular",
+      "scientificText":"Masculopapular"
    },
    {
       "id":224,
-      "option_text":"Peeling",
-      "scientific_text":"Peeling"
+      "optionText":"Peeling",
+      "scientificText":"Peeling"
    },
    {
       "id":225,
-      "option_text":"Petechiae",
-      "scientific_text":"Petechiae"
+      "optionText":"Petechiae",
+      "scientificText":"Petechiae"
    },
    {
       "id":226,
-      "option_text":"Point of Origin",
-      "scientific_text":"Point of Origin"
+      "optionText":"Point of Origin",
+      "scientificText":"Point of Origin"
    },
    {
       "id":227,
-      "option_text":"Progression",
-      "scientific_text":"Progression"
+      "optionText":"Progression",
+      "scientificText":"Progression"
    },
    {
       "id":228,
-      "option_text":"Rash",
-      "scientific_text":"Rash"
+      "optionText":"Rash",
+      "scientificText":"Rash"
    },
    {
       "id":229,
-      "option_text":"No",
-      "scientific_text":null
+      "optionText":"No",
+      "scientificText":null
    },
    {
       "id":230,
-      "option_text":"Yes",
-      "scientific_text":null
+      "optionText":"Yes",
+      "scientificText":null
    },
    {
       "id":231,
-      "option_text":"No",
-      "scientific_text":null
+      "optionText":"No",
+      "scientificText":null
    },
    {
       "id":232,
-      "option_text":"Yes",
-      "scientific_text":null
+      "optionText":"Yes",
+      "scientificText":null
    },
    {
       "id":233,
-      "option_text":"VCPH Laboratory",
-      "scientific_text":null
+      "optionText":"VCPH Laboratory",
+      "scientificText":null
    },
    {
       "id":234,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":235,
-      "option_text":"Indeterminate",
-      "scientific_text":null
+      "optionText":"Indeterminate",
+      "scientificText":null
    },
    {
       "id":236,
-      "option_text":"Negative",
-      "scientific_text":null
+      "optionText":"Negative",
+      "scientificText":null
    },
    {
       "id":237,
-      "option_text":"Positive",
-      "scientific_text":null
+      "optionText":"Positive",
+      "scientificText":null
    },
    {
       "id":238,
-      "option_text":"VCPH Laboratory",
-      "scientific_text":null
+      "optionText":"VCPH Laboratory",
+      "scientificText":null
    },
    {
       "id":239,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":240,
-      "option_text":"Indeterminate",
-      "scientific_text":null
+      "optionText":"Indeterminate",
+      "scientificText":null
    },
    {
       "id":241,
-      "option_text":"Negative",
-      "scientific_text":null
+      "optionText":"Negative",
+      "scientificText":null
    },
    {
       "id":242,
-      "option_text":"Positive",
-      "scientific_text":null
+      "optionText":"Positive",
+      "scientificText":null
    },
    {
       "id":243,
-      "option_text":"Skin",
-      "scientific_text":null
+      "optionText":"Skin",
+      "scientificText":null
    },
    {
       "id":244,
-      "option_text":"GI",
-      "scientific_text":null
+      "optionText":"GI",
+      "scientificText":null
    },
    {
       "id":245,
-      "option_text":"Respiratory",
-      "scientific_text":null
+      "optionText":"Respiratory",
+      "scientificText":null
    },
    {
       "id":246,
-      "option_text":"Neurologic",
-      "scientific_text":null
+      "optionText":"Neurologic",
+      "scientificText":null
    },
    {
       "id":247,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":248,
-      "option_text":"Not a Case",
-      "scientific_text":null
+      "optionText":"Not a Case",
+      "scientificText":null
    },
    {
       "id":249,
-      "option_text":"Suspected",
-      "scientific_text":null
+      "optionText":"Suspected",
+      "scientificText":null
    },
    {
       "id":250,
-      "option_text":"Probable",
-      "scientific_text":null
+      "optionText":"Probable",
+      "scientificText":null
    },
    {
       "id":251,
-      "option_text":"Confirmed",
-      "scientific_text":null
+      "optionText":"Confirmed",
+      "scientificText":null
    },
    {
       "id":252,
-      "option_text":"Male",
-      "scientific_text":null
+      "optionText":"Male",
+      "scientificText":null
    },
    {
       "id":253,
-      "option_text":"Female",
-      "scientific_text":null
+      "optionText":"Female",
+      "scientificText":null
    },
    {
       "id":254,
-      "option_text":"Unknown",
-      "scientific_text":null
+      "optionText":"Unknown",
+      "scientificText":null
    },
    {
       "id":255,
-      "option_text":"Intact",
-      "scientific_text":null
+      "optionText":"Intact",
+      "scientificText":null
    },
    {
       "id":256,
-      "option_text":"Neutered/Spayed",
-      "scientific_text":null
+      "optionText":"Neutered/Spayed",
+      "scientificText":null
    },
    {
       "id":257,
-      "option_text":"Unknown",
-      "scientific_text":null
+      "optionText":"Unknown",
+      "scientificText":null
    },
    {
       "id":258,
-      "option_text":"Pet",
-      "scientific_text":null
+      "optionText":"Pet",
+      "scientificText":null
    },
    {
       "id":259,
-      "option_text":"Stray",
-      "scientific_text":null
+      "optionText":"Stray",
+      "scientificText":null
    },
    {
       "id":260,
-      "option_text":"Feral",
-      "scientific_text":null
+      "optionText":"Feral",
+      "scientificText":null
    },
    {
       "id":261,
-      "option_text":"Livestock",
-      "scientific_text":null
+      "optionText":"Livestock",
+      "scientificText":null
    },
    {
       "id":262,
-      "option_text":"Wild, Unowned",
-      "scientific_text":null
+      "optionText":"Wild, Unowned",
+      "scientificText":null
    },
    {
       "id":263,
-      "option_text":"Wild, Captive",
-      "scientific_text":null
+      "optionText":"Wild, Captive",
+      "scientificText":null
    },
    {
       "id":264,
-      "option_text":"Unknown",
-      "scientific_text":null
+      "optionText":"Unknown",
+      "scientificText":null
    },
    {
       "id":265,
-      "option_text":"GI",
-      "scientific_text":"GI"
+      "optionText":"GI",
+      "scientificText":"GI"
    },
    {
       "id":266,
-      "option_text":"Abdominal Pain",
-      "scientific_text":"Abdominal Pain"
+      "optionText":"Abdominal Pain",
+      "scientificText":"Abdominal Pain"
    },
    {
       "id":267,
-      "option_text":"Diarrhea",
-      "scientific_text":"Diarrhea"
+      "optionText":"Diarrhea",
+      "scientificText":"Diarrhea"
    },
    {
       "id":268,
-      "option_text":"Nausea",
-      "scientific_text":"Nausea"
+      "optionText":"Nausea",
+      "scientificText":"Nausea"
    },
    {
       "id":269,
-      "option_text":"Vomiting",
-      "scientific_text":"Vomiting"
+      "optionText":"Vomiting",
+      "scientificText":"Vomiting"
    },
    {
       "id":270,
-      "option_text":"Neurologic",
-      "scientific_text":"Neurologic"
+      "optionText":"Neurologic",
+      "scientificText":"Neurologic"
    },
    {
       "id":271,
-      "option_text":"Ascending",
-      "scientific_text":"Ascending"
+      "optionText":"Ascending",
+      "scientificText":"Ascending"
    },
    {
       "id":272,
-      "option_text":"Blurred Vision",
-      "scientific_text":"Blurred Vision"
+      "optionText":"Blurred Vision",
+      "scientificText":"Blurred Vision"
    },
    {
       "id":273,
-      "option_text":"Decending",
-      "scientific_text":"Decending"
+      "optionText":"Decending",
+      "scientificText":"Decending"
    },
    {
       "id":274,
-      "option_text":"Delirium",
-      "scientific_text":"Delirium"
+      "optionText":"Delirium",
+      "scientificText":"Delirium"
    },
    {
       "id":275,
-      "option_text":"Dysphagia",
-      "scientific_text":"Dysphagia"
+      "optionText":"Dysphagia",
+      "scientificText":"Dysphagia"
    },
    {
       "id":276,
-      "option_text":"Headache",
-      "scientific_text":"Headache"
+      "optionText":"Headache",
+      "scientificText":"Headache"
    },
    {
       "id":277,
-      "option_text":"Pain",
-      "scientific_text":"Pain"
+      "optionText":"Pain",
+      "scientificText":"Pain"
    },
    {
       "id":278,
-      "option_text":"Paralysis",
-      "scientific_text":"Paralysis"
+      "optionText":"Paralysis",
+      "scientificText":"Paralysis"
    },
    {
       "id":279,
-      "option_text":"Photophobia",
-      "scientific_text":"Photophobia"
+      "optionText":"Photophobia",
+      "scientificText":"Photophobia"
    },
    {
       "id":280,
-      "option_text":"Seizures",
-      "scientific_text":"Seizures"
+      "optionText":"Seizures",
+      "scientificText":"Seizures"
    },
    {
       "id":281,
-      "option_text":"Slurred Speech",
-      "scientific_text":"Slurred Speech"
+      "optionText":"Slurred Speech",
+      "scientificText":"Slurred Speech"
    },
    {
       "id":282,
-      "option_text":"Weakness",
-      "scientific_text":"Weakness"
+      "optionText":"Weakness",
+      "scientificText":"Weakness"
    },
    {
       "id":283,
-      "option_text":"Non Specific",
-      "scientific_text":"Non Specific"
+      "optionText":"Non Specific",
+      "scientificText":"Non Specific"
    },
    {
       "id":284,
-      "option_text":"Diaphoresis",
-      "scientific_text":"Diaphoresis"
+      "optionText":"Diaphoresis",
+      "scientificText":"Diaphoresis"
    },
    {
       "id":285,
-      "option_text":"Fever",
-      "scientific_text":"Fever"
+      "optionText":"Fever",
+      "scientificText":"Fever"
    },
    {
       "id":286,
-      "option_text":"Malaise",
-      "scientific_text":"Malaise"
+      "optionText":"Malaise",
+      "scientificText":"Malaise"
    },
    {
       "id":287,
-      "option_text":"Nodes",
-      "scientific_text":"Nodes"
+      "optionText":"Nodes",
+      "scientificText":"Nodes"
    },
    {
       "id":288,
-      "option_text":"Rigors",
-      "scientific_text":"Rigors"
+      "optionText":"Rigors",
+      "scientificText":"Rigors"
    },
    {
       "id":289,
-      "option_text":"Respiratory",
-      "scientific_text":"Respiratory"
+      "optionText":"Respiratory",
+      "scientificText":"Respiratory"
    },
    {
       "id":290,
-      "option_text":"Chest Pain",
-      "scientific_text":"Chest Pain"
+      "optionText":"Chest Pain",
+      "scientificText":"Chest Pain"
    },
    {
       "id":291,
-      "option_text":"Cough",
-      "scientific_text":"Cough"
+      "optionText":"Cough",
+      "scientificText":"Cough"
    },
    {
       "id":292,
-      "option_text":"Cyanosis",
-      "scientific_text":"Cyanosis"
+      "optionText":"Cyanosis",
+      "scientificText":"Cyanosis"
    },
    {
       "id":293,
-      "option_text":"Dyspnea",
-      "scientific_text":"Dyspnea"
+      "optionText":"Dyspnea",
+      "scientificText":"Dyspnea"
    },
    {
       "id":294,
-      "option_text":"Haemoptysis",
-      "scientific_text":"Coughing Up Blood"
+      "optionText":"Haemoptysis",
+      "scientificText":"Coughing Up Blood"
    },
    {
       "id":295,
-      "option_text":"Productive",
-      "scientific_text":"Productive"
+      "optionText":"Productive",
+      "scientificText":"Productive"
    },
    {
       "id":296,
-      "option_text":"X-Ray",
-      "scientific_text":"X-Ray"
+      "optionText":"X-Ray",
+      "scientificText":"X-Ray"
    },
    {
       "id":297,
-      "option_text":"Skin",
-      "scientific_text":"Skin"
+      "optionText":"Skin",
+      "scientificText":"Skin"
    },
    {
       "id":298,
-      "option_text":"Bleedig Gums",
-      "scientific_text":"Bleedig Gums"
+      "optionText":"Bleedig Gums",
+      "scientificText":"Bleedig Gums"
    },
    {
       "id":299,
-      "option_text":"Blisters",
-      "scientific_text":"Blisters"
+      "optionText":"Blisters",
+      "scientificText":"Blisters"
    },
    {
       "id":300,
-      "option_text":"Bruising",
-      "scientific_text":"Bruising"
+      "optionText":"Bruising",
+      "scientificText":"Bruising"
    },
    {
       "id":301,
-      "option_text":"Eschar",
-      "scientific_text":"Eschar"
+      "optionText":"Eschar",
+      "scientificText":"Eschar"
    },
    {
       "id":302,
-      "option_text":"Masculopapular",
-      "scientific_text":"Masculopapular"
+      "optionText":"Masculopapular",
+      "scientificText":"Masculopapular"
    },
    {
       "id":303,
-      "option_text":"Peeling",
-      "scientific_text":"Peeling"
+      "optionText":"Peeling",
+      "scientificText":"Peeling"
    },
    {
       "id":304,
-      "option_text":"Petechiae",
-      "scientific_text":"Petechiae"
+      "optionText":"Petechiae",
+      "scientificText":"Petechiae"
    },
    {
       "id":305,
-      "option_text":"Point of Origin",
-      "scientific_text":"Point of Origin"
+      "optionText":"Point of Origin",
+      "scientificText":"Point of Origin"
    },
    {
       "id":306,
-      "option_text":"Progression",
-      "scientific_text":"Progression"
+      "optionText":"Progression",
+      "scientificText":"Progression"
    },
    {
       "id":307,
-      "option_text":"Rash",
-      "scientific_text":"Rash"
+      "optionText":"Rash",
+      "scientificText":"Rash"
    },
    {
       "id":308,
-      "option_text":"Indeterminate",
-      "scientific_text":null
+      "optionText":"Indeterminate",
+      "scientificText":null
    },
    {
       "id":309,
-      "option_text":"Negative",
-      "scientific_text":null
+      "optionText":"Negative",
+      "scientificText":null
    },
    {
       "id":310,
-      "option_text":"Positive",
-      "scientific_text":null
+      "optionText":"Positive",
+      "scientificText":null
    },
    {
       "id":311,
-      "option_text":"Indeterminate",
-      "scientific_text":null
+      "optionText":"Indeterminate",
+      "scientificText":null
    },
    {
       "id":312,
-      "option_text":"Negative",
-      "scientific_text":null
+      "optionText":"Negative",
+      "scientificText":null
    },
    {
       "id":313,
-      "option_text":"Positive",
-      "scientific_text":null
+      "optionText":"Positive",
+      "scientificText":null
    },
    {
       "id":314,
-      "option_text":"All Ages",
-      "scientific_text":null
+      "optionText":"All Ages",
+      "scientificText":null
    },
    {
       "id":315,
-      "option_text":"Preschool",
-      "scientific_text":null
+      "optionText":"Preschool",
+      "scientificText":null
    },
    {
       "id":316,
-      "option_text":"Elementary",
-      "scientific_text":null
+      "optionText":"Elementary",
+      "scientificText":null
    },
    {
       "id":317,
-      "option_text":"Middle School",
-      "scientific_text":null
+      "optionText":"Middle School",
+      "scientificText":null
    },
    {
       "id":318,
-      "option_text":"Intermediate",
-      "scientific_text":null
+      "optionText":"Intermediate",
+      "scientificText":null
    },
    {
       "id":319,
-      "option_text":"High School",
-      "scientific_text":null
+      "optionText":"High School",
+      "scientificText":null
    },
    {
       "id":320,
-      "option_text":"Post Secondary",
-      "scientific_text":null
+      "optionText":"Post Secondary",
+      "scientificText":null
    },
    {
       "id":321,
-      "option_text":"All Ages",
-      "scientific_text":null
+      "optionText":"All Ages",
+      "scientificText":null
    },
    {
       "id":322,
-      "option_text":"Preschool",
-      "scientific_text":null
+      "optionText":"Preschool",
+      "scientificText":null
    },
    {
       "id":323,
-      "option_text":"Elementary",
-      "scientific_text":null
+      "optionText":"Elementary",
+      "scientificText":null
    },
    {
       "id":324,
-      "option_text":"Middle School",
-      "scientific_text":null
+      "optionText":"Middle School",
+      "scientificText":null
    },
    {
       "id":325,
-      "option_text":"Intermediate",
-      "scientific_text":null
+      "optionText":"Intermediate",
+      "scientificText":null
    },
    {
       "id":326,
-      "option_text":"High School",
-      "scientific_text":null
+      "optionText":"High School",
+      "scientificText":null
    },
    {
       "id":327,
-      "option_text":"Post Secondary",
-      "scientific_text":null
+      "optionText":"Post Secondary",
+      "scientificText":null
    },
    {
       "id":328,
-      "option_text":"Skin",
-      "scientific_text":null
+      "optionText":"Skin",
+      "scientificText":null
    },
    {
       "id":329,
-      "option_text":"GI",
-      "scientific_text":null
+      "optionText":"GI",
+      "scientificText":null
    },
    {
       "id":330,
-      "option_text":"Respiratory",
-      "scientific_text":null
+      "optionText":"Respiratory",
+      "scientificText":null
    },
    {
       "id":331,
-      "option_text":"Neurologic",
-      "scientific_text":null
+      "optionText":"Neurologic",
+      "scientificText":null
    },
    {
       "id":332,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":333,
-      "option_text":"Not a Case",
-      "scientific_text":null
+      "optionText":"Not a Case",
+      "scientificText":null
    },
    {
       "id":334,
-      "option_text":"Suspected",
-      "scientific_text":null
+      "optionText":"Suspected",
+      "scientificText":null
    },
    {
       "id":335,
-      "option_text":"Probable",
-      "scientific_text":null
+      "optionText":"Probable",
+      "scientificText":null
    },
    {
       "id":336,
-      "option_text":"Confirmed",
-      "scientific_text":null
+      "optionText":"Confirmed",
+      "scientificText":null
    },
    {
       "id":337,
-      "option_text":"Staff",
-      "scientific_text":null
+      "optionText":"Staff",
+      "scientificText":null
    },
    {
       "id":338,
-      "option_text":"Student",
-      "scientific_text":null
+      "optionText":"Student",
+      "scientificText":null
    },
    {
       "id":339,
-      "option_text":"Male",
-      "scientific_text":null
+      "optionText":"Male",
+      "scientificText":null
    },
    {
       "id":340,
-      "option_text":"Female",
-      "scientific_text":null
+      "optionText":"Female",
+      "scientificText":null
    },
    {
       "id":341,
-      "option_text":"Transgender",
-      "scientific_text":null
+      "optionText":"Transgender",
+      "scientificText":null
    },
    {
       "id":342,
-      "option_text":"Hispanic",
-      "scientific_text":null
+      "optionText":"Hispanic",
+      "scientificText":null
    },
    {
       "id":343,
-      "option_text":"Caucasian",
-      "scientific_text":null
+      "optionText":"Caucasian",
+      "scientificText":null
    },
    {
       "id":344,
-      "option_text":"African American",
-      "scientific_text":null
+      "optionText":"African American",
+      "scientificText":null
    },
    {
       "id":345,
-      "option_text":"Alaskan Native",
-      "scientific_text":null
+      "optionText":"Alaskan Native",
+      "scientificText":null
    },
    {
       "id":346,
-      "option_text":"Asian",
-      "scientific_text":null
+      "optionText":"Asian",
+      "scientificText":null
    },
    {
       "id":347,
-      "option_text":"Pacific Islander",
-      "scientific_text":null
+      "optionText":"Pacific Islander",
+      "scientificText":null
    },
    {
       "id":348,
-      "option_text":"Other",
-      "scientific_text":null
+      "optionText":"Other",
+      "scientificText":null
    },
    {
       "id":349,
-      "option_text":"GI",
-      "scientific_text":"GI"
+      "optionText":"GI",
+      "scientificText":"GI"
    },
    {
       "id":350,
-      "option_text":"Abdominal Pain",
-      "scientific_text":"Abdominal Pain"
+      "optionText":"Abdominal Pain",
+      "scientificText":"Abdominal Pain"
    },
    {
       "id":351,
-      "option_text":"Diarrhea",
-      "scientific_text":"Diarrhea"
+      "optionText":"Diarrhea",
+      "scientificText":"Diarrhea"
    },
    {
       "id":352,
-      "option_text":"Nausea",
-      "scientific_text":"Nausea"
+      "optionText":"Nausea",
+      "scientificText":"Nausea"
    },
    {
       "id":353,
-      "option_text":"Vomiting",
-      "scientific_text":"Vomiting"
+      "optionText":"Vomiting",
+      "scientificText":"Vomiting"
    },
    {
       "id":354,
-      "option_text":"Neurologic",
-      "scientific_text":"Neurologic"
+      "optionText":"Neurologic",
+      "scientificText":"Neurologic"
    },
    {
       "id":355,
-      "option_text":"Ascending",
-      "scientific_text":"Ascending"
+      "optionText":"Ascending",
+      "scientificText":"Ascending"
    },
    {
       "id":356,
-      "option_text":"Blurred Vision",
-      "scientific_text":"Blurred Vision"
+      "optionText":"Blurred Vision",
+      "scientificText":"Blurred Vision"
    },
    {
       "id":357,
-      "option_text":"Decending",
-      "scientific_text":"Decending"
+      "optionText":"Decending",
+      "scientificText":"Decending"
    },
    {
       "id":358,
-      "option_text":"Delirium",
-      "scientific_text":"Delirium"
+      "optionText":"Delirium",
+      "scientificText":"Delirium"
    },
    {
       "id":359,
-      "option_text":"Dysphagia",
-      "scientific_text":"Dysphagia"
+      "optionText":"Dysphagia",
+      "scientificText":"Dysphagia"
    },
    {
       "id":360,
-      "option_text":"Headache",
-      "scientific_text":"Headache"
+      "optionText":"Headache",
+      "scientificText":"Headache"
    },
    {
       "id":361,
-      "option_text":"Pain",
-      "scientific_text":"Pain"
+      "optionText":"Pain",
+      "scientificText":"Pain"
    },
    {
       "id":362,
-      "option_text":"Paralysis",
-      "scientific_text":"Paralysis"
+      "optionText":"Paralysis",
+      "scientificText":"Paralysis"
    },
    {
       "id":363,
-      "option_text":"Photophobia",
-      "scientific_text":"Photophobia"
+      "optionText":"Photophobia",
+      "scientificText":"Photophobia"
    },
    {
       "id":364,
-      "option_text":"Seizures",
-      "scientific_text":"Seizures"
+      "optionText":"Seizures",
+      "scientificText":"Seizures"
    },
    {
       "id":365,
-      "option_text":"Slurred Speech",
-      "scientific_text":"Slurred Speech"
+      "optionText":"Slurred Speech",
+      "scientificText":"Slurred Speech"
    },
    {
       "id":366,
-      "option_text":"Weakness",
-      "scientific_text":"Weakness"
+      "optionText":"Weakness",
+      "scientificText":"Weakness"
    },
    {
       "id":367,
-      "option_text":"Non Specific",
-      "scientific_text":"Non Specific"
+      "optionText":"Non Specific",
+      "scientificText":"Non Specific"
    },
    {
       "id":368,
-      "option_text":"Diaphoresis",
-      "scientific_text":"Diaphoresis"
+      "optionText":"Diaphoresis",
+      "scientificText":"Diaphoresis"
    },
    {
       "id":369,
-      "option_text":"Fever",
-      "scientific_text":"Fever"
+      "optionText":"Fever",
+      "scientificText":"Fever"
    },
    {
       "id":370,
-      "option_text":"Malaise",
-      "scientific_text":"Malaise"
+      "optionText":"Malaise",
+      "scientificText":"Malaise"
    },
    {
       "id":371,
-      "option_text":"Nodes",
-      "scientific_text":"Nodes"
+      "optionText":"Nodes",
+      "scientificText":"Nodes"
    },
    {
       "id":372,
-      "option_text":"Rigors",
-      "scientific_text":"Rigors"
+      "optionText":"Rigors",
+      "scientificText":"Rigors"
    },
    {
       "id":373,
-      "option_text":"Respiratory",
-      "scientific_text":"Respiratory"
+      "optionText":"Respiratory",
+      "scientificText":"Respiratory"
    },
    {
       "id":374,
-      "option_text":"Chest Pain",
-      "scientific_text":"Chest Pain"
+      "optionText":"Chest Pain",
+      "scientificText":"Chest Pain"
    },
    {
       "id":375,
-      "option_text":"Cough",
-      "scientific_text":"Cough"
+      "optionText":"Cough",
+      "scientificText":"Cough"
    },
    {
       "id":376,
-      "option_text":"Cyanosis",
-      "scientific_text":"Cyanosis"
+      "optionText":"Cyanosis",
+      "scientificText":"Cyanosis"
    },
    {
       "id":377,
-      "option_text":"Dyspnea",
-      "scientific_text":"Dyspnea"
+      "optionText":"Dyspnea",
+      "scientificText":"Dyspnea"
    },
    {
       "id":378,
-      "option_text":"Haemoptysis",
-      "scientific_text":"Coughing Up Blood"
+      "optionText":"Haemoptysis",
+      "scientificText":"Coughing Up Blood"
    },
    {
       "id":379,
-      "option_text":"Productive",
-      "scientific_text":"Productive"
+      "optionText":"Productive",
+      "scientificText":"Productive"
    },
    {
       "id":380,
-      "option_text":"X-Ray",
-      "scientific_text":"X-Ray"
+      "optionText":"X-Ray",
+      "scientificText":"X-Ray"
    },
    {
       "id":381,
-      "option_text":"Skin",
-      "scientific_text":"Skin"
+      "optionText":"Skin",
+      "scientificText":"Skin"
    },
    {
       "id":382,
-      "option_text":"Bleedig Gums",
-      "scientific_text":"Bleedig Gums"
+      "optionText":"Bleedig Gums",
+      "scientificText":"Bleedig Gums"
    },
    {
       "id":383,
-      "option_text":"Blisters",
-      "scientific_text":"Blisters"
+      "optionText":"Blisters",
+      "scientificText":"Blisters"
    },
    {
       "id":384,
-      "option_text":"Bruising",
-      "scientific_text":"Bruising"
+      "optionText":"Bruising",
+      "scientificText":"Bruising"
    },
    {
       "id":385,
-      "option_text":"Eschar",
-      "scientific_text":"Eschar"
+      "optionText":"Eschar",
+      "scientificText":"Eschar"
    },
    {
       "id":386,
-      "option_text":"Masculopapular",
-      "scientific_text":"Masculopapular"
+      "optionText":"Masculopapular",
+      "scientificText":"Masculopapular"
    },
    {
       "id":387,
-      "option_text":"Peeling",
-      "scientific_text":"Peeling"
+      "optionText":"Peeling",
+      "scientificText":"Peeling"
    },
    {
       "id":388,
-      "option_text":"Petechiae",
-      "scientific_text":"Petechiae"
+      "optionText":"Petechiae",
+      "scientificText":"Petechiae"
    },
    {
       "id":389,
-      "option_text":"Point of Origin",
-      "scientific_text":"Point of Origin"
+      "optionText":"Point of Origin",
+      "scientificText":"Point of Origin"
    },
    {
       "id":390,
-      "option_text":"Progression",
-      "scientific_text":"Progression"
+      "optionText":"Progression",
+      "scientificText":"Progression"
    },
    {
       "id":391,
-      "option_text":"Rash",
-      "scientific_text":"Rash"
+      "optionText":"Rash",
+      "scientificText":"Rash"
    },
    {
       "id":392,
-      "option_text":"GI",
-      "scientific_text":"GI"
+      "optionText":"GI",
+      "scientificText":"GI"
    },
    {
       "id":393,
-      "option_text":"Abdominal Pain",
-      "scientific_text":"Abdominal Pain"
+      "optionText":"Abdominal Pain",
+      "scientificText":"Abdominal Pain"
    },
    {
       "id":394,
-      "option_text":"Diarrhea",
-      "scientific_text":"Diarrhea"
+      "optionText":"Diarrhea",
+      "scientificText":"Diarrhea"
    },
    {
       "id":395,
-      "option_text":"Nausea",
-      "scientific_text":"Nausea"
+      "optionText":"Nausea",
+      "scientificText":"Nausea"
    },
    {
       "id":396,
-      "option_text":"Vomiting",
-      "scientific_text":"Vomiting"
+      "optionText":"Vomiting",
+      "scientificText":"Vomiting"
    },
    {
       "id":397,
-      "option_text":"Neurologic",
-      "scientific_text":"Neurologic"
+      "optionText":"Neurologic",
+      "scientificText":"Neurologic"
    },
    {
       "id":398,
-      "option_text":"Ascending",
-      "scientific_text":"Ascending"
+      "optionText":"Ascending",
+      "scientificText":"Ascending"
    },
    {
       "id":399,
-      "option_text":"Blurred Vision",
-      "scientific_text":"Blurred Vision"
+      "optionText":"Blurred Vision",
+      "scientificText":"Blurred Vision"
    },
    {
       "id":400,
-      "option_text":"Decending",
-      "scientific_text":"Decending"
+      "optionText":"Decending",
+      "scientificText":"Decending"
    },
    {
       "id":401,
-      "option_text":"Delirium",
-      "scientific_text":"Delirium"
+      "optionText":"Delirium",
+      "scientificText":"Delirium"
    },
    {
       "id":402,
-      "option_text":"Dysphagia",
-      "scientific_text":"Dysphagia"
+      "optionText":"Dysphagia",
+      "scientificText":"Dysphagia"
    },
    {
       "id":403,
-      "option_text":"Headache",
-      "scientific_text":"Headache"
+      "optionText":"Headache",
+      "scientificText":"Headache"
    },
    {
       "id":404,
-      "option_text":"Pain",
-      "scientific_text":"Pain"
+      "optionText":"Pain",
+      "scientificText":"Pain"
    },
    {
       "id":405,
-      "option_text":"Paralysis",
-      "scientific_text":"Paralysis"
+      "optionText":"Paralysis",
+      "scientificText":"Paralysis"
    },
    {
       "id":406,
-      "option_text":"Photophobia",
-      "scientific_text":"Photophobia"
+      "optionText":"Photophobia",
+      "scientificText":"Photophobia"
    },
    {
       "id":407,
-      "option_text":"Seizures",
-      "scientific_text":"Seizures"
+      "optionText":"Seizures",
+      "scientificText":"Seizures"
    },
    {
       "id":408,
-      "option_text":"Slurred Speech",
-      "scientific_text":"Slurred Speech"
+      "optionText":"Slurred Speech",
+      "scientificText":"Slurred Speech"
    },
    {
       "id":409,
-      "option_text":"Weakness",
-      "scientific_text":"Weakness"
+      "optionText":"Weakness",
+      "scientificText":"Weakness"
    },
    {
       "id":410,
-      "option_text":"Non Specific",
-      "scientific_text":"Non Specific"
+      "optionText":"Non Specific",
+      "scientificText":"Non Specific"
    },
    {
       "id":411,
-      "option_text":"Diaphoresis",
-      "scientific_text":"Diaphoresis"
+      "optionText":"Diaphoresis",
+      "scientificText":"Diaphoresis"
    },
    {
       "id":412,
-      "option_text":"Fever",
-      "scientific_text":"Fever"
+      "optionText":"Fever",
+      "scientificText":"Fever"
    },
    {
       "id":413,
-      "option_text":"Malaise",
-      "scientific_text":"Malaise"
+      "optionText":"Malaise",
+      "scientificText":"Malaise"
    },
    {
       "id":414,
-      "option_text":"Nodes",
-      "scientific_text":"Nodes"
+      "optionText":"Nodes",
+      "scientificText":"Nodes"
    },
    {
       "id":415,
-      "option_text":"Rigors",
-      "scientific_text":"Rigors"
+      "optionText":"Rigors",
+      "scientificText":"Rigors"
    },
    {
       "id":416,
-      "option_text":"Respiratory",
-      "scientific_text":"Respiratory"
+      "optionText":"Respiratory",
+      "scientificText":"Respiratory"
    },
    {
       "id":417,
-      "option_text":"Chest Pain",
-      "scientific_text":"Chest Pain"
+      "optionText":"Chest Pain",
+      "scientificText":"Chest Pain"
    },
    {
       "id":418,
-      "option_text":"Cough",
-      "scientific_text":"Cough"
+      "optionText":"Cough",
+      "scientificText":"Cough"
    },
    {
       "id":419,
-      "option_text":"Cyanosis",
-      "scientific_text":"Cyanosis"
+      "optionText":"Cyanosis",
+      "scientificText":"Cyanosis"
    },
    {
       "id":420,
-      "option_text":"Dyspnea",
-      "scientific_text":"Dyspnea"
+      "optionText":"Dyspnea",
+      "scientificText":"Dyspnea"
    },
    {
       "id":421,
-      "option_text":"Haemoptysis",
-      "scientific_text":"Coughing Up Blood"
+      "optionText":"Haemoptysis",
+      "scientificText":"Coughing Up Blood"
    },
    {
       "id":422,
-      "option_text":"Productive",
-      "scientific_text":"Productive"
+      "optionText":"Productive",
+      "scientificText":"Productive"
    },
    {
       "id":423,
-      "option_text":"X-Ray",
-      "scientific_text":"X-Ray"
+      "optionText":"X-Ray",
+      "scientificText":"X-Ray"
    },
    {
       "id":424,
-      "option_text":"Skin",
-      "scientific_text":"Skin"
+      "optionText":"Skin",
+      "scientificText":"Skin"
    },
    {
       "id":425,
-      "option_text":"Bleedig Gums",
-      "scientific_text":"Bleedig Gums"
+      "optionText":"Bleedig Gums",
+      "scientificText":"Bleedig Gums"
    },
    {
       "id":426,
-      "option_text":"Blisters",
-      "scientific_text":"Blisters"
+      "optionText":"Blisters",
+      "scientificText":"Blisters"
    },
    {
       "id":427,
-      "option_text":"Bruising",
-      "scientific_text":"Bruising"
+      "optionText":"Bruising",
+      "scientificText":"Bruising"
    },
    {
       "id":428,
-      "option_text":"Eschar",
-      "scientific_text":"Eschar"
+      "optionText":"Eschar",
+      "scientificText":"Eschar"
    },
    {
       "id":429,
-      "option_text":"Masculopapular",
-      "scientific_text":"Masculopapular"
+      "optionText":"Masculopapular",
+      "scientificText":"Masculopapular"
    },
    {
       "id":430,
-      "option_text":"Peeling",
-      "scientific_text":"Peeling"
+      "optionText":"Peeling",
+      "scientificText":"Peeling"
    },
    {
       "id":431,
-      "option_text":"Petechiae",
-      "scientific_text":"Petechiae"
+      "optionText":"Petechiae",
+      "scientificText":"Petechiae"
    },
    {
       "id":432,
-      "option_text":"Point of Origin",
-      "scientific_text":"Point of Origin"
+      "optionText":"Point of Origin",
+      "scientificText":"Point of Origin"
    },
    {
       "id":433,
-      "option_text":"Progression",
-      "scientific_text":"Progression"
+      "optionText":"Progression",
+      "scientificText":"Progression"
    },
    {
       "id":434,
-      "option_text":"Rash",
-      "scientific_text":"Rash"
+      "optionText":"Rash",
+      "scientificText":"Rash"
    },
    {
       "id":435,
-      "option_text":"GI",
-      "scientific_text":"GI"
+      "optionText":"GI",
+      "scientificText":"GI"
    },
    {
       "id":436,
-      "option_text":"Abdominal Pain",
-      "scientific_text":"Abdominal Pain"
+      "optionText":"Abdominal Pain",
+      "scientificText":"Abdominal Pain"
    },
    {
       "id":437,
-      "option_text":"Diarrhea",
-      "scientific_text":"Diarrhea"
+      "optionText":"Diarrhea",
+      "scientificText":"Diarrhea"
    },
    {
       "id":438,
-      "option_text":"Nausea",
-      "scientific_text":"Nausea"
+      "optionText":"Nausea",
+      "scientificText":"Nausea"
    },
    {
       "id":439,
-      "option_text":"Vomiting",
-      "scientific_text":"Vomiting"
+      "optionText":"Vomiting",
+      "scientificText":"Vomiting"
    },
    {
       "id":440,
-      "option_text":"Neurologic",
-      "scientific_text":"Neurologic"
+      "optionText":"Neurologic",
+      "scientificText":"Neurologic"
    },
    {
       "id":441,
-      "option_text":"Ascending",
-      "scientific_text":"Ascending"
+      "optionText":"Ascending",
+      "scientificText":"Ascending"
    },
    {
       "id":442,
-      "option_text":"Blurred Vision",
-      "scientific_text":"Blurred Vision"
+      "optionText":"Blurred Vision",
+      "scientificText":"Blurred Vision"
    },
    {
       "id":443,
-      "option_text":"Decending",
-      "scientific_text":"Decending"
+      "optionText":"Decending",
+      "scientificText":"Decending"
    },
    {
       "id":444,
-      "option_text":"Delirium",
-      "scientific_text":"Delirium"
+      "optionText":"Delirium",
+      "scientificText":"Delirium"
    },
    {
       "id":445,
-      "option_text":"Dysphagia",
-      "scientific_text":"Dysphagia"
+      "optionText":"Dysphagia",
+      "scientificText":"Dysphagia"
    },
    {
       "id":446,
-      "option_text":"Headache",
-      "scientific_text":"Headache"
+      "optionText":"Headache",
+      "scientificText":"Headache"
    },
    {
       "id":447,
-      "option_text":"Pain",
-      "scientific_text":"Pain"
+      "optionText":"Pain",
+      "scientificText":"Pain"
    },
    {
       "id":448,
-      "option_text":"Paralysis",
-      "scientific_text":"Paralysis"
+      "optionText":"Paralysis",
+      "scientificText":"Paralysis"
    },
    {
       "id":449,
-      "option_text":"Photophobia",
-      "scientific_text":"Photophobia"
+      "optionText":"Photophobia",
+      "scientificText":"Photophobia"
    },
    {
       "id":450,
-      "option_text":"Seizures",
-      "scientific_text":"Seizures"
+      "optionText":"Seizures",
+      "scientificText":"Seizures"
    },
    {
       "id":451,
-      "option_text":"Slurred Speech",
-      "scientific_text":"Slurred Speech"
+      "optionText":"Slurred Speech",
+      "scientificText":"Slurred Speech"
    },
    {
       "id":452,
-      "option_text":"Weakness",
-      "scientific_text":"Weakness"
+      "optionText":"Weakness",
+      "scientificText":"Weakness"
    },
    {
       "id":453,
-      "option_text":"Non Specific",
-      "scientific_text":"Non Specific"
+      "optionText":"Non Specific",
+      "scientificText":"Non Specific"
    },
    {
       "id":454,
-      "option_text":"Diaphoresis",
-      "scientific_text":"Diaphoresis"
+      "optionText":"Diaphoresis",
+      "scientificText":"Diaphoresis"
    },
    {
       "id":455,
-      "option_text":"Fever",
-      "scientific_text":"Fever"
+      "optionText":"Fever",
+      "scientificText":"Fever"
    },
    {
       "id":456,
-      "option_text":"Malaise",
-      "scientific_text":"Malaise"
+      "optionText":"Malaise",
+      "scientificText":"Malaise"
    },
    {
       "id":457,
-      "option_text":"Nodes",
-      "scientific_text":"Nodes"
+      "optionText":"Nodes",
+      "scientificText":"Nodes"
    },
    {
       "id":458,
-      "option_text":"Rigors",
-      "scientific_text":"Rigors"
+      "optionText":"Rigors",
+      "scientificText":"Rigors"
    },
    {
       "id":459,
-      "option_text":"Respiratory",
-      "scientific_text":"Respiratory"
+      "optionText":"Respiratory",
+      "scientificText":"Respiratory"
    },
    {
       "id":460,
-      "option_text":"Chest Pain",
-      "scientific_text":"Chest Pain"
+      "optionText":"Chest Pain",
+      "scientificText":"Chest Pain"
    },
    {
       "id":461,
-      "option_text":"Cough",
-      "scientific_text":"Cough"
+      "optionText":"Cough",
+      "scientificText":"Cough"
    },
    {
       "id":462,
-      "option_text":"Cyanosis",
-      "scientific_text":"Cyanosis"
+      "optionText":"Cyanosis",
+      "scientificText":"Cyanosis"
    },
    {
       "id":463,
-      "option_text":"Dyspnea",
-      "scientific_text":"Dyspnea"
+      "optionText":"Dyspnea",
+      "scientificText":"Dyspnea"
    },
    {
       "id":464,
-      "option_text":"Haemoptysis",
-      "scientific_text":"Coughing Up Blood"
+      "optionText":"Haemoptysis",
+      "scientificText":"Coughing Up Blood"
    },
    {
       "id":465,
-      "option_text":"Productive",
-      "scientific_text":"Productive"
+      "optionText":"Productive",
+      "scientificText":"Productive"
    },
    {
       "id":466,
-      "option_text":"X-Ray",
-      "scientific_text":"X-Ray"
+      "optionText":"X-Ray",
+      "scientificText":"X-Ray"
    },
    {
       "id":467,
-      "option_text":"Skin",
-      "scientific_text":"Skin"
+      "optionText":"Skin",
+      "scientificText":"Skin"
    },
    {
       "id":468,
-      "option_text":"Bleedig Gums",
-      "scientific_text":"Bleedig Gums"
+      "optionText":"Bleedig Gums",
+      "scientificText":"Bleedig Gums"
    },
    {
       "id":469,
-      "option_text":"Blisters",
-      "scientific_text":"Blisters"
+      "optionText":"Blisters",
+      "scientificText":"Blisters"
    },
    {
       "id":470,
-      "option_text":"Bruising",
-      "scientific_text":"Bruising"
+      "optionText":"Bruising",
+      "scientificText":"Bruising"
    },
    {
       "id":471,
-      "option_text":"Eschar",
-      "scientific_text":"Eschar"
+      "optionText":"Eschar",
+      "scientificText":"Eschar"
    },
    {
       "id":472,
-      "option_text":"Masculopapular",
-      "scientific_text":"Masculopapular"
+      "optionText":"Masculopapular",
+      "scientificText":"Masculopapular"
    },
    {
       "id":473,
-      "option_text":"Peeling",
-      "scientific_text":"Peeling"
+      "optionText":"Peeling",
+      "scientificText":"Peeling"
    },
    {
       "id":474,
-      "option_text":"Petechiae",
-      "scientific_text":"Petechiae"
+      "optionText":"Petechiae",
+      "scientificText":"Petechiae"
    },
    {
       "id":475,
-      "option_text":"Point of Origin",
-      "scientific_text":"Point of Origin"
+      "optionText":"Point of Origin",
+      "scientificText":"Point of Origin"
    },
    {
       "id":476,
-      "option_text":"Progression",
-      "scientific_text":"Progression"
+      "optionText":"Progression",
+      "scientificText":"Progression"
    },
    {
       "id":477,
-      "option_text":"Rash",
-      "scientific_text":"Rash"
+      "optionText":"Rash",
+      "scientificText":"Rash"
    },
    {
       "id":478,
-      "option_text":"GI",
-      "scientific_text":"GI"
+      "optionText":"GI",
+      "scientificText":"GI"
    },
    {
       "id":479,
-      "option_text":"Abdominal Pain",
-      "scientific_text":"Abdominal Pain"
+      "optionText":"Abdominal Pain",
+      "scientificText":"Abdominal Pain"
    },
    {
       "id":480,
-      "option_text":"Diarrhea",
-      "scientific_text":"Diarrhea"
+      "optionText":"Diarrhea",
+      "scientificText":"Diarrhea"
    },
    {
       "id":481,
-      "option_text":"Nausea",
-      "scientific_text":"Nausea"
+      "optionText":"Nausea",
+      "scientificText":"Nausea"
    },
    {
       "id":482,
-      "option_text":"Vomiting",
-      "scientific_text":"Vomiting"
+      "optionText":"Vomiting",
+      "scientificText":"Vomiting"
    },
    {
       "id":483,
-      "option_text":"Neurologic",
-      "scientific_text":"Neurologic"
+      "optionText":"Neurologic",
+      "scientificText":"Neurologic"
    },
    {
       "id":484,
-      "option_text":"Ascending",
-      "scientific_text":"Ascending"
+      "optionText":"Ascending",
+      "scientificText":"Ascending"
    },
    {
       "id":485,
-      "option_text":"Blurred Vision",
-      "scientific_text":"Blurred Vision"
+      "optionText":"Blurred Vision",
+      "scientificText":"Blurred Vision"
    },
    {
       "id":486,
-      "option_text":"Decending",
-      "scientific_text":"Decending"
+      "optionText":"Decending",
+      "scientificText":"Decending"
    },
    {
       "id":487,
-      "option_text":"Delirium",
-      "scientific_text":"Delirium"
+      "optionText":"Delirium",
+      "scientificText":"Delirium"
    },
    {
       "id":488,
-      "option_text":"Dysphagia",
-      "scientific_text":"Dysphagia"
+      "optionText":"Dysphagia",
+      "scientificText":"Dysphagia"
    },
    {
       "id":489,
-      "option_text":"Headache",
-      "scientific_text":"Headache"
+      "optionText":"Headache",
+      "scientificText":"Headache"
    },
    {
       "id":490,
-      "option_text":"Pain",
-      "scientific_text":"Pain"
+      "optionText":"Pain",
+      "scientificText":"Pain"
    },
    {
       "id":491,
-      "option_text":"Paralysis",
-      "scientific_text":"Paralysis"
+      "optionText":"Paralysis",
+      "scientificText":"Paralysis"
    },
    {
       "id":492,
-      "option_text":"Photophobia",
-      "scientific_text":"Photophobia"
+      "optionText":"Photophobia",
+      "scientificText":"Photophobia"
    },
    {
       "id":493,
-      "option_text":"Seizures",
-      "scientific_text":"Seizures"
+      "optionText":"Seizures",
+      "scientificText":"Seizures"
    },
    {
       "id":494,
-      "option_text":"Slurred Speech",
-      "scientific_text":"Slurred Speech"
+      "optionText":"Slurred Speech",
+      "scientificText":"Slurred Speech"
    },
    {
       "id":495,
-      "option_text":"Weakness",
-      "scientific_text":"Weakness"
+      "optionText":"Weakness",
+      "scientificText":"Weakness"
    },
    {
       "id":496,
-      "option_text":"Non Specific",
-      "scientific_text":"Non Specific"
+      "optionText":"Non Specific",
+      "scientificText":"Non Specific"
    },
    {
       "id":497,
-      "option_text":"Diaphoresis",
-      "scientific_text":"Diaphoresis"
+      "optionText":"Diaphoresis",
+      "scientificText":"Diaphoresis"
    },
    {
       "id":498,
-      "option_text":"Fever",
-      "scientific_text":"Fever"
+      "optionText":"Fever",
+      "scientificText":"Fever"
    },
    {
       "id":499,
-      "option_text":"Malaise",
-      "scientific_text":"Malaise"
+      "optionText":"Malaise",
+      "scientificText":"Malaise"
    },
    {
       "id":500,
-      "option_text":"Nodes",
-      "scientific_text":"Nodes"
+      "optionText":"Nodes",
+      "scientificText":"Nodes"
    },
    {
       "id":501,
-      "option_text":"Rigors",
-      "scientific_text":"Rigors"
+      "optionText":"Rigors",
+      "scientificText":"Rigors"
    },
    {
       "id":502,
-      "option_text":"Respiratory",
-      "scientific_text":"Respiratory"
+      "optionText":"Respiratory",
+      "scientificText":"Respiratory"
    },
    {
       "id":503,
-      "option_text":"Chest Pain",
-      "scientific_text":"Chest Pain"
+      "optionText":"Chest Pain",
+      "scientificText":"Chest Pain"
    },
    {
       "id":504,
-      "option_text":"Cough",
-      "scientific_text":"Cough"
+      "optionText":"Cough",
+      "scientificText":"Cough"
    },
    {
       "id":505,
-      "option_text":"Cyanosis",
-      "scientific_text":"Cyanosis"
+      "optionText":"Cyanosis",
+      "scientificText":"Cyanosis"
    },
    {
       "id":506,
-      "option_text":"Dyspnea",
-      "scientific_text":"Dyspnea"
+      "optionText":"Dyspnea",
+      "scientificText":"Dyspnea"
    },
    {
       "id":507,
-      "option_text":"Haemoptysis",
-      "scientific_text":"Coughing Up Blood"
+      "optionText":"Haemoptysis",
+      "scientificText":"Coughing Up Blood"
    },
    {
       "id":508,
-      "option_text":"Productive",
-      "scientific_text":"Productive"
+      "optionText":"Productive",
+      "scientificText":"Productive"
    },
    {
       "id":509,
-      "option_text":"X-Ray",
-      "scientific_text":"X-Ray"
+      "optionText":"X-Ray",
+      "scientificText":"X-Ray"
    },
    {
       "id":510,
-      "option_text":"Skin",
-      "scientific_text":"Skin"
+      "optionText":"Skin",
+      "scientificText":"Skin"
    },
    {
       "id":511,
-      "option_text":"Bleedig Gums",
-      "scientific_text":"Bleedig Gums"
+      "optionText":"Bleedig Gums",
+      "scientificText":"Bleedig Gums"
    },
    {
       "id":512,
-      "option_text":"Blisters",
-      "scientific_text":"Blisters"
+      "optionText":"Blisters",
+      "scientificText":"Blisters"
    },
    {
       "id":513,
-      "option_text":"Bruising",
-      "scientific_text":"Bruising"
+      "optionText":"Bruising",
+      "scientificText":"Bruising"
    },
    {
       "id":514,
-      "option_text":"Eschar",
-      "scientific_text":"Eschar"
+      "optionText":"Eschar",
+      "scientificText":"Eschar"
    },
    {
       "id":515,
-      "option_text":"Masculopapular",
-      "scientific_text":"Masculopapular"
+      "optionText":"Masculopapular",
+      "scientificText":"Masculopapular"
    },
    {
       "id":516,
-      "option_text":"Peeling",
-      "scientific_text":"Peeling"
+      "optionText":"Peeling",
+      "scientificText":"Peeling"
    },
    {
       "id":517,
-      "option_text":"Petechiae",
-      "scientific_text":"Petechiae"
+      "optionText":"Petechiae",
+      "scientificText":"Petechiae"
    },
    {
       "id":518,
-      "option_text":"Point of Origin",
-      "scientific_text":"Point of Origin"
+      "optionText":"Point of Origin",
+      "scientificText":"Point of Origin"
    },
    {
       "id":519,
-      "option_text":"Progression",
-      "scientific_text":"Progression"
+      "optionText":"Progression",
+      "scientificText":"Progression"
    },
    {
       "id":520,
-      "option_text":"Rash",
-      "scientific_text":"Rash"
+      "optionText":"Rash",
+      "scientificText":"Rash"
    }
 ]

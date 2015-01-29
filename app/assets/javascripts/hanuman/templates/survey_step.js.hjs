@@ -4,7 +4,7 @@
       <label class="col-sm-2 control-label">Survey Template</label>
       <div class="col-sm-4">
         <p class="form-control-static">
-          {{this.survey_template.name}}
+          {{this.surveyTemplate.name}}
         </p>
       </div>
       <label class="col-sm-2 control-label">Step</label>
@@ -22,7 +22,7 @@
       <label class="col-sm-2 control-label">Fully Editable</label>
       <div class="col-sm-4">
         <p class="form-control-static">
-          {{this.survey_template.fully_editable}}
+          {{this.surveyTemplate.fullyEditable}}
         </p>
       </div>
     </div>

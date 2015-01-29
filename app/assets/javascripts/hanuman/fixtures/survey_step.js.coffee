@@ -3,7 +3,7 @@ App.SurveyStep.FIXTURES = [
       "id":1,
       "duplicator":false,
       "step":1,
-      "survey_template":1,
+      "surveyTemplate":1,
       "questions":[
          1,
          2,
@@ -20,7 +20,7 @@ App.SurveyStep.FIXTURES = [
       "id":2,
       "duplicator":true,
       "step":2,
-      "survey_template":1,
+      "surveyTemplate":1,
       "questions":[
          10,
          11,
@@ -71,7 +71,7 @@ App.SurveyStep.FIXTURES = [
       "id":3,
       "duplicator":false,
       "step":3,
-      "survey_template":1,
+      "surveyTemplate":1,
       "questions":[
          53,
          54,
@@ -82,7 +82,7 @@ App.SurveyStep.FIXTURES = [
       "id":4,
       "duplicator":false,
       "step":1,
-      "survey_template":2,
+      "surveyTemplate":2,
       "questions":[
          56,
          57,
@@ -95,7 +95,7 @@ App.SurveyStep.FIXTURES = [
       "id":5,
       "duplicator":true,
       "step":2,
-      "survey_template":2,
+      "surveyTemplate":2,
       "questions":[
          61,
          62,
@@ -154,7 +154,7 @@ App.SurveyStep.FIXTURES = [
       "id":6,
       "duplicator":false,
       "step":3,
-      "survey_template":2,
+      "surveyTemplate":2,
       "questions":[
          112,
          113,
@@ -165,7 +165,7 @@ App.SurveyStep.FIXTURES = [
       "id":7,
       "duplicator":false,
       "step":1,
-      "survey_template":3,
+      "surveyTemplate":3,
       "questions":[
          115,
          116,
@@ -179,7 +179,7 @@ App.SurveyStep.FIXTURES = [
       "id":8,
       "duplicator":true,
       "step":2,
-      "survey_template":3,
+      "surveyTemplate":3,
       "questions":[
          121,
          122,
@@ -232,7 +232,7 @@ App.SurveyStep.FIXTURES = [
       "id":9,
       "duplicator":false,
       "step":3,
-      "survey_template":3,
+      "surveyTemplate":3,
       "questions":[
          166,
          167,
@@ -243,7 +243,7 @@ App.SurveyStep.FIXTURES = [
       "id":10,
       "duplicator":false,
       "step":1,
-      "survey_template":4,
+      "surveyTemplate":4,
       "questions":[
          169,
          170,
@@ -256,7 +256,7 @@ App.SurveyStep.FIXTURES = [
       "id":11,
       "duplicator":true,
       "step":2,
-      "survey_template":4,
+      "surveyTemplate":4,
       "questions":[
          174,
          175,
@@ -342,7 +342,7 @@ App.SurveyStep.FIXTURES = [
       "id":12,
       "duplicator":false,
       "step":3,
-      "survey_template":4,
+      "surveyTemplate":4,
       "questions":[
          252,
          253,
@@ -353,7 +353,7 @@ App.SurveyStep.FIXTURES = [
       "id":13,
       "duplicator":false,
       "step":1,
-      "survey_template":5,
+      "surveyTemplate":5,
       "questions":[
          255,
          256,
@@ -366,7 +366,7 @@ App.SurveyStep.FIXTURES = [
       "id":14,
       "duplicator":true,
       "step":2,
-      "survey_template":5,
+      "surveyTemplate":5,
       "questions":[
          260,
          261,
@@ -403,7 +403,7 @@ App.SurveyStep.FIXTURES = [
       "id":15,
       "duplicator":false,
       "step":3,
-      "survey_template":5,
+      "surveyTemplate":5,
       "questions":[
          289,
          290,

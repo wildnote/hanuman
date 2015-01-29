@@ -3,5 +3,5 @@ App.AnswerTypeController = Ember.ObjectController.extend(
 )
 
 App.SelectedAnswerTypeController = Ember.ObjectController.extend(
-  answer_type: null
+  answerType: null
 )
