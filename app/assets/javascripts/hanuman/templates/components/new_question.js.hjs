@@ -18,13 +18,13 @@
         </a>
       </div>
       <div class="col-sm-3">
-        {{input type="text" value=model.question_text class="form-control"}}
+        {{input type="text" value=model.questionText class="form-control"}}
       </div>
       <div class="col-sm-3">
         {{view Ember.Select
            content=answerTypes
            optionLabelPath="content.name"
-           selection=model.answer_type
+           selection=model.answerType
            class="form-control"}}
       </div>
       <div class="col-sm-3"></div>
@@ -53,17 +53,22 @@
     {{/if}}
   {{/if}}
   
-  {{#if validationError}}
-  {{debugger}}
-  <div class="alert alert-danger">
-    <h4>There was a problem</h4>
-    <ul>
-      {{#each message in errors.messages}}
-      <li>
-        {{titleize attribute}} {{message}}
-      </li>
-      {{/each}}
-    </ul>
+  
+  {{#if errors.length}}
+  <div class="row">
+    <div class="col-sm-12">
+      <div class='alert alert-danger'>
+        <h4>There was a problem</h4>
+        <p>The question could not be saved due to validation errors</p>
+        <ul>
+          {{#each message in errors.messages}}
+          <li>
+            {{titleize attribute}} {{message}}
+          </li>
+          {{/each}}
+        </ul>
+      </div>
+    </div>
   </div>
   {{/if}}
   

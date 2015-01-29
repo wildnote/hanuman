@@ -1,10 +1,10 @@
 App.Question.FIXTURES = [
    {
       "id":2,
-      "question_text":"Syndrome Type",
-      "answer_type":11,
-      "sort_order":2,
-      "answer_choices":[
+      "questionText":"Syndrome Type",
+      "answerType":11,
+      "sortOrder":2,
+      "answerChoices":[
          5,
          4,
          3,
@@ -14,19 +14,19 @@ App.Question.FIXTURES = [
    },
    {
       "id":4,
-      "question_text":"Disease Reported",
-      "answer_type":12,
-      "sort_order":4,
-      "answer_choices":[
+      "questionText":"Disease Reported",
+      "answerType":12,
+      "sortOrder":4,
+      "answerChoices":[
 
       ]
    },
    {
       "id":5,
-      "question_text":"Report Status",
-      "answer_type":10,
-      "sort_order":5,
-      "answer_choices":[
+      "questionText":"Report Status",
+      "answerType":10,
+      "sortOrder":5,
+      "answerChoices":[
          9,
          8,
          7,
@@ -35,111 +35,111 @@ App.Question.FIXTURES = [
    },
    {
       "id":6,
-      "question_text":"Was California Department of Public Health Notified?",
-      "answer_type":10,
-      "sort_order":6,
-      "answer_choices":[
+      "questionText":"Was California Department of Public Health Notified?",
+      "answerType":10,
+      "sortOrder":6,
+      "answerChoices":[
          11,
          10
       ]
    },
    {
       "id":7,
-      "question_text":"CDPH Contact Name",
-      "answer_type":12,
-      "sort_order":7,
-      "answer_choices":[
+      "questionText":"CDPH Contact Name",
+      "answerType":12,
+      "sortOrder":7,
+      "answerChoices":[
 
       ]
    },
    {
       "id":8,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":8,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":8,
+      "answerChoices":[
 
       ]
    },
    {
       "id":9,
-      "question_text":"CDPH Contact Phone",
-      "answer_type":12,
-      "sort_order":9,
-      "answer_choices":[
+      "questionText":"CDPH Contact Phone",
+      "answerType":12,
+      "sortOrder":9,
+      "answerChoices":[
 
       ]
    },
    {
       "id":10,
-      "question_text":"Enter Affected Individual's Information and Symptoms",
-      "answer_type":1,
-      "sort_order":10,
-      "answer_choices":[
+      "questionText":"Enter Affected Individual's Information and Symptoms",
+      "answerType":1,
+      "sortOrder":10,
+      "answerChoices":[
 
       ]
    },
    {
       "id":11,
-      "question_text":"Type",
-      "answer_type":10,
-      "sort_order":11,
-      "answer_choices":[
+      "questionText":"Type",
+      "answerType":10,
+      "sortOrder":11,
+      "answerChoices":[
          13,
          12
       ]
    },
    {
       "id":12,
-      "question_text":"Case Name (First Last)",
-      "answer_type":12,
-      "sort_order":12,
-      "answer_choices":[
+      "questionText":"Case Name (First Last)",
+      "answerType":12,
+      "sortOrder":12,
+      "answerChoices":[
 
       ]
    },
    {
       "id":13,
-      "question_text":"(If applicable, please enter where the case occurred)",
-      "answer_type":4,
-      "sort_order":13,
-      "answer_choices":[
+      "questionText":"(If applicable, please enter where the case occurred)",
+      "answerType":4,
+      "sortOrder":13,
+      "answerChoices":[
 
       ]
    },
    {
       "id":14,
-      "question_text":"Where Case Occurred",
-      "answer_type":12,
-      "sort_order":14,
-      "answer_choices":[
+      "questionText":"Where Case Occurred",
+      "answerType":12,
+      "sortOrder":14,
+      "answerChoices":[
 
       ]
    },
    {
       "id":15,
-      "question_text":"Address",
-      "answer_type":12,
-      "sort_order":15,
-      "answer_choices":[
+      "questionText":"Address",
+      "answerType":12,
+      "sortOrder":15,
+      "answerChoices":[
 
       ]
    },
    {
       "id":16,
-      "question_text":"Age",
-      "answer_type":12,
-      "sort_order":16,
-      "answer_choices":[
+      "questionText":"Age",
+      "answerType":12,
+      "sortOrder":16,
+      "answerChoices":[
 
       ]
    },
    {
       "id":17,
-      "question_text":"Sex",
-      "answer_type":11,
-      "sort_order":17,
-      "answer_choices":[
+      "questionText":"Sex",
+      "answerType":11,
+      "sortOrder":17,
+      "answerChoices":[
          16,
          15,
          14
@@ -147,19 +147,19 @@ App.Question.FIXTURES = [
    },
    {
       "id":19,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":19,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":19,
+      "answerChoices":[
 
       ]
    },
    {
       "id":21,
-      "question_text":"Symptoms",
-      "answer_type":8,
-      "sort_order":21,
-      "answer_choices":[
+      "questionText":"Symptoms",
+      "answerType":8,
+      "sortOrder":21,
+      "answerChoices":[
          66,
          65,
          64,
@@ -207,192 +207,192 @@ App.Question.FIXTURES = [
    },
    {
       "id":22,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":22,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":22,
+      "answerChoices":[
 
       ]
    },
    {
       "id":23,
-      "question_text":"Complete as many date fields below as possible, if a date is not applicable you can leave it blank",
-      "answer_type":2,
-      "sort_order":23,
-      "answer_choices":[
+      "questionText":"Complete as many date fields below as possible, if a date is not applicable you can leave it blank",
+      "answerType":2,
+      "sortOrder":23,
+      "answerChoices":[
 
       ]
    },
    {
       "id":24,
-      "question_text":"Onset Date",
-      "answer_type":9,
-      "sort_order":24,
-      "answer_choices":[
+      "questionText":"Onset Date",
+      "answerType":9,
+      "sortOrder":24,
+      "answerChoices":[
 
       ]
    },
    {
       "id":25,
-      "question_text":"Diagnosis Date",
-      "answer_type":9,
-      "sort_order":25,
-      "answer_choices":[
+      "questionText":"Diagnosis Date",
+      "answerType":9,
+      "sortOrder":25,
+      "answerChoices":[
 
       ]
    },
    {
       "id":26,
-      "question_text":"Recovery Date",
-      "answer_type":9,
-      "sort_order":26,
-      "answer_choices":[
+      "questionText":"Recovery Date",
+      "answerType":9,
+      "sortOrder":26,
+      "answerChoices":[
 
       ]
    },
    {
       "id":27,
-      "question_text":"Exposure Date",
-      "answer_type":9,
-      "sort_order":27,
-      "answer_choices":[
+      "questionText":"Exposure Date",
+      "answerType":9,
+      "sortOrder":27,
+      "answerChoices":[
 
       ]
    },
    {
       "id":28,
-      "question_text":"Treatment",
-      "answer_type":12,
-      "sort_order":28,
-      "answer_choices":[
+      "questionText":"Treatment",
+      "answerType":12,
+      "sortOrder":28,
+      "answerChoices":[
 
       ]
    },
    {
       "id":29,
-      "question_text":"Treatment Date",
-      "answer_type":9,
-      "sort_order":29,
-      "answer_choices":[
+      "questionText":"Treatment Date",
+      "answerType":9,
+      "sortOrder":29,
+      "answerChoices":[
 
       ]
    },
    {
       "id":30,
-      "question_text":"Date of Death",
-      "answer_type":9,
-      "sort_order":30,
-      "answer_choices":[
+      "questionText":"Date of Death",
+      "answerType":9,
+      "sortOrder":30,
+      "answerChoices":[
 
       ]
    },
    {
       "id":31,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":31,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":31,
+      "answerChoices":[
 
       ]
    },
    {
       "id":32,
-      "question_text":"Sent to Emergency Department for this illness?",
-      "answer_type":10,
-      "sort_order":32,
-      "answer_choices":[
+      "questionText":"Sent to Emergency Department for this illness?",
+      "answerType":10,
+      "sortOrder":32,
+      "answerChoices":[
          68,
          67
       ]
    },
    {
       "id":34,
-      "question_text":"Hospitalization Date",
-      "answer_type":9,
-      "sort_order":34,
-      "answer_choices":[
+      "questionText":"Hospitalization Date",
+      "answerType":9,
+      "sortOrder":34,
+      "answerChoices":[
 
       ]
    },
    {
       "id":35,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":35,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":35,
+      "answerChoices":[
 
       ]
    },
    {
       "id":36,
-      "question_text":"Enter Lab Details if applicable, otherwise you can leave it blank",
-      "answer_type":2,
-      "sort_order":36,
-      "answer_choices":[
+      "questionText":"Enter Lab Details if applicable, otherwise you can leave it blank",
+      "answerType":2,
+      "sortOrder":36,
+      "answerChoices":[
 
       ]
    },
    {
       "id":37,
-      "question_text":"Select Lab Name",
-      "answer_type":10,
-      "sort_order":37,
-      "answer_choices":[
+      "questionText":"Select Lab Name",
+      "answerType":10,
+      "sortOrder":37,
+      "answerChoices":[
          72,
          71
       ]
    },
    {
       "id":38,
-      "question_text":"(If Other, please enter the Lab Name)",
-      "answer_type":4,
-      "sort_order":38,
-      "answer_choices":[
+      "questionText":"(If Other, please enter the Lab Name)",
+      "answerType":4,
+      "sortOrder":38,
+      "answerChoices":[
 
       ]
    },
    {
       "id":39,
-      "question_text":"Enter Lab Name",
-      "answer_type":12,
-      "sort_order":39,
-      "answer_choices":[
+      "questionText":"Enter Lab Name",
+      "answerType":12,
+      "sortOrder":39,
+      "answerChoices":[
 
       ]
    },
    {
       "id":40,
-      "question_text":"Lab Collection Date",
-      "answer_type":9,
-      "sort_order":40,
-      "answer_choices":[
+      "questionText":"Lab Collection Date",
+      "answerType":9,
+      "sortOrder":40,
+      "answerChoices":[
 
       ]
    },
    {
       "id":41,
-      "question_text":"Speciman Type",
-      "answer_type":12,
-      "sort_order":41,
-      "answer_choices":[
+      "questionText":"Speciman Type",
+      "answerType":12,
+      "sortOrder":41,
+      "answerChoices":[
 
       ]
    },
    {
       "id":42,
-      "question_text":"Lab Test Type",
-      "answer_type":12,
-      "sort_order":42,
-      "answer_choices":[
+      "questionText":"Lab Test Type",
+      "answerType":12,
+      "sortOrder":42,
+      "answerChoices":[
 
       ]
    },
    {
       "id":43,
-      "question_text":"Test Result",
-      "answer_type":10,
-      "sort_order":43,
-      "answer_choices":[
+      "questionText":"Test Result",
+      "answerType":10,
+      "sortOrder":43,
+      "answerChoices":[
          75,
          74,
          73
@@ -400,74 +400,74 @@ App.Question.FIXTURES = [
    },
    {
       "id":44,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":44,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":44,
+      "answerChoices":[
 
       ]
    },
    {
       "id":46,
-      "question_text":"Select Lab Name",
-      "answer_type":10,
-      "sort_order":46,
-      "answer_choices":[
+      "questionText":"Select Lab Name",
+      "answerType":10,
+      "sortOrder":46,
+      "answerChoices":[
          77,
          76
       ]
    },
    {
       "id":47,
-      "question_text":"(If Other, please enter the Lab Name)",
-      "answer_type":4,
-      "sort_order":47,
-      "answer_choices":[
+      "questionText":"(If Other, please enter the Lab Name)",
+      "answerType":4,
+      "sortOrder":47,
+      "answerChoices":[
 
       ]
    },
    {
       "id":48,
-      "question_text":"Enter Lab Name",
-      "answer_type":12,
-      "sort_order":48,
-      "answer_choices":[
+      "questionText":"Enter Lab Name",
+      "answerType":12,
+      "sortOrder":48,
+      "answerChoices":[
 
       ]
    },
    {
       "id":49,
-      "question_text":"Lab Collection Date",
-      "answer_type":9,
-      "sort_order":49,
-      "answer_choices":[
+      "questionText":"Lab Collection Date",
+      "answerType":9,
+      "sortOrder":49,
+      "answerChoices":[
 
       ]
    },
    {
       "id":50,
-      "question_text":"Speciman Type",
-      "answer_type":12,
-      "sort_order":50,
-      "answer_choices":[
+      "questionText":"Speciman Type",
+      "answerType":12,
+      "sortOrder":50,
+      "answerChoices":[
 
       ]
    },
    {
       "id":51,
-      "question_text":"Lab Test Type",
-      "answer_type":12,
-      "sort_order":51,
-      "answer_choices":[
+      "questionText":"Lab Test Type",
+      "answerType":12,
+      "sortOrder":51,
+      "answerChoices":[
 
       ]
    },
    {
       "id":52,
-      "question_text":"Test Result",
-      "answer_type":10,
-      "sort_order":52,
-      "answer_choices":[
+      "questionText":"Test Result",
+      "answerType":10,
+      "sortOrder":52,
+      "answerChoices":[
          80,
          79,
          78
@@ -475,37 +475,37 @@ App.Question.FIXTURES = [
    },
    {
       "id":53,
-      "question_text":"Enter Additional Important Information",
-      "answer_type":1,
-      "sort_order":53,
-      "answer_choices":[
+      "questionText":"Enter Additional Important Information",
+      "answerType":1,
+      "sortOrder":53,
+      "answerChoices":[
 
       ]
    },
    {
       "id":55,
-      "question_text":"Notes",
-      "answer_type":13,
-      "sort_order":55,
-      "answer_choices":[
+      "questionText":"Notes",
+      "answerType":13,
+      "sortOrder":55,
+      "answerChoices":[
 
       ]
    },
    {
       "id":56,
-      "question_text":"Enter Outbreak Details",
-      "answer_type":1,
-      "sort_order":1,
-      "answer_choices":[
+      "questionText":"Enter Outbreak Details",
+      "answerType":1,
+      "sortOrder":1,
+      "answerChoices":[
 
       ]
    },
    {
       "id":57,
-      "question_text":"Syndrome Type",
-      "answer_type":11,
-      "sort_order":2,
-      "answer_choices":[
+      "questionText":"Syndrome Type",
+      "answerType":11,
+      "sortOrder":2,
+      "answerChoices":[
          85,
          84,
          83,
@@ -515,28 +515,28 @@ App.Question.FIXTURES = [
    },
    {
       "id":58,
-      "question_text":"(If known, please enter the name of the Disease you are Reporting)",
-      "answer_type":4,
-      "sort_order":3,
-      "answer_choices":[
+      "questionText":"(If known, please enter the name of the Disease you are Reporting)",
+      "answerType":4,
+      "sortOrder":3,
+      "answerChoices":[
 
       ]
    },
    {
       "id":59,
-      "question_text":"Disease Reported",
-      "answer_type":12,
-      "sort_order":4,
-      "answer_choices":[
+      "questionText":"Disease Reported",
+      "answerType":12,
+      "sortOrder":4,
+      "answerChoices":[
 
       ]
    },
    {
       "id":60,
-      "question_text":"Report Status",
-      "answer_type":10,
-      "sort_order":5,
-      "answer_choices":[
+      "questionText":"Report Status",
+      "answerType":10,
+      "sortOrder":5,
+      "answerChoices":[
          89,
          88,
          87,
@@ -545,92 +545,92 @@ App.Question.FIXTURES = [
    },
    {
       "id":61,
-      "question_text":"Enter Affected Individual's Information and Symptoms",
-      "answer_type":1,
-      "sort_order":6,
-      "answer_choices":[
+      "questionText":"Enter Affected Individual's Information and Symptoms",
+      "answerType":1,
+      "sortOrder":6,
+      "answerChoices":[
 
       ]
    },
    {
       "id":62,
-      "question_text":"Type",
-      "answer_type":10,
-      "sort_order":7,
-      "answer_choices":[
+      "questionText":"Type",
+      "answerType":10,
+      "sortOrder":7,
+      "answerChoices":[
          91,
          90
       ]
    },
    {
       "id":63,
-      "question_text":"(If applicable, please enter where the case occurred)",
-      "answer_type":4,
-      "sort_order":8,
-      "answer_choices":[
+      "questionText":"(If applicable, please enter where the case occurred)",
+      "answerType":4,
+      "sortOrder":8,
+      "answerChoices":[
 
       ]
    },
    {
       "id":64,
-      "question_text":"Where Case Occurred",
-      "answer_type":12,
-      "sort_order":9,
-      "answer_choices":[
+      "questionText":"Where Case Occurred",
+      "answerType":12,
+      "sortOrder":9,
+      "answerChoices":[
 
       ]
    },
    {
       "id":65,
-      "question_text":"Case Name (First Last)",
-      "answer_type":12,
-      "sort_order":10,
-      "answer_choices":[
+      "questionText":"Case Name (First Last)",
+      "answerType":12,
+      "sortOrder":10,
+      "answerChoices":[
 
       ]
    },
    {
       "id":66,
-      "question_text":"Occupation",
-      "answer_type":12,
-      "sort_order":11,
-      "answer_choices":[
+      "questionText":"Occupation",
+      "answerType":12,
+      "sortOrder":11,
+      "answerChoices":[
 
       ]
    },
    {
       "id":67,
-      "question_text":"Address",
-      "answer_type":12,
-      "sort_order":12,
-      "answer_choices":[
+      "questionText":"Address",
+      "answerType":12,
+      "sortOrder":12,
+      "answerChoices":[
 
       ]
    },
    {
       "id":68,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":13,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":13,
+      "answerChoices":[
 
       ]
    },
    {
       "id":69,
-      "question_text":"Phone",
-      "answer_type":12,
-      "sort_order":14,
-      "answer_choices":[
+      "questionText":"Phone",
+      "answerType":12,
+      "sortOrder":14,
+      "answerChoices":[
 
       ]
    },
    {
       "id":71,
-      "question_text":"Sex",
-      "answer_type":11,
-      "sort_order":16,
-      "answer_choices":[
+      "questionText":"Sex",
+      "answerType":11,
+      "sortOrder":16,
+      "answerChoices":[
          94,
          93,
          92
@@ -638,10 +638,10 @@ App.Question.FIXTURES = [
    },
    {
       "id":72,
-      "question_text":"Ethnicity/Race",
-      "answer_type":11,
-      "sort_order":17,
-      "answer_choices":[
+      "questionText":"Ethnicity/Race",
+      "answerType":11,
+      "sortOrder":17,
+      "answerChoices":[
          101,
          100,
          99,
@@ -653,19 +653,19 @@ App.Question.FIXTURES = [
    },
    {
       "id":73,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":18,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":18,
+      "answerChoices":[
 
       ]
    },
    {
       "id":75,
-      "question_text":"Symptoms",
-      "answer_type":8,
-      "sort_order":20,
-      "answer_choices":[
+      "questionText":"Symptoms",
+      "answerType":8,
+      "sortOrder":20,
+      "answerChoices":[
          144,
          143,
          142,
@@ -713,164 +713,164 @@ App.Question.FIXTURES = [
    },
    {
       "id":76,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":21,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":21,
+      "answerChoices":[
 
       ]
    },
    {
       "id":77,
-      "question_text":"Complete as many date fields below as possible, if a date is not applicable you can leave it blank",
-      "answer_type":2,
-      "sort_order":22,
-      "answer_choices":[
+      "questionText":"Complete as many date fields below as possible, if a date is not applicable you can leave it blank",
+      "answerType":2,
+      "sortOrder":22,
+      "answerChoices":[
 
       ]
    },
    {
       "id":78,
-      "question_text":"Onset Date",
-      "answer_type":9,
-      "sort_order":23,
-      "answer_choices":[
+      "questionText":"Onset Date",
+      "answerType":9,
+      "sortOrder":23,
+      "answerChoices":[
 
       ]
    },
    {
       "id":79,
-      "question_text":"Diagnosis Date",
-      "answer_type":9,
-      "sort_order":24,
-      "answer_choices":[
+      "questionText":"Diagnosis Date",
+      "answerType":9,
+      "sortOrder":24,
+      "answerChoices":[
 
       ]
    },
    {
       "id":80,
-      "question_text":"Recovery Date",
-      "answer_type":9,
-      "sort_order":25,
-      "answer_choices":[
+      "questionText":"Recovery Date",
+      "answerType":9,
+      "sortOrder":25,
+      "answerChoices":[
 
       ]
    },
    {
       "id":81,
-      "question_text":"Exposure Date",
-      "answer_type":9,
-      "sort_order":26,
-      "answer_choices":[
+      "questionText":"Exposure Date",
+      "answerType":9,
+      "sortOrder":26,
+      "answerChoices":[
 
       ]
    },
    {
       "id":82,
-      "question_text":"Treatment",
-      "answer_type":12,
-      "sort_order":27,
-      "answer_choices":[
+      "questionText":"Treatment",
+      "answerType":12,
+      "sortOrder":27,
+      "answerChoices":[
 
       ]
    },
    {
       "id":83,
-      "question_text":"Treatment Date",
-      "answer_type":9,
-      "sort_order":28,
-      "answer_choices":[
+      "questionText":"Treatment Date",
+      "answerType":9,
+      "sortOrder":28,
+      "answerChoices":[
 
       ]
    },
    {
       "id":84,
-      "question_text":"Hospitalization Date",
-      "answer_type":9,
-      "sort_order":29,
-      "answer_choices":[
+      "questionText":"Hospitalization Date",
+      "answerType":9,
+      "sortOrder":29,
+      "answerChoices":[
 
       ]
    },
    {
       "id":85,
-      "question_text":"Date of Death",
-      "answer_type":9,
-      "sort_order":30,
-      "answer_choices":[
+      "questionText":"Date of Death",
+      "answerType":9,
+      "sortOrder":30,
+      "answerChoices":[
 
       ]
    },
    {
       "id":86,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":31,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":31,
+      "answerChoices":[
 
       ]
    },
    {
       "id":88,
-      "question_text":"Select Lab Name",
-      "answer_type":10,
-      "sort_order":33,
-      "answer_choices":[
+      "questionText":"Select Lab Name",
+      "answerType":10,
+      "sortOrder":33,
+      "answerChoices":[
          146,
          145
       ]
    },
    {
       "id":89,
-      "question_text":"(If Other, please enter the Lab Name)",
-      "answer_type":4,
-      "sort_order":34,
-      "answer_choices":[
+      "questionText":"(If Other, please enter the Lab Name)",
+      "answerType":4,
+      "sortOrder":34,
+      "answerChoices":[
 
       ]
    },
    {
       "id":90,
-      "question_text":"Enter Lab Name",
-      "answer_type":12,
-      "sort_order":35,
-      "answer_choices":[
+      "questionText":"Enter Lab Name",
+      "answerType":12,
+      "sortOrder":35,
+      "answerChoices":[
 
       ]
    },
    {
       "id":91,
-      "question_text":"Lab Collection Date",
-      "answer_type":9,
-      "sort_order":36,
-      "answer_choices":[
+      "questionText":"Lab Collection Date",
+      "answerType":9,
+      "sortOrder":36,
+      "answerChoices":[
 
       ]
    },
    {
       "id":92,
-      "question_text":"Speciman Type",
-      "answer_type":12,
-      "sort_order":37,
-      "answer_choices":[
+      "questionText":"Speciman Type",
+      "answerType":12,
+      "sortOrder":37,
+      "answerChoices":[
 
       ]
    },
    {
       "id":93,
-      "question_text":"Lab Test Type",
-      "answer_type":12,
-      "sort_order":38,
-      "answer_choices":[
+      "questionText":"Lab Test Type",
+      "answerType":12,
+      "sortOrder":38,
+      "answerChoices":[
 
       ]
    },
    {
       "id":94,
-      "question_text":"Test Result",
-      "answer_type":10,
-      "sort_order":39,
-      "answer_choices":[
+      "questionText":"Test Result",
+      "answerType":10,
+      "sortOrder":39,
+      "answerChoices":[
          149,
          148,
          147
@@ -878,74 +878,74 @@ App.Question.FIXTURES = [
    },
    {
       "id":95,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":40,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":40,
+      "answerChoices":[
 
       ]
    },
    {
       "id":97,
-      "question_text":"Select Lab Name",
-      "answer_type":10,
-      "sort_order":42,
-      "answer_choices":[
+      "questionText":"Select Lab Name",
+      "answerType":10,
+      "sortOrder":42,
+      "answerChoices":[
          151,
          150
       ]
    },
    {
       "id":98,
-      "question_text":"(If Other, please enter the Lab Name)",
-      "answer_type":4,
-      "sort_order":43,
-      "answer_choices":[
+      "questionText":"(If Other, please enter the Lab Name)",
+      "answerType":4,
+      "sortOrder":43,
+      "answerChoices":[
 
       ]
    },
    {
       "id":99,
-      "question_text":"Enter Lab Name",
-      "answer_type":12,
-      "sort_order":44,
-      "answer_choices":[
+      "questionText":"Enter Lab Name",
+      "answerType":12,
+      "sortOrder":44,
+      "answerChoices":[
 
       ]
    },
    {
       "id":100,
-      "question_text":"Lab Collection Date",
-      "answer_type":9,
-      "sort_order":45,
-      "answer_choices":[
+      "questionText":"Lab Collection Date",
+      "answerType":9,
+      "sortOrder":45,
+      "answerChoices":[
 
       ]
    },
    {
       "id":101,
-      "question_text":"Speciman Type",
-      "answer_type":12,
-      "sort_order":46,
-      "answer_choices":[
+      "questionText":"Speciman Type",
+      "answerType":12,
+      "sortOrder":46,
+      "answerChoices":[
 
       ]
    },
    {
       "id":102,
-      "question_text":"Lab Test Type",
-      "answer_type":12,
-      "sort_order":47,
-      "answer_choices":[
+      "questionText":"Lab Test Type",
+      "answerType":12,
+      "sortOrder":47,
+      "answerChoices":[
 
       ]
    },
    {
       "id":103,
-      "question_text":"Test Result",
-      "answer_type":10,
-      "sort_order":48,
-      "answer_choices":[
+      "questionText":"Test Result",
+      "answerType":10,
+      "sortOrder":48,
+      "answerChoices":[
          154,
          153,
          152
@@ -953,37 +953,37 @@ App.Question.FIXTURES = [
    },
    {
       "id":106,
-      "question_text":"Contact Name",
-      "answer_type":12,
-      "sort_order":51,
-      "answer_choices":[
+      "questionText":"Contact Name",
+      "answerType":12,
+      "sortOrder":51,
+      "answerChoices":[
 
       ]
    },
    {
       "id":107,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":52,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":52,
+      "answerChoices":[
 
       ]
    },
    {
       "id":108,
-      "question_text":"Contact Phone",
-      "answer_type":12,
-      "sort_order":53,
-      "answer_choices":[
+      "questionText":"Contact Phone",
+      "answerType":12,
+      "sortOrder":53,
+      "answerChoices":[
 
       ]
    },
    {
       "id":109,
-      "question_text":"Relationship of Contact to Case",
-      "answer_type":10,
-      "sort_order":54,
-      "answer_choices":[
+      "questionText":"Relationship of Contact to Case",
+      "answerType":10,
+      "sortOrder":54,
+      "answerChoices":[
          157,
          156,
          155
@@ -991,64 +991,64 @@ App.Question.FIXTURES = [
    },
    {
       "id":110,
-      "question_text":"(If Other, please enter the Enter the Relationship)",
-      "answer_type":4,
-      "sort_order":55,
-      "answer_choices":[
+      "questionText":"(If Other, please enter the Enter the Relationship)",
+      "answerType":4,
+      "sortOrder":55,
+      "answerChoices":[
 
       ]
    },
    {
       "id":111,
-      "question_text":"Enter Relationship",
-      "answer_type":12,
-      "sort_order":56,
-      "answer_choices":[
+      "questionText":"Enter Relationship",
+      "answerType":12,
+      "sortOrder":56,
+      "answerChoices":[
 
       ]
    },
    {
       "id":112,
-      "question_text":"Enter Additional Important Information",
-      "answer_type":1,
-      "sort_order":57,
-      "answer_choices":[
+      "questionText":"Enter Additional Important Information",
+      "answerType":1,
+      "sortOrder":57,
+      "answerChoices":[
 
       ]
    },
    {
       "id":113,
-      "question_text":"(Use notes to communicate additional important information if any)",
-      "answer_type":4,
-      "sort_order":58,
-      "answer_choices":[
+      "questionText":"(Use notes to communicate additional important information if any)",
+      "answerType":4,
+      "sortOrder":58,
+      "answerChoices":[
 
       ]
    },
    {
       "id":114,
-      "question_text":"Notes",
-      "answer_type":13,
-      "sort_order":59,
-      "answer_choices":[
+      "questionText":"Notes",
+      "answerType":13,
+      "sortOrder":59,
+      "answerChoices":[
 
       ]
    },
    {
       "id":115,
-      "question_text":"Enter Outbreak Details",
-      "answer_type":1,
-      "sort_order":1,
-      "answer_choices":[
+      "questionText":"Enter Outbreak Details",
+      "answerType":1,
+      "sortOrder":1,
+      "answerChoices":[
 
       ]
    },
    {
       "id":116,
-      "question_text":"School Type",
-      "answer_type":6,
-      "sort_order":2,
-      "answer_choices":[
+      "questionText":"School Type",
+      "answerType":6,
+      "sortOrder":2,
+      "answerChoices":[
          164,
          163,
          162,
@@ -1060,10 +1060,10 @@ App.Question.FIXTURES = [
    },
    {
       "id":117,
-      "question_text":"Syndrome Type",
-      "answer_type":11,
-      "sort_order":3,
-      "answer_choices":[
+      "questionText":"Syndrome Type",
+      "answerType":11,
+      "sortOrder":3,
+      "answerChoices":[
          169,
          168,
          167,
@@ -1073,19 +1073,19 @@ App.Question.FIXTURES = [
    },
    {
       "id":119,
-      "question_text":"Disease Reported",
-      "answer_type":12,
-      "sort_order":5,
-      "answer_choices":[
+      "questionText":"Disease Reported",
+      "answerType":12,
+      "sortOrder":5,
+      "answerChoices":[
 
       ]
    },
    {
       "id":120,
-      "question_text":"Report Status",
-      "answer_type":10,
-      "sort_order":6,
-      "answer_choices":[
+      "questionText":"Report Status",
+      "answerType":10,
+      "sortOrder":6,
+      "answerChoices":[
          173,
          172,
          171,
@@ -1094,83 +1094,83 @@ App.Question.FIXTURES = [
    },
    {
       "id":121,
-      "question_text":"Enter Affected Individual's Information and Symptoms",
-      "answer_type":1,
-      "sort_order":7,
-      "answer_choices":[
+      "questionText":"Enter Affected Individual's Information and Symptoms",
+      "answerType":1,
+      "sortOrder":7,
+      "answerChoices":[
 
       ]
    },
    {
       "id":122,
-      "question_text":"Type",
-      "answer_type":10,
-      "sort_order":8,
-      "answer_choices":[
+      "questionText":"Type",
+      "answerType":10,
+      "sortOrder":8,
+      "answerChoices":[
          175,
          174
       ]
    },
    {
       "id":123,
-      "question_text":"Case Name (First Last)",
-      "answer_type":12,
-      "sort_order":9,
-      "answer_choices":[
+      "questionText":"Case Name (First Last)",
+      "answerType":12,
+      "sortOrder":9,
+      "answerChoices":[
 
       ]
    },
    {
       "id":124,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":10,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":10,
+      "answerChoices":[
 
       ]
    },
    {
       "id":125,
-      "question_text":"Phone",
-      "answer_type":12,
-      "sort_order":11,
-      "answer_choices":[
+      "questionText":"Phone",
+      "answerType":12,
+      "sortOrder":11,
+      "answerChoices":[
 
       ]
    },
    {
       "id":126,
-      "question_text":"Location",
-      "answer_type":25,
-      "sort_order":12,
-      "answer_choices":[
+      "questionText":"Location",
+      "answerType":25,
+      "sortOrder":12,
+      "answerChoices":[
 
       ]
    },
    {
       "id":127,
-      "question_text":"Address",
-      "answer_type":12,
-      "sort_order":13,
-      "answer_choices":[
+      "questionText":"Address",
+      "answerType":12,
+      "sortOrder":13,
+      "answerChoices":[
 
       ]
    },
    {
       "id":128,
-      "question_text":"Age",
-      "answer_type":12,
-      "sort_order":14,
-      "answer_choices":[
+      "questionText":"Age",
+      "answerType":12,
+      "sortOrder":14,
+      "answerChoices":[
 
       ]
    },
    {
       "id":129,
-      "question_text":"Sex",
-      "answer_type":11,
-      "sort_order":15,
-      "answer_choices":[
+      "questionText":"Sex",
+      "answerType":11,
+      "sortOrder":15,
+      "answerChoices":[
          178,
          177,
          176
@@ -1178,10 +1178,10 @@ App.Question.FIXTURES = [
    },
    {
       "id":130,
-      "question_text":"Ethnicity/Race",
-      "answer_type":11,
-      "sort_order":16,
-      "answer_choices":[
+      "questionText":"Ethnicity/Race",
+      "answerType":11,
+      "sortOrder":16,
+      "answerChoices":[
          185,
          184,
          183,
@@ -1193,19 +1193,19 @@ App.Question.FIXTURES = [
    },
    {
       "id":131,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":17,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":17,
+      "answerChoices":[
 
       ]
    },
    {
       "id":133,
-      "question_text":"Symptoms",
-      "answer_type":8,
-      "sort_order":19,
-      "answer_choices":[
+      "questionText":"Symptoms",
+      "answerType":8,
+      "sortOrder":19,
+      "answerChoices":[
          228,
          227,
          226,
@@ -1253,193 +1253,193 @@ App.Question.FIXTURES = [
    },
    {
       "id":134,
-      "question_text":"(Only enter date if individual has recovered!)",
-      "answer_type":17,
-      "sort_order":20,
-      "answer_choices":[
+      "questionText":"(Only enter date if individual has recovered!)",
+      "answerType":17,
+      "sortOrder":20,
+      "answerChoices":[
 
       ]
    },
    {
       "id":135,
-      "question_text":"Recovery Date",
-      "answer_type":22,
-      "sort_order":21,
-      "answer_choices":[
+      "questionText":"Recovery Date",
+      "answerType":22,
+      "sortOrder":21,
+      "answerChoices":[
 
       ]
    },
    {
       "id":136,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":22,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":22,
+      "answerChoices":[
 
       ]
    },
    {
       "id":137,
-      "question_text":"Onset Date",
-      "answer_type":9,
-      "sort_order":23,
-      "answer_choices":[
+      "questionText":"Onset Date",
+      "answerType":9,
+      "sortOrder":23,
+      "answerChoices":[
 
       ]
    },
    {
       "id":138,
-      "question_text":"Date of Absence",
-      "answer_type":9,
-      "sort_order":24,
-      "answer_choices":[
+      "questionText":"Date of Absence",
+      "answerType":9,
+      "sortOrder":24,
+      "answerChoices":[
 
       ]
    },
    {
       "id":139,
-      "question_text":"Date Returned to School",
-      "answer_type":9,
-      "sort_order":25,
-      "answer_choices":[
+      "questionText":"Date Returned to School",
+      "answerType":9,
+      "sortOrder":25,
+      "answerChoices":[
 
       ]
    },
    {
       "id":140,
-      "question_text":"Diagnosis Date",
-      "answer_type":22,
-      "sort_order":26,
-      "answer_choices":[
+      "questionText":"Diagnosis Date",
+      "answerType":22,
+      "sortOrder":26,
+      "answerChoices":[
 
       ]
    },
    {
       "id":141,
-      "question_text":"Exposure Date",
-      "answer_type":22,
-      "sort_order":27,
-      "answer_choices":[
+      "questionText":"Exposure Date",
+      "answerType":22,
+      "sortOrder":27,
+      "answerChoices":[
 
       ]
    },
    {
       "id":142,
-      "question_text":"Treatment",
-      "answer_type":25,
-      "sort_order":28,
-      "answer_choices":[
+      "questionText":"Treatment",
+      "answerType":25,
+      "sortOrder":28,
+      "answerChoices":[
 
       ]
    },
    {
       "id":143,
-      "question_text":"Treatment Date",
-      "answer_type":22,
-      "sort_order":29,
-      "answer_choices":[
+      "questionText":"Treatment Date",
+      "answerType":22,
+      "sortOrder":29,
+      "answerChoices":[
 
       ]
    },
    {
       "id":145,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":31,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":31,
+      "answerChoices":[
 
       ]
    },
    {
       "id":146,
-      "question_text":"Sent to Emergency Department for this illness?",
-      "answer_type":10,
-      "sort_order":32,
-      "answer_choices":[
+      "questionText":"Sent to Emergency Department for this illness?",
+      "answerType":10,
+      "sortOrder":32,
+      "answerChoices":[
          230,
          229
       ]
    },
    {
       "id":147,
-      "question_text":"Hospitalized for this illness?",
-      "answer_type":10,
-      "sort_order":33,
-      "answer_choices":[
+      "questionText":"Hospitalized for this illness?",
+      "answerType":10,
+      "sortOrder":33,
+      "answerChoices":[
          232,
          231
       ]
    },
    {
       "id":148,
-      "question_text":"",
-      "answer_type":16,
-      "sort_order":34,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":16,
+      "sortOrder":34,
+      "answerChoices":[
 
       ]
    },
    {
       "id":150,
-      "question_text":"Select Lab Name",
-      "answer_type":23,
-      "sort_order":36,
-      "answer_choices":[
+      "questionText":"Select Lab Name",
+      "answerType":23,
+      "sortOrder":36,
+      "answerChoices":[
          234,
          233
       ]
    },
    {
       "id":151,
-      "question_text":"(If Other, please enter the Lab Name)",
-      "answer_type":17,
-      "sort_order":37,
-      "answer_choices":[
+      "questionText":"(If Other, please enter the Lab Name)",
+      "answerType":17,
+      "sortOrder":37,
+      "answerChoices":[
 
       ]
    },
    {
       "id":152,
-      "question_text":"Enter Lab Name",
-      "answer_type":25,
-      "sort_order":38,
-      "answer_choices":[
+      "questionText":"Enter Lab Name",
+      "answerType":25,
+      "sortOrder":38,
+      "answerChoices":[
 
       ]
    },
    {
       "id":153,
-      "question_text":"Lab Collection Date",
-      "answer_type":22,
-      "sort_order":39,
-      "answer_choices":[
+      "questionText":"Lab Collection Date",
+      "answerType":22,
+      "sortOrder":39,
+      "answerChoices":[
 
       ]
    },
    {
       "id":154,
-      "question_text":"Speciman Type",
-      "answer_type":25,
-      "sort_order":40,
-      "answer_choices":[
+      "questionText":"Speciman Type",
+      "answerType":25,
+      "sortOrder":40,
+      "answerChoices":[
 
       ]
    },
    {
       "id":155,
-      "question_text":"Lab Test Type",
-      "answer_type":25,
-      "sort_order":41,
-      "answer_choices":[
+      "questionText":"Lab Test Type",
+      "answerType":25,
+      "sortOrder":41,
+      "answerChoices":[
 
       ]
    },
    {
       "id":156,
-      "question_text":"Test Result",
-      "answer_type":23,
-      "sort_order":42,
-      "answer_choices":[
+      "questionText":"Test Result",
+      "answerType":23,
+      "sortOrder":42,
+      "answerChoices":[
          237,
          236,
          235
@@ -1447,74 +1447,74 @@ App.Question.FIXTURES = [
    },
    {
       "id":157,
-      "question_text":"",
-      "answer_type":16,
-      "sort_order":43,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":16,
+      "sortOrder":43,
+      "answerChoices":[
 
       ]
    },
    {
       "id":159,
-      "question_text":"Select Lab Name",
-      "answer_type":23,
-      "sort_order":45,
-      "answer_choices":[
+      "questionText":"Select Lab Name",
+      "answerType":23,
+      "sortOrder":45,
+      "answerChoices":[
          239,
          238
       ]
    },
    {
       "id":160,
-      "question_text":"(If Other, please enter the Lab Name)",
-      "answer_type":17,
-      "sort_order":46,
-      "answer_choices":[
+      "questionText":"(If Other, please enter the Lab Name)",
+      "answerType":17,
+      "sortOrder":46,
+      "answerChoices":[
 
       ]
    },
    {
       "id":161,
-      "question_text":"Enter Lab Name",
-      "answer_type":25,
-      "sort_order":47,
-      "answer_choices":[
+      "questionText":"Enter Lab Name",
+      "answerType":25,
+      "sortOrder":47,
+      "answerChoices":[
 
       ]
    },
    {
       "id":162,
-      "question_text":"Lab Collection Date",
-      "answer_type":22,
-      "sort_order":48,
-      "answer_choices":[
+      "questionText":"Lab Collection Date",
+      "answerType":22,
+      "sortOrder":48,
+      "answerChoices":[
 
       ]
    },
    {
       "id":163,
-      "question_text":"Speciman Type",
-      "answer_type":25,
-      "sort_order":49,
-      "answer_choices":[
+      "questionText":"Speciman Type",
+      "answerType":25,
+      "sortOrder":49,
+      "answerChoices":[
 
       ]
    },
    {
       "id":164,
-      "question_text":"Lab Test Type",
-      "answer_type":25,
-      "sort_order":50,
-      "answer_choices":[
+      "questionText":"Lab Test Type",
+      "answerType":25,
+      "sortOrder":50,
+      "answerChoices":[
 
       ]
    },
    {
       "id":165,
-      "question_text":"Test Result",
-      "answer_type":23,
-      "sort_order":51,
-      "answer_choices":[
+      "questionText":"Test Result",
+      "answerType":23,
+      "sortOrder":51,
+      "answerChoices":[
          242,
          241,
          240
@@ -1522,46 +1522,46 @@ App.Question.FIXTURES = [
    },
    {
       "id":166,
-      "question_text":"Enter Additional Important Information",
-      "answer_type":1,
-      "sort_order":52,
-      "answer_choices":[
+      "questionText":"Enter Additional Important Information",
+      "answerType":1,
+      "sortOrder":52,
+      "answerChoices":[
 
       ]
    },
    {
       "id":167,
-      "question_text":"(Use notes to communicate additional important information if any)",
-      "answer_type":4,
-      "sort_order":53,
-      "answer_choices":[
+      "questionText":"(Use notes to communicate additional important information if any)",
+      "answerType":4,
+      "sortOrder":53,
+      "answerChoices":[
 
       ]
    },
    {
       "id":168,
-      "question_text":"Notes",
-      "answer_type":13,
-      "sort_order":54,
-      "answer_choices":[
+      "questionText":"Notes",
+      "answerType":13,
+      "sortOrder":54,
+      "answerChoices":[
 
       ]
    },
    {
       "id":169,
-      "question_text":"Enter Outbreak Details",
-      "answer_type":1,
-      "sort_order":1,
-      "answer_choices":[
+      "questionText":"Enter Outbreak Details",
+      "answerType":1,
+      "sortOrder":1,
+      "answerChoices":[
 
       ]
    },
    {
       "id":170,
-      "question_text":"Syndrome Type",
-      "answer_type":11,
-      "sort_order":2,
-      "answer_choices":[
+      "questionText":"Syndrome Type",
+      "answerType":11,
+      "sortOrder":2,
+      "answerChoices":[
          247,
          246,
          245,
@@ -1571,19 +1571,19 @@ App.Question.FIXTURES = [
    },
    {
       "id":172,
-      "question_text":"Disease Reported",
-      "answer_type":12,
-      "sort_order":4,
-      "answer_choices":[
+      "questionText":"Disease Reported",
+      "answerType":12,
+      "sortOrder":4,
+      "answerChoices":[
 
       ]
    },
    {
       "id":173,
-      "question_text":"Report Status",
-      "answer_type":10,
-      "sort_order":5,
-      "answer_choices":[
+      "questionText":"Report Status",
+      "answerType":10,
+      "sortOrder":5,
+      "answerChoices":[
          251,
          250,
          249,
@@ -1592,208 +1592,208 @@ App.Question.FIXTURES = [
    },
    {
       "id":174,
-      "question_text":"Enter Affected Animal's Information and Symptoms",
-      "answer_type":1,
-      "sort_order":6,
-      "answer_choices":[
+      "questionText":"Enter Affected Animal's Information and Symptoms",
+      "answerType":1,
+      "sortOrder":6,
+      "answerChoices":[
 
       ]
    },
    {
       "id":175,
-      "question_text":"Owner or Responsible Party Information",
-      "answer_type":2,
-      "sort_order":7,
-      "answer_choices":[
+      "questionText":"Owner or Responsible Party Information",
+      "answerType":2,
+      "sortOrder":7,
+      "answerChoices":[
 
       ]
    },
    {
       "id":176,
-      "question_text":"First and Last Name",
-      "answer_type":12,
-      "sort_order":8,
-      "answer_choices":[
+      "questionText":"First and Last Name",
+      "answerType":12,
+      "sortOrder":8,
+      "answerChoices":[
 
       ]
    },
    {
       "id":177,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":9,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":9,
+      "answerChoices":[
 
       ]
    },
    {
       "id":178,
-      "question_text":"Phone",
-      "answer_type":12,
-      "sort_order":10,
-      "answer_choices":[
+      "questionText":"Phone",
+      "answerType":12,
+      "sortOrder":10,
+      "answerChoices":[
 
       ]
    },
    {
       "id":179,
-      "question_text":"Email",
-      "answer_type":12,
-      "sort_order":11,
-      "answer_choices":[
+      "questionText":"Email",
+      "answerType":12,
+      "sortOrder":11,
+      "answerChoices":[
 
       ]
    },
    {
       "id":180,
-      "question_text":"If applicable, enter Business or Agency Information",
-      "answer_type":2,
-      "sort_order":12,
-      "answer_choices":[
+      "questionText":"If applicable, enter Business or Agency Information",
+      "answerType":2,
+      "sortOrder":12,
+      "answerChoices":[
 
       ]
    },
    {
       "id":181,
-      "question_text":"Business or Agency Name",
-      "answer_type":12,
-      "sort_order":13,
-      "answer_choices":[
+      "questionText":"Business or Agency Name",
+      "answerType":12,
+      "sortOrder":13,
+      "answerChoices":[
 
       ]
    },
    {
       "id":182,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":14,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":14,
+      "answerChoices":[
 
       ]
    },
    {
       "id":184,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":16,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":16,
+      "answerChoices":[
 
       ]
    },
    {
       "id":185,
-      "question_text":"Business or Agency Fax",
-      "answer_type":12,
-      "sort_order":17,
-      "answer_choices":[
+      "questionText":"Business or Agency Fax",
+      "answerType":12,
+      "sortOrder":17,
+      "answerChoices":[
 
       ]
    },
    {
       "id":186,
-      "question_text":"Enter Owner, Responsible Party, Business or Agency Address",
-      "answer_type":2,
-      "sort_order":18,
-      "answer_choices":[
+      "questionText":"Enter Owner, Responsible Party, Business or Agency Address",
+      "answerType":2,
+      "sortOrder":18,
+      "answerChoices":[
 
       ]
    },
    {
       "id":187,
-      "question_text":"Address",
-      "answer_type":12,
-      "sort_order":19,
-      "answer_choices":[
+      "questionText":"Address",
+      "answerType":12,
+      "sortOrder":19,
+      "answerChoices":[
 
       ]
    },
    {
       "id":188,
-      "question_text":"City",
-      "answer_type":12,
-      "sort_order":20,
-      "answer_choices":[
+      "questionText":"City",
+      "answerType":12,
+      "sortOrder":20,
+      "answerChoices":[
 
       ]
    },
    {
       "id":189,
-      "question_text":"Zip Code",
-      "answer_type":12,
-      "sort_order":21,
-      "answer_choices":[
+      "questionText":"Zip Code",
+      "answerType":12,
+      "sortOrder":21,
+      "answerChoices":[
 
       ]
    },
    {
       "id":190,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":22,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":22,
+      "answerChoices":[
 
       ]
    },
    {
       "id":191,
-      "question_text":"Animal Information",
-      "answer_type":2,
-      "sort_order":23,
-      "answer_choices":[
+      "questionText":"Animal Information",
+      "answerType":2,
+      "sortOrder":23,
+      "answerChoices":[
 
       ]
    },
    {
       "id":193,
-      "question_text":"Identification Code",
-      "answer_type":12,
-      "sort_order":25,
-      "answer_choices":[
+      "questionText":"Identification Code",
+      "answerType":12,
+      "sortOrder":25,
+      "answerChoices":[
 
       ]
    },
    {
       "id":194,
-      "question_text":"Species",
-      "answer_type":12,
-      "sort_order":26,
-      "answer_choices":[
+      "questionText":"Species",
+      "answerType":12,
+      "sortOrder":26,
+      "answerChoices":[
 
       ]
    },
    {
       "id":195,
-      "question_text":"Breed",
-      "answer_type":12,
-      "sort_order":27,
-      "answer_choices":[
+      "questionText":"Breed",
+      "answerType":12,
+      "sortOrder":27,
+      "answerChoices":[
 
       ]
    },
    {
       "id":196,
-      "question_text":"Color",
-      "answer_type":12,
-      "sort_order":28,
-      "answer_choices":[
+      "questionText":"Color",
+      "answerType":12,
+      "sortOrder":28,
+      "answerChoices":[
 
       ]
    },
    {
       "id":197,
-      "question_text":"Age",
-      "answer_type":12,
-      "sort_order":29,
-      "answer_choices":[
+      "questionText":"Age",
+      "answerType":12,
+      "sortOrder":29,
+      "answerChoices":[
 
       ]
    },
    {
       "id":198,
-      "question_text":"Sex",
-      "answer_type":11,
-      "sort_order":30,
-      "answer_choices":[
+      "questionText":"Sex",
+      "answerType":11,
+      "sortOrder":30,
+      "answerChoices":[
          254,
          253,
          252
@@ -1801,10 +1801,10 @@ App.Question.FIXTURES = [
    },
    {
       "id":200,
-      "question_text":"Ownership Status",
-      "answer_type":11,
-      "sort_order":32,
-      "answer_choices":[
+      "questionText":"Ownership Status",
+      "answerType":11,
+      "sortOrder":32,
+      "answerChoices":[
          264,
          263,
          262,
@@ -1816,55 +1816,55 @@ App.Question.FIXTURES = [
    },
    {
       "id":201,
-      "question_text":"Address",
-      "answer_type":12,
-      "sort_order":33,
-      "answer_choices":[
+      "questionText":"Address",
+      "answerType":12,
+      "sortOrder":33,
+      "answerChoices":[
 
       ]
    },
    {
       "id":202,
-      "question_text":"City",
-      "answer_type":12,
-      "sort_order":34,
-      "answer_choices":[
+      "questionText":"City",
+      "answerType":12,
+      "sortOrder":34,
+      "answerChoices":[
 
       ]
    },
    {
       "id":203,
-      "question_text":"Zip Code",
-      "answer_type":12,
-      "sort_order":35,
-      "answer_choices":[
+      "questionText":"Zip Code",
+      "answerType":12,
+      "sortOrder":35,
+      "answerChoices":[
 
       ]
    },
    {
       "id":204,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":36,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":36,
+      "answerChoices":[
 
       ]
    },
    {
       "id":206,
-      "question_text":"(Begin typing to search for Symptoms or click inside the box to pick from the list)",
-      "answer_type":4,
-      "sort_order":38,
-      "answer_choices":[
+      "questionText":"(Begin typing to search for Symptoms or click inside the box to pick from the list)",
+      "answerType":4,
+      "sortOrder":38,
+      "answerChoices":[
 
       ]
    },
    {
       "id":207,
-      "question_text":"Symptoms",
-      "answer_type":8,
-      "sort_order":39,
-      "answer_choices":[
+      "questionText":"Symptoms",
+      "answerType":8,
+      "sortOrder":39,
+      "answerChoices":[
          307,
          306,
          305,
@@ -1912,37 +1912,37 @@ App.Question.FIXTURES = [
    },
    {
       "id":208,
-      "question_text":"(Only enter date if animal has recovered!)",
-      "answer_type":4,
-      "sort_order":40,
-      "answer_choices":[
+      "questionText":"(Only enter date if animal has recovered!)",
+      "answerType":4,
+      "sortOrder":40,
+      "answerChoices":[
 
       ]
    },
    {
       "id":1,
-      "question_text":"Enter Outbreak Details",
-      "answer_type":1,
-      "sort_order":1,
-      "answer_choices":[
+      "questionText":"Enter Outbreak Details",
+      "answerType":1,
+      "sortOrder":1,
+      "answerChoices":[
 
       ]
    },
    {
       "id":3,
-      "question_text":"(If known, please enter the name of the Disease you are Reporting)",
-      "answer_type":4,
-      "sort_order":3,
-      "answer_choices":[
+      "questionText":"(If known, please enter the name of the Disease you are Reporting)",
+      "answerType":4,
+      "sortOrder":3,
+      "answerChoices":[
 
       ]
    },
    {
       "id":18,
-      "question_text":"Ethnicity/Race",
-      "answer_type":11,
-      "sort_order":18,
-      "answer_choices":[
+      "questionText":"Ethnicity/Race",
+      "answerType":11,
+      "sortOrder":18,
+      "answerChoices":[
          23,
          22,
          21,
@@ -1954,416 +1954,416 @@ App.Question.FIXTURES = [
    },
    {
       "id":20,
-      "question_text":"(Begin typing to search for Symptoms or click inside the box to pick from the list)",
-      "answer_type":4,
-      "sort_order":20,
-      "answer_choices":[
+      "questionText":"(Begin typing to search for Symptoms or click inside the box to pick from the list)",
+      "answerType":4,
+      "sortOrder":20,
+      "answerChoices":[
 
       ]
    },
    {
       "id":33,
-      "question_text":"Hospitalized for this illness for more than 24 hours?",
-      "answer_type":10,
-      "sort_order":33,
-      "answer_choices":[
+      "questionText":"Hospitalized for this illness for more than 24 hours?",
+      "answerType":10,
+      "sortOrder":33,
+      "answerChoices":[
          70,
          69
       ]
    },
    {
       "id":45,
-      "question_text":"Enter Lab Details for an additional Lab if applicable, otherwise you can leave it blank",
-      "answer_type":2,
-      "sort_order":45,
-      "answer_choices":[
+      "questionText":"Enter Lab Details for an additional Lab if applicable, otherwise you can leave it blank",
+      "answerType":2,
+      "sortOrder":45,
+      "answerChoices":[
 
       ]
    },
    {
       "id":54,
-      "question_text":"(Use notes to communicate additional important information if any)",
-      "answer_type":4,
-      "sort_order":54,
-      "answer_choices":[
+      "questionText":"(Use notes to communicate additional important information if any)",
+      "answerType":4,
+      "sortOrder":54,
+      "answerChoices":[
 
       ]
    },
    {
       "id":70,
-      "question_text":"Age",
-      "answer_type":12,
-      "sort_order":15,
-      "answer_choices":[
+      "questionText":"Age",
+      "answerType":12,
+      "sortOrder":15,
+      "answerChoices":[
 
       ]
    },
    {
       "id":74,
-      "question_text":"(Begin typing to search for Symptoms or click inside the box to pick from the list)",
-      "answer_type":4,
-      "sort_order":19,
-      "answer_choices":[
+      "questionText":"(Begin typing to search for Symptoms or click inside the box to pick from the list)",
+      "answerType":4,
+      "sortOrder":19,
+      "answerChoices":[
 
       ]
    },
    {
       "id":87,
-      "question_text":"Enter Lab Details if applicable, otherwise you can leave it blank",
-      "answer_type":2,
-      "sort_order":32,
-      "answer_choices":[
+      "questionText":"Enter Lab Details if applicable, otherwise you can leave it blank",
+      "answerType":2,
+      "sortOrder":32,
+      "answerChoices":[
 
       ]
    },
    {
       "id":96,
-      "question_text":"Enter Lab Details for an additional Lab if applicable, otherwise you can leave it blank",
-      "answer_type":2,
-      "sort_order":41,
-      "answer_choices":[
+      "questionText":"Enter Lab Details for an additional Lab if applicable, otherwise you can leave it blank",
+      "answerType":2,
+      "sortOrder":41,
+      "answerChoices":[
 
       ]
    },
    {
       "id":104,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":49,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":49,
+      "answerChoices":[
 
       ]
    },
    {
       "id":105,
-      "question_text":"Enter Contact Name and Phone if different from above, otherwise leave blank",
-      "answer_type":2,
-      "sort_order":50,
-      "answer_choices":[
+      "questionText":"Enter Contact Name and Phone if different from above, otherwise leave blank",
+      "answerType":2,
+      "sortOrder":50,
+      "answerChoices":[
 
       ]
    },
    {
       "id":118,
-      "question_text":"(If known, please enter the name of the Disease you are Reporting)",
-      "answer_type":4,
-      "sort_order":4,
-      "answer_choices":[
+      "questionText":"(If known, please enter the name of the Disease you are Reporting)",
+      "answerType":4,
+      "sortOrder":4,
+      "answerChoices":[
 
       ]
    },
    {
       "id":132,
-      "question_text":"(Begin typing to search for Symptoms or click inside the box to pick from the list)",
-      "answer_type":4,
-      "sort_order":18,
-      "answer_choices":[
+      "questionText":"(Begin typing to search for Symptoms or click inside the box to pick from the list)",
+      "answerType":4,
+      "sortOrder":18,
+      "answerChoices":[
 
       ]
    },
    {
       "id":144,
-      "question_text":"Date of Death",
-      "answer_type":22,
-      "sort_order":30,
-      "answer_choices":[
+      "questionText":"Date of Death",
+      "answerType":22,
+      "sortOrder":30,
+      "answerChoices":[
 
       ]
    },
    {
       "id":209,
-      "question_text":"Recovery Date",
-      "answer_type":9,
-      "sort_order":41,
-      "answer_choices":[
+      "questionText":"Recovery Date",
+      "answerType":9,
+      "sortOrder":41,
+      "answerChoices":[
 
       ]
    },
    {
       "id":210,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":42,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":42,
+      "answerChoices":[
 
       ]
    },
    {
       "id":212,
-      "question_text":"Diagnosis Date",
-      "answer_type":9,
-      "sort_order":44,
-      "answer_choices":[
+      "questionText":"Diagnosis Date",
+      "answerType":9,
+      "sortOrder":44,
+      "answerChoices":[
 
       ]
    },
    {
       "id":213,
-      "question_text":"Exposure Date",
-      "answer_type":9,
-      "sort_order":45,
-      "answer_choices":[
+      "questionText":"Exposure Date",
+      "answerType":9,
+      "sortOrder":45,
+      "answerChoices":[
 
       ]
    },
    {
       "id":214,
-      "question_text":"Onset Date",
-      "answer_type":9,
-      "sort_order":46,
-      "answer_choices":[
+      "questionText":"Onset Date",
+      "answerType":9,
+      "sortOrder":46,
+      "answerChoices":[
 
       ]
    },
    {
       "id":215,
-      "question_text":"Treatment",
-      "answer_type":12,
-      "sort_order":47,
-      "answer_choices":[
+      "questionText":"Treatment",
+      "answerType":12,
+      "sortOrder":47,
+      "answerChoices":[
 
       ]
    },
    {
       "id":216,
-      "question_text":"Treatment Date",
-      "answer_type":9,
-      "sort_order":48,
-      "answer_choices":[
+      "questionText":"Treatment Date",
+      "answerType":9,
+      "sortOrder":48,
+      "answerChoices":[
 
       ]
    },
    {
       "id":217,
-      "question_text":"Hospitalization Date",
-      "answer_type":9,
-      "sort_order":49,
-      "answer_choices":[
+      "questionText":"Hospitalization Date",
+      "answerType":9,
+      "sortOrder":49,
+      "answerChoices":[
 
       ]
    },
    {
       "id":219,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":51,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":51,
+      "answerChoices":[
 
       ]
    },
    {
       "id":220,
-      "question_text":"Reporting Agency or Facility Information",
-      "answer_type":2,
-      "sort_order":52,
-      "answer_choices":[
+      "questionText":"Reporting Agency or Facility Information",
+      "answerType":2,
+      "sortOrder":52,
+      "answerChoices":[
 
       ]
    },
    {
       "id":221,
-      "question_text":"Reporting Individual Name",
-      "answer_type":12,
-      "sort_order":53,
-      "answer_choices":[
+      "questionText":"Reporting Individual Name",
+      "answerType":12,
+      "sortOrder":53,
+      "answerChoices":[
 
       ]
    },
    {
       "id":222,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":54,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":54,
+      "answerChoices":[
 
       ]
    },
    {
       "id":223,
-      "question_text":"Phone",
-      "answer_type":12,
-      "sort_order":55,
-      "answer_choices":[
+      "questionText":"Phone",
+      "answerType":12,
+      "sortOrder":55,
+      "answerChoices":[
 
       ]
    },
    {
       "id":224,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":56,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":56,
+      "answerChoices":[
 
       ]
    },
    {
       "id":226,
-      "question_text":"Reporting Individual Occupation",
-      "answer_type":12,
-      "sort_order":58,
-      "answer_choices":[
+      "questionText":"Reporting Individual Occupation",
+      "answerType":12,
+      "sortOrder":58,
+      "answerChoices":[
 
       ]
    },
    {
       "id":227,
-      "question_text":"Reporting Agency or Facility Name",
-      "answer_type":12,
-      "sort_order":59,
-      "answer_choices":[
+      "questionText":"Reporting Agency or Facility Name",
+      "answerType":12,
+      "sortOrder":59,
+      "answerChoices":[
 
       ]
    },
    {
       "id":228,
-      "question_text":"Email",
-      "answer_type":12,
-      "sort_order":60,
-      "answer_choices":[
+      "questionText":"Email",
+      "answerType":12,
+      "sortOrder":60,
+      "answerChoices":[
 
       ]
    },
    {
       "id":229,
-      "question_text":"Address",
-      "answer_type":12,
-      "sort_order":61,
-      "answer_choices":[
+      "questionText":"Address",
+      "answerType":12,
+      "sortOrder":61,
+      "answerChoices":[
 
       ]
    },
    {
       "id":230,
-      "question_text":"City",
-      "answer_type":12,
-      "sort_order":62,
-      "answer_choices":[
+      "questionText":"City",
+      "answerType":12,
+      "sortOrder":62,
+      "answerChoices":[
 
       ]
    },
    {
       "id":232,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":64,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":64,
+      "answerChoices":[
 
       ]
    },
    {
       "id":234,
-      "question_text":"Lab Name",
-      "answer_type":12,
-      "sort_order":66,
-      "answer_choices":[
+      "questionText":"Lab Name",
+      "answerType":12,
+      "sortOrder":66,
+      "answerChoices":[
 
       ]
    },
    {
       "id":235,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":67,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":67,
+      "answerChoices":[
 
       ]
    },
    {
       "id":236,
-      "question_text":"Phone",
-      "answer_type":12,
-      "sort_order":68,
-      "answer_choices":[
+      "questionText":"Phone",
+      "answerType":12,
+      "sortOrder":68,
+      "answerChoices":[
 
       ]
    },
    {
       "id":237,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":69,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":69,
+      "answerChoices":[
 
       ]
    },
    {
       "id":238,
-      "question_text":"Fax",
-      "answer_type":12,
-      "sort_order":70,
-      "answer_choices":[
+      "questionText":"Fax",
+      "answerType":12,
+      "sortOrder":70,
+      "answerChoices":[
 
       ]
    },
    {
       "id":239,
-      "question_text":"Address",
-      "answer_type":12,
-      "sort_order":71,
-      "answer_choices":[
+      "questionText":"Address",
+      "answerType":12,
+      "sortOrder":71,
+      "answerChoices":[
 
       ]
    },
    {
       "id":240,
-      "question_text":"City",
-      "answer_type":12,
-      "sort_order":72,
-      "answer_choices":[
+      "questionText":"City",
+      "answerType":12,
+      "sortOrder":72,
+      "answerChoices":[
 
       ]
    },
    {
       "id":241,
-      "question_text":"Zip Code",
-      "answer_type":12,
-      "sort_order":73,
-      "answer_choices":[
+      "questionText":"Zip Code",
+      "answerType":12,
+      "sortOrder":73,
+      "answerChoices":[
 
       ]
    },
    {
       "id":242,
-      "question_text":"Enter Lab Details if applicable, otherwise you can leave it blank",
-      "answer_type":2,
-      "sort_order":74,
-      "answer_choices":[
+      "questionText":"Enter Lab Details if applicable, otherwise you can leave it blank",
+      "answerType":2,
+      "sortOrder":74,
+      "answerChoices":[
 
       ]
    },
    {
       "id":243,
-      "question_text":"Lab Collection Date",
-      "answer_type":9,
-      "sort_order":75,
-      "answer_choices":[
+      "questionText":"Lab Collection Date",
+      "answerType":9,
+      "sortOrder":75,
+      "answerChoices":[
 
       ]
    },
    {
       "id":244,
-      "question_text":"Speciman Type",
-      "answer_type":12,
-      "sort_order":76,
-      "answer_choices":[
+      "questionText":"Speciman Type",
+      "answerType":12,
+      "sortOrder":76,
+      "answerChoices":[
 
       ]
    },
    {
       "id":245,
-      "question_text":"Lab Test Type",
-      "answer_type":12,
-      "sort_order":77,
-      "answer_choices":[
+      "questionText":"Lab Test Type",
+      "answerType":12,
+      "sortOrder":77,
+      "answerChoices":[
 
       ]
    },
    {
       "id":246,
-      "question_text":"Test Result",
-      "answer_type":10,
-      "sort_order":78,
-      "answer_choices":[
+      "questionText":"Test Result",
+      "answerType":10,
+      "sortOrder":78,
+      "answerChoices":[
          310,
          309,
          308
@@ -2371,37 +2371,37 @@ App.Question.FIXTURES = [
    },
    {
       "id":248,
-      "question_text":"Lab Collection Date",
-      "answer_type":9,
-      "sort_order":80,
-      "answer_choices":[
+      "questionText":"Lab Collection Date",
+      "answerType":9,
+      "sortOrder":80,
+      "answerChoices":[
 
       ]
    },
    {
       "id":249,
-      "question_text":"Speciman Type",
-      "answer_type":12,
-      "sort_order":81,
-      "answer_choices":[
+      "questionText":"Speciman Type",
+      "answerType":12,
+      "sortOrder":81,
+      "answerChoices":[
 
       ]
    },
    {
       "id":250,
-      "question_text":"Lab Test Type",
-      "answer_type":12,
-      "sort_order":82,
-      "answer_choices":[
+      "questionText":"Lab Test Type",
+      "answerType":12,
+      "sortOrder":82,
+      "answerChoices":[
 
       ]
    },
    {
       "id":251,
-      "question_text":"Test Result",
-      "answer_type":10,
-      "sort_order":83,
-      "answer_choices":[
+      "questionText":"Test Result",
+      "answerType":10,
+      "sortOrder":83,
+      "answerChoices":[
          313,
          312,
          311
@@ -2409,46 +2409,46 @@ App.Question.FIXTURES = [
    },
    {
       "id":252,
-      "question_text":"Enter Additional Important Information",
-      "answer_type":1,
-      "sort_order":84,
-      "answer_choices":[
+      "questionText":"Enter Additional Important Information",
+      "answerType":1,
+      "sortOrder":84,
+      "answerChoices":[
 
       ]
    },
    {
       "id":253,
-      "question_text":"(Use notes to communicate additional important information if any)",
-      "answer_type":4,
-      "sort_order":85,
-      "answer_choices":[
+      "questionText":"(Use notes to communicate additional important information if any)",
+      "answerType":4,
+      "sortOrder":85,
+      "answerChoices":[
 
       ]
    },
    {
       "id":254,
-      "question_text":"Notes",
-      "answer_type":13,
-      "sort_order":86,
-      "answer_choices":[
+      "questionText":"Notes",
+      "answerType":13,
+      "sortOrder":86,
+      "answerChoices":[
 
       ]
    },
    {
       "id":255,
-      "question_text":"Enter Outbreak Details",
-      "answer_type":1,
-      "sort_order":1,
-      "answer_choices":[
+      "questionText":"Enter Outbreak Details",
+      "answerType":1,
+      "sortOrder":1,
+      "answerChoices":[
 
       ]
    },
    {
       "id":256,
-      "question_text":"School Type",
-      "answer_type":6,
-      "sort_order":2,
-      "answer_choices":[
+      "questionText":"School Type",
+      "answerType":6,
+      "sortOrder":2,
+      "answerChoices":[
          320,
          319,
          318,
@@ -2460,10 +2460,10 @@ App.Question.FIXTURES = [
    },
    {
       "id":257,
-      "question_text":"School Type",
-      "answer_type":6,
-      "sort_order":3,
-      "answer_choices":[
+      "questionText":"School Type",
+      "answerType":6,
+      "sortOrder":3,
+      "answerChoices":[
          327,
          326,
          325,
@@ -2475,10 +2475,10 @@ App.Question.FIXTURES = [
    },
    {
       "id":258,
-      "question_text":"Syndrome Type",
-      "answer_type":11,
-      "sort_order":4,
-      "answer_choices":[
+      "questionText":"Syndrome Type",
+      "answerType":11,
+      "sortOrder":4,
+      "answerChoices":[
          332,
          331,
          330,
@@ -2488,10 +2488,10 @@ App.Question.FIXTURES = [
    },
    {
       "id":259,
-      "question_text":"Report Status",
-      "answer_type":10,
-      "sort_order":5,
-      "answer_choices":[
+      "questionText":"Report Status",
+      "answerType":10,
+      "sortOrder":5,
+      "answerChoices":[
          336,
          335,
          334,
@@ -2500,83 +2500,83 @@ App.Question.FIXTURES = [
    },
    {
       "id":261,
-      "question_text":"Type",
-      "answer_type":10,
-      "sort_order":7,
-      "answer_choices":[
+      "questionText":"Type",
+      "answerType":10,
+      "sortOrder":7,
+      "answerChoices":[
          338,
          337
       ]
    },
    {
       "id":262,
-      "question_text":"First and Last Name",
-      "answer_type":12,
-      "sort_order":8,
-      "answer_choices":[
+      "questionText":"First and Last Name",
+      "answerType":12,
+      "sortOrder":8,
+      "answerChoices":[
 
       ]
    },
    {
       "id":263,
-      "question_text":"(805-765-4321)",
-      "answer_type":4,
-      "sort_order":9,
-      "answer_choices":[
+      "questionText":"(805-765-4321)",
+      "answerType":4,
+      "sortOrder":9,
+      "answerChoices":[
 
       ]
    },
    {
       "id":264,
-      "question_text":"Phone",
-      "answer_type":12,
-      "sort_order":10,
-      "answer_choices":[
+      "questionText":"Phone",
+      "answerType":12,
+      "sortOrder":10,
+      "answerChoices":[
 
       ]
    },
    {
       "id":265,
-      "question_text":"Location",
-      "answer_type":12,
-      "sort_order":11,
-      "answer_choices":[
+      "questionText":"Location",
+      "answerType":12,
+      "sortOrder":11,
+      "answerChoices":[
 
       ]
    },
    {
       "id":266,
-      "question_text":"Address",
-      "answer_type":12,
-      "sort_order":12,
-      "answer_choices":[
+      "questionText":"Address",
+      "answerType":12,
+      "sortOrder":12,
+      "answerChoices":[
 
       ]
    },
    {
       "id":267,
-      "question_text":"Case Name",
-      "answer_type":12,
-      "sort_order":13,
-      "answer_choices":[
+      "questionText":"Case Name",
+      "answerType":12,
+      "sortOrder":13,
+      "answerChoices":[
 
       ]
    },
    {
       "id":268,
-      "question_text":"Age",
-      "answer_type":12,
-      "sort_order":14,
-      "answer_choices":[
+      "questionText":"Age",
+      "answerType":12,
+      "sortOrder":14,
+      "answerChoices":[
 
       ]
    },
    {
       "id":269,
-      "question_text":"Sex",
-      "answer_type":11,
-      "sort_order":15,
-      "answer_choices":[
+      "questionText":"Sex",
+      "answerType":11,
+      "sortOrder":15,
+      "answerChoices":[
          341,
          340,
          339
@@ -2584,19 +2584,19 @@ App.Question.FIXTURES = [
    },
    {
       "id":271,
-      "question_text":"",
-      "answer_type":3,
-      "sort_order":17,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":3,
+      "sortOrder":17,
+      "answerChoices":[
 
       ]
    },
    {
       "id":273,
-      "question_text":"Symptoms",
-      "answer_type":8,
-      "sort_order":19,
-      "answer_choices":[
+      "questionText":"Symptoms",
+      "answerType":8,
+      "sortOrder":19,
+      "answerChoices":[
          391,
          390,
          389,
@@ -2644,127 +2644,127 @@ App.Question.FIXTURES = [
    },
    {
       "id":274,
-      "question_text":"(Only enter date if individual has recovered!)",
-      "answer_type":4,
-      "sort_order":20,
-      "answer_choices":[
+      "questionText":"(Only enter date if individual has recovered!)",
+      "answerType":4,
+      "sortOrder":20,
+      "answerChoices":[
 
       ]
    },
    {
       "id":275,
-      "question_text":"Recovery Date",
-      "answer_type":9,
-      "sort_order":21,
-      "answer_choices":[
+      "questionText":"Recovery Date",
+      "answerType":9,
+      "sortOrder":21,
+      "answerChoices":[
 
       ]
    },
    {
       "id":276,
-      "question_text":"",
-      "answer_type":16,
-      "sort_order":22,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":16,
+      "sortOrder":22,
+      "answerChoices":[
 
       ]
    },
    {
       "id":277,
-      "question_text":"Diagnosis Date",
-      "answer_type":22,
-      "sort_order":23,
-      "answer_choices":[
+      "questionText":"Diagnosis Date",
+      "answerType":22,
+      "sortOrder":23,
+      "answerChoices":[
 
       ]
    },
    {
       "id":278,
-      "question_text":"Exposure Date",
-      "answer_type":22,
-      "sort_order":24,
-      "answer_choices":[
+      "questionText":"Exposure Date",
+      "answerType":22,
+      "sortOrder":24,
+      "answerChoices":[
 
       ]
    },
    {
       "id":279,
-      "question_text":"Onset Date",
-      "answer_type":22,
-      "sort_order":25,
-      "answer_choices":[
+      "questionText":"Onset Date",
+      "answerType":22,
+      "sortOrder":25,
+      "answerChoices":[
 
       ]
    },
    {
       "id":280,
-      "question_text":"Treatment Date",
-      "answer_type":22,
-      "sort_order":26,
-      "answer_choices":[
+      "questionText":"Treatment Date",
+      "answerType":22,
+      "sortOrder":26,
+      "answerChoices":[
 
       ]
    },
    {
       "id":281,
-      "question_text":"Hospitalization Date",
-      "answer_type":22,
-      "sort_order":27,
-      "answer_choices":[
+      "questionText":"Hospitalization Date",
+      "answerType":22,
+      "sortOrder":27,
+      "answerChoices":[
 
       ]
    },
    {
       "id":282,
-      "question_text":"Date of Death",
-      "answer_type":22,
-      "sort_order":28,
-      "answer_choices":[
+      "questionText":"Date of Death",
+      "answerType":22,
+      "sortOrder":28,
+      "answerChoices":[
 
       ]
    },
    {
       "id":283,
-      "question_text":"",
-      "answer_type":16,
-      "sort_order":29,
-      "answer_choices":[
+      "questionText":"",
+      "answerType":16,
+      "sortOrder":29,
+      "answerChoices":[
 
       ]
    },
    {
       "id":284,
-      "question_text":"Lab Collection Date",
-      "answer_type":22,
-      "sort_order":30,
-      "answer_choices":[
+      "questionText":"Lab Collection Date",
+      "answerType":22,
+      "sortOrder":30,
+      "answerChoices":[
 
       ]
    },
    {
       "id":285,
-      "question_text":"Speciman Type",
-      "answer_type":25,
-      "sort_order":31,
-      "answer_choices":[
+      "questionText":"Speciman Type",
+      "answerType":25,
+      "sortOrder":31,
+      "answerChoices":[
 
       ]
    },
    {
       "id":286,
-      "question_text":"Lab Test Type",
-      "answer_type":25,
-      "sort_order":32,
-      "answer_choices":[
+      "questionText":"Lab Test Type",
+      "answerType":25,
+      "sortOrder":32,
+      "answerChoices":[
 
       ]
    },
    {
       "id":287,
-      "question_text":"Symptoms",
-      "answer_type":8,
-      "sort_order":33,
-      "answer_choices":[
+      "questionText":"Symptoms",
+      "answerType":8,
+      "sortOrder":33,
+      "answerChoices":[
          434,
          433,
          432,
@@ -2812,28 +2812,28 @@ App.Question.FIXTURES = [
    },
    {
       "id":289,
-      "question_text":"Enter Additional Important Information",
-      "answer_type":1,
-      "sort_order":35,
-      "answer_choices":[
+      "questionText":"Enter Additional Important Information",
+      "answerType":1,
+      "sortOrder":35,
+      "answerChoices":[
 
       ]
    },
    {
       "id":291,
-      "question_text":"Notes",
-      "answer_type":13,
-      "sort_order":37,
-      "answer_choices":[
+      "questionText":"Notes",
+      "answerType":13,
+      "sortOrder":37,
+      "answerChoices":[
 
       ]
    },
    {
       "id":292,
-      "question_text":"Symptoms",
-      "answer_type":8,
-      "sort_order":38,
-      "answer_choices":[
+      "questionText":"Symptoms",
+      "answerType":8,
+      "sortOrder":38,
+      "answerChoices":[
          520,
          519,
          518,
@@ -2881,55 +2881,55 @@ App.Question.FIXTURES = [
    },
    {
       "id":149,
-      "question_text":"Enter Lab Details if applicable, otherwise you can leave it blank",
-      "answer_type":15,
-      "sort_order":35,
-      "answer_choices":[
+      "questionText":"Enter Lab Details if applicable, otherwise you can leave it blank",
+      "answerType":15,
+      "sortOrder":35,
+      "answerChoices":[
 
       ]
    },
    {
       "id":158,
-      "question_text":"Enter Lab Details for an additional Lab if applicable, otherwise you can leave it blank",
-      "answer_type":15,
-      "sort_order":44,
-      "answer_choices":[
+      "questionText":"Enter Lab Details for an additional Lab if applicable, otherwise you can leave it blank",
+      "answerType":15,
+      "sortOrder":44,
+      "answerChoices":[
 
       ]
    },
    {
       "id":171,
-      "question_text":"(If known, please enter the name of the Disease you are Reporting)",
-      "answer_type":4,
-      "sort_order":3,
-      "answer_choices":[
+      "questionText":"(If known, please enter the name of the Disease you are Reporting)",
+      "answerType":4,
+      "sortOrder":3,
+      "answerChoices":[
 
       ]
    },
    {
       "id":183,
-      "question_text":"Business or Agency Phone",
-      "answer_type":12,
-      "sort_order":15,
-      "answer_choices":[
+      "questionText":"Business or Agency Phone",
+      "answerType":12,
+      "sortOrder":15,
+      "answerChoices":[
 
       ]
    },
    {
       "id":192,
-      "question_text":"Animal Name",
-      "answer_type":12,
-      "sort_order":24,
-      "answer_choices":[
+      "questionText":"Animal Name",
+      "answerType":12,
+      "sortOrder":24,
+      "answerChoices":[
 
       ]
    },
    {
       "id":199,
-      "question_text":"Reproductive Status",
-      "answer_type":11,
-      "sort_order":31,
-      "answer_choices":[
+      "questionText":"Reproductive Status",
+      "answerType":11,
+      "sortOrder":31,
+      "answerChoices":[
          257,
          256,
          255
@@ -2937,82 +2937,82 @@ App.Question.FIXTURES = [
    },
    {
       "id":205,
-      "question_text":"Symptoms \u0026 Date of Recovery",
-      "answer_type":2,
-      "sort_order":37,
-      "answer_choices":[
+      "questionText":"Symptoms \u0026 Date of Recovery",
+      "answerType":2,
+      "sortOrder":37,
+      "answerChoices":[
 
       ]
    },
    {
       "id":211,
-      "question_text":"Other Important Dates",
-      "answer_type":2,
-      "sort_order":43,
-      "answer_choices":[
+      "questionText":"Other Important Dates",
+      "answerType":2,
+      "sortOrder":43,
+      "answerChoices":[
 
       ]
    },
    {
       "id":218,
-      "question_text":"Date of Death",
-      "answer_type":9,
-      "sort_order":50,
-      "answer_choices":[
+      "questionText":"Date of Death",
+      "answerType":9,
+      "sortOrder":50,
+      "answerChoices":[
 
       ]
    },
    {
       "id":225,
-      "question_text":"Fax",
-      "answer_type":12,
-      "sort_order":57,
-      "answer_choices":[
+      "questionText":"Fax",
+      "answerType":12,
+      "sortOrder":57,
+      "answerChoices":[
 
       ]
    },
    {
       "id":231,
-      "question_text":"Zip Code",
-      "answer_type":12,
-      "sort_order":63,
-      "answer_choices":[
+      "questionText":"Zip Code",
+      "answerType":12,
+      "sortOrder":63,
+      "answerChoices":[
 
       ]
    },
    {
       "id":233,
-      "question_text":"Enter Lab Information if applicable, otherwise you can leave it blank",
-      "answer_type":2,
-      "sort_order":65,
-      "answer_choices":[
+      "questionText":"Enter Lab Information if applicable, otherwise you can leave it blank",
+      "answerType":2,
+      "sortOrder":65,
+      "answerChoices":[
 
       ]
    },
    {
       "id":247,
-      "question_text":"Enter Lab Details for an additional Lab if applicable, otherwise you can leave it blank",
-      "answer_type":2,
-      "sort_order":79,
-      "answer_choices":[
+      "questionText":"Enter Lab Details for an additional Lab if applicable, otherwise you can leave it blank",
+      "answerType":2,
+      "sortOrder":79,
+      "answerChoices":[
 
       ]
    },
    {
       "id":260,
-      "question_text":"Enter Affected Individual's Information and Symptoms",
-      "answer_type":1,
-      "sort_order":6,
-      "answer_choices":[
+      "questionText":"Enter Affected Individual's Information and Symptoms",
+      "answerType":1,
+      "sortOrder":6,
+      "answerChoices":[
 
       ]
    },
    {
       "id":270,
-      "question_text":"Ethnicity/Race",
-      "answer_type":11,
-      "sort_order":16,
-      "answer_choices":[
+      "questionText":"Ethnicity/Race",
+      "answerType":11,
+      "sortOrder":16,
+      "answerChoices":[
          348,
          347,
          346,
@@ -3024,19 +3024,19 @@ App.Question.FIXTURES = [
    },
    {
       "id":272,
-      "question_text":"(Begin typing to search for Symptoms or click inside the box to pick from the list)",
-      "answer_type":4,
-      "sort_order":18,
-      "answer_choices":[
+      "questionText":"(Begin typing to search for Symptoms or click inside the box to pick from the list)",
+      "answerType":4,
+      "sortOrder":18,
+      "answerChoices":[
 
       ]
    },
    {
       "id":288,
-      "question_text":"Symptoms",
-      "answer_type":8,
-      "sort_order":34,
-      "answer_choices":[
+      "questionText":"Symptoms",
+      "answerType":8,
+      "sortOrder":34,
+      "answerChoices":[
          477,
          476,
          475,
@@ -3084,10 +3084,10 @@ App.Question.FIXTURES = [
    },
    {
       "id":290,
-      "question_text":"(Use notes to communicate additional important information if any)",
-      "answer_type":4,
-      "sort_order":36,
-      "answer_choices":[
+      "questionText":"(Use notes to communicate additional important information if any)",
+      "answerType":4,
+      "sortOrder":36,
+      "answerChoices":[
 
       ]
    }

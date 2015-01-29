@@ -1,16 +1,16 @@
-{{!-- called from survey_step and dislpays each answer type as readonly --}}
+{{!-- called from surveyStep and dislpays each answer type as readonly --}}
 <!-- checkboxlist -->
-{{#if answer_type.checkboxlist}}
+{{#if answerType.checkboxlist}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
   <div class="row">
     {{partial "question_edit_buttons"}}
-    <div class="col-sm-3">{{question_text}}</div>
-    <div class="col-sm-3">{{answer_type.name}}</div>
+    <div class="col-sm-3">{{questionText}}</div>
+    <div class="col-sm-3">{{answerType.name}}</div>
     <div class="col-sm-3">
-      {{#each answer_choices}}
-        {{input type="checkbox" name="" disabled=true}}{{option_text}}<br/>
+      {{#each answerChoices}}
+        {{input type="checkbox" name="" disabled=true}}{{optionText}}<br/>
       {{/each}}
     </div>
     {{partial "question_delete_button"}}
@@ -19,7 +19,7 @@
 {{/if}}
 
 <!-- chosenmultiselectgroup -->
-{{#if answer_type.chosenmultiselectgrouped}}
+{{#if answerType.chosenmultiselectgrouped}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
@@ -27,18 +27,18 @@
     {{!partial "question_edit_buttons"}}
     {{!-- not using partial above for now because don't want to show the edit button for grouped multiselect for now-kdh --}}
     <div class="col-sm-2">
-      {{sort_order}}
+      {{sortOrder}}
       <a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-sort"></span></a>
     </div>
-    <div class="col-sm-3">{{question_text}}</div>
-    <div class="col-sm-3">{{answer_type.name}}</div>
+    <div class="col-sm-3">{{questionText}}</div>
+    <div class="col-sm-3">{{answerType.name}}</div>
     <div class="col-sm-3">
-      {{#if answer_choices}}
+      {{#if answerChoices}}
         {{view App.ChosenMultiSelect
-          content=grouped_answer_choices
+          content=grouped_answerChoices
           optionValuePath="content.id"
-          optionLabelPath="content.option_text"
-          optionGroupPath="group_text"
+          optionLabelPath="content.optionText"
+          optionGroupPath="groupText"
         }}
       {{else}}
         {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
@@ -50,29 +50,29 @@
 {{/if}}
 
 <!-- helper -->
-{{#if answer_type.helper}}
+{{#if answerType.helper}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_edit_buttons"}}
-      <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">{{answer_type.name}}</div>
-      <div class="col-sm-3 helperabove">{{question_text}}</div>
+      <div class="col-sm-3">{{questionText}}</div>
+      <div class="col-sm-3">{{answerType.name}}</div>
+      <div class="col-sm-3 helperabove">{{questionText}}</div>
       {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
 
 <!-- line -->
-{{#if answer_type.line}}
+{{#if answerType.line}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_edit_buttons"}}
-      <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">{{answer_type.name}}</div>
+      <div class="col-sm-3">{{questionText}}</div>
+      <div class="col-sm-3">{{answerType.name}}</div>
       <div class="col-sm-3 page-header"></div>
       {{partial "question_delete_button"}}
     </div>
@@ -80,19 +80,19 @@
 {{/if}}
 
 <!-- radio -->
-{{#if answer_type.radio}}
+{{#if answerType.radio}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{/if}}
   {{#unless isEditing}}
     <div class="row">
       {{partial "question_edit_buttons"}}
-      <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">{{answer_type.name}}
+      <div class="col-sm-3">{{questionText}}</div>
+      <div class="col-sm-3">{{answerType.name}}
       </div>
       <div class="col-sm-3">      
-        {{#each answer_choices}}
-          {{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{option_text}}<br/>
+        {{#each answerChoices}}
+          {{view App.RadioButton name="myRadio" selectionBinding="sortOrder" value="id"}}{{optionText}}<br/>
         {{else}}
           <p class="bg-danger">There are no available Answer Options defined. Edit question to add new answer choices.</p>
         {{/each}}
@@ -103,35 +103,35 @@
 {{/if}}
 
 <!-- section -->
-{{#if answer_type.section}}
+{{#if answerType.section}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_edit_buttons"}}
-      <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">{{answer_type.name}}</div>
-      <div class="col-sm-3 form-section">{{question_text}}</div>
+      <div class="col-sm-3">{{questionText}}</div>
+      <div class="col-sm-3">{{answerType.name}}</div>
+      <div class="col-sm-3 form-section">{{questionText}}</div>
       {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
 
 <!-- select -->
-{{#if answer_type.select}}
+{{#if answerType.select}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_edit_buttons"}}
-      <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">{{answer_type.name}}</div>  
+      <div class="col-sm-3">{{questionText}}</div>
+      <div class="col-sm-3">{{answerType.name}}</div>  
       <div class="col-sm-3">
-        {{#if answer_choices}}
+        {{#if answerChoices}}
           {{view Ember.Select
-             content=answer_choices
+             content=answerChoices
              optionValuePath="content.id"
-             optionLabelPath="content.option_text"
+             optionLabelPath="content.optionText"
              class="form-control"
              prompt="Please select"}}
         {{else}}
@@ -144,29 +144,29 @@
 {{/if}}
 
 <!-- static -->
-{{#if answer_type.static}}
+{{#if answerType.static}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_edit_buttons"}}
-      <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">{{answer_type.name}}</div>
-      <div class="col-sm-3 form-static">{{question_text}}</div>
+      <div class="col-sm-3">{{questionText}}</div>
+      <div class="col-sm-3">{{answerType.name}}</div>
+      <div class="col-sm-3 form-static">{{questionText}}</div>
       {{partial "question_delete_button"}}
     </div>
   {{/if}}
 {{/if}}
 
 <!-- text -->
-{{#if answer_type.text}}
+{{#if answerType.text}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_edit_buttons"}}
-      <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">{{answer_type.name}}</div>
+      <div class="col-sm-3">{{questionText}}</div>
+      <div class="col-sm-3">{{answerType.name}}</div>
       <div class="col-sm-3">
         {{input type="text" class="form-control"}}
       </div>
@@ -176,14 +176,14 @@
 {{/if}}
 
 <!-- textarea -->
-{{#if answer_type.textarea}}
+{{#if answerType.textarea}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_edit_buttons"}}
-      <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">{{answer_type.name}}</div>
+      <div class="col-sm-3">{{questionText}}</div>
+      <div class="col-sm-3">{{answerType.name}}</div>
       <div class="col-sm-3">{{textarea class="form-control"}}</div>
       {{partial "question_delete_button"}}
     </div>
@@ -193,14 +193,14 @@
 
 
 <!-- checkbox -->
-{{#if answer_type.checkbox}}
+{{#if answerType.checkbox}}
   {{#if isEditing}}
     {{partial "question_edit"}}
   {{else}}
     <div class="row">
       {{partial "question_edit_buttons"}}
-      <div class="col-sm-3">{{question_text}}</div>
-      <div class="col-sm-3">{{answer_type.name}}</div>
+      <div class="col-sm-3">{{questionText}}</div>
+      <div class="col-sm-3">{{answerType.name}}</div>
       <div class="col-sm-3">{{input type="checkbox" name="" disabled=true}}</div>
       {{partial "question_delete_button"}}
     </div>

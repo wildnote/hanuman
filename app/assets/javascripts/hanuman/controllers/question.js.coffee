@@ -1,37 +1,37 @@
 App.QuestionController = Ember.ObjectController.extend({
-  needs: ["answer_choices", "answer_types", "survey_step"]
+  needs: ["answerChoices", "answerTypes", "surveyStep"]
   
   # called inside question controller because of has_many relationship for each question-kdh
-  answer_choices: (->
+  answerChoices: (->
     Ember.ArrayProxy.createWithMixins Ember.SortableMixin,
-      sortProperties: ["group_text","option_text"],
-      content: @get("content.answer_choices")
-  ).property("content.answer_choices")
+      sortProperties: ["groupText","optionText"],
+      content: @get("content.answerChoices")
+  ).property("content.answerChoices")
   
-  # sort answer_choices by group_text, option_text
-  # filter out null group_text since those are parents and don't want them in select
-  grouped_answer_choices: (->
+  # sort answerChoices by groupText, optionText
+  # filter out null groupText since those are parents and don't want them in select
+  grouped_answerChoices: (->
     Ember.ArrayProxy.createWithMixins Ember.SortableMixin,
-      sortProperties: ["group_text","option_text"],
-      content: @.get("content.answer_choices").filter (answer_choice) ->
-        if answer_choice.get('group_text') 
+      sortProperties: ["groupText","optionText"],
+      content: @.get("content.answerChoices").filter (answer_choice) ->
+        if answer_choice.get('groupText') 
           answer_choice
-  ).property("content.answer_choices")
+  ).property("content.answerChoices")
   
-  root_level_answer_choices: (-> 
-    return @.get("content.answer_choices").filterBy('group_text', '')
-  ).property("content.answer_choices")
+  root_level_answerChoices: (-> 
+    return @.get("content.answerChoices").filterBy('groupText', '')
+  ).property("content.answerChoices")
   
   # retrieve fully editable flag from survey template to determine editing rules
   isFullyEditable: (->
-    return @get('survey_step').get('survey_template').get('fully_editable')
-  ).property('survey_step.survey_template.fully_editable')
+    return @get('surveyStep').get('surveyTemplate').get('fullyEditable')
+  ).property('surveyStep.surveyTemplate.fullyEditable')
   
   actions:
     editQuestion: ->
       @set "isEditing", true
       question = @get('model')
-      if question.get('answer_type').get('hasAnswerChoices')
+      if question.get('answerType').get('hasAnswerChoices')
         @set "showAnswerChoices", true
       
     exitEditQuestion: ->
@@ -49,7 +49,7 @@ App.QuestionController = Ember.ObjectController.extend({
         
     deleteQuestion: ->
       question = @get('model')
-      question.get('survey_step').get('questions').removeObject(question)
+      question.get('surveyStep').get('questions').removeObject(question)
       question.deleteRecord()
       question.save()
       
@@ -62,13 +62,13 @@ App.QuestionController = Ember.ObjectController.extend({
     createAnswerChoice: ->
       question = @get('model')
       answer_choice = @store.createRecord('answer_choice',
-        option_text: @get('option_text')
+        optionText: @get('optionText')
         question: @get('model')
       )
       controller = @
       answer_choice.save().then (answer_choice) ->
-        controller.set('option_text', '')
-        question.get('answer_choices').addObject(answer_choice)
+        controller.set('optionText', '')
+        question.get('answerChoices').addObject(answer_choice)
       @set "isNewAnswerChoice", false
   
   isEditing: false

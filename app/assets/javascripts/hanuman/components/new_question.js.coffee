@@ -1,13 +1,13 @@
 App.NewQuestionComponent = Ember.Component.extend(
   layoutName: 'components/new_question'
   surveyStep: null
-  surveyTemplate: Ember.computed.alias('surveyStep.survey_template')
-  isFullyEditable: Ember.computed.alias('surveyTemplate.fully_editable')
+  surveyTemplate: Ember.computed.alias('surveyStep.surveyTemplate')
+  isFullyEditable: Ember.computed.alias('surveyTemplate.fullyEditable')
   
   setNewModel: ->
     model = @get('surveyStep').get('questions').content.createRecord(
-      sort_order: @get('surveyStep').get('questions.length')
-      question_text: ''
+      sortOrder: @get('surveyStep').get('questions.length')
+      questionText: ''
     )
     @set('model', model)
     
