@@ -1,6 +1,7 @@
-{{#if validationError}}
+{{#if errors.length}}
 <div class="alert alert-danger">
   <h4>There was a problem</h4>
+  <p>The question could not be saved due to validation errors</p>
   <ul>
     {{#each errors}}
     <li>
