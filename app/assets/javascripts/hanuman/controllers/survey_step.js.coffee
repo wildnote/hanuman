@@ -16,34 +16,6 @@ App.SurveyStepController = Ember.ObjectController.extend(
     return @get('questions').get('length')
   ).property('questions.length')
   
-  actions:
-    newQuestion: ->
-      @set "isNewQuestion", true
-      
-    createQuestion: ->
-      surveyStep = @get('model')
-      question = @store.createRecord('question',
-        questionText: @get('questionText')
-        surveyStep: @get('model')
-        sortOrder: @get('questionsCount') + 1
-      )
-      controller = @
-      question.set('answerType', @get('selectedAnswerType'))
-      question.save().then (question) ->
-        # clear out form
-        controller.set 'questionText', ''
-        controller.set 'answerType', ''
-        # need to add new question to bottom of listing with the right sort order
-        surveyStep.get('questions').addObject(question)
-        controller.set "isNewQuestion", false
-        controller.set "validationError", false
-      , (failure) ->
-        console.log "failed"
-        controller.set "validationError", true
-      
-    exitCreateQuestion: ->
-      @set "isNewQuestion", false
-  
   # drag and drop sort order method
   updateSortOrder: (indexes) ->
     console.log "in updateSortOrder"
