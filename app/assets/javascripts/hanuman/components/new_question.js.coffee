@@ -32,4 +32,9 @@ App.NewQuestionComponent = Ember.Component.extend(
       else
         @rollback()
         
+  errors: (->
+    return Em.A() unless @get('object.errors')
+    @get('object.errors').errorsFor(@get('for')).mapBy('message').join(', ')
+  ).property 'object.errors.[]'
+        
 )

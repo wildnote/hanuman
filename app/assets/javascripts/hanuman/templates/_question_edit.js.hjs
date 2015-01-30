@@ -48,15 +48,15 @@
   <div class="col-sm-12">
     <div class='alert alert-danger'>
       <h4>There was a problem</h4>
-      <p>The question could not be saved due to validation errors</p>
+      <p>The question could not be saved due to validation errors. Question text is required.</p>
     </div>
   </div>
 </div>
 {{/if}}
 
-{{#each error in errors.questionText}}
+{{!-- {{#each error in errors.questionText}}
   {{error.message}}
-{{/each}}
+{{/each}} --}}
 
 <!-- new answer choice -->
 {{#if showAnswerChoices}}

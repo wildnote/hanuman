@@ -54,22 +54,25 @@
   {{/if}}
   
   
-  {{#if errors.length}}
+  {{#if model.errors.length}}
   <div class="row">
     <div class="col-sm-12">
       <div class='alert alert-danger'>
         <h4>There was a problem</h4>
-        <p>The question could not be saved due to validation errors</p>
-        <ul>
-          {{#each message in errors.messages}}
+        <p>The question could not be saved due to validation errors. Question text is required.</p>
+        {{!-- <ul>
+          {{#each message in model.errors}}
           <li>
-            {{titleize attribute}} {{message}}
+            {{debugger}}
+            {{attribute}} {{message}}
           </li>
           {{/each}}
-        </ul>
+        </ul> --}}
       </div>
     </div>
   </div>
   {{/if}}
+  
+  
   
 </div>
