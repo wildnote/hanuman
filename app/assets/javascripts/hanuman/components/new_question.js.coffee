@@ -6,7 +6,7 @@ App.NewQuestionComponent = Ember.Component.extend(
   
   setNewModel: ->
     model = @get('surveyStep').get('questions').content.createRecord(
-      sortOrder: @get('surveyStep').get('questions.length')
+      sortOrder: @get('surveyStep').get('questions.length') + 1
       questionText: ''
     )
     @set('model', model)
