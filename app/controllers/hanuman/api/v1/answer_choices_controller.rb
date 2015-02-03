@@ -15,18 +15,17 @@ module Hanuman
     end
 
     def update
-      respond_with answer_choice.update(answer_choice_params)
+      answer_choice = AnswerChoice.find(params[:id])
+      answer_choice.update(answer_choice_params)
+      respond_with answer_choice
     end
 
     def destroy
+      answer_choice = AnswerChoice.find(params[:id])
       respond_with answer_choice.destroy
     end
 
     private
-
-    def answer_choice
-      AnswerChoice.find(params[:id])
-    end
 
     def answer_choice_params
       params.require(:answer_choice).permit(:option_text, :question_id, :scientific_text)

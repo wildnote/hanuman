@@ -5,12 +5,15 @@ App.AnswerChoiceController = Ember.ObjectController.extend(
       @set "isEditingAnswerChoice", true
     
     exitEditAnswerChoice: ->
+      @get('model').rollback()
       @set "isEditingAnswerChoice", false
       
     saveAnswerChoice: ->
       answer_choice = @get('model')
-      answer_choice.save()
-      @set "isEditingAnswerChoice", false
+      answer_choice.save().then (answer_choice) ->
+        @set "isEditingAnswerChoice", false
+      , (response) ->
+        console.log "error"
     
     deleteAnswerChoice: ->
       answer_choice = @get('model')

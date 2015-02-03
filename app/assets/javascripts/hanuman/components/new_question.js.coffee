@@ -31,7 +31,8 @@ App.NewQuestionComponent = Ember.Component.extend(
         @setNewModel()
       else
         @rollback()
-        
+  
+  # not sure where to put this, but it converts DS.Errors errors to array that I can loop through
   errors: (->
     return Em.A() unless @get('object.errors')
     @get('object.errors').errorsFor(@get('for')).mapBy('message').join(', ')
