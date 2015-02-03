@@ -35,6 +35,7 @@ App.QuestionController = Ember.ObjectController.extend({
         @set "showAnswerChoices", true
       
     exitEditQuestion: ->
+      @get('model').rollback()
       @set "isEditing", false
       
     saveQuestion: ->
@@ -69,7 +70,10 @@ App.QuestionController = Ember.ObjectController.extend({
       answer_choice.save().then (answer_choice) ->
         controller.set('optionText', '')
         question.get('answerChoices').addObject(answer_choice)
-      @set "isNewAnswerChoice", false
+        @set "isNewAnswerChoice", false
+      , (response) ->
+        console.log "error"
+      
   
   isEditing: false
   isNewAnswerChoice: false
