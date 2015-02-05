@@ -3,6 +3,21 @@ App.NewQuestionComponent = Ember.Component.extend(
   surveyStep: null
   surveyTemplate: Ember.computed.alias('surveyStep.surveyTemplate')
   isFullyEditable: Ember.computed.alias('surveyTemplate.fullyEditable')
+  showAnswerChoices: false
+  
+  # showAnswerChoices: ->
+  #     console.log("answerTypes changed")
+  #     question = @get('model')
+  #     if question and question.get('answerType')
+  #       question.get('answerType').then (answerType) =>
+  #         if answerType.get('hasAnswerChoices')
+  #           @set "showAnswerChoices", true
+  #     else
+  #       @set "showAnswerChoices", false
+            
+  # answerTypeSelected: (->
+  #   Ember.run.once(this, this.showAnswerChoices)
+  # ).observes('model.answerType.content').on('init')
   
   setNewModel: ->
     model = @get('surveyStep').get('questions').content.createRecord(
