@@ -60,17 +60,51 @@
       <div class='alert alert-danger'>
         <h4>There was a problem</h4>
         <p>The question could not be saved due to validation errors. Question text is required.</p>
-        {{!-- <ul>
+        <ul>
           {{#each message in model.errors}}
           <li>
-            {{debugger}}
             {{attribute}} {{message}}
           </li>
           {{/each}}
-        </ul> --}}
+        </ul>
       </div>
     </div>
   </div>
+  {{/if}}
+  
+  <!-- new answer choice -->
+  {{#if showAnswerChoices}}
+    {{#if isNewAnswerChoice}}
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3">
+          {{input type="text" valueBinding='optionText' class="form-control"}}
+        </div>
+        <div class="col-sm-1">
+          <a class="btn btn-xs btn-primary" href="#" {{action "createAnswerChoice" on="click"}}>
+            <span class="glyphicon glyphicon-check"></span>
+          </a>
+          <a class="btn btn-xs btn-info" href="#" {{action "exitCreateAnswerChoice" on="click"}}>
+            <span class="glyphicon glyphicon-remove-circle"></span>
+          </a>
+        </div>
+      </div>
+    {{else}}
+      <!-- new answer choice button -->
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3">
+          <a class="btn btn-xs btn-primary" href="#" {{action "newAnswerChoice" on="click"}}>
+            <span class="glyphicon glyphicon-plus"></span>
+          </a>
+        </div>
+        <div class="col-sm-1"></div>
+      </div>
+    {{/if}}
   {{/if}}
   
   

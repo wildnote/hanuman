@@ -22,11 +22,10 @@
   <div class="col-sm-3">
     {{#if isFullyEditable}}
       {{view Ember.Select
-         content=controllers.answerTypes.arrangedContent
-         optionValuePath="content.id"
+         content=sortedAnswerTypes
          optionLabelPath="content.name"
-         selectionBinding="content.answerType.content"
-         class="form-control"}}
+         selection=model.answerType.content
+         class="form-control"}} 
     {{else}}
       <p class="bg-danger">
         Answer type cannot be changed because there are surveys submitted for this template. 

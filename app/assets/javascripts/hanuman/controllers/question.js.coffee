@@ -1,5 +1,12 @@
 App.QuestionController = Ember.ObjectController.extend({
-  needs: ["answerChoices", "answerTypes", "surveyStep"]
+  needs: ["answerChoices", "surveyStep"]
+  
+  answerTypes: Ember.computed (->
+    @store.all('answerType')
+  )
+  sortedAnswerTypes: Ember.computed('answerTypes.[]', ->
+    @get('answerTypes').sortBy('name')
+  )
   
   # called inside question controller because of has_many relationship for each question-kdh
   answerChoices: (->
@@ -26,6 +33,10 @@ App.QuestionController = Ember.ObjectController.extend({
   isFullyEditable: (->
     return @get('surveyStep').get('surveyTemplate').get('fullyEditable')
   ).property('surveyStep.surveyTemplate.fullyEditable')
+  
+  # answerTypeSelected: (->
+  #   console.log("answerTypes changed")
+  # ).observes('content.answerType.content')
   
   actions:
     editQuestion: ->
@@ -70,7 +81,7 @@ App.QuestionController = Ember.ObjectController.extend({
       answer_choice.save().then (answer_choice) ->
         controller.set('optionText', '')
         question.get('answerChoices').addObject(answer_choice)
-        @set "isNewAnswerChoice", false
+        #controller.set "isNewAnswerChoice", false
       , (response) ->
         console.log "error"
       
