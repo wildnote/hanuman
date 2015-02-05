@@ -35,9 +35,11 @@
   </div>
   <div class="col-sm-3">
     <br/>
-    {{#each answer_choice in answerChoices}}
-      {{render 'answer_choice' answer_choice}}
+    {{#each answerChoice in answerChoices}}
+      {{answer-choice-row question=model model=answerChoice isNewAnswerChoice=false showAnswerChoices=showAnswerChoices}}
     {{/each}}
+    {{!-- + new answer choice --}}
+    {{answer-choice-row question=model model=answerChoice isNewAnswerChoice=true showAnswerChoices=showAnswerChoices}}
   </div>
     {{partial "question_delete_button"}}
 </div>
@@ -53,41 +55,3 @@
 </div>
 {{/if}}
 
-{{!-- {{#each error in errors.questionText}}
-  {{error.message}}
-{{/each}} --}}
-
-<!-- new answer choice -->
-{{#if showAnswerChoices}}
-  {{#if isNewAnswerChoice}}
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-3">
-        {{input type="text" valueBinding='optionText' class="form-control"}}
-      </div>
-      <div class="col-sm-1">
-        <a class="btn btn-xs btn-primary" href="#" {{action "createAnswerChoice" on="click"}}>
-          <span class="glyphicon glyphicon-check"></span>
-        </a>
-        <a class="btn btn-xs btn-info" href="#" {{action "exitCreateAnswerChoice" on="click"}}>
-          <span class="glyphicon glyphicon-remove-circle"></span>
-        </a>
-      </div>
-    </div>
-  {{else}}
-    <!-- new answer choice button -->
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-3">
-        <a class="btn btn-xs btn-primary" href="#" {{action "newAnswerChoice" on="click"}}>
-          <span class="glyphicon glyphicon-plus"></span>
-        </a>
-      </div>
-      <div class="col-sm-1"></div>
-    </div>
-  {{/if}}
-{{/if}}

@@ -87,6 +87,4 @@ App.QuestionController = Ember.ObjectController.extend({
       
   
   isEditing: false
-  isNewAnswerChoice: false
-  showAnswerChoices: false
 })
