@@ -61,9 +61,14 @@ App.QuestionController = Ember.ObjectController.extend({
         
     deleteQuestion: ->
       question = @get('model')
+      
+      ##### adolfo need to refactor to share this method with surveyStep controller #####
+      ##### call updateSortOrder(indexes)
+      
       question.get('surveyStep').get('questions').removeObject(question)
       question.deleteRecord()
       question.save()
+      
       
     newAnswerChoice: ->
       @set "isNewAnswerChoice", true
