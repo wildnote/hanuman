@@ -14,7 +14,9 @@ module Hanuman
     validates :question_text, presence: true, unless: :no_text_on_that_answer_type
     
     def no_text_on_that_answer_type
-      answer_type.name.eql? "line"
+      unless answer_type.blank?
+        answer_type.name.eql? "line"
+      end
     end
   end
 end
