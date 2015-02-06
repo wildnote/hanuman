@@ -16,7 +16,7 @@
 - current_step = yield(:current_step).strip
 - survey_form_state = yield(:survey_form_state).strip
 
-= form_for @survey, builder: CustomFieldsFormBuilder, html: {class: "form-horizontal"} do |f|
+= form_for @survey, builder: CustomFieldsFormBuilder, html: {class: "form-horizontal form-no-enter-key"} do |f|
 
   .page-header
     %h5
@@ -41,7 +41,7 @@
       %h4.panel-title.pull-left
         %span.glyphicon.glyphicon-chevron-right
         %span.glyphicon.glyphicon-chevron-down
-        %a.btn.btn-xs.btn-primary
+        %strong
           Step 1 Entry 1
       .clearfix
     .panel-collapse.in{:id => "collapse_1_1"}
@@ -58,5 +58,5 @@
 
   .form-group
     .col-sm-offset-5.col-sm-7
-      = f.submit "Next Step", class: "btn btn-primary"
+      = f.submit "Next Step", class: "btn btn-primary", data: {disable_with: "Please wait..."}
       = link_to "Cancel", root_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"

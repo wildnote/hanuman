@@ -30,21 +30,24 @@
 
   - steps.each do |step|
     .panel.panel-info
-      .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}"}
+      .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step.step}"}
         .panel-title
           .pull-left
             %span.glyphicon.glyphicon-chevron-right
             %span.glyphicon.glyphicon-chevron-down
-            %button.btn.btn-xs.btn-primary
+            %strong
               Step
               = step.step
-            = link_to "Edit", admin_path + "/#/survey_steps/" + step.id.to_s
-          - if step.duplicator?
+            - if step.duplicator?
+              %em{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step.step}"}
+                = "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
+          - if current_user.superuser?
             .pull-right
-              %button.btn.btn-xs.btn-primary{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}"}
-                Duplicator
+              = link_to admin_path + "/#/survey_steps/" + step.id.to_s, class: "btn btn-xs btn-primary" do
+                %span.glyphicon.glyphicon-pencil
+                Edit
           .clearfix
-      .panel-collapse.collapse.in{:id => "collapse_#{step}"}
+      .panel-collapse.collapse.in{:id => "collapse_#{step.step}"}
         .panel-body
           - if step.step == 1
             = render ("hanuman/survey_templates/formextensionreadonly")
