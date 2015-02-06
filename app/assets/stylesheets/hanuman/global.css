@@ -125,7 +125,8 @@ input[type="checkbox"] {
   float: right;
 }
 
-.panel-heading.chevron .glyphicon {
+.panel-heading.chevron .glyphicon-chevron-right,
+.panel-heading.chevron .glyphicon-chevron-down {
   margin-right: 10px;
 }
 

@@ -14,7 +14,7 @@
 - current_entry = params[:entry].to_i
 - survey_form_state = yield(:survey_form_state).strip
 
-= form_for @survey, builder: CustomFieldsFormBuilder, html: {class: "form-horizontal"} do |f|
+= form_for @survey, builder: CustomFieldsFormBuilder, html: {class: "form-horizontal form-no-enter-key"} do |f|
 
   .page-header
     %h5
@@ -56,7 +56,7 @@
                 %h4.panel-title.pull-left
                   %span.glyphicon.glyphicon-chevron-right
                   %span.glyphicon.glyphicon-chevron-down
-                  %a.btn.btn-xs.btn-primary
+                  %strong
                     Step
                     = step.step
                     Entry
@@ -80,7 +80,7 @@
               %h4.panel-title.pull-left
                 %span.glyphicon.glyphicon-chevron-right
                 %span.glyphicon.glyphicon-chevron-down
-                %a.btn.btn-xs.btn-primary{readonly: true}
+                %strong{readonly: true}
                   Step
                   = step.step
                   Entry
@@ -107,7 +107,7 @@
         %h4.panel-title.pull-left
           %span.glyphicon.glyphicon-chevron-right
           %span.glyphicon.glyphicon-chevron-down
-          %a.btn.btn-xs.btn-primary{readonly: true}
+          %strong{readonly: true}
             Step
             = current_step
             Entry
@@ -132,7 +132,7 @@
         .pull-left
           %h5= Hanuman::Setting.value("add_entry_helper_text")
         .pull-right
-          = button_tag type: "submit", class: "btn btn-success", name: "next_step" do
+          = button_tag type: "submit", class: "btn btn-success", name: "next_step", data: {disable_with: "Please wait..."} do
             %span.glyphicon.glyphicon-plus
             Add Entry
         .clearfix
@@ -140,7 +140,7 @@
   .form-group
     .col-sm-offset-5.col-sm-7
       - if current_step == 2
-        = f.submit "Next Step", class: "btn btn-primary"
+        = f.submit "Next Step", class: "btn btn-primary", data: {disable_with: "Please wait..."}
       - else
-        = f.submit (current_step == 1 ? "Next Step" : "Finish"), class: "btn btn-primary"
+        = f.submit (current_step == 1 ? "Next Step" : "Finish"), class: "btn btn-primary", data: {disable_with: "Please wait..."}
       = link_to "Cancel", root_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
