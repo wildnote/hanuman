@@ -54,6 +54,17 @@
     {{/if}}
   {{/if}}
   
+  {{#if showAnswerChoices}}
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-4">
+      {{answer-choice-row question=model isNewAnswerChoice=true showAnswerChoices=showAnswerChoices isEditingAnswerChoice=false}}
+    </div>
+  </div>
+  {{/if}}
+  
   
   {{#if model.errors.length}}
   <div class="row">
@@ -65,19 +76,5 @@
     </div>
   </div>
   {{/if}}
-  
-  {{#if showAnswerChoices}}
-  <div class="row">
-    <div class="col-sm-2"></div>
-    <div class="col-sm-3"></div>
-    <div class="col-sm-3"></div>
-    <div class="col-sm-4">
-      {{answer-choice-row question=model isNewAnswerChoice=true showAnswerChoices=showAnswerChoices isEditingAnswerChoice=false}}
-    </div>
-  </div>
-  {{/if}}
-
-  
-  
   
 </div>

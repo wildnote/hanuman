@@ -1,5 +1,4 @@
 App.NewQuestionComponent = Ember.Component.extend(
-  layoutName: 'components/new_question'
   surveyStep: null
   surveyTemplate: Ember.computed.alias('surveyStep.surveyTemplate')
   isFullyEditable: Ember.computed.alias('surveyTemplate.fullyEditable')

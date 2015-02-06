@@ -46,15 +46,18 @@
         
       </div>
       
+      {{!-- loop through existing questions --}}
       <ul class="sortable">
         {{#each question in questions}}
           <li class="row question-border item" data-id="{{unbound question.id}}">
-            {{render 'question' question}}
+            {{question-row isEditing=false model=question isNewQuestionRow=false answerTypes=answerTypes surveyStep=model}}
           </li>
         {{/each}}
       </ul>
       
-      {{new-question surveyStep=model answerTypes=answerTypes}}
+      {{!-- new question row --}}
+      {{question-row isEditing=false isNewQuestionRow=true answerTypes=answerTypes surveyStep=model}}
+      
     </div>
   </div>
 

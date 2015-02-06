@@ -41,6 +41,7 @@ App.QuestionController = Ember.ObjectController.extend({
   actions:
     editQuestion: ->
       @set "isEditing", true
+      @set "isNewQuestion", true
       question = @get('model')
       if question.get('answerType').get('hasAnswerChoices')
         @set "showAnswerChoices", true
