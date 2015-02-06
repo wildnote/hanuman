@@ -59,22 +59,23 @@
   <div class="row">
     <div class="col-sm-12">
       <div class='alert alert-danger'>
-        <h4>There was a problem</h4>
-        <p>The question could not be saved due to validation errors. Question text is required.</p>
-        <ul>
-          {{#each message in model.errors}}
-          <li>
-            {{attribute}} {{message}}
-          </li>
-          {{/each}}
-        </ul>
+        <h4>There was a problem saving the question.</h4>
+        <p>Question text and answer type are required.</p>
       </div>
     </div>
   </div>
   {{/if}}
   
-  {{answer-choice-row isNewAnswerChoice=isNewAnswerChoice showAnswerChoices=showAnswerChoices}}
-  
+  {{#if showAnswerChoices}}
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-4">
+      {{answer-choice-row question=model isNewAnswerChoice=true showAnswerChoices=showAnswerChoices isEditingAnswerChoice=false}}
+    </div>
+  </div>
+  {{/if}}
 
   
   
