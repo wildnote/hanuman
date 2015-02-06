@@ -10,7 +10,7 @@
   .form-group
     = f.label :status, class: "col-sm-2 control-label"
     .col-sm-10
-      = f.text_field :status, class: "form-control"
+      = f.select :status, ["active", "inactive"], {prompt: false}, {class: "form-control"}
   .form-group
     .col-sm-offset-2.col-sm-10
       = f.submit "Save", class: "btn btn-primary"
