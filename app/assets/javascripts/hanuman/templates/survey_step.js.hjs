@@ -50,13 +50,13 @@
       <ul class="sortable">
         {{#each question in questions}}
           <li class="row question-border item" data-id="{{unbound question.id}}">
-            {{question-row isEditing=false model=question isNewQuestionRow=false answerTypes=answerTypes surveyStep=model}}
+            {{question-row isEditing=false model=question isNewQuestionRow=false answerTypes=answerTypes surveyStep=model isFullyEditable=isFullyEditable}}
           </li>
         {{/each}}
       </ul>
       
       {{!-- new question row --}}
-      {{question-row isEditing=false isNewQuestionRow=true answerTypes=answerTypes surveyStep=model}}
+      {{question-row isEditing=false isNewQuestionRow=true answerTypes=answerTypes surveyStep=model isFullyEditable=isFullyEditable}}
       
     </div>
   </div>

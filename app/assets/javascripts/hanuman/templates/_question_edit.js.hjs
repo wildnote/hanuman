@@ -19,49 +19,57 @@
   </div>
   <div class="col-sm-3">
     {{!-- adolfo need answerType.content on new and answerType on edit for selection --}}
-    {{#if model.isNew}}
-      {{view Ember.Select
-         content=answerTypes
-         optionLabelPath="content.name"
-         selection=model.answerType
-         class="form-control"
-         prompt="Please select"}}
-    {{else}}
-      {{view Ember.Select
-        content=answerTypes
-        optionLabelPath="content.name"
-        selection=model.answerType.content
-        class="form-control"
-        prompt="Please select"}}
-    {{/if}}
+    
+      {{#if model.isNew}}
+        {{view Ember.Select
+           content=answerTypes
+           optionLabelPath="content.name"
+           selection=model.answerType
+           class="form-control"
+           prompt="Please select"}}
+      {{else}}
+        {{#if isFullyEditable}}
+          {{view Ember.Select
+            content=answerTypes
+            optionLabelPath="content.name"
+            selection=model.answerType.content
+            class="form-control"
+            prompt="Please select"}}
+        {{else}}
+          {{model.answerType.name}}
+          <div class="alert alert-danger">
+            Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey template to change the Answer Type.
+          </div>
+        {{/if}}
+      {{/if}}
+    
   </div>
   <div class="col-sm-3"></div>
   <div class="col-sm-1"></div>
 </div>
 
 {{#if showAnswerChoices}}
-<div class="row">
-<div class="col-sm-2"></div>
-<div class="col-sm-3"></div>
-<div class="col-sm-3"></div>
-<div class="col-sm-4">
-  <br/>
-  {{#each answerChoice in model.answerChoices}}
-    {{answer-choice-row question=model model=answerChoice isNewAnswerChoice=false showAnswerChoices=showAnswerChoices}}
-  {{/each}}
-  {{!-- + new answer choice --}}
-  {{answer-choice-row question=model model=answerChoice isNewAnswerChoice=true showAnswerChoices=showAnswerChoices}}
-</div>
-</div>
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-4">
+      {{#each answerChoice in model.answerChoices}}
+        {{answer-choice-row question=model model=answerChoice isNewAnswerChoice=false showAnswerChoices=showAnswerChoices}}
+      {{/each}}
+      {{!-- + new answer choice --}}
+      {{answer-choice-row question=model model=answerChoice isNewAnswerChoice=true showAnswerChoices=showAnswerChoices}}
+    </div>
+  </div>
 {{/if}}
 
 {{#if errors.length}}
-<div class="row">
-<div class="col-sm-12">
-  <div class='alert alert-danger'>
-    <h4>There was a problem</h4>
-    <p>The question could not be saved due to validation errors. Question text is required.</p>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class='alert alert-danger'>
+        <h4>There was a problem</h4>
+        <p>The question could not be saved due to validation errors. Question text and answer type are required.</p>
+      </div>
+    </div>
   </div>
-</div>
-</div>
 {{/if}}
