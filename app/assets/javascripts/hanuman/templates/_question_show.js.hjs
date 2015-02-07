@@ -1,7 +1,7 @@
 <!-- checkboxlist -->
 {{#if model.answerType.checkboxlist}}
   <div class="row">
-    {{partial "question_edit_buttons"}}
+    {{partial "question_left_buttons"}}
     <div class="col-sm-3">{{model.questionText}}</div>
     <div class="col-sm-3">{{model.answerType.name}}</div>
     <div class="col-sm-3">
@@ -9,14 +9,14 @@
         {{input type="checkbox" name="" disabled=true}}{{answerChoice.optionText}}<br/>
       {{/each}}
     </div>
-    {{partial "question_delete_button"}}
+    {{partial "question_right_buttons"}}
   </div>
 {{/if}}
 
 <!-- chosenmultiselectgroup -->
 {{#if model.answerType.chosenmultiselectgrouped}}
   <div class="row">
-    {{!partial "question_edit_buttons"}}
+    {{!partial "question_left_buttons"}}
     {{!-- not using partial above for now because don't want to show the edit button for grouped multiselect for now-kdh --}}
     <div class="col-sm-2">
       {{sortOrder}}
@@ -36,36 +36,36 @@
         {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
       {{/if}}
     </div>
-    {{partial "question_delete_button"}}
+    {{partial "question_right_buttons"}}
   </div>
 {{/if}}
 
 <!-- helper -->
 {{#if model.answerType.helper}}
     <div class="row">
-      {{partial "question_edit_buttons"}}
+      {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}</div>
       <div class="col-sm-3 helperabove">{{model.questionText}}</div>
-      {{partial "question_delete_button"}}
+      {{partial "question_right_buttons"}}
     </div>
 {{/if}}
 
 <!-- line -->
 {{#if model.answerType.line}}
     <div class="row">
-      {{partial "question_edit_buttons"}}
+      {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}</div>
       <div class="col-sm-3 page-header"></div>
-      {{partial "question_delete_button"}}
+      {{partial "question_right_buttons"}}
     </div>
 {{/if}}
 
 <!-- radio -->
 {{#if model.answerType.radio}}
     <div class="row">
-      {{partial "question_edit_buttons"}}
+      {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}
       </div>
@@ -76,25 +76,25 @@
           <p class="bg-danger">There are no available Answer Options defined. Edit question to add new answer choices.</p>
         {{/each}}
       </div>
-      {{partial "question_delete_button"}}
+      {{partial "question_right_buttons"}}
     </div>
 {{/if}}
 
 <!-- section -->
 {{#if model.answerType.section}}
     <div class="row">
-      {{partial "question_edit_buttons"}}
+      {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}</div>
       <div class="col-sm-3 form-section">{{model.questionText}}</div>
-      {{partial "question_delete_button"}}
+      {{partial "question_right_buttons"}}
     </div>
 {{/if}}
 
 <!-- select -->
 {{#if model.answerType.select}}
     <div class="row">
-      {{partial "question_edit_buttons"}}
+      {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}</div>  
       <div class="col-sm-3">
@@ -109,52 +109,52 @@
           {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
         {{/if}}
       </div>
-      {{partial "question_delete_button"}}
+      {{partial "question_right_buttons"}}
     </div>
 {{/if}}
 
 <!-- static -->
 {{#if model.answerType.static}}
     <div class="row">
-      {{partial "question_edit_buttons"}}
+      {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}</div>
       <div class="col-sm-3 form-static">{{model.questionText}}</div>
-      {{partial "question_delete_button"}}
+      {{partial "question_right_buttons"}}
     </div>
 {{/if}}
 
 <!-- text -->
 {{#if model.answerType.text}}
     <div class="row">
-      {{partial "question_edit_buttons"}}
+      {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}</div>
       <div class="col-sm-3">
         {{input type="text" class="form-control"}}
       </div>
-      {{partial "question_delete_button"}}
+      {{partial "question_right_buttons"}}
     </div>
 {{/if}}
 
 <!-- textarea -->
 {{#if model.answerType.textarea}}
     <div class="row">
-      {{partial "question_edit_buttons"}}
+      {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}</div>
       <div class="col-sm-3">{{textarea class="form-control"}}</div>
-      {{partial "question_delete_button"}}
+      {{partial "question_right_buttons"}}
     </div>
 {{/if}}
 
 <!-- checkbox -->
 {{#if model.answerType.checkbox}}
     <div class="row">
-      {{partial "question_edit_buttons"}}
+      {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}</div>
       <div class="col-sm-3">{{input type="checkbox" name="" disabled=true}}</div>
-      {{partial "question_delete_button"}}
+      {{partial "question_right_buttons"}}
     </div>
 {{/if}}
