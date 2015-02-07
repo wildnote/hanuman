@@ -1,5 +1,5 @@
 App.SurveyStepController = Ember.ObjectController.extend(
-  needs: ["answerChoices", "answerTypes", "question"]
+  needs: ["answerChoices", "answerTypes"]
   
   questionText: null
   selected_answerType_id: null

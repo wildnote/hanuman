@@ -1,6 +1,6 @@
-{{!-- editable form --}}
-{{#if isEditing}}
 
+{{#if isEditing}}
+    {{!-- editable form --}}
     {{partial "question_edit"}}
   
 {{else}}
