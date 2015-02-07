@@ -1,0 +1,20 @@
+<!-- new question button -->
+{{#if isFullyEditable}}
+  <div class="row">
+    <div class="col-sm-2">
+      <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
+        <span class="glyphicon glyphicon-plus"></span>
+      </a>
+    </div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-1"></div>
+  </div>
+{{else}}
+  <div class="row">
+    <div class="col-sm-12 bg-danger">
+      Adding a question to this survey is unavailable because there have been surveys submitted. 
+      To add a question duplicate the survey template and make changes to the new template.
+    </div>
+  </div>
+{{/if}}
