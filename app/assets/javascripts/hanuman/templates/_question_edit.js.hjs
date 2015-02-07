@@ -1,1 +1,0 @@
-{{question-edit-row surveyStep=model model=question answerTypes=answerTypes isNewQuestion=isNewQuestion isFullyEditable=isFullyEditable isEditing=isEditing}}
