@@ -1,7 +1,5 @@
 <div class="col-sm-1">
-  {{#if isFullyEditable}}
-    <a class="btn btn-xs btn-danger" href="#">
-      <span class="glyphicon glyphicon-trash" {{action "deleteQuestion" on="click"}}></span>
-    </a>
-  {{/if}}
+  <a class="btn btn-xs btn-danger" href="#">
+    <span class="glyphicon glyphicon-trash" {{action "deleteQuestion" on="click"}}></span>
+  </a>
 </div>

@@ -2,7 +2,7 @@ App.QuestionRowComponent = Ember.Component.extend(
   surveyStep: null
   isEditing: null
   isNewQuestionRow: null
-  isFullyEditable: true
+  isFullyEditable: null
   
   answerTypeSelected: (->
     console.log "answerTypeSelected invoked"
