@@ -7,6 +7,7 @@
 </div>
 <div class="row">
   <div class="col-sm-2">
+    {{model.sortOrder}}
     <a class="btn btn-xs btn-primary" href="#" {{action "save" on="click"}}>
       <span class="glyphicon glyphicon-check"></span>
     </a>

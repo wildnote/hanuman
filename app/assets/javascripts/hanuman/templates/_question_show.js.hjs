@@ -19,7 +19,7 @@
     {{!partial "question_left_buttons"}}
     {{!-- not using partial above for now because don't want to show the edit button for grouped multiselect for now-kdh --}}
     <div class="col-sm-2">
-      {{sortOrder}}
+      {{model.sortOrder}}
       <a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-sort"></span></a>
     </div>
     <div class="col-sm-3">{{model.questionText}}</div>
