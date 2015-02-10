@@ -14,10 +14,6 @@ App.SurveyStepRoute = Ember.Route.extend({
   setupController: (controller, model) ->
     @_super controller, model
     
-    # this line will go away once I refactor with Adolfo for the edit question
-    # @controllerFor("answerTypes").set "content", @store.find("answerType")
-    # this line will go away once I refactor with Adolfo for the edit question
-    
     @store.find("answerType").then (answerTypes)->
       controller.set("answerTypes", answerTypes.sortBy('name'))
     return
