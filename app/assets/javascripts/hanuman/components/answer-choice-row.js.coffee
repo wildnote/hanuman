@@ -7,7 +7,7 @@ App.AnswerChoiceRowComponent = Ember.Component.extend(
   question: null
   
   setNewModel: ->
-    model = @get('question').get('answerChoices').content.createRecord(
+    model = @get('question').store.createRecord('answerChoice',
       optionText: ''
     )
     @set('model', model)
@@ -21,37 +21,11 @@ App.AnswerChoiceRowComponent = Ember.Component.extend(
   
   actions:
     save: ->
+      @get('model').set('question', @get('question'))
       @sendAction('save', @get('model'))
       if @get('model.isNew')  
         @set('model',null)
       @send('toggleForm')
-        
-      
-      # trying to handle situation where user save answerchoice before saving question
-      # answerChoice = @get('model')
-      # question = answerChoice.get('question')
-      # controller = @
-      # if question.get('isNew')
-      #   question.save().then (question) ->
-      #     console.log "saved"
-      #     answerChoice.set "question_id", question.get('id')
-      #     answerChoice.save().then(
-      #       =>
-      #         controller.set('model', null)
-      #         controller.send('toggleForm')
-      #       ,->
-      #         console.log('failed')    
-      #     )
-      #   , (response) ->
-      #     console.log "failed"
-      # else
-      #   answerChoice.save().then(
-      #     =>
-      #       @set('model', null)
-      #       @send('toggleForm')
-      #     ,->
-      #       console.log('failed')    
-      #   )
       
     toggleForm: ->
       this.toggleProperty('isEditingAnswerChoice')
