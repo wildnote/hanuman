@@ -1,6 +1,6 @@
 <div class="row">
   <div class="col-sm-2">
-    <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
+    <a class="btn btn-xs btn-primary" href="#" {{action "addNew" on="click"}}>
       <span class="glyphicon glyphicon-plus"></span>
     </a>
   </div>

@@ -25,7 +25,8 @@
         {{view Ember.Select
            content=answerTypes
            optionLabelPath="content.name"
-           selection=model.answerType
+           optionValuePath="content.id"
+           value=answerTypeId
            class="form-control"
            prompt="Please select"}}
       {{else}}
@@ -33,7 +34,8 @@
           {{view Ember.Select
             content=answerTypes
             optionLabelPath="content.name"
-            selection=model.answerType.content
+            optionValuePath="content.id"
+            value=answerTypeId
             class="form-control"
             prompt="Please select"}}
         {{else}}
@@ -59,7 +61,7 @@
         {{answer-choice-row question=model model=answerChoice isNewAnswerChoice=false showAnswerChoices=showAnswerChoices}}
       {{/each}}
       {{!-- + new answer choice --}}
-      {{answer-choice-row question=model model=answerChoice isNewAnswerChoice=true showAnswerChoices=showAnswerChoices}}
+      {{answer-choice-row question=model model=answerChoice save="saveAnswerChoice" isNewAnswerChoice=true showAnswerChoices=showAnswerChoices}}
     </div>
   </div>
 {{/if}}
