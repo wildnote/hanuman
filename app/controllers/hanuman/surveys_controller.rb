@@ -122,8 +122,7 @@ module Hanuman
             :answer_choice_id,
             :selectable_id,
             :selectable_type,
-            answer_choice_ids: [],
-            selectable_ids: []
+            answer_choice_ids: []
           ]
         )
       end
@@ -144,8 +143,7 @@ module Hanuman
             :answer_choice_id,
             :selectable_id,
             :selectable_type,
-            answer_choice_ids: [],
-            selectable_ids: []
+            answer_choice_ids: []
           ]
         )
       end
