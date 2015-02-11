@@ -1,5 +1,6 @@
 {{#if showAnswerChoices}}
   {{#if isEditingAnswerChoice}}
+    {{!-- new and edit --}}
     <div class="row">
       <div class="col-sm-8">
         {{input type="text" valueBinding='model.optionText' class="form-control"}}
@@ -25,6 +26,7 @@
         <div class="col-sm-4"></div>
       </div>
     {{else}}
+      {{!-- show of existing answer choice --}}
       <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
         <span class="glyphicon glyphicon-pencil"></span>
       </a>

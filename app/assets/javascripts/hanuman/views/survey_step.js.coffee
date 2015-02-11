@@ -1,5 +1,10 @@
-App.SurveyStepView = Ember.View.extend(
-  didInsertElement: ->
+App.SurveyStepView = Ember.View.extend( 
+  questionsObserver: ( ->
+    Ember.run.once(this, this.setSortable)
+  ).observes('controller.questions.[]').on('didInsertElement')
+  setSortable: ->
+    return  unless @$()
+    
     controller = @get("controller")
     @$(".sortable").sortable 
       update: (event, ui) ->
@@ -7,5 +12,5 @@ App.SurveyStepView = Ember.View.extend(
         $(this).find(".item").each (index) ->
           indexes[$(this).data("id")] = index
         # $(this).sortable "cancel"
-        controller.updateSortOrder indexes
+        controller.updateSortOrder indexes   
 )
