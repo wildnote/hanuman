@@ -46,7 +46,9 @@ App.QuestionRowComponent = Ember.Component.extend(
       @set('model', null)
       
     @set('showAnswerChoices', false)
+    
   answerChoicesPendingSave: []  
+  
   actions:
     save: ->
       @get('model').set('surveyStep', @get('surveyStep'))
@@ -59,14 +61,18 @@ App.QuestionRowComponent = Ember.Component.extend(
         ,->
           console.log('failed')
       )
+      
     saveAnswerChoice: (answerChoice) ->
       if @get('model.isNew')
+        answerChoice.set('question', this.get('model'))
         @get('answerChoicesPendingSave').push(answerChoice)
       else
         answerChoice.save()
+        
     addNew: ->
       this.toggleProperty('isEditing')
       @setNewModel()
+      
     toggleForm: ->
       this.toggleProperty('isEditing')
       @rollback()
@@ -76,49 +82,32 @@ App.QuestionRowComponent = Ember.Component.extend(
       question = @get('model')
       if question.get('answerType').get('hasAnswerChoices')
         @set "showAnswerChoices", true
-    #   
-    # exitEditQuestion: ->
-    #   @get('model').rollback()
-    #   @set "isEditing", false
-    #   
-    # saveQuestion: ->
-    #   question = @get('model')
-    #   controller = @
-    #   question.save().then ->
-    #     console.log "saved"
-    #     controller.set "isEditing", false
-    #   , (response) ->
-    #     console.log "failed"
-    #     # for error handling
         
     delete: ->
+      console.log "called delete action from question-row component"
       question = @get('model')
       
       ##### adolfo need to refactor to share this method with surveyStep controller #####
       ##### call updateSortOrder(indexes)
       
+      surveyStep = question.get('surveyStep')
+      
       question.get('surveyStep').get('questions').removeObject(question)
       question.deleteRecord()
       question.save()
       
+      indexes = {}
+      $('.sortable').find(".item").each (index) ->
+        indexes[$(this).data("id")] = index
       
-    # newAnswerChoice: ->
-    #   @set "isNewAnswerChoice", true
-    #   
-    # exitCreateAnswerChoice: ->
-    #   @set "isNewAnswerChoice", false
-    #   
-    # createAnswerChoice: ->
-    #   question = @get('model')
-    #   answer_choice = @store.createRecord('answer_choice',
-    #     optionText: @get('optionText')
-    #     question: @get('model')
-    #   )
-    #   controller = @
-    #   answer_choice.save().then (answer_choice) ->
-    #     controller.set('optionText', '')
-    #     question.get('answerChoices').addObject(answer_choice)
-    #     #controller.set "isNewAnswerChoice", false
-    #   , (response) ->
-    #     console.log "error"
+      # duplicate code alert, should just be able to call this method in surveyStep controller
+      # updateSortOrder indexes
+      
+      @beginPropertyChanges()
+      surveyStep.get('questions').forEach (question) ->
+        index = indexes[question.get("id")]
+        question.set "sortOrder", index + 1
+        question.save()
+      @endPropertyChanges()
+      
 )
