@@ -11,6 +11,6 @@ App.SurveyStepView = Ember.View.extend(
       update: (event, ui) ->
         indexes = {}
         $(this).find(".item").each (index) ->
-          indexes[$(this).data("id")] = index\
+          indexes[$(this).data("id")] = index
         controller.updateSortOrder indexes
 )
