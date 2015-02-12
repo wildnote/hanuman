@@ -1,6 +1,3 @@
 <div class="col-sm-1">
-  <a class="btn btn-xs btn-danger">
-    <span class="glyphicon glyphicon-trash" {{action "delete" on="click"}}></span>
-  </a>
   {{delete-button model=model action="delete"}}
 </div>
