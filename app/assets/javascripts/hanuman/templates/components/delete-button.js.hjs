@@ -1,0 +1,10 @@
+<a class="btn btn-xs btn-danger btn-delete" href="#" {{action "confirm" on="click"}}>
+  <span class="glyphicon glyphicon-trash"></span>
+</a>
+<div class="delete-confirm">
+  Are you sure you want to delete this item?
+  <div class="footer">
+    <button class="btn btn-success" {{action "delete"}}>Yes</button>
+    <button class="btn btn-danger" {{action "cancel"}}>No</button>
+  </div>
+</div>
