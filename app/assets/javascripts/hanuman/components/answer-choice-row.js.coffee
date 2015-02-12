@@ -18,7 +18,6 @@ App.AnswerChoiceRowComponent = Ember.Component.extend(
       @get('question').get('answerChoices').removeObject(model)
     @set('model', null)
   
-  
   actions:
     save: ->
       @get('model').set('question', @get('question'))
