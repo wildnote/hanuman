@@ -120,6 +120,8 @@ module Hanuman
             :answer,
             :entry,
             :answer_choice_id,
+            :selectable_id,
+            :selectable_type,
             answer_choice_ids: []
           ]
         )
@@ -139,6 +141,8 @@ module Hanuman
             :answer,
             :entry,
             :answer_choice_id,
+            :selectable_id,
+            :selectable_type,
             answer_choice_ids: []
           ]
         )
