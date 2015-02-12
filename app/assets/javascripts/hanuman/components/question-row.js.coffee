@@ -52,19 +52,21 @@ App.QuestionRowComponent = Ember.Component.extend(
   actions:
     save: ->
       @get('model').set('surveyStep', @get('surveyStep'))
-      @get('model').save().then(
-        =>
-          promises = @get('answerChoicesPendingSave').invoke('save')
-          Ember.RSVP.all(promises).then =>
-            @set('answerChoicesPendingSave', [])
-            @send('toggleForm')
-        ,->
-          console.log('failed')
-      )
+      @get('model').save().then (question) =>
+        # loop through answerChoicesPendingSave and set question_id or question
+        # @get('answerChoicesPendingSave').each (answerChoice) ->
+        #   answerChoice.set('question', question)
+        promises = @get('answerChoicesPendingSave').invoke('save')
+        Ember.RSVP.all(promises).then =>
+          @set('answerChoicesPendingSave', [])
+          @send('toggleForm')
+      ,->
+        console.log('failed')
+      
       
     saveAnswerChoice: (answerChoice) ->
       if @get('model.isNew')
-        answerChoice.set('question', this.get('model'))
+        #answerChoice.set('question', this.get('model'))
         @get('answerChoicesPendingSave').push(answerChoice)
       else
         answerChoice.save()
