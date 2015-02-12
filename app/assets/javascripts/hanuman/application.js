@@ -18,7 +18,6 @@
 //= require handlebars/handlebars
 //= require_self
 //= require ./surveys
-//= require ./templates/all
 
 // Ladda
 Ladda.bind('.ladda-button');
