@@ -54,8 +54,8 @@ App.QuestionRowComponent = Ember.Component.extend(
       @get('model').set('surveyStep', @get('surveyStep'))
       @get('model').save().then (question) =>
         # loop through answerChoicesPendingSave and set question_id or question
-        # @get('answerChoicesPendingSave').each (answerChoice) ->
-        #   answerChoice.set('question', question)
+        @get('answerChoicesPendingSave').forEach (answerChoice) ->
+          answerChoice.set('question', question)
         promises = @get('answerChoicesPendingSave').invoke('save')
         Ember.RSVP.all(promises).then =>
           @set('answerChoicesPendingSave', [])
