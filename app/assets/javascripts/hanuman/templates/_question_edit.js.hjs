@@ -52,27 +52,18 @@
 </div>
 
 {{#if showAnswerChoices}}
-  {{#if model.isNew}}
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-4 alert alert-danger">Please save question and re-edit to add answer choices.</div>
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-3"></div>
+    <div class="col-sm-4">
+      {{#each answerChoice in model.answerChoices}}
+        {{answer-choice-row question=model model=answerChoice isNewAnswerChoice=false showAnswerChoices=showAnswerChoices}}
+      {{/each}}
+      {{!-- + new answer choice --}}
+      {{answer-choice-row question=model model=answerChoice save="saveAnswerChoice" isNewAnswerChoice=true showAnswerChoices=showAnswerChoices}}
     </div>
-  {{else}}
-    <div class="row">
-      <div class="col-sm-2"></div>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-4">
-        {{#each answerChoice in model.answerChoices}}
-          {{answer-choice-row question=model model=answerChoice isNewAnswerChoice=false showAnswerChoices=showAnswerChoices}}
-        {{/each}}
-        {{!-- + new answer choice --}}
-        {{answer-choice-row question=model model=answerChoice save="saveAnswerChoice" isNewAnswerChoice=true showAnswerChoices=showAnswerChoices}}
-      </div>
-    </div>
-  {{/if}}
+  </div>
 {{/if}}
 
 {{#if model.errors.length}}
