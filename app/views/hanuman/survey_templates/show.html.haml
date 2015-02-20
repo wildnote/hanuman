@@ -41,11 +41,10 @@
             - if step.duplicator?
               %em{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step.step}"}
                 = "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
-          - if current_user.superuser?
-            .pull-right
-              = link_to admin_path + "/#/survey_steps/" + step.id.to_s, class: "btn btn-xs btn-primary" do
-                %span.glyphicon.glyphicon-pencil
-                Edit
+          .pull-right
+            = link_to admin_path + "/#/survey_steps/" + step.id.to_s, class: "btn btn-xs btn-primary" do
+              %span.glyphicon.glyphicon-pencil
+              Edit
           .clearfix
       .panel-collapse.collapse.in{:id => "collapse_#{step.step}"}
         .panel-body
