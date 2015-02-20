@@ -45,15 +45,15 @@
               Step
               = step.step
             - if step.duplicator?
-              %em{:type => "button", :"data-toggle" => "collapse", :"data-target" => "#collapse_#{step.step}"}
-                = "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
-          .pull-right
+              %em= "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
+          .clearfix
+      .panel-collapse.collapse.in{:id => "collapse_#{step.step}"}
+        .panel-body
+          .pull-right.edit-delete
             = link_to admin_path + "/#/survey_steps/" + step.id.to_s, class: "btn btn-xs btn-primary" do
               %span.glyphicon.glyphicon-pencil
               Edit Step
           .clearfix
-      .panel-collapse.collapse.in{:id => "collapse_#{step.step}"}
-        .panel-body
           - if step.step == 1
             = render ("hanuman/survey_templates/formextensionreadonly")
           - step.questions.each do |q|

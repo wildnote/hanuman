@@ -53,10 +53,10 @@
         - entries = @survey.observations.filtered_by_step(step.step).entries
         - entries.each do |entry|
           - entry_observations = @survey.observations.filtered_by_step_and_entry(step.step, entry)
-          = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: entry_observations, step: step.step, entry: entry
+          = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: entry_observations, step: step.step, entry: entry, duplicator: true
       - else
         - entry = step_observations.first.entry
-        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: step_observations, step: step.step, entry: entry
+        = render ("hanuman/surveys/fields/readonly/shared/panel"), show: true, survey: @survey, observations: step_observations, step: step.step, entry: entry, duplicator: false
     - if @survey.survey_step_is_duplicator?(step.step)
       .panel.panel-success
         .panel-heading

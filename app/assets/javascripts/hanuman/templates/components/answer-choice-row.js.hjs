@@ -1,39 +1,42 @@
 {{#if showAnswerChoices}}
   {{#if isEditingAnswerChoice}}
     {{!-- new and edit --}}
-    <div class="row">
-      <div class="col-sm-8">
-        {{input type="text" valueBinding='model.optionText' class="form-control"}}
-      </div>
-      <div class="col-sm-4">
-        <a class="btn btn-xs btn-primary" href="#" {{action "save" on="click"}}>
-          <span class="glyphicon glyphicon-check"></span>
-        </a>
-        <a class="btn btn-xs btn-info" href="#" {{action "toggleForm" on="click"}}>
-          <span class="glyphicon glyphicon-remove-circle"></span>
-        </a>
-      </div>
+    <div class="col-sm-12">
+      {{input type="text" valueBinding='model.optionText' class="form-control"}}
+    </div>
+    <div class="col-sm-12">
+      <a class="btn btn-xs btn-primary" href="#" {{action "save" on="click"}}>
+        Save
+      </a>
+      <a class="btn btn-xs btn-default" href="#" {{action "toggleForm" on="click"}}>
+        Cancel
+      </a>
     </div>
   {{else}}
     {{#if isNewAnswerChoice}}
       <!-- + new answer choice button -->
-      <div class="row">
-        <div class="col-sm-8">
-          <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
-            <span class="glyphicon glyphicon-plus"></span>
-          </a>
-        </div>
-        <div class="col-sm-4"></div>
+      <div class="col-sm-12">
+        <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
+          <span class="glyphicon glyphicon-plus"></span>
+          Add
+        </a>
       </div>
     {{else}}
       {{!-- show of existing answer choice --}}
-      <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
-        <span class="glyphicon glyphicon-pencil"></span>
-      </a>
-      <a class="btn btn-xs btn-danger" href="#" {{action "delete" on="click"}}>
-        <span class="glyphicon glyphicon-trash"></span>
-      </a>
-      {{model.optionText}}
+      <div class="col-sm-3">
+        <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
+          <span class="glyphicon glyphicon-pencil"></span>
+          Edit
+        </a>
+      </div>
+      <div class="col-sm-6">
+        {{model.optionText}}
+      </div>
+      <div class="col-sm-3">
+        <a class="btn btn-xs btn-danger" href="#" {{action "delete" on="click"}}>
+          <span class="glyphicon glyphicon-trash"></span>
+        </a>
+      </div>
     {{/if}}
   {{/if}}
 {{/if}}

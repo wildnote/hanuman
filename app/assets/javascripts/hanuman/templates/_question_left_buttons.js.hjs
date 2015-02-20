@@ -3,5 +3,6 @@
   <a class="btn btn-xs btn-primary"><span class="glyphicon glyphicon-sort"></span></a>
   <a class="btn btn-xs btn-primary" {{action "editQuestion" on="click"}}>
     <span class="glyphicon glyphicon-pencil"></span>
+    Edit
   </a>
 </div>

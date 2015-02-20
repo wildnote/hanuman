@@ -59,6 +59,7 @@
                     = step.step
                     Entry
                     = entry
+                  %em= "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
                 .clearfix
               .panel-collapse.in{:id => "collapse_#{step.step}_#{entry}"}
                 .panel-body
@@ -68,7 +69,7 @@
                         = ff.hidden_field :question_id
                         = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
           - else
-            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: entry_observations, step: step.step, entry: entry
+            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: entry_observations, step: step.step, entry: entry, duplicator: true
       - else
         - entry = step_observations.first.entry
         - if current_step == step.step
@@ -96,7 +97,7 @@
                       = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
         - else
           - unless step.step == 3
-            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: step_observations, step: step.step, entry: entry
+            = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: step_observations, step: step.step, entry: entry, duplicator: false
 
   -# this section handles edit on newly created data for steps 2, 3, ... as part of our hacked in step by step wizard
   - unless step_edit
@@ -110,6 +111,8 @@
             = current_step
             Entry
             = current_entry
+          - if current_step == 2
+            %em= "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
         .clearfix
       .panel-collapse.in{:id => "collapse_#{current_step}_#{current_entry}"}
         .panel-body

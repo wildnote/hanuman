@@ -2,6 +2,7 @@
   <div class="col-sm-2">
     <a class="btn btn-xs btn-primary" href="#" {{action "addNew" on="click"}}>
       <span class="glyphicon glyphicon-plus"></span>
+      Add
     </a>
   </div>
   <div class="col-sm-3"></div>

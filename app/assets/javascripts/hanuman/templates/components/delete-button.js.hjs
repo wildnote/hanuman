@@ -2,9 +2,7 @@
   <span class="glyphicon glyphicon-trash"></span>
 </a>
 <div class="delete-confirm">
-  Are you sure you want to delete this item?
-  <div class="footer">
-    <button class="btn btn-success" {{action "delete"}}>Yes</button>
-    <button class="btn btn-danger" {{action "cancel"}}>No</button>
-  </div>
+  <small>Are you sure you want to delete this item?</small>
+  <button class="btn btn-xs btn-success" {{action "delete"}}>Yes</button>
+  <button class="btn btn-xs btn-danger" {{action "cancel"}}>No</button>
 </div>

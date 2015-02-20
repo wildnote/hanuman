@@ -9,6 +9,8 @@
         = step
         Entry
         = entry
+      - if duplicator
+        %em= "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
   -# i know there is a better way to do this, if show just adds the .in class to the collapse, else no .in class
   - if show
     .panel-collapse.collapse.in{:id => "collapse_#{step}_#{entry}"}
