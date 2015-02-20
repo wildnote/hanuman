@@ -31,15 +31,21 @@
   .well
     .form-group
       = label_tag nil, "ID", class: "col-sm-1 control-label"
-      .col-sm-2
+      .col-sm-1
         %p.form-control-static= @survey.id
       = label_tag nil, "Author", class: "col-sm-1 control-label"
-      .col-sm-3
-        %p.form-control-static= @survey.author
+      .col-sm-2
+        %p.form-control-static= @survey.author.name unless @survey.author.blank?
       = label_tag nil, "Created", class: "col-sm-1 control-label"
-      .col-sm-4
+      .col-sm-3
         %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
-
+      = label_tag nil, Hanuman::Setting.value("duplicator_step_label") + " Entries", class: "col-sm-2 control-label"
+      .col-sm-1
+        %p.form-control-static
+          - steps.each do |s|
+            - if @survey.survey_step_is_duplicator?(s.step)
+              = @survey.observations.filtered_by_step(s.step).entries.count
+  
   - steps.each do |step|
     - step_observations = @survey.observations.filtered_by_step(step.step)
     - unless step_observations.blank?
