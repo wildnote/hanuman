@@ -6,10 +6,12 @@
   Survey Template Details
 
 .page-header
-  - if current_user.superuser?
-    = link_to edit_survey_template_path(@survey_template), class: "btn btn-primary" do
-      %span.glyphicon.glyphicon-pencil
-      Edit Survey Template
+  = link_to edit_survey_template_path(@survey_template), class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-pencil
+    Edit Survey Template
+  = link_to duplicate_survey_template_path(@survey_template), data: {confirm: "Are you sure you want to duplicate this Survey Template?"}, method: :patch, class: "btn btn-primary" do
+    %span.glyphicon.glyphicon-repeat
+    Duplicate Survey Template
   %h1 Survey Template Details
 
 .form-horizontal
@@ -17,14 +19,18 @@
   .well
     .form-group
       = label_tag nil, "Name", class: "col-sm-1 control-label"
-      .col-sm-4
+      .col-sm-11
         %p.form-control-static= @survey_template.name
+    .form-group
       = label_tag nil, "Type", class: "col-sm-1 control-label"
       .col-sm-3
         %p.form-control-static= @survey_template.survey_type
       = label_tag nil, "Status", class: "col-sm-1 control-label"
-      .col-sm-2
+      .col-sm-3
         %p.form-control-static= @survey_template.status
+      = label_tag nil, "Created", class: "col-sm-1 control-label"
+      .col-sm-3
+        %p.form-control-static= @survey_template.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%m/%d/%Y")
   
   - steps = @survey_template.survey_steps
 
@@ -44,7 +50,7 @@
           .pull-right
             = link_to admin_path + "/#/survey_steps/" + step.id.to_s, class: "btn btn-xs btn-primary" do
               %span.glyphicon.glyphicon-pencil
-              Edit
+              Edit Step
           .clearfix
       .panel-collapse.collapse.in{:id => "collapse_#{step.step}"}
         .panel-body

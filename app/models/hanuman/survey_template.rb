@@ -1,7 +1,7 @@
 module Hanuman
   class SurveyTemplate < ActiveRecord::Base
     has_paper_trail
-    has_many :survey_steps, -> { order :step }
+    has_many :survey_steps, -> { order :step }, inverse_of: :survey_template
     has_many :questions, through: :survey_steps
     has_many :surveys
     
@@ -11,6 +11,15 @@ module Hanuman
     #has_many :questions, through: :survey_questions
     
     validates_presence_of :name
+    validates_uniqueness_of :name
+
+    amoeba do
+      include_association :survey_steps
+      prepend name: "Copy " + Time.now.strftime("%m/%d/%Y %I:%M:%S %p") + " (PLEASE RENAME) - "
+      set status: "draft"
+    end
+    
+    STATUSES = ["draft", "active", "inactive"]
 
     def self.all_sorted
       order("name ASC")

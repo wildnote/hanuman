@@ -3,12 +3,12 @@ PATH
   specs:
     hanuman (0.0.1)
       active_model_serializers (= 0.8.1)
-      amoeba (= 2.0.0)
+      amoeba (= 3.0.0)
       ancestry (= 2.1.0)
       coffee-rails (= 4.0.1)
-      ember-data-source (= 1.0.0.beta.9)
+      ember-data-source (= 1.0.0.beta.12)
       ember-rails (= 0.15)
-      ember-source (= 1.7)
+      ember-source (= 1.8.1)
       haml-rails (= 0.5.3)
       handlebars_assets (= 0.17.1)
       jquery-rails (= 3.1.1)
@@ -50,8 +50,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
-    amoeba (2.0.0)
-      activerecord (>= 3.0)
+    amoeba (3.0.0)
+      activerecord (>= 3.2.6)
     ancestry (2.1.0)
       activerecord (>= 3.0.0)
     arel (5.0.1.20140414130214)
@@ -66,8 +66,8 @@ GEM
     coffee-script (2.3.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.8.0)
-    ember-data-source (1.0.0.beta.9)
+    coffee-script-source (1.9.1)
+    ember-data-source (1.0.0.beta.12)
       ember-source
     ember-rails (0.15.0)
       active_model_serializers
@@ -78,10 +78,10 @@ GEM
       handlebars-source (> 1.0.0)
       jquery-rails (>= 1.0.17)
       railties (>= 3.1)
-    ember-source (1.7.0)
+    ember-source (1.8.1)
       handlebars-source (~> 1.0)
     erubis (2.7.0)
-    execjs (2.2.2)
+    execjs (2.3.0)
     haml (4.0.6)
       tilt
     haml-rails (0.5.3)

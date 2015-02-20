@@ -25,6 +25,12 @@ Hanuman::Engine.routes.draw do
     end
   end
 
+  resources :survey_templates do
+    member do
+      patch :duplicate
+    end
+  end
+
   resources :survey_questions
 
   resources :observations
@@ -34,8 +40,6 @@ Hanuman::Engine.routes.draw do
   resources :questions
 
   resources :answer_types
-
-  resources :survey_templates
 
   get 'about' => 'about#index'
 

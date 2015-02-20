@@ -3,7 +3,7 @@ require_dependency "hanuman/application_controller"
 module Hanuman
   class SurveyTemplatesController < ApplicationController
     respond_to :json, :html
-    before_action :set_survey_template, only: [:show, :edit, :update, :destroy]
+    before_action :set_survey_template, only: [:show, :edit, :update, :destroy, :duplicate]
 
     # GET /survey_templates
     def index
@@ -51,6 +51,13 @@ module Hanuman
     def destroy
       @survey_template.destroy
       redirect_to survey_templates_url, notice: 'Survey template was successfully destroyed.'
+    end
+
+    # PATCH/PUT /survey_templates/1
+    def duplicate
+      survey_template_copy = @survey_template.amoeba_dup
+      survey_template_copy.save!
+      redirect_to survey_template_copy, notice: 'Survey Template was successfully duplicated.'
     end
 
     private

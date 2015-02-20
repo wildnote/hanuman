@@ -2,8 +2,8 @@ module Hanuman
   class AnswerChoice < ActiveRecord::Base
     has_paper_trail
     has_ancestry
-    belongs_to :question
-    validates_presence_of :option_text, :question_id
+    belongs_to :question, inverse_of: :answer_choices
+    validates_presence_of :option_text, :question
 
     before_save :protect_split
 

@@ -93,7 +93,7 @@ module Hanuman
       redirect_to surveys_url, notice: 'Survey was successfully destroyed.'
     end
 
-    # PATCH/PUT /users/1
+    # PATCH/PUT /surveys/1
     def duplicate
       survey_copy = @survey.amoeba_dup
       survey_copy.save!

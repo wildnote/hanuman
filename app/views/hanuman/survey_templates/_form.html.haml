@@ -14,7 +14,7 @@
   .form-group
     = f.label :status, class: "col-sm-2 control-label"
     .col-sm-10
-      = f.select :status, ["active", "inactive"], {prompt: false}, {class: "form-control"}
+      = f.collection_select :status, Hanuman::SurveyTemplate::STATUSES, :to_s, :to_s, {prompt: false}, {class: "form-control"}
   .form-group
     .col-sm-offset-2.col-sm-10
       = f.submit "Save", class: "btn btn-primary"
