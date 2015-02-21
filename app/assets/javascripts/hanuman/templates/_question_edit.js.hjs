@@ -10,6 +10,17 @@
   <div class="col-sm-12">&nbsp;</div>
 </div>
 
+{{#if model.errors.length}}
+  <div class="row">
+    <div class="col-sm-12">
+      <div class='alert alert-danger'>
+        <h4>There was a problem</h4>
+        <p>The question could not be saved due to validation errors. Question text and answer type are required.</p>
+      </div>
+    </div>
+  </div>
+{{/if}}
+
 <div class="row">
   <div class="col-sm-2">
     {{model.sortOrder}}
@@ -75,17 +86,6 @@
       </div>
       <div class="row">
         {{answer-choice-row question=model model=answerChoice save="saveAnswerChoice" isNewAnswerChoice=true showAnswerChoices=showAnswerChoices}}
-      </div>
-    </div>
-  </div>
-{{/if}}
-
-{{#if model.errors.length}}
-  <div class="row">
-    <div class="col-sm-12">
-      <div class='alert alert-danger'>
-        <h4>There was a problem</h4>
-        <p>The question could not be saved due to validation errors. Question text and answer type are required.</p>
       </div>
     </div>
   </div>

@@ -51,6 +51,8 @@ App.QuestionRowComponent = Ember.Component.extend(
   
   actions:
     save: ->
+      model = @get 'model'
+      surveyStep = @get('surveyStep')
       @get('model').set('surveyStep', @get('surveyStep'))
       @get('model').save().then (question) =>
         # loop through answerChoicesPendingSave and set question_id or question
@@ -62,6 +64,7 @@ App.QuestionRowComponent = Ember.Component.extend(
           @send('toggleForm')
       ,->
         console.log('failed')
+        surveyStep.get('questions').removeObject(model)
       
       
     saveAnswerChoice: (answerChoice) ->
