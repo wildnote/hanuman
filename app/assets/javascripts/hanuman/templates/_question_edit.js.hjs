@@ -34,10 +34,20 @@
         class="form-control"
         prompt="Please select"}}
     {{else}}
-      {{model.answerType.name}}
-      <div class="alert alert-danger">
-        Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey template to change the Answer Type.
-      </div>
+      {{#if model.isNew}}
+        {{view Ember.Select
+          content=answerTypes
+          optionLabelPath="content.name"
+          optionValuePath="content.id"
+          value=answerTypeId
+          class="form-control"
+          prompt="Please select"}}
+      {{else}}
+        {{model.answerType.name}}
+        <div class="alert alert-danger">
+          Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey template to change the Answer Type.
+        </div>
+      {{/if}}
     {{/if}}
     
   </div>

@@ -22,7 +22,7 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">Duplicator</label>
+      <label class="col-sm-2 control-label">{{this.surveyTemplate.duplicatorLabel}}</label>
       <div class="col-sm-4">
         <p class="form-control-static">
           {{duplicator}}
