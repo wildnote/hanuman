@@ -7,11 +7,11 @@ module Hanuman
     has_many :answer_choices, dependent: :destroy, inverse_of: :question
     has_many :observations, dependent: :destroy
     
-    validates_presence_of :answer_type
+    validates_presence_of :answer_type_id
     # wait until after migration for these validations
     #validates_presence_of :sort_order, :survey_step_id
     
-    validates :question_text, presence: true, unless: :no_text_on_that_answer_type
+    validates :question_text, presence: true, unless: :question_text_not_required
     
     after_create :submit_blank_observation_data
 
@@ -19,9 +19,14 @@ module Hanuman
       include_association :answer_choices
     end
     
-    def no_text_on_that_answer_type
+    def question_text_not_required
       unless answer_type.blank?
-        answer_type.name.eql? "line"
+        case answer_type.name
+        when "line"
+          true
+        else
+          false
+        end
       end
     end
     
