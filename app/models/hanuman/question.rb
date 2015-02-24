@@ -13,7 +13,7 @@ module Hanuman
     
     validates :question_text, presence: true, unless: :question_text_not_required
     
-    after_create :submit_blank_observation_data
+    #after_create :submit_blank_observation_data
 
     amoeba do
       include_association :answer_choices
