@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
     belongs_to :answer_type
     belongs_to :survey_step
-    #has_many :survey_questions
+    has_many :survey_questions
     has_many :answer_choices, dependent: :destroy, inverse_of: :question
     has_many :observations, dependent: :destroy
     
