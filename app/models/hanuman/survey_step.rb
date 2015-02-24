@@ -1,6 +1,6 @@
 module Hanuman
   class SurveyStep < ActiveRecord::Base
-    belongs_to :survey_template#, inverse_of: :survey_steps
+    belongs_to :survey_template, inverse_of: :survey_steps
     has_many :questions, -> { order :sort_order }
     
     validates_presence_of :survey_template, :step

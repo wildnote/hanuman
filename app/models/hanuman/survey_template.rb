@@ -1,7 +1,7 @@
 module Hanuman
   class SurveyTemplate < ActiveRecord::Base
     has_paper_trail
-    has_many :survey_steps, -> { order :step }#, inverse_of: :survey_template
+    has_many :survey_steps, -> { order :step }, inverse_of: :survey_template
     has_many :questions, through: :survey_steps
     has_many :surveys
     
