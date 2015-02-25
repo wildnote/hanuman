@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'uglifier', '2.5.3'
   s.add_dependency 'modernizr-rails', '2.7.1'
   s.add_dependency 'jquery-rails', '3.1.1'
-  s.add_dependency 'handlebars_assets', '0.17.1'
   s.add_dependency 'ember-rails', '0.15'
   s.add_dependency 'ember-source', '1.8.1'
   s.add_dependency 'ember-data-source', '1.0.0.beta.12'
