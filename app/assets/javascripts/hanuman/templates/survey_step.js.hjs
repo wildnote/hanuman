@@ -61,7 +61,7 @@
       <ul class="sortable">
         {{#each question in questions}}
           <li class="row question-border item" {{bind-attr data-id=question.id}}>
-            {{question-row isEditing=false model=question isNewQuestionRow=false answerTypes=answerTypes surveyStep=model isFullyEditable=isFullyEditable}}
+            {{partial "question_row"}}
           </li>
         {{/each}}
       </ul>

@@ -16,5 +16,6 @@ App.SurveyStepRoute = Ember.Route.extend({
     
     @store.find("answerType").then (answerTypes)->
       controller.set("answerTypes", answerTypes.sortBy('name'))
+    
     return
 })
