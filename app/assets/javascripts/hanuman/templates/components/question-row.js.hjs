@@ -14,6 +14,7 @@
 
     {{!-- called from surveyStep and dislpays each answer type as readonly --}}
     {{partial "question_show"}}
+    {{partial "question_show_extended"}}
     
   {{/if}}
 
