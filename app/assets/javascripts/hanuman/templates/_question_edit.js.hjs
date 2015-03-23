@@ -37,7 +37,7 @@
   <div class="col-sm-3">    
     
     {{#if isFullyEditable}}
-      {{view Ember.Select
+      {{view "select"
         content=answerTypes
         optionLabelPath="content.name"
         optionValuePath="content.id"
@@ -46,7 +46,7 @@
         prompt="Please select"}}
     {{else}}
       {{#if model.isNew}}
-        {{view Ember.Select
+        {{view "select"
           content=answerTypes
           optionLabelPath="content.name"
           optionValuePath="content.id"

@@ -52,6 +52,14 @@ App.AnswerType = DS.Model.extend({
     if @.get('name') in ['textarea', 'hiddentextarea']
       return true
   ).property('name')
+  time: (->
+    if @.get('name') in ['time']
+      return true
+  ).property('name')
+  typeahead: (->
+    if @.get('name') in ['typeahead']
+      return true
+  ).property('name')
   
   hasAnswerChoices: (->
     if @.get('name') in ['checkboxlist', 'hiddencheckboxlist', 'chosenmultiselect', 

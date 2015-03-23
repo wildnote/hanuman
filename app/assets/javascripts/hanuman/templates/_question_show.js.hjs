@@ -99,7 +99,7 @@
       <div class="col-sm-3">{{model.answerType.name}}</div>  
       <div class="col-sm-3">
         {{#if model.answerChoices}}
-          {{view Ember.Select
+          {{view "select"
              content=model.answerChoices
              optionValuePath="content.id"
              optionLabelPath="content.optionText"
@@ -148,6 +148,32 @@
     </div>
 {{/if}}
 
+<!-- text -->
+{{#if model.answerType.time}}
+    <div class="row">
+      {{partial "question_left_buttons"}}
+      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">{{model.answerType.name}}</div>
+      <div class="col-sm-3">
+        {{input type="time" class="form-control"}}
+      </div>
+      {{partial "question_right_buttons"}}
+    </div>
+{{/if}}
+
+<!-- text -->
+{{#if model.answerType.typeahead}}
+    <div class="row">
+      {{partial "question_left_buttons"}}
+      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">{{model.answerType.name}}</div>
+      <div class="col-sm-3">
+        {{input type="text" class="form-control"}}
+      </div>
+      {{partial "question_right_buttons"}}
+    </div>
+{{/if}}
+
 <!-- checkbox -->
 {{#if model.answerType.checkbox}}
     <div class="row">
@@ -158,3 +184,5 @@
       {{partial "question_right_buttons"}}
     </div>
 {{/if}}
+
+

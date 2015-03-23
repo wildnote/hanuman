@@ -8,7 +8,7 @@ $ ->
   if $(".typeahead").length > 0
     $(".typeahead").each ->
       questionId = $(@).data 'question-id'
-      url = "/hanuman/answerChoices.json?question_id=" + questionId
+      url = "/hanuman/answer_choices.json?question_id=" + questionId
       # instantiate bloodhound engine
       taxonomy = new Bloodhound(
         name: "taxonomy"

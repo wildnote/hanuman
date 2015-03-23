@@ -35,7 +35,7 @@
         %p.form-control-static= @survey.id
       = label_tag nil, "Author", class: "col-sm-1 control-label"
       .col-sm-2
-        %p.form-control-static= @survey.author.name unless @survey.author.blank?
+        %p.form-control-static= @survey.author.name unless @survey.author.blank? or @survey.author.eql? "1"
       = label_tag nil, "Created", class: "col-sm-1 control-label"
       .col-sm-3
         %p.form-control-static= @survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%A %B %e, %Y %l:%M %p")
