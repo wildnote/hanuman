@@ -16,6 +16,8 @@
 //= require ladda/ladda
 //= require jquery
 //= require handlebars/handlebars
+//= require bootstrap/bootstrap-multiselect
+//= require jquery.multiple.select
 //= require_self
 //= require ./surveys
 

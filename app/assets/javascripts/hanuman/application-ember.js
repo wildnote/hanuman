@@ -14,6 +14,7 @@
 //= require chosen/chosen.jquery
 //= require ladda/spin
 //= require ladda/ladda
+//= require bootstrap/bootstrap-multiselect
 //= require jquery
 //= require handlebars/handlebars
 //= require ember
