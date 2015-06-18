@@ -1,2 +1,5 @@
 %li{class: yield(:navbar_hanuman_questions)}
-  = link_to "Questions", hanuman.questions_path
+  = link_to hanuman.questions_path do
+    %i.glyphicon.glyphicon-question-sign
+    %span.menu-title
+      Questions

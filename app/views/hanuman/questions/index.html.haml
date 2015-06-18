@@ -2,26 +2,29 @@
   active
 - content_for :navbar_hanuman_questions do
   active
+- content_for :title do
+  Questions
 
-.page-header
-  = link_to new_question_path, class: "btn btn-primary" do
-    %span.glyphicon.glyphicon-plus
-    New Question
-  %h1 Questions
+.panel
+  .panel-title
+    -# Questions
+    = link_to new_question_path, class: "btn btn-primary" do
+      %span.glyphicon.glyphicon-plus
+      New Question
+  .panel-body
+    .table-responsive
+      %table.table.table-striped.table-hover
+        %thead
+          %tr
+            %th Question Text
+            %th Answer Type
+            %th
 
-.table-responsive
-  %table.table.table-striped.table-hover
-    %thead
-      %tr
-        %th Question Text
-        %th Answer Type
-        %th
-
-    %tbody
-      - @questions.each do |question|
-        %tr
-          %td= link_to question.question_text, question
-          %td= link_to question.answer_type.name, question unless question.answer_type.blank?
-          %td
-            = link_to question, data: {confirm: "Are you sure you want to delete this Question?"}, method: :delete do
-              %span.glyphicon.glyphicon-trash
+        %tbody
+          - @questions.each do |question|
+            %tr
+              %td= link_to question.question_text, question
+              %td= link_to question.answer_type.name, question unless question.answer_type.blank?
+              %td
+                = link_to question, data: {confirm: "Are you sure you want to delete this Question?"}, method: :delete do
+                  %span.glyphicon.glyphicon-trash

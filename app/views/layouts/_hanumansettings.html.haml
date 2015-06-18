@@ -1,2 +1,5 @@
 %li{class: yield(:navbar_hanuman_settings)}
-  = link_to "Settings", hanuman.settings_path
+  = link_to hanuman.settings_path do
+    %i.glyphicon.glyphicon-cog
+    %span.menu-title
+      Settings

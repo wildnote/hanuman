@@ -1,2 +1,5 @@
 %li{class: yield(:navbar_hanuman_answer_types)}
-  = link_to "Answer Types", hanuman.answer_types_path
+  = link_to hanuman.answer_types_path do
+    %i.glyphicon.glyphicon-th-list
+    %span.menu-title
+      Answer Types

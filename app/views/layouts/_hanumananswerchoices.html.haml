@@ -1,2 +1,5 @@
 %li{class: yield(:navbar_hanuman_answer_choices)}
-  = link_to "Answer Choices", hanuman.answer_choices_path
+  = link_to hanuman.answer_choices_path do
+    %i.glyphicon.glyphicon-ok
+    %span.menu-title
+      Answer Choices
