@@ -6,9 +6,9 @@
   Settings
 
 .panel
-  .panel-title
-    -# Settings
-    = link_to new_setting_path, class: "btn btn-primary" do
+  .panel-heading
+    %h3.panel-title Settings
+    = link_to new_setting_path, class: "btn btn-primary panel-title-button-right" do
       %span.glyphicon.glyphicon-plus
       New Setting
 

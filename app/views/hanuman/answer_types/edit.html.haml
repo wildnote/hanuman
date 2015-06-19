@@ -2,8 +2,12 @@
   active
 - content_for :navbar_hanuman_answer_types do
   active
+- content_for :title do
+  Edit Answer Type
 
-.page-header
-  %h1 Edit Answer Type Details
+.col-lg-6
+  .panel
+    .panel-heading
+      %h3.panel-title Edit Answer Type
 
-= render "form"
+    = render "form"

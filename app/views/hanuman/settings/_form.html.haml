@@ -3,15 +3,16 @@
 
 = form_for @setting, html: {class: "form-horizontal"} do |f|
 
-  .form-group
-    = f.label :key, class: "col-sm-2 control-label"
-    .col-sm-10
-      = f.text_field :key, class: "form-control"
-  .form-group
-    = f.label :value, class: "col-sm-2 control-label"
-    .col-sm-10
-      = f.text_field :value, class: "form-control"
-  .form-group
-    .col-sm-offset-2.col-sm-10
-      = f.submit "Save", class: "btn btn-primary"
-      = link_to "Cancel", settings_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"
+  .panel-body
+    .form-group
+      = f.label :key, class: "col-sm-2 control-label"
+      .col-sm-4
+        = f.text_field :key, class: "form-control"
+    .form-group
+      = f.label :value, class: "col-sm-2 control-label"
+      .col-sm-4
+        = f.text_field :value, class: "form-control"
+    .form-group
+      .col-sm-offset-2.col-sm-10
+        = f.submit "Save", class: "btn btn-primary"
+        = link_to "Cancel", settings_path, data: {confirm: "Are you sure you want to Cancel?"}, class: "btn btn-default"

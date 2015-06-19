@@ -3,9 +3,11 @@
 - content_for :navbar_hanuman_settings do
   active
 - content_for :title do
-  Edit Setting Details
+  Edit Setting
 
-.page-header
-  %h1 Edit Setting Details
+.col-lg-6
+  .panel
+    .panel-heading
+      %h3.panel-title Edit Setting
 
-= render "form"
+    = render "form"

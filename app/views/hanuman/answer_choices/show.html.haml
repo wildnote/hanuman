@@ -2,25 +2,27 @@
   active
 - content_for :navbar_hanuman_answer_choices do
   active
+- content_for :title do
+  Answer Choice Details
 
-.page-header
-  = link_to edit_answer_choice_path(@answer_choice), class: "btn btn-primary" do
-    %span.glyphicon.glyphicon-pencil
-    Edit Answer Choice
-  %h1 Answer Choice Details
+.panel
+  .panel-heading
+    %h3.panel-title Answer Choice Details
+    = link_to edit_answer_choice_path(@answer_choice), class: "btn btn-primary panel-title-button-right" do
+      %span.glyphicon.glyphicon-pencil
+      Edit Answer Choice
 
-.table-responsive
-  %table.table.table-striped.table-hover
-    %tbody
-      %tr
-        %td Question
-        %td
-          %b= @answer_choice.question
-      %tr
-        %td Option text
-        %td
-          %b= @answer_choice.option_text
-      %tr
-        %td Scientific text
-        %td
-          %b= @answer_choice.scientific_text unless @answer_choice.scientific_text.blank?
+    %form.form-horizontal
+      .panel-body
+        .form-group
+          %label.col-sm-2.control-label Question
+          .col-sm-4
+            %p.form-control-static= @answer_choice.question
+        .form-group
+          %label.col-sm-2.control-label Option text
+          .col-sm-4
+            %p.form-control-static= @answer_choice.option_text
+        .form-group
+          %label.col-sm-2.control-label Scientific text
+          .col-sm-4
+            %p.form-control-static= @answer_choice.scientific_text unless @answer_choice.scientific_text.blank?

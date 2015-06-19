@@ -5,14 +5,16 @@
 - content_for :title do
   Survey Template Details
 
-.page-header
-  = link_to edit_survey_template_path(@survey_template), class: "btn btn-primary" do
-    %span.glyphicon.glyphicon-pencil
-    Edit Survey Template
-  = link_to duplicate_survey_template_path(@survey_template), data: {confirm: "Are you sure you want to duplicate this Survey Template?"}, method: :patch, class: "btn btn-primary" do
-    %span.glyphicon.glyphicon-repeat
-    Duplicate Survey Template
-  %h1 Survey Template Details
+
+.panel
+  .panel-heading
+    %h3.panel-title Survey Template Details
+    = link_to edit_survey_template_path(@survey_template), class: "btn btn-primary panel-title-button-right" do
+      %span.glyphicon.glyphicon-pencil
+      Edit Survey Template
+    = link_to duplicate_survey_template_path(@survey_template), data: {confirm: "Are you sure you want to duplicate this Survey Template?"}, method: :patch, class: "btn btn-primary panel-title-button-right-2" do
+      %span.glyphicon.glyphicon-repeat
+      Duplicate Survey Template
 
 .form-horizontal
 
@@ -31,7 +33,7 @@
       = label_tag nil, "Created", class: "col-sm-1 control-label"
       .col-sm-3
         %p.form-control-static= @survey_template.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%m/%d/%Y")
-  
+
   - steps = @survey_template.survey_steps
 
   - steps.each do |step|
@@ -58,4 +60,3 @@
             = render ("hanuman/survey_templates/formextensionreadonly")
           - step.questions.each do |q|
             = render ("hanuman/survey_templates/dynamicfield"), q: q
-            

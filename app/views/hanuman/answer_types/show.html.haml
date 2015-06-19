@@ -2,21 +2,23 @@
   active
 - content_for :navbar_hanuman_answer_types do
   active
+- content_for :title do
+  Answer Type Details
 
-.page-header
-  = link_to edit_answer_type_path(@answer_type), class: "btn btn-primary" do
-    %span.glyphicon.glyphicon-pencil
-    Edit Answer Type
-  %h1 Answer Type Details
+.panel
+  .panel-heading
+    %h3.panel-title Answer Type Details
+    = link_to edit_answer_type_path(@answer_type), class: "btn btn-primary panel-title-button-right" do
+      %span.glyphicon.glyphicon-pencil
+      Edit Answer Type
 
-.table-responsive
-  %table.table.table-striped.table-hover
-    %tbody
-      %tr
-        %td Name
-        %td
-          %b= @answer_type.name
-      %tr
-        %td Status
-        %td
-          %b= @answer_type.status
+  %form.form-horizontal
+    .panel-body
+      .form-group
+        %label.col-sm-2.control-label Name
+        .col-sm-10
+          %p.form-control-static= @answer_type.name
+      .form-group
+        %label.col-sm-2.control-label Status
+        .col-sm-10
+          %p.form-control-static= @answer_type.status

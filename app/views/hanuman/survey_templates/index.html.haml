@@ -6,10 +6,10 @@
   Survey Templates
 
 .panel
-  .panel-title
-    -# Survey Templates
+  .panel-heading
+    %h3.panel-title Survey Templates
     - if current_user.superuser?
-      = link_to new_survey_template_path, class: "btn btn-primary" do
+      = link_to new_survey_template_path, class: "btn btn-primary panel-title-button-right" do
         %span.glyphicon.glyphicon-plus
         New Survey Template
 

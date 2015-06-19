@@ -6,9 +6,9 @@
   Questions
 
 .panel
-  .panel-title
-    -# Questions
-    = link_to new_question_path, class: "btn btn-primary" do
+  .panel-heading
+    %h3.panel-title Questions
+    = link_to new_question_path, class: "btn btn-primary panel-title-button-right" do
       %span.glyphicon.glyphicon-plus
       New Question
   .panel-body

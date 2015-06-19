@@ -2,8 +2,12 @@
   active
 - content_for :navbar_hanuman_answer_choices do
   active
+- content_for :title do
+  New Answer Choice
 
-.page-header
-  %h1 New Answer Choice
+.col-lg-6
+  .panel
+    .panel-heading
+      %h3.panel-title New Answer Choice
 
-= render "form"
+    = render "form"

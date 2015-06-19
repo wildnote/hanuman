@@ -2,21 +2,24 @@
   active
 - content_for :navbar_hanuman_questions do
   active
+- content_for :title do
+  Question Details
 
-.page-header
-  = link_to edit_question_path(@question), class: "btn btn-primary" do
-    %span.glyphicon.glyphicon-pencil
-    Edit Question
-  %h1 Question Details
+.col-lg-6
+  .panel
+    .panel-heading
+      %h3.panel-title Question Details
+      = link_to edit_question_path(@question), class: "btn btn-primary panel-title-button-right" do
+        %span.glyphicon.glyphicon-pencil
+        Edit Question
 
-.table-responsive
-  %table.table.table-striped.table-hover
-    %tbody
-      %tr
-        %td Question text
-        %td
-          %b= @question.question_text
-      %tr
-        %td Answer type
-        %td
-          %b= @question.answer_type
+    %form.form-horizontal
+      .panel-body
+        .form-group
+          %label.col-sm-2.control-label Question Text
+          .col-sm-10
+            %p.form-control-static= @question.question_text
+        .form-group
+          %label.col-sm-2.control-label Answer Type
+          .col-sm-10
+            %p.form-control-static= @question.answer_type

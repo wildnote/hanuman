@@ -5,20 +5,20 @@
 - content_for :title do
   Setting Details
 
-.page-header
-  = link_to edit_setting_path(@setting), class: "btn btn-primary" do
-    %span.glyphicon.glyphicon-pencil
-    Edit Setting
-  %h1 Setting Details
+.panel
+  .panel-heading
+    %h3.panel-title Setting Details
+    = link_to edit_setting_path(@setting), class: "btn btn-primary panel-title-button-right" do
+      %span.glyphicon.glyphicon-pencil
+      Edit Setting
 
-.table-responsive
-  %table.table.table-striped.table-hover
-    %tbody
-      %tr
-        %td Key
-        %td
-          %b= @setting.key
-      %tr
-        %td Value
-        %td
-          %b= @setting.value
+  %form.form-horizontal
+    .panel-body
+      .form-group
+        %label.col-sm-2.control-label Key
+        .col-sm-10
+          %p.form-control-static= @setting.key
+      .form-group
+        %label.col-sm-2.control-label Value
+        .col-sm-10
+          %p.form-control-static= @setting.value
