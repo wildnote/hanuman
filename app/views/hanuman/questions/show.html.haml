@@ -5,21 +5,20 @@
 - content_for :title do
   Question Details
 
-.col-lg-6
-  .panel
-    .panel-heading
-      %h3.panel-title Question Details
-      = link_to edit_question_path(@question), class: "btn btn-primary panel-title-button-right" do
-        %span.glyphicon.glyphicon-pencil
-        Edit Question
+.panel
+  .panel-heading
+    %h3.panel-title Question Details
+    = link_to edit_question_path(@question), class: "btn btn-primary panel-title-button-right" do
+      %span.glyphicon.glyphicon-pencil
+      Edit Question
 
-    %form.form-horizontal
-      .panel-body
-        .form-group
-          %label.col-sm-2.control-label Question Text
-          .col-sm-10
-            %p.form-control-static= @question.question_text
-        .form-group
-          %label.col-sm-2.control-label Answer Type
-          .col-sm-10
-            %p.form-control-static= @question.answer_type
+  %form.form-horizontal
+    .panel-body
+      .form-group
+        %label.col-sm-2.control-label Question Text
+        .col-sm-10
+          %p.form-control-static= @question.question_text
+      .form-group
+        %label.col-sm-2.control-label Answer Type
+        .col-sm-10
+          %p.form-control-static= @question.answer_type
