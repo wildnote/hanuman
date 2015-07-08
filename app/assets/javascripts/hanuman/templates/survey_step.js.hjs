@@ -2,7 +2,6 @@
   <a class="btn btn-primary" href="/hanuman/survey_templates/{{unbound this.surveyTemplate.id}}"><span class="glyphicon glyphicon-chevron-left"></span>
     Back to Survey Template Details
   </a>
-  <h1>Edit Step Details</h1>
 </div>
 
 <div class="form-horizontal">
@@ -40,9 +39,9 @@
   <div class="panel panel-info">
     <div class="panel-heading">
     </div>
-    
+
     <div class="panel-body">
-      
+
       <div class="row">
         <div class="col-sm-2"><strong>Edit Actions</strong></div>
         <div class="col-sm-3"><strong>Question/Line Text</strong></div>
@@ -50,13 +49,13 @@
         <div class="col-sm-3"><strong>Preview</strong></div>
         <div class="col-sm-1"><strong>Delete</strong></div>
       </div>
-      
+
       <div class="row">
         <div class="col-sm-12">
           &nbsp;
         </div>
       </div>
-      
+
       {{!-- loop through existing questions --}}
       <ul class="sortable">
         {{#each question in questions}}
@@ -65,10 +64,10 @@
           </li>
         {{/each}}
       </ul>
-      
+
       {{!-- new question row --}}
       {{question-row isEditing=false isNewQuestionRow=true answerTypes=answerTypes surveyStep=model isFullyEditable=isFullyEditable}}
-      
+
     </div>
   </div>
 
