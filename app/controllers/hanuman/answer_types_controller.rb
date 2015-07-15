@@ -6,7 +6,7 @@ module Hanuman
 
     # GET /answer_types
     def index
-      @answer_types = AnswerType.all
+      @answer_types = AnswerType.order('name')
     end
 
     # GET /answer_types/1

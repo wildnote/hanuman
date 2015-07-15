@@ -19,12 +19,16 @@
             %th Name
             %th Status
             %th
+            %th
 
         %tbody
           - @answer_types.each do |answer_type|
             %tr
               %td= link_to answer_type.name, answer_type
               %td= link_to answer_type.status, answer_type
+              %td
+                = link_to edit_answer_type_path(answer_type) do
+                  %span.glyphicon.glyphicon-pencil
               %td
                 = link_to answer_type, data: {confirm: "Are you sure you want to delete this Answer Type?"}, method: :delete do
                   %span.glyphicon.glyphicon-trash

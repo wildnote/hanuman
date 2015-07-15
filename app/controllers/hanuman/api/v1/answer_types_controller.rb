@@ -3,7 +3,7 @@ module Hanuman
     respond_to :json
 
     def index
-      respond_with AnswerType.all
+      respond_with AnswerType.active_sorted
     end
 
     def show
