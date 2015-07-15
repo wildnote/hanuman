@@ -6,7 +6,7 @@ App.AnswerType = DS.Model.extend({
   nameUpcase: (->
     return @.get('name').toUpperCase()
   ).property('name')
-  
+
   # computed properties for anwser type
   checkboxlist: (->
     if @.get('name') in ['checkboxlist', 'hiddencheckboxlist']
@@ -26,6 +26,10 @@ App.AnswerType = DS.Model.extend({
   ).property('name')
   line: (->
     if @.get('name') in ['line', 'hiddenline']
+      return true
+  ).property('name')
+  number: (->
+    if @.get('name') in ['number', 'hiddennumber']
       return true
   ).property('name')
   radio: (->
@@ -60,11 +64,11 @@ App.AnswerType = DS.Model.extend({
     if @.get('name') in ['typeahead']
       return true
   ).property('name')
-  
+
   hasAnswerChoices: (->
-    if @.get('name') in ['checkboxlist', 'hiddencheckboxlist', 'chosenmultiselect', 
-      'hiddenchosenmultiselect', 'chosenmultiselectgrouped', 
-      'hiddenchosenmultiselectgrouped', 'radio', 'hiddenradio', 'select', 
+    if @.get('name') in ['checkboxlist', 'hiddencheckboxlist', 'chosenmultiselect',
+      'hiddenchosenmultiselect', 'chosenmultiselectgrouped',
+      'hiddenchosenmultiselectgrouped', 'radio', 'hiddenradio', 'select',
       'hiddenselect']
       return true
   ).property('name')
