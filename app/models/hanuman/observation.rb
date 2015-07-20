@@ -3,15 +3,15 @@ module Hanuman
     has_paper_trail
     belongs_to :survey
     belongs_to :question
-    has_many :observation_answers
+    has_many :observation_answers, dependent: :destroy
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
-    has_many :answer_choices, through: :observation_answers
+    has_many :answer_choices, through: :observation_answers, dependent: :destroy
     belongs_to :selectable, polymorphic: true
-    
-    validates_presence_of :question_id
-    # no validation for answer - because of structure of data we need empty 
+
+    validates_presence_of :question_id, :entry
+    # no validation for answer - because of structure of data we need empty
     # rows in database for editing of survey - kdh - 10.30.14
-    
+
     default_scope {includes(:question => :survey_step).order('hanuman_survey_steps.step ASC, hanuman_observations.entry ASC, hanuman_questions.sort_order ASC').references(:question => :survey_step)}
 
     before_save :strip_and_squish_answer
@@ -19,7 +19,7 @@ module Hanuman
     amoeba do
       enable
     end
-    
+
     def step
       question.survey_step.step
     end

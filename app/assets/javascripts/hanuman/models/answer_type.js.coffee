@@ -8,6 +8,10 @@ App.AnswerType = DS.Model.extend({
   ).property('name')
 
   # computed properties for anwser type
+  checkbox: (->
+    if @.get('name') in ['checkbox', 'hiddencheckbox']
+      return true
+    ).property('name')
   checkboxlist: (->
     if @.get('name') in ['checkboxlist', 'hiddencheckboxlist']
       return true
@@ -18,6 +22,10 @@ App.AnswerType = DS.Model.extend({
   ).property('name')
   chosenmultiselectgrouped: (->
     if @.get('name') in ['chosenmultiselectgrouped', 'hiddenchosenmultiselectgrouped']
+      return true
+  ).property('name')
+  email: (->
+    if @.get('name') in ['email']
       return true
   ).property('name')
   helper: (->
@@ -32,8 +40,16 @@ App.AnswerType = DS.Model.extend({
     if @.get('name') in ['number', 'hiddennumber']
       return true
   ).property('name')
+  password: (->
+    if @.get('name') in ['password']
+      return true
+  ).property('name')
   radio: (->
     if @.get('name') in ['radio', 'hiddenradio']
+      return true
+  ).property('name')
+  range: (->
+    if @.get('name') in ['range']
       return true
   ).property('name')
   section: (->
@@ -41,11 +57,15 @@ App.AnswerType = DS.Model.extend({
       return true
   ).property('name')
   select: (->
-    if @.get('name') in ['select', 'hiddenselect']
+    if @.get('name') in ['select', 'hiddenselect', 'chosenselect']
       return true
   ).property('name')
   static: (->
     if @.get('name') in ['static', 'hiddenstatic']
+      return true
+  ).property('name')
+  tel: (->
+    if @.get('name') in ['tel']
       return true
   ).property('name')
   text: (->

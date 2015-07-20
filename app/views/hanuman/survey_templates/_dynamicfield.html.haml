@@ -48,7 +48,7 @@
         - q.answer_choices.sorted.each do |a|
           = check_box_tag nil, nil, false, {disabled: true}
           = label_tag nil, a.formatted_answer_choice
-          %br/    
+          %br/
 
 
 
@@ -75,7 +75,7 @@
         = text_field_tag nil, "There are no available Answer Options!", class: "form-control", readonly: true
       - else
         = select_tag nil, option_groups_from_collection_for_select(q.answer_choices.roots.sorted, :children, :formatted_answer_choice, :id, :formatted_answer_choice, nil), {multiple: true, size: 10, class: 'chosen-multiselect form-control'}
-      
+
 
 
 
@@ -98,7 +98,7 @@
     .col-sm-7
       = text_field_tag nil, answer_type.upcase, {disabled: true, class: "form-control"}
       = form_for "", builder: CustomFieldsFormBuilder, html: {class: "form-horizontal"} do |f|
-        = f.datalist_tag nil, options_for_select(q.answer_choices.map{|ac| ac.formatted_answer_choice}), {list_id: "datalist_" + sq.id.to_s + "_list", class: "form-control", readonly: true}
+        = f.datalist_tag nil, options_for_select(q.answer_choices.map{|ac| ac.formatted_answer_choice}), {list_id: "datalist_" + q.id.to_s + "_list", class: "form-control", readonly: true}
 
 
 
@@ -148,7 +148,7 @@
         = text_field_tag nil, "There are no available Answer Options!", class: "form-control", readonly: true
       - else
         - q.answer_choices.sorted.each do |ac|
-          = radio_button_tag sq.id, ac.formatted_answer_choice, false, disabled: true
+          = radio_button_tag q.id, ac.formatted_answer_choice, false, disabled: true
           = label_tag ac.formatted_answer_choice
           %br/
 

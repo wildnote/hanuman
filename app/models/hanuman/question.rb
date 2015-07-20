@@ -5,20 +5,20 @@ module Hanuman
     belongs_to :survey_step
     #has_many :survey_questions
     has_many :answer_choices, dependent: :destroy, inverse_of: :question
-    has_many :observations, dependent: :destroy
-    
+    has_many :observations, dependent: :restrict_with_exception
+
     validates_presence_of :answer_type_id
     # wait until after migration for these validations
     #validates_presence_of :sort_order, :survey_step_id
-    
+
     validates :question_text, presence: true, unless: :question_text_not_required
-    
+
     after_create :submit_blank_observation_data
 
     amoeba do
       include_association :answer_choices
     end
-    
+
     def question_text_not_required
       unless answer_type.blank?
         case answer_type.name
@@ -29,7 +29,7 @@ module Hanuman
         end
       end
     end
-    
+
     # if survey has data submitted against it, then submit blank data for each
     # survey for newly added question
     def submit_blank_observation_data

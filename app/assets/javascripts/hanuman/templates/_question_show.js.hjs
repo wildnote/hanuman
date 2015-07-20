@@ -1,4 +1,17 @@
-<!-- checkboxlist -->
+<!-- ***** CHECKBOX ***** -->
+{{#if model.answerType.checkbox}}
+    <div class="row">
+      {{partial "question_left_buttons"}}
+      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">{{model.answerType.name}}</div>
+      <div class="col-sm-3">{{input type="checkbox" name="" disabled=true}}</div>
+      {{partial "question_right_buttons"}}
+    </div>
+{{/if}}
+
+
+
+<!-- ***** CHECKBOXLIST ***** -->
 {{#if model.answerType.checkboxlist}}
   <div class="row">
     {{partial "question_left_buttons"}}
@@ -13,7 +26,38 @@
   </div>
 {{/if}}
 
-<!-- chosenmultiselectgroup -->
+
+
+<!-- ***** CHOSENMULTISELECT ***** -->
+{{#if model.answerType.chosenmultiselect}}
+  <div class="row">
+    {{!partial "question_left_buttons"}}
+    {{!-- not using partial above for now because don't want to show the edit button for grouped multiselect for now-kdh --}}
+    <div class="col-sm-2">
+      {{model.sortOrder}}
+      <a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-sort"></span></a>
+    </div>
+    <div class="col-sm-3">{{model.questionText}}</div>
+    <div class="col-sm-3">{{model.answerType.name}}</div>
+    <div class="col-sm-3">
+      {{#if model.answerChoices}}
+        {{view App.ChosenMultiSelect
+          content=grouped_answerChoices
+          optionValuePath="content.id"
+          optionLabelPath="content.optionText"
+          optionGroupPath="groupText"
+        }}
+      {{else}}
+        {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
+      {{/if}}
+    </div>
+    {{partial "question_right_buttons"}}
+  </div>
+{{/if}}
+
+
+
+<!-- ***** CHOSENMULTISELECTGROUP ***** -->
 {{#if model.answerType.chosenmultiselectgrouped}}
   <div class="row">
     {{!partial "question_left_buttons"}}
@@ -40,7 +84,24 @@
   </div>
 {{/if}}
 
-<!-- helper -->
+
+
+<!-- ***** EMAIL ***** -->
+{{#if model.answerType.email}}
+    <div class="row">
+      {{partial "question_left_buttons"}}
+      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">{{model.answerType.name}}</div>
+      <div class="col-sm-3">
+        {{input type="email" class="form-control"}}
+      </div>
+      {{partial "question_right_buttons"}}
+    </div>
+{{/if}}
+
+
+
+<!-- ***** HELPER ***** -->
 {{#if model.answerType.helper}}
     <div class="row">
       {{partial "question_left_buttons"}}
@@ -51,18 +112,22 @@
     </div>
 {{/if}}
 
-<!-- line -->
+
+
+<!-- ***** LINE ***** -->
 {{#if model.answerType.line}}
     <div class="row">
       {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}</div>
-      <div class="col-sm-3 page-header"></div>
+      <div class="col-sm-3 page-header">THIS IS BROKEN</div>
       {{partial "question_right_buttons"}}
     </div>
 {{/if}}
 
-<!-- NUMBER -->
+
+
+<!-- ***** NUMBER ***** -->
 {{#if model.answerType.number}}
     <div class="row">
       {{partial "question_left_buttons"}}
@@ -75,7 +140,24 @@
     </div>
 {{/if}}
 
-<!-- radio -->
+
+
+<!-- ***** PASSWORD ***** -->
+{{#if model.answerType.password}}
+    <div class="row">
+      {{partial "question_left_buttons"}}
+      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">{{model.answerType.name}}</div>
+      <div class="col-sm-3">
+        {{input type="password" class="form-control"}}
+      </div>
+      {{partial "question_right_buttons"}}
+    </div>
+{{/if}}
+
+
+
+<!-- ***** RADIO ***** -->
 {{#if model.answerType.radio}}
     <div class="row">
       {{partial "question_left_buttons"}}
@@ -93,7 +175,25 @@
     </div>
 {{/if}}
 
-<!-- section -->
+
+
+<!-- ***** RANGE ***** -->
+{{#if model.answerType.range}}
+    <div class="row">
+      {{partial "question_left_buttons"}}
+      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">{{model.answerType.name}}
+      </div>
+      <div class="col-sm-3">
+        {{input type="range" class="form-control"}}
+      </div>
+      {{partial "question_right_buttons"}}
+    </div>
+{{/if}}
+
+
+
+<!-- ***** SECTION ***** -->
 {{#if model.answerType.section}}
     <div class="row">
       {{partial "question_left_buttons"}}
@@ -104,7 +204,9 @@
     </div>
 {{/if}}
 
-<!-- select -->
+
+
+<!-- ***** SELECT ***** -->
 {{#if model.answerType.select}}
     <div class="row">
       {{partial "question_left_buttons"}}
@@ -126,7 +228,9 @@
     </div>
 {{/if}}
 
-<!-- static -->
+
+
+<!-- ***** STATIC ***** -->
 {{#if model.answerType.static}}
     <div class="row">
       {{partial "question_left_buttons"}}
@@ -137,7 +241,24 @@
     </div>
 {{/if}}
 
-<!-- text -->
+
+
+<!-- ***** TEL ***** -->
+{{#if model.answerType.tel}}
+    <div class="row">
+      {{partial "question_left_buttons"}}
+      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">{{model.answerType.name}}</div>
+      <div class="col-sm-3">
+        {{input type="tel" class="form-control"}}
+      </div>
+      {{partial "question_right_buttons"}}
+    </div>
+{{/if}}
+
+
+
+<!-- ***** TEXT ***** -->
 {{#if model.answerType.text}}
     <div class="row">
       {{partial "question_left_buttons"}}
@@ -150,7 +271,9 @@
     </div>
 {{/if}}
 
-<!-- textarea -->
+
+
+<!-- ***** TEXTAREA ***** -->
 {{#if model.answerType.textarea}}
     <div class="row">
       {{partial "question_left_buttons"}}
@@ -161,7 +284,9 @@
     </div>
 {{/if}}
 
-<!-- text -->
+
+
+<!-- ***** TIME ***** -->
 {{#if model.answerType.time}}
     <div class="row">
       {{partial "question_left_buttons"}}
@@ -174,7 +299,9 @@
     </div>
 {{/if}}
 
-<!-- text -->
+
+
+<!-- ***** TYPEAHEAD ***** -->
 {{#if model.answerType.typeahead}}
     <div class="row">
       {{partial "question_left_buttons"}}
@@ -183,17 +310,6 @@
       <div class="col-sm-3">
         {{input type="text" class="form-control"}}
       </div>
-      {{partial "question_right_buttons"}}
-    </div>
-{{/if}}
-
-<!-- checkbox -->
-{{#if model.answerType.checkbox}}
-    <div class="row">
-      {{partial "question_left_buttons"}}
-      <div class="col-sm-3">{{model.questionText}}</div>
-      <div class="col-sm-3">{{model.answerType.name}}</div>
-      <div class="col-sm-3">{{input type="checkbox" name="" disabled=true}}</div>
       {{partial "question_right_buttons"}}
     </div>
 {{/if}}
