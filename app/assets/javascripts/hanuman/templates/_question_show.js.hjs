@@ -84,6 +84,47 @@
   </div>
 {{/if}}
 
+<!-- ***** CHOSENSELECT ***** -->
+{{#if model.answerType.chosenselect}}
+  <div class="row">
+    {{!partial "question_left_buttons"}}
+    {{!-- not using partial above for now because don't want to show the edit button for grouped multiselect for now-kdh --}}
+    <div class="col-sm-2">
+      {{model.sortOrder}}
+      <a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-sort"></span></a>
+    </div>
+    <div class="col-sm-3">{{model.questionText}}</div>
+    <div class="col-sm-3">{{model.answerType.name}}</div>
+    <div class="col-sm-3">
+      {{#if model.answerChoices}}
+        {{view App.ChosenSelect
+          content=model.answerChoices
+          optionValuePath="content.id"
+          optionLabelPath="content.optionText"
+        }}
+      {{else}}
+        {{input type="text" value="There are no available Answer Options!" class=form-control readonly=true}}
+      {{/if}}
+    </div>
+    {{partial "question_right_buttons"}}
+  </div>
+{{/if}}
+
+
+
+<!-- ***** DATE ***** -->
+{{#if model.answerType.date}}
+    <div class="row">
+      {{partial "question_left_buttons"}}
+      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">{{model.answerType.name}}</div>
+      <div class="col-sm-3">
+        {{input type="date" class="form-control"}}
+      </div>
+      {{partial "question_right_buttons"}}
+    </div>
+{{/if}}
+
 
 
 <!-- ***** EMAIL ***** -->
