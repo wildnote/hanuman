@@ -17,6 +17,9 @@
         %thead
           %tr
             %th Name
+            %th Descriptive Name
+            %th Has Answer Choices
+            %th External Data Source
             %th Status
             %th
             %th
@@ -25,6 +28,9 @@
           - @answer_types.each do |answer_type|
             %tr
               %td= link_to answer_type.name, answer_type
+              %td= link_to answer_type.descriptive_name, answer_type unless answer_type.descriptive_name.blank?
+              %td= link_to answer_type.has_answer_choices, answer_type unless answer_type.has_answer_choices.blank?
+              %td= link_to answer_type.external_data_source, answer_type unless answer_type.external_data_source.blank?
               %td= link_to answer_type.status, answer_type
               %td
                 = link_to edit_answer_type_path(answer_type) do
