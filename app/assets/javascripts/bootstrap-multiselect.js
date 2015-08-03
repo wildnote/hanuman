@@ -233,7 +233,13 @@
              * @param {jQuery} event
              */
             onDropdownShown: function(event) {
-
+              var input = this.$container.find('li.filter input.multiselect-search:visible');
+              var target = event.target;
+              if (target) {
+                setTimeout(function(){
+                  input.focus();
+                }, 250);
+              }
             },
             /**
              * Triggered after the dropdown is hidden.
@@ -781,7 +787,8 @@
                     }).on('input keydown', $.proxy(function(event) {
                         // Cancel enter key default behaviour
                         if (event.which === 13) {
-                          event.preventDefault();
+                          // event.preventDefault();
+                          $(this.$container).find("li:not(.divider):not(.disabled):not(.multiselect-all) a").filter(":visible").first().focus();
                         }
 
                         // This is useful to catch "keydown" events after the browser has updated the control.
