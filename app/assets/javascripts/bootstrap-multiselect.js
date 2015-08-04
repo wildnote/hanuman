@@ -155,7 +155,8 @@
                 if (options.length === 0) {
                     return this.nonSelectedText;
                 }
-                else if (options.length == $('option', $(select)).length) {
+                // else if (options.length == $('option', $(select)).length)
+                else if (options.length == $('option', $(select)).length && options > 1) {
                     return this.allSelectedText;
                 }
                 else if (options.length > this.numberDisplayed) {
