@@ -22,6 +22,26 @@
         .col-sm-10
           %p.form-control-static= @answer_type.name
       .form-group
+        %label.col-sm-2.control-label Descriptive Name
+        .col-sm-10
+          %p.form-control-static= @answer_type.descriptive_name
+      .form-group
+        %label.col-sm-2.control-label Description
+        .col-sm-10
+          %p.form-control-static= @answer_type.description
+      .form-group
+        %label.col-sm-2.control-label Has Answer Choices
+        .col-sm-10
+          %p.form-control-static= @answer_type.has_answer_choices
+      .form-group
+        %label.col-sm-2.control-label External Data Source
+        .col-sm-10
+          %p.form-control-static= @answer_type.external_data_source
+      .form-group
         %label.col-sm-2.control-label Status
         .col-sm-10
           %p.form-control-static= @answer_type.status
+      .form-group
+        %label.col-sm-2.control-label Answer Choice Type
+        .col-sm-10
+          %p.form-control-static= @answer_type.answer_choice_type
