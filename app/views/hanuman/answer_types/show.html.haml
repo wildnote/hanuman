@@ -26,6 +26,10 @@
         .col-sm-10
           %p.form-control-static= @answer_type.descriptive_name
       .form-group
+        %label.col-sm-2.control-label Description
+        .col-sm-10
+          %p.form-control-static= @answer_type.description
+      .form-group
         %label.col-sm-2.control-label Has Answer Choices
         .col-sm-10
           %p.form-control-static= @answer_type.has_answer_choices
@@ -37,3 +41,7 @@
         %label.col-sm-2.control-label Status
         .col-sm-10
           %p.form-control-static= @answer_type.status
+      .form-group
+        %label.col-sm-2.control-label Answer Choice Type
+        .col-sm-10
+          %p.form-control-static= @answer_type.answer_choice_type

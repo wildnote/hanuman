@@ -18,9 +18,11 @@
           %tr
             %th Name
             %th Descriptive Name
+            %th Description
             %th Has Answer Choices
             %th External Data Source
             %th Status
+            %th Answer Choice Type
             %th
             %th
 
@@ -29,9 +31,11 @@
             %tr
               %td= link_to answer_type.name, answer_type
               %td= link_to answer_type.descriptive_name, answer_type unless answer_type.descriptive_name.blank?
+              %td= link_to answer_type.description, answer_type unless answer_type.descriptive_name.blank?
               %td= link_to answer_type.has_answer_choices, answer_type unless answer_type.has_answer_choices.blank?
               %td= link_to answer_type.external_data_source, answer_type unless answer_type.external_data_source.blank?
               %td= link_to answer_type.status, answer_type
+              %td= link_to answer_type.answer_choice_type, answer_type unless answer_type.answer_choice_type.blank?
               %td
                 = link_to edit_answer_type_path(answer_type) do
                   %span.glyphicon.glyphicon-pencil

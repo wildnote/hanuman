@@ -13,6 +13,10 @@
       .col-sm-4
         = f.text_field :descriptive_name, class: "form-control"
     .form-group
+      = f.label :description, class: "col-sm-2 control-label"
+      .col-sm-4
+        = f.text_field :description, class: "form-control"
+    .form-group
       = f.label :has_answer_choices, class: "col-sm-2 control-label"
       .col-sm-4
         = f.select :has_answer_choices, ["false", "true"], {prompt: false}, {class: "form-control"}
