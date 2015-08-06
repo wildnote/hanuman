@@ -3,11 +3,11 @@
 - content_for :navbar_hanuman_survey_templates do
   active
 - content_for :title do
-  Survey Templates
+  Build a Survey
 
 .panel
   .panel-heading
-    %h3.panel-title Survey Templates
+    %h3.panel-title Build a Survey
     - if current_user.superuser?
       = link_to new_survey_template_path, class: "btn btn-primary panel-title-button-right" do
         %span.glyphicon.glyphicon-plus
