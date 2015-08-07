@@ -5,7 +5,7 @@ module Hanuman
     has_many :observations, dependent: :destroy
     has_many :observation_answers, through: :observations
     accepts_nested_attributes_for :observations, :allow_destroy => true#, reject_if: lambda {|attributes| attributes['answer'].blank?}
-    has_one :survey_extension
+    has_one :survey_extension, dependent: :destroy
     accepts_nested_attributes_for :survey_extension, :allow_destroy => true
     validates :survey_template_id, presence: true
 
