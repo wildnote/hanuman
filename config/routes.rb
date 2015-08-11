@@ -31,8 +31,6 @@ Hanuman::Engine.routes.draw do
     end
   end
 
-  resources :survey_questions
-
   resources :observations
 
   resources :answer_choices
