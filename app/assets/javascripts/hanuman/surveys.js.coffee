@@ -67,6 +67,7 @@ $ ->
     allow_single_deselect: true
     no_results_text: "No results matched"
     size: "100%"
+    single_backstroke_delete: false
 
   # END CHOSEN
 

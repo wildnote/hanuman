@@ -3,12 +3,7 @@ module Hanuman
     has_paper_trail
     has_many :survey_steps, -> { order :step }, inverse_of: :survey_template, dependent: :destroy
     has_many :questions, through: :survey_steps, dependent: :destroy
-    has_many :surveys, dependent: :restrict_with_exception
-
-    # have to take this out to fix report pivot on survey decorator, these lines can be removed once production has been migrated fully
-    # this method is only needed for architecture migration
-    #has_many :survey_questions, -> { order :sort_order }
-    #has_many :questions, through: :survey_questions
+    has_many :surveys, dependent: :restrict_with_error
 
     validates_presence_of :name
     validates_uniqueness_of :name

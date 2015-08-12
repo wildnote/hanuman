@@ -87,12 +87,7 @@
 <!-- ***** CHOSENSELECT ***** -->
 {{#if model.answerType.chosenselect}}
   <div class="row">
-    {{!partial "question_left_buttons"}}
-    {{!-- not using partial above for now because don't want to show the edit button for grouped multiselect for now-kdh --}}
-    <div class="col-sm-2">
-      {{model.sortOrder}}
-      <a class="btn btn-xs btn-primary" href="#"><span class="glyphicon glyphicon-sort"></span></a>
-    </div>
+    {{partial "question_left_buttons"}}
     <div class="col-sm-3">{{model.questionText}}</div>
     <div class="col-sm-3">{{model.answerType.name}}</div>
     <div class="col-sm-3">

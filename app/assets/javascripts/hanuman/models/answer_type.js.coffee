@@ -89,7 +89,7 @@ App.AnswerType = DS.Model.extend({
     if @.get('name') in ['checkboxlist', 'hiddencheckboxlist', 'chosenmultiselect',
       'hiddenchosenmultiselect', 'chosenmultiselectgrouped',
       'hiddenchosenmultiselectgrouped', 'radio', 'hiddenradio', 'select',
-      'hiddenselect']
+      'hiddenselect', 'chosenselect']
       return true
   ).property('name')
 })
