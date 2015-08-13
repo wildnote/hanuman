@@ -5,6 +5,8 @@ module Hanuman
     belongs_to :question
     has_many :observation_answers, dependent: :destroy
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
+    # this line if for multiselectr answer choices
+    has_many :answer_choices, through: :observation_answers, dependent: :destroy
     belongs_to :selectable, polymorphic: true
 
     validates_presence_of :question_id, :entry
