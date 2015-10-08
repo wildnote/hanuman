@@ -67,7 +67,7 @@
                     = f.fields_for :observations, o do |ff|
                       .form-entry-item-container
                         = ff.hidden_field :question_id
-                        = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+                        = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) #rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
           - else
             = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: entry_observations, step: step.step, entry: entry, duplicator: true
       - else
@@ -94,7 +94,7 @@
                   = f.fields_for :observations, o do |ff|
                     .form-entry-item-container
                       = ff.hidden_field :question_id
-                      = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+                      = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) #rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
         - else
           - unless step.step == 3
             = render ("hanuman/surveys/fields/readonly/shared/panel"), show: false, survey: @survey, observations: step_observations, step: step.step, entry: entry, duplicator: false
@@ -122,7 +122,7 @@
               = f.fields_for :observations, o do |ff|
                 .form-entry-item-container
                   = ff.hidden_field :question_id
-                  = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
+                  = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) #rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
             - else
               - index_offset += 1
 
