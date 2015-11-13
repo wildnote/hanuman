@@ -4,7 +4,7 @@ module Hanuman
     belongs_to :answer_type
     belongs_to :survey_step
     has_many :answer_choices, dependent: :destroy, inverse_of: :question
-    has_many :observations, dependent: :restrict_with_exception
+    has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
 
     validates_presence_of :answer_type_id
     # wait until after migration for these validations
