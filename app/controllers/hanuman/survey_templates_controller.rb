@@ -49,8 +49,16 @@ module Hanuman
 
     # DELETE /survey_templates/1
     def destroy
-      @survey_template.destroy
-      redirect_to survey_templates_url, notice: 'Survey template was successfully destroyed.'
+      # customizing delete to return validation message when a user tries to delete a survey template with surveys already submitted against it
+      begin
+        @survey_template.destroy
+        flash[:success] = "Survey template was successfully destroyed."
+      rescue ActiveRecord::DeleteRestrictionError => e
+        @survey_template.errors.add(:base, e)
+        flash[:alert] = "#{e}"
+      ensure
+        redirect_to survey_templates_url
+      end
     end
 
     # PATCH/PUT /survey_templates/1

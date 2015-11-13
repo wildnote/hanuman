@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
     has_many :survey_steps, -> { order :step }, inverse_of: :survey_template, dependent: :destroy
     has_many :questions, through: :survey_steps, dependent: :destroy
-    has_many :surveys, dependent: :restrict_with_error
+    has_many :surveys, dependent: :restrict_with_exception
 
     validates_presence_of :name
     validates_uniqueness_of :name
