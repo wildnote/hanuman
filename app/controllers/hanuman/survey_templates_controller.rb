@@ -61,12 +61,19 @@ module Hanuman
       end
     end
 
-    # PATCH/PUT /survey_templates/1
     def duplicate
-      survey_template_copy = @survey_template.amoeba_dup
-      survey_template_copy.save!
-      redirect_to survey_template_copy, notice: 'Survey Template was successfully duplicated.'
+    survey_template_copy = @survey_template.amoeba_dup
+
+    respond_to do |format|
+      if survey_template_copy.save
+        format.html { redirect_to edit_survey_template_path(survey_template_copy.id), notice: 'Survey template was successfully duplicated, please rename.' }
+        format.json { render :show, status: :created, location: @location }
+      else
+        format.html { redirect_to survey_templates_path, alert: 'There was an error duplicating your template: ' + survey_template_copy.errors.full_messages.to_sentence + '.'}
+        format.json { render json: survey_template_copy.errors, status: :unprocessable_entity }
+      end
     end
+  end
 
     private
       # Use callbacks to share common setup or constraints between actions.
