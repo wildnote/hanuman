@@ -4,4 +4,5 @@ App.Question = DS.Model.extend({
   answerChoices: DS.hasMany('answerChoice', {async: true}),
   sortOrder: DS.attr('number'),
   surveyStep: DS.belongsTo('surveyStep')
+  required: DS.attr('boolean')
 })
