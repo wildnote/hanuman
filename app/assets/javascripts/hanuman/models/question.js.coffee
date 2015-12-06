@@ -5,4 +5,5 @@ App.Question = DS.Model.extend({
   sortOrder: DS.attr('number'),
   surveyStep: DS.belongsTo('surveyStep')
   required: DS.attr('boolean')
+  external_data_source: DS.attr('string')
 })
