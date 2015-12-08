@@ -1,0 +1,25 @@
+<%= form_for(@rule_condition) do |f| %>
+  <% if @rule_condition.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@rule_condition.errors.count, "error") %> prohibited this rule_condition from being saved:</h2>
+
+      <ul>
+      <% @rule_condition.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :rule_id %><br>
+    <%= f.text_field :rule_id %>
+  </div>
+  <div class="field">
+    <%= f.label :condition_id %><br>
+    <%= f.text_field :condition_id %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

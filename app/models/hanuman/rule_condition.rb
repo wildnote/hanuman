@@ -1,0 +1,6 @@
+module Hanuman
+  class RuleCondition < ActiveRecord::Base
+    belongs_to :rule
+    belongs_to :condition
+  end
+end

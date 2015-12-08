@@ -1,0 +1,27 @@
+<h1>Listing rule_conditions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Rule</th>
+      <th>Condition</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @rule_conditions.each do |rule_condition| %>
+      <tr>
+        <td><%= rule_condition.rule %></td>
+        <td><%= rule_condition.condition %></td>
+        <td><%= link_to 'Show', rule_condition %></td>
+        <td><%= link_to 'Edit', edit_rule_condition_path(rule_condition) %></td>
+        <td><%= link_to 'Destroy', rule_condition, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Rule condition', new_rule_condition_path %>

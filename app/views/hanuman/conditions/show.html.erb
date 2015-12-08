@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Question:</strong>
+  <%= @condition.question %>
+</p>
+
+<p>
+  <strong>Operator:</strong>
+  <%= @condition.operator %>
+</p>
+
+<p>
+  <strong>Answer:</strong>
+  <%= @condition.answer %>
+</p>
+
+<%= link_to 'Edit', edit_condition_path(@condition) %> |
+<%= link_to 'Back', conditions_path %>

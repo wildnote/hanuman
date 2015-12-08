@@ -1,0 +1,29 @@
+<h1>Listing conditions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Question</th>
+      <th>Operator</th>
+      <th>Answer</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @conditions.each do |condition| %>
+      <tr>
+        <td><%= condition.question %></td>
+        <td><%= condition.operator %></td>
+        <td><%= condition.answer %></td>
+        <td><%= link_to 'Show', condition %></td>
+        <td><%= link_to 'Edit', edit_condition_path(condition) %></td>
+        <td><%= link_to 'Destroy', condition, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Condition', new_condition_path %>

@@ -1,5 +1,11 @@
 Hanuman::Engine.routes.draw do
 
+  resources :rule_conditions
+
+  resources :rules
+
+  resources :conditions
+
   resources :survey_steps
 
   resources :settings
