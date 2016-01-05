@@ -1,6 +1,7 @@
 module Hanuman
   class Question < ActiveRecord::Base
     has_paper_trail
+    has_ancestry
     belongs_to :answer_type
     belongs_to :survey_step
     has_many :answer_choices, dependent: :destroy, inverse_of: :question
@@ -44,5 +45,23 @@ module Hanuman
         end
       end
     end
+
+    def rule_hash
+      # "rule": {
+      #         "id": "1",
+      #         "question_id": "822",
+      #         "match_type": "all",
+      #         "conditions": [
+      #           {
+      #             "id": "1",
+      #             "question_id": "818",
+      #             "operator": "is equal to",
+      #             "answer": "Yes"
+      #           }
+      #         ]
+      #       }
+      Hanuman::RuleSerializer.new(self.rule).to_json
+    end
+
   end
 end
