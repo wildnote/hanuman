@@ -46,6 +46,7 @@ module Hanuman
       end
     end
 
+    # build the rule_hash to pass into rails to then be used by javascript for hide/show functions
     def rule_hash
       # "rule": {
       #         "id": "1",
