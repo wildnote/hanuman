@@ -4,7 +4,7 @@ PATH
     hanuman (1.0.3)
       active_model_serializers (= 0.8.1)
       amoeba (= 3.0.0)
-      ancestry (= 2.1.0)
+      ancestry
       coffee-rails (= 4.0.1)
       ember-data-source (= 1.0.0.beta.12)
       ember-rails (= 0.15)
