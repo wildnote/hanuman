@@ -5,5 +5,6 @@
       = ff.text_field :answer, value: "There are no available Answer Options!", class: "form-control", readonly: true
     - else
       = ff.collection_select :answer, ff.object.question.answer_choices.sorted, :formatted_answer_choice, :formatted_answer_choice,
-                             {prompt: true}, {class: 'form-control'}
+                             {prompt: true}, {class: 'form-control', :"data-rule" => ff.object.question.rule_hash,
+                              :"data-question-id" => ff.object.question.id, :"data-ancestor" => ff.object.question.ancestry}
     = ff.hidden_field :entry
