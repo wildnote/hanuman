@@ -1,12 +1,12 @@
 $ ->
-  
+
   #scan page and find all objects with data rules
   findDataRules = ->
     $("[data-rule]").each ->
       rule = $.parseJSON($(this).attr("data-rule")).rule
       $(rule.conditions).each ->
         bindConditions(rule.hidden, rule.question_id, this.question_id, this.operator, this.answer)
-        
+
   #bind conditions to question
   bindConditions = (hidden, ancestor_id, question_id, operator, answer) ->
     $("[data-question-id=" + question_id + "]").on "change", ->
@@ -36,14 +36,14 @@ $ ->
         else
           hideShowQuestions(hidden, logic_result, ancestor_id)
         i++
-        
+
   #hide or show questions
   hideShowQuestions = (hidden, logic_result, ancestor_id) ->
     selection = $("[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]").closest(".form-entry-item-container")
-    if hidden      
-      if logic_result then selection.removeClass("conditional-logic-hidden") else selection.addClass("conditional-logic-hidden")
-    else
+    if hidden
       if logic_result then selection.addClass("conditional-logic-hidden") else selection.removeClass("conditional-logic-hidden")
-      
+    else
+      if logic_result then selection.removeClass("conditional-logic-hidden") else selection.addClass("conditional-logic-hidden")
+
   #call findDataRules on document ready
   findDataRules()
