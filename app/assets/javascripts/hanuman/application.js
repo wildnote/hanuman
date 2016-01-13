@@ -18,6 +18,7 @@
 //= require handlebars/handlebars
 //= require bootstrap-multiselect
 //= require jquery.multiple.select
+//= require conditional-logic
 //= require_self
 //= require ./surveys
 

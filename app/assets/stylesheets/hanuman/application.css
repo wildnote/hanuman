@@ -12,5 +12,6 @@
  *= require typeahead/typeahead
  *= require ladda/ladda-themeless
  *= require hanuman/global
+ *= require conditional-logic
  *= require_tree .
  */
