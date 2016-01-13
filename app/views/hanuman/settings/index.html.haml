@@ -8,7 +8,7 @@
 .panel
   .panel-heading
     %h3.panel-title Settings
-    = link_to new_setting_path, class: "btn btn-primary panel-title-button-right" do
+    = link_to new_setting_path, class: "btn btn-success panel-title-button-right" do
       %span.glyphicon.glyphicon-plus
       New Setting
 
@@ -16,7 +16,7 @@
   .panel-body
     .pull-right= paginate @settings
     .table-responsive
-      %table.table.table-striped.table-hover
+      %table.table.table-hover
         %thead
           %tr
             %th Key
