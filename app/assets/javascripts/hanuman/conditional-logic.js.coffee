@@ -1,7 +1,7 @@
-$ ->
+class ConditionalLogic
 
   #scan page and find all objects with conditional logic rules
-  findRules = ->
+  findRules: ->
     $("[data-rule]").each ->
       rule = $.parseJSON($(this).attr("data-rule")).rule
       $(rule.conditions).each ->
@@ -10,7 +10,7 @@ $ ->
   #TODO: need to write default state check for edit
   #could we actually do this by evaluating the question itself, if it has an answer show, if not hide?
   #is there some other way?
-  
+
   #bind conditions to question
   bindConditions = (ancestor_id, question_id, operator, answer) ->
     $("[data-question-id=" + question_id + "]").on "change", ->
@@ -24,11 +24,11 @@ $ ->
       clearQuestions(container)
     else
       container.removeClass("conditional-logic-hidden")
-      
+
   #clear questions
   clearQuestions = (container) ->
     container.find("input[type!=hidden]").val("")
-        
+
   #evaluate conditional logic rules
   evaluateRules = (operator, answer, value) ->
     hide_questions = true
@@ -53,5 +53,7 @@ $ ->
         if value.indexOf(answer) > -1 then hide_questions = false
     return hide_questions
 
+$ ->
   #call findRules on document ready
-  findRules()
+  cl = new ConditionalLogic
+  cl.findRules()
