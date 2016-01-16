@@ -7,11 +7,15 @@ class ConditionalLogic
     $("[data-rule]").each ->
       rule = $.parseJSON($(this).attr("data-rule")).rule
       $(rule.conditions).each ->
+        self.setDefaultState(rule.question_id, this.question_id, this.operator, this.answer)
         self.bindConditions(rule.question_id, this.question_id, this.operator, this.answer)
 
   #TODO: need to write default state check for edit
   #could we actually do this by evaluating the question itself, if it has an answer show, if not hide?
   #is there some other way?
+  # set the default hide show conditions
+  setDefaultState: (ancestor_id, question_id, operator, answer) ->
+    self.hideShowQuestions(self.evaluateRules(operator, answer, $("[data-question-id=" + question_id + "]").val()), ancestor_id)
 
   #bind conditions to question
   bindConditions: (ancestor_id, question_id, operator, answer) ->
