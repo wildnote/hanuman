@@ -56,7 +56,7 @@ App.AnswerType = DS.Model.extend({
       return true
   ).property('name')
   section: (->
-    if @.get('name') in ['section', 'hiddensection']
+    if @.get('name') in ['section', 'hiddensection', 'repeater']
       return true
   ).property('name')
   select: (->
