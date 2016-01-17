@@ -9,7 +9,7 @@ module Hanuman
     def show
       respond_with Question.find(params[:id])
     end
-    
+
     def create
       respond_with :api, :v1, Question.create(question_params)
     end
@@ -28,8 +28,11 @@ module Hanuman
     private
 
     def question_params
-      params.require(:question).permit(:question_text, :answer_type_id, :sort_order, :survey_step_id)
+      params.require(:question).permit(
+        :question_text, :answer_type_id, :sort_order, :survey_step_id,
+        :required, :external_data_source, :hidden
+      )
     end
-    
+
   end
 end

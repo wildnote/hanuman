@@ -1,9 +1,12 @@
 App.Question = DS.Model.extend({
-  questionText: DS.attr('string'),
-  answerType: DS.belongsTo('answerType', {async: true}),
-  answerChoices: DS.hasMany('answerChoice', {async: true}),
-  sortOrder: DS.attr('number'),
+  questionText: DS.attr('string')
+  answerType: DS.belongsTo('answerType', {async: true})
+  answerChoices: DS.hasMany('answerChoice', {async: true})
+  sortOrder: DS.attr('number')
   surveyStep: DS.belongsTo('surveyStep')
   required: DS.attr('boolean')
-  external_data_source: DS.attr('string')
+  externalDataSource: DS.attr('string')
+  hidden: DS.attr('boolean')
+  ancestry: DS.attr('string')
+  railsId: DS.attr('number')
 })

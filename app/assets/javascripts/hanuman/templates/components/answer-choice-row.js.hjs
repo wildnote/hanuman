@@ -1,10 +1,10 @@
 {{#if showAnswerChoices}}
   {{#if isEditingAnswerChoice}}
     {{!-- new and edit --}}
-    <div class="col-sm-12">
+    <div class="col-sm-6">
       {{input type="text" valueBinding='model.optionText' class="form-control"}}
     </div>
-    <div class="col-sm-12">
+    <div class="col-sm-6">
       <a class="btn btn-xs btn-primary" href="#" {{action "save" on="click"}}>
         Save
       </a>
@@ -15,7 +15,7 @@
   {{else}}
     {{#if isNewAnswerChoice}}
       <!-- + new answer choice button -->
-      <div class="col-sm-12">
+      <div class="col-sm-6">
         <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
           <span class="glyphicon glyphicon-plus"></span>
           Add
@@ -23,16 +23,14 @@
       </div>
     {{else}}
       {{!-- show of existing answer choice --}}
-      <div class="col-sm-3">
+      <div class="col-sm-6">
+        {{model.optionText}}
+      </div>
+      <div class="col-sm-6">
         <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
           <span class="glyphicon glyphicon-pencil"></span>
           Edit
         </a>
-      </div>
-      <div class="col-sm-6">
-        {{model.optionText}}
-      </div>
-      <div class="col-sm-3">
         <a class="btn btn-xs btn-danger" href="#" {{action "delete" on="click"}}>
           <span class="glyphicon glyphicon-trash"></span>
         </a>
@@ -40,4 +38,3 @@
     {{/if}}
   {{/if}}
 {{/if}}
-
