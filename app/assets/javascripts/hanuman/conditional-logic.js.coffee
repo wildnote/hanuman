@@ -5,10 +5,12 @@ class ConditionalLogic
   #scan page and find all objects with conditional logic rules
   findRules: ->
     $("[data-rule]").each ->
-      rule = $.parseJSON($(this).attr("data-rule")).rule
-      $(rule.conditions).each ->
-        self.setDefaultState(rule.question_id, this.question_id, this.operator, this.answer)
-        self.bindConditions(rule.question_id, this.question_id, this.operator, this.answer)
+      if $(this).attr('data-rule').length > 0
+        rule = $.parseJSON($(this).attr("data-rule")).rule
+        $(rule.conditions).each ->
+          self.setDefaultState(rule.question_id, this.question_id, this.operator, this.answer)
+          self.bindConditions(rule.question_id, this.question_id, this.oatom .perator, this.answer)
+    return
 
   # set the default hide show conditions
   setDefaultState: (ancestor_id, question_id, operator, answer) ->
@@ -18,6 +20,7 @@ class ConditionalLogic
   bindConditions: (ancestor_id, question_id, operator, answer) ->
     $("[data-question-id=" + question_id + "]").on "change", ->
       self.hideShowQuestions(self.evaluateRules(operator, answer, $(this).val()), ancestor_id)
+    return
 
   #hide or show questions
   hideShowQuestions: (hide_questions, ancestor_id) ->
