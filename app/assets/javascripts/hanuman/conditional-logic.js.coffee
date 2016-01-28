@@ -7,9 +7,10 @@ class ConditionalLogic
     $("[data-rule]").each ->
       if $(this).attr('data-rule').length > 0
         rule = $.parseJSON($(this).attr("data-rule")).rule
+        console.log rule 
         $(rule.conditions).each ->
           self.setDefaultState(rule.question_id, this.question_id, this.operator, this.answer)
-          self.bindConditions(rule.question_id, this.question_id, this.oatom .perator, this.answer)
+          self.bindConditions(rule.question_id, this.question_id, this.operator, this.answer)
     return
 
   # set the default hide show conditions
