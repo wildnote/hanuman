@@ -8,13 +8,22 @@ class ConditionalLogic
       $ruleElement = $(this)
       if $ruleElement.attr('data-rule').length > 0
         rule = $.parseJSON($ruleElement.attr("data-rule")).rule
-        console.log rule
         $(rule.conditions).each ->
-          questionId = this.question_id
+          condition = this
+          questionId = condition.question_id
           $triggerContainer = $("[data-question-id=" + questionId + "]")
-          $triggerElement = $triggerContainer.find('.form-control')
-          self.setDefaultState(rule.question_id, $triggerElement, this.operator, this.answer)
-          self.bindConditions(rule.question_id, $triggerElement, this.operator, this.answer)
+          $triggerElement = $triggerContainer.find(".form-control")
+          # text, textarea, select
+          if $triggerElement.length < 2
+            self.setDefaultState(rule.question_id, $triggerElement, condition.operator, condition.answer)
+            self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
+          # radio buttons
+          else
+            for element in $triggerElement
+              do (element) ->
+                self.setDefaultState(rule.question_id, $(element), condition.operator, condition.answer)
+                self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
+
     return
 
   # set the default hide show conditions
@@ -38,7 +47,7 @@ class ConditionalLogic
 
   #clear questions
   clearQuestions: (container) ->
-    container.find("input[type!=hidden]").val("")
+    # container.find("input[type!=hidden]").val("")
 
   #evaluate conditional logic rules
   evaluateRules: (operator, answer, value) ->
@@ -66,6 +75,16 @@ class ConditionalLogic
 
   # get value of triggering question
   getValue: ($conditionElement) ->
+    if $conditionElement.is(":radio")
+      if $conditionElement.is(":checked")
+        return $conditionElement.val()
+      else
+        return
+    if $conditionElement.is(":checkbox")
+      if $conditionElement.is(":checked")
+        return $conditionElement.val()
+      else
+        return
     $conditionElement.val()
 
 $ ->
