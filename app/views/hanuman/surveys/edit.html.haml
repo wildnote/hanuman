@@ -65,7 +65,7 @@
                 .panel-body
                   - entry_observations.each_with_index do |o, index|
                     = f.fields_for :observations, o do |ff|
-                      .form-entry-item-container{class: "#{ff.object.question.hidden ? 'conditional-logic-hidden' : ''}"}
+                      .form-entry-item-container{class: "#{ff.object.question.hidden ? 'conditional-logic-hidden' : ''}", :"data-question-id" => ff.object.question.id, :"data-rule" => ff.object.question.rule_hash, :"data-ancestor" => ff.object.question.ancestry}
                         = ff.hidden_field :question_id
                         = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
           - else
@@ -92,7 +92,7 @@
                   = render ("hanuman/surveys/formextension"), f: f
                 - step_observations.each_with_index do |o, index|
                   = f.fields_for :observations, o do |ff|
-                    .form-entry-item-container{class: "#{ff.object.question.hidden ? 'conditional-logic-hidden' : ''}"}
+                    .form-entry-item-container{class: "#{ff.object.question.hidden ? 'conditional-logic-hidden' : ''}", :"data-question-id" => ff.object.question.id, :"data-rule" => ff.object.question.rule_hash, :"data-ancestor" => ff.object.question.ancestry}
                       = ff.hidden_field :question_id
                       = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
         - else
@@ -120,7 +120,7 @@
             -# if the current observation group is the last observation group render observations as form fields
             - if o.id.blank?
               = f.fields_for :observations, o do |ff|
-                .form-entry-item-container{class: "#{ff.object.question.hidden ? 'conditional-logic-hidden' : ''}"}
+                .form-entry-item-container{class: "#{ff.object.question.hidden ? 'conditional-logic-hidden' : ''}", :"data-question-id" => ff.object.question.id, :"data-rule" => ff.object.question.rule_hash, :"data-ancestor" => ff.object.question.ancestry}
                   = ff.hidden_field :question_id
                   = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: (index - index_offset) rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: (index - index_offset)
             - else
