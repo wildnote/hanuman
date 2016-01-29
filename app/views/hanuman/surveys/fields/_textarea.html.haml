@@ -1,6 +1,5 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    = ff.text_area :answer, rows: 3, class: "form-control", maxlength: 5000, rows: 5,
-        :"data-rule" => ff.object.question.rule_hash, :"data-question-id" => ff.object.question.id, :"data-ancestor" => ff.object.question.ancestry
+    = ff.text_area :answer, rows: 3, class: "form-control", maxlength: 5000, rows: 5
     = ff.hidden_field :entry

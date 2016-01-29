@@ -5,22 +5,26 @@ class ConditionalLogic
   #scan page and find all objects with conditional logic rules
   findRules: ->
     $("[data-rule]").each ->
-      if $(this).attr('data-rule').length > 0
-        rule = $.parseJSON($(this).attr("data-rule")).rule
-        console.log rule 
+      $ruleElement = $(this)
+      if $ruleElement.attr('data-rule').length > 0
+        rule = $.parseJSON($ruleElement.attr("data-rule")).rule
+        console.log rule
         $(rule.conditions).each ->
-          self.setDefaultState(rule.question_id, this.question_id, this.operator, this.answer)
-          self.bindConditions(rule.question_id, this.question_id, this.operator, this.answer)
+          questionId = this.question_id
+          $triggerContainer = $("[data-question-id=" + questionId + "]")
+          $triggerElement = $triggerContainer.find('.form-control')
+          self.setDefaultState(rule.question_id, $triggerElement, this.operator, this.answer)
+          self.bindConditions(rule.question_id, $triggerElement, this.operator, this.answer)
     return
 
   # set the default hide show conditions
-  setDefaultState: (ancestor_id, question_id, operator, answer) ->
-    self.hideShowQuestions(self.evaluateRules(operator, answer, $("[data-question-id=" + question_id + "]").val()), ancestor_id)
+  setDefaultState: (ancestor_id, $triggerElement, operator, answer) ->
+    self.hideShowQuestions(self.evaluateRules(operator, answer, self.getValue($triggerElement)), ancestor_id)
 
   #bind conditions to question
-  bindConditions: (ancestor_id, question_id, operator, answer) ->
-    $("[data-question-id=" + question_id + "]").on "change", ->
-      self.hideShowQuestions(self.evaluateRules(operator, answer, $(this).val()), ancestor_id)
+  bindConditions: (ancestor_id, $triggerElement, operator, answer) ->
+    $triggerElement.on "change", ->
+      self.hideShowQuestions(self.evaluateRules(operator, answer, self.getValue($triggerElement)), ancestor_id)
     return
 
   #hide or show questions
@@ -59,6 +63,10 @@ class ConditionalLogic
       when "contains"
         if value.indexOf(answer) > -1 then hide_questions = false
     return hide_questions
+
+  # get value of triggering question
+  getValue: ($conditionElement) ->
+    $conditionElement.val()
 
 $ ->
   #call findRules on document ready
