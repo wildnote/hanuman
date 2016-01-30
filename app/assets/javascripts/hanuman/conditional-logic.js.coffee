@@ -68,9 +68,9 @@ class ConditionalLogic
         if $.isNumeric(value)
           if value < answer then hide_questions = false
       when "starts with"
-        if value.slice(0, answer.length) == answer then hide_questions = false
+        if value and value.slice(0, answer.length) == answer then hide_questions = false
       when "contains"
-        if value.indexOf(answer) > -1 then hide_questions = false
+        if value and value.indexOf(answer) > -1 then hide_questions = false
     return hide_questions
 
   # get value of triggering question
@@ -83,6 +83,14 @@ class ConditionalLogic
     if $conditionElement.is(":checkbox")
       if $conditionElement.is(":checked")
         return $conditionElement.val()
+      else
+        return
+    if $conditionElement.is('select[multiple]')
+      if $('#' + $conditionElement.attr('id') + ' option:selected').size() > 0
+        option_strings = []
+        $('#' + $conditionElement.attr('id') + ' option:selected').each ->
+          option_strings.push this.innerHTML
+        return option_strings.join(", ")
       else
         return
     $conditionElement.val()
