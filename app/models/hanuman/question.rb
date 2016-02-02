@@ -6,7 +6,8 @@ module Hanuman
     belongs_to :survey_step
     has_many :answer_choices, dependent: :destroy, inverse_of: :question
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
-    has_one :rule
+    has_one :rule, dependent: :destroy
+    has_one :condition, dependent: :destroy
 
     validates_presence_of :answer_type_id
     # wait until after migration for these validations
