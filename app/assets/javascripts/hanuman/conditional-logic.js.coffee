@@ -26,11 +26,17 @@ class ConditionalLogic
             self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
           # radio buttons
           else
-            for element in $triggerElement
-              do (element) ->
-                #self.setDefaultState(rule.question_id, $(element), condition.operator, condition.answer)
-                self.hideShowQuestions(hideQuestions, ancestorId)
-                self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
+            if $triggerElement.is(":checkbox")
+              # limit binding of each checkbox if data-label-value and answer are the same-kdh
+              $triggerElement = $triggerContainer.find(".form-control[data-label-value=" + condition.answer + "]")
+              self.hideShowQuestions(hideQuestions, ancestorId)
+              self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
+            else
+              for element in $triggerElement
+                do (element) ->
+                  #self.setDefaultState(rule.question_id, $(element), condition.operator, condition.answer)
+                  self.hideShowQuestions(hideQuestions, ancestorId)
+                  self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
           # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
           if matchType == "any" and hideQuestions == false
             console.log "let's break out of this joint"
