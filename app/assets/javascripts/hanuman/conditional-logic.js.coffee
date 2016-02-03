@@ -8,32 +8,43 @@ class ConditionalLogic
       $ruleElement = $(this)
       if $ruleElement.attr('data-rule').length > 0
         rule = $.parseJSON($ruleElement.attr("data-rule")).rule
+        matchType = rule.match_type
+        #console.log rule
         $(rule.conditions).each ->
           condition = this
+          #console.log condition
           questionId = condition.question_id
           $triggerContainer = $("[data-question-id=" + questionId + "]")
           $triggerElement = $triggerContainer.find(".form-control")
+          # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
+          hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($triggerElement))
+          ancestorId = rule.question_id
           # text, textarea, select
           if $triggerElement.length < 2
-            self.setDefaultState(rule.question_id, $triggerElement, condition.operator, condition.answer)
+            #self.setDefaultState(rule.question_id, $triggerElement, condition.operator, condition.answer)
+            self.hideShowQuestions(hideQuestions, ancestorId)
             self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
           # radio buttons
           else
             for element in $triggerElement
               do (element) ->
-                self.setDefaultState(rule.question_id, $(element), condition.operator, condition.answer)
+                #self.setDefaultState(rule.question_id, $(element), condition.operator, condition.answer)
+                self.hideShowQuestions(hideQuestions, ancestorId)
                 self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
+          # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
+          if matchType == "any" and hideQuestions == false
+            console.log "let's break out of this joint"
 
     return
 
   # set the default hide show conditions
   setDefaultState: (ancestor_id, $triggerElement, operator, answer) ->
-    self.hideShowQuestions(self.evaluateRules(operator, answer, self.getValue($triggerElement)), ancestor_id)
+    self.hideShowQuestions(self.evaluateCondition(operator, answer, self.getValue($triggerElement)), ancestor_id)
 
   #bind conditions to question
   bindConditions: (ancestor_id, $triggerElement, operator, answer) ->
     $triggerElement.on "change", ->
-      self.hideShowQuestions(self.evaluateRules(operator, answer, self.getValue($triggerElement)), ancestor_id)
+      self.hideShowQuestions(self.evaluateCondition(operator, answer, self.getValue($triggerElement)), ancestor_id)
     return
 
   #hide or show questions
@@ -47,7 +58,7 @@ class ConditionalLogic
 
   #clear questions
   clearQuestions: (container) ->
-    console.log container
+    #console.log container
     # clear out text fields, selects and uncheck radio and checkboxes
     #TODO set these to default values once we implement default values - kdh
     # container.find("input[type!=hidden]").val("")
@@ -72,7 +83,7 @@ class ConditionalLogic
       $(this).prop('checked', false);
 
   #evaluate conditional logic rules
-  evaluateRules: (operator, answer, value) ->
+  evaluateCondition: (operator, answer, value) ->
     hide_questions = true
     switch operator
       when "is equal to"
@@ -104,7 +115,10 @@ class ConditionalLogic
         return
     if $conditionElement.is(":checkbox")
       if $conditionElement.is(":checked")
-        return $conditionElement.val()
+        if $conditionElement.attr('data-label-value')
+          return $conditionElement.attr('data-label-value')
+        else
+          return $conditionElement.val()
       else
         return
     if $conditionElement.is('select[multiple]')
