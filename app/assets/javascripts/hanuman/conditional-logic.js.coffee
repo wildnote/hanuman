@@ -6,40 +6,40 @@ class ConditionalLogic
   findRules: ->
     $("[data-rule]").each ->
       $ruleElement = $(this)
-      if $ruleElement.attr('data-rule').length > 0
-        rule = $.parseJSON($ruleElement.attr("data-rule")).rule
-        matchType = rule.match_type
-        #console.log rule
-        $(rule.conditions).each ->
-          condition = this
-          #console.log condition
-          questionId = condition.question_id
-          $triggerContainer = $("[data-question-id=" + questionId + "]")
-          $triggerElement = $triggerContainer.find(".form-control")
-          # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
-          hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($triggerElement))
-          ancestorId = rule.question_id
-          # text, textarea, select
-          if $triggerElement.length < 2
-            #self.setDefaultState(rule.question_id, $triggerElement, condition.operator, condition.answer)
+      #if $ruleElement.attr('data-rule').length > 0
+      rule = $.parseJSON($ruleElement.attr("data-rule")).rule
+      matchType = rule.match_type
+      #console.log rule
+      $(rule.conditions).each ->
+        condition = this
+        #console.log condition
+        questionId = condition.question_id
+        $triggerContainer = $("[data-question-id=" + questionId + "]")
+        $triggerElement = $triggerContainer.find(".form-control")
+        # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
+        hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($triggerElement))
+        ancestorId = rule.question_id
+        # text, textarea, select
+        if $triggerElement.length < 2
+          #self.setDefaultState(rule.question_id, $triggerElement, condition.operator, condition.answer)
+          self.hideShowQuestions(hideQuestions, ancestorId)
+          self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
+        # radio buttons
+        else
+          if $triggerElement.is(":checkbox")
+            # limit binding of each checkbox if data-label-value and answer are the same-kdh
+            $triggerElement = $triggerContainer.find(".form-control[data-label-value=" + condition.answer + "]")
             self.hideShowQuestions(hideQuestions, ancestorId)
             self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
-          # radio buttons
           else
-            if $triggerElement.is(":checkbox")
-              # limit binding of each checkbox if data-label-value and answer are the same-kdh
-              $triggerElement = $triggerContainer.find(".form-control[data-label-value=" + condition.answer + "]")
-              self.hideShowQuestions(hideQuestions, ancestorId)
-              self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
-            else
-              for element in $triggerElement
-                do (element) ->
-                  #self.setDefaultState(rule.question_id, $(element), condition.operator, condition.answer)
-                  self.hideShowQuestions(hideQuestions, ancestorId)
-                  self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
-          # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
-          if matchType == "any" and hideQuestions == false
-            console.log "let's break out of this joint"
+            for element in $triggerElement
+              do (element) ->
+                #self.setDefaultState(rule.question_id, $(element), condition.operator, condition.answer)
+                self.hideShowQuestions(hideQuestions, ancestorId)
+                self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
+        # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
+        if matchType == "any" and hideQuestions == false
+          console.log "let's break out of this joint"
 
     return
 
@@ -50,7 +50,53 @@ class ConditionalLogic
   #bind conditions to question
   bindConditions: (ancestor_id, $triggerElement, operator, answer) ->
     $triggerElement.on "change", ->
-      self.hideShowQuestions(self.evaluateCondition(operator, answer, self.getValue($triggerElement)), ancestor_id)
+      # pop out of condition into rules to handle all conditions defined in the rule
+      rules = []
+      $("[data-rule]").each ->
+        $ruleElement = $(this)
+        #if $ruleElement.attr('data-rule').length > 0
+        rule = $.parseJSON($ruleElement.attr("data-rule")).rule
+        rules.push rule
+        matchType = rule.match_type
+
+      questionId = $triggerElement.closest('.form-entry-item-container').attr('data-question-id')
+      conditions = rules.map((rule) ->
+        JSON.stringify rule.conditions
+      )
+      currentConditions = JSON.parse(_.filter(conditions, (s) ->
+        s.indexOf('question_id":' + String(questionId)) != -1
+      )[0])
+      if currentConditions.length > 1
+        console.log currentConditions
+        # loop through and run hide show questions for each condition
+        currentConditions.map (condition) ->
+          console.log condition
+          questionId = condition.question_id
+          $triggerContainer = $("[data-question-id=" + questionId + "]")
+          $triggerElement = $triggerContainer.find(".form-control")
+          # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
+          hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($triggerElement))
+          # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
+          if matchType == "any" and hideQuestions == false
+            console.log "let's break out of this joint"
+          # ancestorId = rule.question_id
+          # # text, textarea, select
+          # if $triggerElement.length < 2
+          #   #self.setDefaultState(rule.question_id, $triggerElement, condition.operator, condition.answer)
+          #   self.hideShowQuestions(hideQuestions, ancestorId)
+          # # radio buttons
+          # else
+          #   if $triggerElement.is(":checkbox")
+          #     # limit binding of each checkbox if data-label-value and answer are the same-kdh
+          #     $triggerElement = $triggerContainer.find(".form-control[data-label-value=" + condition.answer + "]")
+          #     self.hideShowQuestions(hideQuestions, ancestorId)
+          #   else
+          #     for element in $triggerElement
+          #       do (element) ->
+          #         #self.setDefaultState(rule.question_id, $(element), condition.operator, condition.answer)
+          #         self.hideShowQuestions(hideQuestions, ancestorId)
+      else
+        self.hideShowQuestions(self.evaluateCondition(operator, answer, self.getValue($triggerElement)), ancestor_id)
     return
 
   #hide or show questions
