@@ -47,7 +47,29 @@ class ConditionalLogic
 
   #clear questions
   clearQuestions: (container) ->
+    console.log container
+    # clear out text fields, selects and uncheck radio and checkboxes
+    #TODO set these to default values once we implement default values - kdh
     # container.find("input[type!=hidden]").val("")
+    textFields = container.find(":text").val("")
+    textAreas = container.find("textarea").val("")
+    # un-select dropdown
+    selects = container.find("select")
+    selects.each ->
+      $(this).val("")
+      $(this).trigger("chosen:updated") if $(this).hasClass('chosen')
+    multiselects = container.find("select[multiple]")
+    multiselects.each ->
+      $('#' + $this.attr('id') + ' option:selected').removeAttr("selected")
+      $(this).trigger("chosen:updated") if $(this).hasClass('chosen-multiselect')
+    # uncheck all checkboxes
+    checkboxes = container.find(":checkbox")
+    checkboxes.each ->
+      $(this).prop('checked', false);
+    # un-select radio buttons
+    radiobuttons = container.find(":radio")
+    radiobuttons.each ->
+      $(this).prop('checked', false);
 
   #evaluate conditional logic rules
   evaluateRules: (operator, answer, value) ->
