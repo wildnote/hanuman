@@ -82,11 +82,11 @@ class ConditionalLogic
     # uncheck all checkboxes
     checkboxes = container.find(":checkbox")
     checkboxes.each ->
-      $(this).prop('checked', false);
+      $(this).prop('checked', false)
     # un-select radio buttons
     radiobuttons = container.find(":radio")
     radiobuttons.each ->
-      $(this).prop('checked', false);
+      $(this).prop('checked', false)
 
   #evaluate conditional logic rules
   evaluateCondition: (operator, answer, value) ->
