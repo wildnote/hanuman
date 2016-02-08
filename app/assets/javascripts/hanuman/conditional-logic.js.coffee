@@ -37,9 +37,6 @@ class ConditionalLogic
                 #self.setDefaultState(rule.question_id, $(element), condition.operator, condition.answer)
                 self.hideShowQuestions(hideQuestions, ancestorId)
                 self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
-        # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
-        if matchType == "any" and hideQuestions == false
-          console.log "let's break out of this joint"
 
     return
 
