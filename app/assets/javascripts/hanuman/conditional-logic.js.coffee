@@ -11,16 +11,17 @@ class ConditionalLogic
       matchType = rule.match_type
       #console.log rule
       $(rule.conditions).each ->
+        $ruleElement = $ruleElement
         condition = this
         #console.log condition
         questionId = condition.question_id
-        $triggerContainer = $("[data-question-id=" + questionId + "]")
+        $triggerContainer = $ruleElement.prev("[data-question-id=" + questionId + "]")
         # getting element on edit and new page
         $triggerElement = $triggerContainer.find(".form-control")
         # getting element on show page
         if $triggerElement.length < 1
           $triggerElement = $triggerContainer.find(".form-control-static")
-        # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
+        # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
         hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($triggerElement))
         ancestorId = rule.question_id
         # text, textarea, select
