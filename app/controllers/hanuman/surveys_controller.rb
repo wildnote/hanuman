@@ -16,7 +16,6 @@ module Hanuman
 
     # GET /surveys/new
     def new
-      # new handles step 1 of survey, all other steps handled in edit
       survey_template_id = params[:survey_template_id]
       survey_template = SurveyTemplate.find survey_template_id
       @survey = Survey.new(survey_template_id: survey_template_id)
@@ -31,14 +30,7 @@ module Hanuman
 
     # GET /surveys/1/edit
     def edit
-      step = params[:step]
-      entry = params[:entry]
-      # build empty entry on edit to deal with first time entering data for that step/entry
-      if @survey.observations.filtered_by_step_and_entry(step, entry).count < 1
-        @survey.survey_template.survey_steps.by_step(step).first.questions.each do |q|
-          @survey.observations.build(question_id: q.id, entry: entry)
-        end
-      end
+      @survey = Survey.find(params[:id])
     end
 
     # POST /surveys
@@ -56,34 +48,11 @@ module Hanuman
 
     # PATCH/PUT /surveys/1
     def update
-      entry = params[:survey][:observations_attributes]['0'][:entry]
-      question = Question.find params[:survey][:observations_attributes]['0'][:question_id]
-      step = question.survey_step.step
 
-      respond_to do |format|
-        if @survey.update(survey_params_update)
-          format.html {
-            if step.eql? 1
-              redirect_to edit_survey_path(@survey.id, "2", "1"), notice: 'Survey was successfully updated.'
-            elsif step.eql? 2
-              # repeat step 2
-              if params[:next_step]
-                redirect_to edit_survey_path(@survey.id, "2", @survey.max_observation_entry_by_step(2) + 1), notice: 'Survey was successfully updated.'
-              else # done with step 2 go to step 3
-                redirect_to edit_survey_path(@survey.id, "3", "1"), notice: 'Survey was successfully updated.'
-              end
-            else # edit from step 1 and 3 go to show
-              redirect_to @survey, notice: 'Survey was successfully updated.'
-            end
-          }
-          format.json {
-            render json: @survey.observations.filtered_by_step_and_entry(step, entry).
-              to_json(:include => {:observation_answers => {:methods => [:answer_choice_text]}}, :methods => [:question_text])
-          }
-        else
-          format.html { render action: 'edit' }
-          format.json { render json: @survey.errors, status: :unprocessable_entity }
-        end
+      if @survey.update(survey_params)
+        redirect_to @survey, notice: 'Survey step was successfully updated.'
+      else
+        render :edit
       end
     end
 
