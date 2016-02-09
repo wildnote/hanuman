@@ -24,22 +24,43 @@ class ConditionalLogic
         # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
         hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($triggerElement))
         ancestorId = rule.question_id
+        # bind conditions based on element type
         # text, textarea, select
         if $triggerElement.length < 2
-          self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement)
           self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
         # radio buttons
         else
           if $triggerElement.is(":checkbox")
             # limit binding of each checkbox if data-label-value and answer are the same-kdh
             $triggerElement = $triggerContainer.find(".form-control[data-label-value=" + condition.answer + "]")
-            self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement)
             self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
           else
             for element in $triggerElement
               do (element) ->
-                self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement)
                 self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
+        # hide show questions
+        #self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement)
+        if rule.conditions.length > 1
+          conditionMetTracker = []
+          _.each rule.conditions, (condition) ->
+            $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
+            hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
+            conditionMet = !hideQuestions
+            conditionMetTracker.push conditionMet
+          # match type any (or)
+          if matchType == "any"
+            if _.indexOf(conditionMetTracker, true) > 0
+              self.hideShowQuestions(false, ancestorId, $ruleElement)
+            else
+              self.hideShowQuestions(true, ancestorId, $ruleElement)
+          # match type all
+          if matchType == "all"
+            if _.indexOf(conditionMetTracker, false) == -1
+              self.hideShowQuestions(false, ancestorId, $ruleElement)
+            else
+              self.hideShowQuestions(true, ancestorId, $ruleElement)
+        else
+          self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement)
     return
 
   #bind conditions to question
