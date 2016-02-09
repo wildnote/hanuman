@@ -142,8 +142,9 @@ class ConditionalLogic
   # get value of triggering question
   getValue: ($conditionElement) ->
     if $conditionElement.is(":radio")
-      if $conditionElement.is(":checked")
-        return $conditionElement.val()
+      selected = $("input[type='radio'][name='" + $conditionElement.attr('name') + "']:checked")
+      if selected.length > 0
+        return selected.val()
       else
         return
     if $conditionElement.is(":checkbox")
