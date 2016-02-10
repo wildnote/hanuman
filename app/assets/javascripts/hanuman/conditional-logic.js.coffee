@@ -11,42 +11,39 @@ class ConditionalLogic
       matchType = rule.match_type
       #console.log rule
       $(rule.conditions).each ->
+        $ruleElement = $ruleElement
         condition = this
         #console.log condition
         questionId = condition.question_id
-        $triggerContainer = $("[data-question-id=" + questionId + "]")
+        $triggerContainer = $ruleElement.closest('.panel').find("[data-question-id=" + questionId + "]")
         # getting element on edit and new page
         $triggerElement = $triggerContainer.find(".form-control")
         # getting element on show page
         if $triggerElement.length < 1
           $triggerElement = $triggerContainer.find(".form-control-static")
-        # deal with any condition, once we get a hide_questions = false then we don't need to run through the rules
+        # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
         hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($triggerElement))
         ancestorId = rule.question_id
+        # bind conditions based on element type
         # text, textarea, select
         if $triggerElement.length < 2
-          #self.setDefaultState(rule.question_id, $triggerElement, condition.operator, condition.answer)
-          self.hideShowQuestions(hideQuestions, ancestorId)
           self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
         # radio buttons
         else
           if $triggerElement.is(":checkbox")
             # limit binding of each checkbox if data-label-value and answer are the same-kdh
             $triggerElement = $triggerContainer.find(".form-control[data-label-value=" + condition.answer + "]")
-            self.hideShowQuestions(hideQuestions, ancestorId)
             self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
           else
             for element in $triggerElement
               do (element) ->
-                #self.setDefaultState(rule.question_id, $(element), condition.operator, condition.answer)
-                self.hideShowQuestions(hideQuestions, ancestorId)
                 self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
-
+        # hide show questions
+        if rule.conditions.length > 1
+          self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleElement, matchType)
+        else
+          self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement)
     return
-
-  # set the default hide show conditions
-  setDefaultState: (ancestor_id, $triggerElement, operator, answer) ->
-    self.hideShowQuestions(self.evaluateCondition(operator, answer, self.getValue($triggerElement)), ancestor_id)
 
   #bind conditions to question
   bindConditions: (ancestor_id, $triggerElement, operator, answer) ->
@@ -60,33 +57,38 @@ class ConditionalLogic
         conditions = rule.conditions
         ancestorId = rule.question_id
         matchingCondition = _.where(conditions, {question_id: Number(questionId)})
+        hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
         if matchingCondition.length > 0
           if conditions.length > 1
-            conditionMetTracker = []
-            _.each conditions, (condition) ->
-              $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
-              hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
-              conditionMet = !hideQuestions
-              conditionMetTracker.push conditionMet
-            # match type any (or)
-            if matchType == "any"
-              if _.indexOf(conditionMetTracker, true) > 0
-                self.hideShowQuestions(false, ancestorId)
-              else
-                self.hideShowQuestions(true, ancestorId)
-            # match type all
-            if matchType == "all"
-              if _.indexOf(conditionMetTracker, false) == -1
-                self.hideShowQuestions(false, ancestorId)
-              else
-                self.hideShowQuestions(true, ancestorId)
+            self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, matchType)
           else
-            self.hideShowQuestions(self.evaluateCondition(operator, answer, self.getValue($triggerElement)), ancestor_id)
+            self.hideShowQuestions(hideQuestions, ancestor_id, $ruleElement)
     return
 
+  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, matchType) ->
+    conditionMetTracker = []
+    _.each conditions, (condition) ->
+      $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
+      hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
+      conditionMet = !hideQuestions
+      conditionMetTracker.push conditionMet
+    # match type any (or)
+    if matchType == "any"
+      if _.indexOf(conditionMetTracker, true) > 0
+        self.hideShowQuestions(false, ancestorId, $ruleElement)
+      else
+        self.hideShowQuestions(true, ancestorId, $ruleElement)
+    # match type all
+    if matchType == "all"
+      if _.indexOf(conditionMetTracker, false) == -1
+        self.hideShowQuestions(false, ancestorId, $ruleElement)
+      else
+        self.hideShowQuestions(true, ancestorId, $ruleElement)
+
+
   #hide or show questions
-  hideShowQuestions: (hide_questions, ancestor_id) ->
-    container = $("[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]").closest(".form-entry-item-container")
+  hideShowQuestions: (hide_questions, ancestor_id, $ruleElement) ->
+    container = $ruleElement.closest('.panel').find("[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]")
     if hide_questions
       container.addClass("conditional-logic-hidden")
       self.clearQuestions(container)
