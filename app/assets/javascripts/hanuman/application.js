@@ -19,6 +19,7 @@
 //= require bootstrap-multiselect
 //= require jquery.multiple.select
 //= require hanuman/conditional-logic
+//= require hanuman/repeater
 //= require_self
 //= require ./surveys
 
