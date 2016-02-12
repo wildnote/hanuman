@@ -36,5 +36,22 @@ module Hanuman
     def fully_editable
       num_reports_submitted < 1 ? true : false
     end
+
+    # after duplicating the survey template remap ancestry and rule information
+    def remap_conditional_logic(old_survey_template)
+      self.questions.each do |q|
+        unless q.ancestry.blank?
+          new_parent = self.questions.find_by_duped_question_id q.ancestry.to_i
+          q.ancestry = new_parent.id.to_s
+          q.save!
+        end
+        q.conditions.each do |c|
+          old_rule_id = c.rule_id
+          new_rule = Hanuman::Rule.includes(question: :survey_step).where("hanuman_rules.duped_rule_id = ? AND hanuman_survey_steps.survey_template_id = ?", old_rule_id, self.id).references(question: :survey_step).first
+          c.rule_id = new_rule.id
+          c.save!
+        end
+      end
+    end
   end
 end
