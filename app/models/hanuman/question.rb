@@ -7,7 +7,7 @@ module Hanuman
     has_many :answer_choices, dependent: :destroy, inverse_of: :question
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
     has_one :rule, dependent: :destroy
-    #has_one :condition, dependent: :destroy
+    has_many :conditions#, dependent: :destroy
 
     validates_presence_of :answer_type_id
     # wait until after migration for these validations
@@ -18,7 +18,11 @@ module Hanuman
     after_create :submit_blank_observation_data
 
     amoeba do
-      include_association :answer_choices
+      include_association [:rule, :conditions, :answer_choices]
+      # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
+      customize(lambda { |original_question,new_question|
+        new_question.duped_question_id = original_question.id
+      })
     end
 
     def question_text_not_required
