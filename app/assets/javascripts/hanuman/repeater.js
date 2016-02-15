@@ -19,8 +19,8 @@ $(document).ready(function(){
     $(timeInput).remove()
     $('div.panel-body').append(timeInput)
     $('.attachinary-input').attachinary()
-    
-    // removed latlong cordinated from new form
+
+    // removes latlong cordinated from new form
     $('input.latlong-entry').last().val("")
 
     // shows uploaded file name
@@ -32,7 +32,6 @@ $(document).ready(function(){
     var timeStamp = new Date().getTime()
     for (var i = 0; i < $clonedRepeator.length; i++) {
       if ($($clonedRepeator[i]).find('div.form-section').text().trim().replace("                        +", "").trim() == "Observation") {
-        // data entry attribute
         $($clonedRepeator[i]).attr('data-entry', dataEntry);
         // inputs
         $($clonedRepeator[i]).find('input').first().attr('id', "survey_observations_attributes_" + timeStamp + "_question_id");
@@ -42,7 +41,8 @@ $(document).ready(function(){
         $($($clonedRepeator[i]).find('input')[1]).attr('value', dataEntry);
 
       }else if ($($clonedRepeator[i]).find('label').text() == "Location") {
-        $($clonedRepeator[i]).attr('data-entry', dataEntry)
+        $($clonedRepeator[i]).attr('data-entry', dataEntry);
+
         // inputs
         $($($clonedRepeator[i]).find('input')[0]).attr('id',"survey_observations_attributes_" + timeStamp + "_question_id")
         $($($clonedRepeator[i]).find('input')[0]).attr('name',"survey[observations_attributes][" + timeStamp + "][question_id]")
@@ -54,9 +54,7 @@ $(document).ready(function(){
         // labels
         $($clonedRepeator[i]).find('label').attr("for", "survey_observations_attributes_" + timeStamp + "_answer")
 
-      }else if ($($($clonedRepeator[i]).find('label')[3]).text() == "Enter lat/long of location selected above") {
-
-        // data entry attribute
+      }else if (i == 2) {
         $($clonedRepeator[i]).attr('data-entry', dataEntry);
         // inputs
         $($($clonedRepeator[i]).find('input')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
@@ -71,7 +69,6 @@ $(document).ready(function(){
 
         // empty the input
       }else if ($($clonedRepeator[i]).find('label').first().text() == "Plant(s) observed") {
-        // data entry attribute
         $($clonedRepeator[i]).attr('data-entry', dataEntry);
         // inputs
         $($($clonedRepeator[i]).find('input')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
@@ -85,8 +82,9 @@ $(document).ready(function(){
         // labels
         $($($clonedRepeator[i]).find('label')).attr('for', "survey_observations_attributes_" + timeStamp + "_answer");
 
+        // div id
+        $($($clonedRepeator[i]).find('.chosen-container-multi')).attr('id', "survey_observations_attributes_" + timeStamp + "_taxon_ids__chosen")
       }else if ($($clonedRepeator[i]).find('label').first().text() == "Enter special info about Eel grass") {
-        // data entry attribute
         $($clonedRepeator[i]).attr('data-entry', dataEntry);
         // inputs
         $($($clonedRepeator[i]).find('input')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
@@ -97,13 +95,12 @@ $(document).ready(function(){
         // textareas
         $($($clonedRepeator[i]).find('textarea')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_answer");
         $($($clonedRepeator[i]).find('textarea')[0]).attr("name", "survey[observations_attributes][" + timeStamp + "][answer]");
-        // 1 labels
+        // labels
         $($($clonedRepeator[i]).find('label').first()).attr("for", "survey_observations_attributes_" + timeStamp + "_answer");
 
       }else if ($($clonedRepeator[i]).find('label:first-child').text() == "Photo(s)"){
-        // data entry attribute
-        $($clonedRepeator[i]).attr('data-entry', dataEntry);
 
+        $($clonedRepeator[i]).attr('data-entry', dataEntry);
         // replace file input html
         $($clonedRepeator[i]).html($fileInput)
 
