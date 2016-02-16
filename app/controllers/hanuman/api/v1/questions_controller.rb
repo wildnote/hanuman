@@ -30,7 +30,7 @@ module Hanuman
     def question_params
       params.require(:question).permit(
         :question_text, :answer_type_id, :sort_order, :survey_step_id,
-        :required, :external_data_source, :hidden
+        :required, :external_data_source, :hidden, :ancestry
       )
     end
 
