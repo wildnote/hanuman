@@ -14,10 +14,19 @@
 
     {{!-- called from surveyStep and dislpays each answer type as readonly --}}
     <div class="row">
-      {{partial "question_left_buttons"}}
       <div class="col-sm-3">{{model.questionText}}</div>
       <div class="col-sm-3">{{model.answerType.name}}</div>
-      {{partial "question_right_buttons"}}
+      <div class="col-sm-3">
+        <a class="btn btn-success" {{action "editQuestion" on="click"}}>
+        <span class="glyphicon glyphicon-pencil"></span>
+          Edit
+        </a>
+        <span style="display:inline-block">{{delete-button model=model action="delete"}}</span>
+      </div>
+      <div class="col-sm-3 dev-only">
+        <a class="btn"><span class="glyphicon glyphicon-sort"></span></a>
+        {{model.sortOrder}} [{{model.railsId}}]
+      </div>
     </div>
 
   {{/if}}

@@ -43,10 +43,10 @@
     <div class="panel-body">
 
       <div class="row">
-        <div class="col-sm-3"><strong></strong></div>
         <div class="col-sm-3"><strong>Label</strong></div>
         <div class="col-sm-3"><strong>Question Type</strong></div>
         <div class="col-sm-3"><strong>Actions</strong></div>
+        <div class="col-sm-3"><strong></strong></div>
       </div>
 
       <div class="row">

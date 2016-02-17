@@ -1,8 +1,0 @@
-<div class="col-sm-3">
-  <a class="btn btn-success" {{action "editQuestion" on="click"}}>
-  <span class="glyphicon glyphicon-pencil"></span>
-    Edit
-  </a>
-  <a class="btn"><span class="glyphicon glyphicon-sort"></span></a>
-  <span style="display:inline-block">{{delete-button model=model action="delete"}}</span>
-</div>
