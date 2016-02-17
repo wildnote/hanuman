@@ -5,10 +5,10 @@
       {{input type="text" valueBinding='model.optionText' class="form-control"}}
     </div>
     <div class="col-sm-6">
-      <a class="btn btn-xs btn-primary" href="#" {{action "save" on="click"}}>
+      <a class="btn btn-success" href="#" {{action "save" on="click"}}>
         Save
       </a>
-      <a class="btn btn-xs btn-default" href="#" {{action "toggleForm" on="click"}}>
+      <a class="btn btn-default" href="#" {{action "toggleForm" on="click"}}>
         Cancel
       </a>
     </div>
@@ -16,7 +16,7 @@
     {{#if isNewAnswerChoice}}
       <!-- + new answer choice button -->
       <div class="col-sm-6">
-        <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
+        <a class="btn btn-success" href="#" {{action "toggleForm" on="click"}}>
           <span class="glyphicon glyphicon-plus"></span>
           Add
         </a>
@@ -27,11 +27,11 @@
         {{model.optionText}}
       </div>
       <div class="col-sm-6">
-        <a class="btn btn-xs btn-primary" href="#" {{action "toggleForm" on="click"}}>
+        <a class="btn btn-success" href="#" {{action "toggleForm" on="click"}}>
           <span class="glyphicon glyphicon-pencil"></span>
           Edit
         </a>
-        <a class="btn btn-xs btn-danger" href="#" {{action "delete" on="click"}}>
+        <a class="btn" href="#" {{action "delete" on="click"}}>
           <span class="glyphicon glyphicon-trash"></span>
         </a>
       </div>

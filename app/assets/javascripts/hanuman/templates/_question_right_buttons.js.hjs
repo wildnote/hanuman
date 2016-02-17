@@ -1,3 +1,0 @@
-<div class="col-sm-1">
-  {{delete-button model=model action="delete"}}
-</div>
