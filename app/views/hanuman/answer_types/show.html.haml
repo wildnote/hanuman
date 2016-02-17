@@ -1,16 +1,19 @@
+- content_for :title do
+  Answer Type Details
+- content_for :title_parent do
+  Answer Types
+- content_for :title_icon do
+  glyphicon-exclamation-sign
+- content_for :title_actions do
+  = render "actions", locals: {}
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_answer_types do
   active
-- content_for :title do
-  Answer Type Details
 
 .panel
   .panel-heading
     %h3.panel-title Answer Type Details
-    = link_to answer_types_path, class: "btn btn-primary panel-title-button-right-2" do
-      %span.glyphicon.glyphicon-justify
-      All Answer Types
     = link_to edit_answer_type_path(@answer_type), class: "btn btn-primary panel-title-button-right" do
       %span.glyphicon.glyphicon-pencil
       Edit Answer Type

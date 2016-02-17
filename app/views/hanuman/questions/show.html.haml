@@ -1,9 +1,15 @@
+- content_for :title do
+  Question Details
+- content_for :title_parent do
+  Questions
+- content_for :title_icon do
+  glyphicon-question-sign
+- content_for :title_actions do
+  = render "actions", locals: {}
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_questions do
   active
-- content_for :title do
-  Question Details
 
 .panel
   .panel-heading
