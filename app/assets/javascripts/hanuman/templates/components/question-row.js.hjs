@@ -2,20 +2,33 @@
 {{#if isEditing}}
     {{!-- editable form --}}
     {{partial "question_edit"}}
-  
+
 {{else}}
 
   {{#if isNewQuestionRow}}
-    
+
     {{partial "question_new"}}
-  
+
   {{!-- show --}}
   {{else}}
 
     {{!-- called from surveyStep and dislpays each answer type as readonly --}}
-    {{partial "question_show"}}
-    {{partial "question_show_extended"}}
-    
+    <div class="row">
+      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">{{model.answerType.name}}</div>
+      <div class="col-sm-3">
+        <a class="btn btn-success" {{action "editQuestion" on="click"}}>
+        <span class="glyphicon glyphicon-pencil"></span>
+          Edit
+        </a>
+        <span style="display:inline-block">{{delete-button model=model action="delete"}}</span>
+      </div>
+      <div class="col-sm-3 dev-only">
+        <a class="btn"><span class="glyphicon glyphicon-sort"></span></a>
+        {{model.sortOrder}} [{{model.railsId}}]
+      </div>
+    </div>
+
   {{/if}}
 
 {{/if}}

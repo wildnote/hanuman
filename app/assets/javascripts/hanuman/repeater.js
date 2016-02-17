@@ -1,6 +1,6 @@
 $(document).ready(function(){
   $dataEntry = parseInt($('.panel-body div:nth-child(4)').attr('data-entry'))
-  $fileInput = $('.attachinary-input:first-child').parent().parent().parent().prop('outerHTML')
+  $photoInput = $('.attachinary-input:first-child').parent().parent().parent().prop('outerHTML')
 
   $('.duplicate').on("click", function(e){
     e.preventDefault();
@@ -9,121 +9,132 @@ $(document).ready(function(){
     questionId = $container.attr('data-question-id');
     entryId = $container.attr('data-entry');
     $repeater = $("[data-question-id=" + questionId + "][data-entry=" + entryId + "],[data-ancestor=" + questionId + "][data-entry=" + entryId + "]");
-    stringified = $repeater.prop('outerHTML');
 
+
+    //1 remove "chosen" form  div.chosen-multiselect
+    $(".chosen-multiselect").chosen('destroy')
+
+    // clone repeater
     $clonedRepeater = $repeater.clone(true)
+
+    //2 increment the data-entry every click
     $dataEntry = $dataEntry + 1
+
+    // update attributes with timestamps
     updateDom($clonedRepeater, $dataEntry )
     $('.panel-body').append($clonedRepeater)
+
+
+    // remove time input form bottom and append to new extention
     var timeInput = $('div.col-sm-7 input:first-child[type=time]').last().parent().parent().parent()
     $(timeInput).remove()
     $('div.panel-body').append(timeInput)
     $('.attachinary-input').attachinary()
 
-    // removes latlong cordinated from new form
+    // 3 removes latlong cordinated from new form
     $('input.latlong-entry').last().val("")
 
-    // shows uploaded file name
+
+    // 4 shows uploaded file name
     $('input[type=file]').fileupload('option', 'replaceFileInput', false);
+
+    // 5 bind chosen multiselect
+    $(".chosen-multiselect").chosen();
   });
 
+  function updateClonedInputs($clonedRepeater, dataEntry, timeStamp){
+    $($clonedRepeater).attr('data-entry', dataEntry);
+    var inputs = $($clonedRepeater).find('input')
+    var lastInputIndex = inputs.length - 1
+    var index = 0
+    $(inputs[lastInputIndex]).attr("value", dataEntry)
+    inputs.each(function(){
+      if ($(inputs[index]).attr('id')) {
+        $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/[\d+]/, timeStamp))
+      }
+      if ($(inputs[index]).attr('name')) {
+      $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/[\d+]/, timeStamp))
+      }
+      index ++
+    });
+  }
+
+  function updateClonedLabels($clonedRepeater, timeStamp){
+    var labels = $($clonedRepeater).find('label')
+    var index = 0
+    labels.each(function(){
+      if ($(labels[index]).attr("for")) {
+        var attr = $(labels[index]).attr("for")
+        $(labels[index]).attr("for", attr.replace(/[\d+]/, timeStamp))
+      }
+      index ++
+    });
+  }
 
   function updateDom($clonedRepeater, dataEntry){
     var timeStamp = new Date().getTime()
     for (var i = 0; i < $clonedRepeater.length; i++) {
       if ($($clonedRepeater[i]).attr('data-element-type') == "container") {
-        $($clonedRepeater[i]).attr('data-entry', dataEntry);
-        // inputs
-        $($clonedRepeater[i]).find('input').first().attr('id', "survey_observations_attributes_" + timeStamp + "_question_id");
-        $($clonedRepeater[i]).find('input').first().attr('name', "survey[observations_attributes][" + timeStamp + "][question_id]");
-        $($($clonedRepeater[i]).find('input')[1]).attr('id', "survey_observations_attributes_" + timeStamp + "_question_id");
-        $($($clonedRepeater[i]).find('input')[1]).attr('name', "survey[observations_attributes][" + timeStamp + "][question_id]");
-        $($($clonedRepeater[i]).find('input')[1]).attr('value', dataEntry);
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
 
       }else if ($($clonedRepeater[i]).attr('data-element-type') == "select") {
-        $($clonedRepeater[i]).attr('data-entry', dataEntry);
-
-        // inputs
-        $($($clonedRepeater[i]).find('input')[0]).attr('id',"survey_observations_attributes_" + timeStamp + "_question_id")
-        $($($clonedRepeater[i]).find('input')[0]).attr('name',"survey[observations_attributes][" + timeStamp + "][question_id]")
-        $($($clonedRepeater[i]).find('input')[1]).attr('id',"survey_observations_attributes_" + timeStamp + "_selectable_type")
-        $($($clonedRepeater[i]).find('input')[1]).attr('name',"survey[observations_attributes][" + timeStamp + "][selectable_type]")
-        $($($clonedRepeater[i]).find('input')[2]).attr('id',"survey_observations_attributes_" + timeStamp + "_entry")
-        $($($clonedRepeater[i]).find('input')[2]).attr('name',"survey[observations_attributes][" + timeStamp + "][entry]")
-        $($($clonedRepeater[i]).find('input')[2]).attr('value', dataEntry)
-        // labels
-        $($clonedRepeater[i]).find('label').attr("for", "survey_observations_attributes_" + timeStamp + "_answer")
-
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
+        $($($clonedRepeater[i]).find('div.chosen-container')).attr("id", "survey_observations_attributes_" + timeStamp + "_answer_chosen")
       }else if ($($clonedRepeater[i]).attr('data-element-type') == 'map') {
-        $($clonedRepeater[i]).attr('data-entry', dataEntry);
-        // inputs
-        $($($clonedRepeater[i]).find('input')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
-        $($($clonedRepeater[i]).find('input')[0]).attr("name", "survey[observations_attributes][" + timeStamp + "][question_id]");
-        $($($clonedRepeater[i]).find('input')[1]).attr("id", "survey_observations_attributes_" + timeStamp + "_answer");
-        $($($clonedRepeater[i]).find('input')[1]).attr("name", "survey[observations_attributes][" + timeStamp + "][answer]");
-        $($($clonedRepeater[i]).find('input')[2]).attr("id", "survey_observations_attributes_" + timeStamp + "_entry");
-        $($($clonedRepeater[i]).find('input')[2]).attr("name", "survey[observations_attributes][" + timeStamp + "][answer]");
-        $($($clonedRepeater[i]).find('input')[2]).attr("value", dataEntry);
-        //  labels
-        $($($clonedRepeater[i]).find('label')[3]).attr("for", "survey_observations_attributes_" + timeStamp + "_answer");
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
 
       }else if ($($clonedRepeater[i]).attr('data-element-type') == "multiselect") {
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
 
-
-        $($clonedRepeater[i]).attr('data-entry', dataEntry);
-        // inputs
-        $($($clonedRepeater[i]).find('input')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
-        $($($clonedRepeater[i]).find('input')[0]).attr("name", "survey[observations_attributes][" + timeStamp + "][question_id]");
-        $($clonedRepeater[i]).find('input:nth-child(2)').attr("id", "survey_observations_attributes_" + timeStamp + "_entry")
-        $($clonedRepeater[i]).find('input:nth-child(2)').attr("name", "survey[observations_attributes][" + timeStamp + "][entry]")
-        $($($clonedRepeater[i]).find('input')[2]).attr("id", "survey_observations_attributes_" + timeStamp + "_entry");
-        $($($clonedRepeater[i]).find('input')[2]).attr("name", "survey[observations_attributes][" + timeStamp + "][entry]");
-        $($($clonedRepeater[i]).find('input')[2]).attr("value", dataEntry);
-        //selects
-        $($($clonedRepeater[i]).find('select')).attr('id', "survey_observations_attributes_" + timeStamp + "_taxon_ids_");
-        $($($clonedRepeater[i]).find('select')).attr('name', "survey[observations_attributes][" + timeStamp + "][taxon_ids][]");
-        $($($clonedRepeater[i]).find('select')).attr('data-parsley-multiple', "survey[observations_attributes][" + timeStamp + "][taxon_ids][]");
-        // labels
-        $($($clonedRepeater[i]).find('label')).attr('for', "survey_observations_attributes_" + timeStamp + "_answer");
-
-        // div id
-        $($($clonedRepeater[i]).find('.chosen-container-multi')).attr('id', "survey_observations_attributes_" + timeStamp + "_taxon_ids__chosen")
       }else if ($($clonedRepeater[i]).attr('data-element-type') == "textarea") {
-        $($clonedRepeater[i]).attr('data-entry', dataEntry);
-        // inputs
-        $($($clonedRepeater[i]).find('input')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
-        $($($clonedRepeater[i]).find('input')[0]).attr("name", "survey[observations_attributes][" + timeStamp + "][question_id]");
-        $($($clonedRepeater[i]).find('input')[1]).attr("id", "survey_observations_attributes_" + timeStamp + "_entry");
-        $($($clonedRepeater[i]).find('input')[1]).attr("name", "survey[observations_attributes][" + timeStamp + "][entry]");
-        $($($clonedRepeater[i]).find('input')[1]).attr("value", dataEntry);
-        // textareas
-        $($($clonedRepeater[i]).find('textarea')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_answer");
-        $($($clonedRepeater[i]).find('textarea')[0]).attr("name", "survey[observations_attributes][" + timeStamp + "][answer]");
-        // labels
-        $($($clonedRepeater[i]).find('label').first()).attr("for", "survey_observations_attributes_" + timeStamp + "_answer");
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
 
       }else if ($($clonedRepeater[i]).attr('data-element-type') == "file"){
 
-        $($clonedRepeater[i]).attr('data-entry', dataEntry);
+        // removes  div.attachinary_container duplicate
+       $($clonedRepeater[i]).find(".attachinary_container").last().remove()
 
-        // replace file input html
-        $($clonedRepeater[i]).html($fileInput)
+       // replace file input's html with new instance
+       $($clonedRepeater[i]).replaceWith($photoInput)
 
-        // inputs
-        $($($clonedRepeater[i]).find('input')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
-        $($($clonedRepeater[i]).find('input')[0]).attr("name", "survey[observations_attributes][" + timeStamp + "][question_id]");
-        $($($clonedRepeater[i]).find('input')[1]).attr("id", "survey_observations_attributes_" + timeStamp + "_photos");
-        $($($clonedRepeater[i]).find('input')[1]).attr("name", "survey[observations_attributes][" + timeStamp + "][photos][]");
-        $($($clonedRepeater[i]).find('input')[2]).attr("name", "survey[observations_attributes][" + timeStamp + "][photos][]");
-        $($($clonedRepeater[i]).find('input')[3]).attr("id", "survey_observations_attributes_" + timeStamp + "_entry")
-        $($($clonedRepeater[i]).find('input')[3]).attr("name", "survey[observations_attributes][" + timeStamp + "][entry]");
-        $($($clonedRepeater[i]).find('input')[3]).attr("value", dataEntry)
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
 
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "radio"){
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
 
-        // label
-        $($($clonedRepeater[i]).find('label')[0]).attr("for", "survey_observations_attributes_" + timeStamp + "_answer");
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "checkboxes"){
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
 
-      };
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "date") {
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
+
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "email") {
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
+
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "helper") {
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "number") {
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
+
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "line") {
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "static") {
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "text") {
+        updateClonedInputs($clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels($clonedRepeater[i], timeStamp)
+      }
       timeStamp  =  new Date().getTime()
     };
   };
