@@ -1,17 +1,19 @@
+- content_for :title do
+  Settings
+- content_for :title_parent do
+  Settings
+- content_for :title_icon do
+  glyphicon-cog
+- content_for :title_actions do
+  = render "actions", locals: {}
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_settings do
   active
-- content_for :title do
-  Settings
 
 .panel.panel-info
   .panel-heading
     %h3.panel-title Settings
-    = link_to new_setting_path, class: "btn btn-success panel-title-button-right" do
-      %span.glyphicon.glyphicon-plus
-      New Setting
-
 
   .panel-body
     .pull-right= paginate @settings

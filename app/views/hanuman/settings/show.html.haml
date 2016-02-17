@@ -1,9 +1,15 @@
+- content_for :title do
+  Setting Details
+- content_for :title_parent do
+  Settings
+- content_for :title_icon do
+  glyphicon-cog
+- content_for :title_actions do
+  = render "actions", locals: {}
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_settings do
   active
-- content_for :title do
-  Setting Details
 
 .panel.panel-info
   .panel-heading

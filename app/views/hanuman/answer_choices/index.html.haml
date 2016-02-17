@@ -1,16 +1,19 @@
+- content_for :title do
+  Answer Choices
+- content_for :title_parent do
+  Answer Choices
+- content_for :title_icon do
+  glyphicon-ok-sign
+- content_for :title_actions do
+  = render "actions", locals: {}
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_answer_choices do
   active
-- content_for :title do
-  Answer Choices
 
 .panel.panel-info
   .panel-heading
     %h3.panel-title Answer Choices
-    = link_to new_answer_choice_path, class: "btn btn-success panel-title-button-right" do
-      %span.glyphicon.glyphicon-plus
-      New Answer Choice
   .panel-body
     .table-responsive
       %table.table.table-hover

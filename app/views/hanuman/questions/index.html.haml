@@ -1,16 +1,19 @@
+- content_for :title do
+  Questions
+- content_for :title_parent do
+  Questions
+- content_for :title_icon do
+  glyphicon-question-sign
+- content_for :title_actions do
+  = render "actions", locals: {}
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_questions do
   active
-- content_for :title do
-  Questions
 
 .panel.panel-info
   .panel-heading
     %h3.panel-title Questions
-    = link_to new_question_path, class: "btn btn-success panel-title-button-right" do
-      %span.glyphicon.glyphicon-plus
-      New Question
   .panel-body
     .table-responsive
       %table.table.table-hover
