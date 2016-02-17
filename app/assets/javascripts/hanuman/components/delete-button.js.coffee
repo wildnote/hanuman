@@ -15,7 +15,7 @@ App.DeleteButtonComponent = Ember.Component.extend
       $confirm = $('.delete-confirm', el)
       $confirm.fadeOut()
     delete: ->
-      el = this.get('element')  
+      el = this.get('element')
       $confirm = $('.delete-confirm', el)
       $confirm.fadeOut()
       @sendAction()

@@ -2,20 +2,24 @@
 {{#if isEditing}}
     {{!-- editable form --}}
     {{partial "question_edit"}}
-  
+
 {{else}}
 
   {{#if isNewQuestionRow}}
-    
+
     {{partial "question_new"}}
-  
+
   {{!-- show --}}
   {{else}}
 
     {{!-- called from surveyStep and dislpays each answer type as readonly --}}
-    {{partial "question_show"}}
-    {{partial "question_show_extended"}}
-    
+    <div class="row">
+      {{partial "question_left_buttons"}}
+      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">{{model.answerType.name}}</div>
+      {{partial "question_right_buttons"}}
+    </div>
+
   {{/if}}
 
 {{/if}}

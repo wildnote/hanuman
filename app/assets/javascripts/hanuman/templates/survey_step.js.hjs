@@ -43,11 +43,10 @@
     <div class="panel-body">
 
       <div class="row">
-        <div class="col-sm-2"><strong>Edit Actions</strong></div>
-        <div class="col-sm-3"><strong>Question/Line Text</strong></div>
-        <div class="col-sm-3"><strong>Question/Answer Type</strong></div>
-        <div class="col-sm-3"><strong>Preview</strong></div>
-        <div class="col-sm-1"><strong>Delete</strong></div>
+        <div class="col-sm-3"><strong></strong></div>
+        <div class="col-sm-3"><strong>Label</strong></div>
+        <div class="col-sm-3"><strong>Question Type</strong></div>
+        <div class="col-sm-3"><strong>Actions</strong></div>
       </div>
 
       <div class="row">
