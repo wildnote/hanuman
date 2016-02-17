@@ -1,6 +1,6 @@
 $(document).ready(function(){
   $dataEntry = parseInt($('.panel-body div:nth-child(4)').attr('data-entry'))
-  $fileInput = $('.attachinary-input:first-child').parent().parent().parent().prop('outerHTML')
+  $photoInput = $('.attachinary-input:first-child').parent().parent().parent().prop('outerHTML')
 
   $('.duplicate').on("click", function(e){
     e.preventDefault();
@@ -125,25 +125,223 @@ $(document).ready(function(){
 
       }else if ($($clonedRepeater[i]).attr('data-element-type') == "file"){
         $($clonedRepeater[i]).attr('data-entry', dataEntry);
+        if ($($($clonedRepeater[i]).find('input')[1]).attr('name').includes('photos')) {
 
-        // replace file input's html with new instance
-        $($clonedRepeater[i]).find(".attachinary_container").first().remove()
-        $($clonedRepeater[i]).replaceWith($fileInput)
+          $($clonedRepeater[i]).attr('data-entry', dataEntry);
+
+          // removes  div.attachinary_container duplicate
+          $($clonedRepeater[i]).find(".attachinary_container").last().remove()
+
+          // replace file input's html with new instance
+          $($clonedRepeater[i]).replaceWith($photoInput)
+
+          // inputs
+          $($($clonedRepeater[i]).find('input')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
+          $($($clonedRepeater[i]).find('input')[0]).attr("name", "survey[observations_attributes][" + timeStamp + "][question_id]");
+          $($($clonedRepeater[i]).find('input')[1]).attr("id", "survey_observations_attributes_" + timeStamp + "_photos");
+          $($($clonedRepeater[i]).find('input')[1]).attr("name", "survey[observations_attributes][" + timeStamp + "][photos][]");
+          $($($clonedRepeater[i]).find('input')[2]).attr("id", "survey_observations_attributes_" + timeStamp + "_entry");
+          $($($clonedRepeater[i]).find('input')[2]).attr("name", "survey[observations_attributes][" + timeStamp + "][entry]");
+          $($($clonedRepeater[i]).find('input')[2]).attr("value", dataEntry)
+
+          // label
+          $($clonedRepeater[i]).find('label:first-child').attr("for", "survey_observations_attributes_" + timeStamp + "_answer");
+        } else if ($($($clonedRepeater[5]).find('input')[1]).attr('name').includes('videos')) {
+          $($clonedRepeater[i]).attr('data-entry', dataEntry);
+
+          // removes  div.attachinary_container duplicate
+          $($clonedRepeater[i]).find(".attachinary_container").last().remove()
+
+          // replace file input's html with new instance
+          $($clonedRepeater[i]).replaceWith($photoInput)
+
+          // inputs
+          $($($clonedRepeater[i]).find('input')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
+          $($($clonedRepeater[i]).find('input')[0]).attr("name", "survey[observations_attributes][" + timeStamp + "][question_id]");
+          $($($clonedRepeater[i]).find('input')[1]).attr("id", "survey_observations_attributes_" + timeStamp + "_videos");
+          $($($clonedRepeater[i]).find('input')[1]).attr("name", "survey[observations_attributes][" + timeStamp + "][videos][]");
+          $($($clonedRepeater[i]).find('input')[2]).attr("id", "survey_observations_attributes_" + timeStamp + "_entry");
+          $($($clonedRepeater[i]).find('input')[2]).attr("name", "survey[observations_attributes][" + timeStamp + "][entry]");
+          $($($clonedRepeater[i]).find('input')[2]).attr("value", dataEntry)
+        }else if ($($($clonedRepeater[5]).find('input')[1]).attr('name').includes('documents')) {
+          $($clonedRepeater[i]).attr('data-entry', dataEntry);
+
+          // removes  div.attachinary_container duplicate
+          $($clonedRepeater[i]).find(".attachinary_container").last().remove()
+
+          // replace file input's html with new instance
+          $($clonedRepeater[i]).replaceWith($photoInput)
+
+          // inputs
+          $($($clonedRepeater[i]).find('input')[0]).attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
+          $($($clonedRepeater[i]).find('input')[0]).attr("name", "survey[observations_attributes][" + timeStamp + "][question_id]");
+          $($($clonedRepeater[i]).find('input')[1]).attr("id", "survey_observations_attributes_" + timeStamp + "_documents");
+          $($($clonedRepeater[i]).find('input')[1]).attr("name", "survey[observations_attributes][" + timeStamp + "][documents][]");
+          $($($clonedRepeater[i]).find('input')[2]).attr("id", "survey_observations_attributes_" + timeStamp + "_entry");
+          $($($clonedRepeater[i]).find('input')[2]).attr("name", "survey[observations_attributes][" + timeStamp + "][entry]");
+          $($($clonedRepeater[i]).find('input')[2]).attr("value", dataEntry)
+        }
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "radio"){
+        $($clonedRepeater[i]).attr('data-entry', dataEntry);
+        // inputs
+        $($($clonedRepeater[i]).find('input')[0]).attr('id',"survey_observations_attributes_" + timeStamp + "_question_id")
+        $($($clonedRepeater[i]).find('input')[0]).attr('name',"survey[observations_attributes][" + timeStamp + "][question_id]")
+        $($($clonedRepeater[i]).find('input')[1]).attr('id', "survey_observations_attributes_" + timeStamp + "_answer_a")
+        $($($clonedRepeater[i]).find('input')[1]).attr('name', "survey[observations_attributes][" + timeStamp + "][answer]")
+        $($($clonedRepeater[i]).find('input')[2]).attr('id',"survey_observations_attributes_" + timeStamp + "_answer_b")
+        $($($clonedRepeater[i]).find('input')[2]).attr('name', "survey[observations_attributes][" + timeStamp + "][answer]")
+        $($($clonedRepeater[i]).find('input')[3]).attr('id', "survey_observations_attributes_" + timeStamp + "_entry")
+        $($($clonedRepeater[i]).find('input')[3]).attr('name', "survey[observations_attributes][" + timeStamp + "][entry]")
+        $($($clonedRepeater[i]).find('input')[3]).attr('value', dataEntry)
+
+
+        // labels
+        $($($clonedRepeater[i]).find('label')[0]).attr("for", "survey_observations_attributes_" + timeStamp + "_answer")
+
+        // radio button labels
+        var labels = $($clonedRepeater[i]).find('label')
+        var index = 1
+        labels.each(function(){
+          if (index != labels.length) {
+            var attr = $(labels[index]).attr("for")
+            $(labels[index]).attr("for", attr.replace(/[\d+]/, timeStamp))
+          }
+          index ++
+        });
+
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "checkboxes"){
+        $($clonedRepeater[i]).attr('data-entry', dataEntry);
+
 
         // inputs
-        $($clonedRepeater[i]).find('input:first-child').attr("id", "survey_observations_attributes_" + timeStamp + "_question_id");
-        $($clonedRepeater[i]).find('input:first-child').attr("name", "survey[observations_attributes][" + timeStamp + "][question_id]");
-        $($clonedRepeater[i]).find('input:nth-child(2)').attr("id", "survey_observations_attributes_" + timeStamp + "_photos");
-        $($clonedRepeater[i]).find('input:nth-child(2)').attr("name", "survey[observations_attributes][" + timeStamp + "][photos][]");
-        $($clonedRepeater[i]).find('input:nth-child(3)').attr("name", "survey[observations_attributes][" + timeStamp + "][photos][]");
-        $($clonedRepeater[i]).find('input:nth-child(4)').attr("id", "survey_observations_attributes_" + timeStamp + "_entry")
-        $($clonedRepeater[i]).find('input:nth-child(4)').attr("name", "survey[observations_attributes][" + timeStamp + "][entry]");
-        $($clonedRepeater[i]).find('input:nth-child(4)').attr("value", dataEntry)
+        var inputs = $($clonedRepeater[i]).find('input')
+        var lastInputIndex = inputs.length - 1
+        var index = 0
+        $(inputs[lastInputIndex]).attr("value", dataEntry)
+        inputs.each(function(){
+          $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/[\d+]/, timeStamp))
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/[\d+]/, timeStamp))
+          index ++
+        });
 
-        // label
-        $($clonedRepeater[i]).find('label:first-child').attr("for", "survey_observations_attributes_" + timeStamp + "_answer");
+        // labels
+        $($($clonedRepeater[i]).find('label')[0]).attr("for", "survey_observations_attributes_" + timeStamp + "_answer")
 
-      };
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "date") {
+        $($clonedRepeater[i]).attr('data-entry', dataEntry);
+
+
+        // inputs
+        var inputs = $($clonedRepeater[i]).find('input')
+        var lastInputIndex = inputs.length - 1
+        var index = 0
+        $(inputs[lastInputIndex]).attr("value", dataEntry)
+        inputs.each(function(){
+          $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/[\d+]/, timeStamp))
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/[\d+]/, timeStamp))
+          index ++
+        });
+        // labels
+        $($($clonedRepeater[i]).find('label')).attr('for',"survey_observations_attributes_" + timeStamp + "_answer")
+
+
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "email") {
+        $($clonedRepeater[i]).attr('data-entry', dataEntry);
+
+
+        // inputs
+        var inputs = $($clonedRepeater[i]).find('input')
+        var lastInputIndex = inputs.length - 1
+        var index = 0
+        $(inputs[lastInputIndex]).attr("value", dataEntry)
+        inputs.each(function(){
+          $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/[\d+]/, timeStamp))
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/[\d+]/, timeStamp))
+          index ++
+        });
+
+        // labels
+        $($($clonedRepeater[i]).find('label')).attr('for',"survey_observations_attributes_" + timeStamp + "_answer")
+
+
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "helper") {
+        $($clonedRepeater[i]).attr('data-entry', dataEntry);
+
+
+        // inputs
+        var inputs = $($clonedRepeater[i]).find('input')
+        var lastInputIndex = inputs.length - 1
+        var index = 0
+        $(inputs[lastInputIndex]).attr("value", dataEntry)
+        inputs.each(function(){
+          $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/[\d+]/, timeStamp))
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/[\d+]/, timeStamp))
+          index ++
+        });
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "number") {
+        $($clonedRepeater[i]).attr('data-entry', dataEntry);
+
+
+        // inputs
+        var inputs = $($clonedRepeater[i]).find('input')
+        var lastInputIndex = inputs.length - 1
+        var index = 0
+        $(inputs[lastInputIndex]).attr("value", dataEntry)
+        inputs.each(function(){
+          $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/[\d+]/, timeStamp))
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/[\d+]/, timeStamp))
+          index ++
+        });
+
+        // labels
+        $($($clonedRepeater[i]).find('label')).attr('for',"survey_observations_attributes_" + timeStamp + "_answer")
+
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "line") {
+        $($clonedRepeater[i]).attr('data-entry', dataEntry);
+
+
+        // inputs
+        var inputs = $($clonedRepeater[i]).find('input')
+        var lastInputIndex = inputs.length - 1
+        var index = 0
+        $(inputs[lastInputIndex]).attr("value", dataEntry)
+        inputs.each(function(){
+          $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/[\d+]/, timeStamp))
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/[\d+]/, timeStamp))
+          index ++
+        });
+
+
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "static") {
+        $($clonedRepeater[i]).attr('data-entry', dataEntry);
+
+
+        // inputs
+        var inputs = $($clonedRepeater[i]).find('input')
+        var lastInputIndex = inputs.length - 1
+        var index = 0
+        $(inputs[lastInputIndex]).attr("value", dataEntry)
+        inputs.each(function(){
+          $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/[\d+]/, timeStamp))
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/[\d+]/, timeStamp))
+          index ++
+        });
+      }else if ($($clonedRepeater[i]).attr('data-element-type') == "text") {
+        $($clonedRepeater[i]).attr('data-entry', dataEntry);
+        // inputs
+        var inputs = $($clonedRepeater[i]).find('input')
+        var lastInputIndex = inputs.length - 1
+        var index = 0
+        $(inputs[lastInputIndex]).attr("value", dataEntry)
+        inputs.each(function(){
+          $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/[\d+]/, timeStamp))
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/[\d+]/, timeStamp))
+          index ++
+        });
+
+        // labels
+        $($($clonedRepeater[i]).find('label')).attr('for',"survey_observations_attributes_" + timeStamp + "_answer")
+      }
       timeStamp  =  new Date().getTime()
     };
   };
