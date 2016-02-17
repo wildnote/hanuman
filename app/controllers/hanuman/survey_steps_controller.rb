@@ -2,6 +2,7 @@ require_dependency "hanuman/application_controller"
 
 module Hanuman
   class SurveyStepsController < ApplicationController
+    respond_to :json, :html
     before_action :set_survey_step, only: [:show, :edit, :update, :destroy]
 
     # GET /survey_steps
@@ -11,6 +12,10 @@ module Hanuman
 
     # GET /survey_steps/1
     def show
+      respond_to do |format|
+        format.html
+        format.json {render json: @survey_step}
+      end
     end
 
     # GET /survey_steps/new

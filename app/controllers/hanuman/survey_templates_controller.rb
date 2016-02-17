@@ -16,6 +16,10 @@ module Hanuman
 
     # GET /survey_templates/1
     def show
+      respond_to do |format|
+        format.html
+        format.json {render json: @survey_template}
+      end
     end
 
     # GET /survey_templates/new
