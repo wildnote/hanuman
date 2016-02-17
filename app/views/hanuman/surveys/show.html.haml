@@ -19,9 +19,9 @@
 .form-horizontal
 
   - steps = @survey.survey_template.survey_steps
-  
+
   .panel.panel-default
-    .panel-body  
+    .panel-body
       .survey-progress
         - steps.each do |step|
           .col-sm-4{class: "#{false ? 'current' : ''}"}
@@ -45,7 +45,7 @@
           - steps.each do |s|
             - if @survey.survey_step_is_duplicator?(s.step)
               = @survey.observations.filtered_by_step(s.step).entries.count
-  
+
   - steps.each do |step|
     - step_observations = @survey.observations.filtered_by_step(step.step)
     - unless step_observations.blank?
