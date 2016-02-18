@@ -1,0 +1,6 @@
+- if current_user.superuser?
+  %li{:class => "#{locals[:navbar_hanuman_survey_templates_new_survey_template]}"}
+    = link_to new_survey_template_path do
+      %i.glyphicon.glyphicon-plus
+      %span.menu-title
+        New Survey Template

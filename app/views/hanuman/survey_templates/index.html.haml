@@ -1,17 +1,19 @@
+- content_for :title do
+  Design a Survey
+- content_for :title_parent do
+  Design a Survey
+- content_for :title_icon do
+  glyphicon-edit
+- content_for :title_actions do
+  = render "actions", locals: {}
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_survey_templates do
   active
-- content_for :title do
-  Build a Survey
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Build a Survey
-    - if current_user.superuser?
-      = link_to new_survey_template_path, class: "btn btn-primary panel-title-button-right" do
-        %span.glyphicon.glyphicon-plus
-        New Survey Template
+    %h3.panel-title Design a Survey
 
   .panel-body
     .pull-right= paginate @survey_templates
