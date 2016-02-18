@@ -2,14 +2,30 @@ $(document).ready(function(){
   $dataEntry = parseInt($('.panel-body div:nth-child(4)').attr('data-entry'))
   $photoInput = $('.attachinary-input:first-child').parent().parent().parent().prop('outerHTML')
 
+  $('.duplicate').each(function(){
+    $target = $(this);
+    $container = $target.closest('.form-container-entry-item');
+    questionId = $container.attr('data-question-id');
+    entryId = $container.attr('data-entry');
+    $repeater = $("[data-question-id=" + questionId + "][data-entry=" + entryId + "],[data-ancestor=" + questionId + "][data-entry=" + entryId + "]");
+
+    $repeater.attr("style", "background-color: #EFF;");
+  });
+
   $('.duplicate').on("click", function(e){
 
     e.preventDefault();
     $target = $(event.target);
-    $container = $target.closest('.form-entry-item-container');
+    $container = $target.closest('.form-container-entry-item');
     questionId = $container.attr('data-question-id');
     entryId = $container.attr('data-entry');
+
     $repeater = $("[data-question-id=" + questionId + "][data-entry=" + $('.panel-body div:nth-child(4)').attr('data-entry') + "],[data-ancestor=" + questionId + "][data-entry=" + $('.panel-body div:nth-child(4)').attr('data-entry') + "]");
+
+    // $repeater = $("[data-question-id=" + questionId + "][data-entry=" + entryId + "],[data-ancestor=" + questionId + "][data-entry=" + entryId + "]");
+
+    $repeater.attr("style", "background-color: #EFF;");
+
 
     // 5 bind chosen select & multiselect
     $(".chosen-multiselect").chosen('destroy')
