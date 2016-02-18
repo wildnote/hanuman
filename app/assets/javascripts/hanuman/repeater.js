@@ -38,7 +38,7 @@ $(document).ready(function(){
 
 
     // 4 shows uploaded file name
-    $('input[type=file]').fileupload('option', 'replaceFileInput', false);
+    // $('input[type=file]').fileupload('option', 'replaceFileInput', false);
 
     // 5 bind chosen multiselect
     $(".chosen-multiselect").chosen();
