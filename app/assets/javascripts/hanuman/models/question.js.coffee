@@ -9,4 +9,5 @@ App.Question = DS.Model.extend({
   hidden: DS.attr('boolean')
   ancestry: DS.attr('string')
   railsId: DS.attr('number')
+  rule: DS.belongsTo('rule', {async: true})
 })

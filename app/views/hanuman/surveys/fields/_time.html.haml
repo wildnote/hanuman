@@ -1,5 +1,5 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    = ff.time_field :answer, class: "form-control"
+    = ff.time_field :answer, class: "form-control", value: o.answer
     = ff.hidden_field :entry

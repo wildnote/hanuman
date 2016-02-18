@@ -11,6 +11,10 @@ module Hanuman
 
     # GET /questions/1
     def show
+      respond_to do |format|
+        format.html
+        format.json {render json: @question}
+      end
     end
 
     # GET /questions/new
