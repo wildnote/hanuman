@@ -53,7 +53,7 @@ class ConditionalLogic
         $ruleElement = $(this)
         rule = $.parseJSON($ruleElement.attr("data-rule")).rule
         matchType = rule.match_type
-        questionId = $triggerElement.closest('.form-entry-item-container').attr('data-question-id')
+        questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
         conditions = rule.conditions
         ancestorId = rule.question_id
         matchingCondition = _.where(conditions, {question_id: Number(questionId)})

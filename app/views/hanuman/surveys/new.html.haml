@@ -50,7 +50,7 @@
 
         - @survey.observations.each_with_index do |o, index|
           = f.fields_for :observations, o do |ff|
-            .form-entry-item-container
+            .form-container-entry-item
               = ff.hidden_field :question_id
               = render ("hanuman/surveys/fields/" + ff.object.question.answer_type.name), ff: ff, index: index rescue render "hanuman/surveys/fields/rescue/notsupported", ff: ff, index: index
 

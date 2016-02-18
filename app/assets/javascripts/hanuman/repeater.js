@@ -2,13 +2,25 @@ $(document).ready(function(){
   $dataEntry = parseInt($('.panel-body div:nth-child(4)').attr('data-entry'))
   $photoInput = $('.attachinary-input:first-child').parent().parent().parent().prop('outerHTML')
 
-  $('.duplicate').on("click", function(e){
-    e.preventDefault();
-    $target = $(event.target);
-    $container = $target.closest('.form-entry-item-container');
+  $('.duplicate').each(function(){
+    $target = $(this);
+    $container = $target.closest('.form-container-entry-item');
     questionId = $container.attr('data-question-id');
     entryId = $container.attr('data-entry');
     $repeater = $("[data-question-id=" + questionId + "][data-entry=" + entryId + "],[data-ancestor=" + questionId + "][data-entry=" + entryId + "]");
+
+    $repeater.attr("style", "background-color: #EFF;");
+  });
+
+  $('.duplicate').on("click", function(e){
+    e.preventDefault();
+    $target = $(event.target);
+    $container = $target.closest('.form-container-entry-item');
+    questionId = $container.attr('data-question-id');
+    entryId = $container.attr('data-entry');
+    $repeater = $("[data-question-id=" + questionId + "][data-entry=" + entryId + "],[data-ancestor=" + questionId + "][data-entry=" + entryId + "]");
+
+    $repeater.attr("style", "background-color: #EFF;");
 
 
     //1 remove "chosen" form  div.chosen-multiselect
