@@ -49,11 +49,12 @@ $(document).ready(function(){
   $('div.panel-body').on('click', "a.destroy", function(){
     var entry = $($(this).closest('div.form-entry-item-container')).attr('data-entry')
     var dataObservationId = $($(this).closest('div.form-entry-item-container')).attr('data-observation-id')
-    $("div.form-entry-item-container[data-entry=" + entry + "]").remove()
+    $("div.form-entry-item-container[data-entry=" + entry + "]").not('div.form-entry-item-container[data-element-type=time]').remove()
 
     if (window.location.pathname.match(/\/projects\/[\d+]\/hanuman\/surveys\/\d+\/edit/)) {
       var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1]
       var surveyId = window.location.pathname.match(/\/surveys\/(\d+)/)[1]
+
       $.ajax({
         url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/entry/"+ entry,
         method: "Delete"
@@ -79,6 +80,20 @@ $(document).ready(function(){
     });
   }
 
+  function updateClonedSelects($clonedRepeater, timeStamp){
+    var select = $($clonedRepeater).find('select')
+    var index = 0
+    select.each(function(){
+      if ($(select[index]).attr('id')) {
+        $(select[index]).attr("id", $(select[index]).attr("id").replace(/[\d+]/, timeStamp))
+      }
+      if ($(select[index]).attr('name')) {
+        $(select[index]).attr("name", $(select[index]).attr("name").replace(/[\d+]/, timeStamp))
+      }
+      index ++
+    });
+  }
+
   function updateClonedLabels($clonedRepeater, timeStamp){
     var labels = $($clonedRepeater).find('label')
     var index = 0
@@ -87,6 +102,20 @@ $(document).ready(function(){
         var attr = $(labels[index]).attr("for")
         $(labels[index]).attr("for", attr.replace(/[\d+]/, timeStamp))
       }
+      index ++
+    });
+  }
+  function updateClonedTextareas($clonedRepeater, timeStamp){
+    var textareas = $($clonedRepeater).find('textarea')
+    var index = 0
+    textareas.each(function(){
+      if ($(textareas[index]).attr('id')) {
+        $(textareas[index]).attr("id", $(textareas[index]).attr("id").replace(/[\d+]/, timeStamp))
+      }
+      if ($(textareas[index]).attr('name')) {
+        $(textareas[index]).attr("name", $(textareas[index]).attr("name").replace(/[\d+]/, timeStamp))
+      }
+      $(textareas[index]).val("")
       index ++
     });
   }
@@ -100,6 +129,7 @@ $(document).ready(function(){
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "select") {
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
+        updateClonedSelects(clonedRepeater[i], timeStamp)
         $($(clonedRepeater[i]).find('div.chosen-container')).attr("id", "survey_observations_attributes_" + timeStamp + "_answer_chosen")
       }else if ($(clonedRepeater[i]).attr('data-element-type') == 'map') {
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
@@ -108,10 +138,12 @@ $(document).ready(function(){
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "multiselect") {
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
+        updateClonedSelects(clonedRepeater[i], timeStamp)
 
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "textarea") {
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
+        updateClonedTextareas($clonedRepeater[i], timeStamp)
 
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "file"){
 
