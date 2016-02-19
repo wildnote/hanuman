@@ -19,12 +19,12 @@ body {
   text-transform: capitalize;
 }
 
-.form-section {
+.form-banner {
   background-color: #def;
   text-align: center;
 }
 
-.form-section,
+.form-banner,
 .form-static {
   font-size: 14px;
   font-weight: bold;
