@@ -1,18 +1,14 @@
 $(document).ready(function(){
   $dataEntry = parseInt($('div.form-container-repeater').find('.form-container-entry-item').first().attr('data-entry'))
-  $fileInput = $('.attachinary-input').first().parent().parent().parent().prop('outerHTML')
-
-  console.log($dataEntry)
   $('.duplicate').on("click", function(e){
     e.preventDefault();
     // unbind chosen select & multiselect
     $(".chosen-multiselect").chosen('destroy');
     $(".chosen-select").chosen('destroy');
-
+    $(".bootstrap-checkbox-multiselect").multiselect('destroy')
     var container = $('.form-container-repeater').first();
     $clonedContainer = container.clone(true)
     var containerItems = $($clonedContainer).find('.form-container-entry-item')
-
 
     // increment data-entry by 1 every click
     $dataEntry = $dataEntry + 1
@@ -21,12 +17,13 @@ $(document).ready(function(){
     updateDom(containerItems, $dataEntry )
 
     $('.form-container-repeater').last().after($clonedContainer)
-
     $('.attachinary-input').attachinary()
 
     // bind chosen select & multiselect
     $(".chosen-multiselect").chosen();
     $(".chosen-select").chosen();
+    $(".bootstrap-checkbox-multiselect").multiselect()
+    $("input[type=file]").prop("disabled", false)
   });
 
   $('div.panel-body').on('click', "a.destroy", function(){
@@ -73,6 +70,9 @@ $(document).ready(function(){
       if ($(select[index]).attr('name')) {
         $(select[index]).attr("name", $(select[index]).attr("name").replace(/(\d+)/, timeStamp))
       }
+      if ($(select[index]).attr('data-parsley-multiple')) {
+        $(select[index]).attr("data-parsley-multiple", $(select[index]).attr("name").replace(/(\d+)/, timeStamp))
+      }
       index ++
     });
   }
@@ -88,6 +88,7 @@ $(document).ready(function(){
       index ++
     });
   }
+
   function updateClonedTextareas($clonedRepeater, timeStamp){
     var textareas = $($clonedRepeater).find('textarea')
     var index = 0
@@ -108,110 +109,99 @@ $(document).ready(function(){
     for (var i = 0; i < clonedRepeater.length; i++) {
       if ($(clonedRepeater[i]).attr('data-element-type') == "container") {
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        console.log("container")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
 
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "select") {
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
         updateClonedSelects(clonedRepeater[i], timeStamp)
-        console.log("select")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
         $($(clonedRepeater[i]).find('div.chosen-container')).attr("id", "survey_observations_attributes_" + timeStamp + "_answer_chosen")
       }else if ($(clonedRepeater[i]).attr('data-element-type') == 'map') {
         $($(clonedRepeater[i]).find('.col-sm-12.latlong')).attr('id', timeStamp)
         $(clonedRepeater[i]).find('input.latlong-entry').val("");
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
-        console.log("map")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
 
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "multiselect") {
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
         updateClonedSelects(clonedRepeater[i], timeStamp)
-        console.log("multiselect")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
 
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "textarea") {
         $(clonedRepeater[i]).find('input[type=textarea]').val('')
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
         updateClonedTextareas(clonedRepeater[i], timeStamp)
-        console.log("textarea")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
 
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "file"){
-       // replace file input's html with fresh instance
-      //  $(clonedRepeater[i]).replaceWith($fileInput)
-
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
-        console.log("file")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
 
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "radio"){
         $(clonedRepeater[i]).find('input[type=radio]').prop('checked', false);
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
-        console.log("radio")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
 
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "checkboxes"){
         $(clonedRepeater[i]).find('input[type=checkbox]:checked').removeAttr('checked')
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
-        console.log("checkboxes")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "date") {
         $(clonedRepeater[i]).find('[type=date]').last().val('')
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
-        console.log("date")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "email") {
         $(clonedRepeater[i]).find('input[type=email]').val('')
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
-        console.log("email")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "helper") {
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "number") {
         $(clonedRepeater[i]).find('input[type=number]').val('')
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
-        console.log("number")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
 
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "line") {
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        console.log("line")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "static") {
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        console.log("static")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "text") {
         $(clonedRepeater[i]).find('input[type=text]').val('')
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
-        console.log("text")
-        console.log(timeStamp)
-        console.log(clonedRepeater[i])
+
+
+      }else if ($(clonedRepeater[i]).attr('data-element-type') == "time") {
+        $(clonedRepeater[i]).find('input[type=time]').val('')
+        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
+        updateClonedLabels(clonedRepeater[i], timeStamp)
+
+
       }
       timeStamp  =  new Date().getTime()
     };
