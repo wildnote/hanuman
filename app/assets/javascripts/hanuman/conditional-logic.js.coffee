@@ -7,7 +7,7 @@ class ConditionalLogic
     $("[data-rule]").each ->
       $ruleElement = $(this)
       #if $ruleElement.attr('data-rule').length > 0
-      rule = $.parseJSON($ruleElement.attr("data-rule")).rule
+      rule = $.parseJSON($ruleElement.attr("data-rule")).rule_hash
       matchType = rule.match_type
       #console.log rule
       $(rule.conditions).each ->
@@ -51,7 +51,7 @@ class ConditionalLogic
       # pop out of condition into rules to handle all conditions defined in the rule
       $("[data-rule]").each ->
         $ruleElement = $(this)
-        rule = $.parseJSON($ruleElement.attr("data-rule")).rule
+        rule = $.parseJSON($ruleElement.attr("data-rule")).rule_hash
         matchType = rule.match_type
         questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
         conditions = rule.conditions

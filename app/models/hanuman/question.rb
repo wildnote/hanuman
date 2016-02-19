@@ -67,7 +67,7 @@ module Hanuman
       #         ]
       #       }
       unless self.rule.blank?
-        Hanuman::RuleSerializer.new(self.rule).to_json
+        Hanuman::RuleHashSerializer.new(self.rule).to_json
       end
     end
 
