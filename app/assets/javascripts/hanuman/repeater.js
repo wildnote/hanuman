@@ -1,60 +1,32 @@
 $(document).ready(function(){
-  $dataEntry = parseInt($('.panel-body div:nth-child(4)').attr('data-entry'))
-  $photoInput = $('.attachinary-input:first-child').parent().parent().parent().prop('outerHTML')
+  $dataEntry = parseInt($('div.form-container-repeater').find('.form-container-entry-item').first().attr('data-entry'))
+  $fileInput = $('.attachinary-input').first().parent().parent().parent().prop('outerHTML')
 
-  $('.duplicate').each(function(){
-    $target = $(this);
-    $container = $target.closest('.form-container-entry-item');
-    questionId = $container.attr('data-question-id');
-    entryId = $container.attr('data-entry');
-    $repeater = $("[data-question-id=" + questionId + "][data-entry=" + entryId + "],[data-ancestor=" + questionId + "][data-entry=" + entryId + "]");
-
-    $repeater.attr("style", "background-color: #EFF;");
-  });
-
+  console.log($dataEntry)
   $('.duplicate').on("click", function(e){
-
     e.preventDefault();
-    $target = $(event.target);
-    $container = $target.closest('.form-container-entry-item');
-    questionId = $container.attr('data-question-id');
-    entryId = $container.attr('data-entry');
+    // unbind chosen select & multiselect
+    $(".chosen-multiselect").chosen('destroy');
+    $(".chosen-select").chosen('destroy');
 
-    $repeater = $("[data-question-id=" + questionId + "][data-entry=" + $('.panel-body div:nth-child(4)').attr('data-entry') + "],[data-ancestor=" + questionId + "][data-entry=" + $('.panel-body div:nth-child(4)').attr('data-entry') + "]");
-
-    // $repeater = $("[data-question-id=" + questionId + "][data-entry=" + entryId + "],[data-ancestor=" + questionId + "][data-entry=" + entryId + "]");
-
-    $repeater.attr("style", "background-color: #EFF;");
+    var container = $('.form-container-repeater').first();
+    $clonedContainer = container.clone(true)
+    var containerItems = $($clonedContainer).find('.form-container-entry-item')
 
 
-    // 5 bind chosen select & multiselect
-    $(".chosen-multiselect").chosen('destroy')
-    $(".chosen-select").chosen('destroy')
-
-    // cloning repeater
-    $clonedRepeater = $repeater.clone(true)
-
-    //2 increment data-entry by 1 every click
+    // increment data-entry by 1 every click
     $dataEntry = $dataEntry + 1
 
     // update attributes with timestamps
-    updateDom($clonedRepeater, $dataEntry )
-    $('.panel-body').append($clonedRepeater)
+    updateDom(containerItems, $dataEntry )
 
-
-    // remove time input from bottom and append to new extention
-    // var timeInput = $('div.col-sm-7 input:first-child[type=time]').last().parent().parent().parent()
-    // $(timeInput).remove()
-    // $('div.panel-body').append(timeInput)
+    $('.form-container-repeater').last().after($clonedContainer)
 
     $('.attachinary-input').attachinary()
 
-
-    // 5 bind chosen select & multiselect
+    // bind chosen select & multiselect
     $(".chosen-multiselect").chosen();
     $(".chosen-select").chosen();
-
-    // adds a link to remove repeator section
   });
 
   $('div.panel-body').on('click', "a.destroy", function(){
@@ -169,18 +141,14 @@ $(document).ready(function(){
         $(clonedRepeater[i]).find('input[type=textarea]').val('')
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
-        updateClonedTextareas($clonedRepeater[i], timeStamp)
+        updateClonedTextareas(clonedRepeater[i], timeStamp)
         console.log("textarea")
         console.log(timeStamp)
         console.log(clonedRepeater[i])
 
       }else if ($(clonedRepeater[i]).attr('data-element-type') == "file"){
-
-        // removes  div.attachinary_container duplicate
-       $(clonedRepeater[i]).find(".attachinary_container").last().remove()
-
-       // replace file input's html with new instance
-       $(clonedRepeater[i]).replaceWith($photoInput)
+       // replace file input's html with fresh instance
+      //  $(clonedRepeater[i]).replaceWith($fileInput)
 
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
