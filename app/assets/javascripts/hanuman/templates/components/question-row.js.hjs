@@ -14,7 +14,12 @@
 
     {{!-- called from surveyStep and dislpays each answer type as readonly --}}
     <div class="row">
-      <div class="col-sm-3">{{model.questionText}}</div>
+      <div class="col-sm-3">
+        {{#if model.childQuestion}}
+          ->
+        {{/if}}
+        {{model.questionText}}
+      </div>
       <div class="col-sm-3">{{model.answerType.name}}</div>
       <div class="col-sm-3">
         <a class="btn btn-success" {{action "editQuestion" on="click"}}>
@@ -26,6 +31,12 @@
       <div class="col-sm-3 dev-only">
         <a class="btn"><span class="glyphicon glyphicon-sort"></span></a>
         {{model.sortOrder}} [{{model.railsId}}]
+        {{#if model.hidden}}
+          H
+        {{/if}}
+        {{#if model.required}}
+          R
+        {{/if}}
       </div>
     </div>
 

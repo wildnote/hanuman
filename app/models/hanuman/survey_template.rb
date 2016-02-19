@@ -6,7 +6,7 @@ module Hanuman
     has_many :surveys, dependent: :restrict_with_exception
 
     validates_presence_of :name
-    validates_uniqueness_of :name
+    #validates_uniqueness_of :name MOVED THIS TO CHILD APPLICAITON TO MAKE IT SCOPED BY ORANIZATION-KDH
 
     amoeba do
       include_association :survey_steps

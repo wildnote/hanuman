@@ -10,4 +10,11 @@ App.Question = DS.Model.extend({
   ancestry: DS.attr('string')
   railsId: DS.attr('number')
   rule: DS.belongsTo('rule', {async: true})
+
+  childQuestion: (->
+    if @.get('ancestry')?
+      return true
+    else
+      return false
+  ).property('ancestry')
 })
