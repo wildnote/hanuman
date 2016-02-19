@@ -120,6 +120,8 @@ class ConditionalLogic
     radiobuttons = container.find(":radio")
     radiobuttons.each ->
       $(this).prop('checked', false)
+    # trigger onchange event which is needed for embedded conditional logic
+    container.find('.form-control').trigger('change')
 
   #evaluate conditional logic rules
   evaluateCondition: (operator, answer, value) ->
