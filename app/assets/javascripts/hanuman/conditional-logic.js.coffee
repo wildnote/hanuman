@@ -15,7 +15,7 @@ class ConditionalLogic
         condition = this
         #console.log condition
         questionId = condition.question_id
-        $triggerContainer = $ruleElement.closest('.panel').find("[data-question-id=" + questionId + "]")
+        $triggerContainer = $ruleElement.closest('.form-container-survey').find("[data-question-id=" + questionId + "]")
         # getting element on edit and new page
         $triggerElement = $triggerContainer.find(".form-control")
         # getting element on show page
@@ -88,7 +88,7 @@ class ConditionalLogic
 
   #hide or show questions
   hideShowQuestions: (hide_questions, ancestor_id, $ruleElement) ->
-    container = $ruleElement.closest('.panel').find("[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]")
+    container = $ruleElement.closest('.form-container-survey').find(".form-container-repeater[data-question-id=" + ancestor_id + "],[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]")
     if hide_questions
       container.addClass("conditional-logic-hidden")
       self.clearQuestions(container)
@@ -120,6 +120,8 @@ class ConditionalLogic
     radiobuttons = container.find(":radio")
     radiobuttons.each ->
       $(this).prop('checked', false)
+    # trigger onchange event which is needed for embedded conditional logic
+    container.find('.form-control').trigger('change')
 
   #evaluate conditional logic rules
   evaluateCondition: (operator, answer, value) ->
