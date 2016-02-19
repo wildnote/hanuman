@@ -15,7 +15,7 @@ class ConditionalLogic
         condition = this
         #console.log condition
         questionId = condition.question_id
-        $triggerContainer = $ruleElement.closest('.panel').find("[data-question-id=" + questionId + "]")
+        $triggerContainer = $ruleElement.closest('form').find("[data-question-id=" + questionId + "]")
         # getting element on edit and new page
         $triggerElement = $triggerContainer.find(".form-control")
         # getting element on show page
