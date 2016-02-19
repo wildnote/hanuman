@@ -16,14 +16,18 @@ $(document).ready(function(){
     // update attributes with timestamps
     updateDom(containerItems, $dataEntry )
 
+    // create a new string variable
+    // loop through containerItem
+    // plop containerItem.prop('outerHTML') into the dom
+
     $('.form-container-repeater').last().after($clonedContainer)
-    $('.attachinary-input').attachinary()
+    // $('.attachinary-input').attachinary()
 
     // bind chosen select & multiselect
     $(".chosen-multiselect").chosen();
     $(".chosen-select").chosen();
     $(".bootstrap-checkbox-multiselect").multiselect()
-    $("input[type=file]").prop("disabled", false)
+    // $("input[type=file]").prop("disabled", false)
   });
 
   $('div.panel-body').on('click', "a.destroy", function(){
@@ -120,7 +124,7 @@ $(document).ready(function(){
 
         $($(clonedRepeater[i]).find('div.chosen-container')).attr("id", "survey_observations_attributes_" + timeStamp + "_answer_chosen")
       }else if ($(clonedRepeater[i]).attr('data-element-type') == 'map') {
-        $($(clonedRepeater[i]).find('.col-sm-12.latlong')).attr('id', timeStamp)
+        $($(clonedRepeater[i]).find('.latlong')).attr('id', timeStamp)
         $(clonedRepeater[i]).find('input.latlong-entry').val("");
         updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
         updateClonedLabels(clonedRepeater[i], timeStamp)
