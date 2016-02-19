@@ -1,7 +1,10 @@
 $(document).ready(function(){
   $dataEntry = parseInt($('div.form-container-repeater').find('.form-container-entry-item').first().attr('data-entry'))
+  // $('.panel-body').on("click", '.duplicate', function(e){
   $('.panel-body').on("click", '.duplicate', function(e){
     e.preventDefault();
+    e.stopPropagation();
+    
     // unbind chosen select & multiselect
     $(".chosen-multiselect").chosen('destroy');
     $(".chosen-select").chosen('destroy');
