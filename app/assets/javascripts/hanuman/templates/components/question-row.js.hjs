@@ -31,6 +31,9 @@
       <div class="col-sm-3 dev-only">
         <a class="btn"><span class="glyphicon glyphicon-sort"></span></a>
         {{model.sortOrder}} [{{model.railsId}}]
+        {{#if model.ancestry}}
+          [A={{model.ancestry}}]
+        {{/if}}
         {{#if model.hidden}}
           H
         {{/if}}
