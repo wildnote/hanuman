@@ -1,7 +1,6 @@
 $(document).ready(function(){
   $dataEntry = parseInt($('div.form-container-repeater').find('.form-container-entry-item').first().attr('data-entry'))
-  // $('.panel-body').on("click", '.duplicate', function(e){
-  $('.panel-body').on("click", '.duplicate', function(e){
+  $('.panel-body').on("click", '.duplicate-form-container-repeater', function(e){
     e.preventDefault();
     e.stopPropagation();
 
@@ -36,7 +35,7 @@ $(document).ready(function(){
     bindButtons()
   });
 
-  $('div.panel-body').on('click', "a.destroy", function(){
+  $('div.panel-body').on('click', ".destroy-form-container-repeater", function(){
     var entry = $($(this).closest('div.form-entry-item-container')).attr('data-entry')
     var dataObservationId = $($(this).closest('div.form-entry-item-container')).attr('data-observation-id')
     $("div.form-entry-item-container[data-entry=" + entry + "]").not('div.form-entry-item-container[data-element-type=time]').remove()
