@@ -4,12 +4,12 @@ $(document).ready(function(){
   $('.panel-body').on("click", '.duplicate', function(e){
     e.preventDefault();
     e.stopPropagation();
-    
+
     // unbind chosen select & multiselect
     $(".chosen-multiselect").chosen('destroy');
     $(".chosen-select").chosen('destroy');
     $(".bootstrap-checkbox-multiselect").multiselect('destroy')
-    var container = $('.form-container-repeater').first();
+    var container = $(this).closest('.form-container-repeater');
     $clonedContainer = container.clone(true)
     var containerItems = $($clonedContainer).find('.form-container-entry-item')
 
@@ -25,7 +25,7 @@ $(document).ready(function(){
       $(containerItems[i]).replaceWith(newInput)
     }
 
-    $('.form-container-repeater').last().after($clonedContainer)
+    $(container).after($clonedContainer)
     // bind chosen select, multiselect, and attachinary
     $('.attachinary-input').attachinary()
     $(".chosen-multiselect").chosen();
