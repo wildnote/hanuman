@@ -1,17 +1,19 @@
 webshims.setOptions("forms-ext", {
-  date: {
-    startView: 2,
+  replaceUI: 'true',
+  "widgets": {
     openOnFocus: true,
     popover: {
       appendTo: "body"
     }
   },
+  date: {
+    startView: 2
+  },
+  month: {
+    startView: 1
+  },
   "datetime-local": {
-    startView: 3,
-    openOnFocus: true,
-    popover: {
-      appendTo: "body"
-    }
+    startView: 3
   }
 });
 
