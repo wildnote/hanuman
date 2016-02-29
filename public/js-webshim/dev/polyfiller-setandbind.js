@@ -1,5 +1,4 @@
 webshims.setOptions("forms-ext", {
-  replaceUI: 'true',
   "widgets": {
     openOnFocus: true,
     popover: {
