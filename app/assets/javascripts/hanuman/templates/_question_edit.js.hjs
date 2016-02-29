@@ -101,13 +101,27 @@
       </div>
 
       <div class="form-group">
-        <div class="col-sm-6 pull-right">
+        <div class="col-sm-6">
           <a class="btn btn-primary" href="#" {{action "save" on="click"}}>
             Save
           </a>
           <a class="btn btn-default" href="#" {{action "toggleForm" on="click"}}>
             Cancel
           </a>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-6">
+          <label for="ancestry">Rule</label>
+          <p>{{model.rule.matchType}}</p>
+          {{#each condition in model.rule.conditions}}
+            <p>
+              {{condition.question_id}}
+              {{condition.operator}}
+              {{condition.answer}}
+            </p>
+          {{/each}}
         </div>
       </div>
     </form>

@@ -17,6 +17,8 @@ Hanuman::Engine.routes.draw do
       resources :questions
       resources :survey_steps
       resources :survey_templates
+      resources :rules
+      resources :conditions
     end
   end
 

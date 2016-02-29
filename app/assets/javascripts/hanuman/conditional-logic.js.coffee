@@ -49,6 +49,7 @@ class ConditionalLogic
   bindConditions: (ancestor_id, $triggerElement, operator, answer) ->
     $triggerElement.on "change", ->
       # pop out of condition into rules to handle all conditions defined in the rule
+      # TODO it seems this is looping through ALL data-rule in the DOM instead of the data-rule associated with the element that triggered the onchange event-kdh
       $("[data-rule]").each ->
         $ruleElement = $(this)
         rule = $.parseJSON($ruleElement.attr("data-rule")).rule_hash

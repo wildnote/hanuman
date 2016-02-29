@@ -1,6 +1,6 @@
 module Hanuman
   class RuleSerializer < ActiveModel::Serializer
-    attributes :id, :question_id, :match_type, :hidden
+    attributes :id, :match_type
     has_many :conditions, embed: :ids
     def hidden
       object.question.hidden
