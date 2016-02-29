@@ -1,7 +1,13 @@
 $(document).ready(function(){
 
-  $dataEntry = parseInt($('.form-container-repeater').find('.form-container-entry-item').first().attr('data-entry'));
-
+  // need to find the max data entry on the page and start incrementing from there
+  $dataEntry = 0;
+  $('.form-container-repeater').each(function() {
+    if ($dataEntry < $(this).attr('data-entry')) {
+      $dataEntry = parseInt($(this).attr('data-entry'));
+    }
+  });
+  
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
     e.preventDefault();
     e.stopPropagation();
