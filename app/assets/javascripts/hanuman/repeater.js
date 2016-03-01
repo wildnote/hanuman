@@ -7,7 +7,7 @@ $(document).ready(function(){
       $dataEntry = parseInt($(this).attr('data-entry'));
     }
   });
-  
+
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
     e.preventDefault();
     e.stopPropagation();
@@ -33,6 +33,8 @@ $(document).ready(function(){
     }
 
     $(container).after($clonedContainer)
+
+    clearValues($(container).nextAll(".form-container-repeater").find('.form-container-entry-item'))
     // bind chosen select, multiselect, and attachinary
     $('.attachinary-input').attachinary()
     $(".chosen-multiselect").chosen();
@@ -134,99 +136,52 @@ $(document).ready(function(){
   function updateDom(clonedRepeater, dataEntry){
     var timeStamp = new Date().getTime()
     for (var i = 0; i < clonedRepeater.length; i++) {
-      if ($(clonedRepeater[i]).attr('data-element-type') == "container") {
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
+      $($(clonedRepeater[i]).find('.latlong')).attr('id', "map".concat(timeStamp))
+      updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
+      updateClonedLabels(clonedRepeater[i], timeStamp)
+      updateClonedSelects(clonedRepeater[i], timeStamp)
+      updateClonedTextareas(clonedRepeater[i], timeStamp)
+      $($(clonedRepeater[i]).find('.chosen-container')).attr("id", "survey_observations_attributes_" + timeStamp + "_answer_chosen")
 
 
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "select") {
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-        updateClonedSelects(clonedRepeater[i], timeStamp)
-
-
-        $($(clonedRepeater[i]).find('.chosen-container')).attr("id", "survey_observations_attributes_" + timeStamp + "_answer_chosen")
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == 'map') {
-        $($(clonedRepeater[i]).find('.latlong')).attr('id', "map".concat(timeStamp))
-        $(clonedRepeater[i]).find('.latlong-entry').val("");
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "multiselect") {
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-        updateClonedSelects(clonedRepeater[i], timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "textarea") {
-        $(clonedRepeater[i]).find('input[type=textarea]').val('')
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-        updateClonedTextareas(clonedRepeater[i], timeStamp)
-
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "file"){
-        $($(clonedRepeater[i]).find('.attachinary_container')).remove()
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "radio"){
-        $(clonedRepeater[i]).find('input[type=radio]').prop('checked', false);
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "checkboxes"){
-        $(clonedRepeater[i]).find('input[type=checkbox]:checked').removeAttr('checked')
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "date") {
-        $(clonedRepeater[i]).find('[type=date]').last().val('')
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "email") {
-        $(clonedRepeater[i]).find('input[type=email]').val('')
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "helper") {
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "number") {
-        $(clonedRepeater[i]).find('input[type=number]').val('')
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "line") {
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "static") {
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "text") {
-        $(clonedRepeater[i]).find('input[type=text]').val('')
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-
-
-      } else if ($(clonedRepeater[i]).attr('data-element-type') == "time") {
-        $(clonedRepeater[i]).find('input[type=time]').val('')
-        updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp)
-        updateClonedLabels(clonedRepeater[i], timeStamp)
-
-
-      }
       timeStamp = new Date().getTime()
     };
   };
 
+  function clearValues(clonedRepeater){
+    for (var i = 0; i < clonedRepeater.length; i++) {
+      // $(clonedRepeater[i]).find("input[type!=hidden]").val("")
+      textFields = $(clonedRepeater[i]).find(":text").val("")
+      textAreas = $(clonedRepeater[i]).find("textarea").val("")
+      // un-select dropdown
+      selects = $(clonedRepeater[i]).find("select")
+      $(selects).each(function() {
+        $(this).val("")
+        // if we don't add please select at this point the dropdown will show blank with no prompt
+        $(this).prepend("<option value>Please select</option>")
+        if ($(this).hasClass('chosen')) {
+          $(this).trigger("chosen:updated")
+        }
+      });
+      multiselects = $(clonedRepeater[i]).find("select[multiple]")
+      $(multiselects).each(function() {
+        $('#' + $this.attr('id') + ' option:selected').removeAttr("selected")
+        if ($(this).hasClass('chosen-multiselect')) {
+          $(this).trigger("chosen:updated")
+        }
+      });
+      // uncheck all checkboxes
+      checkboxes = $(clonedRepeater[i]).find(":checkbox")
+      $(checkboxes).each(function() {
+        $(this).prop('checked', false)
+        });
+      // un-select radio buttons
+      radiobuttons = $(clonedRepeater[i]).find(":radio")
+      $(radiobuttons).each(function() {
+        $(this).prop('checked', false)
+      });
+      // trigger onchange event which is needed for embedded conditional logic
+      $(clonedRepeater[i]).find('.form-control').trigger('change')
+    };
+  };
 });
