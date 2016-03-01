@@ -173,7 +173,7 @@ $(document).ready(function(){
       });
       multiselects = $(clonedRepeater[i]).find("select[multiple]");
       $(multiselects).each(function() {
-        $('#' + $this.attr('id') + ' option:selected').removeAttr("selected");
+        $('#' + $(this).attr('id') + ' option:selected').removeAttr("selected");
         if ($(this).hasClass('chosen-multiselect')) {
           $(this).trigger("chosen:updated");
         }
