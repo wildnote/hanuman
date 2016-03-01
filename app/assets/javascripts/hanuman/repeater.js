@@ -164,7 +164,9 @@ $(document).ready(function(){
       $(selects).each(function() {
         $(this).val("");
         // if we don't add please select at this point the dropdown will show blank with no prompt
-        $(this).prepend("<option value>Please select</option>");
+        if ($(this).find('option:contains("Please select")').length < 1) {
+          $(this).prepend("<option value>Please select</option>");
+        }
         if ($(this).hasClass('chosen')) {
           $(this).trigger("chosen:updated");
         }
