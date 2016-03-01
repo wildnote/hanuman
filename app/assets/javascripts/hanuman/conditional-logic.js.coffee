@@ -1,4 +1,4 @@
-class ConditionalLogic
+class @ConditionalLogic
 
   self = ConditionalLogic.prototype
 
@@ -12,9 +12,15 @@ class ConditionalLogic
       #console.log rule
       $(rule.conditions).each ->
         $ruleElement = $ruleElement
+        $container = $($ruleElement).closest(".form-container-repeater")
         condition = this
         #console.log condition
         questionId = condition.question_id
+        #TODO: this shit needs to be context specific yo
+
+        #  all_questions = $container
+        #  all_questions << $($container).find(".form-container-repeater[data-question-id=" + ancestor_id + "],[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]")
+
         $triggerContainer = $ruleElement.closest('.form-container-survey').find("[data-question-id=" + questionId + "]")
         # getting element on edit and new page
         $triggerElement = $triggerContainer.find(".form-control")
@@ -40,9 +46,9 @@ class ConditionalLogic
                 self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
         # hide show questions
         if rule.conditions.length > 1
-          self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleElement, matchType)
+          self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleElement, $container, matchType)
         else
-          self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement)
+          self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container)
     return
 
   #bind conditions to question
@@ -50,8 +56,9 @@ class ConditionalLogic
     $triggerElement.on "change", ->
       # pop out of condition into rules to handle all conditions defined in the rule
       # TODO it seems this is looping through ALL data-rule in the DOM instead of the data-rule associated with the element that triggered the onchange event-kdh
-      $("[data-rule]").each ->
+      $($triggerElement).closest(".form-container-repeater").find("[data-rule]").each ->
         $ruleElement = $(this)
+        $container = $(this).closest(".form-container-repeater")
         rule = $.parseJSON($ruleElement.attr("data-rule")).rule_hash
         matchType = rule.match_type
         questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
@@ -61,12 +68,12 @@ class ConditionalLogic
         hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
         if matchingCondition.length > 0
           if conditions.length > 1
-            self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, matchType)
+            self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, matchType)
           else
-            self.hideShowQuestions(hideQuestions, ancestor_id, $ruleElement)
+            self.hideShowQuestions(hideQuestions, ancestor_id, $ruleElement, $container)
     return
 
-  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, matchType) ->
+  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, matchType) ->
     conditionMetTracker = []
     _.each conditions, (condition) ->
       $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
@@ -76,25 +83,26 @@ class ConditionalLogic
     # match type any (or)
     if matchType == "any"
       if _.indexOf(conditionMetTracker, true) > 0
-        self.hideShowQuestions(false, ancestorId, $ruleElement)
+        self.hideShowQuestions(false, ancestorId, $ruleElement, $container)
       else
-        self.hideShowQuestions(true, ancestorId, $ruleElement)
+        self.hideShowQuestions(true, ancestorId, $ruleElement, $container)
     # match type all
     if matchType == "all"
       if _.indexOf(conditionMetTracker, false) == -1
-        self.hideShowQuestions(false, ancestorId, $ruleElement)
+        self.hideShowQuestions(false, ancestorId, $ruleElement, $container)
       else
-        self.hideShowQuestions(true, ancestorId, $ruleElement)
+        self.hideShowQuestions(true, ancestorId, $ruleElement, $container)
 
 
   #hide or show questions
-  hideShowQuestions: (hide_questions, ancestor_id, $ruleElement) ->
-    container = $ruleElement.closest('.form-container-survey').find(".form-container-repeater[data-question-id=" + ancestor_id + "],[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]")
+  hideShowQuestions: (hide_questions, ancestor_id, $ruleElement, $container) ->
+    all_questions = $container
+    all_questions << $($container).find(".form-container-repeater[data-question-id=" + ancestor_id + "],[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]")
     if hide_questions
-      container.addClass("conditional-logic-hidden")
-      self.clearQuestions(container)
+      all_questions.addClass("conditional-logic-hidden")
+      self.clearQuestions(all_questions)
     else
-      container.removeClass("conditional-logic-hidden")
+      all_questions.removeClass("conditional-logic-hidden")
 
   #clear questions
   clearQuestions: (container) ->
