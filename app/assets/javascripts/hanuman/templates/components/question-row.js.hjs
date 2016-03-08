@@ -40,10 +40,12 @@
         {{#if model.required}}
           R
         {{/if}}
-        CL {{model.rule.matchType}}
-        {{#each condition in model.rule.conditions}}
-          [if {{condition.questionId}} {{condition.operator}} {{condition.answer}}]
-        {{/each}}
+        {{#if model.rule}}
+          CL {{model.rule.matchType}}
+          {{#each condition in model.rule.conditions}}
+            [if {{condition.questionId}} {{condition.operator}} {{condition.answer}}]
+          {{/each}}
+        {{/if}}
       </div>
     </div>
 
