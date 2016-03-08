@@ -1,5 +1,5 @@
 module Hanuman
   class ConditionSerializer < ActiveModel::Serializer
-    attributes :id, :question_id, :operator, :answer
+    attributes :id, :operator, :answer, :question_id
   end
 end

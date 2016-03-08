@@ -11,7 +11,7 @@ module Hanuman
     end
 
     def create
-      respond_with :api, :v1, Rule.create(answer_choice_params)
+      respond_with :api, :v1, Rule.create(rule_params)
     end
 
     def update
