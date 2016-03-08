@@ -108,10 +108,6 @@ class @ConditionalLogic
     _.each conditions, (condition) ->
       $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
       hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
-      console.log(string(condition.operator));
-      console.log(string(condition.answer));
-      console.log(string(self.getValue($conditionElement)));
-      console.log(string(hideQuestions));
       conditionMet = !hideQuestions
       conditionMetTracker.push conditionMet
     # match type any (or)
