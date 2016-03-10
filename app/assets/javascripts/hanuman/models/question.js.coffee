@@ -17,4 +17,9 @@ App.Question = DS.Model.extend({
     else
       return false
   ).property('ancestry')
+
+  numChildren: (->
+    if @.get('ancestry')?
+      Array(@.get('ancestry').split('/').length + 1).join("==> ")
+  ).property('ancestry')
 })
