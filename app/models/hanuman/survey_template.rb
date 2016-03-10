@@ -39,11 +39,20 @@ module Hanuman
     # after duplicating the survey template remap ancestry and rule information
     def remap_conditional_logic(old_survey_template)
       self.questions.each do |q|
+        # remap ancestry and conditional logic after the duplication because the don't just copy over
+        # update ancestry relationships
         unless q.ancestry.blank?
-          new_parent = self.questions.find_by_duped_question_id q.ancestry.to_i
-          q.ancestry = new_parent.id.to_s
+          ancestry_array = q.ancestry.split("/")
+          new_ancestors = []
+          ancestry_array.each do |p|
+            new_ancestor = self.questions.find_by_duped_question_id p.to_i
+            new_ancestors << new_ancestor.id
+          end
+          new_ancestors_string = new_ancestors.join("/")
+          q.ancestry = new_ancestors_string
           q.save!
         end
+        # update conditioanl logic rules
         q.conditions.each do |c|
           old_rule_id = c.rule_id
           new_rule = Hanuman::Rule.includes(question: :survey_step).where("hanuman_rules.duped_rule_id = ? AND hanuman_survey_steps.survey_template_id = ?", old_rule_id, self.id).references(question: :survey_step).first
