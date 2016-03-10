@@ -11,7 +11,6 @@ module Hanuman
     amoeba do
       include_association :survey_steps
       prepend name: "Copy " + Time.now.strftime("%m/%d/%Y %I:%M:%S %p") + " (PLEASE RENAME) - "
-      set status: "draft"
     end
 
     STATUSES = ["draft", "active", "inactive"]
