@@ -158,7 +158,8 @@ class @ConditionalLogic
       $(this).trigger("chosen:updated") if $(this).hasClass('chosen')
     multiselects = container.find("select[multiple]")
     multiselects.each ->
-      $('#' + $this.attr('id') + ' option:selected').removeAttr("selected")
+      id = $(this).attr('id')
+      $('#' + id + ' option:selected').removeAttr("selected")
       $(this).trigger("chosen:updated") if $(this).hasClass('chosen-multiselect')
     # uncheck all checkboxes
     checkboxes = container.find(":checkbox")
