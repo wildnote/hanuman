@@ -52,6 +52,8 @@ class @ConditionalLogic
         $repeater = $($triggerElement).closest(".form-container-repeater")
         if $repeater.length > 0
           inRepeater = true
+        else
+          $container = $($ruleElement).closest(".form-container-survey")
         # hide show questions
         if rule.conditions.length > 1
           self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleElement, $container, inRepeater, matchType)
