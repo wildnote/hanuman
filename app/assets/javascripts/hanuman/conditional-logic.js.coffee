@@ -39,7 +39,7 @@ class @ConditionalLogic
           self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
         # radio buttons
         else
-          if $triggerElement.is(":checkbox")
+          if ($triggerElement.is(":checkbox") || $triggerElement.is(":radio"))
             # limit binding of each checkbox if data-label-value and answer are the same-kdh
             $triggerElement = $triggerContainer.find(".form-control[data-label-value=" + condition.answer + "]")
             self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
@@ -200,7 +200,10 @@ class @ConditionalLogic
     if $conditionElement.is(":radio")
       selected = $("input[type='radio'][name='" + $conditionElement.attr('name') + "']:checked")
       if selected.length > 0
-        return selected.val()
+        if $conditionElement.attr('data-label-value')
+          return $conditionElement.attr('data-label-value')
+        else
+          return $conditionElement.val()
       else
         return
     if $conditionElement.is(":checkbox")
