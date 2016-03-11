@@ -36,17 +36,17 @@ class @ConditionalLogic
         # bind conditions based on element type
         # text, textarea, select
         if $triggerElement.length < 2
-          self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
+          self.bindConditions($triggerElement)
         # radio buttons
         else
           if ($triggerElement.is(":checkbox") || $triggerElement.is(":radio"))
             # limit binding of each checkbox if data-label-value and answer are the same-kdh
             $triggerElement = $triggerContainer.find(".form-control[data-label-value=" + condition.answer + "]")
-            self.bindConditions(rule.question_id, $triggerElement, condition.operator, condition.answer)
+            self.bindConditions($triggerElement)
           else
             for element in $triggerElement
               do (element) ->
-                self.bindConditions(rule.question_id, $(element), condition.operator, condition.answer)
+                self.bindConditions($(element))
         # determine if we are in a repeater
         inRepeater = false
         $repeater = $($triggerElement).closest(".form-container-repeater")
@@ -60,7 +60,7 @@ class @ConditionalLogic
     return
 
   #bind conditions to question
-  bindConditions: (ancestor_id, $triggerElement, operator, answer) ->
+  bindConditions: ($triggerElement) ->
     $triggerElement.on "change", ->
       # pop out of condition into rules to handle all conditions defined in the rule
       # TODO it seems this is looping through ALL data-rule in the DOM instead of the data-rule associated with the element that triggered the onchange event-kdh
@@ -77,12 +77,14 @@ class @ConditionalLogic
           conditions = rule.conditions
           ancestorId = rule.question_id
           matchingCondition = _.where(conditions, {question_id: Number(questionId)})
-          hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
           if matchingCondition.length > 0
             if conditions.length > 1
               self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType)
             else
-              self.hideShowQuestions(hideQuestions, ancestor_id, $ruleElement, $container, inRepeater)
+              operator = conditions[0].operator
+              answer = conditions[0].answer
+              hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
+              self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
       # if not then lets assume its at the top most level outside of a repeater
       else
         $($triggerElement).closest(".form-container-survey").find("[data-rule]").each ->
@@ -95,12 +97,14 @@ class @ConditionalLogic
           conditions = rule.conditions
           ancestorId = rule.question_id
           matchingCondition = _.where(conditions, {question_id: Number(questionId)})
-          hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
           if matchingCondition.length > 0
             if conditions.length > 1
               self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType)
             else
-              self.hideShowQuestions(hideQuestions, ancestor_id, $ruleElement, $container, inRepeater)
+              operator = conditions[0].operator
+              answer = conditions[0].answer
+              hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
+              self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
     return
 
   checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType) ->
