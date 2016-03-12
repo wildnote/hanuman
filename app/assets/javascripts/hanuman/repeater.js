@@ -24,7 +24,7 @@ $(document).ready(function(){
 
     // update attributes with timestamps
     updateDom(containerItems, $dataEntry);
-    stringifyAndResetContainer(containerItems)
+    stringifyAndResetContainer($clonedContainer)
 
     // fix repeater container data-entry numbers
     $clonedContainer.attr("data-entry", $dataEntry);
@@ -50,6 +50,7 @@ $(document).ready(function(){
     // bind maps
     setupDefaultMaps();
     bindButtons();
+    resetMapButtons();
     // bind ConditionalLogic
     cl = new ConditionalLogic;
     cl.findRules();
@@ -76,6 +77,13 @@ $(document).ready(function(){
       });
     }
   });
+
+  function resetMapButtons(){
+    var map = $('.form-container-repeater').last().find('div.form-container-entry-item[data-element-type=map] div.map-buttons')
+    $(map).find('a.edit-map').text('Pin a Location on Map')
+    $(map).find('a.cancel-map').attr('style','display: none;')
+  };
+
   function stringifyAndResetContainer(containerItems){
     for (var i = 0; i < containerItems.length; i++) {
       stringInput = $(containerItems[i]).prop('outerHTML');
@@ -89,7 +97,6 @@ $(document).ready(function(){
     $(".chosen-select").chosen('destroy');
     $(".bootstrap-checkbox-multiselect").multiselect('destroy');
   }
-
 
   function bindChosenTypes(){
     $('.attachinary-input').attachinary();
