@@ -13,6 +13,7 @@ class @ConditionalLogic
       $(rule.conditions).each ->
         $ruleElement = $ruleElement
         $container = $($ruleElement).closest(".form-container-repeater")
+
         condition = this
         #console.log condition
         questionId = condition.question_id
@@ -55,6 +56,7 @@ class @ConditionalLogic
         else
           $container = $($ruleElement).closest(".form-container-survey")
         # hide show questions
+        $container = $ruleElement
         if rule.conditions.length > 1
           self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleElement, $container, inRepeater, matchType)
         else
@@ -72,7 +74,8 @@ class @ConditionalLogic
         $repeater.find("[data-rule]").each ->
           inRepeater = true
           $ruleElement = $(this)
-          $container = $(this).closest(".form-container-repeater")
+          #$container = $(this).closest(".form-container-repeater")
+          $container = $ruleElement
           rule = $.parseJSON($ruleElement.attr("data-rule")).rule_hash
           matchType = rule.match_type
           questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
@@ -92,7 +95,8 @@ class @ConditionalLogic
         $($triggerElement).closest(".form-container-survey").find("[data-rule]").each ->
           inRepeater = false
           $ruleElement = $(this)
-          $container = $(this).closest(".form-container-survey")
+          #$container = $(this).closest(".form-container-survey")
+          $container = $ruleElement
           rule = $.parseJSON($ruleElement.attr("data-rule")).rule_hash
           matchType = rule.match_type
           questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
@@ -138,22 +142,22 @@ class @ConditionalLogic
 
   #hide or show questions
   hideShowQuestions: (hide_questions, ancestor_id, $ruleElement, $container, inRepeater) ->
-    all_questions = $($container).find(".form-container-repeater[data-question-id=" + ancestor_id + "],[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]")
+    #all_questions = $($container).find(".form-container-repeater[data-question-id=" + ancestor_id + "][data-entry=],[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]")
 
     # deal with container
-    unless $container.hasClass("form-container-survey")
-      if hide_questions
-        $container.addClass("conditional-logic-hidden")
-        self.clearQuestions($container)
-      else
-        $container.removeClass("conditional-logic-hidden")
+    #unless $container.hasClass("form-container-survey")
+    if hide_questions
+      $container.addClass("conditional-logic-hidden")
+      self.clearQuestions($container)
+    else
+      $container.removeClass("conditional-logic-hidden")
 
     # deal with questions
-    if hide_questions
-      all_questions.addClass("conditional-logic-hidden")
-      self.clearQuestions(all_questions)
-    else
-      all_questions.removeClass("conditional-logic-hidden")
+    # if hide_questions
+    #   all_questions.addClass("conditional-logic-hidden")
+    #   self.clearQuestions(all_questions)
+    # else
+    #   all_questions.removeClass("conditional-logic-hidden")
 
   #clear questions
   clearQuestions: (container) ->
