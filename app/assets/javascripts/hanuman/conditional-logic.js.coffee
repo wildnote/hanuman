@@ -113,21 +113,24 @@ class @ConditionalLogic
     conditionMetTracker = []
     _.each conditions, (condition) ->
       $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
+      if $conditionElement.is(":checkbox")# || $triggerElement.is(":radio"))
+        # limit binding of each checkbox if data-label-value and answer are the same-kdh
+        $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value=" + condition.answer + "]")
       hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
       conditionMet = !hideQuestions
       conditionMetTracker.push conditionMet
     # match type any (or)
     if matchType == "any"
-      if _.indexOf(conditionMetTracker, true) > 0
+      if conditionMetTracker.indexOf(true) > -1
         self.hideShowQuestions(false, ancestorId, $ruleElement, $container, inRepeater)
       else
         self.hideShowQuestions(true, ancestorId, $ruleElement, $container, inRepeater)
     # match type all
     if matchType == "all"
-      if _.indexOf(conditionMetTracker, false) == -1
-        self.hideShowQuestions(false, ancestorId, $ruleElement, $container, inRepeater)
-      else
+      if conditionMetTracker.indexOf(false) > -1
         self.hideShowQuestions(true, ancestorId, $ruleElement, $container, inRepeater)
+      else
+        self.hideShowQuestions(false, ancestorId, $ruleElement, $container, inRepeater)
 
 
   #hide or show questions
