@@ -46,6 +46,8 @@ $(document).ready(function(){
     removeErrorBackground('radio')
     removeErrorBackground('checkbox')
     removeErrorBackground('checkboxes')
+    removeUserSuccessClass()
+
 
     // bind maps
     setupDefaultMaps();
@@ -81,7 +83,17 @@ $(document).ready(function(){
   function resetMapButtons(){
     var map = $('.form-container-repeater').last().find('div.form-container-entry-item[data-element-type=map] div.map-buttons')
     $(map).find('a.edit-map').text('Pin a Location on Map')
+    $(map).find('a.edit-map').attr('style','display: inline-block;')
     $(map).find('a.cancel-map').attr('style','display: none;')
+  };
+
+  function removeUserSuccessClass(){
+    var types = ['checkboxes', 'checkbox', 'radio']
+    setTimeout(function(){
+      types.forEach(function(type){
+        $($('.form-container-repeater').last().find('div.form-container-entry-item[data-element-type=' + type + '] .col-sm-7 input')).removeClass('user-success');
+      })
+    }, 2000)
   };
 
   function stringifyAndResetContainer(containerItems){
