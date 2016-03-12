@@ -12,10 +12,9 @@ $(document).ready(function(){
     e.preventDefault();
     e.stopPropagation();
 
-    // unbind chosen select & multiselect
-    $(".chosen-multiselect").chosen('destroy');
-    $(".chosen-select").chosen('destroy');
-    $(".bootstrap-checkbox-multiselect").multiselect('destroy');
+    $formValidator.parsley().destroy()
+    unbindChosenTypes()
+
     var container = $(this).closest('.form-container-repeater');
     $clonedContainer = container.clone(true);
     var containerItems = $($clonedContainer).find('.form-container-entry-item');
@@ -25,33 +24,41 @@ $(document).ready(function(){
 
     // update attributes with timestamps
     updateDom(containerItems, $dataEntry);
-
-    for (var i = 0; i < containerItems.length; i++) {
-      stringInput = $(containerItems[i]).prop('outerHTML');
-      newInput = $.parseHTML(stringInput);
-      $(containerItems[i]).replaceWith(newInput);
-    }
+    stringifyAndResetContainer(containerItems)
 
     // fix repeater container data-entry numbers
     $clonedContainer.attr("data-entry", $dataEntry);
     $clonedContainer.find(".form-container-repeater").attr("data-entry", $dataEntry);
 
     $(container).after($clonedContainer);
-
     clearValues($(container).nextAll(".form-container-repeater").find('.form-container-entry-item'));
-    // bind chosen select, multiselect, and attachinary
-    $('.attachinary-input').attachinary();
-    $(".chosen-multiselect").chosen();
-    $(".chosen-select").chosen();
-    $(".bootstrap-checkbox-multiselect").multiselect();
+    bindChosenTypes()
+
+
+
+
+
+
+
+    $formValidator.parsley()
+    new $RequireSurveyInputData().inspectElements();
+    $($('div.form-container-entry-item[data-required=true]').find('ul.parsley-errors-list')).remove()
+    removeErrorBackground('radio')
+    removeErrorBackground('checkbox')
+    removeErrorBackground('checkboxes')
+
     // bind maps
     setupDefaultMaps();
     bindButtons();
-
     // bind ConditionalLogic
     cl = new ConditionalLogic;
     cl.findRules();
+
   });
+
+  function removeErrorBackground(type){
+    $('div.form-container-entry-item[data-element-type='+ type +']').find('div.col-sm-7').removeAttr('style')
+  }
 
   $('.form-container-survey').on('click', ".destroy-form-container-repeater", function(){
     var entry = $($(this).closest('.form-container-repeater')).attr('data-entry');
@@ -69,6 +76,27 @@ $(document).ready(function(){
       });
     }
   });
+  function stringifyAndResetContainer(containerItems){
+    for (var i = 0; i < containerItems.length; i++) {
+      stringInput = $(containerItems[i]).prop('outerHTML');
+      newInput = $.parseHTML(stringInput);
+      $(containerItems[i]).replaceWith(newInput);
+    }
+  }
+
+  function unbindChosenTypes(){
+    $(".chosen-multiselect").chosen('destroy');
+    $(".chosen-select").chosen('destroy');
+    $(".bootstrap-checkbox-multiselect").multiselect('destroy');
+  }
+
+
+  function bindChosenTypes(){
+    $('.attachinary-input').attachinary();
+    $(".chosen-multiselect").chosen();
+    $(".chosen-select").chosen();
+    $(".bootstrap-checkbox-multiselect").multiselect();
+  }
 
   function updateClonedInputs($clonedRepeater, dataEntry, timeStamp){
     $($clonedRepeater).attr('data-entry', dataEntry);
@@ -76,11 +104,16 @@ $(document).ready(function(){
     var lastInputIndex = inputs.length - 1;
     var index = 0;
     $(inputs[lastInputIndex]).attr("value", dataEntry);
+    var parsleySubstrig = Math.random().toString(36).substring(13);
     inputs.each(function(){
       if ($(inputs[index]).attr('id')) {
         var idStamp = $(inputs[index]).attr("id").match(/\d+/)[0];
         var newTimeStamp = idStamp.concat(timeStamp);
         $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/\d+/, newTimeStamp));
+      }
+      if ($(inputs[index]).attr('data-parsley-multiple')) {
+        var newTimeStamp = parsleySubstrig.concat(timeStamp);
+        $(inputs[index]).attr("data-parsley-multiple", $(inputs[index]).attr("data-parsley-multiple").replace(/(\d+)/, newTimeStamp));
       }
       if ($(inputs[index]).attr('name')) {
         var nameStamp = $(inputs[index]).attr("name").match(/\d+/)[0];
@@ -89,7 +122,7 @@ $(document).ready(function(){
       }
       index ++;
     });
-  }
+  };
 
   function updateClonedSelects($clonedRepeater, timeStamp){
     var select = $($clonedRepeater).find('select');
@@ -105,6 +138,7 @@ $(document).ready(function(){
         var newTimeStamp = nameStamp.concat(timeStamp);
         $(select[index]).attr("name", $(select[index]).attr("name").replace(/(\d+)/, newTimeStamp));
       }
+
       index ++;
     });
   }
