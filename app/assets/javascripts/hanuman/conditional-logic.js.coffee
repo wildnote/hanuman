@@ -122,15 +122,18 @@ class @ConditionalLogic
     # match type any (or)
     if matchType == "any"
       if conditionMetTracker.indexOf(true) > -1
-        self.hideShowQuestions(false, ancestorId, $ruleElement, $container, inRepeater)
+        hideShow = false
       else
-        self.hideShowQuestions(true, ancestorId, $ruleElement, $container, inRepeater)
+        hideShow = true
     # match type all
     if matchType == "all"
-      if conditionMetTracker.indexOf(false) > -1
-        self.hideShowQuestions(true, ancestorId, $ruleElement, $container, inRepeater)
+      if conditionMetTracker.indexOf(false) == -1
+        # if no false in the array then show the conditional logic
+        hideShow = false
       else
-        self.hideShowQuestions(false, ancestorId, $ruleElement, $container, inRepeater)
+        # if one false then hide the conditioanl logic
+        hideShow = true
+    self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
 
 
   #hide or show questions
