@@ -12,9 +12,12 @@ $(document).ready(function(){
     e.preventDefault();
     e.stopPropagation();
 
-    $formValidator.parsley().destroy()
-    unbindChosenTypes()
+    $scrollPosition = $(this).offset().top - 50;
 
+    // unbind chosen select & multiselect
+    $(".chosen-multiselect").chosen('destroy');
+    $(".chosen-select").chosen('destroy');
+    $(".bootstrap-checkbox-multiselect").multiselect('destroy');
     var container = $(this).closest('.form-container-repeater');
     $clonedContainer = container.clone(true);
     var containerItems = $($clonedContainer).find('.form-container-entry-item');
@@ -30,25 +33,29 @@ $(document).ready(function(){
     $clonedContainer.attr("data-entry", $dataEntry);
     $clonedContainer.find(".form-container-repeater").attr("data-entry", $dataEntry);
 
+    // set cloned container to display none for fading in
+    $clonedContainer.attr("style", "display: none;").addClass("new-clone");
+
     $(container).after($clonedContainer);
     clearValues($(container).nextAll(".form-container-repeater").find('.form-container-entry-item'));
     bindChosenTypes()
 
+    $newClone = $(".new-clone");
 
+    $newClone.delay("100").fadeIn(1000).removeClass("new-clone");
 
+    setTimeout(function() {
+      $("html, body").animate({
+        scrollTop: $scrollPosition
+      }, 500);
+    }, 200);
 
-
-
-
-    $formValidator.parsley()
-    new $RequireSurveyInputData().inspectElements();
-    $($('div.form-container-entry-item[data-required=true]').find('ul.parsley-errors-list')).remove()
-    removeErrorBackground('radio')
-    removeErrorBackground('checkbox')
-    removeErrorBackground('checkboxes')
-    removeUserSuccessClass()
-
-
+    clearValues($(container).nextAll(".form-container-repeater").find('.form-container-entry-item'));
+    // bind chosen select, multiselect, and attachinary
+    $('.attachinary-input').attachinary();
+    $(".chosen-multiselect").chosen();
+    $(".chosen-select").chosen();
+    $(".bootstrap-checkbox-multiselect").multiselect();
     // bind maps
     setupDefaultMaps();
     bindButtons();
@@ -67,7 +74,20 @@ $(document).ready(function(){
     var entry = $($(this).closest('.form-container-repeater')).attr('data-entry');
     var dataObservationId = $($(this).closest('.form-container-repeater')).attr('data-observation-id');
     $(".form-entry-item-container[data-entry=" + entry + "]").not('.form-entry-item-container[data-element-type=time]').remove();
-    $(this).closest('.form-container-repeater').remove();
+    $removeContainer = $(this).closest('.form-container-repeater');
+
+    setTimeout(function() {
+      $("html, body").animate({
+        scrollTop: $removeContainer.offset().top - 500
+      }, 1000);
+    }, 200);
+
+    $removeContainer.fadeOut(
+      2000,
+      function() {
+          $removeContainer.remove();
+      }
+    );
 
     if (window.location.pathname.match(/\/projects\/[\d+]\/hanuman\/surveys\/\d+\/edit/)) {
       var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1];
@@ -78,6 +98,8 @@ $(document).ready(function(){
         method: "Delete"
       });
     }
+
+    return false;
   });
 
   function resetMapButtons(){
