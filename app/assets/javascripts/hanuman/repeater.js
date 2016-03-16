@@ -209,7 +209,7 @@ $(document).ready(function(){
 
   function clearValues(clonedRepeater){
     for (var i = 0; i < clonedRepeater.length; i++) {
-      // $(clonedRepeater[i]).find("input[type!=hidden]").val("");
+      $(clonedRepeater[i]).find("input[type!=hidden]").val("");
       textFields = $(clonedRepeater[i]).find(":text").val("");
       textAreas = $(clonedRepeater[i]).find("textarea").val("");
       // un-select dropdown
