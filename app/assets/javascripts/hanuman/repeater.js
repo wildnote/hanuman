@@ -13,11 +13,9 @@ $(document).ready(function(){
     e.stopPropagation();
 
     $scrollPosition = $(this).offset().top - 50;
+    $formValidator.parsley().destroy()
+    unbindChosenTypes()
 
-    // unbind chosen select & multiselect
-    $(".chosen-multiselect").chosen('destroy');
-    $(".chosen-select").chosen('destroy');
-    $(".bootstrap-checkbox-multiselect").multiselect('destroy');
     var container = $(this).closest('.form-container-repeater');
     $clonedContainer = container.clone(true);
     var containerItems = $($clonedContainer).find('.form-container-entry-item');
@@ -98,8 +96,6 @@ $(document).ready(function(){
         method: "Delete"
       });
     }
-
-    return false;
   });
 
   function resetMapButtons(){
@@ -231,7 +227,9 @@ $(document).ready(function(){
 
   function clearValues(clonedRepeater){
     for (var i = 0; i < clonedRepeater.length; i++) {
-      $(clonedRepeater[i]).find("input[type!=hidden]").val("");
+      $(clonedRepeater[i]).find("input[type=tel]").val("");
+      $(clonedRepeater[i]).find("input[type=time]").val("");
+      $(clonedRepeater[i]).find("input[type=date]").val("");
       textFields = $(clonedRepeater[i]).find(":text").val("");
       textAreas = $(clonedRepeater[i]).find("textarea").val("");
       // un-select dropdown
