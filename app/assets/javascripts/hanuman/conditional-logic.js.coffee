@@ -217,10 +217,10 @@ class @ConditionalLogic
     if $conditionElement.is(":radio")
       selected = $("input[type='radio'][name='" + $conditionElement.attr('name') + "']:checked")
       if selected.length > 0
-        if $conditionElement.attr('data-label-value')
-          return $conditionElement.attr('data-label-value')
+        if selected.attr('data-label-value')
+          return selected.attr('data-label-value')
         else
-          return $conditionElement.val()
+          return selected.val()
       else
         return
     if $conditionElement.is(":checkbox")
