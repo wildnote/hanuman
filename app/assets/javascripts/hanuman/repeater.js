@@ -11,8 +11,7 @@ $(document).ready(function(){
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
     e.preventDefault();
     e.stopPropagation();
-
-    $scrollPosition = $(this).offset().top - 50;
+    
     $formValidator.parsley().destroy()
     unbindChosenTypes()
 
@@ -31,29 +30,25 @@ $(document).ready(function(){
     $clonedContainer.attr("data-entry", $dataEntry);
     $clonedContainer.find(".form-container-repeater").attr("data-entry", $dataEntry);
 
-    // set cloned container to display none for fading in
-    $clonedContainer.attr("style", "display: none;").addClass("new-clone");
-
     $(container).after($clonedContainer);
     clearValues($(container).nextAll(".form-container-repeater").find('.form-container-entry-item'));
     bindChosenTypes()
 
-    $newClone = $(".new-clone");
 
-    $newClone.delay("100").fadeIn(1000).removeClass("new-clone");
 
-    setTimeout(function() {
-      $("html, body").animate({
-        scrollTop: $scrollPosition
-      }, 500);
-    }, 200);
 
-    clearValues($(container).nextAll(".form-container-repeater").find('.form-container-entry-item'));
-    // bind chosen select, multiselect, and attachinary
-    $('.attachinary-input').attachinary();
-    $(".chosen-multiselect").chosen();
-    $(".chosen-select").chosen();
-    $(".bootstrap-checkbox-multiselect").multiselect();
+
+
+
+    $formValidator.parsley()
+    new $RequireSurveyInputData().inspectElements();
+    $($('div.form-container-entry-item[data-required=true]').find('ul.parsley-errors-list')).remove()
+    removeErrorBackground('radio')
+    removeErrorBackground('checkbox')
+    removeErrorBackground('checkboxes')
+    removeUserSuccessClass()
+
+
     // bind maps
     setupDefaultMaps();
     bindButtons();
