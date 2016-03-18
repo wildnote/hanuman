@@ -1,5 +1,5 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    = ff.text_field :answer, class: "form-control timepicker", type: "text" ,value: o.answer
+    = ff.text_field :answer, class: "form-control customTimepicker", type: "text" ,value: o.answer
     = ff.hidden_field :entry

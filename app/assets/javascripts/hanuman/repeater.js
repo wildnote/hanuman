@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+  removeTimePickerTimeZone()
   // need to find the max data entry on the page and start incrementing from there
   $dataEntry = 0;
   $('.form-container-repeater').each(function() {
@@ -11,9 +12,12 @@ $(document).ready(function(){
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
     e.preventDefault();
     e.stopPropagation();
-    
+
+    $scrollPosition = $(this).offset().top - 50;
+
     $formValidator.parsley().destroy()
     unbindChosenTypes()
+    $('.datepicker').datepicker('destroy')
 
     var container = $(this).closest('.form-container-repeater');
     $clonedContainer = container.clone(true);
@@ -30,15 +34,24 @@ $(document).ready(function(){
     $clonedContainer.attr("data-entry", $dataEntry);
     $clonedContainer.find(".form-container-repeater").attr("data-entry", $dataEntry);
 
+    // set cloned container to display none for fading in
+    $clonedContainer.attr("style", "display: none;").addClass("new-clone");
+
     $(container).after($clonedContainer);
+
+    $newClone = $(".new-clone");
+
+    $newClone.delay("100").fadeIn(1000).removeClass("new-clone");
+
+    setTimeout(function() {
+      $("html, body").animate({
+        scrollTop: $scrollPosition
+      }, 500);
+    }, 200);
+
+
     clearValues($(container).nextAll(".form-container-repeater").find('.form-container-entry-item'));
     bindChosenTypes()
-
-
-
-
-
-
 
     $formValidator.parsley()
     new $RequireSurveyInputData().inspectElements();
@@ -57,7 +70,22 @@ $(document).ready(function(){
     cl = new ConditionalLogic;
     cl.findRules();
 
+    $('.datepicker').datepicker()
+    $('.customTimepicker').removeClass('hasDatepicker')
+    window.bindTimePicker()
+    removeTimePickerTimeZone()
   });
+
+
+  function removeTimePickerTimeZone(){
+    $(".customTimepicker").on("click", function(){
+      window.removeTimeZoneButton()
+    })
+
+    $(".customTimepicker").keyup(function(event){
+      window.removeTimeZoneButton()
+    })
+  }
 
   function removeErrorBackground(type){
     $('div.form-container-entry-item[data-element-type='+ type +']').find('div.col-sm-7').removeAttr('style')
@@ -91,6 +119,7 @@ $(document).ready(function(){
         method: "Delete"
       });
     }
+    return false;
   });
 
   function resetMapButtons(){
