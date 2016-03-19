@@ -84,6 +84,9 @@ $(document).ready(function(){
 
     $(".customTimepicker").keyup(function(event){
       window.removeTimeZoneButton()
+      if(event.which == 8){
+        $(this).val('')
+      }
     })
   }
 
@@ -167,6 +170,8 @@ $(document).ready(function(){
     $(inputs[lastInputIndex]).attr("value", dataEntry);
     var parsleySubstrig = Math.random().toString(36).substring(13);
     inputs.each(function(){
+      if ($(inputs[index]).attr('type') == 'file') {
+        $(inputs[index]).siblings('.attachinary_container').last().remove()      }
       if ($(inputs[index]).attr('id')) {
         var idStamp = $(inputs[index]).attr("id").match(/\d+/)[0];
         var newTimeStamp = idStamp.concat(timeStamp);
@@ -285,6 +290,7 @@ $(document).ready(function(){
       $(radiobuttons).each(function() {
         $(this).prop('checked', false);
       });
+
       // trigger onchange event which is needed for embedded conditional logic
       $(clonedRepeater[i]).find('.form-control').trigger('change');
     };
