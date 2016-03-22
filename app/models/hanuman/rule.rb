@@ -1,7 +1,10 @@
 module Hanuman
   class Rule < ActiveRecord::Base
     belongs_to :question
-    has_many :conditions
+    has_many :conditions, dependent: :destroy
+
+    #validates :question_id, presence: true
+    validates :match_type, presence: true
 
     MATCH_TYPES = ["any","all"]
 
