@@ -40,7 +40,7 @@ class @ConditionalLogic
           self.bindConditions($triggerElement)
         # radio buttons
         else
-          if ($triggerElement.is(":checkbox") || $triggerElement.is(":radio"))
+          if $triggerElement.is(":checkbox")
             # limit binding of each checkbox if data-label-value and answer are the same-kdh
             $triggerElement = $triggerContainer.find(".form-control[data-label-value=" + condition.answer.replace("/","\\/") + "]")
             self.bindConditions($triggerElement)
