@@ -63,9 +63,11 @@ $(document).ready(function(){
 
 
     // bind maps
-    setupDefaultMaps();
-    bindButtons();
-    resetMapButtons();
+    setTimeout(function(){
+      setupDefaultMaps();
+      bindButtons();
+      resetMapButtons();
+    },500)
     // bind ConditionalLogic
     cl = new ConditionalLogic;
     cl.findRules();
