@@ -31,7 +31,11 @@
     .form-group
       = f.label :answer_choice_type, class: "col-sm-2 control-label"
       .col-sm-4
-        = select(:answer_type, :answer_choice_type, options_for_select(Hanuman::AnswerType::ANSWER_CHOICE_TYPES, @answer_type.answer_choice_type), {prompt: ""}, {class: "form-control"})
+        = select(:answer_type, :answer_choice_type, options_for_select(Hanuman::AnswerType::ANSWER_CHOICE_TYPES, @answer_type.answer_choice_type), {prompt: false}, {class: "form-control"})
+    .form-group
+      = f.label :element_type, class: "col-sm-2 control-label"
+      .col-sm-4
+        = select(:answer_type, :element_type, options_for_select(Hanuman::AnswerType::ELEMENT_TYPES, @answer_type.element_type), {prompt: false}, {class: "form-control"})
     .form-group
       .col-sm-offset-2.col-sm-10
         = f.submit "Save", class: "btn btn-primary"

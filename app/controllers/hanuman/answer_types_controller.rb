@@ -56,7 +56,7 @@ module Hanuman
 
       # Only allow a trusted parameter "white list" through.
       def answer_type_params
-        params.require(:answer_type).permit(:name, :status, :descriptive_name, :has_answer_choices, :external_data_source, :description, :answer_choice_type)
+        params.require(:answer_type).permit(:name, :status, :descriptive_name, :has_answer_choices, :external_data_source, :description, :answer_choice_type, :element_type)
       end
   end
 end

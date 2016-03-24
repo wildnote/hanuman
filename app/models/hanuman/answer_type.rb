@@ -5,8 +5,9 @@ module Hanuman
     validates_uniqueness_of :name
     has_many :questions, dependent: :restrict_with_exception
 
-    ANSWER_CHOICE_TYPES = ["external", "internal", "internal-grouped"]
     ANSWER_CHOICE_STATUSES = ["active", "inactive"]
+    ANSWER_CHOICE_TYPES = ["", "external", "internal", "internal-grouped"]
+    ELEMENT_TYPES = ["", "checkbox", "checkboxes", "container", "date", "email", "file", "helper", "line", "map", "multiselect", "number", "radio", "select", "static", "text", "textarea", "time"]
 
     def self.active_sorted
       where(status: 'active').order('name')
