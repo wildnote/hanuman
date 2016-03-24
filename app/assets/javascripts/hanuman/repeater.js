@@ -76,6 +76,7 @@ $(document).ready(function(){
     $('.customTimepicker').removeClass('hasDatepicker')
     window.bindTimePicker()
     removeTimePickerTimeZone()
+    window.showVideoPreview()
   });
 
 
