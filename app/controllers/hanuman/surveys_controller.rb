@@ -91,6 +91,7 @@ module Hanuman
             :answer_choice_id,
             :selectable_id,
             :selectable_type,
+            :group_sort,
             answer_choice_ids: []
           ]
         )
@@ -112,6 +113,7 @@ module Hanuman
             :answer_choice_id,
             :selectable_id,
             :selectable_type,
+            :group_sort,
             answer_choice_ids: []
           ]
         )
