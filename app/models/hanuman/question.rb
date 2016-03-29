@@ -77,4 +77,5 @@ module Hanuman
       new_q.save
     end
     
+  end
 end
