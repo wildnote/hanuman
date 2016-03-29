@@ -71,5 +71,11 @@ module Hanuman
       end
     end
 
+    def dup_and_save
+      new_q = self.amoeba_dup
+      new_q.sort_order = self.sort_order + 1
+      new_q.save
+    end
+    
   end
 end
