@@ -239,6 +239,8 @@ class @ConditionalLogic
         return option_strings.join(", ")
       else
         return
+    if $conditionElement.is('select')
+      return $('#' + $conditionElement.attr('id') + ' option:selected').text()
     if $conditionElement.is("p")
       return $conditionElement.text()
     $conditionElement.val()
