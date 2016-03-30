@@ -1,6 +1,5 @@
 $(document).ready(function(){
 
-  removeTimePickerTimeZone()
   // need to find the max data entry on the page and start incrementing from there
   $dataEntry = 0;
   $('.form-container-repeater').each(function() {
@@ -74,9 +73,7 @@ $(document).ready(function(){
     cl.findRules();
 
     $('.datepicker').datepicker()
-    $('.customTimepicker').removeClass('hasDatepicker')
-    window.bindTimePicker()
-    removeTimePickerTimeZone()
+    $('.timepicki').removeClass('hasDatepicker')
 
     // binds previews
     window.showVideoPreview()
@@ -87,20 +84,6 @@ $(document).ready(function(){
   function cleartFilePreviewContainers(container){
     $($(container).find('.document-preview-container')).empty()
     $($(container).find('.video-preview-container')).empty()
-  }
-
-
-  function removeTimePickerTimeZone(){
-    $(".customTimepicker").on("click", function(){
-      window.removeTimeZoneButton()
-    })
-
-    $(".customTimepicker").keyup(function(event){
-      window.removeTimeZoneButton()
-      if(event.which == 8){
-        $(this).val('')
-      }
-    })
   }
 
   function removeErrorBackground(type){
