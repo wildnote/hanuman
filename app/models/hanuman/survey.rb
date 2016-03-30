@@ -51,7 +51,6 @@ module Hanuman
 
         debug = false
 
-        form_container_type = []
         form_container_label = []
         form_container_nesting_level = -1
         remaining_children = []
@@ -62,14 +61,13 @@ module Hanuman
         self.observations.each do |o|
           if o.entry == 1
             if debug
-              apply_group_sort_debug(o, 1, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
+              apply_group_sort_debug(o, 1, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
             end
 
             remaining_children[form_container_nesting_level] = remaining_children[form_container_nesting_level] - 1 unless remaining_children[form_container_nesting_level].blank?
 
             if o.question.answer_type.element_type == "container"
               form_container_nesting_level += 1
-              form_container_type << o.question.answer_type.name
               form_container_label << o.question.question_text
               if o.question.children.blank?
                 remaining_children << 0
@@ -96,26 +94,28 @@ module Hanuman
 
             if remaining_children[form_container_nesting_level] == 0 || o.question.id == last_child_id[form_container_nesting_level]
               form_container_nesting_level -= 1
-              form_container_type.pop
               form_container_label.pop
               remaining_children.pop
               last_child_id.pop
+              group.pop
+              sort.pop
 
               if debug
-                apply_group_sort_debug(o, 2, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
+                apply_group_sort_debug(o, 2, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
               end
 
               remaining_children.each do |rc|
                 if rc == 0
                   form_container_nesting_level -= 1
-                  form_container_type.pop
                   form_container_label.pop
                   remaining_children.pop
                   last_child_id.pop
+                  group.pop
+                  sort.pop
                 end
 
                 if debug
-                  apply_group_sort_debug(o, 2, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
+                  apply_group_sort_debug(o, 2, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
                 end
 
               end
@@ -124,7 +124,8 @@ module Hanuman
             sort[form_container_nesting_level + 1] += 1
           end
         end
-        # figure out how to loop through remaining entries, will need to determine the max entry number to invoke a loop
+
+        # loop through remaining entries, will need to determine the max entry number to invoke a loop
 
         depth = 0
         group = []
@@ -146,23 +147,14 @@ module Hanuman
 
                   # we have a matching question id
                   # grab group_sort from matching observation and parse
-                  puts sub_o.group_sort.to_s
                   parsed_group_sort = sub_o.group_sort.split("-")
-                  puts parsed_group_sort.to_s
                   depth = parsed_group_sort.count
-                  puts depth.to_s
                   parsed_group_sort.each_with_index do |a, index|
-                    puts a.to_s
                     parse_current = a.gsub("g", "").gsub("s", "").split(":")
-                    puts parse_current
-                    puts group.to_s
-                    puts sort.to_s
                     #check depth against index, if matching we are at the level that needs incremented group
                     group << (depth == index + 1 ? parse_current[0].to_i + (n - 1) : parse_current[0].to_i)
                     #keep sort the same
                     sort << parse_current[1].to_i
-                    puts group.to_s
-                    puts sort.to_s
                   end
 
                   group_sort = ""
@@ -189,9 +181,40 @@ module Hanuman
           end
         end
 
+        # clean up entry level discrepancies with regard to grouping
+
+        master_group_sort = ""
+        master_prefix = ""
+
+        (2..(last_entry)).each do |n|
+          self.observations.each do |o|
+            if o.entry == n
+
+              # find the current entry observation group sort and store it in master variables for continual evaluation
+              if master_group_sort.blank?
+                master_group_sort = o.group_sort
+                master_prefix = master_group_sort[0..14]
+              end
+
+              # parse and fix the current entry observation group sort based on master variables
+
+              current_group_sort = o.group_sort
+              current_prefix = current_group_sort[0..14]
+              current_suffix = current_group_sort.gsub(current_prefix, "")
+              o.group_sort = master_prefix + current_suffix
+
+              if debug
+                puts o.group_sort
+                puts o.inspect
+              end
+
+            end
+          end
+        end
+
       end
 
-      def apply_group_sort_debug(observation, code_level, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
+      def apply_group_sort_debug(observation, code_level, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
         indentation = ""
         if code_level > 1
           (1..(code_level - 1)).each do |i|
@@ -211,7 +234,6 @@ module Hanuman
         puts indentation + "ancestry: " + observation.question.ancestry.to_s
         puts indentation + "last ancestor.id: " + observation.question.ancestry.to_s.split("/").last.to_s
         puts indentation + "......"
-        puts indentation + "form_container_type: " + form_container_type.to_s
         puts indentation + "form_container_label: " + form_container_label.to_s
         puts indentation + "form_container_nesting_level: " + form_container_nesting_level.to_s
         puts indentation + "remaining_children: " + remaining_children.to_s
