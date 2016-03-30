@@ -13,7 +13,7 @@ module Hanuman
     # no validation for answer - because of structure of data we need empty
     # rows in database for editing of survey - kdh - 10.30.14
 
-    default_scope {includes(:question => :survey_step).order('hanuman_survey_steps.step ASC, hanuman_observations.entry ASC, hanuman_questions.sort_order ASC').references(:question => :survey_step)}
+    default_scope {includes(:question).order('hanuman_observations.entry ASC, hanuman_questions.sort_order ASC').references(:question)}
 
     before_save :strip_and_squish_answer
 

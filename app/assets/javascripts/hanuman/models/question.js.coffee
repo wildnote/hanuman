@@ -22,4 +22,11 @@ App.Question = DS.Model.extend({
     if @.get('ancestry')?
       Array(@.get('ancestry').split('/').length + 1).join("==> ")
   ).property('ancestry')
+
+  isContainer: (->
+    if @.get('answerType').get('name') is 'section'
+      return true
+    else
+      return false
+  ).property('answerType')
 })
