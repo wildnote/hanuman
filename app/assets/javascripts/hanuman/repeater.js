@@ -36,6 +36,7 @@ $(document).ready(function(){
 
     // set cloned container to display none for fading in
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
+    cleartFilePreviewContainers($clonedContainer)
 
     $(container).after($clonedContainer);
 
@@ -76,7 +77,36 @@ $(document).ready(function(){
     $('.customTimepicker').removeClass('hasDatepicker')
     window.bindTimePicker()
     removeTimePickerTimeZone()
+
+    // binds previews
+    window.showVideoPreview()
+    window.documentPreview()
+    window.fileDeleteEvent()
+
+
+
+    if (window.location.pathname.match(/\/projects\/[\d+]\/hanuman\/surveys\/\d+\/\edit/)) {
+      videos = $('[data-element-type=video]').last().find('.custom-cloudinary li a')
+      documents = $('[data-element-type=document]').last().find('.custom-cloudinary li a')
+      photos = $('[data-element-type=photo]').last().find('.custom-cloudinary li a')
+
+      clearFileInputsValuesInEdit(videos ,"video")
+      clearFileInputsValuesInEdit(documents, "document")
+      clearFileInputsValuesInEdit(photos, "photo")
+     }
   });
+
+  function clearFileInputsValuesInEdit(files, type){
+    while (files.length >= 1) {
+      $(files[0]).click()
+      files = $("[data-element-type="+type+"]").last().find('.custom-cloudinary li a')
+    }
+  }
+
+  function cleartFilePreviewContainers(container){
+    $($(container).find('.document-preview-container')).empty()
+    $($(container).find('.video-preview-container')).empty()
+  }
 
 
   function removeTimePickerTimeZone(){
@@ -172,8 +202,9 @@ $(document).ready(function(){
     $(inputs[lastInputIndex]).attr("value", dataEntry);
     var parsleySubstrig = Math.random().toString(36).substring(13);
     inputs.each(function(){
-      if ($(inputs[index]).attr('type') == 'file') {
-        $(inputs[index]).siblings('.attachinary_container').last().remove()      }
+      if ($(inputs[index]).attr('type') == 'file' || $(inputs[index]).attr('type') == 'document' || $(inputs[index]).attr('type') == 'photo' || $(inputs[index]).attr('type') == 'video') {
+        $(inputs[index]).siblings('.attachinary_container').last().remove()
+      }
       if ($(inputs[index]).attr('id')) {
         var idStamp = $(inputs[index]).attr("id").match(/\d+/)[0];
         var newTimeStamp = idStamp.concat(timeStamp);
@@ -267,6 +298,7 @@ $(document).ready(function(){
       selects = $(clonedRepeater[i]).find("select");
       $(selects).each(function() {
         $(this).val("");
+
         // if we don't add please select at this point the dropdown will show blank with no prompt
         if ($(this).find('option:contains("Please select")').length < 1) {
           $(this).prepend("<option value>Please select</option>");
