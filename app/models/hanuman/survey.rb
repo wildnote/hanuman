@@ -51,6 +51,7 @@ module Hanuman
 
         debug = false
 
+        form_container_type = []
         form_container_label = []
         form_container_nesting_level = -1
         remaining_children = []
@@ -61,14 +62,15 @@ module Hanuman
         self.observations.each do |o|
           if o.entry == 1
             if debug
-              apply_group_sort_debug(o, 1, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
+              apply_group_sort_debug(o, 1, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
             end
 
             remaining_children[form_container_nesting_level] = remaining_children[form_container_nesting_level] - 1 unless remaining_children[form_container_nesting_level].blank?
 
             if o.question.answer_type.element_type == "container"
-              form_container_nesting_level += 1
+              form_container_type << o.question.answer_type.name
               form_container_label << o.question.question_text
+              form_container_nesting_level += 1
               if o.question.children.blank?
                 remaining_children << 0
               else
@@ -93,21 +95,23 @@ module Hanuman
             end
 
             if remaining_children[form_container_nesting_level] == 0 || o.question.id == last_child_id[form_container_nesting_level]
-              form_container_nesting_level -= 1
+              form_container_type.pop
               form_container_label.pop
+              form_container_nesting_level -= 1
               remaining_children.pop
               last_child_id.pop
               group.pop
               sort.pop
 
               if debug
-                apply_group_sort_debug(o, 2, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
+                apply_group_sort_debug(o, 2, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
               end
 
               remaining_children.each do |rc|
                 if rc == 0
-                  form_container_nesting_level -= 1
+                  form_container_type.pop
                   form_container_label.pop
+                  form_container_nesting_level -= 1
                   remaining_children.pop
                   last_child_id.pop
                   group.pop
@@ -115,7 +119,7 @@ module Hanuman
                 end
 
                 if debug
-                  apply_group_sort_debug(o, 2, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
+                  apply_group_sort_debug(o, 2, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
                 end
 
               end
@@ -234,6 +238,7 @@ module Hanuman
         puts indentation + "ancestry: " + observation.question.ancestry.to_s
         puts indentation + "last ancestor.id: " + observation.question.ancestry.to_s.split("/").last.to_s
         puts indentation + "......"
+        puts indentation + "form_container_type: " + form_container_type.to_s
         puts indentation + "form_container_label: " + form_container_label.to_s
         puts indentation + "form_container_nesting_level: " + form_container_nesting_level.to_s
         puts indentation + "remaining_children: " + remaining_children.to_s
