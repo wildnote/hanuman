@@ -185,6 +185,7 @@ module Hanuman
 
       # clean up entry level discrepancies with regard to grouping
 
+      master_entry = 0
       master_group_sort = ""
       master_prefix = ""
 
@@ -193,7 +194,8 @@ module Hanuman
           if o.entry == n
 
             # find the current entry observation group sort and store it in master variables for continual evaluation
-            if master_group_sort.blank?
+            if master_group_sort.blank? || master_entry != n
+              master_entry = n
               master_group_sort = o.group_sort
               master_prefix = master_group_sort[0..14]
             end
