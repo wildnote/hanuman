@@ -71,8 +71,8 @@ $(document).ready(function(){
     cl = new ConditionalLogic;
     cl.findRules();
 
-    $('.datepicker').datepicker()
-    $('.timepicki').removeClass('hasDatepicker')
+    $(".datepicker").unbind().datepicker()
+    $(".timepicki").unbind().timepicki()
   });
 
   function removeErrorBackground(type){
