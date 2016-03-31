@@ -5,62 +5,50 @@ class @ConditionalLogic
   #scan page and find all objects with conditional logic rules
   findRules: ->
     $("[data-rule!=''][data-rule]").each ->
-      $ruleElement = $(this)
+      $ruleContainer = $(this)
       #if $ruleElement.attr('data-rule').length > 0
-      rule = $.parseJSON($ruleElement.attr("data-rule")).rule_hash
+      rule = $.parseJSON($ruleContainer.attr("data-rule")).rule_hash
       matchType = rule.match_type
       #console.log rule
       $(rule.conditions).each ->
-        $ruleElement = $ruleElement
-        $container = $($ruleElement).closest(".form-container-repeater")
-
         condition = this
-        #console.log condition
-        questionId = condition.question_id
-        #TODO: this shit needs to be context specific yo
+        conditionQuestionId = condition.question_id
+        # the container for the rule element(s), could be a single element contained in form-container-entry-item or multiple in form-container-repeater
+        $ruleContainer = $ruleContainer
+        # the condition container
+        $conditionContainer = $ruleContainer.siblings("[data-question-id=" + conditionQuestionId + "]")
+        # the condition element, which we need to check value for conditional logic
+        $conditionElement = $conditionContainer.find(".form-control")
+        # show
+        if $conditionElement.length < 1
+          $conditionElement = $conditionContainer.find(".form-control-static")
 
-        #  all_questions = $container
-        #  all_questions << $($container).find(".form-container-repeater[data-question-id=" + ancestor_id + "],[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]")
-
-        $triggerContainer = $ruleElement.closest('.form-container-survey').find("[data-question-id=" + questionId + "]");
-        # getting element on edit and new page
-        $triggerElement = $triggerContainer.find(".form-control")
-
-
-        #$triggerContainer = $ruleElement.closest('.form-container-repeater');
-        # getting element on show page
-        if $triggerElement.length < 1
-          $triggerElement = $triggerContainer.find(".form-control-static")
         # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
-        hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($triggerElement))
+        hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
+
         ancestorId = rule.question_id
         # bind conditions based on element type
         # text, textarea, select
-        if $triggerElement.length < 2
-          self.bindConditions($triggerElement)
+        if $conditionElement.length < 2
+          self.bindConditions($conditionElement)
         # radio buttons
         else
-          if $triggerElement.is(":checkbox")
+          if $conditionElement.is(":checkbox")
             # limit binding of each checkbox if data-label-value and answer are the same-kdh
-            $triggerElement = $triggerContainer.find(".form-control[data-label-value=" + condition.answer.replace("/","\\/") + "]")
-            self.bindConditions($triggerElement)
+            $conditionElement = $conditionContainer.find(".form-control[data-label-value=" + condition.answer.replace("/","\\/") + "]")
+            self.bindConditions($conditionElement)
           else
-            for element in $triggerElement
+            for element in $conditionElement
               do (element) ->
                 self.bindConditions($(element))
-        # determine if we are in a repeater
+
+        #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
+        # determine if we are in a repeater-this needs to get deleted-kdh
         inRepeater = false
-        $repeater = $($triggerElement).closest(".form-container-repeater")
-        if $repeater.length > 0
-          inRepeater = true
-        else
-          $container = $($ruleElement).closest(".form-container-survey")
-        # hide show questions
-        $container = $ruleElement
         if rule.conditions.length > 1
-          self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleElement, $container, inRepeater, matchType)
+          self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType)
         else
-          self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
+          self.hideShowQuestions(hideQuestions, ancestorId, $ruleContainer, $ruleContainer, inRepeater)
     return
 
   #bind conditions to question
