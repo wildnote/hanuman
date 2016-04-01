@@ -19,9 +19,9 @@
       %table.table.table-hover
         %thead
           %tr
-            %th Question
-            %th Option Text
-            %th Scientific Text
+            %th= sortable "hanuman_questions.question_text, hanuman_answer_choices.option_text, hanuman_answer_choices.scientific_text*", "Question"
+            %th= sortable "hanuman_answer_choices.option_text, hanuman_questions.question_text, hanuman_answer_choices.scientific_text*", "Option Text"
+            %th= sortable "hanuman_answer_choices.scientific_text, hanuman_questions.question_text, hanuman_answer_choices.option_text*", "Scientific Text"
             %th
 
         %tbody

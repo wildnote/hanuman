@@ -2,11 +2,11 @@ require_dependency "hanuman/application_controller"
 
 module Hanuman
   class AnswerTypesController < ApplicationController
-    before_action :set_answer_type, only: [:show, :edit, :update, :destroy]
     helper_method :sort_column, :sort_direction
+    before_action :set_answer_type, only: [:show, :edit, :update, :destroy]
     # GET /answer_types
     def index
-      @answer_types = AnswerType.order('name')
+      @answer_types = AnswerType.sort(sort_column, sort_direction)
     end
 
     # GET /answer_types/1
@@ -48,15 +48,15 @@ module Hanuman
       redirect_to answer_types_url, notice: 'Answer type was successfully destroyed.'
     end
 
-
-
+    # helper methods
     def sort_column
-      !params[:sort].blank? ? params[:sort] : "answer_types.name"
+      !params[:sort].blank? ? params[:sort] : "hanuman_answer_types.name asc, hanuman_answer_types.descriptive_name asc, hanuman_answer_types.description asc, hanuman_answer_types.status asc, hanuman_answer_types.has_answer_choices asc, hanuman_answer_types.external_data_source asc, hanuman_answer_types.answer_choice_type asc, hanuman_answer_types.element_type asc"
     end
 
     def sort_direction
       %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
+
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_answer_type

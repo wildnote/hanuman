@@ -2,11 +2,12 @@ require_dependency "hanuman/application_controller"
 
 module Hanuman
   class QuestionsController < ApplicationController
+    helper_method :sort_column, :sort_direction
     before_action :set_question, only: [:show, :edit, :update, :destroy]
 
     # GET /questions
     def index
-      @questions = Question.all
+      @questions = Question.order(sort_column + " " + sort_direction)
     end
 
     # GET /questions/1
@@ -50,6 +51,14 @@ module Hanuman
     def destroy
       @question.destroy
       redirect_to questions_url, notice: 'Question was successfully destroyed.'
+    end
+    # helper methods
+    def sort_column
+      !params[:sort].blank? ? params[:sort] : "hanuman_questions.question_text"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
 
     private
