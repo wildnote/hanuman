@@ -9,7 +9,11 @@
       .col-sm-4
         = f.text_field :name, class: "form-control"
     .form-group
-      = f.label :descriptive_name, class: "col-sm-2 control-label"
+      = f.label :element_type, "Element Type", class: "col-sm-2 control-label"
+      .col-sm-4
+        = select(:answer_type, :element_type, options_for_select(Hanuman::AnswerType::ELEMENT_TYPES, @answer_type.element_type), {prompt: false}, {class: "form-control"})
+    .form-group
+      = f.label :descriptive_name, "Descriptive Name", class: "col-sm-2 control-label"
       .col-sm-4
         = f.text_field :descriptive_name, class: "form-control"
     .form-group
@@ -17,25 +21,21 @@
       .col-sm-4
         = f.text_field :description, class: "form-control"
     .form-group
-      = f.label :has_answer_choices, class: "col-sm-2 control-label"
+      = f.label :has_answer_choices, "Has Answer Choices", class: "col-sm-2 control-label"
       .col-sm-4
         = f.select :has_answer_choices, ["false", "true"], {prompt: false}, {class: "form-control"}
     .form-group
-      = f.label :external_data_source, class: "col-sm-2 control-label"
+      = f.label :answer_choice_type, "Answer Choice Type", class: "col-sm-2 control-label"
+      .col-sm-4
+        = select(:answer_type, :answer_choice_type, options_for_select(Hanuman::AnswerType::ANSWER_CHOICE_TYPES, @answer_type.answer_choice_type), {prompt: false}, {class: "form-control"})
+    .form-group
+      = f.label :external_data_source, "External Data Source", class: "col-sm-2 control-label"
       .col-sm-4
         = f.text_field :external_data_source, class: "form-control"
     .form-group
       = f.label :status, class: "col-sm-2 control-label"
       .col-sm-4
         = select(:answer_type, :status, options_for_select(Hanuman::AnswerType::ANSWER_CHOICE_STATUSES, @answer_type.status), {prompt: false}, {class: "form-control"})
-    .form-group
-      = f.label :answer_choice_type, class: "col-sm-2 control-label"
-      .col-sm-4
-        = select(:answer_type, :answer_choice_type, options_for_select(Hanuman::AnswerType::ANSWER_CHOICE_TYPES, @answer_type.answer_choice_type), {prompt: false}, {class: "form-control"})
-    .form-group
-      = f.label :element_type, class: "col-sm-2 control-label"
-      .col-sm-4
-        = select(:answer_type, :element_type, options_for_select(Hanuman::AnswerType::ELEMENT_TYPES, @answer_type.element_type), {prompt: false}, {class: "form-control"})
     .form-group
       .col-sm-offset-2.col-sm-10
         = f.submit "Save", class: "btn btn-primary"
