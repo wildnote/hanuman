@@ -79,7 +79,10 @@ module Hanuman
     end
 
     # duplicate a question set which contains a parent question, followed by a
-    # single question or a section of questions that is triggered by conditional logic-kdh
+    # single question or a section of questions that is triggered by conditional logic
+    # this method duplicates the parent question, the section/child question
+    # and all conditional logic and ancestry relationships are mimicked for a
+    # complete duplication process-kdh
     def dup_question_set_and_save
       parent_q = self
       section_q = parent_q.conditions.first.rule.question
