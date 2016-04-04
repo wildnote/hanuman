@@ -71,11 +71,70 @@ module Hanuman
       end
     end
 
+    # duplicate and save a single question with answer choices and conditions
     def dup_and_save
       new_q = self.amoeba_dup
       new_q.sort_order = self.sort_order + 1
       new_q.save
     end
-    
+
+    # duplicate a question set which contains a parent question, followed by a
+    # single question or a section of questions that is triggered by conditional logic
+    # this method duplicates the parent question, the section/child question
+    # and all conditional logic and ancestry relationships are mimicked for a
+    # complete duplication process-kdh
+    def dup_question_set_and_save
+      parent_q = self
+      section_q = parent_q.conditions.first.rule.question
+      children_qs = section_q.children
+      start_sort_order = 10000
+      increment_sort_by = 2
+      unless children_qs.blank?
+        start_sort_order = children_qs.last.sort_order
+        # number of new children questions + condition (parent) and children (rule) questions
+        increment_sort_by = children_qs.count + 2
+      else
+        start_sort_order = section_q.sort_order
+      end
+
+      # remap sort orders leaving space for new questions before saving new question
+      parent_q.survey_step.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
+        q.sort_order = q.sort_order + increment_sort_by
+        q.save
+      end
+
+      # this will create new question, answer choices and conditions,
+      # but the conditions will be pointed to the old rule which we will need to remap
+      new_parent_q = parent_q.amoeba_dup
+      # now that we have resorted save new_parent_q into open slot
+      new_parent_q.sort_order = new_parent_q.sort_order + increment_sort_by
+      new_parent_q.save
+
+      # this will duplicate the question, will need to create a new rule,
+      # and then set the condtions to new rule id
+      new_section_q = section_q.amoeba_dup
+      new_section_q.sort_order = new_section_q.sort_order + increment_sort_by
+      new_section_q.save
+
+      # update newly created conditions with rule relationship now that the rule has been created
+      # the rule gets created with the section question
+      new_rule = new_section_q.rule
+      new_parent_q.conditions.each do |c|
+        c.rule_id = new_rule.id
+        c.save
+      end
+
+      children_qs.each do |q|
+        new_child_q = q.amoeba_dup
+        # update ancestry relationship
+        new_child_q.parent = new_section_q
+
+        # set sort_order
+        new_child_q.sort_order = new_child_q.sort_order + increment_sort_by
+        new_child_q.save
+      end
+
+    end
+
   end
 end
