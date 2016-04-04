@@ -36,6 +36,8 @@ $(document).ready(function(){
     // set cloned container to display none for fading in
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
 
+    clearValues($clonedContainer);
+
     $(container).after($clonedContainer);
 
     $newClone = $(".new-clone");
@@ -48,8 +50,6 @@ $(document).ready(function(){
       }, 500);
     }, 200);
 
-
-    clearValues($(container).nextAll(".form-container-repeater").find('.form-container-entry-item'));
     bindChosenTypes()
 
     $formValidator.parsley()
