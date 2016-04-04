@@ -50,7 +50,7 @@ module Hanuman
 
     # helper methods
     def sort_column
-      !params[:sort].blank? ? params[:sort] : "hanuman_answer_types.name asc, hanuman_answer_types.descriptive_name asc, hanuman_answer_types.description asc, hanuman_answer_types.status asc, hanuman_answer_types.has_answer_choices asc, hanuman_answer_types.external_data_source asc, hanuman_answer_types.answer_choice_type asc, hanuman_answer_types.element_type asc"
+      !params[:sort].blank? ? params[:sort] : "hanuman_answer_types.name asc, hanuman_answer_types.element_type asc, hanuman_answer_types.descriptive_name asc, hanuman_answer_types.description asc, hanuman_answer_types.has_answer_choices asc, hanuman_answer_types.answer_choice_type asc, hanuman_answer_types.external_data_source asc, hanuman_answer_types.status asc"
     end
 
     def sort_direction

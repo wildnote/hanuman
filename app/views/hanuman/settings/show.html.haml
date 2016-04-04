@@ -14,12 +14,14 @@
 .panel.panel-info
   .panel-heading
     %h3.panel-title Setting Details
-    = link_to edit_setting_path(@setting), class: "btn btn-primary panel-title-button-right" do
-      %span.glyphicon.glyphicon-pencil
-      Edit Setting
 
   %form.form-horizontal
     .panel-body
+      .pull-right
+        = link_to edit_setting_path(@setting), class: "btn btn-primary" do
+          %span.glyphicon.glyphicon-pencil
+          Edit Setting
+      .clearfix
       .form-group
         %label.col-sm-2.control-label Key
         .col-sm-10

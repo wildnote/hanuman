@@ -8,7 +8,7 @@
       = f.label :question, class: "col-sm-2 control-label"
       .col-sm-4
         = f.hidden_field :question_id, class: "form-control"
-        = @answer_choice.question.question_text
+        = @answer_choice.question.question_text unless @answer_choice.question.blank?
     .form-group
       = f.label :option_text, class: "col-sm-2 control-label"
       .col-sm-4

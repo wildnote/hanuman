@@ -7,7 +7,7 @@ module Hanuman
 
     # GET /questions
     def index
-      @questions = Question.order(sort_column + " " + sort_direction)
+      @questions = Question.sort(sort_column, sort_direction)
     end
 
     # GET /questions/1
@@ -54,7 +54,7 @@ module Hanuman
     end
     # helper methods
     def sort_column
-      !params[:sort].blank? ? params[:sort] : "hanuman_questions.question_text"
+      !params[:sort].blank? ? params[:sort] : "hanuman_questions.question_text asc, hanuman_answer_types.name asc"
     end
 
     def sort_direction

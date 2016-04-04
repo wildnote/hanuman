@@ -25,6 +25,10 @@ module Hanuman
       })
     end
 
+    def self.sort(sort_column, sort_direction)
+      joins(:answer_type).order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc"))
+    end
+
     def question_text_not_required
       unless answer_type.blank?
         case answer_type.name

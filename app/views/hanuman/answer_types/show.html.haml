@@ -14,16 +14,22 @@
 .panel.panel-info
   .panel-heading
     %h3.panel-title Answer Type Details
-    = link_to edit_answer_type_path(@answer_type), class: "btn btn-primary panel-title-button-right" do
-      %span.glyphicon.glyphicon-pencil
-      Edit Answer Type
 
   %form.form-horizontal
     .panel-body
+      .pull-right
+        = link_to edit_answer_type_path(@answer_type), class: "btn btn-primary" do
+          %span.glyphicon.glyphicon-pencil
+          Edit Answer Type
+      .clearfix
       .form-group
         %label.col-sm-2.control-label Name
         .col-sm-10
           %p.form-control-static= @answer_type.name
+      .form-group
+        %label.col-sm-2.control-label Element Type
+        .col-sm-10
+          %p.form-control-static= @answer_type.element_type
       .form-group
         %label.col-sm-2.control-label Descriptive Name
         .col-sm-10
@@ -37,6 +43,10 @@
         .col-sm-10
           %p.form-control-static= @answer_type.has_answer_choices
       .form-group
+        %label.col-sm-2.control-label Answer Choice Type
+        .col-sm-10
+          %p.form-control-static= @answer_type.answer_choice_type
+      .form-group
         %label.col-sm-2.control-label External Data Source
         .col-sm-10
           %p.form-control-static= @answer_type.external_data_source
@@ -44,11 +54,3 @@
         %label.col-sm-2.control-label Status
         .col-sm-10
           %p.form-control-static= @answer_type.status
-      .form-group
-        %label.col-sm-2.control-label Answer Choice Type
-        .col-sm-10
-          %p.form-control-static= @answer_type.answer_choice_type
-      .form-group
-        %label.col-sm-2.control-label Element Type
-        .col-sm-10
-          %p.form-control-static= @answer_type.element_type
