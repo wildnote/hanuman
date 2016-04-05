@@ -14,21 +14,23 @@
 .panel.panel-info
   .panel-heading
     %h3.panel-title Answer Choice Details
-    = link_to edit_answer_choice_path(@answer_choice), class: "btn btn-primary panel-title-button-right" do
-      %span.glyphicon.glyphicon-pencil
-      Edit Answer Choice
 
-    %form.form-horizontal
-      .panel-body
-        .form-group
-          %label.col-sm-2.control-label Question
-          .col-sm-4
-            %p.form-control-static= @answer_choice.question.question_text
-        .form-group
-          %label.col-sm-2.control-label Option text
-          .col-sm-4
-            %p.form-control-static= @answer_choice.option_text
-        .form-group
-          %label.col-sm-2.control-label Scientific text
-          .col-sm-4
-            %p.form-control-static= @answer_choice.scientific_text unless @answer_choice.scientific_text.blank?
+  %form.form-horizontal
+    .panel-body
+      .pull-right
+        = link_to edit_answer_choice_path(@answer_choice), class: "btn btn-primary" do
+          %span.glyphicon.glyphicon-pencil
+          Edit Answer Choice
+      .clearfix
+      .form-group
+        %label.col-sm-2.control-label Question
+        .col-sm-4
+          %p.form-control-static= @answer_choice.question.question_text
+      .form-group
+        %label.col-sm-2.control-label Option text
+        .col-sm-4
+          %p.form-control-static= @answer_choice.option_text
+      .form-group
+        %label.col-sm-2.control-label Scientific text
+        .col-sm-4
+          %p.form-control-static= @answer_choice.scientific_text unless @answer_choice.scientific_text.blank?

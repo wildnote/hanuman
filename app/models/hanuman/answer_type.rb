@@ -12,5 +12,9 @@ module Hanuman
     def self.active_sorted
       where(status: 'active').order('name')
     end
+
+    def self.sort(sort_column, sort_direction)
+      self.order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc"))
+    end
   end
 end

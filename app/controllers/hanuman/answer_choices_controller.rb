@@ -2,15 +2,12 @@ require_dependency "hanuman/application_controller"
 
 module Hanuman
   class AnswerChoicesController < ApplicationController
+    helper_method :sort_column, :sort_direction
     before_action :set_answer_choice, only: [:show, :edit, :update, :destroy]
 
     # GET /answer_choices
     def index
-      if params[:question_id]
-        @answer_choices = AnswerChoice.filtered_by_question_id(params[:question_id])
-      else
-        @answer_choices = AnswerChoice.all
-      end
+      @answer_choices = AnswerChoice.filtered_by_question_id_and_sort(params[:question_id], sort_column, sort_direction)
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @answer_choices.to_json(methods: :formatted_answer_choice)}
@@ -54,6 +51,15 @@ module Hanuman
     def destroy
       @answer_choice.destroy
       redirect_to answer_choices_url, notice: 'Answer choice was successfully destroyed.'
+    end
+
+    # helper methods
+    def sort_column
+      !params[:sort].blank? ? params[:sort] : "hanuman_questions.question_text asc, hanuman_answer_choices.option_text asc, hanuman_answer_choices.scientific_text asc"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
 
     private

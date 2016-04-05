@@ -2,11 +2,12 @@ require_dependency "hanuman/application_controller"
 
 module Hanuman
   class SettingsController < ApplicationController
+    helper_method :sort_column, :sort_direction
     before_action :set_setting, only: [:show, :edit, :update, :destroy]
 
     # GET /settings
     def index
-      @settings = Setting.all.order("hanuman_settings.key ASC").page(params[:page])
+      @settings = Setting.sort(sort_column, sort_direction).page(params[:page])
     end
 
     # GET /settings/1
@@ -46,6 +47,15 @@ module Hanuman
     def destroy
       @setting.destroy
       redirect_to settings_url, notice: 'Setting was successfully destroyed.'
+    end
+
+    # helper methods
+    def sort_column
+      !params[:sort].blank? ? params[:sort] : "hanuman_settings.key asc, hanuman_settings.value asc"
+    end
+
+    def sort_direction
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
 
     private

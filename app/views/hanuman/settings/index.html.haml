@@ -21,8 +21,8 @@
       %table.table.table-hover
         %thead
           %tr
-            %th Key
-            %th Value
+            %th= sortable "hanuman_settings.key, hanuman_settings.value*", "Key"
+            %th= sortable "hanuman_settings.value, hanuman_settings.key*", "Value"
             %th
 
         %tbody
