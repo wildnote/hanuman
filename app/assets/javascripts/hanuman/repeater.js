@@ -14,9 +14,9 @@ $(document).ready(function(){
 
     $scrollPosition = $(this).offset().top - 50;
 
-    $formValidator.parsley().destroy()
-    unbindChosenTypes()
-    $('.datepicker').datepicker('destroy')
+    $formValidator.parsley().destroy();
+    unbindChosenTypes();
+    $('.datepicker').datepicker('destroy');
 
     var container = $(this).closest('.form-container-repeater');
     $clonedContainer = container.clone(true);
@@ -27,7 +27,7 @@ $(document).ready(function(){
 
     // update attributes with timestamps
     updateDom(containerItems, $dataEntry);
-    stringifyAndResetContainer($clonedContainer)
+    stringifyAndResetContainer($clonedContainer);
 
     // fix repeater container data-entry numbers
     $clonedContainer.attr("data-entry", $dataEntry);
@@ -35,7 +35,7 @@ $(document).ready(function(){
 
     // set cloned container to display none for fading in
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
-    cleartFilePreviewContainers($clonedContainer)
+    cleartFilePreviewContainers($clonedContainer);
 
     clearValues($clonedContainer);
 
@@ -51,15 +51,15 @@ $(document).ready(function(){
       }, 500);
     }, 200);
 
-    bindChosenTypes()
+    bindChosenTypes();
 
-    $formValidator.parsley()
+    $formValidator.parsley();
     new $RequireSurveyInputData().inspectElements();
-    $($('div.form-container-entry-item[data-required=true]').find('ul.parsley-errors-list')).remove()
-    removeErrorBackground('radio')
-    removeErrorBackground('checkbox')
-    removeErrorBackground('checkboxes')
-    removeUserSuccessClass()
+    $($('div.form-container-entry-item[data-required=true]').find('ul.parsley-errors-list')).remove();
+    removeErrorBackground('radio');
+    removeErrorBackground('checkbox');
+    removeErrorBackground('checkboxes');
+    removeUserSuccessClass();
 
 
     // bind maps
@@ -72,35 +72,41 @@ $(document).ready(function(){
     cl = new ConditionalLogic;
     cl.findRules();
 
-    $(".datepicker").unbind().datepicker()
-    $(".timepicki").unbind().timepicki()
+    $(".datepicker").unbind().datepicker();
+    $(".timepicki").unbind().timepicki({
+      increase_direction: 'up',
+      on_change: timepickValidate = function(element) {
+        return $(element).parsley().validate();
+      }
+    });
+
 
     // binds previews
-    window.showVideoPreview()
-    window.documentPreview()
-    window.fileDeleteEvent()
+    window.showVideoPreview();
+    window.documentPreview();
+    window.fileDeleteEvent();
 
     if (window.location.pathname.match(/\/projects\/[\d+]\/hanuman\/surveys\/\d+\/\edit/)) {
       videos = $('[data-element-type=video]').last().find('.custom-cloudinary li a')
       documents = $('[data-element-type=document]').last().find('.custom-cloudinary li a')
       photos = $('[data-element-type=photo]').last().find('.custom-cloudinary li a')
 
-      clearFileInputsValuesInEdit(videos ,"video")
-      clearFileInputsValuesInEdit(documents, "document")
-      clearFileInputsValuesInEdit(photos, "photo")
+      clearFileInputsValuesInEdit(videos ,"video");
+      clearFileInputsValuesInEdit(documents, "document");
+      clearFileInputsValuesInEdit(photos, "photo");
      }
   });
 
   function clearFileInputsValuesInEdit(files, type){
     while (files.length >= 1) {
-      $(files[0]).click()
+      $(files[0]).click();
       files = $("[data-element-type="+type+"]").last().find('.custom-cloudinary li a')
     }
   }
 
   function cleartFilePreviewContainers(container){
-    $($(container).find('.document-preview-container')).empty()
-    $($(container).find('.video-preview-container')).empty()
+    $($(container).find('.document-preview-container')).empty();
+    $($(container).find('.video-preview-container')).empty();
   }
 
   function removeErrorBackground(type){
