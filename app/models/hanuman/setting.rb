@@ -1,6 +1,12 @@
 module Hanuman
   class Setting < ActiveRecord::Base
     validates_uniqueness_of :key
+
+    def self.sort(sort_column, sort_direction)
+      order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc"))
+    end
+
+
     def self.enable?(key)
       k = find_by_key(key)
       if k.blank?

@@ -19,8 +19,8 @@
       %table.table.table-hover
         %thead
           %tr
-            %th Question Text
-            %th Answer Type
+            %th= sortable "hanuman_questions.question_text, hanuman_answer_types.name*", "Question Text"
+            %th= sortable "hanuman_answer_types.name, hanuman_questions.question_text*", "Answer Type"
             %th
 
         %tbody

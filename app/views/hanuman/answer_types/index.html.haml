@@ -19,14 +19,14 @@
       %table.table.table-hover
         %thead
           %tr
-            %th Name
-            %th Descriptive Name
-            %th Description
-            %th Has Answer Choices
-            %th External Data Source
-            %th Status
-            %th Answer Choice Type
-            %th Element Type
+            %th= sortable "hanuman_answer_types.name, hanuman_answer_types.element_type, hanuman_answer_types.descriptive_name, hanuman_answer_types.description, hanuman_answer_types.has_answer_choices, hanuman_answer_types.answer_choice_type, hanuman_answer_types.external_data_source, hanuman_answer_types.status*", "Name"
+            %th= sortable "hanuman_answer_types.element_type, hanuman_answer_types.name, hanuman_answer_types.descriptive_name, hanuman_answer_types.description, hanuman_answer_types.has_answer_choices, hanuman_answer_types.answer_choice_type, hanuman_answer_types.external_data_source, hanuman_answer_types.status*", "Element Type"
+            %th= sortable "hanuman_answer_types.descriptive_name, hanuman_answer_types.name, hanuman_answer_types.element_type, hanuman_answer_types.description, hanuman_answer_types.has_answer_choices, hanuman_answer_types.answer_choice_type, hanuman_answer_types.external_data_source, hanuman_answer_types.status*", "Descriptive Name"
+            %th= sortable "hanuman_answer_types.description, hanuman_answer_types.name, hanuman_answer_types.element_type, hanuman_answer_types.descriptive_name, hanuman_answer_types.has_answer_choices, hanuman_answer_types.answer_choice_type, hanuman_answer_types.external_data_source, hanuman_answer_types.status*", "Description"
+            %th= sortable "hanuman_answer_types.has_answer_choices, hanuman_answer_types.name, hanuman_answer_types.element_type, hanuman_answer_types.descriptive_name, hanuman_answer_types.description, hanuman_answer_types.answer_choice_type, hanuman_answer_types.external_data_source, hanuman_answer_types.status*", "Has Answer Choices"
+            %th= sortable "hanuman_answer_types.answer_choice_type, hanuman_answer_types.name, hanuman_answer_types.element_type, hanuman_answer_types.descriptive_name, hanuman_answer_types.description, hanuman_answer_types.has_answer_choices, hanuman_answer_types.external_data_source, hanuman_answer_types.status*", "Answer Choice Type"
+            %th= sortable "hanuman_answer_types.external_data_source, hanuman_answer_types.name, hanuman_answer_types.element_type, hanuman_answer_types.descriptive_name, hanuman_answer_types.description, hanuman_answer_types.has_answer_choices, hanuman_answer_types.answer_choice_type, hanuman_answer_types.status*", "External Data Source"
+            %th= sortable "hanuman_answer_types.status, hanuman_answer_types.name, hanuman_answer_types.element_type, hanuman_answer_types.descriptive_name, hanuman_answer_types.description, hanuman_answer_types.has_answer_choices, hanuman_answer_types.answer_choice_type, hanuman_answer_types.external_data_source*", "Status"
             %th
             %th
 
@@ -35,12 +35,12 @@
             %tr
               %td= link_to answer_type.name, answer_type
               %td= link_to answer_type.descriptive_name, answer_type unless answer_type.descriptive_name.blank?
+              %td= link_to answer_type.element_type, answer_type unless answer_type.element_type.blank?
               %td= link_to answer_type.description, answer_type unless answer_type.descriptive_name.blank?
               %td= link_to answer_type.has_answer_choices, answer_type unless answer_type.has_answer_choices.blank?
+              %td= link_to answer_type.answer_choice_type, answer_type unless answer_type.answer_choice_type.blank?
               %td= link_to answer_type.external_data_source, answer_type unless answer_type.external_data_source.blank?
               %td= link_to answer_type.status, answer_type unless answer_type.status.blank?
-              %td= link_to answer_type.answer_choice_type, answer_type unless answer_type.answer_choice_type.blank?
-              %td= link_to answer_type.element_type, answer_type unless answer_type.element_type.blank?
               %td
                 = link_to edit_answer_type_path(answer_type) do
                   %span.glyphicon.glyphicon-pencil

@@ -1,6 +1,5 @@
 $(document).ready(function(){
 
-  removeTimePickerTimeZone()
   // need to find the max data entry on the page and start incrementing from there
   $dataEntry = 0;
   $('.form-container-repeater').each(function() {
@@ -38,6 +37,8 @@ $(document).ready(function(){
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
     cleartFilePreviewContainers($clonedContainer)
 
+    clearValues($clonedContainer);
+
     $(container).after($clonedContainer);
 
     $newClone = $(".new-clone");
@@ -50,8 +51,6 @@ $(document).ready(function(){
       }, 500);
     }, 200);
 
-
-    clearValues($(container).nextAll(".form-container-repeater").find('.form-container-entry-item'));
     bindChosenTypes()
 
     $formValidator.parsley()
@@ -73,17 +72,13 @@ $(document).ready(function(){
     cl = new ConditionalLogic;
     cl.findRules();
 
-    $('.datepicker').datepicker()
-    $('.customTimepicker').removeClass('hasDatepicker')
-    window.bindTimePicker()
-    removeTimePickerTimeZone()
+    $(".datepicker").unbind().datepicker()
+    $(".timepicki").unbind().timepicki()
 
     // binds previews
     window.showVideoPreview()
     window.documentPreview()
     window.fileDeleteEvent()
-
-
 
     if (window.location.pathname.match(/\/projects\/[\d+]\/hanuman\/surveys\/\d+\/\edit/)) {
       videos = $('[data-element-type=video]').last().find('.custom-cloudinary li a')
@@ -106,20 +101,6 @@ $(document).ready(function(){
   function cleartFilePreviewContainers(container){
     $($(container).find('.document-preview-container')).empty()
     $($(container).find('.video-preview-container')).empty()
-  }
-
-
-  function removeTimePickerTimeZone(){
-    $(".customTimepicker").on("click", function(){
-      window.removeTimeZoneButton()
-    })
-
-    $(".customTimepicker").keyup(function(event){
-      window.removeTimeZoneButton()
-      if(event.which == 8){
-        $(this).val('')
-      }
-    })
   }
 
   function removeErrorBackground(type){

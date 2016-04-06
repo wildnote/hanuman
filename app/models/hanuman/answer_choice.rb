@@ -7,10 +7,9 @@ module Hanuman
 
     before_save :protect_split
 
-    def self.filtered_by_question_id(question_id)
-      select(:id, :option_text, :scientific_text).
-        where('question_id = ?', question_id).
-        order('option_text')
+    def self.filtered_by_question_id_and_sort(question_id, sort_column, sort_direction)
+      question_id.blank? ? true : conditions = "hanuman_answer_choices.question_id = " + question_id.to_s
+      joins(:question).where(conditions).order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc"))
     end
 
     def protect_split
@@ -29,7 +28,7 @@ module Hanuman
     def self.sorted
       order("option_text")
     end
-    
+
     def self.second_level
       where(ancestry: nil)
     end
