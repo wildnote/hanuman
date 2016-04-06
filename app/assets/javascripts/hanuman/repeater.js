@@ -72,15 +72,31 @@ $(document).ready(function(){
     cl = new ConditionalLogic;
     cl.findRules();
 
-
     $(".datepicker").unbind().datepicker()
     $(".timepicki").unbind().timepicki()
-    
+
     // binds previews
     window.showVideoPreview()
     window.documentPreview()
     window.fileDeleteEvent()
+
+    if (window.location.pathname.match(/\/projects\/[\d+]\/hanuman\/surveys\/\d+\/\edit/)) {
+      videos = $('[data-element-type=video]').last().find('.custom-cloudinary li a')
+      documents = $('[data-element-type=document]').last().find('.custom-cloudinary li a')
+      photos = $('[data-element-type=photo]').last().find('.custom-cloudinary li a')
+
+      clearFileInputsValuesInEdit(videos ,"video")
+      clearFileInputsValuesInEdit(documents, "document")
+      clearFileInputsValuesInEdit(photos, "photo")
+     }
   });
+
+  function clearFileInputsValuesInEdit(files, type){
+    while (files.length >= 1) {
+      $(files[0]).click()
+      files = $("[data-element-type="+type+"]").last().find('.custom-cloudinary li a')
+    }
+  }
 
   function cleartFilePreviewContainers(container){
     $($(container).find('.document-preview-container')).empty()
