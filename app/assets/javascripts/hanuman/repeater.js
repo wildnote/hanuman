@@ -37,6 +37,8 @@ $(document).ready(function(){
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
     cleartFilePreviewContainers($clonedContainer)
 
+    clearValues($clonedContainer);
+
     $(container).after($clonedContainer);
 
     $newClone = $(".new-clone");
@@ -49,8 +51,6 @@ $(document).ready(function(){
       }, 500);
     }, 200);
 
-
-    clearValues($(container).nextAll(".form-container-repeater").find('.form-container-entry-item'));
     bindChosenTypes()
 
     $formValidator.parsley()
@@ -72,9 +72,10 @@ $(document).ready(function(){
     cl = new ConditionalLogic;
     cl.findRules();
 
-    $('.datepicker').datepicker()
-    $('.timepicki').removeClass('hasDatepicker')
 
+    $(".datepicker").unbind().datepicker()
+    $(".timepicki").unbind().timepicki()
+    
     // binds previews
     window.showVideoPreview()
     window.documentPreview()
