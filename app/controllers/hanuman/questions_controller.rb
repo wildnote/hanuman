@@ -52,6 +52,25 @@ module Hanuman
       @question.destroy
       redirect_to questions_url, notice: 'Question was successfully destroyed.'
     end
+
+    # build up form to grab data to import answer options
+    # GET /questions/import_answer_choices
+    def import_answer_choices
+      @questions = Question.all.order("id")
+    end
+
+    # import answer options
+    # POST /questions/import
+    def import
+      question_id = params[:question_id]
+      file = params[:file]
+      unless question_id.blank?
+        question = Question.find question_id
+        message = question.import_answer_choices(file)
+        redirect_to question, notice: 'Answer Choices Imported: ' + message
+      end
+    end
+
     # helper methods
     def sort_column
       !params[:sort].blank? ? params[:sort] : "hanuman_questions.question_text asc, hanuman_answer_types.name asc"

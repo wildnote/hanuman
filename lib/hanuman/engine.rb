@@ -4,6 +4,7 @@ require 'ancestry'
 require 'ember-rails'
 require 'kaminari'
 require 'active_model_serializers'
+require 'roo'
 
 module Hanuman
   class Engine < ::Rails::Engine
@@ -16,7 +17,7 @@ module Hanuman
         require_dependency(c)
       end
     end
-    
+
     initializer "static assets" do |app|
       app.middleware.insert_before(::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public")
     end

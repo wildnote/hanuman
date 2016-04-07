@@ -43,7 +43,12 @@ Hanuman::Engine.routes.draw do
 
   resources :answer_choices
 
-  resources :questions
+  resources :questions do
+    collection do
+      get 'import_answer_choices'
+      post 'import'
+    end
+  end
 
   resources :answer_types
 
