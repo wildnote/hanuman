@@ -230,7 +230,9 @@ class @ConditionalLogic
     if $conditionElement.is('select')
       return $('#' + $conditionElement.attr('id') + ' option:selected').text()
     if $conditionElement.is("p")
-      return $conditionElement.text()
+      #remove carriage returns and trim leading and trailing whitespace
+      #need to refactor to look for value in element data- attribute instead of from html rendered output
+      return $conditionElement.text().replace(/\↵/g,"").trim()
     $conditionElement.val()
 
 $ ->
