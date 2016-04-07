@@ -137,7 +137,44 @@ module Hanuman
         new_child_q.sort_order = new_child_q.sort_order + increment_sort_by
         new_child_q.save
       end
+    end
 
+    def import_answer_choices(file)
+      spreadsheet = Import::open_spreadsheet(file)
+      header = spreadsheet.row(1)
+      imported = []
+      not_imported = []
+      message = nil
+      if header.index("Answer Choices").blank?
+        message = "Could not import answer choices because we found no 'Answer Choices' column."
+      else
+        (2..spreadsheet.last_row).each do |i|
+          row = Hash[[header, spreadsheet.row(i)].transpose]
+          name = row["Answer Choices"]
+          answer_choice = AnswerChoice.where(option_text: name, question_id: self.id)
+          if answer_choice.blank?
+            imported << name
+            AnswerChoice.create(option_text: name, question_id: self.id)
+          else
+            not_imported << name
+          end
+        end
+        puts "********"
+        puts "********"
+        puts "********"
+        puts "imported"
+        puts imported
+        puts "********"
+        puts "********"
+        puts "********"
+        puts "not imported"
+        puts not_imported
+        puts "********"
+        puts "********"
+        puts "********"
+        message = "number of answer choices imported: #{imported.count.to_s}; number of answer choices not imported because they are already attached to the question: #{not_imported.count.to_s}."
+      end
+      message
     end
 
   end

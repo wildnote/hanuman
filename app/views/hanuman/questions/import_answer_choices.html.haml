@@ -1,0 +1,32 @@
+- content_for :navbar_projects do
+  active
+- content_for :title do
+  Question Import Answer Choices
+
+= form_tag import_questions_path, multipart: true do
+  .panel.panel-info
+    .panel-heading
+      %h3.panel-title Import Answer Choices
+    .panel-body
+      .form-group
+        = label_tag :file, "Excel File", class: "col-sm-2 control-label"
+        .col-sm-6
+          = file_field_tag :file
+      .form-group
+        .col-sm-offset-2.col-sm-10
+          Place all answer choices in a single column and label the column Answer Choices in a xls, xlsx, or csv file. Choose that file and click Import.
+      .form-group
+        = label_tag :question_id, "Question", class: "col-sm-2 control-label"
+        .col-sm-6
+          = select_tag "question_id", options_from_collection_for_select(@questions, "id", "id")
+      .form-group
+        .col-sm-offset-2.col-sm-10
+          Select the question ID of the question you want to import answer choices for. Find the question id in the survey admin page.
+      .form-group
+        .col-sm-12
+      .form-group
+        .col-sm-12
+      .form-group
+        .col-sm-offset-2.col-sm-10
+          = submit_tag "Import", class: "btn btn-primary"
+          = link_to "Cancel", questions_path, class: "btn btn-default"

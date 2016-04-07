@@ -32,6 +32,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'ember-data-source', '1.0.0.beta.12'
   s.add_dependency 'kaminari', '0.16.1'
   s.add_dependency 'active_model_serializers', '0.8.1'
+  s.add_dependency 'roo', '2.3.2'
 
   s.add_development_dependency 'pg', '0.17.1'
 end
