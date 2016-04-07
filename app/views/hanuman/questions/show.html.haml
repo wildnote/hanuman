@@ -30,3 +30,18 @@
         %label.col-sm-2.control-label Answer Type
         .col-sm-10
           %p.form-control-static= @question.answer_type.name
+      %h4
+        Answer Choices
+      %hr
+      %h5.row
+        .col-sm-2
+        .col-sm-1
+          Name
+        .col-sm-1
+          Status
+      - @question.answer_choices.each do |ac|
+        .row
+          .col-sm-2
+          .col-sm-6
+            = ac.option_text
+          .col-sm-1
