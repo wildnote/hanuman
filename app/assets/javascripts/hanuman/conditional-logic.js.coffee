@@ -103,7 +103,7 @@ class @ConditionalLogic
 
   checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType) ->
     conditionMetTracker = []
-    _.each conditions, (condition) ->
+    $.each conditions, (index, condition) ->
       $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
       if inRepeater
         $conditionElement = $container.closest(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control')
