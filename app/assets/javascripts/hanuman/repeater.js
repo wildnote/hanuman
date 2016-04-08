@@ -18,16 +18,22 @@ $(document).ready(function(){
     unbindChosenTypes();
     $('.datepicker').datepicker('destroy');
 
+    // find and clone container
     var container = $(this).closest('.form-container-repeater');
     $clonedContainer = container.clone(true);
+
+    // remove hidden field observation ids
+    $($clonedContainer).find('.hidden-field-observation-id').remove();
+
+    // collect all container items inside cloned container for iteration
     var containerItems = $($clonedContainer).find('.form-container-entry-item');
 
     // increment data-entry by 1 on every click
     $dataEntry = $dataEntry + 1;
 
-    // update attributes with timestamps
+    // loop through collected container items and update attributes with timestamps
+    // CONTAINER ITEMS ARE RELATIVE TO CLONED CONTAINER, THINK OF CLONED CONTAINER AS A SECONDARY DOM OF ITS OWN.
     updateDom(containerItems, $dataEntry);
-    stringifyAndResetContainer($clonedContainer);
 
     // fix repeater container data-entry numbers
     $clonedContainer.attr("data-entry", $dataEntry);
@@ -37,8 +43,11 @@ $(document).ready(function(){
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
     cleartFilePreviewContainers($clonedContainer);
 
+    // clear values
     clearValues($clonedContainer);
 
+    // we need to stringiy and reset before appending to dom
+    stringifyAndResetContainer($clonedContainer);
     $(container).after($clonedContainer);
 
     $newClone = $(".new-clone");
