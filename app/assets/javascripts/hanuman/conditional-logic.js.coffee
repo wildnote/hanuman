@@ -45,6 +45,9 @@ class @ConditionalLogic
         #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
         # determine if we are in a repeater-this needs to get deleted-kdh
         inRepeater = false
+        $repeater = $conditionElement.closest(".form-container-repeater")
+        if $repeater.length > 0
+            inRepeater = true
         if rule.conditions.length > 1
           self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType)
         else
@@ -103,7 +106,7 @@ class @ConditionalLogic
 
   checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType) ->
     conditionMetTracker = []
-    _.each conditions, (condition) ->
+    $.each conditions, (index, condition) ->
       $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
       if inRepeater
         $conditionElement = $container.closest(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control')
@@ -233,7 +236,9 @@ class @ConditionalLogic
     if $conditionElement.is('select')
       return $('#' + $conditionElement.attr('id') + ' option:selected').text()
     if $conditionElement.is("p")
-      return $conditionElement.text()
+      #remove carriage returns and trim leading and trailing whitespace
+      #need to refactor to look for value in element data- attribute instead of from html rendered output
+      return $conditionElement.text().replace(/\↵/g,"").trim()
     $conditionElement.val()
 
 $ ->
