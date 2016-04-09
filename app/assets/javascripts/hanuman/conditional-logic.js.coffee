@@ -45,6 +45,9 @@ class @ConditionalLogic
         #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
         # determine if we are in a repeater-this needs to get deleted-kdh
         inRepeater = false
+        $repeater = $conditionElement.closest(".form-container-repeater")
+        if $repeater.length > 0
+            inRepeater = true
         if rule.conditions.length > 1
           self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType)
         else
