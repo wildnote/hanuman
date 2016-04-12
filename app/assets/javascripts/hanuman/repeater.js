@@ -285,9 +285,11 @@ $(document).ready(function(){
 
   function clearValues(clonedRepeater){
     for (var i = 0; i < clonedRepeater.length; i++) {
+      $(clonedRepeater[i]).find("input[type=date]").val("");
+      $(clonedRepeater[i]).find("input[type=email]").val("");
+      $(clonedRepeater[i]).find("input[type=number]").val("");
       $(clonedRepeater[i]).find("input[type=tel]").val("");
       $(clonedRepeater[i]).find("input[type=time]").val("");
-      $(clonedRepeater[i]).find("input[type=date]").val("");
       textFields = $(clonedRepeater[i]).find(":text").val("");
       textAreas = $(clonedRepeater[i]).find("textarea").val("");
       // un-select dropdown
