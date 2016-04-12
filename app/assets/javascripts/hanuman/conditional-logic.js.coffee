@@ -107,10 +107,15 @@ class @ConditionalLogic
   checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType) ->
     conditionMetTracker = []
     $.each conditions, (index, condition) ->
-      $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
       if inRepeater
         $conditionElement = $container.closest(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control')
-      #TODO this checkbox condition still needs to be fixed for relativity
+        if $conditionElement.length < 1
+          $conditionElement = $container.closest(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control-static')
+      else
+        $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
+        if $conditionElement.length < 1
+          $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control-static')
+
       if $conditionElement.is(":checkbox")# || $triggerElement.is(":radio"))
         # limit binding of each checkbox if data-label-value and answer are the same-kdh
         $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value=" + condition.answer.replace("/","\\/") + "]")
@@ -196,10 +201,10 @@ class @ConditionalLogic
         if value.length > 0 then hide_questions = false
       when "is greater than"
         if $.isNumeric(value)
-          if value > answer then hide_questions = false
+          if parseFloat(value) > parseFloat(answer) then hide_questions = false
       when "is less than"
         if $.isNumeric(value)
-          if value < answer then hide_questions = false
+          if parseFloat(value) < parseFloat(answer) then hide_questions = false
       when "starts with"
         if value and value.slice(0, answer.length) == answer then hide_questions = false
       when "contains"
@@ -239,6 +244,9 @@ class @ConditionalLogic
       #remove carriage returns and trim leading and trailing whitespace
       #need to refactor to look for value in element data- attribute instead of from html rendered output
       return $conditionElement.text().replace(/\↵/g,"").trim()
+    # survey report preview
+    if $conditionElement.is('td')
+      return $conditionElement.text().replace(/\↵/g, "").trim()
     $conditionElement.val()
 
 $ ->
