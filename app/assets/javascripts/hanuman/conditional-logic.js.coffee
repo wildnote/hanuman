@@ -244,6 +244,9 @@ class @ConditionalLogic
       #remove carriage returns and trim leading and trailing whitespace
       #need to refactor to look for value in element data- attribute instead of from html rendered output
       return $conditionElement.text().replace(/\↵/g,"").trim()
+    # survey report preview
+    if $conditionElement.is('td')
+      return $conditionElement.text().replace(/\↵/g, "").trim()
     $conditionElement.val()
 
 $ ->
