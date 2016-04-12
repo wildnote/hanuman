@@ -107,10 +107,15 @@ class @ConditionalLogic
   checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType) ->
     conditionMetTracker = []
     $.each conditions, (index, condition) ->
-      $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
       if inRepeater
         $conditionElement = $container.closest(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control')
-      #TODO this checkbox condition still needs to be fixed for relativity
+        if $conditionElement.length < 1
+          $conditionElement = $container.closest(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control-static')
+      else
+        $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
+        if $conditionElement.length < 1
+          $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control-static')
+
       if $conditionElement.is(":checkbox")# || $triggerElement.is(":radio"))
         # limit binding of each checkbox if data-label-value and answer are the same-kdh
         $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value=" + condition.answer.replace("/","\\/") + "]")
