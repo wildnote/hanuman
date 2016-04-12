@@ -201,10 +201,10 @@ class @ConditionalLogic
         if value.length > 0 then hide_questions = false
       when "is greater than"
         if $.isNumeric(value)
-          if value > answer then hide_questions = false
+          if parseFloat(value) > parseFloat(answer) then hide_questions = false
       when "is less than"
         if $.isNumeric(value)
-          if value < answer then hide_questions = false
+          if parseFloat(value) < parseFloat(answer) then hide_questions = false
       when "starts with"
         if value and value.slice(0, answer.length) == answer then hide_questions = false
       when "contains"
