@@ -42,10 +42,12 @@
         {{/if}}
 
         {{#if model.rule}}
-          CL {{model.rule.matchType}}
+          [CL show
           {{#each condition in model.rule.conditions}}
-            [if {{condition.questionId}} {{condition.operator}} {{condition.answer}}]
+            if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
+            {{model.ruleMatchType}}
           {{/each}}
+          ]
         {{/if}}
       </div>
     </div>
