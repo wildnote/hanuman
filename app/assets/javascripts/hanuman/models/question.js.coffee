@@ -29,4 +29,11 @@ App.Question = DS.Model.extend({
     else
       return false
   ).property('answerType')
+  ruleMatchType: (->
+    if @.get('rule')
+      if @.get('rule').get('matchType') is "all"
+        return "AND"
+      else
+        return "OR"
+  ).property('rule')
 })

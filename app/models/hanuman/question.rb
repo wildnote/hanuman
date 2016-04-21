@@ -7,7 +7,7 @@ module Hanuman
     has_many :answer_choices, dependent: :destroy, inverse_of: :question
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
     has_one :rule, dependent: :destroy
-    has_many :conditions#, dependent: :destroy
+    has_many :conditions, dependent: :destroy
 
     validates_presence_of :answer_type_id
     # wait until after migration for these validations
