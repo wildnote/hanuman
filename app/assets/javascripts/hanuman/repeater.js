@@ -14,7 +14,7 @@ $(document).ready(function(){
 
     $scrollPosition = $(this).offset().top - 50;
 
-    $formValidator.parsley().destroy();
+    $formValidator.parsley('destroy')
     unbindChosenTypes();
     $('.datepicker').datepicker('destroy');
 
@@ -94,7 +94,7 @@ $(document).ready(function(){
     window.showVideoPreview();
     window.documentPreview();
     window.fileDeleteEvent();
-
+    $('.parsley-error').removeClass('parsley-error')
     if (window.location.pathname.match(/\/projects\/[\d+]\/hanuman\/surveys\/\d+\/\edit/)) {
       videos = $('[data-element-type=video]').last().find('.custom-cloudinary li a')
       documents = $('[data-element-type=document]').last().find('.custom-cloudinary li a')
