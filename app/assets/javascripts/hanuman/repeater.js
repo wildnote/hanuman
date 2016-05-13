@@ -14,7 +14,11 @@ $(document).ready(function(){
 
     $scrollPosition = $(this).offset().top - 50;
 
-    $formValidator.parsley('destroy')
+    if ($('[data-required=true]').length > 0) {
+      var formValidator = $('form.parsley-survey')
+      // formValidator.parsley('destroy')
+    }
+
     unbindChosenTypes();
     $('.datepicker').datepicker('destroy');
 
@@ -61,9 +65,10 @@ $(document).ready(function(){
     }, 200);
 
     bindChosenTypes();
-
-    $formValidator.parsley();
-    new $RequireSurveyInputData().inspectElements();
+    if ($('[data-required=true]').length > 0) {
+      formValidator.parsley();
+      new $RequireSurveyInputData().inspectElements();
+    }
     $($('div.form-container-entry-item[data-required=true]').find('ul.parsley-errors-list')).remove();
     removeErrorBackground('radio');
     removeErrorBackground('checkbox');
