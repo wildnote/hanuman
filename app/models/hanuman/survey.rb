@@ -58,72 +58,74 @@ module Hanuman
       sort = [0]
 
       self.observations.each do |o|
-        if o.entry == 1
-          if debug
-            apply_group_sort_debug(o, 1, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
-          end
-
-          remaining_children[form_container_nesting_level] = remaining_children[form_container_nesting_level] - 1 unless remaining_children[form_container_nesting_level].blank?
-
-          if o.question.answer_type.element_type == "container"
-            form_container_type << o.question.answer_type.name
-            form_container_label << o.question.question_text
-            form_container_nesting_level += 1
-            if o.question.children.blank?
-              remaining_children << 0
-            else
-              remaining_children << o.question.children.length
-              last_child_id << o.question.children.order(:sort_order).last.id
+        unless o.question.blank?
+          if o.entry == 1
+            if debug
+              apply_group_sort_debug(o, 1, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
             end
-            group << 0
-            sort << 0
-          end
 
-          group_sort = ""
+            remaining_children[form_container_nesting_level] = remaining_children[form_container_nesting_level] - 1 unless remaining_children[form_container_nesting_level].blank?
 
-          (1..(form_container_nesting_level + 2)).each_with_index do |n, index|
-            group_sort += (index == 0 ? "g" : "-g") + group[index].to_s.rjust(3, '0') + ":s" + sort[index].to_s.rjust(3, '0')
-          end
+            if o.question.answer_type.element_type == "container"
+              form_container_type << o.question.answer_type.name
+              form_container_label << o.question.question_text
+              form_container_nesting_level += 1
+              if o.question.children.blank?
+                remaining_children << 0
+              else
+                remaining_children << o.question.children.length
+                last_child_id << o.question.children.order(:sort_order).last.id
+              end
+              group << 0
+              sort << 0
+            end
 
-          o.group_sort = group_sort
+            group_sort = ""
 
-          if debug
-            puts group_sort
-            puts o.inspect
-          end
+            (1..(form_container_nesting_level + 2)).each_with_index do |n, index|
+              group_sort += (index == 0 ? "g" : "-g") + group[index].to_s.rjust(3, '0') + ":s" + sort[index].to_s.rjust(3, '0')
+            end
 
-          if remaining_children[form_container_nesting_level] == 0 || o.question.id == last_child_id[form_container_nesting_level]
-            form_container_type.pop
-            form_container_label.pop
-            form_container_nesting_level -= 1
-            remaining_children.pop
-            last_child_id.pop
-            group.pop
-            sort.pop
+            o.group_sort = group_sort
 
             if debug
-              apply_group_sort_debug(o, 2, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
+              puts group_sort
+              puts o.inspect
             end
 
-            remaining_children.each do |rc|
-              if rc == 0
-                form_container_type.pop
-                form_container_label.pop
-                form_container_nesting_level -= 1
-                remaining_children.pop
-                last_child_id.pop
-                group.pop
-                sort.pop
-              end
+            if remaining_children[form_container_nesting_level] == 0 || o.question.id == last_child_id[form_container_nesting_level]
+              form_container_type.pop
+              form_container_label.pop
+              form_container_nesting_level -= 1
+              remaining_children.pop
+              last_child_id.pop
+              group.pop
+              sort.pop
 
               if debug
                 apply_group_sort_debug(o, 2, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
               end
 
-            end
-          end
+              remaining_children.each do |rc|
+                if rc == 0
+                  form_container_type.pop
+                  form_container_label.pop
+                  form_container_nesting_level -= 1
+                  remaining_children.pop
+                  last_child_id.pop
+                  group.pop
+                  sort.pop
+                end
 
-          sort[form_container_nesting_level + 1] += 1
+                if debug
+                  apply_group_sort_debug(o, 2, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
+                end
+
+              end
+            end
+
+            sort[form_container_nesting_level + 1] += 1
+          end
         end
       end
 
