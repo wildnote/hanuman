@@ -8,17 +8,14 @@ $(document).ready(function(){
     }
   });
 
+  // clicking on button to add repeater
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
     e.preventDefault();
     e.stopPropagation();
 
     $scrollPosition = $(this).offset().top - 50;
 
-    if ($('[data-required=true]').length > 0) {
-      var formValidator = $('form.parsley-survey')
-      // formValidator.parsley('destroy')
-    }
-
+    // unbinding events on plugins
     unbindChosenTypes();
     $('.datepicker').datepicker('destroy');
 
@@ -28,8 +25,10 @@ $(document).ready(function(){
 
     // remove hidden field observation ids
     $($clonedContainer).find('.hidden-field-observation-id').remove();
+    // remove data-observation-id at the repeater level
+    $($clonedContainer).removeAttr('data-observation-id')
 
-    // collect all container items inside cloned container for iteration
+    // collect all container items inside cloned container for iteration later to update all attributes
     var containerItems = $($clonedContainer).find('.form-container-entry-item');
 
     // increment data-entry by 1 on every click
@@ -45,12 +44,14 @@ $(document).ready(function(){
 
     // set cloned container to display none for fading in
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
-    cleartFilePreviewContainers($clonedContainer);
+    // commenting out because we don't use fancy preview code for docs and videos, if we bring this back probably need this at this point
+    // cleartFilePreviewContainers($clonedContainer);
 
     // clear values
     clearValues($clonedContainer);
 
-    // we need to stringiy and reset before appending to dom
+    // we need to stringiy and reset before appending to dom becuase without this, certain js events were getting
+    // triggered on the current repeater as well as the repeater above it
     stringifyAndResetContainer($clonedContainer);
     $(container).after($clonedContainer);
 
@@ -65,27 +66,28 @@ $(document).ready(function(){
     }, 200);
 
     bindChosenTypes();
-    if ($('[data-required=true]').length > 0) {
-      formValidator.parsley();
-      new $RequireSurveyInputData().inspectElements();
-    }
-    $($('div.form-container-entry-item[data-required=true]').find('ul.parsley-errors-list')).remove();
-    removeErrorBackground('radio');
-    removeErrorBackground('checkbox');
-    removeErrorBackground('checkboxes');
-    removeUserSuccessClass();
 
+    // remove parsley classes and error messages on clonedContainer
+    $clonedContainer.find('div.form-container-entry-item[data-required=true]').find('ul.parsley-errors-list').remove();
+    removeErrorBackground('radio', $clonedContainer);
+    removeErrorBackground('checkbox', $clonedContainer);
+    removeErrorBackground('checkboxes', $clonedContainer);
+    removeUserSuccessClass($clonedContainer);
 
     // bind maps
     setTimeout(function(){
+      // setupDefaultMaps and bindButtons are in maps.js
+      // TODO move maps.js into hanuman, make these method calls relative to the $clonedContainer
       setupDefaultMaps();
       bindButtons();
-      resetMapButtons();
+      resetMapButtons($clonedContainer);
     },500)
-    // bind ConditionalLogic
+
+    // bind ConditionalLogic and re-run the logic to hide and show
     cl = new ConditionalLogic;
     cl.findRules();
 
+    // unbind and rebind the pickers
     $(".datepicker").unbind().datepicker();
     $(".timepicki").unbind().timepicki({
       increase_direction: 'up',
@@ -95,26 +97,25 @@ $(document).ready(function(){
     });
 
 
+    // removed the pretty doc and video preview in cloudinary upload so commenting this out for now-kdh
     // binds previews
-    window.showVideoPreview();
-    window.documentPreview();
-    window.fileDeleteEvent();
-    $('.parsley-error').removeClass('parsley-error')
-    if (window.location.pathname.match(/\/projects\/[\d+]\/hanuman\/surveys\/\d+\/\edit/)) {
-      videos = $('[data-element-type=video]').last().find('.custom-cloudinary li a')
-      documents = $('[data-element-type=document]').last().find('.custom-cloudinary li a')
-      photos = $('[data-element-type=photo]').last().find('.custom-cloudinary li a')
+    // window.showVideoPreview();
+    // window.documentPreview();
+    // window.fileDeleteEvent();
 
-      clearFileInputsValuesInEdit(videos ,"video");
-      clearFileInputsValuesInEdit(documents, "document");
-      clearFileInputsValuesInEdit(photos, "photo");
+    // resetting parsley required field styling on clonedContainer
+    $clonedContainer.find('.parsley-error').removeClass('parsley-error')
+
+    // on edit treat photo, video and doc sections as if new since on edit there is already saved files
+    if ($('.survey-edit-mode').length > 0) {
+      files = $clonedContainer.find('[data-element-type=file]').find('.custom-cloudinary li a')
+      clearFileInputsValuesInEdit(files);
      }
   });
 
-  function clearFileInputsValuesInEdit(files, type){
-    while (files.length >= 1) {
-      $(files[0]).click();
-      files = $("[data-element-type="+type+"]").last().find('.custom-cloudinary li a')
+  function clearFileInputsValuesInEdit(files){
+    if (files.length >= 1) {
+      files.click();
     }
   }
 
@@ -123,15 +124,34 @@ $(document).ready(function(){
     $($(container).find('.video-preview-container')).empty();
   }
 
-  function removeErrorBackground(type){
-    $('div.form-container-entry-item[data-element-type='+ type +']').find('div.col-sm-7').removeAttr('style')
+  function removeErrorBackground(type, $clonedContainer){
+    $clonedContainer.find('div.form-container-entry-item[data-element-type='+ type +']').find('div.col-sm-7').removeAttr('style')
   }
 
   $('.form-container-survey').on('click', ".destroy-form-container-repeater", function(){
+    var that = this;
     var entry = $($(this).closest('.form-container-repeater')).attr('data-entry');
     var dataObservationId = $($(this).closest('.form-container-repeater')).attr('data-observation-id');
+    // if we have a dataObservationId then the observation has been saved to the DB, thus we need to delete from the DB otherwise just remove from the DOM
+    if (dataObservationId) {
+      var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1];
+      var surveyId = window.location.pathname.match(/\/surveys\/(\d+)/)[1];
+
+      $.ajax({
+        url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/entry/"+ entry,
+        method: "Delete"
+      }).done(function(response) {
+        removeObservationFromDom(that, entry);
+      });
+    }else{
+      removeObservationFromDom(that, entry);
+    }
+    return false;
+  });
+
+  function removeObservationFromDom(observationContainerToDelete, entry) {
     $(".form-entry-item-container[data-entry=" + entry + "]").not('.form-entry-item-container[data-element-type=time]').remove();
-    $removeContainer = $(this).closest('.form-container-repeater');
+    $removeContainer = $(observationContainerToDelete).closest('.form-container-repeater');
 
     setTimeout(function() {
       $("html, body").animate({
@@ -145,31 +165,20 @@ $(document).ready(function(){
           $removeContainer.remove();
       }
     );
+  }
 
-    if (window.location.pathname.match(/\/projects\/[\d+]\/hanuman\/surveys\/\d+\/edit/)) {
-      var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1];
-      var surveyId = window.location.pathname.match(/\/surveys\/(\d+)/)[1];
-
-      $.ajax({
-        url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/entry/"+ entry,
-        method: "Delete"
-      });
-    }
-    return false;
-  });
-
-  function resetMapButtons(){
-    var map = $('.form-container-repeater').last().find('div.form-container-entry-item[data-element-type=map] div.map-buttons')
-    $(map).find('a.edit-map').text('Pin a Location on Map')
-    $(map).find('a.edit-map').attr('style','display: inline-block;')
-    $(map).find('a.cancel-map').attr('style','display: none;')
+  function resetMapButtons($clonedContainer){
+    var map = $clonedContainer.find('div.form-container-entry-item[data-element-type=map] div.map-buttons')
+    $(map).find('a.edit-map').text('Pin a Location on Map');
+    $(map).find('a.edit-map').attr('style','display: inline-block;');
+    $(map).find('a.cancel-map').attr('style','display: none;');
   };
 
-  function removeUserSuccessClass(){
+  function removeUserSuccessClass($clonedContainer){
     var types = ['checkboxes', 'checkbox', 'radio']
     setTimeout(function(){
       types.forEach(function(type){
-        $($('.form-container-repeater').last().find('div.form-container-entry-item[data-element-type=' + type + '] .col-sm-7 input')).removeClass('user-success');
+        $clonedContainer.find('div.form-container-entry-item[data-element-type=' + type + '] .col-sm-7 input').removeClass('user-success');
       })
     }, 2000)
   };
@@ -203,22 +212,23 @@ $(document).ready(function(){
     $(inputs[lastInputIndex]).attr("value", dataEntry);
     var parsleySubstrig = Math.random().toString(36).substring(13);
     inputs.each(function(){
-      if ($(inputs[index]).attr('type') == 'file' || $(inputs[index]).attr('type') == 'document' || $(inputs[index]).attr('type') == 'photo' || $(inputs[index]).attr('type') == 'video') {
-        $(inputs[index]).siblings('.attachinary_container').last().remove()
-      }
+      // removing because we don't use the special .attachinary_container for preview of video and document when uploading
+      // if ($(inputs[index]).attr('type') == 'file' || $(inputs[index]).attr('type') == 'document' || $(inputs[index]).attr('type') == 'photo' || $(inputs[index]).attr('type') == 'video') {
+      //   $(inputs[index]).siblings('.attachinary_container').last().remove()
+      // }
       if ($(inputs[index]).attr('id')) {
         var idStamp = $(inputs[index]).attr("id").match(/\d+/)[0];
         var newTimeStamp = idStamp.concat(timeStamp);
         $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/\d+/, newTimeStamp));
       }
-      if ($(inputs[index]).attr('data-parsley-multiple')) {
-        var newTimeStamp = parsleySubstrig.concat(timeStamp);
-        $(inputs[index]).attr("data-parsley-multiple", $(inputs[index]).attr("data-parsley-multiple").replace(/(\d+)/, newTimeStamp));
-      }
       if ($(inputs[index]).attr('name')) {
         var nameStamp = $(inputs[index]).attr("name").match(/\d+/)[0];
         var newTimeStamp = nameStamp.concat(timeStamp);
         $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/\d+/, newTimeStamp));
+      }
+      if ($(inputs[index]).attr('data-parsley-multiple')) {
+        var newTimeStamp = parsleySubstrig.concat(timeStamp);
+        $(inputs[index]).attr("data-parsley-multiple", $(inputs[index]).attr("data-parsley-multiple").replace(/(\d+)/, newTimeStamp));
       }
       index ++;
     });
