@@ -8,6 +8,7 @@ module Hanuman
     has_one :survey_extension, dependent: :destroy
     accepts_nested_attributes_for :survey_extension, :allow_destroy => true
     validates :survey_template_id, presence: true
+    validates :survey_date, presence: true
 
     before_save :apply_group_sort
 
