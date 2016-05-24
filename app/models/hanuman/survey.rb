@@ -223,7 +223,7 @@ module Hanuman
 
     end
 
-    def apply_group_sort_debug(observation, code_level, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
+    def apply_group_sort_debug(observation, code_level, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
       indentation = ""
       if code_level > 1
         (1..(code_level - 1)).each do |i|
