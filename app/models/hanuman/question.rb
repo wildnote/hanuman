@@ -16,6 +16,7 @@ module Hanuman
     validates :question_text, presence: true, unless: :question_text_not_required
 
     after_create :submit_blank_observation_data
+    after_update :resort_submitted_observations, if: :sort_order_changed?
 
     amoeba do
       include_association [:rule, :conditions, :answer_choices]
@@ -67,6 +68,15 @@ module Hanuman
             end
           end
           # calling save so that before_save method apply_group_sort is called to resort observations after inserting new ones for new questions-kdh
+          s.save
+        end
+      end
+    end
+
+    def resort_submitted_observations
+      unless survey_step.survey_template.fully_editable
+        surveys = survey_step.survey_template.surveys
+        surveys.each do |s|
           s.save
         end
       end
