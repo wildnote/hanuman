@@ -16,7 +16,7 @@ module Hanuman
     validates :question_text, presence: true, unless: :question_text_not_required
 
     after_create :submit_blank_observation_data
-    after_destroy :resort_submitted_data
+    #after_destroy :resort_submitted_data
 
     amoeba do
       include_association [:rule, :conditions, :answer_choices]
@@ -44,27 +44,26 @@ module Hanuman
     # if survey has data submitted against it, then submit blank data for each
     # survey for newly added question
     def submit_blank_observation_data
+      question = self
+      parent = self.parent
       unless survey_step.survey_template.fully_editable
         surveys = survey_step.survey_template.surveys
         surveys.each do |s|
-          entry = 1
-          # check for ancestry to see if question belongs to a repeater
-          parent = self.parent
           if parent.blank?
             Observation.create(
               survey_id: s.id,
               question_id: self.id,
               answer: '',
-              entry: entry
+              entry: 1
             )
+          # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
           else
-            entry = parent.entry unless parent.blank?
-            parent.observations.each do |o|
+            s.observations.where(question_id: parent.id).each do |o|
               Observation.create(
                 survey_id: s.id,
                 question_id: self.id,
                 answer: '',
-                entry: entry
+                entry: o.entry
               )
             end
           end
