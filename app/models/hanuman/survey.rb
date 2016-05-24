@@ -107,7 +107,7 @@ module Hanuman
                 apply_group_sort_debug(o, 2, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
               end
 
-              remaining_children.each do |rc|
+              remaining_children.reverse.each do |rc|
                 if rc == 0
                   form_container_type.pop
                   form_container_label.pop
@@ -116,6 +116,8 @@ module Hanuman
                   last_child_id.pop
                   group.pop
                   sort.pop
+                else
+                  break
                 end
 
                 if debug
