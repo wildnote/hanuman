@@ -32,11 +32,15 @@ module Hanuman
       end
     end
 
-    def sortable(column, title)
+    def sortable(column, title, path_call_string)
       title ||= column.titleize
-      css_class = column.gsub("*", "") == sort_column.gsub(" asc,", ",").gsub(" desc,", ",").gsub(" asc", "").gsub(" desc", "") ? "current #{sort_direction}" : nil
-      direction = column.gsub("*", "") == sort_column.gsub(" asc,", ",").gsub(" desc,", ",").gsub(" asc", "").gsub(" desc", "") && sort_direction == "asc" ? "desc" : "asc"
-      link_to raw(title), params.merge(:sort => column.gsub("*,", "!").gsub(",", " " + direction + ",").gsub("*", " asc").gsub("!", " asc,"), :direction => direction, :page => nil), {:class => css_class}
+      css_class = column.gsub('*', '') == sort_column.gsub(' asc,', ',').gsub(' desc,', ',').gsub(' asc', '').gsub(' desc', '') ? 'current #{sort_direction}' : nil
+      direction = column.gsub('*', '') == sort_column.gsub(' asc,', ',').gsub(' desc,', ',').gsub(' asc', '').gsub(' desc', '') && sort_direction == 'asc' ? 'desc' : 'asc'
+      if path_call_string
+        link_to raw(title), eval(path_call_string+"(params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil))"), {:class => css_class}
+      else
+        link_to raw(title), params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil), {:class => css_class}
+      end
     end
   end
 end
