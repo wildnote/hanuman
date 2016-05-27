@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
   //  This removes the delete button from the first repeater.
-  $('.destroy-form-container-repeater').first().remove()
+  $('.destroy-form-container-repeater').first().hide()
 
   // need to find the max data entry on the page and start incrementing from there
   $dataEntry = 0;
@@ -10,7 +10,7 @@ $(document).ready(function(){
       $dataEntry = parseInt($(this).attr('data-entry'));
     }
   });
-  
+
   // clicking on button to add repeater
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
     e.preventDefault();
@@ -108,6 +108,9 @@ $(document).ready(function(){
 
     // resetting parsley required field styling on clonedContainer
     $clonedContainer.find('.parsley-error').removeClass('parsley-error')
+
+    // shows delete button for new repeaters.
+    $clonedContainer.find('.destroy-form-container-repeater').show()
 
     // on edit treat photo, video and doc sections as if new since on edit there is already saved files
     if ($('.survey-edit-mode').length > 0) {
