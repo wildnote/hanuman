@@ -108,14 +108,15 @@ $(document).ready(function(){
 
     // on edit treat photo, video and doc sections as if new since on edit there is already saved files
     if ($('.survey-edit-mode').length > 0) {
-      files = $clonedContainer.find('[data-element-type=file]').find('.custom-cloudinary li a')
+      files = $clonedContainer.find("[data-element-type=file]").find('.custom-cloudinary li a')
       clearFileInputsValuesInEdit(files);
      }
   });
 
   function clearFileInputsValuesInEdit(files){
-    if (files.length >= 1) {
-      files.click();
+    while (files.length >= 1) {
+      $(files[0]).click();
+      files = $clonedContainer.find("[data-element-type=file]").find('.custom-cloudinary li a')
     }
   }
 
@@ -212,10 +213,10 @@ $(document).ready(function(){
     $(inputs[lastInputIndex]).attr("value", dataEntry);
     var parsleySubstrig = Math.random().toString(36).substring(13);
     inputs.each(function(){
-      // removing because we don't use the special .attachinary_container for preview of video and document when uploading
-      // if ($(inputs[index]).attr('type') == 'file' || $(inputs[index]).attr('type') == 'document' || $(inputs[index]).attr('type') == 'photo' || $(inputs[index]).attr('type') == 'video') {
-      //   $(inputs[index]).siblings('.attachinary_container').last().remove()
-      // }
+      // removing uploaded photos, docs and videos from $clonedContainer
+      if ($(inputs[index]).attr('type') == 'file') {
+        $(inputs[index]).siblings('.attachinary_container').last().remove()
+      }
       if ($(inputs[index]).attr('id')) {
         var idStamp = $(inputs[index]).attr("id").match(/\d+/)[0];
         var newTimeStamp = idStamp.concat(timeStamp);
