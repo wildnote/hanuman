@@ -62,11 +62,6 @@ module Hanuman
       self.observations.each do |o|
         # have to check for existence of question because mobile device may be submitting a survey with a question that has since been deleted-kdh
         unless o.question.blank?
-          puts "*****"
-          puts "*****"
-          puts "o.question.blank? = false"
-          puts "*****"
-          puts "*****"
           if o.entry == 1
             if debug
               apply_group_sort_debug(o, 1, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
@@ -137,11 +132,6 @@ module Hanuman
           end
         else
           # delete the observtion from the collection since the question got deleted
-            puts "*****"
-            puts "*****"
-            puts "o.question.blank? = true"
-            puts "*****"
-            puts "*****"
           o.mark_for_destruction
           # o.destroy
         end
@@ -165,11 +155,6 @@ module Hanuman
         self.observations.each do |o|
           # have to check for existence of question because mobile device may be submitting a survey with a question that has since been deleted-kdh
           unless o.question.blank?
-            puts "*****"
-            puts "*****"
-            puts "o.question.blank? = false"
-            puts "*****"
-            puts "*****"
             if o.entry == n
               # find matching question id from entry 1 observations
               self.observations.each do |sub_o|
@@ -210,11 +195,6 @@ module Hanuman
             end
           else
             # delete the observtion from the collection since the question got deleted
-            puts "*****"
-            puts "*****"
-            puts "o.question.blank? = true"
-            puts "*****"
-            puts "*****"
             o.mark_for_destruction
             # o.destroy
           end
