@@ -32,14 +32,21 @@ module Hanuman
       end
     end
 
-    def sortable(column, title, path_call_string)
+    def sortable(column, title, path_call_string = nil)
       title ||= column.titleize
-      css_class = column.gsub('*', '') == sort_column.gsub(' asc,', ',').gsub(' desc,', ',').gsub(' asc', '').gsub(' desc', '') ? 'current #{sort_direction}' : nil
+      css_class = column.gsub('*', '') == sort_column.gsub(' asc,', ',').gsub(' desc,', ',').gsub(' asc', '').gsub(' desc', '') ? "current #{sort_direction}" : nil
       direction = column.gsub('*', '') == sort_column.gsub(' asc,', ',').gsub(' desc,', ',').gsub(' asc', '').gsub(' desc', '') && sort_direction == 'asc' ? 'desc' : 'asc'
       if path_call_string
         link_to raw(title), eval(path_call_string+"(params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil))"), {:class => css_class}
       else
         link_to raw(title), params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil), {:class => css_class}
+      end
+    end
+
+    def project_context_engine_pagination(pagination_markup)
+      unless pagination_markup.blank?
+        pagination_path = pagination_markup.to_s.split("a href=\"/")[1].split("?")[0]
+        pagination_markup.gsub(pagination_path, "projects/" + params[:project_id] + "/" + pagination_path).gsub("project_id=" + params[:project_id], "").gsub("&amp;&amp;", "&").html_safe
       end
     end
   end
