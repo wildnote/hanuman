@@ -2,8 +2,8 @@
   Edit Step
 <% end %>
 
-<script type="text/x-handlebars">
-  <div class="container">
-    {{outlet}}
-  </div>
-</script>
+<div id="ember-container">
+	<base href="/hanuman/admin/">
+	<%= include_ember_script_tags :frontend %>
+	<%= include_ember_stylesheet_tags :frontend %>
+</div>

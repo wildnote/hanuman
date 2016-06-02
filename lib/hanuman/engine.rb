@@ -1,7 +1,7 @@
 require 'paper_trail'
 require 'amoeba'
 require 'ancestry'
-require 'ember-rails'
+require 'ember-cli-rails'
 require 'kaminari'
 require 'active_model_serializers'
 require 'roo'
