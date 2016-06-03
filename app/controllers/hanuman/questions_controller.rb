@@ -70,7 +70,7 @@ module Hanuman
         file_name = params[:file].original_filename
         project_id = question.id
         args = {file_path: file_path, question_id: question_id, file_name: file_name}
-        ImportsWorker.perform_async(args)
+        ImportWorker.perform_async(args)
         redirect_to question, notice: 'Answer choices are being imported, refresh page to view them.'
       end
     end
