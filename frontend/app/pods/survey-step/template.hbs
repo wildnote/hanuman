@@ -1,1 +1,65 @@
-{{outlet}}
+<div class="page-header">
+  <a class="btn btn-primary" href="/hanuman/survey_templates/{{surveyStep.surveyTemplate.id}}"><span class="glyphicon glyphicon-chevron-left"></span>
+    Back to Survey Template Details
+  </a>
+</div>
+
+<div class="form-horizontal">
+  <div class="well">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Survey Template</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">
+          {{surveyStep.surveyTemplate.name}}
+        </p>
+      </div>
+      <label class="col-sm-2 control-label">Step</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">
+          {{surveyStep.step}}
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">{{surveyStep.surveyTemplate.duplicatorLabel}}</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">
+          {{surveyStep.duplicator}}
+        </p>
+      </div>
+      <label class="col-sm-2 control-label">Fully Editable</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">
+          {{surveyStep.surveyTemplate.fullyEditable}}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-info">
+    <div class="panel-heading"></div>
+    <div class="panel-body">
+
+      <div class="row">
+        <div class="col-sm-3"><strong>Label</strong></div>
+        <div class="col-sm-3"><strong>Question Type</strong></div>
+        <div class="col-sm-3"><strong>Actions</strong></div>
+        <div class="col-sm-3"><strong></strong></div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          &nbsp;
+        </div>
+      </div>
+
+      {{!-- loop through existing questions --}}
+      <ul class="sortable ui-sortable">
+      	{{#each surveyStep.questions as |question|}}
+          <li class="row question-border item" data-id={{question.id}}>
+          	{{question-row question=question}}
+          </li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+ </div>
