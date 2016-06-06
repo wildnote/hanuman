@@ -1,10 +1,9 @@
 import { moduleForModel, test } from 'ember-qunit';
 
-moduleForModel('survey-step', 'Unit | Model | survey step', {
+moduleForModel('answer-choice', 'Unit | Model | answer choice', {
   // Specify the other units that are required for this test.
   needs: [
-    'model:survey-template',
-    'model:question'
+  	'model:question'
   ]
 });
 
