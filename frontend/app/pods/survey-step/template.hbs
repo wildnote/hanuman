@@ -9,7 +9,7 @@
     <div class="form-group">
       <label class="col-sm-2 control-label">Survey Template</label>
       <div class="col-sm-4">
-        <p class="form-control-static">
+        <p class="form-control-static" data-test="surveyTemplate.name">
           {{surveyStep.surveyTemplate.name}}
         </p>
       </div>
@@ -21,9 +21,9 @@
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label">{{surveyStep.surveyTemplate.duplicatorLabel}}</label>
+      <label class="col-sm-2 control-label" data-test="surveyTemplate.duplicatorLabel">{{surveyStep.surveyTemplate.duplicatorLabel}}</label>
       <div class="col-sm-4">
-        <p class="form-control-static">
+        <p class="form-control-static" data-test="surveyStep.duplicator">
           {{surveyStep.duplicator}}
         </p>
       </div>

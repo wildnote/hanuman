@@ -4,9 +4,9 @@
     {{#if question.childQuestion}}
       {{question.numChildren}}
     {{/if}}
-    {{question.questionText}}
+    <span data-test="question.questionText">{{question.questionText}}</span>
   </div>
-  <div class="col-sm-3">{{question.answerType.name}}</div>
+  <div class="col-sm-3" data-test="question.answerType.name">{{question.answerType.name}}</div>
   <div class="col-sm-3">
     <a class="btn btn-success" {{action "editQuestion" on="click"}}>
     <span class="glyphicon glyphicon-pencil"></span>
