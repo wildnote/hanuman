@@ -54,12 +54,14 @@
 
       {{!-- loop through existing questions --}}
       <ul class="sortable ui-sortable">
-      	{{#each surveyStep.questions as |question|}}
+        {{#each surveyStep.questions as |question|}}
           <li class="row question-border item" data-id={{question.id}}>
-          	{{question-row question=question}}
+            {{question-row question=question}}
           </li>
         {{/each}}
       </ul>
     </div>
   </div>
  </div>
+
+{{outlet}}
