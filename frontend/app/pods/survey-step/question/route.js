@@ -10,5 +10,11 @@ export default Ember.Route.extend({
 
   setupController(controller, models) {
     controller.setProperties(models);
+  },
+
+  actions: {
+    transitionToSurveyStep() {
+      this.transitionTo('survey_step',this.currentModel.question.get('surveyStep'));
+    }
   }
 });

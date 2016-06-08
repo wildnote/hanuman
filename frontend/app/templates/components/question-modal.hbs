@@ -71,17 +71,6 @@
 
         <div class="form-group">
           <div class="col-sm-6">
-            <a class="btn btn-primary" href="#" {{action "save" on="click"}}>
-              Save
-            </a>
-            <a class="btn btn-default" href="#" {{action "toggleForm" on="click"}}>
-              Cancel
-            </a>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-sm-6">
             <label for="ancestry">Conditional Logic</label>
             <p>{{question.rule.matchType}}</p>
             {{#each uestion.rule.conditions as |condition|}}
@@ -91,14 +80,22 @@
             {{/each}}
           </div>
         </div>
+
+        <div class="row">
+          <div class="form-group">
+            <div class="col-sm-12">
+              <a class="btn btn-primary" href="#" {{action "save" on="click"}}>
+                Save
+              </a>
+              <a class="btn btn-default" onclick={{action "closeModal"}}>
+                Cancel
+              </a>
+            </div>
+          </div>
+        </div>
+
       </form>
 
     </div>
   </div>
-  <div class="row">
-
-    <div class="col-sm-3"></div>
-    <div class="col-sm-1"></div>
-  </div>
-
 {{/ember-remodal}}

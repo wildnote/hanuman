@@ -7,7 +7,7 @@ export default Ember.Component.extend({
   remodal: Ember.inject.service(),
   isFullyEditable: alias('question.surveyStep.surveyTemplate.fullyEditable'),
 
-  didRender() {
+  didInsertElement() {
     this._super(...arguments);
     Ember.run.scheduleOnce('afterRender', this, function () {
       this.get('remodal').open('question-modal');
@@ -18,6 +18,11 @@ export default Ember.Component.extend({
     setAnswerType(answerTypeId) {
       const answerType = this.get('answerTypes').findBy('id', answerTypeId);
       this.set('question.answerType', answerType);
+    },
+
+    closeModal() {
+      this.get('remodal').close('question-modal');
+      this.sendAction('transitionToSurveyStep');
     }
   }
 });

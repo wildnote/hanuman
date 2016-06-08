@@ -2,9 +2,11 @@ export default function() {
   this.namespace = 'hanuman/api/v1';
 
   // Shorthand
+  this.get('/answer_types');
   this.get('/answer_types/:id');
   this.get('/survey_steps/:id');
   this.get('/survey_templates/:id');
+  this.get('/questions/:id');
 
   // These comments are here to help you get started. Feel free to delete them.
 
