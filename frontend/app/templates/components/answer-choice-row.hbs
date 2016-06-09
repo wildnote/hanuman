@@ -1,0 +1,41 @@
+{{#if isEditingAnswerChoice}}
+  {{!-- new and edit --}}
+  <div class="col-sm-6">
+    <input type="text"
+          class="form-control"
+          value={{answerChoice.optionText}}
+          oninput={{action (mut answerChoice.optionText) value="target.value"}} />
+  </div>
+  <div class="col-sm-6">
+    <a class="btn btn-success" onclick={{action 'save'}}>
+      Save
+    </a>
+    <a class="btn btn-default" onclick={{action 'toggleForm'}}>
+      Cancel
+    </a>
+  </div>
+{{else}}
+  {{#if isNewAnswerChoice}}
+    <!-- + new answer choice button -->
+    <div class="col-sm-6">
+      <a class="btn btn-success" onclick={{action 'toggleForm'}}>
+        <span class="glyphicon glyphicon-plus"></span>
+        Add
+      </a>
+    </div>
+  {{else}}
+    {{!-- show of existing answer choice --}}
+    <div class="col-sm-6">
+      {{answerChoice.optionText}}
+    </div>
+    <div class="col-sm-6">
+      <a class="btn btn-success" onclick={{action 'toggleForm'}}>
+        <span class="glyphicon glyphicon-pencil"></span>
+        Edit
+      </a>
+      <a class="btn" onclick={{action 'delete'}}>
+        <span class="glyphicon glyphicon-trash"></span>
+      </a>
+    </div>
+  {{/if}}
+{{/if}}
