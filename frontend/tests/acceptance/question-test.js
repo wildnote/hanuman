@@ -35,3 +35,26 @@ test('selecting a type with answer choices', function(assert) {
     },0);
   });
 });
+
+test('canceling question edition', function(assert) {
+  question = server.create('question', {surveyStep});
+  visit(`/survey_steps/${surveyStep.id}/question/${question.id}`);
+  andThen(function() {
+    assert.equal(currentURL(), `/survey_steps/${surveyStep.id}/question/${question.id}`);
+    click('[data-test="cancel-question-link"]').then(()=>{
+      assert.equal(currentURL(), `/survey_steps/${surveyStep.id}`);
+    });
+  });
+
+});
+
+test('editing a question', function(assert) {
+  question = server.create('question', {surveyStep});
+  visit(`/survey_steps/${surveyStep.id}/question/${question.id}`);
+  fillIn('[data-test="question.externalDataSource"]', 'chuchucu');
+  click('[data-test="save-question-link"]').then(()=>{
+    question = server.db.questions.find(question.id);
+    assert.equal(question.external_data_source, 'chuchucu');
+    assert.equal(currentURL(), `/survey_steps/${surveyStep.id}`);
+  });
+});

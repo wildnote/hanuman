@@ -41,7 +41,7 @@
               <label for="questionText">Label</label>
               <input type="text"
                     class="form-control"
-                    id="questionText"
+                    data-test="question.questionText"
                     value={{question.questionText}}
                     oninput={{action (mut question.questionText) value="target.value"}} />
             </div>
@@ -49,7 +49,7 @@
               <label for="externalDataSource">External Data Source</label>
               <input type="text"
                     class="form-control"
-                    id="externalDataSource"
+                    data-test="question.externalDataSource"
                     value={{question.externalDataSource}}
                     oninput={{action (mut question.externalDataSource) value="target.value"}} />
               <small class="text-muted">(Superuser only)</small>
@@ -66,14 +66,16 @@
             </div>
             <div class="form-group col-sm-6">
               <label for="ancestry">Conditional Logic</label>
-              <div>
-                <span class="label label-primary">{{question.rule.matchType}}</span>
-                {{#each question.rule.conditions as |condition|}}
-                  <span class="label label-default">
-                    if {{condition.question.id}} {{condition.operator}} {{condition.answer}}
-                  </span>
-                {{/each}}
-              </div>
+              {{#if question.rule}}
+                <div>
+                  <span class="label label-primary">{{question.rule.matchType}}</span>
+                  {{#each question.rule.conditions as |condition|}}
+                    <span class="label label-default">
+                      if {{condition.question.id}} {{condition.operator}} {{condition.answer}}
+                    </span>
+                  {{/each}}
+                </div>
+              {{/if}}
             </div>
           </div>
           <div class="row">
@@ -93,7 +95,6 @@
 
           {{#if showAnswerChoices}}
             <hr/>
-            <table></table>
             <div class="row">
               <div class="col-md-4"><h4 data-test="answer-choices-label">Answer Choices</h4></div>
               <div class="col-md-10 col-md-offset-1">
@@ -128,10 +129,10 @@
           <div class="row">
             <div class="form-group">
               <div class="col-sm-12">
-                <a class="btn btn-primary" onclick={{action "save"}}>
+                <a class="btn btn-primary" data-test="save-question-link" onclick={{action "save"}}>
                   Save
                 </a>
-                <a class="btn btn-default" onclick={{action "closeModal"}}>
+                <a class="btn btn-default" data-test="cancel-question-link" onclick={{action "closeModal"}}>
                   Cancel
                 </a>
               </div>

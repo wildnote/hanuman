@@ -1,5 +1,6 @@
 import { Factory, faker } from 'ember-cli-mirage';
 export default Factory.extend({
+  external_data_source: '',
   ancestry: '',
   hidden: false,
   question_text() {
