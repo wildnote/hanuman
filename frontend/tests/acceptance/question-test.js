@@ -58,3 +58,39 @@ test('editing a question', function(assert) {
     assert.equal(currentURL(), `/survey_steps/${surveyStep.id}`);
   });
 });
+
+test('deleting a question', function(assert) {
+  let questions = server.createList('question', 2, {surveyStep});
+  question = questions[0];
+  visit(`/survey_steps/${surveyStep.id}`);
+
+  andThen(function() {
+    assert.equal(question.question_text,find(`li[data-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
+    click(`li[data-id="${question.id}"] [data-test="delete-question-link"]`).then(()=>{
+      assert.notEqual(question.question_text,find('[data-test="question.questionText"]:first').text().trim());
+    });
+    visit(`/survey_steps/${surveyStep.id}`).then(()=>{
+      assert.notEqual(question.question_text,find('[data-test="question.questionText"]:first').text().trim());
+    });
+  });
+});
+
+test('deleting a question with `surveyTemplate.fullyEditable`', function(assert) {
+  surveyTemplate = server.create('survey-template', {fully_editable: false});
+  surveyStep = server.create('survey-step', {surveyTemplate});
+  let questions = server.createList('question', 2, {surveyStep});
+  question = questions[0];
+  visit(`/survey_steps/${surveyStep.id}`);
+
+  andThen(function() {
+    assert.equal(question.question_text,find(`li[data-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
+    click(`li[data-id="${question.id}"] [data-test="confirm-delete-question-link"]`).then(()=>{
+      click(`li[data-id="${question.id}"] [data-test="delete-question-link"]`).then(()=>{
+        assert.notEqual(question.question_text,find('[data-test="question.questionText"]:first').text().trim());
+      });
+    });
+    visit(`/survey_steps/${surveyStep.id}`).then(()=>{
+      assert.notEqual(question.question_text,find('[data-test="question.questionText"]:first').text().trim());
+    });
+  });
+});

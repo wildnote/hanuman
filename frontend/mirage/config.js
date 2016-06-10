@@ -9,6 +9,7 @@ export default function() {
   // Questions
   this.get('/questions/:id');
   this.post('/questions');
+  this.del('/questions/:id');
   this.put('/questions/:id', ({ questions }, request) => {
     let attrs = JSON.parse(request.requestBody)['question'],
         id = request.params.id;
