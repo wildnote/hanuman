@@ -5,10 +5,10 @@ var surveyTemplate, surveyStep, questions;
 
 moduleForAcceptance('Acceptance | survey step', {
   beforeEach() {
-  	server.loadFixtures();
+    server.loadFixtures();
     surveyTemplate = server.create('survey-template');
     surveyStep = server.create('survey-step', {surveyTemplate: surveyTemplate});
-		questions = server.createList('question', 5, { surveyStep });
+    questions = server.createList('question', 5, { surveyStep });
   }
 });
 
@@ -32,7 +32,7 @@ test('listing questions', function(assert) {
   visit(`/survey_steps/${surveyStep.id}`);
   andThen(function() {
     for (var question of questions) {
-			assert.equal(question.question_text,find(`li[data-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
+      assert.equal(question.question_text,find(`li[data-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
     }
   });
 });

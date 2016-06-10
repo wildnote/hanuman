@@ -2,12 +2,13 @@
   {{!-- new and edit --}}
   <div class="col-sm-6">
     <input type="text"
+          data-test="answerChoice.optionText"
           class="form-control"
           value={{answerChoice.optionText}}
           oninput={{action (mut answerChoice.optionText) value="target.value"}} />
   </div>
   <div class="col-sm-6">
-    <a class="btn btn-success" onclick={{action 'save'}}>
+    <a class="btn btn-success" data-test="save-answer-choice-link" onclick={{action 'save'}}>
       Save
     </a>
     <a class="btn btn-default" onclick={{action 'toggleForm'}}>
@@ -18,22 +19,22 @@
   {{#if isNewAnswerChoice}}
     <!-- + new answer choice button -->
     <div class="col-sm-6">
-      <a class="btn btn-success" onclick={{action 'toggleForm'}}>
+      <a class="btn btn-success" data-test="add-answer-choice-link" onclick={{action 'toggleForm'}}>
         <span class="glyphicon glyphicon-plus"></span>
         Add
       </a>
     </div>
   {{else}}
     {{!-- show of existing answer choice --}}
-    <div class="col-sm-6">
+    <div class="col-sm-6" data-test="answerChoice.optionText">
       {{answerChoice.optionText}}
     </div>
     <div class="col-sm-6">
-      <a class="btn btn-success" onclick={{action 'toggleForm'}}>
+      <a class="btn btn-success" data-test="edit-answer-choice-link" onclick={{action 'toggleForm'}}>
         <span class="glyphicon glyphicon-pencil"></span>
         Edit
       </a>
-      <a class="btn" onclick={{action 'delete'}}>
+      <a class="btn" data-test="delete-answer-choice-link" onclick={{action 'delete'}}>
         <span class="glyphicon glyphicon-trash"></span>
       </a>
     </div>

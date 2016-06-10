@@ -24,7 +24,7 @@
           <div class="col-sm-6">
             <label>Type of Question</label>
             {{#if isFullyEditable}}
-              <select class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
+              <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
                 {{#each answerTypes as |answerType|}}
                   <option value={{answerType.id}} selected={{eq question.answerType.id answerType.id}}>{{answerType.name}}</option>
                 {{/each}}
@@ -52,12 +52,12 @@
         {{#if showAnswerChoices}}
           <div class="row">
             <div class="col-sm-6">
-              Answer Choices
+              <label data-test="answer-choices-label">Answer Choices</label>
               {{#each question.answerChoices as |answerChoice|}}
                 <div class="row">
                   <div class="col-sm-6 admin-tiny-row-space"></div>
                 </div>
-                <div class="row">
+                <div class="row" data-answer-choice-id={{answerChoice.id}}>
                   {{answer-choice-row question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
                 </div>
               {{/each}}
