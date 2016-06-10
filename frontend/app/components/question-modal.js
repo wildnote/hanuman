@@ -35,7 +35,7 @@ export default Ember.Component.extend({
           let promises = this.get('answerChoicesPendingSave').invoke('save');
           Ember.RSVP.all(promises).then(()=>{
             this.set('answerChoicesPendingSave', []);
-            this.send('toggleForm');
+            this.send('closeModal');
           });
         },
         (error)=>{

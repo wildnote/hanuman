@@ -1,6 +1,8 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
+  tagName: 'tr',
+  attributeBindings: ['answerChoice.id:data-answer-choice-id'],
   isEditingAnswerChoice: false,
 
   setNewAnswerChoice() {

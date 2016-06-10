@@ -20,125 +20,125 @@
     <div class="panel-heading"><h3 class="panel-title">Question Details</h3></div>
     <div class="panel-body">
       <form>
-        <div class="form-group">
-          <div class="col-sm-6">
-            <label>Type of Question</label>
-            {{#if isFullyEditable}}
-              <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
-                {{#each answerTypes as |answerType|}}
-                  <option value={{answerType.id}} selected={{eq question.answerType.id answerType.id}}>{{answerType.name}}</option>
-                {{/each}}
-              </select>
-            {{else}}
-              {{question.answerType.name}}
-              <div class="alert alert-danger">
-                Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey template to change the Answer Type.
-              </div>
-            {{/if}}
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-sm-6">
-            <label for="questionText">Label</label>
-            <input type="text"
-                  class="form-control"
-                  id="questionText"
-                  value={{question.questionText}}
-                  oninput={{action (mut question.questionText) value="target.value"}} />
-          </div>
-        </div>
-
-        {{#if showAnswerChoices}}
+        <div class="col-sm-12">
           <div class="row">
-            <div class="col-sm-6">
-              <label data-test="answer-choices-label">Answer Choices</label>
-              {{#each question.answerChoices as |answerChoice|}}
+            <div class="form-group col-sm-4">
+              <label>Type of Question</label>
+              {{#if isFullyEditable}}
+                <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
+                  {{#each answerTypes as |answerType|}}
+                    <option value={{answerType.id}} selected={{eq question.answerType.id answerType.id}}>{{answerType.name}}</option>
+                  {{/each}}
+                </select>
+              {{else}}
+                {{question.answerType.name}}
+                <div class="alert alert-danger">
+                  Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey template to change the Answer Type.
+                </div>
+              {{/if}}
+            </div>
+            <div class="form-group col-sm-4">
+              <label for="questionText">Label</label>
+              <input type="text"
+                    class="form-control"
+                    id="questionText"
+                    value={{question.questionText}}
+                    oninput={{action (mut question.questionText) value="target.value"}} />
+            </div>
+            <div class="form-group col-sm-4">
+              <label for="externalDataSource">External Data Source</label>
+              <input type="text"
+                    class="form-control"
+                    id="externalDataSource"
+                    value={{question.externalDataSource}}
+                    oninput={{action (mut question.externalDataSource) value="target.value"}} />
+              <small class="text-muted">(Superuser only)</small>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <label for="ancestry">Ancestry</label>
+              <input type="text"
+                    class="form-control"
+                    id="ancestry"
+                    value={{question.ancestry}}
+                    oninput={{action (mut question.ancestry) value="target.value"}} />
+            </div>
+            <div class="form-group col-sm-6">
+              <label for="ancestry">Conditional Logic</label>
+              <div>
+                <span class="label label-primary">{{question.rule.matchType}}</span>
+                {{#each question.rule.conditions as |condition|}}
+                  <span class="label label-default">
+                    if {{condition.question.id}} {{condition.operator}} {{condition.answer}}
+                  </span>
+                {{/each}}
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="form-group col-sm-6">
+              <input type="checkbox"
+                    name="isRequired"
+                    checked={{question.required}}
+                    onchange={{action (mut question.required) value="target.checked"}} /> Required
+            </div>
+            <div class="form-group col-sm-6">
+              <input type="checkbox"
+                    name="isHidden"
+                    checked={{question.hidden}}
+                    onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
+            </div>
+          </div>
+
+          {{#if showAnswerChoices}}
+            <hr/>
+            <table></table>
+            <div class="row">
+              <div class="col-md-4"><h4 data-test="answer-choices-label">Answer Choices</h4></div>
+              <div class="col-md-10 col-md-offset-1">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th>OptionText</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each question.answerChoices as |answerChoice|}}
+                        {{answer-choice-row question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
+                      {{/each}}
+                      {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true}}
+                    </tbody>
+                  </table>
+                </div>
+
                 <div class="row">
                   <div class="col-sm-6 admin-tiny-row-space"></div>
                 </div>
-                <div class="row" data-answer-choice-id={{answerChoice.id}}>
-                  {{answer-choice-row question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
+                {{!-- + new answer choice --}}
+                <div class="row">
+
                 </div>
-              {{/each}}
-              <div class="row">
-                <div class="col-sm-6 admin-tiny-row-space"></div>
               </div>
-              {{!-- + new answer choice --}}
-              <div class="row">
-                {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true}}
+            </div>
+          {{/if}}
+          <hr/>
+          <div class="row">
+            <div class="form-group">
+              <div class="col-sm-12">
+                <a class="btn btn-primary" onclick={{action "save"}}>
+                  Save
+                </a>
+                <a class="btn btn-default" onclick={{action "closeModal"}}>
+                  Cancel
+                </a>
               </div>
             </div>
           </div>
-        {{/if}}
-
-        <div class="form-group">
-          <div class="col-sm-6">
-            <input type="checkbox"
-                  name="isRequired"
-                  checked={{question.required}}
-                  onchange={{action (mut question.required) value="target.checked"}} /> Required
-          </div>
         </div>
-
-        <div class="form-group">
-          <div class="col-sm-6">
-            <input type="checkbox"
-                  name="isHidden"
-                  checked={{question.hidden}}
-                  onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-sm-6">
-            <label for="externalDataSource">External Data Source (Superuser only)</label>
-            <input type="text"
-                  class="form-control"
-                  id="externalDataSource"
-                  value={{question.externalDataSource}}
-                  oninput={{action (mut question.externalDataSource) value="target.value"}} />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-sm-6">
-            <label for="ancestry">Ancestry</label>
-            <input type="text"
-                  class="form-control"
-                  id="ancestry"
-                  value={{question.ancestry}}
-                  oninput={{action (mut question.ancestry) value="target.value"}} />
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-sm-6">
-            <label for="ancestry">Conditional Logic</label>
-            <p>{{question.rule.matchType}}</p>
-            {{#each uestion.rule.conditions as |condition|}}
-              <p>
-                if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
-              </p>
-            {{/each}}
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="form-group">
-            <div class="col-sm-12">
-              <a class="btn btn-primary" href="#" {{action "save" on="click"}}>
-                Save
-              </a>
-              <a class="btn btn-default" onclick={{action "closeModal"}}>
-                Cancel
-              </a>
-            </div>
-          </div>
-        </div>
-
       </form>
-
     </div>
   </div>
 {{/ember-remodal}}
