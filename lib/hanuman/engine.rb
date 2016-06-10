@@ -5,6 +5,7 @@ require 'ember-rails'
 require 'kaminari'
 require 'active_model_serializers'
 require 'roo'
+require 'carrierwave'
 
 module Hanuman
   class Engine < ::Rails::Engine
