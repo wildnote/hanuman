@@ -7,6 +7,7 @@
     "ember-qunit-notifications": "0.1.0",
     "pretender": "~1.1.0",
     "Faker": "~3.1.0",
-    "remodal": "1.0.7"
+    "remodal": "1.0.7",
+    "spin.js": "^2.3.2"
   }
 }
