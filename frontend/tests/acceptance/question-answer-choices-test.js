@@ -15,7 +15,7 @@ moduleForAcceptance('Acceptance | question answer choices', {
 test('adding an answer choice', function(assert) {
   question = server.create('question', {surveyStep, answer_type_id: 17}); // Answer Type id 17 = `Radio`
 
-  visit(`/survey_steps/${surveyStep.id}/question/${question.id}`);
+  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
 
   andThen(function() {
     click('[data-test="add-answer-choice-link"]');
@@ -33,7 +33,7 @@ test('editing an answer choice', function(assert) {
 
   let firstAnswerChoices = answerChoices[0];
 
-  visit(`/survey_steps/${surveyStep.id}/question/${question.id}`);
+  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
 
   andThen(function() {
     for (var answerChoice of answerChoices) {
@@ -55,7 +55,7 @@ test('deleting an answer choice', function(assert) {
 
   let firstAnswerChoices = answerChoices[0];
 
-  visit(`/survey_steps/${surveyStep.id}/question/${question.id}`);
+  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
 
   andThen(function() {
     let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
@@ -63,7 +63,7 @@ test('deleting an answer choice', function(assert) {
     click(`${selector} [data-test="delete-answer-choice-link"]`).then(()=>{
       assert.notEqual(firstAnswerChoices.option_text,find('[data-test="answerChoice.optionText"]:first').text().trim());
     });
-    visit(`/survey_steps/${surveyStep.id}/question/${question.id}`).then(()=>{
+    visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`).then(()=>{
       assert.notEqual(firstAnswerChoices.option_text,find('[data-test="answerChoice.optionText"]:first').text().trim());
     });
   });

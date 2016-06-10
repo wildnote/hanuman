@@ -12,12 +12,12 @@ moduleForAcceptance('Acceptance | question', {
   }
 });
 
-test('visiting survey_steps/:survey_step_id/question/:id', function(assert) {
+test('visiting survey_steps/:survey_step_id/questions/:id', function(assert) {
   question = server.create('question', {surveyStep});
-  visit(`/survey_steps/${surveyStep.id}/question/${question.id}`);
+  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
 
   andThen(function() {
-    assert.equal(currentURL(), `/survey_steps/${surveyStep.id}/question/${question.id}`);
+    assert.equal(currentURL(), `/survey_steps/${surveyStep.id}/questions/${question.id}`);
   });
 });
 
@@ -25,7 +25,7 @@ test('visiting survey_steps/:survey_step_id/question/:id', function(assert) {
 test('selecting a type with answer choices', function(assert) {
   question = server.create('question', {surveyStep, answer_type_id: 17}); // Answer Type id 17 = `Radio`
 
-  visit(`/survey_steps/${surveyStep.id}/question/${question.id}`);
+  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
   andThen(function() {
     assert.equal(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
     fillIn('[data-test="answer-type-id-select"]', 1);
@@ -38,9 +38,9 @@ test('selecting a type with answer choices', function(assert) {
 
 test('canceling question edition', function(assert) {
   question = server.create('question', {surveyStep});
-  visit(`/survey_steps/${surveyStep.id}/question/${question.id}`);
+  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
   andThen(function() {
-    assert.equal(currentURL(), `/survey_steps/${surveyStep.id}/question/${question.id}`);
+    assert.equal(currentURL(), `/survey_steps/${surveyStep.id}/questions/${question.id}`);
     click('[data-test="cancel-question-link"]').then(()=>{
       assert.equal(currentURL(), `/survey_steps/${surveyStep.id}`);
     });
@@ -50,7 +50,7 @@ test('canceling question edition', function(assert) {
 
 test('editing a question', function(assert) {
   question = server.create('question', {surveyStep});
-  visit(`/survey_steps/${surveyStep.id}/question/${question.id}`);
+  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
   fillIn('[data-test="question.externalDataSource"]', 'chuchucu');
   click('[data-test="save-question-link"]').then(()=>{
     question = server.db.questions.find(question.id);
