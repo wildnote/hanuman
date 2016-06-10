@@ -5,7 +5,7 @@ const {
 
 export default Ember.Component.extend({
   remodal: Ember.inject.service(),
-  isFullyEditable: alias('question.surveyStep.surveyTemplate.fullyEditable'),
+  isFullyEditable: alias('surveyStep.surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   answerChoicesPendingSave: [],
 
