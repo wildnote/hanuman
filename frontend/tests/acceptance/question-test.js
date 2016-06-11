@@ -36,6 +36,21 @@ test('selecting a type with answer choices', function(assert) {
   });
 });
 
+test('adding a question', function(assert) {
+  visit(`/survey_steps/${surveyStep.id}`);
+
+  andThen(function() {
+    click('a:contains("Add")').then(()=>{
+      assert.equal(currentURL(), `/survey_steps/${surveyStep.id}/questions/new`);
+      fillIn('[data-test="question.questionText"]', 'this is DA question');
+      click('[data-test="save-question-link"]').then(()=>{
+        question = server.schema.questions.all().models[0];
+        assert.equal(question.questionText, 'this is DA question');
+      });
+    });
+  });
+});
+
 test('canceling question edition', function(assert) {
   question = server.create('question', {surveyStep});
   visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
