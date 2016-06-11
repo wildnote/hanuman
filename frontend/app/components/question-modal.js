@@ -26,23 +26,25 @@ export default Ember.Component.extend({
       let question = this.get('question'),
           surveyStep = this.get('surveyStep');
       question.set('surveyStep', surveyStep);
-      question.save().then(
-        (question)=>{
-          // loop through answerChoicesPendingSave and set question_id or question
-          for (var answerChoicesPending of this.get('answerChoicesPendingSave')) {
-            answerChoicesPending.set('question', question);
+      if(question.validate()){
+        question.save().then(
+          (question)=>{
+            // loop through answerChoicesPendingSave and set question_id or question
+            for (var answerChoicesPending of this.get('answerChoicesPendingSave')) {
+              answerChoicesPending.set('question', question);
+            }
+            let promises = this.get('answerChoicesPendingSave').invoke('save');
+            Ember.RSVP.all(promises).then(()=>{
+              this.set('answerChoicesPendingSave', []);
+              this.send('closeModal');
+            });
+          },
+          (error)=>{
+            console.error(`An error has occured: ${error}.`);
+            surveyStep.get('questions').removeObject(question);
           }
-          let promises = this.get('answerChoicesPendingSave').invoke('save');
-          Ember.RSVP.all(promises).then(()=>{
-            this.set('answerChoicesPendingSave', []);
-            this.send('closeModal');
-          });
-        },
-        (error)=>{
-          console.error(`An error has occured: ${error}.`);
-          surveyStep.get('questions').removeObject(question);
-        }
-      );
+        );
+      }
     },
 
     saveAnswerChoice(answerChoice){

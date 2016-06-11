@@ -1,11 +1,15 @@
 {{#if isEditingAnswerChoice}}
   {{!-- new and edit --}}
   <td>
-    <input type="text"
-          data-test="answerChoice.optionText"
-          class="form-control"
-          value={{answerChoice.optionText}}
-          oninput={{action (mut answerChoice.optionText) value="target.value"}} />
+    {{#object-form for=answerChoice}}
+      {{#form-field for='optionText'}}
+        <input type="text"
+              data-test="answerChoice.optionText"
+              class="form-control"
+              value={{answerChoice.optionText}}
+              oninput={{action (mut answerChoice.optionText) value="target.value"}} />
+      {{/form-field}}
+    {{/object-form}}
   </td>
   <td>
     <a class="btn btn-success" data-test="save-answer-choice-link" onclick={{action 'save'}}>

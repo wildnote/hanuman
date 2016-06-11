@@ -2,13 +2,14 @@ import Ember from 'ember';
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import { belongsTo, hasMany } from 'ember-data/relationships';
+import Validator from './../mixins/model-validator';
 
 const {
   computed,
   computed: { bool, equal }
 } = Ember;
 
-export default Model.extend({
+export default Model.extend(Validator, {
   // Attributes
   questionText: attr('string'),
   sortOrder: attr('number'),
@@ -35,5 +36,15 @@ export default Model.extend({
   ruleMatchType: computed('rule.matchType', function() {
     let rule = this.get('rule');
     return (rule.get('matchType') === 'all') ? 'AND' : 'OR';
-  })
+  }),
+
+  // Validations
+  validations: {
+    questionText:{
+      presence: true
+    },
+    answerType:{
+      presence: true
+    }
+  }
 });

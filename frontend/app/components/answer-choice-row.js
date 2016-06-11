@@ -23,11 +23,13 @@ export default Ember.Component.extend({
     save() {
       let answerChoice = this.get('answerChoice');
       answerChoice.set('question', this.get('question'));
-      this.sendAction('save',answerChoice);
-      if(answerChoice.get('isNew')){
-        this.set('answerChoice',null);
+      if(answerChoice.validate()){
+        this.sendAction('save',answerChoice);
+        if(answerChoice.get('isNew')){
+          this.set('answerChoice',null);
+        }
+        this.send('toggleForm');
       }
-      this.send('toggleForm');
     },
 
     delete() {
