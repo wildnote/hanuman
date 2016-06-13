@@ -5,7 +5,7 @@ const {
 
 export default Ember.Component.extend({
   isFullyEditable: alias('question.surveyStep.surveyTemplate.fullyEditable'),
-
+  attributeBindings: ['question.id:data-question-id'],
 
   actions: {
     confirm(){

@@ -11,7 +11,6 @@ moduleForAcceptance('Acceptance | question answer choices', {
   }
 });
 
-
 test('adding an answer choice', function(assert) {
   question = server.create('question', {surveyStep, answer_type_id: 17}); // Answer Type id 17 = `Radio`
 

@@ -32,7 +32,7 @@ test('listing questions', function(assert) {
   visit(`/survey_steps/${surveyStep.id}`);
   andThen(function() {
     for (var question of questions) {
-      assert.equal(question.question_text,find(`li[data-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
+      assert.equal(question.question_text,find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
     }
   });
 });
