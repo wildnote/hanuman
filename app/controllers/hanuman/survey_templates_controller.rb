@@ -3,7 +3,7 @@ require_dependency "hanuman/application_controller"
 module Hanuman
   class SurveyTemplatesController < ApplicationController
     respond_to :json, :html
-    before_action :set_survey_template, only: [:show, :edit, :update, :destroy, :duplicate]
+    before_action :set_survey_template, only: [:show, :edit, :update, :destroy, :duplicate, :update_survey_data]
 
     # GET /survey_templates
     def index
@@ -78,6 +78,11 @@ module Hanuman
           format.json { render json: survey_template_copy.errors, status: :unprocessable_entity }
         end
       end
+    end
+
+    def update_survey_data
+      @survey_template.resort_submitted_observations
+      redirect_to survey_templates_url, notice: 'Survey data resorted.'
     end
 
     private

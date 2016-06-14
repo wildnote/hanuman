@@ -16,7 +16,9 @@ module Hanuman
     validates :question_text, presence: true, unless: :question_text_not_required
 
     after_create :submit_blank_observation_data
-    after_update :resort_submitted_observations, if: :sort_order_changed?
+    # this flooding the system on a question resort which is resulting in a db deadlock,
+    # will manually call this at the survey template level after all changes are made
+    #after_update :resort_submitted_observations, if: :sort_order_changed?
 
     amoeba do
       include_association [:rule, :conditions, :answer_choices]
