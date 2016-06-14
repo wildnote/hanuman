@@ -11,7 +11,7 @@
       .form-group
         = label_tag :file, "Excel File", class: "col-sm-2 control-label"
         .col-sm-6
-          = file_field_tag :file
+          = file_field_tag :file, 'data-parsley-required' => true
       .form-group
         .col-sm-offset-2.col-sm-10
           Place all answer choices in a single column and label the column Answer Choices in a xls, xlsx, or csv file. Choose that file and click Import.

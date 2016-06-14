@@ -166,8 +166,8 @@ module Hanuman
       end
     end
 
-    def import_answer_choices(file)
-      spreadsheet = Import::open_spreadsheet(file)
+    def import_answer_choices(file_name, file_path)
+      spreadsheet = Import::open_spreadsheet(file_name, file_path)
       header = spreadsheet.row(1)
       imported = []
       not_imported = []
