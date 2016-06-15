@@ -1,5 +1,6 @@
 import Ember from 'ember';
 const {
+  computed,
   computed: { alias }
 } = Ember;
 
@@ -8,6 +9,9 @@ export default Ember.Component.extend({
   isFullyEditable: alias('surveyStep.surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   answerChoicesPendingSave: [],
+  ancestryQuestion: computed('question.ancestry', function() {
+    return this.get('questions').findBy('id',this.get('question.ancestry'));
+  }),
 
   didInsertElement() {
     this._super(...arguments);
@@ -17,6 +21,11 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    ancestryChange(newAncestryId){
+      let question = this.get('question');
+      question.set('ancestry',newAncestryId);
+    },
+
     setAnswerType(answerTypeId) {
       const answerType = this.get('answerTypes').findBy('id', answerTypeId);
       this.set('question.answerType', answerType);

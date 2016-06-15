@@ -5,6 +5,7 @@ export default Ember.Route.extend({
     let surveyStep = this.modelFor('survey-step');
     return Ember.RSVP.hash({
       question: this.store.createRecord('question',{surveyStep}),
+      questions: surveyStep.get('questions'),
       answerTypes: this.store.findAll('answer-type'),
       surveyTemplate: surveyStep.get('surveyTemplate'),
       surveyStep
