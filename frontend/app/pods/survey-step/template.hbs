@@ -1,7 +1,15 @@
 <div class="page-header">
-  <a class="btn btn-primary" href="/hanuman/survey_templates/{{surveyStep.surveyTemplate.id}}"><span class="glyphicon glyphicon-chevron-left"></span>
-    Back to Survey Template Details
-  </a>
+  <div class="pull-left">
+    <a class="btn btn-primary" href="/hanuman/survey_templates/{{surveyStep.surveyTemplate.id}}"><span class="glyphicon glyphicon-chevron-left"></span>
+      Back to Survey Template Details
+    </a>
+  </div>
+  <div class="pull-right">
+    <a class="btn btn-primary" href="/hanuman/survey_templates/{{unbound this.surveyTemplate.id}}/update_survey_data">
+      Resort Submitted Data
+    </a>
+  </div>
+
 </div>
 
 <div class="form-horizontal">
