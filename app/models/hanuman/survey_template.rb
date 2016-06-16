@@ -61,5 +61,15 @@ module Hanuman
         end
       end
     end
+
+    # doing this at the survey template level so we only call survey save once and not all at once when a resort happens
+    def resort_submitted_observations
+      unless self.fully_editable
+        surveys = self.surveys
+        surveys.each do |s|
+          s.save
+        end
+      end
+    end
   end
 end

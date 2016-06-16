@@ -1,5 +1,8 @@
 $(document).ready(function(){
 
+  //  This removes the delete button from the first repeater.
+  $('.destroy-form-container-repeater').first().hide()
+
   // need to find the max data entry on the page and start incrementing from there
   $dataEntry = 0;
   $('.form-container-repeater').each(function() {
@@ -106,6 +109,9 @@ $(document).ready(function(){
     // resetting parsley required field styling on clonedContainer
     $clonedContainer.find('.parsley-error').removeClass('parsley-error')
 
+    // shows delete button for new repeaters.
+    $clonedContainer.find('.destroy-form-container-repeater').show()
+
     // on edit treat photo, video and doc sections as if new since on edit there is already saved files
     if ($('.survey-edit-mode').length > 0) {
       files = $clonedContainer.find("[data-element-type=file]").find('.custom-cloudinary li a')
@@ -130,22 +136,24 @@ $(document).ready(function(){
   }
 
   $('.form-container-survey').on('click', ".destroy-form-container-repeater", function(){
+    var response = window.confirm('Are you sure you want to delete this observation?')
     var that = this;
     var entry = $($(this).closest('.form-container-repeater')).attr('data-entry');
     var dataObservationId = $($(this).closest('.form-container-repeater')).attr('data-observation-id');
     // if we have a dataObservationId then the observation has been saved to the DB, thus we need to delete from the DB otherwise just remove from the DOM
-    if (dataObservationId) {
-      var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1];
-      var surveyId = window.location.pathname.match(/\/surveys\/(\d+)/)[1];
-
-      $.ajax({
-        url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/entry/"+ entry,
-        method: "Delete"
-      }).done(function(response) {
+    if (response === true) {
+      if (dataObservationId) {
+        var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1];
+        var surveyId = window.location.pathname.match(/\/surveys\/(\d+)/)[1];
+        $.ajax({
+          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/entry/"+ entry,
+          method: "Delete"
+        }).done(function(response) {
+          removeObservationFromDom(that, entry);
+        });
+      }else{
         removeObservationFromDom(that, entry);
-      });
-    }else{
-      removeObservationFromDom(that, entry);
+      }
     }
     return false;
   });

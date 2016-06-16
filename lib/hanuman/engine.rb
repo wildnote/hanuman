@@ -5,6 +5,7 @@ require 'ember-cli-rails'
 require 'kaminari'
 require 'active_model_serializers'
 require 'roo'
+require 'sidekiq'
 
 module Hanuman
   class Engine < ::Rails::Engine
