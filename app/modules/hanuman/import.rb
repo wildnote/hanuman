@@ -1,12 +1,11 @@
 module Hanuman::Import
-  def self.open_spreadsheet(file)
-    extension = case File.extname(file.original_filename)
+  def self.open_spreadsheet(file_name, file_path)
+    extension = case File.extname(file_name)
     when ".csv" then :csv
     when ".xls" then :xls
     when ".xlsx" then :xlsx
-    else raise "Unknown file type: #{file.original_filename}"
+    else raise "Unknown file type: #{file_name}"
     end
-    puts file.path
-    spreadsheet = Roo::Spreadsheet.open(file.path, extension: extension)
+    spreadsheet = Roo::Spreadsheet.open(file_path, extension: extension)
   end
 end

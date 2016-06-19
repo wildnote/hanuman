@@ -38,6 +38,7 @@ Hanuman::Engine.routes.draw do
   resources :survey_templates do
     member do
       patch :duplicate
+      get :update_survey_data
     end
   end
 
