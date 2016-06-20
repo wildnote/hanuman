@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const {
   computed,
-  computed: { alias }
+  computed: { alias, sort }
 } = Ember;
 
 export default Ember.Component.extend({
@@ -9,6 +9,8 @@ export default Ember.Component.extend({
   isFullyEditable: alias('surveyStep.surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   answerChoicesPendingSave: [],
+  sortBy: ['name'],
+  sortedAnswerTypes: sort('answerTypes','sortBy'),
   ancestryQuestion: computed('question.ancestry', function() {
     return this.get('questions').findBy('id',this.get('question.ancestry'));
   }),
@@ -23,6 +25,9 @@ export default Ember.Component.extend({
   actions: {
     ancestryChange(newAncestryId){
       let question = this.get('question');
+      if(Ember.isBlank(newAncestryId)){
+        newAncestryId = null;
+      }
       question.set('ancestry',newAncestryId);
     },
 
@@ -38,13 +43,16 @@ export default Ember.Component.extend({
       if(question.validate()){
         question.save().then(
           (question)=>{
+            let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
             // loop through answerChoicesPendingSave and set question_id or question
-            for (var answerChoicesPending of this.get('answerChoicesPendingSave')) {
+            for (var answerChoicesPending of answerChoicesPendingSave) {
               answerChoicesPending.set('question', question);
             }
-            let promises = this.get('answerChoicesPendingSave').invoke('save');
+            let promises = answerChoicesPendingSave.invoke('save');
             Ember.RSVP.all(promises).then(()=>{
-              this.set('answerChoicesPendingSave', []);
+              while (answerChoicesPendingSave.length > 0) {
+                  answerChoicesPendingSave.pop();
+              }
               this.send('closeModal');
             });
           },

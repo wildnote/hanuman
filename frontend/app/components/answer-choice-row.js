@@ -25,7 +25,7 @@ export default Ember.Component.extend({
       answerChoice.set('question', this.get('question'));
       if(answerChoice.validate()){
         this.sendAction('save',answerChoice);
-        if(answerChoice.get('isNew')){
+        if(this.get('isNewAnswerChoice')){
           this.set('answerChoice',null);
         }
         this.send('toggleForm');
@@ -35,7 +35,9 @@ export default Ember.Component.extend({
     delete() {
       let answerChoice = this.get('answerChoice');
       answerChoice.deleteRecord();
-      answerChoice.save();
+      if(!answerChoice.get('isNew')){
+        answerChoice.save();
+      }
     }
   }
 });

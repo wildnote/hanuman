@@ -15,7 +15,7 @@
             {{#if (or isFullyEditable question.isNew)}}
               {{#form-field for='answerType'}}
                 <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
-                  {{#each answerTypes as |answerType|}}
+                  {{#each sortedAnswerTypes as |answerType|}}
                     <option value={{answerType.id}} selected={{eq question.answerType.id answerType.id}}>{{answerType.name}}</option>
                   {{/each}}
                 </select>
@@ -50,13 +50,12 @@
         <div class="row">
           <div class="form-group col-sm-6">
             {{#form-field for='ancestry' label='Ancestry'}}
-              {{ember-selectize
-                content=questions
-                optionValuePath="id"
-                optionLabelPath="questionText"
-                selection=ancestryQuestion
-                select-value="ancestryChange"
-                placeholder="Select a question" }}
+              <select class="form-control" onchange={{action "ancestryChange" value="target.value"}}>
+                <option></option>
+                {{#each questions as |opQuestion|}}
+                  <option value={{opQuestion.id}} selected={{eq opQuestion.id question.ancestry}}>{{opQuestion.questionText}}</option>
+                {{/each}}
+              </select>
             {{/form-field}}
           </div>
           <div class="form-group col-sm-6">
