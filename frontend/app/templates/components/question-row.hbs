@@ -12,22 +12,15 @@
       <span class="glyphicon glyphicon-pencil"></span>
         Edit
     {{/link-to}}
-
-    {{#if isFullyEditable}}
-      <a class="btn btn-delete" data-test="delete-question-link" onclick={{action 'delete'}}>
-        <span class="glyphicon glyphicon-trash"></span>
-      </a>
-    {{else}}
-      <a class="btn btn-delete" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
-        <span class="glyphicon glyphicon-trash"></span>
-      </a>
-      <div class="delete-confirm">
-        <small>Performing this delete will also destroy associated historical data.</small><br />
-        <small>Are you sure you want to delete this item?</small>
-        <button class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
-        <button class="btn" onclick={{action 'cancel'}}>No</button>
-      </div>
-    {{/if}}
+    <a class="btn btn-delete" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
+      <span class="glyphicon glyphicon-trash"></span>
+    </a>
+    <div class="delete-confirm">
+      <small>Performing this delete will also destroy associated historical data.</small><br />
+      <small>Are you sure you want to delete this item?</small>
+      <button class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
+      <button class="btn" onclick={{action 'cancel'}}>No</button>
+    </div>
   </div>
   <div class="col-sm-3 dev-only">
     <a class="btn"><span class="glyphicon glyphicon-sort"></span></a>

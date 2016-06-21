@@ -1,10 +1,6 @@
 import Ember from 'ember';
-const {
-  computed: { alias }
-} = Ember;
 
 export default Ember.Component.extend({
-  isFullyEditable: alias('question.surveyStep.surveyTemplate.fullyEditable'),
   attributeBindings: ['question.id:data-question-id'],
 
   actions: {
