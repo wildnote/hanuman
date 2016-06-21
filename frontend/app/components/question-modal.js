@@ -22,6 +22,15 @@ export default Ember.Component.extend({
     });
   },
 
+  _removeAnswerChoices() {
+    this.get('question.answerChoices').then((answerChoices)=>{
+      answerChoices.forEach(function(answerChoice) {
+        answerChoice.deleteRecord();
+        answerChoice.save();
+      });
+    });
+  },
+
   actions: {
     ancestryChange(newAncestryId){
       let question = this.get('question');
@@ -48,10 +57,13 @@ export default Ember.Component.extend({
             for (var answerChoicesPending of answerChoicesPendingSave) {
               answerChoicesPending.set('question', question);
             }
+            if(!question.get('answerType.hasAnswerChoices')){
+              this._removeAnswerChoices();
+            }
             let promises = answerChoicesPendingSave.invoke('save');
             Ember.RSVP.all(promises).then(()=>{
               while (answerChoicesPendingSave.length > 0) {
-                  answerChoicesPendingSave.pop();
+                answerChoicesPendingSave.pop();
               }
               this.send('closeModal');
             });

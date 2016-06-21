@@ -67,3 +67,25 @@ test('deleting an answer choice', function(assert) {
     });
   });
 });
+
+test('changing the answer type to one with no answer choices deletes all the previously created', function(assert) {
+  question = server.create('question', {surveyStep, answer_type_id: 17});
+  answerChoices = server.createList('answer-choice', 2, { question });
+
+  let firstAnswerChoices = answerChoices[0];
+
+  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
+
+  andThen(function() {
+    assert.equal(firstAnswerChoices.option_text,find('[data-test="answerChoice.optionText"]:first').text().trim());
+    fillIn('[data-test="answer-type-id-select"]', 1);
+    triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
+    click('[data-test="save-question-link"]').then(()=>{
+      visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`).then(()=>{
+        assert.notEqual(firstAnswerChoices.option_text,find('[data-test="answerChoice.optionText"]:first').text().trim());
+        assert.notEqual(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
+        assert.equal(0, server.schema.answerChoices.all().models.length);
+      });
+    });
+  });
+});
