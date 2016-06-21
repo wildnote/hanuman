@@ -6,6 +6,8 @@ require 'kaminari'
 require 'active_model_serializers'
 require 'roo'
 require 'carrierwave'
+require 'cloudinary'
+require 'sidekiq'
 
 module Hanuman
   class Engine < ::Rails::Engine
