@@ -22,9 +22,10 @@ export default Ember.Component.extend({
       let question = this.get('question'),
           el = this.get('element'),
           $confirm = Ember.$('.delete-confirm', el);
-      $confirm.fadeOut();
       question.deleteRecord();
-      question.save();
+      question.save().then(()=>{
+        $confirm.fadeOut();
+      });
       // Missing update question indexes
     }
   }
