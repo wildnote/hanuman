@@ -20,6 +20,8 @@
 //= require jquery.multiple.select
 //= require hanuman/conditional-logic
 //= require hanuman/repeater
+//= require hanuman/observation_photos
+//= require cloudinary
 //= require_self
 //= require ./surveys
 

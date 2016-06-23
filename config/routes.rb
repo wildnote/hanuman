@@ -1,5 +1,7 @@
 Hanuman::Engine.routes.draw do
 
+  resources :observation_photos
+
   resources :rule_conditions
 
   resources :rules

@@ -7,6 +7,10 @@ module Hanuman
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
     # this line if for multiselectr answer choices
     has_many :answer_choices, through: :observation_answers, dependent: :destroy
+
+    has_many :observation_photos
+    accepts_nested_attributes_for :observation_photos, allow_destroy: true
+
     belongs_to :selectable, polymorphic: true
 
     validates_presence_of :question_id, :entry

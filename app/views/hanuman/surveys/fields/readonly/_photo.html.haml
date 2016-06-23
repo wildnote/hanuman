@@ -1,0 +1,9 @@
+.form-group
+  = render "hanuman/surveys/fields/readonly/shared/label", o: o
+  .col-sm-7
+    - o.photos.each do |p|
+      = link_to cl_image_tag(p.path, size: '350x350', crop: :thumb, class: "img-responsive thumbnail"), cloudinary_url(p.path), html_options = {class: "gallery-item gallery-photo", id: "photo_" + p.id.to_s, :"data-content-type" => p.resource_type, :"data-download-url" => cloudinary_url(p.path), :"data-file-name" => p.public_id}
+      = link_to p.public_id + "." + p.format + " | download file", cloudinary_url(p.path, attachment: true), html_options = { download: true }
+      %br
+      %br
+      %br

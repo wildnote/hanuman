@@ -34,7 +34,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'active_model_serializers', '0.8.1'
   s.add_dependency 'roo', '2.3.2'
   s.add_dependency 'carrierwave'
-  s.add_dependency 'cloudinary'
+  s.add_dependency 'cloudinary', '1.2.0'
   s.add_dependency 'sidekiq'
 
   s.add_development_dependency 'pg', '0.17.1'

@@ -1,0 +1,10 @@
+.form-group
+  = render "hanuman/surveys/fields/shared/label", ff: ff
+  .col-sm-7
+    = cl_image_upload_tag :photo,
+      :crop => :limit, :width => 1000, :height => 1000, :html => { :multiple => true , :class => "image_upload"}
+    .preview
+
+    = ff.hidden_field :entry
+    -# = text_field_tag "survey[observations_attributes][#{index}][observation_photos][#{index}][photo]"
+    -# = text_field_tag "survey[observations_attributes][#{index}][observation_photos][#{index}][description]"
