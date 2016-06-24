@@ -56,7 +56,7 @@ module Hanuman
 
       # Only allow a trusted parameter "white list" through.
       def condition_params
-        params.require(:condition).permit(:question_id, :operator, :answer)
+        params.require(:condition).permit(:question_id, :operator, :answer, :rule_id)
       end
   end
 end
