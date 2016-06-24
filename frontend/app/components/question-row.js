@@ -25,5 +25,4 @@ export default Ember.Component.extend({
       // Missing update question indexes
     }
   }
-
 });

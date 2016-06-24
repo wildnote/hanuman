@@ -22,7 +22,7 @@ export default Model.extend(Validator, {
   // Associations
   answerType:     belongsTo('answer-type'),
   surveyStep:     belongsTo('survey-step'),
-  rule:           belongsTo('rule'),
+  rule:           belongsTo('rule', {async: false}),
   answerChoices:  hasMany('answer-choice'),
 
   // Computed Properties

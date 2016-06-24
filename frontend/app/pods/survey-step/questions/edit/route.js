@@ -13,7 +13,11 @@ export default Ember.Route.extend({
   },
 
   afterModel: function(models) {
-    return models.question.get('answerChoices');
+    let question = models.question;
+    if(!question.get('rule')){
+      question.set('rule',this.store.createRecord('rule'));
+    }
+    return question.get('answerChoices');
   },
 
   setupController(controller, models) {

@@ -9,6 +9,7 @@ export default Ember.Component.extend({
   isFullyEditable: alias('surveyStep.surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   answerChoicesPendingSave: [],
+  conditionsPendingSave: [],
   sortBy: ['name'],
   sortedAnswerTypes: sort('answerTypes','sortBy'),
   ancestryQuestion: computed('question.ancestry', function() {
@@ -45,6 +46,10 @@ export default Ember.Component.extend({
       this.set('question.answerType', answerType);
     },
 
+    setRuleMatchType(matchType) {
+      this.set('question.rule.matchType', matchType);
+    },
+
     save() {
       let question = this.get('question'),
           surveyStep = this.get('surveyStep');
@@ -52,6 +57,9 @@ export default Ember.Component.extend({
       if(question.validate()){
         question.save().then(
           (question)=>{
+            if(question.get('rule')){
+              question.get('rule').save();
+            }
             let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
             // loop through answerChoicesPendingSave and set question_id or question
             for (var answerChoicesPending of answerChoicesPendingSave) {
@@ -73,6 +81,14 @@ export default Ember.Component.extend({
             surveyStep.get('questions').removeObject(question);
           }
         );
+      }
+    },
+
+    saveCondition(condition){
+      if(this.get('question.isNew') || this.get('question.rule.isNew')){
+        this.get('conditionsPendingSave').push(condition);
+      }else{
+        condition.save();
       }
     },
 

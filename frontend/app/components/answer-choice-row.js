@@ -12,7 +12,7 @@ export default Ember.Component.extend({
     this.set('answerChoice', answerChoice);
   },
 
-  actions:{
+  actions: {
     toggleForm() {
       this.toggleProperty('isEditingAnswerChoice');
       if(Ember.isNone(this.get('answerChoice'))){
@@ -22,8 +22,8 @@ export default Ember.Component.extend({
 
     save() {
       let answerChoice = this.get('answerChoice');
-      answerChoice.set('question', this.get('question'));
       if(answerChoice.validate()){
+        answerChoice.set('question', this.get('question'));
         this.sendAction('save',answerChoice);
         if(this.get('isNewAnswerChoice')){
           this.set('answerChoice',null);

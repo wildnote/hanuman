@@ -6,6 +6,8 @@ export default function() {
   this.get('/answer_types/:id');
   this.get('/survey_steps/:id');
   this.get('/survey_templates/:id');
+  // Rules
+  this.post('/rules');
   // Questions
   this.get('/questions/:id');
   this.post('/questions');

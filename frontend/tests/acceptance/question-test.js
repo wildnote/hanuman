@@ -36,7 +36,7 @@ test('selecting a type with answer choices', function(assert) {
   });
 });
 
-test('adding a question', function(assert) {
+test('adding a questionsss', function(assert) {
   visit(`/survey_steps/${surveyStep.id}`);
 
   andThen(function() {
