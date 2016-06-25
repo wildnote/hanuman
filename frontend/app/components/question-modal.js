@@ -21,6 +21,11 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce('afterRender', this, function () {
       this.get('remodal').open('question-modal');
     });
+    // Tabs
+    Ember.$('a[data-toggle="tab"]').on('click', function(e) {
+      e.preventDefault();
+      Ember.$$(this).tab('show');
+    });
   },
 
   _removeAnswerChoices() {

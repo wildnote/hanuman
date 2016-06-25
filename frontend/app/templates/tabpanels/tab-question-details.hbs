@@ -1,0 +1,66 @@
+{{#object-form for=question}}
+  <div class="col-sm-12">
+    <div class="row">
+      <div class="form-group col-sm-4">
+        <label>Type of Question</label>
+        {{#if (or isFullyEditable question.isNew)}}
+          {{#form-field for='answerType'}}
+            <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
+              {{#each sortedAnswerTypes as |answerType|}}
+                <option value={{answerType.id}} selected={{eq question.answerType.id answerType.id}}>{{answerType.name}}</option>
+              {{/each}}
+            </select>
+          {{/form-field}}
+        {{else}}
+          {{question.answerType.name}}
+          <div class="alert alert-danger">
+            Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey template to change the Answer Type.
+          </div>
+        {{/if}}
+      </div>
+      <div class="form-group col-sm-4">
+        {{#form-field for='questionText' label='Label'}}
+          <input type="text"
+                class="form-control"
+                data-test="question.questionText"
+                value={{question.questionText}}
+                oninput={{action (mut question.questionText) value="target.value"}} />
+        {{/form-field}}
+      </div>
+      <div class="form-group col-sm-4">
+        {{#form-field for='externalDataSource' label='External Data Source'}}
+          <input type="text"
+                class="form-control"
+                data-test="question.externalDataSource"
+                value={{question.externalDataSource}}
+                oninput={{action (mut question.externalDataSource) value="target.value"}} />
+          <small class="text-muted">(Superuser only)</small>
+        {{/form-field}}
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-sm-6">
+        {{#form-field for='ancestry' label='Ancestry'}}
+          <select class="form-control" onchange={{action "ancestryChange" value="target.value"}}>
+            <option></option>
+            {{#each questions as |opQuestion|}}
+              <option value={{opQuestion.id}} selected={{eq opQuestion.id question.ancestry}}>{{opQuestion.questionText}}</option>
+            {{/each}}
+          </select>
+        {{/form-field}}
+      </div>
+      <div class="form-group col-sm-3">
+        <input type="checkbox"
+              name="isRequired"
+              checked={{question.required}}
+              onchange={{action (mut question.required) value="target.checked"}} /> Required
+      </div>
+      <div class="form-group col-sm-3">
+        <input type="checkbox"
+              name="isHidden"
+              checked={{question.hidden}}
+              onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
+      </div>
+    </div>
+  </div>
+{{/object-form}}
