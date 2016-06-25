@@ -32,6 +32,32 @@ export default Ember.Component.extend({
     });
   },
 
+  _pendingObjectsPromises(pendingObjects, toSet, objTo){
+    for (var pendingObject of pendingObjects) {
+      pendingObject.set(toSet, objTo);
+    }
+    return pendingObjects.invoke('save');
+  },
+
+  _saveSuccess(question, promises){
+    let answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
+        conditionsPendingSave = this.get('conditionsPendingSave');
+
+    if(!question.get('answerType.hasAnswerChoices')){
+      this._removeAnswerChoices();
+    }
+    promises = Ember.$.makeArray(promises);
+    Ember.RSVP.all(promises).then(()=>{
+      while (answerChoicesPendingSave.length > 0) {
+        answerChoicesPendingSave.pop();
+      }
+      while (conditionsPendingSave.length > 0) {
+        conditionsPendingSave.pop();
+      }
+      this.send('closeModal');
+    });
+  },
+
   actions: {
     ancestryChange(newAncestryId){
       let question = this.get('question');
@@ -57,24 +83,24 @@ export default Ember.Component.extend({
       if(question.validate()){
         question.save().then(
           (question)=>{
+            let promises = [],
+                answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
+                answerChoicesPromises = this._pendingObjectsPromises(answerChoicesPendingSave, 'question', question);
+
+            promises = promises.concat(answerChoicesPromises);
+
             if(question.get('rule')){
-              question.get('rule').save();
+              let conditionsPendingSave = this.get('conditionsPendingSave'),
+                  rule = question.get('rule');
+              rule.set('question',question);
+              rule.save().then((rule) =>{
+                let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
+                promises = promises.concat(conditionsPromises);
+                this._saveSuccess(promises);
+              });
+            }else{
+              this._saveSuccess(promises);
             }
-            let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
-            // loop through answerChoicesPendingSave and set question_id or question
-            for (var answerChoicesPending of answerChoicesPendingSave) {
-              answerChoicesPending.set('question', question);
-            }
-            if(!question.get('answerType.hasAnswerChoices')){
-              this._removeAnswerChoices();
-            }
-            let promises = answerChoicesPendingSave.invoke('save');
-            Ember.RSVP.all(promises).then(()=>{
-              while (answerChoicesPendingSave.length > 0) {
-                answerChoicesPendingSave.pop();
-              }
-              this.send('closeModal');
-            });
           },
           (error)=>{
             console.error(`An error has occured: ${error}.`);
