@@ -168,6 +168,56 @@ module Hanuman
       end
     end
 
+    def dup_section
+      section_q = self
+      children_qs = section_q.children
+      start_sort_order = 10000
+      increment_sort_by = 2
+      unless children_qs.blank?
+        start_sort_order = children_qs.last.sort_order
+        # number of new children questions + condition (parent) and children (rule) questions
+        increment_sort_by = children_qs.count + 2
+      else
+        start_sort_order = section_q.sort_order
+      end
+
+      # remap sort orders leaving space for new questions before saving new question
+      section_q.survey_step.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
+        q.sort_order = q.sort_order + increment_sort_by
+        q.save
+      end
+
+      # this will duplicate the question, will need to create a new rule,
+      # and then set the condtions to new rule id
+      new_section_q = section_q.amoeba_dup
+      new_section_q.sort_order = new_section_q.sort_order + increment_sort_by
+      new_section_q.save
+
+      children_qs.each do |q|
+        new_child_q = q.amoeba_dup
+        # update ancestry relationship
+        new_child_q.parent = new_section_q
+
+        # set sort_order
+        new_child_q.sort_order = new_child_q.sort_order + increment_sort_by
+        new_child_q.save
+      end
+
+      # update newly created conditions with rule relationship now that the rule has been created
+      # the rule gets created with the section question
+      # new_children_questions = new_section_q.children
+      # new_children_questions.each do |q|
+      #   new_rule = q.rule
+      #   unless q.rule.blank?
+      #     new_parent_q.conditions.each do |c|
+      #       c.rule_id = new_rule.id
+      #       c.save
+      #     end
+      #   end
+      # end
+
+    end
+
     def import_answer_choices(file_name, file_path)
       spreadsheet = Import::open_spreadsheet(file_name, file_path)
       header = spreadsheet.row(1)
