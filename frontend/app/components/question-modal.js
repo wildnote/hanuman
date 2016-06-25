@@ -24,7 +24,7 @@ export default Ember.Component.extend({
     // Tabs
     Ember.$('a[data-toggle="tab"]').on('click', function(e) {
       e.preventDefault();
-      Ember.$$(this).tab('show');
+      Ember.$(this).tab('show');
     });
   },
 
