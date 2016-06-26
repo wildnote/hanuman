@@ -3,7 +3,7 @@
   <td>if</td>
   <td>
     {{#form-field for='question'}}
-      <select class="form-control" onchange={{action "setConditionQuestion" value="target.value"}}>
+      <select data-test="condition-question-id-select" class="form-control" onchange={{action "setConditionQuestion" value="target.value"}}>
         {{#each questions as |question|}}
           <option value={{question.id}} selected={{eq question.id condition.questionId}}>{{question.questionText}} - {{question.id}}</option>
         {{/each}}
@@ -12,7 +12,7 @@
   </td>
   <td>
     {{#form-field for='operator'}}
-      <select data-test="condition-select" class="form-control" onchange={{action "setConditionOperator" value="target.value"}}>
+      <select data-test="condition-operator-select" class="form-control" onchange={{action "setConditionOperator" value="target.value"}}>
         {{#each operators as |operator|}}
           <option value={{operator}} selected={{eq operator condition.operator}}>{{operator}}</option>
         {{/each}}
@@ -58,7 +58,7 @@
     <td>if</td>
     <td><span class="label label-default" title={{currentQuestion.questionText}}>{{condition.questionId}}</span></td>
     <td><span class="label label-default">{{condition.operator}}</span></td>
-    <td><span class="label label-default">{{condition.answer}}</span></td>
+    <td><span class="label label-default" data-test="condition.answer">{{condition.answer}}</span></td>
     <td>
       <a class="btn btn-success btn-sm" data-test="edit-condition-link" onclick={{action 'toggleForm'}}>
         <span class="glyphicon glyphicon-pencil"></span>

@@ -6,8 +6,22 @@ export default function() {
   this.get('/answer_types/:id');
   this.get('/survey_steps/:id');
   this.get('/survey_templates/:id');
+  // Conditions
+  this.get('/conditions/:id');
+  this.post('/conditions');
+  this.del('/conditions/:id');
+  this.put('/conditions/:id', ({ conditions }, request) => {
+    let attrs = JSON.parse(request.requestBody)['condition'],
+        id = request.params.id;
+    return conditions.find(id).update(attrs);
+  });
   // Rules
   this.post('/rules');
+  this.put('/rules/:id', ({ rules }, request) => {
+    let attrs = JSON.parse(request.requestBody)['rule'],
+        id = request.params.id;
+    return rules.find(id).update(attrs);
+  });
   // Questions
   this.get('/questions/:id');
   this.post('/questions');
@@ -15,6 +29,7 @@ export default function() {
   this.put('/questions/:id', ({ questions }, request) => {
     let attrs = JSON.parse(request.requestBody)['question'],
         id = request.params.id;
+    delete attrs.rule;
     return questions.find(id).update(attrs);
   });
   // Answer Choices
