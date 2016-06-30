@@ -16,13 +16,8 @@ export default Ember.Component.extend({
     },
     delete(){
       let question = this.get('question'),
-          el = this.get('element'),
-          $confirm = Ember.$('.delete-confirm', el);
-      question.deleteRecord();
-      question.save().then(()=>{
-        $confirm.fadeOut();
-      });
-      // Missing update question indexes
+          el = this.get('element');
+      this.sendAction('deleteQuestion',question, el);
     }
   }
 });

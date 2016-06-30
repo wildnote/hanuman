@@ -5,7 +5,8 @@ const {
 
 export default Ember.Controller.extend({
   surveyStep: alias('model'),
-  questions: filterBy('surveyStep.questions', 'isNew', false),
+  questionsNotNew: filterBy('surveyStep.questions', 'isNew', false),
+  questions: filterBy('questionsNotNew', 'isDeleted', false),
   questionsSorting: ['sortOrder'],
   sortedQuestions: sort('questions', 'questionsSorting')
 });
