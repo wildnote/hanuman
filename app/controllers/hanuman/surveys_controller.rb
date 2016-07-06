@@ -92,7 +92,12 @@ module Hanuman
             :selectable_id,
             :selectable_type,
             :group_sort,
-            answer_choice_ids: []
+            answer_choice_ids: [],
+            observation_photos_attributes: [
+              :id,
+              :photo,
+              :description
+            ]
           ]
         )
       end
@@ -114,7 +119,12 @@ module Hanuman
             :selectable_id,
             :selectable_type,
             :group_sort,
-            answer_choice_ids: []
+            answer_choice_ids: [],
+            observation_photos_attributes: [
+              :id,
+              :photo,
+              :description
+            ]
           ]
         )
       end
