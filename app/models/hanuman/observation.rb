@@ -10,6 +10,10 @@ module Hanuman
 
     has_many :observation_photos
     accepts_nested_attributes_for :observation_photos, allow_destroy: true
+    has_many :observation_documents
+    accepts_nested_attributes_for :observation_documents, allow_destroy: true
+    has_many :observation_videos
+    accepts_nested_attributes_for :observation_videos, allow_destroy: true
 
     belongs_to :selectable, polymorphic: true
 
