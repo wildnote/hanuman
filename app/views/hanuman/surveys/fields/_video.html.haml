@@ -1,0 +1,5 @@
+.form-group
+  = render "hanuman/surveys/fields/shared/label", ff: ff
+  .col-sm-7
+    =# ff.attachinary_file_field :videos, format: "video"
+    = ff.hidden_field :entry

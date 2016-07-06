@@ -1,0 +1,14 @@
+.form-group
+  = render "hanuman/surveys/fields/readonly/shared/label", o: o
+  .col-sm-7.videotesting
+    -# - o.videos.each do |p|
+    -#   = cl_video_tag(p.public_id, options = {  source_type: 'webm', controls: true, preload: 'none', crop: :fill, size: '350x350' } )
+    -#   %br
+    -#   %br
+    -#   - unless p.format.blank?
+    -#     = p.public_id + "." + p.format + " | right click on video to download"
+    -#   -else
+    -#     = p.public_id + " | right click on video to download"
+    -#   %br
+    -#   %br
+    -#   %br

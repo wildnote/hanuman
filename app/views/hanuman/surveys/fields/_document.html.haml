@@ -1,0 +1,6 @@
+.form-group
+  = render "hanuman/surveys/fields/shared/label", ff: ff
+  .col-sm-7
+    -# = ff.file_field :answer, class: "form-control"
+    =# ff.attachinary_file_field :documents, cloudinary: {resource_type: :auto }
+    = ff.hidden_field :entry
