@@ -14,7 +14,7 @@ module Hanuman
     end
 
     def self.sort(sort_column, sort_direction)
-      self.order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc"))
+      self.order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc").gsub("desc desc", "desc").gsub("desc asc", "desc"))
     end
   end
 end

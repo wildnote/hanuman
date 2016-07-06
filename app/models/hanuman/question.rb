@@ -29,7 +29,7 @@ module Hanuman
     end
 
     def self.sort(sort_column, sort_direction)
-      joins(:answer_type).order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc"))
+      joins(:answer_type).order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc").gsub("desc desc", "desc").gsub("desc asc", "desc"))
     end
 
     def question_text_not_required
