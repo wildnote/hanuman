@@ -9,7 +9,7 @@ module Hanuman
 
     def self.filtered_by_question_id_and_sort(question_id, sort_column, sort_direction)
       question_id.blank? ? true : conditions = "hanuman_answer_choices.question_id = " + question_id.to_s
-      joins(:question).where(conditions).order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc"))
+      joins(:question).where(conditions).order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc").gsub("desc desc", "desc").gsub("desc asc", "desc"))
     end
 
     def protect_split
