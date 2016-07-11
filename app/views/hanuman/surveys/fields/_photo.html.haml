@@ -2,7 +2,7 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
     = ff.fields_for :observation_photos, o do |fff|
-      = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "image_upload"}
+      = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "image_upload survey-photo-upload"}
       .preview
 
     = ff.hidden_field :entry
