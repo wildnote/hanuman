@@ -1,6 +1,10 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
+    = ff.fields_for :observation_documents, o do |fff|
+      = fff.cl_upload(:document, :html => { :multiple => true , :class => "image_upload survey-document-upload"})
+      -# = fff.cl_upload_tag(:document, :chunk_size => 6_000_000)
+      .document-preview
     -# = ff.file_field :answer, class: "form-control"
     =# ff.attachinary_file_field :documents, cloudinary: {resource_type: :auto }
     = ff.hidden_field :entry

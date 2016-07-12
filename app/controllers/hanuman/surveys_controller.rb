@@ -97,6 +97,16 @@ module Hanuman
               :id,
               :photo,
               :description
+            ],
+            observation_videos_attributes: [
+              :id,
+              :video,
+              :description
+            ],
+            observation_documents_attributes: [
+              :id,
+              :document,
+              :description
             ]
           ]
         )
@@ -123,6 +133,16 @@ module Hanuman
             observation_photos_attributes: [
               :id,
               :photo,
+              :description
+            ],
+            observation_videos_attributes: [
+              :id,
+              :video,
+              :description
+            ],
+            observation_documents_attributes: [
+              :id,
+              :document,
               :description
             ]
           ]

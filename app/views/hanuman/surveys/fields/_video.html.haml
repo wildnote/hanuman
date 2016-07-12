@@ -1,5 +1,11 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    =# ff.attachinary_file_field :videos, format: "video"
+    - o.observation_videos.each do |v|
+      = cl_video_tag(v.video.url, options = { controls: true, preload: 'none', width: 350, poster: v.video.url.gsub("mp4", "jpg") })
+    = ff.fields_for :observation_videos, o do |fff|
+      = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "image_upload survey-video-upload"})
+      .video-preview
+      .progress
+        .progress-bar.progress-bar-success.video-progress-bar
     = ff.hidden_field :entry

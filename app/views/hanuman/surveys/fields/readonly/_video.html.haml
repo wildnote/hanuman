@@ -1,6 +1,8 @@
 .form-group
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
   .col-sm-7.videotesting
+    - o.observation_videos.each do |v|
+      = cl_video_tag(v.video.url, options = { controls: true, preload: 'none', width: 350 })
     -# - o.videos.each do |p|
     -#   = cl_video_tag(p.public_id, options = {  source_type: 'webm', controls: true, preload: 'none', crop: :fill, size: '350x350' } )
     -#   %br
