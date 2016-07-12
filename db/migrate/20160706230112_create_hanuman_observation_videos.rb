@@ -1,7 +1,7 @@
 class CreateHanumanObservationVideos < ActiveRecord::Migration
   def change
     create_table :hanuman_observation_videos do |t|
-      t.observation :references
+      t.references :observation, index: true
       t.string :video
       t.text :description
 

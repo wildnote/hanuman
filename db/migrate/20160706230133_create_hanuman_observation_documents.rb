@@ -1,7 +1,7 @@
 class CreateHanumanObservationDocuments < ActiveRecord::Migration
   def change
     create_table :hanuman_observation_documents do |t|
-      t.observation :references
+      t.references :observation, index: true
       t.string :document
       t.text :description
 
