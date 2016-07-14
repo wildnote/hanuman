@@ -7,7 +7,7 @@ This project rocks and uses MIT-LICENSE.
 
 Hanuman is a rails engine that gives the rails application the ability to create surveys for data collection.
 
-It is still pretty early in the development stage. However, we are useing it in two of our applications.
+It is still pretty early in the development stage. However, we are using it in two of our applications.
 
 
 
@@ -48,3 +48,8 @@ Once you have Bower and Ember CLI installed you need to install npm and bower de
 rake ember:install
 ```
 
+To run tests
+
+```
+BUNDLE_GEMFILE="Gemfile.development" rake ember:test
+```
