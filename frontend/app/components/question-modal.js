@@ -63,6 +63,12 @@ export default Ember.Component.extend({
     });
   },
 
+  _sortOrder(question){
+    let surveyStep = this.get('surveyStep'),
+        lastQuestion = surveyStep.get('questions').sortBy('sortOrder').get('lastObject');
+    question.set('sortOrder',lastQuestion.get('sortOrder') + 1);
+  },
+
   actions: {
     ancestryChange(newAncestryId){
       let question = this.get('question');
@@ -86,6 +92,9 @@ export default Ember.Component.extend({
           surveyStep = this.get('surveyStep');
       question.set('surveyStep', surveyStep);
       if(question.validate()){
+        if(question.get('isNew')){
+          this._sortOrder(question);
+        }
         question.save().then(
           (question)=>{
             let promises = [],
