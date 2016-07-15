@@ -57,3 +57,9 @@ To run tests
 ```
 BUNDLE_GEMFILE="Gemfile.development" rake ember:test
 ```
+
+You may need to run the following to get the tests running
+
+```
+npm install -g phantomjs-prebuilt
+```
