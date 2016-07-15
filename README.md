@@ -26,6 +26,10 @@ node -v
 npm -v
 ````
 
+###### Setup in parent app
+
+The following commands should be done in the parent app.
+
 ###### Ember CLI
 
 Once you’ve installed Node, you’ll need to globally install Ember CLI:
@@ -45,11 +49,17 @@ npm install -g bower
 Once you have Bower and Ember CLI installed you need to install npm and bower dependencies before running the rails server:
 
 ````
-rake ember:install
+BUNDLE_GEMFILE="Gemfile.development" rake ember:install
 ```
 
 To run tests
 
 ```
 BUNDLE_GEMFILE="Gemfile.development" rake ember:test
+```
+
+You may need to run the following to get the tests running
+
+```
+npm install -g phantomjs-prebuilt
 ```

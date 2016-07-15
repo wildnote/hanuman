@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const {
   computed,
-  computed: { alias, sort }
+  computed: { alias, sort, match }
 } = Ember;
 
 export default Ember.Component.extend({
@@ -10,8 +10,11 @@ export default Ember.Component.extend({
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   answerChoicesPendingSave: [],
   conditionsPendingSave: [],
-  sortBy: ['name'],
-  sortedAnswerTypes: sort('answerTypes','sortBy'),
+  sortTypesBy: ['name'],
+  sortChoicesBy: ['optionText'],
+  sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
+  sortedAnswerChoices: sort('question.answerChoices', 'sortChoicesBy'),
+  showAncestrySelect: match('question.answerType.name', /section|repeater/),
   ancestryQuestion: computed('question.ancestry', function() {
     return this.get('questions').findBy('id',this.get('question.ancestry'));
   }),
@@ -63,6 +66,12 @@ export default Ember.Component.extend({
     });
   },
 
+  _sortOrder(question){
+    let surveyStep = this.get('surveyStep'),
+        lastQuestion = surveyStep.get('questions').sortBy('sortOrder').get('lastObject');
+    question.set('sortOrder',lastQuestion.get('sortOrder') + 1);
+  },
+
   actions: {
     ancestryChange(newAncestryId){
       let question = this.get('question');
@@ -86,6 +95,9 @@ export default Ember.Component.extend({
           surveyStep = this.get('surveyStep');
       question.set('surveyStep', surveyStep);
       if(question.validate()){
+        if(question.get('isNew')){
+          this._sortOrder(question);
+        }
         question.save().then(
           (question)=>{
             let promises = [],
@@ -94,7 +106,8 @@ export default Ember.Component.extend({
 
             promises = promises.concat(answerChoicesPromises);
 
-            if(question.get('rule')){
+            // We can't save the rule until there is at least one condition associated with the rule
+            if(question.get('rule') && (!question.get('rule.isNew') || this.get('conditionsPendingSave.length') > 0)){
               let conditionsPendingSave = this.get('conditionsPendingSave'),
                   rule = question.get('rule');
               rule.set('question',question);
