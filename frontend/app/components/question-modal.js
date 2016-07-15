@@ -106,7 +106,8 @@ export default Ember.Component.extend({
 
             promises = promises.concat(answerChoicesPromises);
 
-            if(question.get('rule')){
+            // We can't save the rule until there is at least one condition associated with the rule
+            if(question.get('rule') && (!question.get('rule.isNew') || this.get('conditionsPendingSave.length') > 0)){
               let conditionsPendingSave = this.get('conditionsPendingSave'),
                   rule = question.get('rule');
               rule.set('question',question);
