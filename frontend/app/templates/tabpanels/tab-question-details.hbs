@@ -52,16 +52,14 @@
               onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
       </div>
       <div class="form-group col-sm-6">
-        {{#if showAncestrySelect}}
-          {{#form-field for='ancestry' label='Ancestry'}}
-            <select class="form-control" onchange={{action "ancestryChange" value="target.value"}}>
-              <option></option>
-              {{#each questions as |opQuestion|}}
-                <option value={{opQuestion.id}} selected={{eq opQuestion.id question.ancestry}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
-              {{/each}}
-            </select>
-          {{/form-field}}
-        {{/if}}
+        {{#form-field for='ancestry' label='Ancestry'}}
+          <select class="form-control" onchange={{action "ancestryChange" value="target.value"}}>
+            <option></option>
+            {{#each ancestryQuestions as |opQuestion|}}
+              <option value={{opQuestion.id}} selected={{eq opQuestion.id question.ancestry}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
+            {{/each}}
+          </select>
+        {{/form-field}}
       </div>
     </div>
   </div>

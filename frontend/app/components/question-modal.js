@@ -1,7 +1,7 @@
 import Ember from 'ember';
 const {
   computed,
-  computed: { alias, sort, match }
+  computed: { alias, sort }
 } = Ember;
 
 export default Ember.Component.extend({
@@ -14,7 +14,12 @@ export default Ember.Component.extend({
   sortChoicesBy: ['optionText'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   sortedAnswerChoices: sort('question.answerChoices', 'sortChoicesBy'),
-  showAncestrySelect: match('question.answerType.name', /section|repeater/),
+  ancestryQuestions: computed('questions', function() {
+    return this.get('questions').filter(function(question) {
+      let allowedTypes = ['section','repeater'];
+      return allowedTypes.contains(question.get('answerType.name'));
+    });
+  }),
   ancestryQuestion: computed('question.ancestry', function() {
     return this.get('questions').findBy('id',this.get('question.ancestry'));
   }),
