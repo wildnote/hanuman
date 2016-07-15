@@ -75,7 +75,7 @@ test('changing the answer type to one with no answer choices deletes all the pre
   question = server.create('question', {surveyStep, answer_type_id: 17});
   answerChoices = server.createList('answer-choice', 2, { question });
 
-  let firstAnswerChoices = answerChoices[0];
+  let firstAnswerChoices = answerChoices.sortBy('option_text').get('firstObject');
 
   visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
 

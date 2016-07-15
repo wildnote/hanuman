@@ -10,7 +10,7 @@
           </tr>
         </thead>
         <tbody>
-          {{#each question.answerChoices as |answerChoice|}}
+          {{#each sortedAnswerChoices as |answerChoice|}}
             {{answer-choice-row question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
           {{/each}}
           {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true}}

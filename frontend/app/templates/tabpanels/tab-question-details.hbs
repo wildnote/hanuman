@@ -44,7 +44,7 @@
           <select class="form-control" onchange={{action "ancestryChange" value="target.value"}}>
             <option></option>
             {{#each questions as |opQuestion|}}
-              <option value={{opQuestion.id}} selected={{eq opQuestion.id question.ancestry}}>{{opQuestion.questionText}}</option>
+              <option value={{opQuestion.id}} selected={{eq opQuestion.id question.ancestry}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
             {{/each}}
           </select>
         {{/form-field}}

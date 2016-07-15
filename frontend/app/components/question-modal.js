@@ -10,8 +10,10 @@ export default Ember.Component.extend({
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   answerChoicesPendingSave: [],
   conditionsPendingSave: [],
-  sortBy: ['name'],
-  sortedAnswerTypes: sort('answerTypes','sortBy'),
+  sortTypesBy: ['name'],
+  sortChoicesBy: ['optionText'],
+  sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
+  sortedAnswerChoices: sort('question.answerChoices', 'sortChoicesBy'),
   ancestryQuestion: computed('question.ancestry', function() {
     return this.get('questions').findBy('id',this.get('question.ancestry'));
   }),
