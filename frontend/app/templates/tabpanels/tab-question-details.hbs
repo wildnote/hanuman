@@ -39,16 +39,6 @@
       </div>
     </div>
     <div class="row">
-      <div class="form-group col-sm-6">
-        {{#form-field for='ancestry' label='Ancestry'}}
-          <select class="form-control" onchange={{action "ancestryChange" value="target.value"}}>
-            <option></option>
-            {{#each questions as |opQuestion|}}
-              <option value={{opQuestion.id}} selected={{eq opQuestion.id question.ancestry}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
-            {{/each}}
-          </select>
-        {{/form-field}}
-      </div>
       <div class="form-group col-sm-3">
         <input type="checkbox"
               name="isRequired"
@@ -60,6 +50,18 @@
               name="isHidden"
               checked={{question.hidden}}
               onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
+      </div>
+      <div class="form-group col-sm-6">
+        {{#if showAncestrySelect}}
+          {{#form-field for='ancestry' label='Ancestry'}}
+            <select class="form-control" onchange={{action "ancestryChange" value="target.value"}}>
+              <option></option>
+              {{#each questions as |opQuestion|}}
+                <option value={{opQuestion.id}} selected={{eq opQuestion.id question.ancestry}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
+              {{/each}}
+            </select>
+          {{/form-field}}
+        {{/if}}
       </div>
     </div>
   </div>
