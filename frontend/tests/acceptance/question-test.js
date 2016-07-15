@@ -35,20 +35,6 @@ test('selecting a type with answer choices', function(assert) {
   });
 });
 
-test('selecting a type that supports ancestry selection', function(assert) {
-  question = server.create('question', {surveyStep, answer_type_id: 56}); // Answer Type id 17 = `Radio`
-
-  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
-  andThen(function() {
-    assert.equal(find('.field.ancestry label').text().trim(), 'Ancestry', 'Shows ancestry select');
-    fillIn('[data-test="answer-type-id-select"]', 1);
-    triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
-    Ember.run.later(this,function() {
-      assert.notEqual(find('.field.ancestry label').text().trim(), 'Ancestry');
-    },0);
-  });
-});
-
 test('adding a questionsss', function(assert) {
   visit(`/survey_steps/${surveyStep.id}`);
 
