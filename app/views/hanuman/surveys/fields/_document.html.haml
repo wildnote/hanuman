@@ -1,10 +1,14 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
+    - o.observation_documents.each do |d|
+      - if ['pdf','jpg','png','gif'].include? d.document.url.last(3)
+        = link_to cl_image_tag(d.document.my_public_id, size: '350x350', crop: :thumb, class: 'img-responsive thumbnail', format: 'jpg'), cloudinary_url(d.document), html_options = {target: "_blank", id: "document_" + d.id.to_s}
+      - else
+        = image_tag("file-icon.png", class: 'img-responsive thumbnail')
     = ff.fields_for :observation_documents, o do |fff|
       = fff.cl_upload(:document, :html => { :multiple => true , :class => "image_upload survey-document-upload"})
-      -# = fff.cl_upload_tag(:document, :chunk_size => 6_000_000)
       .document-preview
-    -# = ff.file_field :answer, class: "form-control"
-    =# ff.attachinary_file_field :documents, cloudinary: {resource_type: :auto }
+      .progress
+        .progress-bar.progress-bar-success.document-progress-bar
     = ff.hidden_field :entry
