@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140716224956) do
+ActiveRecord::Schema.define(version: 20160719225437) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -33,37 +33,98 @@ ActiveRecord::Schema.define(version: 20140716224956) do
     t.string   "status"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "description"
+    t.string   "descriptive_name"
+    t.boolean  "has_answer_choices",   default: false, null: false
+    t.string   "external_data_source"
+    t.string   "answer_choice_type"
+    t.string   "post_name"
+    t.string   "post_type"
+    t.string   "element_type"
   end
+
+  create_table "hanuman_conditions", force: true do |t|
+    t.integer  "question_id"
+    t.string   "operator"
+    t.string   "answer"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "rule_id"
+  end
+
+  add_index "hanuman_conditions", ["question_id"], name: "index_hanuman_conditions_on_question_id", using: :btree
+  add_index "hanuman_conditions", ["rule_id"], name: "index_hanuman_conditions_on_rule_id", using: :btree
 
   create_table "hanuman_observation_answers", force: true do |t|
     t.integer  "observation_id"
     t.integer  "answer_choice_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "multiselectable_id"
+    t.string   "multiselectable_type"
   end
 
   create_table "hanuman_observations", force: true do |t|
     t.integer  "survey_id"
-    t.integer  "survey_question_id"
     t.text     "answer"
     t.text     "notes"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "group"
+    t.integer  "entry"
     t.integer  "answer_choice_id"
+    t.integer  "question_id"
+    t.integer  "selectable_id"
+    t.string   "selectable_type"
+    t.string   "group_sort"
   end
 
   add_index "hanuman_observations", ["survey_id"], name: "index_hanuman_observations_on_survey_id", using: :btree
-  add_index "hanuman_observations", ["survey_question_id"], name: "index_hanuman_observations_on_survey_question_id", using: :btree
 
   create_table "hanuman_questions", force: true do |t|
     t.text     "question_text"
     t.integer  "answer_type_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "survey_step_id"
+    t.integer  "sort_order"
+    t.boolean  "required",             default: false
+    t.string   "external_data_source"
+    t.string   "ancestry"
+    t.boolean  "hidden",               default: false
+    t.integer  "duped_question_id"
+    t.integer  "survey_template_id"
   end
 
+  add_index "hanuman_questions", ["ancestry"], name: "index_hanuman_questions_on_ancestry", using: :btree
   add_index "hanuman_questions", ["answer_type_id"], name: "index_hanuman_questions_on_answer_type_id", using: :btree
+  add_index "hanuman_questions", ["survey_template_id"], name: "index_hanuman_questions_on_survey_template_id", using: :btree
+
+  create_table "hanuman_rule_conditions", force: true do |t|
+    t.integer  "rule_id"
+    t.integer  "condition_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "hanuman_rule_conditions", ["condition_id"], name: "index_hanuman_rule_conditions_on_condition_id", using: :btree
+  add_index "hanuman_rule_conditions", ["rule_id"], name: "index_hanuman_rule_conditions_on_rule_id", using: :btree
+
+  create_table "hanuman_rules", force: true do |t|
+    t.integer  "question_id"
+    t.string   "match_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "duped_rule_id"
+  end
+
+  add_index "hanuman_rules", ["question_id"], name: "index_hanuman_rules_on_question_id", using: :btree
+
+  create_table "hanuman_settings", force: true do |t|
+    t.string   "key"
+    t.string   "value"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "hanuman_survey_extensions", force: true do |t|
     t.integer  "survey_id"
@@ -75,14 +136,22 @@ ActiveRecord::Schema.define(version: 20140716224956) do
     t.integer  "survey_template_id"
     t.integer  "question_id"
     t.integer  "sort_order"
-    t.string   "group"
     t.boolean  "duplicator",         default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "step"
   end
 
   add_index "hanuman_survey_questions", ["question_id"], name: "index_hanuman_survey_questions_on_question_id", using: :btree
   add_index "hanuman_survey_questions", ["survey_template_id"], name: "index_hanuman_survey_questions_on_survey_template_id", using: :btree
+
+  create_table "hanuman_survey_steps", force: true do |t|
+    t.integer  "survey_template_id"
+    t.integer  "step"
+    t.boolean  "duplicator"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "hanuman_survey_templates", force: true do |t|
     t.string   "name"
