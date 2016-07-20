@@ -8,7 +8,9 @@
         = image_tag("file-icon.png", class: 'img-responsive thumbnail')
     = ff.fields_for :observation_documents, o do |fff|
       = fff.cl_upload(:document, :html => { :multiple => true , :class => "image_upload survey-document-upload"})
-      .document-preview
+      .document-upload-error
+      .document-preview-container
+        .document-preview
       .progress
         .progress-bar.progress-bar-success.document-progress-bar
     = ff.hidden_field :entry

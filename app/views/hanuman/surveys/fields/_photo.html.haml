@@ -6,7 +6,9 @@
       = link_to p.photo.my_public_id + "." + p.photo.format + " | download file", cloudinary_url(p.photo, attachment: true), html_options = { download: true }
     = ff.fields_for :observation_photos, o do |fff|
       = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "image_upload survey-photo-upload"}
-      .photo-preview
+      .photo-upload-error
+      .photo-preview-container
+        .photo-preview
       .progress
         .progress-bar.progress-bar-success.photo-progress-bar
 
