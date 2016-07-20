@@ -12,11 +12,17 @@ $ ->
       version: data.result.version
       crop: 'fill'
       width: 350)
-    # need to add textarea for caption for each photo, attach photo identifier to text area so we can come back and rename apprpriately
+    # need to add a textarea to each photo, name of text area must be survey[observations_attributes][1][observation_photos_attributes][0][description]
 
-    # loop through the hidden fields, match the photo and description textarea with the hidden input and name text area apprpriately
+    # one photo upload would look like this
+    #survey[observations_attributes][1][observation_photos_attributes][0][photo]
+    #survey[observations_attributes][1][observation_photos_attributes][0][description]
 
-    # rename the hidden fields as they have
+    # next photo
+    #survey[observations_attributes][1][observation_photos_attributes][1][photo]
+    #survey[observations_attributes][1][observation_photos_attributes][1][description]
+
+    # make sure after first photo, the observation_photos_attributes[0] index is incremented for both photo and description
 
   $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadfail', (e, data) ->
     # append error message
