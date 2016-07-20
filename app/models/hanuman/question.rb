@@ -2,19 +2,23 @@ module Hanuman
   class Question < ActiveRecord::Base
     has_paper_trail
     has_ancestry
+
+    # Relations
     belongs_to :answer_type
-    belongs_to :survey_step
+    belongs_to :survey_step # Deprecated
+    belongs_to :survey_template
     has_many :answer_choices, dependent: :destroy, inverse_of: :question
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
     has_one :rule, dependent: :destroy
     has_many :conditions, dependent: :destroy
 
+    # Validations
     validates_presence_of :answer_type_id
     # wait until after migration for these validations
     #validates_presence_of :sort_order, :survey_step_id
-
     validates :question_text, presence: true, unless: :question_text_not_required
 
+    # Callbacks
     after_create :submit_blank_observation_data
     # this flooding the system on a question resort which is resulting in a db deadlock,
     # will manually call this at the survey template level after all changes are made
@@ -48,8 +52,8 @@ module Hanuman
     def submit_blank_observation_data
       question = self
       parent = self.parent
-      unless survey_step.survey_template.fully_editable
-        surveys = survey_step.survey_template.surveys
+      unless survey_template.fully_editable
+        surveys = survey_template.surveys
         surveys.each do |s|
           if parent.blank?
             Observation.create(
@@ -76,8 +80,8 @@ module Hanuman
     end
 
     def resort_submitted_observations
-      unless survey_step.survey_template.fully_editable
-        surveys = survey_step.survey_template.surveys
+      unless survey_template.fully_editable
+        surveys = survey_template.surveys
         surveys.each do |s|
           s.save
         end
@@ -131,7 +135,7 @@ module Hanuman
       end
 
       # remap sort orders leaving space for new questions before saving new question
-      parent_q.survey_step.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
+      parent_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
         q.sort_order = q.sort_order + increment_sort_by
         q.save
       end
@@ -182,7 +186,7 @@ module Hanuman
       end
 
       # remap sort orders leaving space for new questions before saving new question
-      section_q.survey_step.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
+      section_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
         q.sort_order = q.sort_order + increment_sort_by
         q.save
       end

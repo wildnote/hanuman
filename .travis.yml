@@ -2,6 +2,8 @@
 language: node_js
 node_js:
   - "0.12"
+rvm:
+  - 2.2.3
 
 sudo: false
 
@@ -10,10 +12,16 @@ cache:
     - node_modules
 
 before_install:
+  - gem install bundler -v 1.12.5
   - cd frontend
   - export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
   - "npm config set spin false"
   - "npm install -g npm@^2"
+
+before_script:
+  - psql -c 'create database hanuman_test;' -U postgres
+  - bundle exec rake db:migrate --trace
+  - cd frontend
 
 install:
   - npm install -g bower
@@ -22,6 +30,8 @@ install:
 
 script:
   - ember test
+  - cd .. && bundle exec rspec
+
 
 notifications:
   email: false
