@@ -1,4 +1,4 @@
-.form-group
+.form-group.file-upload
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
     - o.observation_videos.each do |v|
@@ -7,7 +7,6 @@
       = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "image_upload survey-video-upload"})
       .video-upload-error
       .video-preview-container
-        .video-preview
       .progress
         .progress-bar.progress-bar-success.video-progress-bar
     = ff.hidden_field :entry
