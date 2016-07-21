@@ -25,6 +25,14 @@ module Hanuman
           question_id: q.id,
           entry: 1
         )
+
+        if q.answer_type.name.eql? "photo"
+          o.observation_photos.build()
+        elsif q.answer_type.name.eql? "video"
+          o.observation_videos.build()
+        elsif q.answer_type.name.eql? "document"
+          o.observation_documents.build()
+        end
       end
     end
 

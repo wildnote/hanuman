@@ -6,6 +6,7 @@ addTexareaForUpload = (file, data, idx) ->
   fileValue = dataObj.resource_type+"/"+dataObj.type+"/"+"v"+dataObj.version+"/"+dataObj.public_id+"."+dataObj.format+"#"+dataObj.signature
   if file == "photo"
     regex = /\[observation_photos_attributes]\[\d+]\[photo]/
+    console.log data
     nameAttr = data.cloudinaryField.replace(/\[observation_photos_attributes]\[\d+]\[photo]/, "[observation_photos_attributes][" + idx + "][description]")
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_photos_attributes]\[\d+]\[photo]/, "[observation_photos_attributes][" + idx + "][photo]")
   else if file == "document"
@@ -36,8 +37,34 @@ addTexareaForUpload = (file, data, idx) ->
       $(obj).remove()
 
 
+removePhotoHiddenInput = ->
+  photosRegex = /survey\[observations_attributes]\[\d+]\[observation_photos_attributes]\[\d+]\[id]/
+  photoInputs = $($($('.file-upload')).find('input[type=hidden]')).filter (i, o) ->
+    name = $(o).attr('name')
+    name.match(photosRegex) != null
+  photoInputs[0].remove()
+
+removeVideoHiddenInput = ->
+  videosRegex = /survey\[observations_attributes]\[\d+]\[observation_videos_attributes]\[\d+]\[id]/
+  videoInputs = $($($('.file-upload')).find('input[type=hidden]')).filter (i, o) ->
+    name = $(o).attr('name')
+    name.match(videosRegex) != null
+  videoInputs[0].remove()
+
+removeDocumentHiddenInput = ->
+  documentsRegex = /survey\[observations_attributes]\[\d+]\[observation_documents_attributes]\[\d+]\[id]/
+  documentInputs = $($($('.file-upload')).find('input[type=hidden]')).filter (i, o) ->
+    name = $(o).attr('name')
+    name.match(documentsRegex) != null
+  documentInputs[0].remove()
+
 
 $ ->
+  if $('.edit-move-file').length > 0
+    removePhotoHiddenInput()
+    removeVideoHiddenInput()
+    removeDocumentHiddenInput()
+
   # removes deleted files on survey new.
   $('.file-upload').on 'click', '.remove-upload', ->
     file = $(@).attr('id')
