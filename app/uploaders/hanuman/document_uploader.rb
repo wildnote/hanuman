@@ -7,6 +7,10 @@ module Hanuman
     # include CarrierWave::MiniMagick
     include Cloudinary::CarrierWave
 
+
+    def extension_white_list
+      %w(jpg png gif jpeg xls xlsx pdf doc docx txt tif tiff zip eml kmz ppt pptx)
+    end
     # Choose what kind of storage to use for this uploader:
     #storage :file
     # storage :fog
