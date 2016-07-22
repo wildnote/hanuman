@@ -7,7 +7,7 @@ module Hanuman
     # include CarrierWave::MiniMagick
     include Cloudinary::CarrierWave
 
-    def extension_whitelist
+    def extension_white_list
       %w(mov mp4)
     end
     # Choose what kind of storage to use for this uploader:
