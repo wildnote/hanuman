@@ -17,9 +17,9 @@ before_install:
   - export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
   - "npm config set spin false"
   - "npm install -g npm@^2"
-  - cd ..
 
 before_script:
+  - cd ..
   - psql -c 'create database hanuman_test;' -U postgres
   - bundle exec rake db:migrate --trace
   - cd frontend
