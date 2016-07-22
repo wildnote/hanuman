@@ -22,6 +22,7 @@
 //= require hanuman/repeater
 //= require hanuman/required_data
 //= require hanuman/cloudinary-uploads
+//= require hanuman/maps
 //= require cloudinary
 //= require_self
 //= require ./surveys
