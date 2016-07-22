@@ -39,6 +39,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rspec-rails", "~> 3.4"
   s.add_development_dependency "database_cleaner"
   s.add_development_dependency "shoulda-matchers"
+  s.add_development_dependency "shoulda-callback-matchers"
   s.add_development_dependency 'factory_girl_rails', '~> 4.7'
   s.add_development_dependency "fakeweb", "~> 1.3"
   s.add_development_dependency "faker", "~> 1.6.5"

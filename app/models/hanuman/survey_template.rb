@@ -1,11 +1,14 @@
 module Hanuman
   class SurveyTemplate < ActiveRecord::Base
     has_paper_trail
+
+    # Relations
     has_many :survey_steps, -> { order :step }, inverse_of: :survey_template, dependent: :destroy
     has_many :questions, through: :survey_steps, dependent: :destroy
     has_many :surveys, dependent: :restrict_with_exception
 
-    validates_presence_of :name
+    # Validations
+    validates :name, presence: true
     #validates_uniqueness_of :name MOVED THIS TO CHILD APPLICAITON TO MAKE IT SCOPED BY ORANIZATION-KDH
 
     amoeba do

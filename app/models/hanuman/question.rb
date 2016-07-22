@@ -13,7 +13,7 @@ module Hanuman
     has_many :conditions, dependent: :destroy
 
     # Validations
-    validates_presence_of :answer_type_id
+    validates :answer_type_id, presence: true
     # wait until after migration for these validations
     #validates_presence_of :sort_order, :survey_step_id
     validates :question_text, presence: true, unless: :question_text_not_required

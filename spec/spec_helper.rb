@@ -4,6 +4,7 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../dummy/config/environment.rb', __FILE__)
 require 'rspec/rails'
 require 'shoulda-matchers'
+require 'shoulda-callback-matchers'
 require 'database_cleaner'
 require 'factory_girl_rails'
 require 'codeclimate-test-reporter'
@@ -28,6 +29,7 @@ Shoulda::Matchers.configure do |config|
 end
 
 RSpec.configure do |config|
+  config.include(Shoulda::Callback::Matchers::ActiveModel)
   config.include FactoryGirl::Syntax::Methods
   config.mock_with :rspec
   config.use_transactional_fixtures = true

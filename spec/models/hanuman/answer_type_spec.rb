@@ -14,5 +14,9 @@ module Hanuman
                             .in_array(Hanuman::AnswerType::ANSWER_CHOICE_STATUSES)
       end
     end
+
+    describe 'Relations' do
+      it { is_expected.to have_many(:questions).dependent(:restrict_with_exception) }
+    end
   end
 end

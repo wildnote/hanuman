@@ -187,6 +187,8 @@ GEM
       sass (~> 3.2.0)
       sprockets (~> 2.8, <= 2.11.0)
       sprockets-rails (~> 2.0)
+    shoulda-callback-matchers (1.1.4)
+      activesupport (>= 3)
     shoulda-matchers (3.1.1)
       activesupport (>= 4.0.0)
     sidekiq (4.1.4)
@@ -239,4 +241,5 @@ DEPENDENCIES
   pg (= 0.18.4)
   rspec-rails (~> 3.4)
   rubocop (~> 0.40.0)
+  shoulda-callback-matchers
   shoulda-matchers
