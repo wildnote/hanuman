@@ -2,13 +2,20 @@ module Hanuman
   class SurveyTemplate < ActiveRecord::Base
     has_paper_trail
 
+    # Constants
+    STATUSES = %w(draft active inactive)
+
+    # Scopes
+    scope :all_active_sorted, -> { where("status = 'active'").order('name ASC') }
+
     # Relations
-    has_many :survey_steps, -> { order :step }, inverse_of: :survey_template, dependent: :destroy
-    has_many :questions, through: :survey_steps, dependent: :destroy
+    has_many :survey_steps, -> { order :step }, inverse_of: :survey_template, dependent: :destroy #Deprecated
+    has_many :questions, dependent: :destroy
     has_many :surveys, dependent: :restrict_with_exception
 
     # Validations
     validates :name, presence: true
+    validates :status, inclusion: { in: STATUSES }
     #validates_uniqueness_of :name MOVED THIS TO CHILD APPLICAITON TO MAKE IT SCOPED BY ORANIZATION-KDH
 
     amoeba do
@@ -16,22 +23,16 @@ module Hanuman
       prepend name: "Copy " + Time.now.strftime("%m/%d/%Y %I:%M:%S %p") + " (PLEASE RENAME) - "
     end
 
-    STATUSES = ["draft", "active", "inactive"]
-
     def self.all_sorted
-      order("name ASC")
-    end
-
-    def self.all_active_sorted
-      where("status = 'active'").order("name ASC")
+      order('name ASC')
     end
 
     def survey_step_is_duplicator?(step)
-      self.survey_steps.by_step(step).first.duplicator
+      survey_steps.by_step(step).first.duplicator
     end
 
     def num_reports_submitted
-      self.surveys.count
+      surveys.count
     end
 
     # a survey template
