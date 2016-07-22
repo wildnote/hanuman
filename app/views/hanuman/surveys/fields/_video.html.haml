@@ -2,7 +2,7 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
     - if !@survey.id.nil?
-      .edit-move-file
+      .edit-mode-file
       = ff.fields_for :observation_videos, o do |fff|
         = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "image_upload survey-video-upload"})
       .video-upload-error
@@ -11,9 +11,15 @@
         .progress-bar.progress-bar-success.video-progress-bar
       - o.observation_videos.each do |v|
         = ff.fields_for :observation_videos, v do |fff|
-          = cl_video_tag(v.video.my_public_id, options = { controls: true, preload: 'none', width: 350 })
-          %br
-          = fff.text_area :description, rows: 2, cols: 55, style: "margin:20px 0 20px 0;"
+          .upload-view-mode
+            = cl_video_tag(v.video.my_public_id, options = { controls: true, preload: 'none', width: 350 })
+            %br
+            = fff.text_area :description, rows: 2, cols: 55, style: "margin:20px 0 20px 0;"
+            %br
+            %p.delete-box
+              = fff.check_box :_destroy, class:"hidden delete-checkbox"
+              %a{class:"delete-saved-file", href:"#"}Delete Video
+            %hr
     - else
       = ff.fields_for :observation_videos do |fff|
         = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "image_upload survey-video-upload"})

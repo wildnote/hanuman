@@ -2,7 +2,7 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
     - if !@survey.id.nil?
-      .edit-move-file
+      .edit-mode-file
       = ff.fields_for :observation_photos,o do |fff|
         = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "image_upload survey-photo-upload"}
       .photo-upload-error
@@ -11,12 +11,17 @@
         .progress-bar.progress-bar-success.photo-progress-bar
       - o.observation_photos.each do |p|
         = ff.fields_for :observation_photos, p do |fff|
-          = link_to cl_image_tag(p.photo, :crop => :fill, :width => 350), cloudinary_url(p.photo), html_options = {class: "gallery-item gallery-photo", id: "photo_" + p.id.to_s, :"data-content-type" => p.photo.resource_type, :"data-download-url" => cloudinary_url(p.photo), :"data-file-name" => p.photo.public_id}
-          %br
-          = fff.text_area :description, rows: 2, cols: 55, style: "margin:20px 0 20px 0;"
-          %br
-          = link_to p.photo.my_public_id + "." + p.photo.format + " | download file", cloudinary_url(p.photo, attachment: true), html_options = { download: true }
-          %br
+          .upload-view-mode
+            = link_to cl_image_tag(p.photo, :crop => :fill, :width => 350), cloudinary_url(p.photo), html_options = {class: "gallery-item gallery-photo", id: "photo_" + p.id.to_s, :"data-content-type" => p.photo.resource_type, :"data-download-url" => cloudinary_url(p.photo), :"data-file-name" => p.photo.public_id}
+            %br
+            = fff.text_area :description, rows: 2, cols: 55, style: "margin:20px 0 20px 0;"
+            %br
+            = link_to p.photo.my_public_id + "." + p.photo.format + " | download file", cloudinary_url(p.photo, attachment: true), html_options = { download: true }
+            %br
+            %p.delete-box
+              = fff.check_box :_destroy, class:"hidden delete-checkbox"
+              %a{class:"delete-saved-file", href:"#"}Delete Photo
+            %hr
 
     - else
       = ff.fields_for :observation_photos do |fff|

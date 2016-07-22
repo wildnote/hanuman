@@ -37,6 +37,7 @@ addTexareaForUpload = (file, data, idx) ->
       $(obj).remove()
 
 
+#  these fuctions are remove unnecessary hidden inputs placed in the dome by "=fff.cl_image_tag" and "=fff.cl_image_tag" on edit mode
 removePhotoHiddenInput = ->
   photosRegex = /survey\[observations_attributes]\[\d+]\[observation_photos_attributes]\[\d+]\[id]/
   photoInputs = $($($('.file-upload')).find('input[type=hidden]')).filter (i, o) ->
@@ -60,7 +61,13 @@ removeDocumentHiddenInput = ->
 
 
 $ ->
-  if $('.edit-move-file').length > 0
+  $('.delete-saved-file').on 'click', ->
+    $($(@).closest('.delete-box').find(".delete-checkbox")).prop( "checked", true )
+    $(@).closest('.delete-box').closest('.upload-view-mode').hide()
+    console.log $($(@).closest('.delete-box').find(".delete-checkbox"))
+
+
+  if $('.edit-mode-file').length > 0
     removePhotoHiddenInput()
     removeVideoHiddenInput()
     removeDocumentHiddenInput()
