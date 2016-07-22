@@ -1,5 +1,5 @@
----
-language: node_js
+language: ruby
+cache: bundler
 node_js:
   - "0.12"
 rvm:
@@ -17,10 +17,11 @@ before_install:
   - export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
   - "npm config set spin false"
   - "npm install -g npm@^2"
+  - cd ..
 
 before_script:
   - psql -c 'create database hanuman_test;' -U postgres
-  - gem install rake && bundle install && bundle exec rake db:migrate --trace
+  - bundle exec rake db:migrate --trace
   - cd frontend
 
 install:
