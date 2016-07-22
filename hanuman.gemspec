@@ -19,7 +19,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'rails', '4.1.4'
   s.add_dependency 'paper_trail', '~> 3.0.2'
-  s.add_dependency 'ancestry'#, '2.1.0'
+  s.add_dependency 'ancestry', '1.4.1'
   s.add_dependency 'amoeba', '3.0.0'
   s.add_dependency 'haml-rails', '0.5.3'
   s.add_dependency 'coffee-rails', '4.0.1'
@@ -33,9 +33,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'kaminari', '0.16.1'
   s.add_dependency 'active_model_serializers', '0.8.1'
   s.add_dependency 'roo', '2.3.2'
-  s.add_dependency 'carrierwave'
+  s.add_dependency 'carrierwave', '0.11.2'
   s.add_dependency 'cloudinary', '1.2.0'
-  s.add_dependency 'sidekiq'
+  s.add_dependency 'sidekiq', '3.5.0'
+  s.add_dependency 'gmaps4rails', '2.1.2'
 
   s.add_development_dependency 'pg', '0.17.1'
 end
