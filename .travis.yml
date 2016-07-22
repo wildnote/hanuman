@@ -21,7 +21,7 @@ before_install:
 before_script:
   - cd ..
   - psql -c 'create database hanuman_test;' -U postgres
-  - bundle exec rake db:migrate --trace
+  - bundle install && bundle exec rake db:migrate --trace
   - cd frontend
 
 install:
