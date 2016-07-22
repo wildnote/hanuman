@@ -16,7 +16,7 @@
           - else
             = image_tag("file-icon.png", class: 'img-responsive thumbnail')
           %br
-          = fff.text_area :description
+          = fff.text_area :description, rows: 2, cols: 55, style: "margin:20px 0 20px 0;"
     - else
       = ff.fields_for :observation_documents do |fff|
         = fff.cl_upload(:document, :html => { :multiple => true , :class => "image_upload survey-document-upload"})

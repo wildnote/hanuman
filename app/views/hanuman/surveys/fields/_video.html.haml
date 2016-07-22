@@ -13,7 +13,7 @@
         = ff.fields_for :observation_videos, v do |fff|
           = cl_video_tag(v.video.my_public_id, options = { controls: true, preload: 'none', width: 350 })
           %br
-          = fff.text_area :description
+          = fff.text_area :description, rows: 2, cols: 55, style: "margin:20px 0 20px 0;"
     - else
       = ff.fields_for :observation_videos do |fff|
         = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "image_upload survey-video-upload"})
