@@ -14,5 +14,9 @@ module Hanuman
     describe 'Relations' do
       it { is_expected.to belong_to(:question).inverse_of(:answer_choices) }
     end
+
+    describe 'Callbacks' do
+      it { is_expected.to callback(:protect_split).before(:save) }
+    end
   end
 end
