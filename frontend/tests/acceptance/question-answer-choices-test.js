@@ -17,7 +17,7 @@ test('adding an answer choice', function(assert) {
   visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
 
   andThen(function() {
-    click('a[href="#tab-question-choices"]');
+    // click('a[href="#tab-question-choices"]');
     click('[data-test="add-answer-choice-link"]');
     fillIn('[data-test="answerChoice.optionText"]', 'A new answer choice');
     click('[data-test="save-answer-choice-link"]').then(()=>{
@@ -36,7 +36,7 @@ test('editing an answer choice', function(assert) {
   visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
 
   andThen(function() {
-    click('a[href="#tab-question-choices"]');
+    // click('a[href="#tab-question-choices"]');
     for (var answerChoice of answerChoices) {
       assert.equal(answerChoice.option_text,find(`[data-answer-choice-id="${answerChoice.id}"] [data-test="answerChoice.optionText"]`).text().trim());
     }
@@ -59,7 +59,7 @@ test('deleting an answer choice', function(assert) {
   visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
 
   andThen(function() {
-    click('a[href="#tab-question-choices"]');
+    // click('a[href="#tab-question-choices"]');
     let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
 
     click(`${selector} [data-test="delete-answer-choice-link"]`).then(()=>{
