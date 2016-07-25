@@ -20,7 +20,7 @@ module Hanuman
       survey_template = SurveyTemplate.find survey_template_id
       @survey = Survey.new(survey_template_id: survey_template_id)
       @survey.build_survey_extension
-      survey_template.survey_steps.first.questions.each do |q|
+      survey_template.questions.each do |q|
         @survey.observations.build(
           question_id: q.id,
           entry: 1

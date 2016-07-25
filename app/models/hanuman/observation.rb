@@ -18,12 +18,17 @@ module Hanuman
 
     # Scopes
     default_scope {includes(:question).order('hanuman_observations.entry ASC, hanuman_questions.sort_order ASC').references(:question)}
+    scope :by_survey_template_and_entry, -> (survey_template, entry) do
+      includes(question: [:survey_template, :answer_type])
+      .where(hanuman_survey_templates: {id: survey_template.id}, entry: entry)
+    end
 
     # Callbackas
     before_save :strip_and_squish_answer
 
     # Delegations
     delegate :question_text, to: :question
+    delegate :survey_template, to: :question
 
     amoeba do
       enable
@@ -61,6 +66,7 @@ module Hanuman
       where("hanuman_survey_steps.step = ?", step)
     end
 
+    # Deprecated
     def self.filtered_by_step_and_entry(step, entry)
       includes(:question => [:survey_step, :answer_type]).
       where("hanuman_survey_steps.step = ? AND hanuman_observations.entry = ?", step, entry)
