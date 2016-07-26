@@ -91,7 +91,7 @@
         <div class="form-group">
           <div class="col-sm-12">
             {{#form-field for='ancestry' label='Ancestry'}}
-              <select class="form-control" onchange={{action "ancestryChange" value="target.value"}}>
+              <select class="form-control" data-test="ancestry-select" onchange={{action "ancestryChange" value="target.value"}}>
                 <option></option>
                 {{#each ancestryQuestions as |opQuestion|}}
                   <option value={{opQuestion.id}} selected={{eq opQuestion.id question.ancestry}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
