@@ -28,7 +28,6 @@ test('adding a conditional with a question without rule previously created', fun
 
   andThen(function() {
     assert.equal(0, server.schema.rules.all().models.length);
-    click('a[href="#tab-question-conditionals"]');
     click('[data-test="add-condition-link"]');
     // Select question
     fillIn('[data-test="condition-question-id-select"]', 3);
@@ -62,7 +61,6 @@ test('editing a conditional', function(assert) {
   visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
 
   andThen(function() {
-    click('a[href="#tab-question-conditionals"]');
     for (var condition of conditions) {
       assert.equal(condition.answer, find(`[data-condition-id="${condition.id}"] [data-test="condition.answer"]`).text().trim());
     }
@@ -88,14 +86,12 @@ test('deleting a conditional', function(assert) {
   visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
 
   andThen(function() {
-    click('a[href="#tab-question-conditionals"]');
     let selector = `[data-condition-id="${firstCondition.id}"]`;
 
     click(`${selector} [data-test="delete-condition-link"]`).then(()=>{
       assert.notEqual(firstCondition.answer,find('[data-test="condition.answer"]:first').text().trim());
     });
     visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`).then(()=>{
-      click('a[href="#tab-question-conditionals"]');
       assert.notEqual(firstCondition.answer,find('[data-test="condition.answer"]:first').text().trim());
     });
   });

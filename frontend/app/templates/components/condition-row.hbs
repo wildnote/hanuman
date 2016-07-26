@@ -56,7 +56,7 @@
   {{else}}
     {{!-- show of existing condition --}}
     <td>if</td>
-    <td><span class="label label-default" title={{currentQuestion.questionText}}>{{condition.questionId}}</span></td>
+    <td><span class="label label-default" title={{currentQuestion.questionText}}>{{currentQuestion.questionText}} - {{condition.questionId}}</span></td>
     <td><span class="label label-default">{{condition.operator}}</span></td>
     <td><span class="label label-default" data-test="condition.answer">{{condition.answer}}</span></td>
     <td>

@@ -35,6 +35,32 @@ test('selecting a type with answer choices', function(assert) {
   });
 });
 
+test('selecting ancestry', function(assert) {
+  question = server.create('question', {surveyStep, answer_type_id: 17}); // Answer Type id 17 = `Radio`
+
+  const ancestryAnswerTypesId = [57,56];
+  let ancestryQuestions =
+    server.createList('question', 2, {
+     surveyStep,
+     answer_type_id: ancestryAnswerTypesId[Math.floor(Math.random() * ancestryAnswerTypesId.length)]
+   });
+
+  let notAncestryQuestions = server.createList('question', 2, {surveyStep, answer_type_id: 19});
+
+  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
+  andThen(function() {
+    for (var ancestry of ancestryQuestions) {
+      assert.equal(`${ancestry.question_text} - ${ancestry.id}`,find(`[data-test="ancestry-select"] option[value="${ancestry.id}"]`).text().trim());
+    }
+
+    find('[data-test="ancestry-select"] option[value]').each(function() {
+      for (var notAncestry of notAncestryQuestions) {
+        assert.notEqual(`${notAncestry.question_text} - ${notAncestry.id}`,$(this).text().trim());
+      }
+    });
+  });
+});
+
 test('adding a questionsss', function(assert) {
   visit(`/survey_steps/${surveyStep.id}`);
 
