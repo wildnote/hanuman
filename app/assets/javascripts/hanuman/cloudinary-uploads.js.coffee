@@ -161,6 +161,48 @@ $ ->
     removePhotoHiddenInput()
     removeVideoHiddenInput()
     removeDocumentHiddenInput()
+    $('input[type=submit]').on 'click',(e) ->
+      # e.preventDefault()
+      $('.document-upload').each (i, obj) ->
+        # this loop checks for documents that are flaged for delete. if it files all of them flag for delete then we validate input
+
+        if $($('.video-upload')[i]).closest('.video-column').find('.upload-view-mode').length == 0
+          emptyDocumentContainer = true
+        else
+          emptyDocumentContainer = true
+          $($('.document-upload')[i]).closest('.document-column').find('.upload-view-mode').each (i, obj) ->
+            if $(obj).is(':visible')
+              emptyDocumentContainer = false
+
+        if !emptyDocumentContainer || $($('.document-upload')[i]).closest('.document-column').find('.document-preview-container').html() != ""
+          $($('.document-upload')[i]).removeAttr('data-parsley-required')
+
+      #  check for **VIDEO** empty contianer
+      $('.video-upload').each (i, obj) ->
+        if $($('.video-upload')[i]).closest('.video-column').find('.upload-view-mode').length == 0
+          emptyVideoContainer = true
+        else
+          emptyVideoContainer = true
+          $($('.video-upload')[i]).closest('.video-column').find('.upload-view-mode').each (i, obj) ->
+            if $(obj).is(':visible')
+              emptyVideoContainer = false
+
+        if !emptyVideoContainer || $($('.video-upload')[i]).closest('.video-column').find('.video-preview-container').html() != ""
+          $($('.video-upload')[i]).removeAttr('data-parsley-required')
+
+
+      $('.photo-upload').each (i, obj) ->
+        if $($('.photo-upload')[i]).closest('.photo-column').find('.upload-view-mode').length == 0
+          emptyPhotoContainer = true
+        else
+          emptyPhotoContainer = true
+          $($('.video-upload')[i]).closest('.video-column').find('.upload-view-mode').each (i, obj) ->
+            if $(obj).is(':visible')
+              emptyPhotoContainer = false
+
+        if !emptyPhotoContainer || $($('.photo-upload')[i]).closest('.photo-column').find('.photo-preview-container').html() != ""
+          $($('.photo-upload')[i]).removeAttr('data-parsley-required')
+
 
   # removes deleted files on survey new.
   $('.file-upload').on 'click', '.remove-upload', ->
