@@ -15,6 +15,7 @@ addTexareaForUpload = (file, data, idx) ->
     # if document then overwrite  the filevalue
     fileValue = dataObj.resource_type+"/"+dataObj.type+"/"+"v"+dataObj.version+"/"+dataObj.public_id+"#"+dataObj.signature
   else if file == "video"
+    console.log data
     regex = /\[observation_videos_attributes]\[\d+]\[video]/
     nameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][description]")
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][video]")
@@ -22,6 +23,7 @@ addTexareaForUpload = (file, data, idx) ->
   # this is simply appending the textarea and the hidden input. I am adding the hidden input right next to the img video-preview
   $("."+file+"-preview").last().append "<br>"
   $("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:20px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea>"
+  $("."+file+"-preview").last().append "<p>"+data.result.public_id+"</p>"
   $("."+file+"-preview").last().append "<p><a id="+file+" class='remove-upload' href='#'>Remove "+file+"</a></p>"
   $("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
   $("."+file+"-preview").last().append "<br>"
@@ -114,9 +116,11 @@ bindDocumentUploads = ->
       $('.document-column .progress').addClass('hidden')
     setTimeout callback, 1000
 
+    publicId = data.result.public_id
     # need to wrap this .append in a div class=photo-preview-container
     $('.document-preview-container').append "<div class='document-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
     addTexareaForUpload("document", data, docIdx)
+    $('.document-preview img:last').attr('src', '/images/file-icon.png')
     docIdx += 1
   # handles errors
   $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadfail', (e, data) ->
