@@ -1,6 +1,6 @@
 .form-group.file-upload
   = render "hanuman/surveys/fields/shared/label", ff: ff
-  .col-sm-7
+  .col-sm-7.document-column
     - if !@survey.id.nil?
       .edit-mode-file
       = ff.fields_for :observation_documents,o do |fff|
@@ -28,6 +28,6 @@
         = fff.cl_upload(:document, :html => { :multiple => true , :class => "image_upload survey-document-upload"})
         .document-upload-error
         .document-preview-container
-        .progress
+        .progress.hidden
           .progress-bar.progress-bar-success.document-progress-bar
     = ff.hidden_field :entry

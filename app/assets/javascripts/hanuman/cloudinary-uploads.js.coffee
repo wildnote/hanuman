@@ -6,7 +6,6 @@ addTexareaForUpload = (file, data, idx) ->
   fileValue = dataObj.resource_type+"/"+dataObj.type+"/"+"v"+dataObj.version+"/"+dataObj.public_id+"."+dataObj.format+"#"+dataObj.signature
   if file == "photo"
     regex = /\[observation_photos_attributes]\[\d+]\[photo]/
-    console.log data
     nameAttr = data.cloudinaryField.replace(/\[observation_photos_attributes]\[\d+]\[photo]/, "[observation_photos_attributes][" + idx + "][description]")
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_photos_attributes]\[\d+]\[photo]/, "[observation_photos_attributes][" + idx + "][photo]")
   else if file == "document"
@@ -35,6 +34,97 @@ addTexareaForUpload = (file, data, idx) ->
     className = $(obj).attr('class')
     if name.match(regex) != null && className !=  file+"-hidden-input"
       $(obj).remove()
+
+
+
+
+bindPhotoUploads = ->
+  # ***** PHOTOS *****
+  $('.survey-photo-upload').on 'click', ->
+    $('.photo-column .progress').removeClass('hidden')
+    # progress bar
+    $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadprogress', (e, data) ->
+      # implement progress indicator
+      $(".photo-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
+
+  photoIdx = 0
+  $('.cloudinary-fileupload.survey-photo-upload').bind 'cloudinarydone', (e, data) ->
+    callback = ->
+      $('.photo-progress-bar').removeAttr("style")
+      $('.photo-column .progress').addClass('hidden')
+
+    setTimeout callback, 1000
+
+    # need to wrap this .append in a div class=photo-preview-container
+    $('.photo-preview-container').append "<div class='photo-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
+    addTexareaForUpload("photo", data, photoIdx)
+    photoIdx += 1
+
+  # handle errors
+  $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadfail', (e, data) ->
+    # append error message
+    $('.photo-upload-error').append "<p> Failed to upload photo, please try again</p>"
+    $(".survey-photo-upload").on 'click', ->
+      $('.photo-upload-error').find('p').remove()
+
+
+bindVideoUploads = ->
+  $('.survey-video-upload').on 'click', ->
+    $('.video-column .progress').removeClass('hidden')
+    # progress bar
+    $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadprogress', (e, data) ->
+      # implement progress indicator
+      $(".video-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
+
+
+  # ***** VIDEOS *****
+  videoIdx = 0
+  $('.cloudinary-fileupload.survey-video-upload').bind 'cloudinarydone', (e, data) ->
+    callback = ->
+      $('.video-progress-bar').removeAttr("style")
+      $('.video-column .progress').addClass('hidden')
+    setTimeout callback, 1000
+
+    $('.video-preview-container').append "<div class='video-preview'>" + $.cloudinary.video(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350) + "</div>"
+    addTexareaForUpload("video", data, videoIdx)
+    videoIdx += 1
+
+  # handle errors
+  $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadfail', (e, data) ->
+    $('.video-upload-error').append "<p> Failed to upload video, please try again</p>"
+    $(".survey-video-upload").on 'click', ->
+      $('.video-upload-error').find('p').remove()
+
+
+bindDocumentUploads = ->
+
+  $('.survey-document-upload').on 'click', ->
+    $('.document-column .progress').removeClass('hidden')
+    # progress bar
+    $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadprogress', (e, data) ->
+      # implement progress indicator
+      $('.document-progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
+
+
+  # ***** DOCUMENTS *****
+  docIdx = 0
+  $('.cloudinary-fileupload.survey-document-upload').bind 'cloudinarydone', (e, data) ->
+    callback = ->
+      $('.document-progress-bar').removeAttr("style")
+      $('.document-column .progress').addClass('hidden')
+    setTimeout callback, 1000
+
+    # need to wrap this .append in a div class=photo-preview-container
+    $('.document-preview-container').append "<div class='document-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
+    addTexareaForUpload("document", data, docIdx)
+    docIdx += 1
+  # handles errors
+  $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadfail', (e, data) ->
+    $('.document-upload-error').append "<p> Failed to upload document, please try again</p>"
+    $(".survey-document-upload").on 'click', ->
+      $('.document-upload-error').find('p').remove()
+
+
 
 
 #  these fuctions are remove unnecessary hidden inputs placed in the dome by "=fff.cl_image_tag" and "=fff.cl_image_tag" on edit mode
@@ -83,63 +173,6 @@ $ ->
   if $.fn.cloudinary_fileupload != undefined
     $('input.cloudinary-fileupload[type=file]').cloudinary_fileupload()
 
-  # ***** PHOTOS *****
-  photoIdx = 0
-  $('.cloudinary-fileupload.survey-photo-upload').bind 'cloudinarydone', (e, data) ->
-    # need to wrap this .append in a div class=photo-preview-container
-
-    $('.photo-preview-container').append "<div class='photo-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
-    addTexareaForUpload("photo", data, photoIdx)
-    photoIdx += 1
-
-  # handle errors
-  $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadfail', (e, data) ->
-    # append error message
-    $('.photo-upload-error').append "<p> Failed to upload photo, please try again</p>"
-    $(".survey-photo-upload").on 'click', ->
-      $('.photo-upload-error').find('p').remove()
-
-  # progress bar
-  $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadprogress', (e, data) ->
-    # implement progress indicator
-    $('.photo-progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
-
-
-
-  # ***** VIDEOS *****
-  videoIdx = 0
-  $('.cloudinary-fileupload.survey-video-upload').bind 'cloudinarydone', (e, data) ->
-
-    $('.video-preview-container').append "<div class='video-preview'>" + $.cloudinary.video(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350) + "</div>"
-    addTexareaForUpload("video", data, videoIdx)
-    videoIdx += 1
-
-  # handle errors
-  $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadfail', (e, data) ->
-    $('.video-upload-error').append "<p> Failed to upload video, please try again</p>"
-    $(".survey-video-upload").on 'click', ->
-      $('.video-upload-error').find('p').remove()
-  # progress bar
-  $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadprogress', (e, data) ->
-    # implement progress indicator
-    $('.video-progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
-
-
-
-  # ***** DOCUMENTS *****
-  docIdx = 0
-  $('.cloudinary-fileupload.survey-document-upload').bind 'cloudinarydone', (e, data) ->
-    # need to wrap this .append in a div class=photo-preview-container
-
-    $('.document-preview-container').append "<div class='document-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
-    addTexareaForUpload("document", data, docIdx)
-    docIdx += 1
-  # handles errors
-  $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadfail', (e, data) ->
-    $('.document-upload-error').append "<p> Failed to upload document, please try again</p>"
-    $(".survey-document-upload").on 'click', ->
-      $('.document-upload-error').find('p').remove()
-  # progress bar
-  $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadprogress', (e, data) ->
-    # implement progress indicator
-    $('.document-progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
+  bindPhotoUploads()
+  bindVideoUploads()
+  bindDocumentUploads()

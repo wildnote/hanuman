@@ -1,13 +1,13 @@
 .form-group.file-upload
   = render "hanuman/surveys/fields/shared/label", ff: ff
-  .col-sm-7
+  .col-sm-7.photo-column
     - if !@survey.id.nil?
       .edit-mode-file
       = ff.fields_for :observation_photos,o do |fff|
         = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "image_upload survey-photo-upload"}
       .photo-upload-error
       .photo-preview-container
-      .progress
+      .progress.hidden
         .progress-bar.progress-bar-success.photo-progress-bar
       - o.observation_photos.each do |p|
         = ff.fields_for :observation_photos, p do |fff|
@@ -28,7 +28,7 @@
         = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "image_upload survey-photo-upload"}
         .photo-upload-error
         .photo-preview-container
-        .progress
+        .progress.hidden
           .progress-bar.progress-bar-success.photo-progress-bar
 
 

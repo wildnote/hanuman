@@ -1,13 +1,13 @@
 .form-group.file-upload
   = render "hanuman/surveys/fields/shared/label", ff: ff
-  .col-sm-7
+  .col-sm-7.video-column
     - if !@survey.id.nil?
       .edit-mode-file
       = ff.fields_for :observation_videos, o do |fff|
         = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "image_upload survey-video-upload"})
       .video-upload-error
       .video-preview-container
-      .progress
+      .progress.hidden
         .progress-bar.progress-bar-success.video-progress-bar
       - o.observation_videos.each do |v|
         = ff.fields_for :observation_videos, v do |fff|
@@ -25,6 +25,6 @@
         = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "image_upload survey-video-upload"})
         .video-upload-error
         .video-preview-container
-        .progress
+        .progress.hidden
           .progress-bar.progress-bar-success.video-progress-bar
     = ff.hidden_field :entry
