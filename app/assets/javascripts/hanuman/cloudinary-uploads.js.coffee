@@ -15,7 +15,6 @@ addTexareaForUpload = (file, data, idx) ->
     # if document then overwrite  the filevalue
     fileValue = dataObj.resource_type+"/"+dataObj.type+"/"+"v"+dataObj.version+"/"+dataObj.public_id+"#"+dataObj.signature
   else if file == "video"
-    console.log data
     regex = /\[observation_videos_attributes]\[\d+]\[video]/
     nameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][description]")
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][video]")
@@ -60,6 +59,7 @@ bindPhotoUploads = ->
     # need to wrap this .append in a div class=photo-preview-container
     $('.photo-preview-container').append "<div class='photo-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
     addTexareaForUpload("photo", data, photoIdx)
+
     photoIdx += 1
 
   # handle errors
@@ -89,7 +89,16 @@ bindVideoUploads = ->
 
     $('.video-preview-container').append "<div class='video-preview'>" + $.cloudinary.video(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350) + "</div>"
     addTexareaForUpload("video", data, videoIdx)
+    poster = $(e.target).closest(".video-column").find('.video-preview:last').find("video").attr("poster")
+    $(e.target).closest(".video-column").find('.video-preview:last').find("video").attr("poster", poster.replace(/$|.mp4|.mov/, ".jpg"))
     videoIdx += 1
+
+    if data.result.format != "mov" && data.result.format != "mp4"
+      $('.video-upload-error').append "<p style='color:#d6193d;'> Only MP4 and MOV formats supported</p>"
+      $(e.target).closest(".video-column").find('.video-preview').last().find('a.remove-upload').click()
+      $(".survey-video-upload").on 'click', ->
+        $('.video-upload-error').find('p').remove()
+
 
   # handle errors
   $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadfail', (e, data) ->
@@ -102,7 +111,7 @@ bindDocumentUploads = ->
 
   $('.survey-document-upload').on 'click', ->
     $('.document-column .progress').removeClass('hidden')
-    # progress bar
+     # progress bar
     $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadprogress', (e, data) ->
       # implement progress indicator
       $('.document-progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
@@ -120,8 +129,24 @@ bindDocumentUploads = ->
     # need to wrap this .append in a div class=photo-preview-container
     $('.document-preview-container').append "<div class='document-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
     addTexareaForUpload("document", data, docIdx)
-    $('.document-preview img:last').attr('src', '/images/file-icon.png')
+    if data.result.format != "jpg" && data.result.format != "png"
+      $('.document-preview img:last').attr('src', '/images/file-icon.png')
     docIdx += 1
+
+  # validating upload format. If fomat to supported then handle error
+    if data.result.format != undefined
+      uploadFormat = "."+data.result.format
+    else
+      uploadFormat = data.result.public_id.match(/\.[0-9a-z]+$/i)[0]
+    permittenFormats = [".jpg", ".png", ".gif", ".jpeg", ".xls", ".xlsx", ".pdf", ".doc", ".docx", ".txt", ".tif", ".tiff", ".zip", ".eml", ".kmz", ".ppt", ".pptx"]
+    permited  = permittenFormats.find (f) ->
+                 f == uploadFormat
+    if permited == undefined
+      $('.document-upload-error').append "<p style='color:#d6193d;'> document format NOT supported</p>"
+      $(e.target).closest(".document-column").find('.document-preview').last().find('a.remove-upload').click()
+      $(".survey-document-upload").on 'click', ->
+        $('.document-upload-error').find('p').remove()
+
   # handles errors
   $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadfail', (e, data) ->
     $('.document-upload-error').append "<p> Failed to upload document, please try again</p>"
@@ -194,7 +219,7 @@ $ ->
         if !emptyVideoContainer || $($('.video-upload')[i]).closest('.video-column').find('.video-preview-container').html() != ""
           $($('.video-upload')[i]).removeAttr('data-parsley-required')
 
-
+      #  check for **PHOTO** empty contianer
       $('.photo-upload').each (i, obj) ->
         if $($('.photo-upload')[i]).closest('.photo-column').find('.upload-view-mode').length == 0
           emptyPhotoContainer = true
