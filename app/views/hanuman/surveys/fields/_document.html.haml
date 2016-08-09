@@ -6,9 +6,9 @@
       = ff.fields_for :observation_documents,o do |fff|
         = fff.cl_upload(:document, :html => { :multiple => true , :class => "document-upload survey-document-upload"})
       .document-upload-error
-      .document-preview-container
       .progress.hidden
         .progress-bar.progress-bar-success.document-progress-bar
+      .document-preview-container
       - o.observation_documents.each do |d|
         = ff.fields_for :observation_documents,d do |fff|
           .upload-view-mode
@@ -27,7 +27,7 @@
       = ff.fields_for :observation_documents do |fff|
         = fff.cl_upload(:document, :html => { :multiple => true , :class => "document-upload survey-document-upload"})
         .document-upload-error
-        .document-preview-container
         .progress.hidden
           .progress-bar.progress-bar-success.document-progress-bar
+        .document-preview-container
     = ff.hidden_field :entry

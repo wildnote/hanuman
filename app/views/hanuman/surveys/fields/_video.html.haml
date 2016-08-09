@@ -6,9 +6,9 @@
       = ff.fields_for :observation_videos, o do |fff|
         = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "video-upload survey-video-upload"})
       .video-upload-error
-      .video-preview-container
       .progress.hidden
         .progress-bar.progress-bar-success.video-progress-bar
+      .video-preview-container
       - o.observation_videos.each do |v|
         = ff.fields_for :observation_videos, v do |fff|
           .upload-view-mode
@@ -24,7 +24,7 @@
       = ff.fields_for :observation_videos do |fff|
         = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "video-upload survey-video-upload"})
         .video-upload-error
-        .video-preview-container
         .progress.hidden
           .progress-bar.progress-bar-success.video-progress-bar
+        .video-preview-container
     = ff.hidden_field :entry
