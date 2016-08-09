@@ -1,0 +1,14 @@
+.question-modal{
+	&.ember-remodal{
+		padding: 5px;
+	}
+	.panel{
+		margin-bottom: 0px;
+	}
+	.selectize-control{
+		text-align: left;
+	}
+	.tabbable.tabs-below{
+		margin-top: -18px;
+	}
+}

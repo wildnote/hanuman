@@ -28,7 +28,7 @@ module Hanuman
     private
 
     def condition_params
-      params.require(:condition).permit(:operator, :answer, :question_id)
+      params.require(:condition).permit(:operator, :answer, :question_id, :rule_id)
     end
   end
 end

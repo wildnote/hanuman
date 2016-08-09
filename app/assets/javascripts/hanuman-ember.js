@@ -1,1 +1,0 @@
-//= require hanuman/application-ember
