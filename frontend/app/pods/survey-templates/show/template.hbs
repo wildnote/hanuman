@@ -1,11 +1,11 @@
 <div class="page-header">
   <div class="pull-left">
-    <a class="btn btn-primary" href="/hanuman/survey_templates/{{surveyStep.surveyTemplate.id}}"><span class="glyphicon glyphicon-chevron-left"></span>
+    <a class="btn btn-primary" href="/hanuman/survey_templates/{surveyTemplate.id}}"><span class="glyphicon glyphicon-chevron-left"></span>
       Back to Survey Template Details
     </a>
   </div>
   <div class="pull-right">
-    <a class="btn btn-primary" href="/hanuman/survey_templates/{{surveyStep.surveyTemplate.id}}/update_survey_data">
+    <a class="btn btn-primary" href="/hanuman/survey_templates/{{surveyTemplate.id}}/update_survey_data">
       Resort Submitted Data
     </a>
   </div>
@@ -17,33 +17,35 @@
       <label class="col-sm-2 control-label">Survey Template</label>
       <div class="col-sm-4">
         <p class="form-control-static" data-test="surveyTemplate.name">
-          {{surveyStep.surveyTemplate.name}}
+          {{surveyTemplate.name}}
         </p>
       </div>
-      <label class="col-sm-2 control-label">Step</label>
+      <label class="col-sm-2 control-label">Type</label>
       <div class="col-sm-4">
         <p class="form-control-static">
-          {{surveyStep.step}}
+          {{surveyTemplate.surveyType}}
         </p>
       </div>
     </div>
     <div class="form-group">
-      <label class="col-sm-2 control-label" data-test="surveyTemplate.duplicatorLabel">{{surveyStep.surveyTemplate.duplicatorLabel}}</label>
+      <label class="col-sm-2 control-label">Status</label>
       <div class="col-sm-4">
-        <p class="form-control-static" data-test="surveyStep.duplicator">
-          {{surveyStep.duplicator}}
+        <p class="form-control-static" data-test="surveyTemplate.status">
+          {{surveyTemplate.status}}
         </p>
       </div>
       <label class="col-sm-2 control-label">Fully Editable</label>
       <div class="col-sm-4">
         <p class="form-control-static">
-          {{surveyStep.surveyTemplate.fullyEditable}}
+          {{surveyTemplate.fullyEditable}}
         </p>
       </div>
     </div>
   </div>
   <div class="panel panel-info">
-    <div class="panel-heading"></div>
+    <div class="panel-heading">
+      <div class="panel-title">Questions</div>
+    </div>
     <div class="panel-body">
 
       <div class="row">
@@ -70,7 +72,7 @@
       {{!-- Add new question --}}
       <div class="row ember-view">
         <div class="col-sm-2">
-          {{#link-to "survey_step.questions.new" class="btn btn-success"}}
+          {{#link-to "survey_templates.show.questions.new" class="btn btn-success"}}
             <span class="glyphicon glyphicon-plus"></span>
               Add
           {{/link-to}}

@@ -10,6 +10,6 @@ export default Model.extend({
   fullyEditable: attr('boolean'),
   duplicatorLabel: attr('string'),
 
-  // Associations
-  surveySteps: hasMany('survey-step')
+  // Relations
+  questions: hasMany('question')
 });

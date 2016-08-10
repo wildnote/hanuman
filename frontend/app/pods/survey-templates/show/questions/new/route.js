@@ -2,13 +2,12 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   model() {
-    let surveyStep = this.modelFor('survey-step');
+    let surveyTemplate = this.modelFor('survey-templates.show');
     return Ember.RSVP.hash({
-      question: this.store.createRecord('question',{surveyStep}),
-      questions: surveyStep.get('questions'),
+      question: this.store.createRecord('question',{surveyTemplate}),
+      questions: surveyTemplate.get('questions'),
       answerTypes: this.store.findAll('answer-type'),
-      surveyTemplate: surveyStep.get('surveyTemplate'),
-      surveyStep
+      surveyTemplate
     });
   },
 

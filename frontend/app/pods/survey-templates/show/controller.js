@@ -4,8 +4,8 @@ const {
 } = Ember;
 
 export default Ember.Controller.extend({
-  surveyStep: alias('model'),
-  questionsNotNew: filterBy('surveyStep.questions', 'isNew', false),
+  surveyTemplate: alias('model'),
+  questionsNotNew: filterBy('surveyTemplate.questions', 'isNew', false),
   questions: filterBy('questionsNotNew', 'isDeleted', false),
   questionsSorting: ['sortOrder'],
   sortedQuestions: sort('questions', 'questionsSorting')

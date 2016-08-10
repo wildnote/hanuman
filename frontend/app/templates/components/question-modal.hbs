@@ -32,6 +32,7 @@
                   {{/each}}
                 </select>
               {{/form-field}}
+              {{question.answerType.hasAnswerChoices}}
             {{else}}
               {{question.answerType.name}}
               <div class="alert alert-danger">
