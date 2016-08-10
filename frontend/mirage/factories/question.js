@@ -3,8 +3,8 @@ export default Factory.extend({
   external_data_source: '',
   ancestry: '',
   hidden: false,
-  question_text() {
-    return faker.lorem.sentence();
+  question_text(i) {
+    return `${faker.lorem.sentence()} ${i}`;
   },
   required() {
     return faker.list.random(true, false)();

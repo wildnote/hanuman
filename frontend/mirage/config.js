@@ -4,8 +4,8 @@ export default function() {
   // Shorthand
   this.get('/answer_types');
   this.get('/answer_types/:id');
-  this.get('/survey_steps/:id');
   this.get('/survey_templates/:id');
+
   // Conditions
   this.get('/conditions/:id');
   this.post('/conditions');
