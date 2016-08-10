@@ -8,6 +8,7 @@ require 'roo'
 require 'carrierwave'
 require 'cloudinary'
 require 'sidekiq'
+require 'responders'
 
 module Hanuman
   class Engine < ::Rails::Engine
