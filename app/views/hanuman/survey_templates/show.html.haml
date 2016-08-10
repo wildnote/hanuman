@@ -60,7 +60,7 @@
       .panel-collapse.collapse.in{:id => "collapse_#{step.step}"}
         .panel-body
           .pull-right.edit-delete
-            = link_to admin_path + "/#/survey_steps/" + step.id.to_s, class: "btn btn-xs btn-success" do
+            = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-xs btn-success" do
               %span.glyphicon.glyphicon-pencil
               Edit Step
           .clearfix
