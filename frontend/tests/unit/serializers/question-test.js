@@ -5,7 +5,7 @@ moduleForModel('question', 'Unit | Serializer | question', {
   needs: [
   	'serializer:question',
   	'model:answer-type',
-  	'model:survey-step',
+  	'model:survey-template',
   	'model:rule',
   	'model:answer-choice'
   ]

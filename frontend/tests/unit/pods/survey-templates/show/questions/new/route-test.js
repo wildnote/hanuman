@@ -1,6 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
 
-moduleFor('route:survey-step/questions/new', 'Unit | Route | survey step/questions/new', {
+moduleFor('route:survey-templates/show/questions/new', 'Unit | Route | survey templates/show/questions/new', {
   // Specify the other units that are required for this test.
   // needs: ['controller:foo']
 });

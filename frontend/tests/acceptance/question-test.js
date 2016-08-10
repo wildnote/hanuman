@@ -2,29 +2,28 @@ import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 
-var surveyTemplate, surveyStep, question;
+var surveyTemplate, question;
 
 moduleForAcceptance('Acceptance | question', {
   beforeEach() {
     server.loadFixtures();
     surveyTemplate = server.create('survey-template');
-    surveyStep = server.create('survey-step', {surveyTemplate});
   }
 });
 
-test('visiting survey_steps/:survey_step_id/questions/:id', function(assert) {
-  question = server.create('question', {surveyStep});
-  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
+test('visiting survey_templates/:survey_step_id/questions/:id', function(assert) {
+  question = server.create('question', {surveyTemplate});
+  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
   andThen(function() {
-    assert.equal(currentURL(), `/survey_steps/${surveyStep.id}/questions/${question.id}`);
+    assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   });
 });
 
 test('selecting a type with answer choices', function(assert) {
-  question = server.create('question', {surveyStep, answer_type_id: 17}); // Answer Type id 17 = `Radio`
+  question = server.create('question', {surveyTemplate, answer_type_id: 17}); // Answer Type id 17 = `Radio`
 
-  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
+  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   andThen(function() {
     assert.equal(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
     fillIn('[data-test="answer-type-id-select"]', 1);
@@ -36,18 +35,18 @@ test('selecting a type with answer choices', function(assert) {
 });
 
 test('selecting ancestry', function(assert) {
-  question = server.create('question', {surveyStep, answer_type_id: 17}); // Answer Type id 17 = `Radio`
+  question = server.create('question', {surveyTemplate, answer_type_id: 17}); // Answer Type id 17 = `Radio`
 
   const ancestryAnswerTypesId = [57,56];
   let ancestryQuestions =
     server.createList('question', 2, {
-     surveyStep,
+     surveyTemplate,
      answer_type_id: ancestryAnswerTypesId[Math.floor(Math.random() * ancestryAnswerTypesId.length)]
    });
 
-  let notAncestryQuestions = server.createList('question', 2, {surveyStep, answer_type_id: 19});
+  let notAncestryQuestions = server.createList('question', 2, {surveyTemplate, answer_type_id: 19});
 
-  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
+  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   andThen(function() {
     for (var ancestry of ancestryQuestions) {
       assert.equal(`${ancestry.question_text} - ${ancestry.id}`,find(`[data-test="ancestry-select"] option[value="${ancestry.id}"]`).text().trim());
@@ -62,11 +61,11 @@ test('selecting ancestry', function(assert) {
 });
 
 test('adding a questionsss', function(assert) {
-  visit(`/survey_steps/${surveyStep.id}`);
+  visit(`/survey_templates/${surveyTemplate.id}`);
 
   andThen(function() {
     click('a:contains("Add")').then(()=>{
-      assert.equal(currentURL(), `/survey_steps/${surveyStep.id}/questions/new`);
+      assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
       fillIn('[data-test="question.questionText"]', 'this is DA question');
       click('[data-test="save-question-link"]').then(()=>{
         question = server.schema.questions.all().models[0];
@@ -77,35 +76,34 @@ test('adding a questionsss', function(assert) {
 });
 
 test('canceling question edition', function(assert) {
-  question = server.create('question', {surveyStep});
-  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
+  question = server.create('question', {surveyTemplate});
+  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   andThen(function() {
-    assert.equal(currentURL(), `/survey_steps/${surveyStep.id}/questions/${question.id}`);
+    assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
     click('[data-test="cancel-question-link"]').then(()=>{
-      assert.equal(currentURL(), `/survey_steps/${surveyStep.id}`);
+      assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
     });
   });
 
 });
 
 test('editing a question', function(assert) {
-  question = server.create('question', {surveyStep});
-  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
+  question = server.create('question', {surveyTemplate});
+  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   fillIn('[data-test="question.externalDataSource"]', 'chuchucu');
   click('[data-test="save-question-link"]').then(()=>{
     question = server.db.questions.find(question.id);
     assert.equal(question.external_data_source, 'chuchucu');
-    assert.equal(currentURL(), `/survey_steps/${surveyStep.id}`);
+    assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
   });
 });
 
 
 test('deleting a question', function(assert) {
   surveyTemplate = server.create('survey-template', {fully_editable: false});
-  surveyStep = server.create('survey-step', {surveyTemplate});
-  let questions = server.createList('question', 2, {surveyStep});
+  let questions = server.createList('question', 2, {surveyTemplate});
   question = questions[0];
-  visit(`/survey_steps/${surveyStep.id}`);
+  visit(`/survey_templates/${surveyTemplate.id}`);
 
   andThen(function() {
     assert.equal(question.question_text,find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
@@ -114,7 +112,7 @@ test('deleting a question', function(assert) {
         assert.notEqual(question.question_text,find('[data-test="question.questionText"]:first').text().trim());
       });
     });
-    visit(`/survey_steps/${surveyStep.id}`).then(()=>{
+    visit(`/survey_templates/${surveyTemplate.id}`).then(()=>{
       assert.notEqual(question.question_text,find('[data-test="question.questionText"]:first').text().trim());
     });
   });
