@@ -6,9 +6,9 @@
       = ff.fields_for :observation_photos,o do |fff|
         = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "photo-upload survey-photo-upload"}
       .photo-upload-error
-      .photo-preview-container
       .progress.hidden
         .progress-bar.progress-bar-success.photo-progress-bar
+      .photo-preview-container
       - o.observation_photos.each do |p|
         = ff.fields_for :observation_photos, p do |fff|
           .upload-view-mode
@@ -27,9 +27,9 @@
       = ff.fields_for :observation_photos do |fff|
         = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "photo-upload survey-photo-upload"}
         .photo-upload-error
-        .photo-preview-container
         .progress.hidden
           .progress-bar.progress-bar-success.photo-progress-bar
+        .photo-preview-container
 
 
 
