@@ -1,0 +1,86 @@
+<div class="page-header">
+  <div class="pull-left">
+    <a class="btn btn-primary" href="/hanuman/survey_templates/{{surveyStep.surveyTemplate.id}}"><span class="glyphicon glyphicon-chevron-left"></span>
+      Back to Survey Template Details
+    </a>
+  </div>
+  <div class="pull-right">
+    <a class="btn btn-primary" href="/hanuman/survey_templates/{{surveyStep.surveyTemplate.id}}/update_survey_data">
+      Resort Submitted Data
+    </a>
+  </div>
+</div>
+
+<div class="form-horizontal">
+  <div class="well">
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Survey Template</label>
+      <div class="col-sm-4">
+        <p class="form-control-static" data-test="surveyTemplate.name">
+          {{surveyStep.surveyTemplate.name}}
+        </p>
+      </div>
+      <label class="col-sm-2 control-label">Step</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">
+          {{surveyStep.step}}
+        </p>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label" data-test="surveyTemplate.duplicatorLabel">{{surveyStep.surveyTemplate.duplicatorLabel}}</label>
+      <div class="col-sm-4">
+        <p class="form-control-static" data-test="surveyStep.duplicator">
+          {{surveyStep.duplicator}}
+        </p>
+      </div>
+      <label class="col-sm-2 control-label">Fully Editable</label>
+      <div class="col-sm-4">
+        <p class="form-control-static">
+          {{surveyStep.surveyTemplate.fullyEditable}}
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-info">
+    <div class="panel-heading"></div>
+    <div class="panel-body">
+
+      <div class="row">
+        <div class="col-sm-3"><strong>Label</strong></div>
+        <div class="col-sm-3"><strong>Question Type</strong></div>
+        <div class="col-sm-3"><strong>Actions</strong></div>
+        <div class="col-sm-3"><strong></strong></div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          &nbsp;
+        </div>
+      </div>
+
+      {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange="reorderQuestions" as |group|}}
+        {{#each sortedQuestions as |question|}}
+          {{#sortable-item tagName="li" class="row question-border item" model=question group=group handle=".glyphicon-sort"}}
+            {{question-row question=question deleteQuestion='deleteQuestion'}}
+          {{/sortable-item}}
+        {{/each}}
+      {{/sortable-group}}
+
+      {{!-- Add new question --}}
+      <div class="row ember-view">
+        <div class="col-sm-2">
+          {{#link-to "survey_step.questions.new" class="btn btn-success"}}
+            <span class="glyphicon glyphicon-plus"></span>
+              Add
+          {{/link-to}}
+        </div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-1"></div>
+      </div>
+    </div>
+  </div>
+ </div>
+
+{{outlet}}

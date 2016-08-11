@@ -28,7 +28,7 @@ module Hanuman
     private
 
     def rule_params
-      params.require(:rule).permit(:match_type)
+      params.require(:rule).permit(:match_type, :question_id)
     end
   end
 end

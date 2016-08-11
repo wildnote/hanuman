@@ -9,7 +9,7 @@ module Hanuman
     def show
       respond_with AnswerChoice.find(params[:id])
     end
-    
+
     def create
       respond_with :api, :v1, AnswerChoice.create(answer_choice_params)
     end

@@ -1,5 +1,7 @@
 Hanuman::Engine.routes.draw do
 
+  resources :observation_photos
+
   resources :rule_conditions
 
   resources :rules
@@ -22,7 +24,9 @@ Hanuman::Engine.routes.draw do
     end
   end
 
-  get 'admin' => 'admin#index'
+
+
+  mount_ember_app :frontend, to: '/admin', controller: 'admin', action: 'index', as: 'admin'
   get 'admin/show'
 
   get 'surveys/:id/edit/:step/:entry' => 'surveys#edit', as: :edit_survey
@@ -56,5 +60,6 @@ Hanuman::Engine.routes.draw do
   get 'about' => 'about#index'
 
   #root 'about#index'
+  mount_ember_assets :frontend, to: "/admin"
 
 end

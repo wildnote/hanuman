@@ -25,6 +25,14 @@ module Hanuman
           question_id: q.id,
           entry: 1
         )
+
+        if q.answer_type.name.eql? "photo"
+          o.observation_photos.build()
+        elsif q.answer_type.name.eql? "video"
+          o.observation_videos.build()
+        elsif q.answer_type.name.eql? "document"
+          o.observation_documents.build()
+        end
       end
     end
 
@@ -92,7 +100,22 @@ module Hanuman
             :selectable_id,
             :selectable_type,
             :group_sort,
-            answer_choice_ids: []
+            answer_choice_ids: [],
+            observation_photos_attributes: [
+              :id,
+              :photo,
+              :description
+            ],
+            observation_videos_attributes: [
+              :id,
+              :video,
+              :description
+            ],
+            observation_documents_attributes: [
+              :id,
+              :document,
+              :description
+            ]
           ]
         )
       end
@@ -114,7 +137,22 @@ module Hanuman
             :selectable_id,
             :selectable_type,
             :group_sort,
-            answer_choice_ids: []
+            answer_choice_ids: [],
+            observation_photos_attributes: [
+              :id,
+              :photo,
+              :description
+            ],
+            observation_videos_attributes: [
+              :id,
+              :video,
+              :description
+            ],
+            observation_documents_attributes: [
+              :id,
+              :document,
+              :description
+            ]
           ]
         )
       end

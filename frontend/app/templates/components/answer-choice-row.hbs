@@ -1,0 +1,48 @@
+{{#if isEditingAnswerChoice}}
+  {{!-- new and edit --}}
+  <td>
+    {{#object-form for=answerChoice}}
+      {{#form-field for='optionText'}}
+        <input type="text"
+              data-test="answerChoice.optionText"
+              class="form-control"
+              value={{answerChoice.optionText}}
+              oninput={{action (mut answerChoice.optionText) value="target.value"}} />
+      {{/form-field}}
+    {{/object-form}}
+  </td>
+  <td>
+    <a class="btn btn-success" data-test="save-answer-choice-link" onclick={{action 'save'}}>
+      Save
+    </a>
+    <a class="btn btn-default" onclick={{action 'toggleForm'}}>
+      Cancel
+    </a>
+  </td>
+
+{{else}}
+  {{#if isNewAnswerChoice}}
+    <!-- + new answer choice button -->
+    <td>
+      <a class="btn btn-success" data-test="add-answer-choice-link" onclick={{action 'toggleForm'}}>
+        <span class="glyphicon glyphicon-plus"></span>
+        Add
+      </a>
+    </td>
+    <td></td>
+  {{else}}
+    {{!-- show of existing answer choice --}}
+    <td data-test="answerChoice.optionText">
+      {{answerChoice.optionText}}
+    </td>
+    <td>
+      <a class="btn btn-success" data-test="edit-answer-choice-link" onclick={{action 'toggleForm'}}>
+        <span class="glyphicon glyphicon-pencil"></span>
+        Edit
+      </a>
+      <a class="btn" data-test="delete-answer-choice-link" onclick={{action 'delete'}}>
+        <span class="glyphicon glyphicon-trash"></span>
+      </a>
+    </td>
+  {{/if}}
+{{/if}}

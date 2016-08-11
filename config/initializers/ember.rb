@@ -1,2 +1,3 @@
-Hanuman::Engine.config.ember.variant = :development
-Hanuman::Engine.config.handlebars.templates_root = "hanuman/templates"
+EmberCli.configure do |c|
+  c.app :frontend, path: "../hanuman/frontend"
+end
