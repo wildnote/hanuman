@@ -2,7 +2,6 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   renderTemplate: function(){
-    console.log("rendering thing");
     this.render({outlet: 'questions'});
   },
   actions: {
