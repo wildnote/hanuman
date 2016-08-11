@@ -1,10 +1,10 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
-  model() {
-    let surveyTemplate = this.modelFor('survey-templates.show');
+  model(params) {
+    let surveyTemplate = this.modelFor('survey-templates.record');
     return Ember.RSVP.hash({
-      question: this.store.createRecord('question',{surveyTemplate}),
+      question: this.store.findRecord('question', params.question_id),
       questions: surveyTemplate.get('questions'),
       answerTypes: this.store.findAll('answer-type'),
       surveyTemplate
@@ -12,7 +12,11 @@ export default Ember.Route.extend({
   },
 
   afterModel: function(models) {
-    models.question.set('answerType',models.answerTypes.get('firstObject'));
+    let question = models.question;
+    if(!question.get('rule')){
+      question.set('rule',this.store.createRecord('rule'));
+    }
+    return question.get('answerChoices');
   },
 
   setupController(controller, models) {

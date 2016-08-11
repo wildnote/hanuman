@@ -1,6 +1,11 @@
+import Ember from 'ember';
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import { hasMany } from 'ember-data/relationships';
+
+const {
+  computed: { filterBy }
+} = Ember;
 
 export default Model.extend({
   // Attributes
@@ -11,5 +16,8 @@ export default Model.extend({
   duplicatorLabel: attr('string'),
 
   // Relations
-  questions: hasMany('question')
+  questions: hasMany('question'),
+  // Computed
+  questionsNotNew: filterBy('questions', 'isNew', false),
+  filteredquestions: filterBy('questionsNotNew', 'isDeleted', false)
 });

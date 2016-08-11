@@ -7,7 +7,8 @@ const Router = Ember.Router.extend({
 
 Router.map(function() {
   this.route('survey_templates', function() {
-    this.route('show', { path: '/:survey_template_id' }, function() {
+    this.route('record', { path: '/:survey_template_id' }, function() {
+      this.route('edit');
       this.route('questions', function() {
         this.route('new');
         this.route('edit', { path: ':question_id' });
