@@ -48,6 +48,7 @@
     "ember-sortable": "1.8.1",
     "ember-spin-spinner": "0.3.0",
     "ember-truth-helpers": "1.2.0",
+    "liquid-fire": "0.24.1",
     "loader.js": "^4.0.1"
   }
 }
