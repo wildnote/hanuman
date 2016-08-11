@@ -35,3 +35,16 @@ test('listing questions', function(assert) {
     }
   });
 });
+
+test('editing a survey template', function(assert) {
+  visit(`/survey_templates/${surveyTemplate.id}`);
+  click('[data-test="edit-survey-link"]').then(()=>{
+    assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/edit`);
+    fillIn('[data-test="surveyTemplate.name"]', 'Yo te vi salir campeón del continente');
+    click('[data-test="save-survey-template-link"]').then(()=>{
+      surveyTemplate = server.db.surveyTemplates.find(surveyTemplate.id);
+      assert.equal(surveyTemplate.name, 'Yo te vi salir campeón del continente');
+      assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
+    });
+  });
+});

@@ -5,6 +5,10 @@ import config from './config/environment';
 
 let App;
 
+Ember.LinkComponent.reopen({
+  attributeBindings: ['data-test']
+});
+
 Ember.MODEL_FACTORY_INJECTIONS = true;
 
 App = Ember.Application.extend({
