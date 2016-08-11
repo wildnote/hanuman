@@ -6,7 +6,7 @@ const {
 
 export default Ember.Component.extend({
   remodal: Ember.inject.service(),
-  isFullyEditable: alias('surveyStep.surveyTemplate.fullyEditable'),
+  isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   answerChoicesPendingSave: [],
   conditionsPendingSave: [],
@@ -72,8 +72,8 @@ export default Ember.Component.extend({
   },
 
   _sortOrder(question){
-    let surveyStep = this.get('surveyStep'),
-        lastQuestion = surveyStep.get('questions').sortBy('sortOrder').get('lastObject');
+    let surveyTemplate = this.get('surveyTemplate'),
+        lastQuestion = surveyTemplate.get('questions').sortBy('sortOrder').get('lastObject');
     question.set('sortOrder',lastQuestion.get('sortOrder') + 1);
   },
 
@@ -97,8 +97,8 @@ export default Ember.Component.extend({
 
     save() {
       let question = this.get('question'),
-          surveyStep = this.get('surveyStep');
-      question.set('surveyStep', surveyStep);
+          surveyTemplate = this.get('surveyTemplate');
+      question.set('surveyTemplate', surveyTemplate);
       if(question.validate()){
         if(question.get('isNew')){
           this._sortOrder(question);
@@ -119,15 +119,15 @@ export default Ember.Component.extend({
               rule.save().then((rule) =>{
                 let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
                 promises = promises.concat(conditionsPromises);
-                this._saveSuccess(promises);
+                this._saveSuccess(question, promises);
               });
             }else{
-              this._saveSuccess(promises);
+              this._saveSuccess(question, promises);
             }
           },
           (error)=>{
             console.error(`An error has occured: ${error}.`);
-            surveyStep.get('questions').removeObject(question);
+            surveyTemplate.get('questions').removeObject(question);
           }
         );
       }

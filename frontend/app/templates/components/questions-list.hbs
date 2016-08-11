@@ -1,0 +1,41 @@
+<div class="panel panel-info">
+  <div class="panel-heading">
+    <div class="panel-title">Questions</div>
+  </div>
+  <div class="panel-body">
+
+    <div class="row">
+      <div class="col-sm-3"><strong>Label</strong></div>
+      <div class="col-sm-3"><strong>Question Type</strong></div>
+      <div class="col-sm-3"><strong>Actions</strong></div>
+      <div class="col-sm-3"><strong></strong></div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        &nbsp;
+      </div>
+    </div>
+
+    {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange="reorderQuestions" as |group|}}
+      {{#each sortedQuestions as |question|}}
+        {{#sortable-item tagName="li" class="row question-border item" model=question group=group handle=".glyphicon-sort"}}
+          {{question-row question=question deleteQuestion='deleteQuestion'}}
+        {{/sortable-item}}
+      {{/each}}
+    {{/sortable-group}}
+
+    {{!-- Add new question --}}
+    <div class="row ember-view">
+      <div class="col-sm-2">
+        {{#link-to "survey_templates.record.questions.new" class="btn btn-success"}}
+          <span class="glyphicon glyphicon-plus"></span>
+            Add
+        {{/link-to}}
+      </div>
+      <div class="col-sm-3"></div>
+      <div class="col-sm-3"></div>
+      <div class="col-sm-1"></div>
+    </div>
+  </div>
+</div>

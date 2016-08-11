@@ -4,8 +4,13 @@ export default function() {
   // Shorthand
   this.get('/answer_types');
   this.get('/answer_types/:id');
-  this.get('/survey_steps/:id');
   this.get('/survey_templates/:id');
+  this.put('/survey_templates/:id', ({ surveyTemplates }, request) => {
+    let attrs = JSON.parse(request.requestBody)['survey_template'],
+        id = request.params.id;
+    return surveyTemplates.find(id).update(attrs);
+  });
+
   // Conditions
   this.get('/conditions/:id');
   this.post('/conditions');

@@ -1,12 +1,16 @@
 module Hanuman
   class Rule < ActiveRecord::Base
+
+    # Constants
+    MATCH_TYPES = %w(any all)
+
+    # Relations
     belongs_to :question
     has_many :conditions, dependent: :destroy
 
+    # Validations
     #validates :question_id, presence: true
-    validates :match_type, presence: true
-
-    MATCH_TYPES = ["any","all"]
+    validates :match_type, inclusion: { in: MATCH_TYPES }
 
     amoeba do
       exclude_association [:conditions]

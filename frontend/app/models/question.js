@@ -21,7 +21,7 @@ export default Model.extend(Validator, {
 
   // Associations
   answerType:     belongsTo('answer-type'),
-  surveyStep:     belongsTo('survey-step'),
+  surveyTemplate: belongsTo('survey-template'),
   rule:           belongsTo('rule', {async: false}),
   answerChoices:  hasMany('answer-choice'),
 

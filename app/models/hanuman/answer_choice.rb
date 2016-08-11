@@ -2,9 +2,17 @@ module Hanuman
   class AnswerChoice < ActiveRecord::Base
     has_paper_trail
     has_ancestry
-    belongs_to :question, inverse_of: :answer_choices
-    validates_presence_of :option_text, :question
 
+    # Scopes
+    scope :second_level, -> { where(ancestry: nil) }
+
+    # Relations
+    belongs_to :question, inverse_of: :answer_choices
+
+    # Validations
+    validates :option_text, :question, presence: true
+
+    # Callbacks
     before_save :protect_split
 
     def self.filtered_by_question_id_and_sort(question_id, sort_column, sort_direction)
@@ -22,15 +30,11 @@ module Hanuman
     end
 
     def self.all_sorted
-      order("option_text ASC, scientific_text ASC")
+      order('option_text ASC, scientific_text ASC')
     end
 
     def self.sorted
-      order("option_text")
-    end
-
-    def self.second_level
-      where(ancestry: nil)
+      order('option_text')
     end
 
     def formatted_answer_choice

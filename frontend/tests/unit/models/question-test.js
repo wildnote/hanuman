@@ -5,7 +5,7 @@ moduleForModel('question', 'Unit | Model | question', {
   // Specify the other units that are required for this test.
   needs: [
     'model:answer-type',
-    'model:survey-step',
+    'model:survey-template',
     'model:rule',
     'model:answer-choice',
     'model:condition'

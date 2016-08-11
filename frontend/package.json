@@ -44,10 +44,11 @@
     "ember-model-validator": "^2.1.0",
     "ember-remodal": "1.2.0",
     "ember-resolver": "^2.0.3",
-    "ember-route-action-helper": "0.3.2",
+    "ember-route-action-helper": "0.3.3",
     "ember-sortable": "1.8.1",
     "ember-spin-spinner": "0.3.0",
     "ember-truth-helpers": "1.2.0",
+    "liquid-fire": "0.24.1",
     "loader.js": "^4.0.1"
   }
 }

@@ -1,18 +1,17 @@
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 
-var surveyTemplate, surveyStep, question, rule, conditions;
+var surveyTemplate, surveyTemplate, question, rule, conditions;
 moduleForAcceptance('Acceptance | question conditionals', {
   beforeEach() {
     server.loadFixtures();
     surveyTemplate = server.create('survey-template');
-    surveyStep = server.create('survey-step', {surveyTemplate});
   }
 });
 
 // Conditional tabs shouldn't be enable on for new questions
 test('creating new question hides conditional tab', function(assert) {
-  visit(`/survey_steps/${surveyStep.id}`);
+  visit(`/survey_templates/${surveyTemplate.id}`);
   andThen(function() {
     click('a:contains("Add")').then(()=>{
       assert.notEqual(find('[href="#tab-question-conditionals"]').text().trim(), 'Conditionals', 'Hide conditional tab');
@@ -21,10 +20,10 @@ test('creating new question hides conditional tab', function(assert) {
 });
 
 test('adding a conditional with a question without rule previously created', function(assert) {
-  server.createList('question', 5, { surveyStep });
-  question = server.create('question', {surveyStep});
+  server.createList('question', 5, { surveyTemplate });
+  question = server.create('question', {surveyTemplate});
 
-  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
+  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
   andThen(function() {
     assert.equal(0, server.schema.rules.all().models.length);
@@ -50,15 +49,15 @@ test('adding a conditional with a question without rule previously created', fun
 });
 
 test('editing a conditional', function(assert) {
-  server.createList('question', 5, { surveyStep });
+  server.createList('question', 5, { surveyTemplate });
   rule = server.create('rule');
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
-  question = server.create('question', { surveyStep, rule });
+  question = server.create('question', { surveyTemplate, rule });
   rule = server.db.rules.update(rule.id, { question: question });
 
   let firstCondition = conditions[0];
 
-  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
+  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
   andThen(function() {
     for (var condition of conditions) {
@@ -75,15 +74,15 @@ test('editing a conditional', function(assert) {
 });
 
 test('deleting a conditional', function(assert) {
-  server.createList('question', 5, { surveyStep });
+  server.createList('question', 5, { surveyTemplate });
   rule = server.create('rule');
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
-  question = server.create('question', { surveyStep, rule });
+  question = server.create('question', { surveyTemplate, rule });
   rule = server.db.rules.update(rule.id, { question: question });
 
   let firstCondition = conditions[0];
 
-  visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`);
+  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
   andThen(function() {
     let selector = `[data-condition-id="${firstCondition.id}"]`;
@@ -91,7 +90,7 @@ test('deleting a conditional', function(assert) {
     click(`${selector} [data-test="delete-condition-link"]`).then(()=>{
       assert.notEqual(firstCondition.answer,find('[data-test="condition.answer"]:first').text().trim());
     });
-    visit(`/survey_steps/${surveyStep.id}/questions/${question.id}`).then(()=>{
+    visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`).then(()=>{
       assert.notEqual(firstCondition.answer,find('[data-test="condition.answer"]:first').text().trim());
     });
   });
