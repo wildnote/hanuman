@@ -108,9 +108,9 @@ class @ConditionalLogic
     conditionMetTracker = []
     $.each conditions, (index, condition) ->
       if inRepeater
-        $conditionElement = $container.closest(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control')
+        $conditionElement = $container.parents(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control')
         if $conditionElement.length < 1
-          $conditionElement = $container.closest(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control-static')
+          $conditionElement = $container.parents(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control-static')
       else
         $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
         if $conditionElement.length < 1
