@@ -6,6 +6,7 @@
       %br
       %br
       = p.description
+      = p.sort_order
       %br
       = link_to p.photo.my_public_id + "." + p.photo.format + " | download file", cloudinary_url(p.photo, attachment: true), html_options = { download: true }
       %br

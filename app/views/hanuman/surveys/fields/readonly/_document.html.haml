@@ -8,9 +8,10 @@
         = cl_image_tag(d.document.my_public_id, size: '50x50', crop: :fill, format: 'jpg', class: 'doc-preview')
       - else
         = image_tag("file-icon.png")
-      = link_to d.document.my_public_id +  " | download file", cloudinary_url(d.document.url, attachment: true, resource_type: :raw), html_options = { download: true }
+      = link_to d.document.my_public_id + "."+ d.document.format + " | download file", cloudinary_url(d.document.url, attachment: true, resource_type: :raw), html_options = { download: true }
       %br
       = d.description
+      = d.sort_order
       %br
       %br
       %br
