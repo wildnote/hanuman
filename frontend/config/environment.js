@@ -5,7 +5,7 @@ module.exports = function(environment) {
     modulePrefix: 'frontend',
     podModulePrefix: 'frontend/pods',
     environment: environment,
-    rootURL: '/hanuman/admin/',
+    rootURL: '/',
     locationType: 'auto',
     EmberENV: {
       FEATURES: {
