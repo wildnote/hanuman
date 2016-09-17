@@ -7,6 +7,10 @@
     "Faker": "~3.1.0",
     "remodal": "1.1.0",
     "spin.js": "^2.3.2",
-    "selectize": "miguelcobain/selectize.js#master"
+    "selectize": "miguelcobain/selectize.js#master",
+    "route-recognizer": "0.2.6"
+  },
+  "resolutions": {
+    "route-recognizer": "0.2.6"
   }
 }
