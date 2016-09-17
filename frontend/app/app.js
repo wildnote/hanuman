@@ -12,7 +12,7 @@ Ember.LinkComponent.reopen({
 Ember.MODEL_FACTORY_INJECTIONS = true;
 
 App = Ember.Application.extend({
-	rootElement: '#ember-container',
+  rootElement: '#ember-container',
   modulePrefix: config.modulePrefix,
   podModulePrefix: config.podModulePrefix,
   Resolver
