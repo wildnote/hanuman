@@ -42,29 +42,21 @@
       .col-sm-3
         %p.form-control-static= @survey_template.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%m/%d/%Y")
 
-  - steps = @survey_template.survey_steps
 
-  - steps.each do |step|
-    .panel.panel-info
-      .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step.step}"}
-        .panel-title
-          .pull-left
-            %span.glyphicon.glyphicon-chevron-right
-            %span.glyphicon.glyphicon-chevron-down
-            %strong
-              Step
-              = step.step
-            - if step.duplicator?
-              %em= "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
-          .clearfix
-      .panel-collapse.collapse.in{:id => "collapse_#{step.step}"}
-        .panel-body
-          .pull-right.edit-delete
-            = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-xs btn-success" do
-              %span.glyphicon.glyphicon-pencil
-              Edit Step
-          .clearfix
-          - if step.step == 1
-            = render ("hanuman/survey_templates/formextensionreadonly")
-          - step.questions.each do |q|
-            = render ("hanuman/survey_templates/dynamicfield"), q: q
+  .panel.panel-info
+    .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_1"}
+      .panel-title
+        .pull-left
+          %span.glyphicon.glyphicon-chevron-right
+          %span.glyphicon.glyphicon-chevron-down
+        .clearfix
+    .panel-collapse.collapse.in{:id => "collapse_1"}
+      .panel-body
+        .pull-right.edit-delete
+          = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-xs btn-success" do
+            %span.glyphicon.glyphicon-pencil
+            Edit Survey Template
+        .clearfix
+        = render ("hanuman/survey_templates/formextensionreadonly")
+        - @survey_template.questions.each do |q|
+          = render ("hanuman/survey_templates/dynamicfield"), q: q
