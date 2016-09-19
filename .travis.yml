@@ -28,6 +28,7 @@ install:
   - npm install -g bower
   - npm install
   - bower install
+  - bower --version
 
 script:
   - ember test

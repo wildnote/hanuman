@@ -1,5 +1,5 @@
 export default function() {
-  this.namespace = 'hanuman/api/v1';
+  this.namespace = '/hanuman/api/v1';
 
   // Shorthand
   this.get('/answer_types');
