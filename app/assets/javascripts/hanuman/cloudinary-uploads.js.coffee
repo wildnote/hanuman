@@ -162,28 +162,13 @@ bindDocumentUploads = ->
 
 
 
-#  these fuctions are remove unnecessary hidden inputs placed in the dome by "=fff.cl_image_tag" and "=fff.cl_image_tag" on edit mode
-removePhotoHiddenInput = ->
-  photosRegex = /survey\[observations_attributes]\[\d+]\[observation_photos_attributes]\[\d+]\[id]/
-  photoInputs = $($($('.file-upload')).find('input[type=hidden]')).filter (i, o) ->
-    name = $(o).attr('name')
-    name.match(photosRegex) != null
-  photoInputs[0].remove()
-
-removeVideoHiddenInput = ->
-  videosRegex = /survey\[observations_attributes]\[\d+]\[observation_videos_attributes]\[\d+]\[id]/
-  videoInputs = $($($('.file-upload')).find('input[type=hidden]')).filter (i, o) ->
-    name = $(o).attr('name')
-    name.match(videosRegex) != null
-  videoInputs[0].remove()
-
-removeDocumentHiddenInput = ->
-  documentsRegex = /survey\[observations_attributes]\[\d+]\[observation_documents_attributes]\[\d+]\[id]/
-  documentInputs = $($($('.file-upload')).find('input[type=hidden]')).filter (i, o) ->
-    name = $(o).attr('name')
-    name.match(documentsRegex) != null
-  documentInputs[0].remove()
-
+#  this fuction removes unnecessary inputs type hidden placed on the dom by "=fff.cl_image_tag" and "=fff.cl_image_tag" on edit mode
+removeFileHiddenInput = ->
+  $(".file-upload-input-button").each (i, e) ->
+    name = $(e).attr('name')
+    if $(e).find("input[type='hidden']:first").length > 0
+      console.log $(e).find("input[type='hidden']:first")
+      $(e).find("input[type='hidden']:first").remove()
 
 $ ->
   $('.delete-saved-file').on 'click', ->
@@ -193,9 +178,7 @@ $ ->
 
 
   if $('.edit-mode-file').length > 0
-    removePhotoHiddenInput()
-    removeVideoHiddenInput()
-    removeDocumentHiddenInput()
+    removeFileHiddenInput()
     $('input[type=submit]').on 'click',(e) ->
       # e.preventDefault()
       $('.document-upload').each (i, obj) ->

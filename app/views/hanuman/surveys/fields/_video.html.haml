@@ -1,6 +1,6 @@
 .form-group.file-upload
   = render "hanuman/surveys/fields/shared/label", ff: ff
-  .col-sm-7.video-column
+  .col-sm-7.video-column.file-upload-input-button
     - if !@survey.id.nil?
       .edit-mode-file
       = ff.fields_for :observation_videos, o do |fff|
