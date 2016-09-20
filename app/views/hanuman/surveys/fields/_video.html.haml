@@ -13,14 +13,18 @@
         = ff.fields_for :observation_videos, v do |fff|
           .upload-view-mode
             = cl_video_tag(v.video.my_public_id, options = { controls: true, preload: 'none', width: 350 })
-            %br
-            = fff.object.video.file.public_id + "." + fff.object.video.file.format
-            %br
-            = fff.text_area :description, rows: 2, cols: 55, style: "margin:20px 0 20px 0;"
-            %br
-            = fff.text_field :sort_order, type: :number
-            %br
-            %br
+            %p
+              = fff.object.video.file.public_id + "." + fff.object.video.file.format
+
+            = fff.label :"description:"
+            .form-group
+              .col-sm-7
+                = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add video description here..."
+
+            = fff.label :"Sort Order:"
+            .form-group
+              .col-sm-7
+                = fff.text_field :sort_order, type: :number
             %p.delete-box
               = fff.check_box :_destroy, class:"hidden delete-checkbox"
               %a{class:"delete-saved-file", href:"#"}Delete Video
