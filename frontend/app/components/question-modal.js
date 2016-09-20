@@ -17,7 +17,7 @@ export default Ember.Component.extend({
   ancestryQuestions: computed('questions', function() {
     return this.get('questions').filter(function(question) {
       let allowedTypes = ['section','repeater'];
-      return allowedTypes.contains(question.get('answerType.name'));
+      return allowedTypes.includes(question.get('answerType.name'));
     });
   }),
   ancestryQuestion: computed('question.ancestry', function() {

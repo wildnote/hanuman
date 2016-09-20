@@ -23,6 +23,6 @@ export default Model.extend({
 
   // Computed Properties
   hasAnswerChoices: computed('name', function() {
-    return this.get('types').contains(this.get('name'));
+    return this.get('types').includes(this.get('name'));
   })
 });

@@ -1,14 +1,16 @@
 {
   "name": "frontend",
   "dependencies": {
-    "ember": "~2.6.0",
-    "ember-cli-shims": "0.1.1",
-    "ember-cli-test-loader": "0.2.2",
-    "ember-qunit-notifications": "0.1.0",
-    "pretender": "~1.1.0",
+    "ember": "~2.9.0-beta.1",
+    "ember-cli-shims": "0.1.3",
+    "pretender": "1.2.0",
     "Faker": "~3.1.0",
-    "remodal": "1.0.7",
+    "remodal": "1.1.0",
     "spin.js": "^2.3.2",
-    "selectize": "miguelcobain/selectize.js#master"
+    "selectize": "miguelcobain/selectize.js#master",
+    "route-recognizer": "0.2.6"
+  },
+  "resolutions": {
+    "route-recognizer": "0.2.6"
   }
 }
