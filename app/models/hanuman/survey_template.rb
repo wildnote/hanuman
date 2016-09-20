@@ -10,7 +10,7 @@ module Hanuman
 
     # Relations
     has_many :survey_steps, -> { order :step }, inverse_of: :survey_template, dependent: :destroy #Deprecated
-    has_many :questions, dependent: :destroy
+    has_many :questions, -> { order :sort_order }, dependent: :destroy
     has_many :surveys, dependent: :restrict_with_exception
 
     # Validations
