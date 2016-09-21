@@ -182,7 +182,7 @@ $ ->
     $('input[type=submit]').on 'click',(e) ->
       # e.preventDefault()
       $('.document-upload').each (i, obj) ->
-        # this loop checks for documents that are flaged for delete. if it files all of them flag for delete then we validate input
+        # this loop checks for documents that are flagged for delete
 
         if $($('.video-upload')[i]).closest('.video-column').find('.upload-view-mode').length == 0
           emptyDocumentContainer = true
