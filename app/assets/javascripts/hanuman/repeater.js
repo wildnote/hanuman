@@ -48,7 +48,7 @@ $(document).ready(function(){
     // set cloned container to display none for fading in
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
     // commenting out because we don't use fancy preview code for docs and videos, if we bring this back probably need this at this point
-    // cleartFilePreviewContainers($clonedContainer);
+    cleartFilePreviewContainers($clonedContainer);
 
     // clear values
     clearValues($clonedContainer);
@@ -127,8 +127,14 @@ $(document).ready(function(){
   }
 
   function cleartFilePreviewContainers(container){
-    $($(container).find('.document-preview-container')).empty();
-    $($(container).find('.video-preview-container')).empty();
+    if ($('.survey-edit-mode').length > 0) {
+      $($(container).find('.upload-view-mode')).empty();
+    }else {
+      $($(container).find('.photo-preview-container')).empty();
+      $($(container).find('.video-preview-container')).empty();
+      $($(container).find('.document-preview-container')).empty();
+
+    }
   }
 
   function removeErrorBackground(type, $clonedContainer){
@@ -207,7 +213,6 @@ $(document).ready(function(){
   }
 
   function bindChosenTypes(){
-    $('.attachinary-input').attachinary();
     $(".chosen-multiselect").chosen();
     $(".chosen-select").chosen();
     $(".bootstrap-checkbox-multiselect").multiselect();
@@ -231,9 +236,15 @@ $(document).ready(function(){
         $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/\d+/, newTimeStamp));
       }
       if ($(inputs[index]).attr('name')) {
-        var nameStamp = $(inputs[index]).attr("name").match(/\d+/)[0];
-        var newTimeStamp = nameStamp.concat(timeStamp);
-        $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/\d+/, newTimeStamp));
+        if ($(inputs[index]).attr('name') != "file") {
+          var nameStamp = $(inputs[index]).attr("name").match(/\d+/)[0];
+          var newTimeStamp = nameStamp.concat(timeStamp);
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/\d+/, newTimeStamp));
+        }else if($(inputs[index]).attr("data-cloudinary-field")) {
+          var nameStamp = $(inputs[index]).attr("data-cloudinary-field").match(/\d+/)[0];
+          var newTimeStamp = nameStamp.concat(timeStamp);
+          $(inputs[index]).attr("data-cloudinary-field", $(inputs[index]).attr("data-cloudinary-field").replace(/\d+/, newTimeStamp));
+        }
       }
       if ($(inputs[index]).attr('data-parsley-multiple')) {
         var newTimeStamp = parsleySubstrig.concat(timeStamp);
