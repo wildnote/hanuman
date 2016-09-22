@@ -25,16 +25,7 @@
   <div class="col-sm-3 dev-only">
     <a class="btn"><span class="glyphicon glyphicon-sort"></span></a>
     {{question.sortOrder}} [{{question.railsId}}]
-    {{#if question.ancestry}}
-      [A={{question.ancestry}}]
-    {{/if}}
-    {{#if question.hidden}}
-      H
-    {{/if}}
-    {{#if question.required}}
-      R
-    {{/if}}
-
+    {{typeInitial}}
     {{#if question.rule}}
       [CL show
       {{#each question.rule.conditions as |condition|}}
