@@ -17,7 +17,7 @@
       </div>
     </div>
 
-    {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange="reorderQuestions" as |group|}}
+    {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange=(route-action "reorderQuestions") as |group|}}
       {{#each sortedQuestions as |question|}}
         {{#sortable-item tagName="li" class="row question-border item" model=question group=group handle=".glyphicon-sort"}}
           {{question-row question=question deleteQuestion='deleteQuestion'}}
