@@ -1,10 +1,13 @@
-.row.question-border{
+.li-question{
   &:hover{
     background-color: #e8e8e8;
   }
   &.is-dragging{
     background-color: white;
     z-index: 9999999999;
+  }
+  &.has-ancestry{
+    margin-left: 15px;
   }
   .glyphicon-sort{
     font-size: 15px;
