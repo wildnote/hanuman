@@ -111,12 +111,12 @@
                 <div class="table-responsive">
                   <table class="table table-hover">
                     <thead>
-                      <tr>
+                      <tr class="no-hover">
                         <th colspan="6">Conditional Logic</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
+                      <tr class="no-hover">
                         <td colspan="6">
                           <select data-test="rule-match-type-select" class="form-control" onchange={{action "setRuleMatchType" value="target.value"}}>
                             <option value="any" selected={{eq question.rule.matchType 'any'}}>match on any question condition</option>
@@ -124,7 +124,7 @@
                           </select>
                         </td>
                       </tr>
-                      <tr>
+                      <tr class="no-hover">
                         <td width="10px"></td>
                         <td>Question</td>
                         <td>Operator</td>

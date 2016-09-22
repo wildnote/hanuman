@@ -9,6 +9,7 @@ export default Ember.Component.extend({
   for: alias('condition'),
   tagName: 'tr',
   attributeBindings: ['condition.id:data-condition-id'],
+  classNameBindings: ['isNewCondition:no-hover'],
   isEditingCondition: false,
   operators: [
                 'is equal to',
