@@ -1,6 +1,7 @@
 {{!-- called from surveyTemplate and dislpays each answer type as readonly --}}
 <div class="row">
   <div class="col-sm-3">
+    <span class="glyphicon glyphicon-sort"></span>
     {{#if question.childQuestion}}
       {{question.numChildren}}
     {{/if}}
@@ -22,8 +23,7 @@
       <button class="btn" onclick={{action 'cancel'}}>No</button>
     </div>
   </div>
-  <div class="col-sm-3 dev-only">
-    <a class="btn"><span class="glyphicon glyphicon-sort"></span></a>
+  <div class="col-sm-3">
     {{question.sortOrder}} [{{question.railsId}}]
     {{typeInitial}}
     {{#if question.rule}}
