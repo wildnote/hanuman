@@ -28,7 +28,7 @@ export default Model.extend(Validator, {
   // Computed Properties
   childQuestion:  bool('ancestry'),
   isContainer:    equal('answerType.name', 'section'),
-  numChildren: computed('childQuestion', function() {
+  numChildren:    computed('childQuestion', function() {
     if(this.get('childQuestion')){
       return this.get('ancestry').split('/').length;
     }else{
