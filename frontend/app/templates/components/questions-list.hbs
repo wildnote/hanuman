@@ -3,39 +3,48 @@
     <div class="panel-title">Questions</div>
   </div>
   <div class="panel-body">
-
-    <div class="row">
-      <div class="col-sm-3"><strong>Label</strong></div>
-      <div class="col-sm-3"><strong>Question Type</strong></div>
-      <div class="col-sm-3"><strong>Actions</strong></div>
-      <div class="col-sm-3"><strong>Info</strong></div>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-12">
-        &nbsp;
+    {{#if isLoadingQuestions}}
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="progress-bar progress-bar-striped active notransition" role="progressbar" aria-valuenow="{{loadingProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{loadingProgress}}%;min-width: 2em;">
+            {{loadingProgress}}%
+          </div>
+        </div>
       </div>
-    </div>
-
-    {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange=(route-action "reorderQuestions") as |group|}}
-      {{#each sortedQuestions as |question|}}
-        {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicon-sort"}}
-          {{question-row question=question deleteQuestion='deleteQuestion'}}
-        {{/sortable-item}}
-      {{/each}}
-    {{/sortable-group}}
-
-    {{!-- Add new question --}}
-    <div class="row ember-view">
-      <div class="col-sm-2">
-        {{#link-to "survey_templates.record.questions.new" class="btn btn-success"}}
-          <span class="glyphicon glyphicon-plus"></span>
-            Add
-        {{/link-to}}
+    {{else}}
+      <div class="row">
+        <div class="col-sm-3"><strong>Label</strong></div>
+        <div class="col-sm-3"><strong>Question Type</strong></div>
+        <div class="col-sm-3"><strong>Actions</strong></div>
+        <div class="col-sm-3"><strong>Info</strong></div>
       </div>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-3"></div>
-      <div class="col-sm-1"></div>
-    </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          &nbsp;
+        </div>
+      </div>
+
+      {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange=(route-action "reorderQuestions") as |group|}}
+        {{#each sortedQuestions as |question|}}
+          {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicon-sort"}}
+            {{question-row question=question deleteQuestion='deleteQuestion'}}
+          {{/sortable-item}}
+        {{/each}}
+      {{/sortable-group}}
+
+      {{!-- Add new question --}}
+      <div class="row ember-view">
+        <div class="col-sm-2">
+          {{#link-to "survey_templates.record.questions.new" class="btn btn-success"}}
+            <span class="glyphicon glyphicon-plus"></span>
+              Add
+          {{/link-to}}
+        </div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-3"></div>
+        <div class="col-sm-1"></div>
+      </div>
+    {{/if}}
   </div>
 </div>
