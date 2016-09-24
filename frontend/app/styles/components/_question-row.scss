@@ -6,8 +6,14 @@
     background-color: white;
     z-index: 9999999999;
   }
-  &.has-ancestry{
-    margin-left: 15px;
+  &.has-ancestry-1{
+    margin-left: 10px;
+  }
+  &.has-ancestry-2{
+    margin-left: 25px;
+  }
+  &.has-ancestry-3{
+    margin-left: 35px;
   }
   .glyphicon-sort{
     font-size: 15px;

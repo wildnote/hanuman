@@ -60,7 +60,7 @@ test('selecting ancestry', function(assert) {
   });
 });
 
-test('adding a questionsss', function(assert) {
+test('adding a question', function(assert) {
   visit(`/survey_templates/${surveyTemplate.id}`);
 
   andThen(function() {

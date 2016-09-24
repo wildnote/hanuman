@@ -19,7 +19,7 @@
 
     {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange=(route-action "reorderQuestions") as |group|}}
       {{#each sortedQuestions as |question|}}
-        {{#sortable-item tagName="li" class=(sortable-classes question.childQuestion) model=question group=group handle=".glyphicon-sort"}}
+        {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicon-sort"}}
           {{question-row question=question deleteQuestion='deleteQuestion'}}
         {{/sortable-item}}
       {{/each}}

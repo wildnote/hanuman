@@ -30,7 +30,9 @@ export default Model.extend(Validator, {
   isContainer:    equal('answerType.name', 'section'),
   numChildren: computed('childQuestion', function() {
     if(this.get('childQuestion')){
-      return Array(this.get('ancestry').split('/').length + 1).join("==> ");
+      return this.get('ancestry').split('/').length;
+    }else{
+      return 0;
     }
   }),
   ruleMatchType: computed('rule.matchType', function() {
