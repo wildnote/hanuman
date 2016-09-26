@@ -9,6 +9,7 @@ module Hanuman
     has_many :observation_answers, dependent: :destroy
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
     has_many :answer_choices, through: :observation_answers, dependent: :destroy
+    belongs_to :answer_choice # adding this select and radio buttons, store answer_choice_id in observation table
     has_many :observation_photos
     has_many :photos, class_name: "observation_photos"
     accepts_nested_attributes_for :observation_photos, allow_destroy: true
