@@ -1,9 +1,7 @@
 {{!-- called from surveyTemplate and dislpays each answer type as readonly --}}
 <div class="row">
   <div class="col-sm-3">
-    {{#if question.childQuestion}}
-      {{question.numChildren}}
-    {{/if}}
+    <span class="glyphicon glyphicon-sort"></span>
     <span data-test="question.questionText">{{question.questionText}}</span>
   </div>
   <div class="col-sm-3" data-test="question.answerType.name">{{question.answerType.name}}</div>
@@ -22,19 +20,10 @@
       <button class="btn" onclick={{action 'cancel'}}>No</button>
     </div>
   </div>
-  <div class="col-sm-3 dev-only">
+  <div class="col-sm-3">
     <a class="btn"><span class="glyphicons glyphicons-sort"></span></a>
     {{question.sortOrder}} [{{question.railsId}}]
-    {{#if question.ancestry}}
-      [A={{question.ancestry}}]
-    {{/if}}
-    {{#if question.hidden}}
-      H
-    {{/if}}
-    {{#if question.required}}
-      R
-    {{/if}}
-
+    {{typeInitial}}
     {{#if question.rule}}
       [CL show
       {{#each question.rule.conditions as |condition|}}

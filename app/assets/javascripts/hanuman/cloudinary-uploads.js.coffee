@@ -3,29 +3,35 @@ addTexareaForUpload = (file, data, idx) ->
 
   # this code is seting the attr values for the hidden fields for the uploaded images.
   dataObj = JSON.parse(data._response.jqXHR.responseText);
+  sortOrder = idx + 1
   fileValue = dataObj.resource_type+"/"+dataObj.type+"/"+"v"+dataObj.version+"/"+dataObj.public_id+"."+dataObj.format+"#"+dataObj.signature
   if file == "photo"
     regex = /\[observation_photos_attributes]\[\d+]\[photo]/
     nameAttr = data.cloudinaryField.replace(/\[observation_photos_attributes]\[\d+]\[photo]/, "[observation_photos_attributes][" + idx + "][description]")
+    orderNameAttr = data.cloudinaryField.replace(/\[observation_photos_attributes]\[\d+]\[photo]/, "[observation_photos_attributes][" + idx + "][sort_order]")
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_photos_attributes]\[\d+]\[photo]/, "[observation_photos_attributes][" + idx + "][photo]")
   else if file == "document"
     regex = /\[observation_documents_attributes]\[\d+]\[document]/
     nameAttr = data.cloudinaryField.replace(/\[observation_documents_attributes]\[\d+]\[document]/, "[observation_documents_attributes][" + idx + "][description]")
+    orderNameAttr = data.cloudinaryField.replace(/\[observation_documents_attributes]\[\d+]\[document]/, "[observation_documents_attributes][" + idx + "][sort_order]")
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_documents_attributes]\[\d+]\[document]/, "[observation_documents_attributes][" + idx + "][document]")
     # if document then overwrite  the filevalue
     fileValue = dataObj.resource_type+"/"+dataObj.type+"/"+"v"+dataObj.version+"/"+dataObj.public_id+"#"+dataObj.signature
   else if file == "video"
     regex = /\[observation_videos_attributes]\[\d+]\[video]/
     nameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][description]")
+    orderNameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][sort_order]")
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][video]")
 
   # this is simply appending the textarea and the hidden input. I am adding the hidden input right next to the img video-preview
-  $("."+file+"-preview").last().append "<br>"
-  $("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:20px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea>"
   $("."+file+"-preview").last().append "<p>"+data.result.public_id+"</p>"
+  $("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:20px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea>"
+  $("."+file+"-preview").last().append "<p><input type='number' value='"+sortOrder+"' name="+orderNameAttr+"></input></p>"
   $("."+file+"-preview").last().append "<p><a id="+file+" class='remove-upload' href='#'>Remove "+file+"</a></p>"
   $("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
   $("."+file+"-preview").last().append "<br>"
+  $("."+file+"-preview").last().append "<hr>"
+
 
 
   # this is finding the hidden field that was placed on the dom with mismatched name attributes and removing them because I already placed the correct hidden input next to preview
@@ -156,28 +162,13 @@ bindDocumentUploads = ->
 
 
 
-#  these fuctions are remove unnecessary hidden inputs placed in the dome by "=fff.cl_image_tag" and "=fff.cl_image_tag" on edit mode
-removePhotoHiddenInput = ->
-  photosRegex = /survey\[observations_attributes]\[\d+]\[observation_photos_attributes]\[\d+]\[id]/
-  photoInputs = $($($('.file-upload')).find('input[type=hidden]')).filter (i, o) ->
-    name = $(o).attr('name')
-    name.match(photosRegex) != null
-  photoInputs[0].remove()
-
-removeVideoHiddenInput = ->
-  videosRegex = /survey\[observations_attributes]\[\d+]\[observation_videos_attributes]\[\d+]\[id]/
-  videoInputs = $($($('.file-upload')).find('input[type=hidden]')).filter (i, o) ->
-    name = $(o).attr('name')
-    name.match(videosRegex) != null
-  videoInputs[0].remove()
-
-removeDocumentHiddenInput = ->
-  documentsRegex = /survey\[observations_attributes]\[\d+]\[observation_documents_attributes]\[\d+]\[id]/
-  documentInputs = $($($('.file-upload')).find('input[type=hidden]')).filter (i, o) ->
-    name = $(o).attr('name')
-    name.match(documentsRegex) != null
-  documentInputs[0].remove()
-
+#  this fuction removes unnecessary inputs type hidden placed on the dom by "=fff.cl_image_tag" and "=fff.cl_image_tag" on edit mode
+removeFileHiddenInput = ->
+  $(".file-upload-input-button").each (i, e) ->
+    name = $(e).attr('name')
+    if $(e).find("input[type='hidden']:first").length > 0
+      console.log $(e).find("input[type='hidden']:first")
+      $(e).find("input[type='hidden']:first").remove()
 
 $ ->
   $('.delete-saved-file').on 'click', ->
@@ -187,13 +178,11 @@ $ ->
 
 
   if $('.edit-mode-file').length > 0
-    removePhotoHiddenInput()
-    removeVideoHiddenInput()
-    removeDocumentHiddenInput()
+    removeFileHiddenInput()
     $('input[type=submit]').on 'click',(e) ->
       # e.preventDefault()
       $('.document-upload').each (i, obj) ->
-        # this loop checks for documents that are flaged for delete. if it files all of them flag for delete then we validate input
+        # this loop checks for documents that are flagged for delete
 
         if $($('.video-upload')[i]).closest('.video-column').find('.upload-view-mode').length == 0
           emptyDocumentContainer = true

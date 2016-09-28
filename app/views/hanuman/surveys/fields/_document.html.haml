@@ -1,6 +1,6 @@
 .form-group.file-upload
   = render "hanuman/surveys/fields/shared/label", ff: ff
-  .col-sm-7.document-column
+  .col-sm-7.document-column.file-upload-input-button
     - if !@survey.id.nil?
       .edit-mode-file
       = ff.fields_for :observation_documents,o do |fff|
@@ -10,14 +10,23 @@
         .progress-bar.progress-bar-success.document-progress-bar
       .document-preview-container
       - o.observation_documents.each do |d|
-        = ff.fields_for :observation_documents,d do |fff|
+        = ff.fields_for :observation_documents, d do |fff|
           .upload-view-mode
             - if ['pdf','jpg','png','gif'].include? d.document.url.last(3)
               = link_to cl_image_tag(d.document.my_public_id, size: '350x350', crop: :thumb, class: 'img-responsive thumbnail', format: 'jpg'), cloudinary_url(d.document), html_options = {target: "_blank", id: "document_" + d.id.to_s}
             - else
               = image_tag("file-icon.png", class: 'img-responsive thumbnail')
+            %p
+              = fff.object.document.file.public_id + "." + fff.object.document.file.format
+            = fff.label :"Description:"
+            .form-group
+              .col-sm-7
+                = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add document description here..."
+            = fff.label :"Sort Order:"
+            .form-group
+              .col-sm-7
+                = fff.text_field :sort_order, type: :number
             %br
-            = fff.text_area :description, rows: 2, cols: 55, style: "margin:20px 0 20px 0;"
             %br
             %p.delete-box
               = fff.check_box :_destroy, class:"hidden delete-checkbox"

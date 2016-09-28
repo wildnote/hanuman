@@ -42,37 +42,22 @@
 
 - steps = @survey_template.survey_steps
 
-- steps.each do |step|
-  -# surpress all but step 1 for now to clean up page a little until steps fully go away
-  - if step.step == 1
-    .panel.panel-info
-      .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step.step}"}
-        .panel-title
-          .pull-left
-            %span.glyphicons.glyphicons-chevron-right
-            %span.glyphicons.glyphicons-chevron-down
-            -# hiding step specific stuff until steps fully go away
-            -# %strong
-            -#   Step
-            -#   = step.step
-            -# - if step.duplicator?
-            -#   %em= "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
-            Survey Template Form
+  .panel.panel-info
+    .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_1"}
+      .panel-title
+        .pull-left
+          %span.glyphicons.glyphicons-chevron-right
+          %span.glyphicons.glyphicons-chevron-down
+          Survey Template Form
+        .clearfix
+    .panel-collapse.collapse.in{:id => "collapse_1"}
+      .panel-body
+        %form.form-horizontal
+          .pull-right.edit-delete
+            = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-success" do
+              %span.glyphicons.glyphicons-pencil
+              Edit Survey Template Form
           .clearfix
-      .panel-collapse.collapse.in{:id => "collapse_#{step.step}"}
-        .panel-body
-          %form.form-horizontal
-            -# hiding step specific stuff until steps fully go away
-            -# .pull-right.edit-delete
-            -#   = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-success" do
-            -#     %span.glyphicons.glyphicons-pencil
-            -#     Edit Step
-            .pull-right.edit-delete
-              = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-success" do
-                %span.glyphicons.glyphicons-pencil
-                Edit Survey Template Form
-            .clearfix
-            - if step.step == 1
-              = render ("hanuman/survey_templates/formextensionreadonly")
-            - step.questions.each do |q|
-              = render ("hanuman/survey_templates/dynamicfield"), q: q
+          = render ("hanuman/survey_templates/formextensionreadonly")
+          - @survey_template.questions.each do |q|
+            = render ("hanuman/survey_templates/dynamicfield"), q: q

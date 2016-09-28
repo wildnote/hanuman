@@ -4,6 +4,7 @@ const {
 } = Ember;
 
 export default Ember.Controller.extend({
+  isLoadingQuestions: true,
   surveyTemplate: alias('model')
 });
 

@@ -8,8 +8,6 @@ module.exports = {
   ],
   "launch_in_dev": [
     "PhantomJS",
-    "Chrome",
-    "Firefox",
-    "Safari"
+    "Chrome"
   ]
 };
