@@ -6,7 +6,7 @@ module Hanuman
     before_action :set_answer_type, only: [:show, :edit, :update, :destroy]
     # GET /answer_types
     def index
-      @answer_types = AnswerType.sort(sort_column, sort_direction)
+      @answer_types = AnswerType.sort(sort_column, sort_direction).page(params[:page])
     end
 
     # GET /answer_types/1

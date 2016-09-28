@@ -1,9 +1,9 @@
 - content_for :title do
-  Edit Setting
+  Edit System Setting
 - content_for :title_parent do
-  Settings
-- content_for :title_icon do
-  glyphicon-cog
+  System Settings
+- content_for :superuser_label do
+  SS
 - content_for :title_actions do
   = render "actions", locals: {}
 - content_for :navbar_hanuman do
@@ -13,6 +13,6 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Edit Setting
+    %h3.panel-title Edit System Setting
 
   = render "form"

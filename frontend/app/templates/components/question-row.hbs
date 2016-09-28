@@ -9,11 +9,11 @@
   <div class="col-sm-3" data-test="question.answerType.name">{{question.answerType.name}}</div>
   <div class="col-sm-3">
     {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-success"}}
-      <span class="glyphicon glyphicon-pencil"></span>
+      <span class="glyphicons glyphicons-pencil"></span>
         Edit
     {{/link-to}}
     <a class="btn btn-delete" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
-      <span class="glyphicon glyphicon-trash"></span>
+      <span class="glyphicons glyphicons-trash"></span>
     </a>
     <div class="delete-confirm">
       <small>Performing this delete will also destroy associated historical data.</small><br />
@@ -23,7 +23,7 @@
     </div>
   </div>
   <div class="col-sm-3 dev-only">
-    <a class="btn"><span class="glyphicon glyphicon-sort"></span></a>
+    <a class="btn"><span class="glyphicons glyphicons-sort"></span></a>
     {{question.sortOrder}} [{{question.railsId}}]
     {{#if question.ancestry}}
       [A={{question.ancestry}}]

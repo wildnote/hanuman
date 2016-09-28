@@ -2,8 +2,8 @@
   Answer Types
 - content_for :title_parent do
   Answer Types
-- content_for :title_icon do
-  glyphicon-exclamation-sign
+- content_for :superuser_label do
+  AT
 - content_for :title_actions do
   = render "actions", locals: {}
 - content_for :navbar_hanuman do
@@ -15,6 +15,8 @@
   .panel-heading
     %h3.panel-title Answer Types
   .panel-body
+    .pull-right= paginate(@answer_types)
+    .clearfix
     .table-responsive
       %table.table.table-hover
         %thead
@@ -43,7 +45,9 @@
               %td= link_to answer_type.status, answer_type unless answer_type.status.blank?
               %td
                 = link_to edit_answer_type_path(answer_type) do
-                  %span.glyphicon.glyphicon-pencil
+                  %span.glyphicons.glyphicons-pencil
               %td
                 = link_to answer_type, data: {confirm: "Are you sure you want to delete this Answer Type?"}, method: :delete do
-                  %span.glyphicon.glyphicon-trash
+                  %span.glyphicons.glyphicons-trash
+    .pull-right= paginate(@answer_types)
+    .clearfix

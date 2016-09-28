@@ -19,7 +19,7 @@
 
     {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange="reorderQuestions" as |group|}}
       {{#each sortedQuestions as |question|}}
-        {{#sortable-item tagName="li" class="row question-border item" model=question group=group handle=".glyphicon-sort"}}
+        {{#sortable-item tagName="li" class="row question-border item" model=question group=group handle=".glyphicons-sort"}}
           {{question-row question=question deleteQuestion='deleteQuestion'}}
         {{/sortable-item}}
       {{/each}}
@@ -29,7 +29,7 @@
     <div class="row ember-view">
       <div class="col-sm-2">
         {{#link-to "survey_templates.record.questions.new" class="btn btn-success"}}
-          <span class="glyphicon glyphicon-plus"></span>
+          <span class="glyphicons glyphicons-plus"></span>
             Add
         {{/link-to}}
       </div>

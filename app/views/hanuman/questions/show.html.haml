@@ -2,8 +2,8 @@
   Question Details
 - content_for :title_parent do
   Questions
-- content_for :title_icon do
-  glyphicon-question-sign
+- content_for :superuser_label do
+  QS
 - content_for :title_actions do
   = render "actions", locals: {}
 - content_for :navbar_hanuman do
@@ -18,8 +18,8 @@
   %form.form-horizontal
     .panel-body
       .pull-right
-        = link_to edit_question_path(@question), class: "btn btn-primary" do
-          %span.glyphicon.glyphicon-pencil
+        = link_to edit_question_path(@question), class: "btn btn-success" do
+          %span.glyphicons.glyphicons-pencil
           Edit Question
       .clearfix
       .form-group

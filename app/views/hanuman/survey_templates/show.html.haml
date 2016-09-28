@@ -1,9 +1,9 @@
 - content_for :title do
-  Survey Template Details
+  Survey Templates
 - content_for :title_parent do
   Design a Survey
 - content_for :title_icon do
-  glyphicon-edit
+  glyphicons-edit
 - content_for :title_actions do
   = render "actions", locals: {}
 - content_for :navbar_hanuman do
@@ -13,58 +13,66 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Survey Template Details
-    = link_to edit_survey_template_path(@survey_template), class: "btn btn-success panel-title-button-right" do
-      %span.glyphicon.glyphicon-pencil
-      Edit Survey Template
-    = link_to duplicate_survey_template_path(@survey_template), data: {confirm: "Are you sure you want to duplicate this Survey Template?"}, method: :patch, class: "btn btn-success panel-title-button-right-2" do
-      %span.glyphicon.glyphicon-repeat
-      Duplicate Survey Template
-    = link_to duplicate_survey_template_path(@survey_template), data: {confirm: "Are you sure you want to duplicate this Survey Template?"}, method: :patch, class: "btn btn-success panel-title-button-right-2" do
-      %span.glyphicon.glyphicon-repeat
-      Duplicate Survey Template
+    %h3.panel-title Survey Template Attributes
+  .panel-body
+    .pull-right
+      -# duplication makes more sense on the index page, once you are drilling in you are more focused on editing
+      -# = link_to duplicate_survey_template_path(@survey_template), data: {confirm: "Are you sure you want to duplicate this Survey Template?"}, method: :patch, class: "btn btn-success" do
+      -#   %span.glyphicons.glyphicons-repeat
+      -#   Duplicate Survey Template
+      = link_to edit_survey_template_path(@survey_template), class: "btn btn-success" do
+        %span.glyphicons.glyphicons-pencil
+        Edit Survey Template Attributes
+    .clearfix
+    %form.form-horizontal
+      .form-group
+        = label_tag nil, "Name", class: "col-sm-1 control-label"
+        .col-sm-11
+          %p.form-control-static= @survey_template.name
+      .form-group
+        = label_tag nil, "Type", class: "col-sm-1 control-label"
+        .col-sm-3
+          %p.form-control-static= @survey_template.survey_type
+        = label_tag nil, "Status", class: "col-sm-1 control-label"
+        .col-sm-3
+          %p.form-control-static= @survey_template.status
+        = label_tag nil, "Created", class: "col-sm-1 control-label"
+        .col-sm-3
+          %p.form-control-static= @survey_template.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%m/%d/%Y")
 
-.form-horizontal
+- steps = @survey_template.survey_steps
 
-  .well
-    .form-group
-      = label_tag nil, "Name", class: "col-sm-1 control-label"
-      .col-sm-11
-        %p.form-control-static= @survey_template.name
-    .form-group
-      = label_tag nil, "Type", class: "col-sm-1 control-label"
-      .col-sm-3
-        %p.form-control-static= @survey_template.survey_type
-      = label_tag nil, "Status", class: "col-sm-1 control-label"
-      .col-sm-3
-        %p.form-control-static= @survey_template.status
-      = label_tag nil, "Created", class: "col-sm-1 control-label"
-      .col-sm-3
-        %p.form-control-static= @survey_template.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%m/%d/%Y")
-
-  - steps = @survey_template.survey_steps
-
-  - steps.each do |step|
+- steps.each do |step|
+  -# surpress all but step 1 for now to clean up page a little until steps fully go away
+  - if step.step == 1
     .panel.panel-info
       .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step.step}"}
         .panel-title
           .pull-left
-            %span.glyphicon.glyphicon-chevron-right
-            %span.glyphicon.glyphicon-chevron-down
-            %strong
-              Step
-              = step.step
-            - if step.duplicator?
-              %em= "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
+            %span.glyphicons.glyphicons-chevron-right
+            %span.glyphicons.glyphicons-chevron-down
+            -# hiding step specific stuff until steps fully go away
+            -# %strong
+            -#   Step
+            -#   = step.step
+            -# - if step.duplicator?
+            -#   %em= "(" + Hanuman::Setting.value("duplicator_step_label") + ")"
+            Survey Template Form
           .clearfix
       .panel-collapse.collapse.in{:id => "collapse_#{step.step}"}
         .panel-body
-          .pull-right.edit-delete
-            = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-xs btn-success" do
-              %span.glyphicon.glyphicon-pencil
-              Edit Step
-          .clearfix
-          - if step.step == 1
-            = render ("hanuman/survey_templates/formextensionreadonly")
-          - step.questions.each do |q|
-            = render ("hanuman/survey_templates/dynamicfield"), q: q
+          %form.form-horizontal
+            -# hiding step specific stuff until steps fully go away
+            -# .pull-right.edit-delete
+            -#   = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-success" do
+            -#     %span.glyphicons.glyphicons-pencil
+            -#     Edit Step
+            .pull-right.edit-delete
+              = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-success" do
+                %span.glyphicons.glyphicons-pencil
+                Edit Survey Template Form
+            .clearfix
+            - if step.step == 1
+              = render ("hanuman/survey_templates/formextensionreadonly")
+            - step.questions.each do |q|
+              = render ("hanuman/survey_templates/dynamicfield"), q: q
