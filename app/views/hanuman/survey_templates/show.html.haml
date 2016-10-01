@@ -40,8 +40,6 @@
         .col-sm-3
           %p.form-control-static= @survey_template.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%m/%d/%Y")
 
-- steps = @survey_template.survey_steps
-
   .panel.panel-info
     .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_1"}
       .panel-title
@@ -60,4 +58,4 @@
           .clearfix
           = render ("hanuman/survey_templates/formextensionreadonly")
           - @survey_template.questions.each do |q|
-            = render ("hanuman/survey_templates/dynamicfield"), q: q
+            = render(partial: "hanuman/survey_templates/dynamicfield", locals: {q: q})
