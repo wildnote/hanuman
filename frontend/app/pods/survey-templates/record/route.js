@@ -8,11 +8,12 @@ export default Ember.Route.extend({
     // Progress bar indicators
     let i = 0,
         p = 0,
-        total = model.get('questions.length');
+        surveyTemplate = model,
+        total = surveyTemplate.get('questions.length');
     if(total === 0){
       controller.set('isLoadingQuestions', false);
     }else{
-      model.hasMany('questions').ids().forEach((questionId) => {
+      surveyTemplate.hasMany('questions').ids().forEach((questionId) => {
         this.store.findRecord('question', questionId).then(function() {
           let pp = p;
           i += 1;

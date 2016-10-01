@@ -41,6 +41,23 @@
           {{/form-field}}
         </div>
       </div>
+      {{#if isSuperUser}}
+        <div class="form-group">
+          <label class="col-sm-2 control-label" for="survey_template_status">Owner</label>
+          <div class="col-sm-4">
+            {{#form-field for='organizationId'}}
+              {{#power-select
+                  selected=(find-by 'id' surveyTemplate.organizationId organizations)
+                  options=organizations
+                  onchange=(action (mut surveyTemplate.organizationId) value="id")
+                  as |organization|
+                }}
+                  {{organization.name}}
+              {{/power-select}}
+            {{/form-field}}
+          </div>
+        </div>
+      {{/if}}
       <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
           <a class="btn btn-primary" data-test="save-survey-template-link" onclick={{route-action "save"}}>

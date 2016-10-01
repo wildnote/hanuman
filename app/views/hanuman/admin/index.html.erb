@@ -2,8 +2,12 @@
   Edit Survey Template
 <% end %>
 
+<script>
+  window.superUser = <%= current_user.superuser? %>;
+</script>
+
 <div id="ember-container">
-	<base href="/hanuman/admin/">
-	<%= include_ember_script_tags :frontend %>
-	<%= include_ember_stylesheet_tags :frontend %>
+  <base href="/hanuman/admin/">
+  <%= include_ember_script_tags :frontend %>
+  <%= include_ember_stylesheet_tags :frontend %>
 </div>

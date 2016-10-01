@@ -17,6 +17,8 @@ const SurveyTemplate = Model.extend(Validator, {
   surveyType: attr('string'),
   fullyEditable: attr('boolean'),
   duplicatorLabel: attr('string'),
+  // Custom hack for Wildnote
+  organizationId: attr('number'),
 
   // Relations
   questions: hasMany('question'),

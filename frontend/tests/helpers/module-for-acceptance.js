@@ -8,6 +8,7 @@ const { RSVP: { Promise } } = Ember;
 export default function(name, options = {}) {
   module(name, {
     beforeEach() {
+      window.superUser = true;
       this.application = startApp();
 
       if (options.beforeEach) {
@@ -16,6 +17,7 @@ export default function(name, options = {}) {
     },
 
     afterEach() {
+      window.superUser = undefined;
       let afterEach = options.afterEach && options.afterEach.apply(this, arguments);
       return Promise.resolve(afterEach).then(() => destroyApp(this.application));
     }

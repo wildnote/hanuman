@@ -1,3 +1,5 @@
+import Mirage from 'ember-cli-mirage';
+
 export default function() {
   this.namespace = '/hanuman/api/v1';
 
@@ -45,6 +47,11 @@ export default function() {
     let attrs = JSON.parse(request.requestBody)['answer_choice'],
         id = request.params.id;
     return answerChoices.find(id).update(attrs);
+  });
+
+  // Custom Organizations
+  this.get('/organizations', () => {
+    return new Mirage.Response(200, {}, { organizations: []});
   });
 
 }
