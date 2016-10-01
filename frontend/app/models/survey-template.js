@@ -29,9 +29,6 @@ const SurveyTemplate = Model.extend(Validator, {
     name:{
       presence: true
     },
-    surveyType:{
-      presence: true
-    },
     status:{
       inclusion: {
         in: STATUSES
