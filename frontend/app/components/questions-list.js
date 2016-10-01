@@ -1,11 +1,12 @@
 import Ember from 'ember';
 const {
-  computed: { sort }
+  computed: { sort, alias }
 } = Ember;
 
 export default Ember.Component.extend({
   questionsSorting: ['sortOrder'],
   sortedQuestions: sort('surveyTemplate.filteredquestions', 'questionsSorting'),
+  isFullyEditable: alias('surveyTemplate.fullyEditable'),
   actions:{
     deleteQuestion(question, elRow){
       let $confirm = Ember.$('.delete-confirm', elRow),
