@@ -36,8 +36,12 @@ export default Ember.Route.extend({
     },
     updateSortOrder(questions){
       questions.forEach(function(question, index) {
-        question.set('sortOrder', index + 1);
-        question.save();
+        let oldSortOrder = question.get('sortOrder'),
+            newSortOrder = index + 1;
+        if(oldSortOrder !== newSortOrder){
+          question.set('sortOrder', newSortOrder);
+          question.save();
+        }
       });
     }
   }
