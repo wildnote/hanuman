@@ -15,13 +15,13 @@ export default Ember.Component.extend({
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   sortedAnswerChoices: sort('question.answerChoices', 'sortChoicesBy'),
   ancestryQuestions: computed('questions', function() {
-    return this.get('questions').filter(function(question) {
+    return this.get('questions').filter((question) => {
       let allowedTypes = ['section','repeater'];
       return allowedTypes.includes(question.get('answerType.name'));
     });
   }),
-  ancestryQuestion: computed('question.ancestry', function() {
-    return this.get('questions').findBy('id',this.get('question.ancestry'));
+  ancestryQuestion: computed('question.parentId', function() {
+    return this.get('questions').findBy('id',this.get('question.parentId'));
   }),
 
   didInsertElement() {
@@ -83,7 +83,7 @@ export default Ember.Component.extend({
       if(Ember.isBlank(newAncestryId)){
         newAncestryId = null;
       }
-      question.set('ancestry',newAncestryId);
+      question.set('parentId',newAncestryId);
     },
 
     setAnswerType(answerTypeId) {

@@ -6,7 +6,7 @@ import Validator from './../mixins/model-validator';
 
 const {
   computed,
-  computed: { bool, equal }
+  computed: { bool, equal, match }
 } = Ember;
 
 export default Model.extend(Validator, {
@@ -17,6 +17,7 @@ export default Model.extend(Validator, {
   externalDataSource: attr('string'),
   hidden: attr('boolean'),
   ancestry: attr('string'),
+  parentId: attr('string'),
   railsId: attr('number'),
 
   // Associations
@@ -39,6 +40,7 @@ export default Model.extend(Validator, {
     let rule = this.get('rule');
     return (rule.get('matchType') === 'all') ? 'AND' : 'OR';
   }),
+  supportAncestry: match('answerType.name', /section|repeater/),
 
   // Validations
   validations: {
