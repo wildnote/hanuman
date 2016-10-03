@@ -28,7 +28,15 @@
       {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange=(route-action "reorderQuestions") as |group|}}
         {{#each sortedQuestions as |question|}}
           {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicon-sort"}}
-            {{question-row question=question deleteQuestion='deleteQuestion' isFullyEditable=isFullyEditable}}
+            {{#if question.supportAncestry}}
+              {{#draggable-object-target action="setAncestry" acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
+                {{question-row question=question deleteQuestion='deleteQuestion' isFullyEditable=isFullyEditable}}
+              {{/draggable-object-target}}
+            {{else}}
+              {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded'}}
+                {{question-row question=question deleteQuestion='deleteQuestion' isFullyEditable=isFullyEditable}}
+              {{/draggable-object}}
+            {{/if}}
           {{/sortable-item}}
         {{/each}}
       {{/sortable-group}}

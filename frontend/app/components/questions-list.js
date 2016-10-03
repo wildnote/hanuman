@@ -1,6 +1,8 @@
 import Ember from 'ember';
 const {
-  computed: { sort, alias }
+  run,
+  computed: { sort, alias },
+  $
 } = Ember;
 
 export default Ember.Component.extend({
@@ -19,6 +21,29 @@ export default Ember.Component.extend({
         }
         $confirm.fadeOut();
       });
+    },
+    setAncestry(question, opts){
+      let ancestryQuestion = opts.target.acenstry;
+      question.set('parentId',ancestryQuestion.get('id'));
+      question.set('sortOrder',ancestryQuestion.get('sortOrder'));
+      question.save().then(()=>{
+        question.reload();
+      });
+      this.sendAction('updateSortOrder',this.get('sortedQuestions'));
+    },
+    dragStarted(question){
+      $('.draggable-object-target').parent(`:not(.model-id-${question.get('parentId')})`).addClass('dragging-coming-active');
+    },
+    dragEnded(){
+      $('.draggable-object-target').parent().removeClass('dragging-coming-active');
+    },
+    dragOver(){
+      run.next(this, function() {
+        $('.accepts-drag').parent().addClass('dragging-over');
+      });
+    },
+    dragOut(){
+      $('.draggable-object-target').parent().removeClass('dragging-over');
     }
   }
 });

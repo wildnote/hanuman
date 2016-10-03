@@ -1,7 +1,7 @@
 {
   "name": "frontend",
   "dependencies": {
-    "ember": "~2.9.0-beta.3",
+    "ember": "~2.9.0-beta.4",
     "ember-cli-shims": "~0.1.1",
     "pretender": "1.2.0",
     "Faker": "~3.1.0",

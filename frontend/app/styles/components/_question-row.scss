@@ -6,6 +6,32 @@
     background-color: white;
     z-index: 9999999999;
   }
+
+  &.dragging-coming-active{
+    background-color: #466873;
+    color: white;
+    .draggable-target-message{
+      display: inline;
+    }
+  }
+  &.dragging-coming-active.dragging-over{
+    background-color: #b9b508 !important;
+    .draggable-target-message{
+      background-color: #b15959 !important;
+    }
+  }
+  .draggable-target-message{
+    display: none;
+    left: 50%;
+    margin-top: -11px;
+    background-color: #a53a3a;
+    padding: 5px;
+    border-radius: 0px 0px 3px 3px;
+    position: absolute;
+    z-index: 2;
+    opacity: 0.9;
+  }
+
   &.has-ancestry-1{
     margin-left: 10px;
   }
