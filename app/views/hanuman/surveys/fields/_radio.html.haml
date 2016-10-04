@@ -9,7 +9,7 @@
       %p
         - ff.object.question.answer_choices.sorted.each do |a|
           = radio_button_tag "survey[observations_attributes][#{index}][answer_choice_id]",
-                             a.id, ff.object.answer.eql?(a.id), class: 'form-control', data: { "label-value" => a.id }
+                             a.id, ff.object.answer.eql?(a.id), class: 'form-control', data: { "label-value" => a.formatted_answer_choice }
           = label_tag nil, a.formatted_answer_choice
           %br/
     = ff.hidden_field :entry
