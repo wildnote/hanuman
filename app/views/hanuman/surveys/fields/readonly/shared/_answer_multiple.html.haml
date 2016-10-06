@@ -1,4 +1,6 @@
 %p.form-control-static
   - o.observation_answers.each do |oa|
-    = oa.answer_choice.formatted_answer_choice
+    - unless oa.answer_choice.blank?
+      = oa.answer_choice.formatted_answer_choice
+
     %br/
