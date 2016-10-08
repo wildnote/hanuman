@@ -27,7 +27,7 @@
 
       {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange=(route-action "reorderQuestions") as |group|}}
         {{#each sortedQuestions as |question|}}
-          {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicon-sort"}}
+          {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
             {{#if question.supportAncestry}}
               {{#draggable-object-target action="setAncestry" acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
                 {{question-row question=question deleteQuestion='deleteQuestion' isFullyEditable=isFullyEditable}}
@@ -45,7 +45,7 @@
       <div class="row ember-view">
         <div class="col-sm-2">
           {{#link-to "survey_templates.record.questions.new" class="btn btn-success"}}
-            <span class="glyphicon glyphicon-plus"></span>
+            <span class="glyphicons glyphicons-plus"></span>
               Add
           {{/link-to}}
         </div>
