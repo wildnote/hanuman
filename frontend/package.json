@@ -51,6 +51,8 @@
     "ember-route-action-helper": "2.0.0",
     "ember-sortable": "1.8.2",
     "ember-spin-spinner": "0.3.1",
+    "ember-tether": "0.3.1",
+    "ember-tooltips": "2.0.1",
     "ember-truth-helpers": "1.2.0",
     "liquid-fire": "0.26.1",
     "loader.js": "^4.0.10"

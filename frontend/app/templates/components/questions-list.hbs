@@ -13,10 +13,10 @@
       </div>
     {{else}}
       <div class="row">
-        <div class="col-sm-3"><strong>Label</strong></div>
-        <div class="col-sm-3"><strong>Question Type</strong></div>
-        <div class="col-sm-3"><strong>Actions</strong></div>
-        <div class="col-sm-3"><strong>Info</strong></div>
+        <div class="col-sm-4"><strong>Label</strong></div>
+        <div class="col-sm-2"><strong>Question Type</strong></div>
+        <div class="col-sm-4"><strong>Info</strong></div>
+        <div class="col-sm-2"><strong>Actions</strong></div>
       </div>
 
       <div class="row">
@@ -30,10 +30,10 @@
           {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
             {{#if question.supportAncestry}}
               {{#draggable-object-target action="setAncestry" acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
-                {{question-row question=question deleteQuestion='deleteQuestion' isFullyEditable=isFullyEditable}}
+                {{question-row question=question deleteQuestion='deleteQuestion' isFullyEditable=isFullyEditable ancestrable=true}}
               {{/draggable-object-target}}
             {{else}}
-              {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded'}}
+              {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded' dragHandle='.glyphicons-move-square'}}
                 {{question-row question=question deleteQuestion='deleteQuestion' isFullyEditable=isFullyEditable}}
               {{/draggable-object}}
             {{/if}}

@@ -41,10 +41,13 @@
   &.has-ancestry-3{
     margin-left: 35px;
   }
-  .glyphicons-sorting{
-    font-size: 15px;
+  .glyphicons-sorting, .glyphicons-move-square{
+    font-size: 14px;
     margin-right: 15px;
     padding-top: 5px;
     cursor: move;
+    &:hover{
+      color: #afa9aa;
+    }
   }
 }

@@ -1,13 +1,32 @@
 {{!-- called from surveyTemplate and dislpays each answer type as readonly --}}
 <div class="row">
   <div class="draggable-target-message"> Position under this question </div>
-  <div class="col-sm-3">
-    <span class="glyphicons glyphicons-sorting"></span>
+  <div class="col-sm-4">
+    <span class="glyphicons glyphicons-sorting">
+      {{#tooltip-on-element duration=700}}Sort question{{/tooltip-on-element}}
+    </span>
+    {{#unless ancestrable}}
+      <span class="glyphicons glyphicons-move-square">
+        {{#tooltip-on-element duration=700}}Add to another question{{/tooltip-on-element}}
+      </span>
+    {{/unless}}
     <span data-test="question.questionText">{{question.questionText}}</span>
   </div>
-  <div class="col-sm-3" data-test="question.answerType.name">{{question.answerType.name}}</div>
-  <div class="col-sm-3">
-    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-success"}}
+  <div class="col-sm-2" data-test="question.answerType.name">{{question.answerType.name}}</div>
+  <div class="col-sm-4">
+    {{question.sortOrder}} [{{question.railsId}}]
+    {{typeInitial}}
+    {{#if question.rule}}
+      [CL show
+      {{#each question.rule.conditions as |condition|}}
+        if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
+        {{question.ruleMatchType}}
+      {{/each}}
+      ]
+    {{/if}}
+  </div>
+  <div class="col-sm-2">
+    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
       <span class="glyphicons glyphicons-pencil"></span>
         Edit
     {{/link-to}}
@@ -20,18 +39,6 @@
       <button class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
       <button class="btn" onclick={{action 'cancel'}}>No</button>
     </div>
-  </div>
-  <div class="col-sm-3">
-    {{question.sortOrder}} [{{question.railsId}}]
-    {{typeInitial}}
-    {{#if question.rule}}
-      [CL show
-      {{#each question.rule.conditions as |condition|}}
-        if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
-        {{question.ruleMatchType}}
-      {{/each}}
-      ]
-    {{/if}}
   </div>
 </div>
 
