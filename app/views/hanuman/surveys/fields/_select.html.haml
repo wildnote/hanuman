@@ -7,6 +7,6 @@
         = ff.hidden_field :answer
 
     - else
-      = ff.collection_select :answer_choice_id, ff.object.question.answer_choices.sorted, :id, :formatted_answer_choice,
+      = ff.collection_select :answer, ff.object.question.answer_choices.sorted, :formatted_answer_choice, :formatted_answer_choice,
                              {prompt: true}, {class: 'form-control'}
     = ff.hidden_field :entry
