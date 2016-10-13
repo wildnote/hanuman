@@ -24,6 +24,12 @@ module Hanuman
     # will manually call this at the survey template level after all changes are made
     #after_update :resort_submitted_observations, if: :sort_order_changed?
 
+    # need to save array of child_ids to pass to native API it's too slow to generate on the fly
+    # if question has ancestors, loop through those ancestors and update the ancestry_children field
+    after_create :set_ancestry_children
+    after_update :set_ancestry_children
+    after_destroy :set_ancestry_children
+
     amoeba do
       include_association [:rule, :conditions, :answer_choices]
       # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
@@ -34,6 +40,13 @@ module Hanuman
 
     def self.sort(sort_column, sort_direction)
       joins(:answer_type).order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc").gsub("desc desc", "desc").gsub("desc asc", "desc"))
+    end
+
+    def set_ancestry_children
+      self.ancestors.each do |a|
+        a.ancestry_children = a.child_ids
+        a.save
+      end
     end
 
     def question_text_not_required
