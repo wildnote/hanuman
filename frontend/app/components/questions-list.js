@@ -24,9 +24,9 @@ export default Ember.Component.extend({
     },
     setAncestry(question, opts){
       let ancestryQuestion = opts.target.acenstry;
-      question.set('parentId',ancestryQuestion.get('id'));
-      question.set('sortOrder',ancestryQuestion.get('sortOrder'));
-      question.save().then(()=>{
+      question.set('parentId', ancestryQuestion.get('id'));
+      question.set('sortOrder', ancestryQuestion.get('sortOrder') + 1);
+      question.save().then(() => {
         question.reload();
       });
       this.sendAction('updateSortOrder',this.get('sortedQuestions'));

@@ -30,6 +30,7 @@ export default function() {
     return rules.find(id).update(attrs);
   });
   // Questions
+  this.get('/questions');
   this.get('/questions/:id');
   this.post('/questions');
   this.del('/questions/:id');
