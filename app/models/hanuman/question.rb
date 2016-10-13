@@ -26,8 +26,7 @@ module Hanuman
 
     # need to save array of child_ids to pass to native API it's too slow to generate on the fly
     # if question has ancestors, loop through those ancestors and update the ancestry_children field
-    after_create :set_ancestry_children
-    after_update :set_ancestry_children
+    after_save :set_ancestry_children
     after_destroy :set_ancestry_children
 
     amoeba do
