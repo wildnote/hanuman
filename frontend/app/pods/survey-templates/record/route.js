@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-const { run } = Ember;
+const { run, isPresent, isBlank } = Ember;
 
 export default Ember.Route.extend({
   setupController(controller, model) {
@@ -30,6 +30,27 @@ export default Ember.Route.extend({
       });
     }
   },
+
+  _checkAncestryConsistency(questions){
+    questions.forEach(function(question) {
+      if(isPresent(question.get('parentId'))) {
+        let parent = questions.findBy('id', question.get('parentId')),
+            sortOrder = question.get('sortOrder');
+        if(isBlank(parent)) { return; }
+        if(parent.get('sortOrder') > sortOrder){
+          question.set('parentId', null);
+          let questionToAsk = questions.findBy('sortOrder', question.get('sortOrder') + 1);
+          if(isPresent(questionToAsk)){
+            question.set('parentId', questionToAsk.get('parentId'));
+          }
+          question.save().then(()=>{
+            question.reload();
+          });
+        }
+      }
+    });
+  },
+
   actions:{
     reorderQuestions(questions){
       this.send('updateSortOrder',questions);
