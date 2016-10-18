@@ -15,11 +15,11 @@
             = link_to cl_image_tag(p.photo, :crop => :fill, :width => 350), cloudinary_url(p.photo), html_options = {class: "gallery-item gallery-photo", id: "photo_" + p.id.to_s, :"data-content-type" => p.photo.resource_type, :"data-download-url" => cloudinary_url(p.photo), :"data-file-name" => p.photo.public_id}
             %p
               = link_to p.photo.my_public_id + "." + p.photo.format + " | download file", cloudinary_url(p.photo, attachment: true), html_options = { download: true }
-            = fff.label :"Description:"
+            = fff.label :"Description"
             .form-group
               .col-sm-7
                 = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add photo description here..."
-            = fff.label :"Sort Order:"
+            = fff.label :"Sort Order"
             .form-group
               .col-sm-7
                 = fff.text_field :sort_order, type: :number
