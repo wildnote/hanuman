@@ -17,7 +17,7 @@
             - else
               = image_tag("file-icon.png", class: 'img-responsive thumbnail')
             %p
-              = fff.object.document.file.public_id + "." + fff.object.document.file.format
+              = fff.object.document.file.public_id #+ "." + fff.object.document.file.format
             = fff.label :"Description:"
             .form-group
               .col-sm-7

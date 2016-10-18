@@ -1,5 +1,5 @@
 
-addTexareaForUpload = (file, data, idx) ->
+addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
   # this code is seting the attr values for the hidden fields for the uploaded images.
   dataObj = JSON.parse(data._response.jqXHR.responseText);
@@ -24,13 +24,13 @@ addTexareaForUpload = (file, data, idx) ->
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][video]")
 
   # this is simply appending the textarea and the hidden input. I am adding the hidden input right next to the img video-preview
-  $("."+file+"-preview").last().append "<p>"+data.result.public_id+"</p>"
-  $("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:20px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea>"
-  $("."+file+"-preview").last().append "<p><input type='number' value='"+sortOrder+"' name="+orderNameAttr+"></input></p>"
-  $("."+file+"-preview").last().append "<p><a id="+file+" class='remove-upload' href='#'>Remove "+file+"</a></p>"
-  $("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
-  $("."+file+"-preview").last().append "<br>"
-  $("."+file+"-preview").last().append "<hr>"
+  $previewContainer.find("."+file+"-preview").last().append "<p>"+data.result.public_id+"</p>"
+  $previewContainer.find("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:20px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea>"
+  $previewContainer.find("."+file+"-preview").last().append "<p><input type='number' value='"+sortOrder+"' name="+orderNameAttr+"></input></p>"
+  $previewContainer.find("."+file+"-preview").last().append "<p><a id="+file+" class='remove-upload' href='#'>Remove "+file+"</a></p>"
+  $previewContainer.find("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
+  $previewContainer.find("."+file+"-preview").last().append "<br>"
+  $previewContainer.find("."+file+"-preview").last().append "<hr>"
 
 
 
@@ -44,97 +44,93 @@ addTexareaForUpload = (file, data, idx) ->
 
 
 
-
+# ***** PHOTOS *****
 @bindPhotoUploads = ->
-  # ***** PHOTOS *****
-  $('.survey-photo-upload').on 'click', ->
-    $('.photo-column .progress').removeClass('hidden')
+  $('.survey-photo-upload').on 'click', (e, data) ->
+    $(e.target).siblings('.progress').removeClass('hidden')
     # progress bar
     $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadprogress', (e, data) ->
       # implement progress indicator
-      $(".photo-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
+      $(e.target).siblings('.progress').find(".photo-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
   photoIdx = 0
   $('.cloudinary-fileupload.survey-photo-upload').bind 'cloudinarydone', (e, data) ->
-    callback = ->
-      $('.photo-progress-bar').removeAttr("style")
-      $('.photo-column .progress').addClass('hidden')
+    #callback = ->
+    $(e.target).siblings('.progress').find('.photo-progress-bar').removeAttr("style")
+    $(e.target).siblings('.progress').addClass('hidden')
+    #setTimeout callback, 1000
 
-    setTimeout callback, 1000
-
-    # need to wrap this .append in a div class=photo-preview-container
-    $('.photo-preview-container').append "<div class='photo-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
-    addTexareaForUpload("photo", data, photoIdx)
+    $photoPreviewContainer = $(e.target).siblings('.photo-preview-container')
+    $photoPreviewContainer.append "<div class='photo-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
+    addTexareaForUpload("photo", data, photoIdx, $photoPreviewContainer)
 
     photoIdx += 1
 
   # handle errors
   $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadfail', (e, data) ->
     # append error message
-    $('.photo-upload-error').append "<p> Failed to upload photo, please try again</p>"
-    $(".survey-photo-upload").on 'click', ->
-      $('.photo-upload-error').find('p').remove()
+    $(e.target).siblings('.photo-upload-error').append "<p> Failed to upload photo, please try again</p>"
+    $(".survey-photo-upload").on 'click', (e, data) ->
+      $(e.target).siblings('.photo-upload-error').find('p').remove()
 
-
+# ***** VIDEOS *****
 @bindVideoUploads = ->
-  $('.survey-video-upload').on 'click', ->
-    $('.video-column .progress').removeClass('hidden')
+  $('.survey-video-upload').on 'click', (e, data) ->
+    $(e.target).siblings('.progress').removeClass('hidden')
     # progress bar
     $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadprogress', (e, data) ->
       # implement progress indicator
-      $(".video-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
+      $(e.target).siblings('.progress').find(".video-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
-
-  # ***** VIDEOS *****
   videoIdx = 0
   $('.cloudinary-fileupload.survey-video-upload').bind 'cloudinarydone', (e, data) ->
-    callback = ->
-      $('.video-progress-bar').removeAttr("style")
-      $('.video-column .progress').addClass('hidden')
-    setTimeout callback, 1000
+    #callback = ->
+    $(e.target).siblings('.progress').find('.video-progress-bar').removeAttr("style")
+    $(e.target).siblings('.progress').addClass('hidden')
+    #setTimeout callback, 1000
 
-    $('.video-preview-container').append "<div class='video-preview'>" + $.cloudinary.video(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350) + "</div>"
-    addTexareaForUpload("video", data, videoIdx)
+    $videoPreviewContainer = $(e.target).siblings('.video-preview-container')
+    $videoPreviewContainer.append "<div class='video-preview'>" + $.cloudinary.video(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350) + "</div>"
+    addTexareaForUpload("video", data, videoIdx, $videoPreviewContainer)
     poster = $(e.target).closest(".video-column").find('.video-preview:last').find("video").attr("poster")
     $(e.target).closest(".video-column").find('.video-preview:last').find("video").attr("poster", poster.replace(/$|.mp4|.mov/, ".jpg"))
     videoIdx += 1
 
     if data.result.format != "mov" && data.result.format != "mp4"
-      $('.video-upload-error').append "<p style='color:#d6193d;'> Only MP4 and MOV formats supported</p>"
+      $(e.target).siblings('.video-upload-error').append "<p style='color:#d6193d;'> Only MP4 and MOV formats supported</p>"
       $(e.target).closest(".video-column").find('.video-preview').last().find('a.remove-upload').click()
-      $(".survey-video-upload").on 'click', ->
-        $('.video-upload-error').find('p').remove()
+      $(".survey-video-upload").on 'click', (e, data) ->
+        $(e.target).siblings('.video-upload-error').find('p').remove()
 
 
   # handle errors
   $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadfail', (e, data) ->
-    $('.video-upload-error').append "<p> Failed to upload video, please try again</p>"
+    $(e.target).siblings('.video-upload-error').append "<p> Failed to upload video, please try again</p>"
     $(".survey-video-upload").on 'click', ->
-      $('.video-upload-error').find('p').remove()
+      $(e.target).siblings('.video-upload-error').find('p').remove()
 
 
+# ***** DOCUMENTS *****
 @bindDocumentUploads = ->
-
-  $('.survey-document-upload').on 'click', ->
-    $('.document-column .progress').removeClass('hidden')
+  $('.survey-document-upload').on 'click', (e, data) ->
+    $(e.target).siblings('.progress').removeClass('hidden')
      # progress bar
     $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadprogress', (e, data) ->
       # implement progress indicator
-      $('.document-progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
+      $(e.target).siblings('.progress').find('.document-progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
-
-  # ***** DOCUMENTS *****
   docIdx = 0
   $('.cloudinary-fileupload.survey-document-upload').bind 'cloudinarydone', (e, data) ->
-    callback = ->
-      $('.document-progress-bar').removeAttr("style")
-      $('.document-column .progress').addClass('hidden')
-    setTimeout callback, 1000
+    #callback = ->
+    $(e.target).siblings('.progress').find('.document-progress-bar').removeAttr("style")
+    $(e.target).siblings('.progress').addClass('hidden')
+    #setTimeout callback, 1000
 
     publicId = data.result.public_id
-    # need to wrap this .append in a div class=photo-preview-container
-    $('.document-preview-container').append "<div class='document-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
-    addTexareaForUpload("document", data, docIdx)
+
+    $documentPreviewContainer = $(e.target).siblings('.document-preview-container')
+    $documentPreviewContainer.append "<div class='document-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
+    addTexareaForUpload("document", data, docIdx, $documentPreviewContainer)
     if data.result.format != "jpg" && data.result.format != "png"
       $('.document-preview img:last').attr('src', '/images/file-icon.png')
     docIdx += 1
@@ -148,16 +144,16 @@ addTexareaForUpload = (file, data, idx) ->
     permited  = permittenFormats.find (f) ->
                  f == uploadFormat
     if permited == undefined
-      $('.document-upload-error').append "<p style='color:#d6193d;'> document format NOT supported</p>"
+      $(e.target).siblings('.document-upload-error').append "<p style='color:#d6193d;'> document format NOT supported</p>"
       $(e.target).closest(".document-column").find('.document-preview').last().find('a.remove-upload').click()
       $(".survey-document-upload").on 'click', ->
-        $('.document-upload-error').find('p').remove()
+        $(e.target).siblings('.document-upload-error').find('p').remove()
 
   # handles errors
   $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadfail', (e, data) ->
-    $('.document-upload-error').append "<p> Failed to upload document, please try again</p>"
+    $(e.target).siblings('.document-upload-error').append "<p> Failed to upload document, please try again</p>"
     $(".survey-document-upload").on 'click', ->
-      $('.document-upload-error').find('p').remove()
+      $(e.target).siblings('.document-upload-error').find('p').remove()
 
 
 
