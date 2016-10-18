@@ -21,6 +21,8 @@ $(document).ready(function(){
     // unbinding events on plugins
     unbindChosenTypes();
     $('.datepicker').datepicker('destroy');
+    // cloudinary events
+    $.cleanData( $('input.cloudinary-fileupload[type=file]') );
 
     // find and clone container
     var container = $(this).closest('.form-container-repeater');
@@ -98,6 +100,15 @@ $(document).ready(function(){
         return $(element).parsley().validate();
       }
     });
+
+    // rebind cloudinary
+    if ($.fn.cloudinary_fileupload != undefined) {
+      $('input.cloudinary-fileupload[type=file]').cloudinary_fileupload()
+    }
+
+    bindPhotoUploads()
+    bindVideoUploads()
+    bindDocumentUploads()
 
 
     // removed the pretty doc and video preview in cloudinary upload so commenting this out for now-kdh

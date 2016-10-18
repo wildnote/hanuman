@@ -45,7 +45,7 @@ addTexareaForUpload = (file, data, idx) ->
 
 
 
-bindPhotoUploads = ->
+@bindPhotoUploads = ->
   # ***** PHOTOS *****
   $('.survey-photo-upload').on 'click', ->
     $('.photo-column .progress').removeClass('hidden')
@@ -76,7 +76,7 @@ bindPhotoUploads = ->
       $('.photo-upload-error').find('p').remove()
 
 
-bindVideoUploads = ->
+@bindVideoUploads = ->
   $('.survey-video-upload').on 'click', ->
     $('.video-column .progress').removeClass('hidden')
     # progress bar
@@ -113,7 +113,7 @@ bindVideoUploads = ->
       $('.video-upload-error').find('p').remove()
 
 
-bindDocumentUploads = ->
+@bindDocumentUploads = ->
 
   $('.survey-document-upload').on 'click', ->
     $('.document-column .progress').removeClass('hidden')
