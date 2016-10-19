@@ -10,6 +10,9 @@ const {
 } = Ember;
 
 export default Model.extend(Validator, {
+  // Accessors
+  loading: attr('boolean', { defaultValue: false }),
+
   // Attributes
   questionText: attr('string'),
   sortOrder: attr('number'),

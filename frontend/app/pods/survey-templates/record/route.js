@@ -34,18 +34,19 @@ export default Ember.Route.extend({
   _checkAncestryConsistency(questions){
     questions.forEach(function(question) {
       if(isPresent(question.get('parentId'))) {
-        let parent = questions.findBy('id', question.get('parentId')),
+        let parentId = question.get('parentId'),
+            parent = questions.findBy('id', parentId),
             sortOrder = question.get('sortOrder');
         if(isBlank(parent)) { return; }
+        let questionToAskDown = questions.findBy('sortOrder', question.get('sortOrder') + 1);
         if(parent.get('sortOrder') > sortOrder){
           question.set('parentId', null);
-          let questionToAsk = questions.findBy('sortOrder', question.get('sortOrder') + 1);
-          if(isPresent(questionToAsk)){
-            question.set('parentId', questionToAsk.get('parentId'));
+          if(isPresent(questionToAskDown)){
+            question.set('parentId', questionToAskDown.get('parentId'));
+            question.save().then(()=>{
+              question.reload();
+            });
           }
-          question.save().then(()=>{
-            question.reload();
-          });
         }
       }
     });
@@ -56,7 +57,7 @@ export default Ember.Route.extend({
       this.send('updateSortOrder',questions);
     },
     updateSortOrder(questions){
-      questions.forEach(function(question, index) {
+      questions.forEach((question, index) => {
         let oldSortOrder = question.get('sortOrder'),
             newSortOrder = index + 1;
         if(oldSortOrder !== newSortOrder){
@@ -64,6 +65,7 @@ export default Ember.Route.extend({
           question.save();
         }
       });
+      this._checkAncestryConsistency(questions);
     }
   }
 });
