@@ -24,10 +24,12 @@ export default Ember.Component.extend({
     },
     setAncestry(question, opts){
       let ancestryQuestion = opts.target.acenstry;
+      question.set('loading', true);
       question.set('parentId', ancestryQuestion.get('id'));
       question.set('sortOrder', ancestryQuestion.get('sortOrder') + 1);
       question.save().then(() => {
         question.reload();
+        run.later(this ,()=> { question.set('loading', false); }, 1000);
       });
       this.sendAction('updateSortOrder',this.get('sortedQuestions'));
     },

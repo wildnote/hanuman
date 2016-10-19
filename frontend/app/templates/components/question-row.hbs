@@ -2,11 +2,14 @@
 <div class="row">
   <div class="draggable-target-message"> Position under this question </div>
   <div class="col-sm-4">
-    <span class="glyphicons glyphicons-sorting">
+    {{#if question.loading}}
+      <span class="glyphicons gly-spin glyphicons-refresh"></span>
+    {{/if}}
+    <span class="glyphicons glyphicons-sorting {{if question.loading 'hide'}}">
       {{#tooltip-on-element duration=700}}Sort question{{/tooltip-on-element}}
     </span>
     {{#unless ancestrable}}
-      <span class="glyphicons glyphicons-move-square">
+      <span class="glyphicons glyphicons-move-square {{if question.loading 'hide'}}">
         {{#tooltip-on-element duration=700}}Add to another question{{/tooltip-on-element}}
       </span>
     {{/unless}}
@@ -16,7 +19,7 @@
   <div class="col-sm-4">
     {{question.sortOrder}} [{{question.railsId}}]
     {{typeInitial}}
-    {{#if question.rule}}
+    {{#if (and question.rule question.rule.conditions)}}
       [CL show
       {{#each question.rule.conditions as |condition|}}
         if {{condition.questionId}} {{condition.operator}} {{condition.answer}}

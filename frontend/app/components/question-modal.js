@@ -8,8 +8,6 @@ export default Ember.Component.extend({
   remodal: Ember.inject.service(),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
-  answerChoicesPendingSave: [],
-  conditionsPendingSave: [],
   sortTypesBy: ['name'],
   sortChoicesBy: ['optionText'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
@@ -23,6 +21,14 @@ export default Ember.Component.extend({
   ancestryQuestion: computed('question.parentId', function() {
     return this.get('questions').findBy('id',this.get('question.parentId'));
   }),
+
+  init() {
+    this._super(...arguments);
+    this.setProperties({
+      answerChoicesPendingSave: [],
+      conditionsPendingSave: []
+    });
+  },
 
   didInsertElement() {
     this._super(...arguments);
@@ -62,10 +68,10 @@ export default Ember.Component.extend({
     promises = Ember.$.makeArray(promises);
     Ember.RSVP.all(promises).then(()=>{
       while (answerChoicesPendingSave.length > 0) {
-        answerChoicesPendingSave.pop();
+        answerChoicesPendingSave.popObject();
       }
       while (conditionsPendingSave.length > 0) {
-        conditionsPendingSave.pop();
+        conditionsPendingSave.popObject();
       }
       this.send('closeModal');
     });
@@ -116,11 +122,20 @@ export default Ember.Component.extend({
               let conditionsPendingSave = this.get('conditionsPendingSave'),
                   rule = question.get('rule');
               rule.set('question',question);
-              rule.save().then((rule) =>{
-                let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
-                promises = promises.concat(conditionsPromises);
-                this._saveSuccess(question, promises);
-              });
+              rule.save().then(
+                (rule) =>{
+                  let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
+                  promises = promises.concat(conditionsPromises);
+                  this._saveSuccess(question, promises);
+                },
+                // Rule was deleted on the server
+                () =>{
+                  question.get('store').unloadRecord(rule);
+                  question.reload().then((question)=>{
+                    this._saveSuccess(question, []);
+                  });
+                }
+              );
             }else{
               this._saveSuccess(question, promises);
             }
@@ -135,15 +150,24 @@ export default Ember.Component.extend({
 
     saveCondition(condition){
       if(this.get('question.isNew') || this.get('question.rule.isNew')){
-        this.get('conditionsPendingSave').push(condition);
+        this.get('conditionsPendingSave').pushObject(condition);
       }else{
+        condition.save();
+      }
+    },
+
+    removeCondition(condition){
+      if(this.get('question.isNew') || this.get('question.rule.isNew')){
+        this.get('conditionsPendingSave').removeObject(condition);
+      }else{
+        condition.deleteRecord();
         condition.save();
       }
     },
 
     saveAnswerChoice(answerChoice){
       if(this.get('question.isNew')){
-        this.get('answerChoicesPendingSave').push(answerChoice);
+        this.get('answerChoicesPendingSave').pushObject(answerChoice);
       }else{
         answerChoice.save();
       }
