@@ -54,10 +54,7 @@ export default Ember.Component.extend({
 
     delete() {
       let condition = this.get('condition');
-      condition.deleteRecord();
-      if(!condition.get('isNew')){
-        condition.save();
-      }
+      this.sendAction('remove',condition);
     },
     setConditionOperator(operator){
       this.set('condition.operator',operator);

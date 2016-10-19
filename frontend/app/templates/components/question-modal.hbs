@@ -133,9 +133,9 @@
                         <td width="10px"></td>
                       </tr>
                       {{#each question.rule.conditions as |condition|}}
-                        {{condition-row condition=condition rule=question.rule questions=questions save='saveCondition' isNewCondition=false}}
+                        {{condition-row condition=condition rule=question.rule questions=questions save='saveCondition' remove='removeCondition' isNewCondition=false}}
                       {{/each}}
-                      {{condition-row rule=question.rule questions=questions save='saveCondition' isNewCondition=true}}
+                      {{condition-row rule=question.rule questions=questions save='saveCondition' remove='removeCondition' isNewCondition=true}}
                     </tbody>
                   </table>
                 </div>

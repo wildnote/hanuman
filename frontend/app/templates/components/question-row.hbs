@@ -19,7 +19,7 @@
   <div class="col-sm-4">
     {{question.sortOrder}} [{{question.railsId}}]
     {{typeInitial}}
-    {{#if question.rule}}
+    {{#if (and question.rule question.rule.conditions)}}
       [CL show
       {{#each question.rule.conditions as |condition|}}
         if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
