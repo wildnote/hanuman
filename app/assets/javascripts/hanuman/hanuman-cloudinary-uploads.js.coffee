@@ -226,9 +226,15 @@ $ ->
 
 
   # instantiate cloudinary file upload (direct upload)
+
+  # unbind
+  $.cleanData( $('input.cloudinary-fileupload[type=file]') )
+
+  # rebind cloudinary
   if $.fn.cloudinary_fileupload != undefined
     $('input.cloudinary-fileupload[type=file]').cloudinary_fileupload()
 
+  # rebind our custom code
   bindPhotoUploads()
   bindVideoUploads()
   bindDocumentUploads()

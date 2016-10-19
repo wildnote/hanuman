@@ -10,22 +10,30 @@
 // Read Sprockets README (https://github.com/sstephenson/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require typeahead/typeahead.bundle
+// BASE LIBRARY JS FILE REFERENCES (DO NOT MODIFY)
+//
+//= require jquery
+//
+// THIRD PARTY LIBRARY JS FILE REFERENCES (ADD FILE REFERENCES AT THE END OF THIS SECTION UNLESS SPECIFIC ORDERING IS NECESSARY)
+//
+//= require bootstrap-multiselect/bootstrap-multiselect
 //= require chosen/chosen.jquery
+//= require cloudinary
+//= require handlebars/handlebars
 //= require ladda/spin
 //= require ladda/ladda
-//= require jquery
-//= require handlebars/handlebars
-//= require bootstrap-multiselect
-//= require jquery.multiple.select
-//= require hanuman/conditional-logic
-//= require hanuman/repeater
-//= require hanuman/required_data
-//= require hanuman/cloudinary-uploads
-//= require hanuman/maps
-//= require cloudinary
+//= require multiple-select/jquery.multiple.select
+//= require typeahead/typeahead.bundle
+//
+// HANUMAN SPECIFIC JS FILE REFERENCES (ADD FILE REFERENCES AT THE END OF THIS SECTION UNLESS SPECIFIC ORDERING IS NECESSARY)
+//
+//= require hanuman/hanuman-conditional-logic
+//= require hanuman/hanuman-repeater
+//= require hanuman/hanuman-required-data
+//= require hanuman/hanuman-cloudinary-uploads
+//= require hanuman/hanuman-maps
+//= require hanuman/hanuman-surveys
+//
+// END JS FILE REFERENCES (DO NOT MODIFY)
+//
 //= require_self
-//= require ./surveys
-
-// Ladda
-Ladda.bind('.ladda-button');

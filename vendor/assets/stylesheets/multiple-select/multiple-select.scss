@@ -56,11 +56,11 @@
     right: 0;
     width: 20px;
     height: 25px;
-    background: url('multiple-select.png') left top no-repeat;
+    background: image_url('multiple-select/multiple-select.png') left top no-repeat;
 }
 
 .ms-choice > div.open {
-    background: url('multiple-select.png') right top no-repeat;
+    background: image_url('multiple-select/multiple-select.png') right top no-repeat;
 }
 
 .ms-drop {
@@ -120,13 +120,13 @@
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
     box-shadow: none;
-    background: #fff url('multiple-select.png') no-repeat 100% -22px;
-    background: url('multiple-select.png') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, white), color-stop(0.99, #eeeeee));
-    background: url('multiple-select.png') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, white 85%, #eeeeee 99%);
-    background: url('multiple-select.png') no-repeat 100% -22px, -moz-linear-gradient(center bottom, white 85%, #eeeeee 99%);
-    background: url('multiple-select.png') no-repeat 100% -22px, -o-linear-gradient(bottom, white 85%, #eeeeee 99%);
-    background: url('multiple-select.png') no-repeat 100% -22px, -ms-linear-gradient(top, #ffffff 85%, #eeeeee 99%);
-    background: url('multiple-select.png') no-repeat 100% -22px, linear-gradient(top, #ffffff 85%, #eeeeee 99%);
+    background: #fff image_url('multiple-select/multiple-select.png') no-repeat 100% -22px;
+    background: image_url('multiple-select/multiple-select.png') no-repeat 100% -22px, -webkit-gradient(linear, left bottom, left top, color-stop(0.85, white), color-stop(0.99, #eeeeee));
+    background: image_url('multiple-select/multiple-select.png') no-repeat 100% -22px, -webkit-linear-gradient(center bottom, white 85%, #eeeeee 99%);
+    background: image_url('multiple-select/multiple-select.png') no-repeat 100% -22px, -moz-linear-gradient(center bottom, white 85%, #eeeeee 99%);
+    background: image_url('multiple-select/multiple-select.png') no-repeat 100% -22px, -o-linear-gradient(bottom, white 85%, #eeeeee 99%);
+    background: image_url('multiple-select/multiple-select.png') no-repeat 100% -22px, -ms-linear-gradient(top, #ffffff 85%, #eeeeee 99%);
+    background: image_url('multiple-select/multiple-select.png') no-repeat 100% -22px, linear-gradient(top, #ffffff 85%, #eeeeee 99%);
 }
 
 .ms-search, .ms-search input {
@@ -188,4 +188,46 @@
 
 .ms-drop .ms-no-results {
     display: none;
+}
+
+li.filter-hidden {
+  display: none;
+}
+
+
+.multiselect-container {
+  position:absolute;z-index:2000;list-style-type:none;margin:0;padding:0;
+  }
+.multiselect-container.dropdown-menu {
+  overflow:scroll;
+}
+.multiselect-container .input-group {
+  margin:5px;
+  }
+.multiselect-container>li.filter-hidden {
+  display:none;
+  }
+.multiselect-container>li {
+  padding:0;
+  }
+.multiselect-container>li>a.multiselect-all label {
+  font-weight:bold;
+  }
+.multiselect-container>li>label.multiselect-group {
+  margin:0;padding:3px 20px 3px 20px;height:100%;font-weight:bold;
+  }
+.multiselect-container>li>a {
+  padding:0;
+  }
+.multiselect-container>li>a>label {
+  margin:0;height:100%;cursor:pointer;font-weight:normal;padding:3px 20px 3px 40px;
+  }
+.multiselect-container>li>a>label.radio,.multiselect-container>li>a>label.checkbox {
+  margin:0;
+  }
+.multiselect-container>li>a>label>input[type="checkbox"] {
+  margin-bottom:5px;
+  }
+.btn-group>.btn-group:nth-child(2)>.multiselect.btn {
+  border-top-left-radius:4px;border-bottom-left-radius:4px;
 }

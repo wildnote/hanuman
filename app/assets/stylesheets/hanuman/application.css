@@ -5,13 +5,22 @@
  * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
  * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
  *
- * You're free to add application-wide styles to this file and they'll appear at the top of the
- * compiled file, but it's generally better to create a new file per style scope.
+ * THIRD PARTY LIBRARY CSS FILE REFERENCES (ADD FILE REFERENCES AT THE END OF THIS SECTION)
  *
- *= require_self
- *= require typeahead/typeahead
+ *= require chosen/chosen
  *= require ladda/ladda-themeless
- *= require hanuman/global
- *= require hanuman/conditional-logic
+ *= require multiple-select/multiple-select
+ *= require typeahead/typeahead
+ *
+ * HANUMAN CUSTOMIZATION CSS FILE REFERENCES (ADD FILE REFERENCES AT THE END OF THIS SECTION UNLESS SPECIFIC ORDERING IS NECESSARY)
+ *
+ *= require hanuman/hanuman-global
+ *= require hanuman/hanuman-conditional-logic
+ *= require hanuman/hanuman-admin
+ *
+ * END CSS FILE REFERENCES (DO NOT MODIFY)
+ *
  *= require_tree .
+ *= require hanuman/hanuman-hero
+ *= require_self
  */

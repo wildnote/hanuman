@@ -70,6 +70,7 @@ $(document).ready(function(){
       }, 500);
     }, 200);
 
+    // TODO: figure out how to fix the way we are doing our bind
     bindChosenTypes();
 
     // remove parsley classes and error messages on clonedContainer
