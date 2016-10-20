@@ -80,7 +80,10 @@ export default Ember.Component.extend({
   _sortOrder(question){
     let surveyTemplate = this.get('surveyTemplate'),
         lastQuestion = surveyTemplate.get('questions').sortBy('sortOrder').get('lastObject');
-    question.set('sortOrder',lastQuestion.get('sortOrder') + 1);
+    question.set('sortOrder',1);
+    if(lastQuestion && lastQuestion !== question){
+      question.set('sortOrder',lastQuestion.get('sortOrder') + 1);
+    }
   },
 
   actions: {

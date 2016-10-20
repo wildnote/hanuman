@@ -21,7 +21,7 @@ export default Ember.Route.extend({
           if(pp !== p){
             controller.set('loadingProgress', ((p * 10) + 5));
           }
-          if((i+1) === total){
+          if((i+1) >= total){
             run.next(this, function() {
               controller.set('isLoadingQuestions', false);
             });
