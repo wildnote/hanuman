@@ -14,6 +14,10 @@ export default Ember.Route.extend({
       controller.set('isLoadingQuestions', false);
     }else{
       surveyTemplate.hasMany('questions').ids().forEach((questionId) => {
+        if(!questionId){
+          i += 1;
+          return;
+        }
         this.store.findRecord('question', questionId).then(function() {
           let pp = p;
           i += 1;

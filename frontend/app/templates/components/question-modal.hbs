@@ -28,12 +28,12 @@
               {{#form-field for='answerType'}}
                 <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
                   {{#each sortedAnswerTypes as |answerType|}}
-                    <option value={{answerType.id}} selected={{eq question.answerType.id answerType.id}}>{{answerType.name}}</option>
+                    <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>{{answerType.displayName}}</option>
                   {{/each}}
                 </select>
               {{/form-field}}
             {{else}}
-              {{question.answerType.name}}
+              {{question.answerType.displayName}}
               <div class="alert alert-danger">
                 Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey template to change the Answer Type.
               </div>
