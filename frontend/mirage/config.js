@@ -7,6 +7,7 @@ export default function() {
   this.get('/answer_types');
   this.get('/answer_types/:id');
   this.get('/survey_templates/:id');
+  this.post('/survey_templates');
   this.put('/survey_templates/:id', ({ surveyTemplates }, request) => {
     let attrs = JSON.parse(request.requestBody)['survey_template'],
         id = request.params.id;

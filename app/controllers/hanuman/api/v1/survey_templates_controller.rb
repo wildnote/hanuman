@@ -10,6 +10,10 @@ module Hanuman
       respond_with SurveyTemplate.find(params[:id])
     end
 
+    def create
+      respond_with :api, :v1, SurveyTemplate.create(survey_template_params)
+    end
+
     def update
       survey_template = SurveyTemplate.find(params[:id])
       survey_template.update(survey_template_params)

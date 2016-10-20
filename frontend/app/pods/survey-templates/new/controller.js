@@ -1,5 +1,4 @@
 import Ember from 'ember';
-
 const {
   computed: { alias }
 } = Ember;
@@ -7,3 +6,4 @@ const {
 export default Ember.Controller.extend({
   surveyTemplate: alias('model')
 });
+

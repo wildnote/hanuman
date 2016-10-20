@@ -13,7 +13,7 @@ const STATUSES = ['draft', 'active', 'inactive'];
 const SurveyTemplate = Model.extend(Validator, {
   // Attributes
   name: attr('string'),
-  status: attr('string'),
+  status: attr('string', { defaultValue: 'draft' }),
   surveyType: attr('string'),
   fullyEditable: attr('boolean'),
   duplicatorLabel: attr('string'),
