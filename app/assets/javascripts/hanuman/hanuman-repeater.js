@@ -128,6 +128,12 @@ $(document).ready(function(){
     if ($('.survey-edit-mode').length > 0) {
       files = $clonedContainer.find("[data-element-type=file]").find('.custom-cloudinary li a')
       clearFileInputsValuesInEdit(files);
+
+      // the code below is removing an unnecessary input placed in dom by carrierwave for every upload button.
+      $clonedContainer.find('.file-upload-input-button').each(function(i, e){
+        $(e).find(".upload-view-mode").next().remove()
+      })
+
      }
   });
 
