@@ -10,3 +10,9 @@
   -o-transition: none !important;
   transition: none !important;
 }
+
+.panel-heading{
+  .panel-title-button-right:nth-child(2){
+    margin-right: 190px;
+  }
+}

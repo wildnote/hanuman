@@ -1,8 +1,9 @@
 import Ember from 'ember';
 
-const { run, isPresent, isBlank } = Ember;
+const { run, isPresent, isBlank, inject } = Ember;
 
 export default Ember.Route.extend({
+  notify: inject.service('notify'),
   setupController(controller, model) {
     this._super(controller, model);
     // Progress bar indicators
@@ -70,6 +71,21 @@ export default Ember.Route.extend({
         }
       });
       this._checkAncestryConsistency(questions);
+    },
+    duplicate(){
+      let surveyTemplate = this.currentModel;
+      surveyTemplate.duplicate().then(
+        // Success
+        (duplicateReponse)=>{
+          this.transitionTo('survey_templates.record', duplicateReponse.survey_template.id);
+          this.get('notify').success('Survey Template successfully duplicated.');
+        },
+        // Error
+        (error)=>{
+          console.log(error);
+          this.get('notify').alert('There was an error trying to duplicate this Survey Template');
+        }
+      );
     }
   }
 });
