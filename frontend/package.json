@@ -54,7 +54,7 @@
     "ember-tether": "0.3.1",
     "ember-tooltips": "2.0.1",
     "ember-truth-helpers": "1.2.0",
-    "liquid-fire": "0.26.2",
+    "liquid-fire": "0.26.4",
     "loader.js": "^4.0.10"
   }
 }
