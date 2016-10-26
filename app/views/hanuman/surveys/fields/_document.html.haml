@@ -18,11 +18,11 @@
               = image_tag("file-icon.png", class: 'img-responsive thumbnail')
             %p
               = fff.object.document.file.public_id #+ "." + fff.object.document.file.format
-            = fff.label :"Description:"
+            = fff.label :"Description"
             .form-group
               .col-sm-7
                 = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add document description here..."
-            = fff.label :"Sort Order:"
+            = fff.label :"Sort Order"
             .form-group
               .col-sm-7
                 = fff.text_field :sort_order, type: :number
