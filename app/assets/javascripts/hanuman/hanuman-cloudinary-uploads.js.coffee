@@ -16,7 +16,10 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     orderNameAttr = data.cloudinaryField.replace(/\[observation_documents_attributes]\[\d+]\[document]/, "[observation_documents_attributes][" + idx + "][sort_order]")
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_documents_attributes]\[\d+]\[document]/, "[observation_documents_attributes][" + idx + "][document]")
     # if document then overwrite  the filevalue
-    fileValue = dataObj.resource_type+"/"+dataObj.type+"/"+"v"+dataObj.version+"/"+dataObj.public_id+"#"+dataObj.signature
+    if data.result.format == "pdf"
+      fileValue = dataObj.resource_type+"/"+dataObj.type+"/"+"v"+dataObj.version+"/"+dataObj.public_id+".pdf"+"#"+dataObj.signature
+    else
+      fileValue = dataObj.resource_type+"/"+dataObj.type+"/"+"v"+dataObj.version+"/"+dataObj.public_id+"#"+dataObj.signature
   else if file == "video"
     regex = /\[observation_videos_attributes]\[\d+]\[video]/
     nameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][description]")
@@ -24,7 +27,11 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][video]")
 
   # this is simply appending the textarea and the hidden input. I am adding the hidden input right next to the img video-preview
-  $previewContainer.find("."+file+"-preview").last().append "<p>"+data.result.public_id+"</p>"
+  if data.result.format == undefined
+    file_id = data.result.public_id
+  else
+    file_id = data.result.public_id+"."+data.result.format
+  $previewContainer.find("."+file+"-preview").last().append "<p>"+file_id+"</p>"
   $previewContainer.find("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:20px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea>"
   $previewContainer.find("."+file+"-preview").last().append "<p><input type='number' value='"+sortOrder+"' name="+orderNameAttr+"></input></p>"
   $previewContainer.find("."+file+"-preview").last().append "<p><a id="+file+" class='remove-upload' href='#'>Remove "+file+"</a></p>"
@@ -93,7 +100,6 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     $videoPreviewContainer.append "<div class='video-preview'>" + $.cloudinary.video(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350) + "</div>"
     addTexareaForUpload("video", data, videoIdx, $videoPreviewContainer)
     poster = $(e.target).closest(".video-column").find('.video-preview:last').find("video").attr("poster")
-    $(e.target).closest(".video-column").find('.video-preview:last').find("video").attr("poster", poster.replace(/$|.mp4|.mov/, ".jpg"))
     videoIdx += 1
 
     if data.result.format != "mov" && data.result.format != "mp4"
@@ -126,13 +132,19 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     $(e.target).siblings('.progress').addClass('hidden')
     #setTimeout callback, 1000
 
-    publicId = data.result.public_id
+    # this if statement sets the pdf file's extension to png for a preview in upload
+    # publicId = data.result.public_id
+    if data.result.format == "pdf"
+      file_format ="png"
+    else
+      file_format = data.result.format
 
     $documentPreviewContainer = $(e.target).siblings('.document-preview-container')
-    $documentPreviewContainer.append "<div class='document-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
+    $documentPreviewContainer.append "<div class='document-preview'>" + $.cloudinary.image(data.result.public_id, format: file_format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
     addTexareaForUpload("document", data, docIdx, $documentPreviewContainer)
-    if data.result.format != "jpg" && data.result.format != "png"
+    if data.result.format != "pdf" && data.result.format != "png" && data.result.format != "jpg"
       $('.document-preview img:last').attr('src', '/images/file-icon.png')
+
     docIdx += 1
 
   # validating upload format. If fomat to supported then handle error
