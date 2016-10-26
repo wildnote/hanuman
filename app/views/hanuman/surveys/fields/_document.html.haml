@@ -34,7 +34,7 @@
             %hr
     - else
       = ff.fields_for :observation_documents do |fff|
-        = fff.cl_upload(:document, :html => { :multiple => true , :class => "document-upload survey-document-upload"})
+        = fff.cl_upload(:document, :resource_type => "raw", :html => { :multiple => true , :class => "document-upload survey-document-upload" })
         .document-upload-error
         .progress.hidden
           .progress-bar.progress-bar-success.document-progress-bar
