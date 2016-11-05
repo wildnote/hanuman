@@ -1,4 +1,8 @@
 .li-question{
+  &.animated {
+    -vendor-animation-duration: 3s;
+  }
+
   &:hover{
     background-color: #e8e8e8;
   }

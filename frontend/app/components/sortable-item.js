@@ -1,12 +1,16 @@
 import Ember from 'ember';
 import SortableItem from 'ember-sortable/components/sortable-item';
 
-const { observer, run, on } = Ember;
+const { observer, computed, run, on } = Ember;
 
 export default SortableItem.extend({
-  classNameBindings: ['ancestryClassName','modelIdClassName'],
+  classNames: ['animated'],
+  classNameBindings: ['ancestryClassName','modelIdClassName','wasJustCreated:zoomInDown'],
   ancestryClassName: '',
   modelIdClassName: '',
+  wasJustCreated: computed('model.wasNew', function() {
+    return this.get('model.wasNew');
+  }),
   numChildrenChanged: on('init', observer('model.{numChildren,childQuestion}', function() {
     let childQuestion = this.get('model.childQuestion'),
         numChildren = this.get('model.numChildren');
