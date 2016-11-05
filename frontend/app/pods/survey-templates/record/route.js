@@ -73,19 +73,18 @@ export default Ember.Route.extend({
       this._checkAncestryConsistency(questions);
     },
     duplicate(){
+      let indexController = this.controllerFor('survey-templates.record.index');
       let surveyTemplate = this.currentModel;
-      surveyTemplate.duplicate().then(
-        // Success
-        (duplicateReponse)=>{
-          this.transitionTo('survey_templates.record', duplicateReponse.survey_template.id);
-          this.get('notify').success('Survey Template successfully duplicated.');
-        },
-        // Error
-        (error)=>{
-          console.log(error);
-          this.get('notify').alert('There was an error trying to duplicate this Survey Template');
-        }
-      );
+      indexController.send('toggleDuplicateLoading');
+      surveyTemplate.duplicate().then((duplicateReponse) => {
+        this.transitionTo('survey_templates.record', duplicateReponse.survey_template.id);
+        run.later(this ,()=> { this.get('notify').success('Survey Template successfully duplicated.'); }, 1000);
+      }).catch((error) => {
+        console.log(error);
+        this.get('notify').alert('There was an error trying to duplicate this Survey Template');
+      }).finally(() => {
+        run.later(this ,()=> { indexController.send('toggleDuplicateLoading'); }, 1500);
+      });
     }
   }
 });

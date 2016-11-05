@@ -1,9 +1,9 @@
 <div class="panel panel-info">
   <div class="panel-heading">
     <h3 class="panel-title">Survey Template Details</h3>
-    <a class="btn btn-success panel-title-button-right" data-test="duplicate-survey-link" onclick={{route-action "duplicate"}}>
+    <a class="btn btn-success panel-title-button-right" id="duplicate-survey-link" data-test="duplicate-survey-link" onclick={{route-action "duplicate" this}}>
       <span class="glyphicons glyphicons-more-items"></span>
-      Duplicate Survey Template
+      <span class="text">Duplicate Survey Template</span>
     </a>
     {{#link-to 'survey_templates.record.edit' surveyTemplate data-test="edit-survey-link" class="btn btn-success panel-title-button-right"}}
       <span class="glyphicons glyphicons-pencil"></span>
