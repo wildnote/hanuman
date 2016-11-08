@@ -9,7 +9,7 @@
       .progress.hidden
         .progress-bar.progress-bar-success.document-progress-bar
       .document-preview-container
-      - o.observation_documents.each do |d|
+      - o.observation_documents.order(sort_order: :asc).each do |d|
         = ff.fields_for :observation_documents, d do |fff|
           .upload-view-mode
             - if ['pdf','jpg','png','gif'].include? d.document.url.last(3)
