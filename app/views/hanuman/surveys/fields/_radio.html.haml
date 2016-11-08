@@ -8,7 +8,7 @@
     - else
       %p
         - ff.object.question.answer_choices.sorted.each do |a|
-          = radio_button_tag "survey[observations_attributes][#{index}][answer_choice_id]",
+          = radio_button_tag "survey[observations_attributes][#{index}][answer]",
                              a.formatted_answer_choice, ff.object.answer.eql?(a.formatted_answer_choice), class: 'form-control', data: { "label-value" => a.formatted_answer_choice }
           = label_tag nil, a.formatted_answer_choice
           %br/

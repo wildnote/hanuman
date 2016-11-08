@@ -1,5 +1,7 @@
 import Ember from 'ember';
 const {
+  $,
+  run,
   computed,
   computed: { alias, sort }
 } = Ember;
@@ -8,7 +10,7 @@ export default Ember.Component.extend({
   remodal: Ember.inject.service(),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
-  sortTypesBy: ['name'],
+  sortTypesBy: ['displayName'],
   sortChoicesBy: ['optionText'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   sortedAnswerChoices: sort('question.answerChoices', 'sortChoicesBy'),
@@ -36,9 +38,9 @@ export default Ember.Component.extend({
       this.get('remodal').open('question-modal');
     });
     // Tabs
-    Ember.$('a[data-toggle="tab"]').on('click', function(e) {
+    $('a[data-toggle="tab"]').on('click', function(e) {
       e.preventDefault();
-      Ember.$(this).tab('show');
+      $(this).tab('show');
     });
   },
 
@@ -65,7 +67,7 @@ export default Ember.Component.extend({
     if(!question.get('answerType.hasAnswerChoices')){
       this._removeAnswerChoices();
     }
-    promises = Ember.$.makeArray(promises);
+    promises = $.makeArray(promises);
     Ember.RSVP.all(promises).then(()=>{
       while (answerChoicesPendingSave.length > 0) {
         answerChoicesPendingSave.popObject();
@@ -110,6 +112,7 @@ export default Ember.Component.extend({
       question.set('surveyTemplate', surveyTemplate);
       if(question.validate()){
         if(question.get('isNew')){
+          question.set('wasNew', true);
           this._sortOrder(question);
         }
         question.save().then(
@@ -177,6 +180,9 @@ export default Ember.Component.extend({
     },
 
     closeModal() {
+      if(this.get('question.wasNew')){
+        run.later(this, ()=> { console.log('neea'); $('html, body').animate({ scrollTop: $(document).height() }, 500); }, 500);
+      }
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');
     }
