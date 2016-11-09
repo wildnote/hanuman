@@ -127,11 +127,14 @@ $(document).ready(function(){
     // on edit treat photo, video and doc sections as if new since on edit there is already saved files
     if ($('.survey-edit-mode').length > 0) {
       files = $clonedContainer.find("[data-element-type=file]").find('.custom-cloudinary li a')
+
       clearFileInputsValuesInEdit(files);
 
-      // the code below is removing an unnecessary input placed in dom by carrierwave for every upload button.
-      $clonedContainer.find('.file-upload-input-button').each(function(i, e){
-        $(e).find(".upload-view-mode").next().remove()
+      // the code below is removing an unnecessary input placed in dom by carrierwave for every upload button. If we dont remove this input, we get an error when we submit the form.
+      $clonedContainer.find('.file-upload-input-button input[type=hidden]').each(function(i, e){
+        if ($(e).attr("name").slice(-4) == "[id]") {
+          $(e).remove()
+        }
       })
 
      }
@@ -147,10 +150,15 @@ $(document).ready(function(){
   function cleartFilePreviewContainers(container){
     if ($('.survey-edit-mode').length > 0) {
       $($(container).find('.upload-view-mode')).empty();
+      $(container).find(".photo-preview").empty()
+      $(container).find(".video-preview").empty()
+      $(container).find(".document-preview").empty()
+
     }else {
       $($(container).find('.photo-preview-container')).empty();
       $($(container).find('.video-preview-container')).empty();
       $($(container).find('.document-preview-container')).empty();
+
 
     }
   }
