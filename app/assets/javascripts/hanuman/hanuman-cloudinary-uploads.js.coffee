@@ -145,7 +145,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     $documentPreviewContainer.append "<div class='document-preview'>" + $.cloudinary.image(data.result.public_id, format: file_format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
     addTexareaForUpload("document", data, docIdx, $documentPreviewContainer)
     if data.result.format != "pdf" && data.result.format != "png" && data.result.format != "jpg"
-      $('.document-preview img:last').attr('src', '/images/file-icon.png')
+      $('.document-preview img:last').attr('src', '/assets/file-icon.png')
 
     docIdx += 1
 
