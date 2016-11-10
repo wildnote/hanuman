@@ -3,7 +3,6 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
   # this code is seting the attr values for the hidden fields for the uploaded images.
   dataObj = JSON.parse(data._response.jqXHR.responseText);
-  sortOrder = idx + 1
   fileValue = dataObj.resource_type+"/"+dataObj.type+"/"+"v"+dataObj.version+"/"+dataObj.public_id+"."+dataObj.format+"#"+dataObj.signature
   if file == "photo"
     regex = /\[observation_photos_attributes]\[\d+]\[photo]/
@@ -31,17 +30,20 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     file_id = data.result.public_id
   else
     file_id = data.result.public_id+"."+data.result.format
+
   $previewContainer.find("."+file+"-preview").last().append "<p>"+file_id+"</p>"
   $previewContainer.find("."+file+"-preview").last().append "<label>Description</label><br>"
   $previewContainer.find("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:0px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea><br>"
   $previewContainer.find("."+file+"-preview").last().append "<label>Sort Order</label>"
-  $previewContainer.find("."+file+"-preview").last().append "<p><input type='number' value='"+sortOrder+"' name="+orderNameAttr+"></input></p>"
+  $previewContainer.find("."+file+"-preview").last().append "<p><input class='upload-sort-order' type='number' value='' name="+orderNameAttr+"></input></p>"
   $previewContainer.find("."+file+"-preview").last().append "<p><a id="+file+" class='remove-upload' href='#'>Remove "+file+"</a></p>"
   $previewContainer.find("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
   $previewContainer.find("."+file+"-preview").last().append "<br>"
   $previewContainer.find("."+file+"-preview").last().append "<hr>"
 
-
+  # this code is setting the sort_order everytime  time we upload. It takes care of both scenearios, survey new ands survey edit
+  $($previewContainer).closest('.file-upload-input-button').find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
+    $(element).find('.upload-sort-order').val(idx+1)
 
   # this is finding the hidden field that was placed on the dom with mismatched name attributes and removing them because I already placed the correct hidden input next to preview
   fileHiddenFields = $('form input[type=hidden]')
@@ -181,18 +183,36 @@ removeFileHiddenInput = ->
       $(e).find("input[type='hidden']:first").remove()
 
 $ ->
+  # when a user removes an upload in edit, we are resetting the sortorder
   $('.delete-saved-file').on 'click', ->
     $($(@).closest('.delete-box').find(".delete-checkbox")).prop( "checked", true )
     $(@).closest('.delete-box').closest('.upload-view-mode').hide()
-    console.log $($(@).closest('.delete-box').find(".delete-checkbox"))
+    if $(@).closest(".file-upload-input-button").hasClass('photo-column')
+      file = "photo"
+    else if $(@).closest(".file-upload-input-button").hasClass('video-column')
+      file = "video"
+    else if $(@).closest(".file-upload-input-button").hasClass('document-column')
+      file = "document"
+
+    $(@).closest('.file-upload-input-button').find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
+      $(element).find('.upload-sort-order').val(idx+1)
+
+  # on click removes uploaded files on survey new.
+  $('.file-upload').on 'click', '.remove-upload', ->
+    file = $(@).attr('id')
+    containerClass = "."+file+"-preview"
+    fileToDelete = $(@).closest(".file-upload-input-button")
+    $(@).closest(containerClass).remove()
+    $(fileToDelete).find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
+      $(element).find('.upload-sort-order').val(idx+1)
 
 
   if $('.edit-mode-file').length > 0
     removeFileHiddenInput()
     $('input[type=submit]').on 'click',(e) ->
-      # e.preventDefault()
+
+      # this loop checks for documents that are flagged for delete
       $('.document-upload').each (i, obj) ->
-        # this loop checks for documents that are flagged for delete
 
         if $($('.video-upload')[i]).closest('.video-column').find('.upload-view-mode').length == 0
           emptyDocumentContainer = true
@@ -230,13 +250,6 @@ $ ->
 
         if !emptyPhotoContainer || $($('.photo-upload')[i]).closest('.photo-column').find('.photo-preview-container').html() != ""
           $($('.photo-upload')[i]).removeAttr('data-parsley-required')
-
-
-  # removes deleted files on survey new.
-  $('.file-upload').on 'click', '.remove-upload', ->
-    file = $(@).attr('id')
-    containerClass = "."+file+"-preview"
-    $(@).closest(containerClass).remove()
 
 
   # instantiate cloudinary file upload (direct upload)
