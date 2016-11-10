@@ -41,7 +41,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
   $previewContainer.find("."+file+"-preview").last().append "<br>"
   $previewContainer.find("."+file+"-preview").last().append "<hr>"
 
-  # this code is setting the sort_order everytime  time we upload. It takes care of both scenearios, survey new ands survey edit
+  # this code is setting the sort_order every time we upload. It takes care of both scenearios, survey new ands survey edit
   $($previewContainer).closest('.file-upload-input-button').find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
     $(element).find('.upload-sort-order').val(idx+1)
 
@@ -64,18 +64,23 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
       # implement progress indicator
       $(e.target).siblings('.progress').find(".photo-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
-  photoIdx = 0
   $('.cloudinary-fileupload.survey-photo-upload').bind 'cloudinarydone', (e, data) ->
-    #callback = ->
+    # Im setting the upload's index based on the count of existing attachements
+    imgCount = $(e.target).closest('.file-upload-input-button').find("img").length
+    if imgCount == 0
+      photoIdx = 1
+    else
+      photoIdx = imgCount + 1
+
+    console.log photoIdx + " photo"
+
     $(e.target).siblings('.progress').find('.photo-progress-bar').removeAttr("style")
     $(e.target).siblings('.progress').addClass('hidden')
-    #setTimeout callback, 1000
 
     $photoPreviewContainer = $(e.target).siblings('.photo-preview-container')
     $photoPreviewContainer.append "<div class='photo-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
     addTexareaForUpload("photo", data, photoIdx, $photoPreviewContainer)
 
-    photoIdx += 1
 
   # handle errors
   $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadfail', (e, data) ->
@@ -93,18 +98,22 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
       # implement progress indicator
       $(e.target).siblings('.progress').find(".video-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
-  videoIdx = 0
   $('.cloudinary-fileupload.survey-video-upload').bind 'cloudinarydone', (e, data) ->
-    #callback = ->
+    #  Im setting the upload's index based on the count of existing attachements
+    vidCount = $(e.target).closest('.file-upload-input-button').find(".video-preview, .upload-view-mode").length
+    if vidCount == 0
+      videoIdx = 1
+    else
+      videoIdx = vidCount + 1
+
+    console.log videoIdx + " video"
     $(e.target).siblings('.progress').find('.video-progress-bar').removeAttr("style")
     $(e.target).siblings('.progress').addClass('hidden')
-    #setTimeout callback, 1000
 
     $videoPreviewContainer = $(e.target).siblings('.video-preview-container')
     $videoPreviewContainer.append "<div class='video-preview'>" + $.cloudinary.video(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350) + "</div>"
     addTexareaForUpload("video", data, videoIdx, $videoPreviewContainer)
     poster = $(e.target).closest(".video-column").find('.video-preview:last').find("video").attr("poster")
-    videoIdx += 1
 
     if data.result.format != "mov" && data.result.format != "mp4"
       $(e.target).siblings('.video-upload-error').append "<p style='color:#d6193d;'> Only MP4 and MOV formats supported</p>"
@@ -129,12 +138,18 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
       # implement progress indicator
       $(e.target).siblings('.progress').find('.document-progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
-  docIdx = 0
   $('.cloudinary-fileupload.survey-document-upload').bind 'cloudinarydone', (e, data) ->
-    #callback = ->
+    # Im setting the upload's index based on the count of existing attachements
+    docCount = $(e.target).closest('.file-upload-input-button').find(".document-preview, .upload-view-mode").length
+    if docCount == 0
+      docIdx = 1
+    else
+      docIdx = docCount + 1
+
+    console.log docIdx + " document"
+
     $(e.target).siblings('.progress').find('.document-progress-bar').removeAttr("style")
     $(e.target).siblings('.progress').addClass('hidden')
-    #setTimeout callback, 1000
 
     # this if statement sets the pdf file's extension to png for a preview in upload
     # publicId = data.result.public_id
