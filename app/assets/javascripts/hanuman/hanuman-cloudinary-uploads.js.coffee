@@ -53,8 +53,6 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     if name.match(regex) != null && className !=  file+"-hidden-input"
       $(obj).remove()
 
-
-
 # ***** PHOTOS *****
 @bindPhotoUploads = ->
   $('.survey-photo-upload').on 'click', (e, data) ->
@@ -72,15 +70,12 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     else
       photoIdx = imgCount + 1
 
-    console.log photoIdx + " photo"
-
     $(e.target).siblings('.progress').find('.photo-progress-bar').removeAttr("style")
     $(e.target).siblings('.progress').addClass('hidden')
 
     $photoPreviewContainer = $(e.target).siblings('.photo-preview-container')
     $photoPreviewContainer.append "<div class='photo-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
     addTexareaForUpload("photo", data, photoIdx, $photoPreviewContainer)
-
 
   # handle errors
   $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadfail', (e, data) ->
@@ -106,7 +101,6 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     else
       videoIdx = vidCount + 1
 
-    console.log videoIdx + " video"
     $(e.target).siblings('.progress').find('.video-progress-bar').removeAttr("style")
     $(e.target).siblings('.progress').addClass('hidden')
 
@@ -121,13 +115,11 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
       $(".survey-video-upload").on 'click', (e, data) ->
         $(e.target).siblings('.video-upload-error').find('p').remove()
 
-
   # handle errors
   $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadfail', (e, data) ->
     $(e.target).siblings('.video-upload-error').append "<p> Failed to upload video, please try again</p>"
     $(".survey-video-upload").on 'click', ->
       $(e.target).siblings('.video-upload-error').find('p').remove()
-
 
 # ***** DOCUMENTS *****
 @bindDocumentUploads = ->
@@ -146,8 +138,6 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     else
       docIdx = docCount + 1
 
-    console.log docIdx + " document"
-
     $(e.target).siblings('.progress').find('.document-progress-bar').removeAttr("style")
     $(e.target).siblings('.progress').addClass('hidden')
 
@@ -163,8 +153,6 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     addTexareaForUpload("document", data, docIdx, $documentPreviewContainer)
     if data.result.format != "pdf" && data.result.format != "png" && data.result.format != "jpg"
       $('.document-preview img:last').attr('src', '/assets/file-icon.png')
-
-    docIdx += 1
 
   # validating upload format. If fomat to supported then handle error
     if data.result.format != undefined
@@ -221,7 +209,6 @@ $ ->
     $(fileToDelete).find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
       $(element).find('.upload-sort-order').val(idx+1)
 
-
   if $('.edit-mode-file').length > 0
     removeFileHiddenInput()
     $('input[type=submit]').on 'click',(e) ->
@@ -265,9 +252,6 @@ $ ->
 
         if !emptyPhotoContainer || $($('.photo-upload')[i]).closest('.photo-column').find('.photo-preview-container').html() != ""
           $($('.photo-upload')[i]).removeAttr('data-parsley-required')
-
-
-  # instantiate cloudinary file upload (direct upload)
 
   # unbind
   $.cleanData( $('input.cloudinary-fileupload[type=file]') )
