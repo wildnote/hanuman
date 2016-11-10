@@ -73,6 +73,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     $(e.target).siblings('.progress').find('.photo-progress-bar').removeAttr("style")
     $(e.target).siblings('.progress').addClass('hidden')
 
+
     $photoPreviewContainer = $(e.target).siblings('.photo-preview-container')
     $photoPreviewContainer.append "<div class='photo-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
     addTexareaForUpload("photo", data, photoIdx, $photoPreviewContainer)
@@ -140,7 +141,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
     $(e.target).siblings('.progress').find('.document-progress-bar').removeAttr("style")
     $(e.target).siblings('.progress').addClass('hidden')
-
+      
     # this if statement sets the pdf file's extension to png for a preview in upload
     # publicId = data.result.public_id
     if data.result.format == "pdf"
