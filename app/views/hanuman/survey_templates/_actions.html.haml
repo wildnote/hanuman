@@ -1,6 +1,11 @@
-- if current_user.superuser?
-  %li{:class => "#{locals[:navbar_hanuman_survey_templates_new_survey_template]}"}
-    = link_to new_survey_template_path do
-      %i.glyphicons.glyphicons-plus
+%li{:class => "#{locals[:navbar_hanuman_survey_templates]}"}
+  = link_to survey_templates_path do
+    %i.glyphicons.glyphicons-list-alt
+    %span.menu-title
+      Surveys
+- if locals[:navbar_hanuman_survey_templates_context].to_s.strip.length > 0
+  %li.active
+    = link_to request.fullpath do
+      %i.glyphicons.glyphicons-list-numbered
       %span.menu-title
-        New Survey Template
+        = locals[:navbar_hanuman_survey_templates_context].to_s

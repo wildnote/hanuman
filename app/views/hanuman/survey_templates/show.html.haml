@@ -1,11 +1,11 @@
 - content_for :title do
-  Survey Templates
+  Survey Attributes
 - content_for :title_parent do
   Design a Survey
 - content_for :title_icon do
   glyphicons-edit
 - content_for :title_actions do
-  = render "actions", locals: {}
+  = render "actions", locals: {navbar_hanuman_survey_templates_context: "Survey Attributes"}
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_survey_templates do
@@ -13,16 +13,16 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Survey Template Attributes
+    %h3.panel-title Survey Attributes
   .panel-body
     .pull-right
       -# duplication makes more sense on the index page, once you are drilling in you are more focused on editing
-      -# = link_to duplicate_survey_template_path(@survey_template), data: {confirm: "Are you sure you want to duplicate this Survey Template?"}, method: :patch, class: "btn btn-success" do
+      -# = link_to duplicate_survey_template_path(@survey_template), data: {confirm: "Are you sure you want to duplicate this Survey?"}, method: :patch, class: "btn btn-success" do
       -#   %span.glyphicons.glyphicons-repeat
-      -#   Duplicate Survey Template
+      -#   Duplicate Survey
       = link_to edit_survey_template_path(@survey_template), class: "btn btn-success" do
         %span.glyphicons.glyphicons-pencil
-        Edit Survey Template Attributes
+        Edit Survey Attributes
     .clearfix
     %form.form-horizontal
       .form-group
@@ -46,7 +46,7 @@
         .pull-left
           %span.glyphicons.glyphicons-chevron-right
           %span.glyphicons.glyphicons-chevron-down
-          Survey Template Form
+          Survey Form
         .clearfix
     .panel-collapse.collapse.in{:id => "collapse_1"}
       .panel-body
@@ -54,7 +54,7 @@
           .pull-right.edit-delete
             = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-success" do
               %span.glyphicons.glyphicons-pencil
-              Edit Survey Template Form
+              Edit Survey Form
           .clearfix
           = render ("hanuman/survey_templates/formextensionreadonly")
           - @survey_template.questions.each do |q|

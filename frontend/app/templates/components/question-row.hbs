@@ -1,16 +1,16 @@
 {{!-- called from surveyTemplate and dislpays each answer type as readonly --}}
 <div class="row">
-  <div class="draggable-target-message"> Position under this question </div>
+  <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
   <div class="col-sm-4">
     {{#if question.loading}}
       <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{/if}}
     <span class="glyphicons glyphicons-sorting {{if question.loading 'hide'}}">
-      {{#tooltip-on-element duration=700}}Sort question{{/tooltip-on-element}}
+      {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
     </span>
     {{#unless ancestrable}}
       <span class="glyphicons glyphicons-move-square {{if question.loading 'hide'}}">
-        {{#tooltip-on-element duration=700}}Add to another question{{/tooltip-on-element}}
+        {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
       </span>
     {{/unless}}
     <span data-test="question.questionText">{{question.questionText}}</span>
@@ -31,10 +31,10 @@
   <div class="col-sm-2">
     {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
       <span class="glyphicons glyphicons-pencil"></span>
-        Edit
+      Edit
     {{/link-to}}
     <a class="btn btn-delete" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
-      <span class="glyphicon glyphicon-trash"></span>
+      <span class="glyphicons glyphicons-bin"></span>
     </a>
     <div class="delete-confirm">
       <small class="{{if isFullyEditable 'hide'}}">Performing this delete will also destroy associated historical data.<br></small>

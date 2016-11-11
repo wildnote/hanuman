@@ -1,11 +1,11 @@
 - content_for :title do
-  Edit Survey Template
+  Edit Survey
 - content_for :title_parent do
   Design a Survey
 - content_for :title_icon do
   glyphicons-edit
 - content_for :title_actions do
-  = render "actions", locals: {}
+  = render "actions", locals: {navbar_hanuman_survey_templates_context: "Edit Survey"}
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_survey_templates do
@@ -13,6 +13,6 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Edit Survey Template
+    %h3.panel-title Edit Survey
 
   = render "form"
