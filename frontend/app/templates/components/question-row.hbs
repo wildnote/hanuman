@@ -1,41 +1,25 @@
 {{!-- called from surveyTemplate and dislpays each answer type as readonly --}}
 <div class="row">
-  <div class="col-sm-3">
-    {{#if question.childQuestion}}
-      {{question.numChildren}}
+  <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
+  <div class="col-sm-4">
+    {{#if question.loading}}
+      <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{/if}}
+    <span class="glyphicons glyphicons-sorting {{if question.loading 'hide'}}">
+      {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
+    </span>
+    {{#unless ancestrable}}
+      <span class="glyphicons glyphicons-move-square {{if question.loading 'hide'}}">
+        {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
+      </span>
+    {{/unless}}
     <span data-test="question.questionText">{{question.questionText}}</span>
   </div>
-  <div class="col-sm-3" data-test="question.answerType.name">{{question.answerType.name}}</div>
-  <div class="col-sm-3">
-    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-success"}}
-      <span class="glyphicon glyphicon-pencil"></span>
-        Edit
-    {{/link-to}}
-    <a class="btn btn-delete" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
-      <span class="glyphicon glyphicon-trash"></span>
-    </a>
-    <div class="delete-confirm">
-      <small>Performing this delete will also destroy associated historical data.</small><br />
-      <small>Are you sure you want to delete this item?</small>
-      <button class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
-      <button class="btn" onclick={{action 'cancel'}}>No</button>
-    </div>
-  </div>
-  <div class="col-sm-3 dev-only">
-    <a class="btn"><span class="glyphicon glyphicon-sort"></span></a>
+  <div class="col-sm-2" data-test="question.answerType.name">{{question.answerType.name}}</div>
+  <div class="col-sm-4">
     {{question.sortOrder}} [{{question.railsId}}]
-    {{#if question.ancestry}}
-      [A={{question.ancestry}}]
-    {{/if}}
-    {{#if question.hidden}}
-      H
-    {{/if}}
-    {{#if question.required}}
-      R
-    {{/if}}
-
-    {{#if question.rule}}
+    {{typeInitial}}
+    {{#if (and question.rule question.rule.conditions)}}
       [CL show
       {{#each question.rule.conditions as |condition|}}
         if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
@@ -43,6 +27,21 @@
       {{/each}}
       ]
     {{/if}}
+  </div>
+  <div class="col-sm-2">
+    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
+      <span class="glyphicons glyphicons-pencil"></span>
+      Edit
+    {{/link-to}}
+    <a class="btn btn-delete" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
+      <span class="glyphicons glyphicons-bin"></span>
+    </a>
+    <div class="delete-confirm">
+      <small class="{{if isFullyEditable 'hide'}}">Performing this delete will also destroy associated historical data.<br></small>
+      <small>Are you sure you want to delete this question?</small><br>
+      <button class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
+      <button class="btn" onclick={{action 'cancel'}}>No</button>
+    </div>
   </div>
 </div>
 

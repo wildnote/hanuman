@@ -2,14 +2,11 @@
 module Hanuman
   class VideoUploader < CarrierWave::Uploader::Base
 
-    # Include RMagick or MiniMagick support:
-    # include CarrierWave::RMagick
-    # include CarrierWave::MiniMagick
     include Cloudinary::CarrierWave
 
-    # def extension_white_list
-    #   %w(mp4 mov)
-    # end
+    def extension_white_list
+      %w(mp4, webm, flv, mov, ogv, 3gp, 3g2, wmv, mpeg, flv, mkv, avi)
+    end
 
     # Choose what kind of storage to use for this uploader:
     #storage :file

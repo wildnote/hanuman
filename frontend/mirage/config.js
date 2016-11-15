@@ -1,10 +1,13 @@
+import Mirage from 'ember-cli-mirage';
+
 export default function() {
-  this.namespace = 'hanuman/api/v1';
+  this.namespace = '/hanuman/api/v1';
 
   // Shorthand
   this.get('/answer_types');
   this.get('/answer_types/:id');
   this.get('/survey_templates/:id');
+  this.post('/survey_templates');
   this.put('/survey_templates/:id', ({ surveyTemplates }, request) => {
     let attrs = JSON.parse(request.requestBody)['survey_template'],
         id = request.params.id;
@@ -28,6 +31,7 @@ export default function() {
     return rules.find(id).update(attrs);
   });
   // Questions
+  this.get('/questions');
   this.get('/questions/:id');
   this.post('/questions');
   this.del('/questions/:id');
@@ -45,6 +49,11 @@ export default function() {
     let attrs = JSON.parse(request.requestBody)['answer_choice'],
         id = request.params.id;
     return answerChoices.find(id).update(attrs);
+  });
+
+  // Custom Organizations
+  this.get('/organizations', () => {
+    return new Mirage.Response(200, {}, { organizations: []});
   });
 
 }

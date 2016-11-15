@@ -12,6 +12,7 @@ export default Model.extend({
   postName: attr('string'),
   postType: attr('string'),
   elementType: attr('string'),
+  descriptiveName: attr('string'),
 
   types: ['checkboxlist', 'hiddencheckboxlist', 'chosenmultiselect',
       'hiddenchosenmultiselect', 'chosenmultiselectgrouped',
@@ -23,6 +24,10 @@ export default Model.extend({
 
   // Computed Properties
   hasAnswerChoices: computed('name', function() {
-    return this.get('types').contains(this.get('name'));
+    return this.get('types').includes(this.get('name'));
+  }),
+
+  displayName: computed('name', 'descriptiveName', function() {
+    return this.get('descriptiveName') || this.get('name');
   })
 });

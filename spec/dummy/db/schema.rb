@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160719225437) do
+ActiveRecord::Schema.define(version: 20161012233207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "hanuman_answer_choices", force: true do |t|
+  create_table "hanuman_answer_choices", force: :cascade do |t|
     t.integer  "question_id"
     t.string   "option_text"
     t.datetime "created_at"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20160719225437) do
   add_index "hanuman_answer_choices", ["ancestry"], name: "index_hanuman_answer_choices_on_ancestry", using: :btree
   add_index "hanuman_answer_choices", ["question_id"], name: "index_hanuman_answer_choices_on_question_id", using: :btree
 
-  create_table "hanuman_answer_types", force: true do |t|
+  create_table "hanuman_answer_types", force: :cascade do |t|
     t.string   "name"
     t.string   "status"
     t.datetime "created_at"
@@ -43,7 +43,7 @@ ActiveRecord::Schema.define(version: 20160719225437) do
     t.string   "element_type"
   end
 
-  create_table "hanuman_conditions", force: true do |t|
+  create_table "hanuman_conditions", force: :cascade do |t|
     t.integer  "question_id"
     t.string   "operator"
     t.string   "answer"
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20160719225437) do
   add_index "hanuman_conditions", ["question_id"], name: "index_hanuman_conditions_on_question_id", using: :btree
   add_index "hanuman_conditions", ["rule_id"], name: "index_hanuman_conditions_on_rule_id", using: :btree
 
-  create_table "hanuman_observation_answers", force: true do |t|
+  create_table "hanuman_observation_answers", force: :cascade do |t|
     t.integer  "observation_id"
     t.integer  "answer_choice_id"
     t.datetime "created_at"
@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 20160719225437) do
     t.string   "multiselectable_type"
   end
 
-  create_table "hanuman_observations", force: true do |t|
+  create_table "hanuman_observations", force: :cascade do |t|
     t.integer  "survey_id"
     t.text     "answer"
     t.text     "notes"
@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(version: 20160719225437) do
 
   add_index "hanuman_observations", ["survey_id"], name: "index_hanuman_observations_on_survey_id", using: :btree
 
-  create_table "hanuman_questions", force: true do |t|
+  create_table "hanuman_questions", force: :cascade do |t|
     t.text     "question_text"
     t.integer  "answer_type_id"
     t.datetime "created_at"
@@ -93,13 +93,14 @@ ActiveRecord::Schema.define(version: 20160719225437) do
     t.boolean  "hidden",               default: false
     t.integer  "duped_question_id"
     t.integer  "survey_template_id"
+    t.text     "ancestry_children",    default: [],    array: true
   end
 
   add_index "hanuman_questions", ["ancestry"], name: "index_hanuman_questions_on_ancestry", using: :btree
   add_index "hanuman_questions", ["answer_type_id"], name: "index_hanuman_questions_on_answer_type_id", using: :btree
   add_index "hanuman_questions", ["survey_template_id"], name: "index_hanuman_questions_on_survey_template_id", using: :btree
 
-  create_table "hanuman_rule_conditions", force: true do |t|
+  create_table "hanuman_rule_conditions", force: :cascade do |t|
     t.integer  "rule_id"
     t.integer  "condition_id"
     t.datetime "created_at"
@@ -109,7 +110,7 @@ ActiveRecord::Schema.define(version: 20160719225437) do
   add_index "hanuman_rule_conditions", ["condition_id"], name: "index_hanuman_rule_conditions_on_condition_id", using: :btree
   add_index "hanuman_rule_conditions", ["rule_id"], name: "index_hanuman_rule_conditions_on_rule_id", using: :btree
 
-  create_table "hanuman_rules", force: true do |t|
+  create_table "hanuman_rules", force: :cascade do |t|
     t.integer  "question_id"
     t.string   "match_type"
     t.datetime "created_at"
@@ -119,20 +120,20 @@ ActiveRecord::Schema.define(version: 20160719225437) do
 
   add_index "hanuman_rules", ["question_id"], name: "index_hanuman_rules_on_question_id", using: :btree
 
-  create_table "hanuman_settings", force: true do |t|
+  create_table "hanuman_settings", force: :cascade do |t|
     t.string   "key"
     t.string   "value"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "hanuman_survey_extensions", force: true do |t|
+  create_table "hanuman_survey_extensions", force: :cascade do |t|
     t.integer  "survey_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "hanuman_survey_questions", force: true do |t|
+  create_table "hanuman_survey_questions", force: :cascade do |t|
     t.integer  "survey_template_id"
     t.integer  "question_id"
     t.integer  "sort_order"
@@ -145,7 +146,7 @@ ActiveRecord::Schema.define(version: 20160719225437) do
   add_index "hanuman_survey_questions", ["question_id"], name: "index_hanuman_survey_questions_on_question_id", using: :btree
   add_index "hanuman_survey_questions", ["survey_template_id"], name: "index_hanuman_survey_questions_on_survey_template_id", using: :btree
 
-  create_table "hanuman_survey_steps", force: true do |t|
+  create_table "hanuman_survey_steps", force: :cascade do |t|
     t.integer  "survey_template_id"
     t.integer  "step"
     t.boolean  "duplicator"
@@ -153,7 +154,7 @@ ActiveRecord::Schema.define(version: 20160719225437) do
     t.datetime "updated_at"
   end
 
-  create_table "hanuman_survey_templates", force: true do |t|
+  create_table "hanuman_survey_templates", force: :cascade do |t|
     t.string   "name"
     t.string   "status"
     t.string   "survey_type"
@@ -161,7 +162,7 @@ ActiveRecord::Schema.define(version: 20160719225437) do
     t.datetime "updated_at"
   end
 
-  create_table "hanuman_surveys", force: true do |t|
+  create_table "hanuman_surveys", force: :cascade do |t|
     t.integer  "survey_template_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -170,7 +171,7 @@ ActiveRecord::Schema.define(version: 20160719225437) do
 
   add_index "hanuman_surveys", ["survey_template_id"], name: "index_hanuman_surveys_on_survey_template_id", using: :btree
 
-  create_table "versions", force: true do |t|
+  create_table "versions", force: :cascade do |t|
     t.string   "item_type",  null: false
     t.integer  "item_id",    null: false
     t.string   "event",      null: false

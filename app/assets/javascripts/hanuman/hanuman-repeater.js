@@ -21,6 +21,8 @@ $(document).ready(function(){
     // unbinding events on plugins
     unbindChosenTypes();
     $('.datepicker').datepicker('destroy');
+    // cloudinary events
+    $.cleanData( $('input.cloudinary-fileupload[type=file]') );
 
     // find and clone container
     var container = $(this).closest('.form-container-repeater');
@@ -48,7 +50,7 @@ $(document).ready(function(){
     // set cloned container to display none for fading in
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
     // commenting out because we don't use fancy preview code for docs and videos, if we bring this back probably need this at this point
-    // cleartFilePreviewContainers($clonedContainer);
+    cleartFilePreviewContainers($clonedContainer);
 
     // clear values
     clearValues($clonedContainer);
@@ -68,6 +70,7 @@ $(document).ready(function(){
       }, 500);
     }, 200);
 
+    // TODO: figure out how to fix the way we are doing our bind
     bindChosenTypes();
 
     // remove parsley classes and error messages on clonedContainer
@@ -99,6 +102,15 @@ $(document).ready(function(){
       }
     });
 
+    // rebind cloudinary
+    if ($.fn.cloudinary_fileupload != undefined) {
+      $('input.cloudinary-fileupload[type=file]').cloudinary_fileupload()
+    }
+
+    bindPhotoUploads()
+    bindVideoUploads()
+    bindDocumentUploads()
+
 
     // removed the pretty doc and video preview in cloudinary upload so commenting this out for now-kdh
     // binds previews
@@ -115,7 +127,16 @@ $(document).ready(function(){
     // on edit treat photo, video and doc sections as if new since on edit there is already saved files
     if ($('.survey-edit-mode').length > 0) {
       files = $clonedContainer.find("[data-element-type=file]").find('.custom-cloudinary li a')
+
       clearFileInputsValuesInEdit(files);
+
+      // the code below is removing an unnecessary input placed in dom by carrierwave for every upload button. If we dont remove this input, we get an error when we submit the form.
+      $clonedContainer.find('.file-upload-input-button input[type=hidden]').each(function(i, e){
+        if ($(e).attr("name").slice(-4) == "[id]") {
+          $(e).remove()
+        }
+      })
+
      }
   });
 
@@ -127,8 +148,19 @@ $(document).ready(function(){
   }
 
   function cleartFilePreviewContainers(container){
-    $($(container).find('.document-preview-container')).empty();
-    $($(container).find('.video-preview-container')).empty();
+    if ($('.survey-edit-mode').length > 0) {
+      $($(container).find('.upload-view-mode')).empty();
+      $(container).find(".photo-preview").empty()
+      $(container).find(".video-preview").empty()
+      $(container).find(".document-preview").empty()
+
+    }else {
+      $($(container).find('.photo-preview-container')).empty();
+      $($(container).find('.video-preview-container')).empty();
+      $($(container).find('.document-preview-container')).empty();
+
+
+    }
   }
 
   function removeErrorBackground(type, $clonedContainer){
@@ -207,7 +239,6 @@ $(document).ready(function(){
   }
 
   function bindChosenTypes(){
-    $('.attachinary-input').attachinary();
     $(".chosen-multiselect").chosen();
     $(".chosen-select").chosen();
     $(".bootstrap-checkbox-multiselect").multiselect();
@@ -231,9 +262,15 @@ $(document).ready(function(){
         $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/\d+/, newTimeStamp));
       }
       if ($(inputs[index]).attr('name')) {
-        var nameStamp = $(inputs[index]).attr("name").match(/\d+/)[0];
-        var newTimeStamp = nameStamp.concat(timeStamp);
-        $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/\d+/, newTimeStamp));
+        if ($(inputs[index]).attr('name') != "file") {
+          var nameStamp = $(inputs[index]).attr("name").match(/\d+/)[0];
+          var newTimeStamp = nameStamp.concat(timeStamp);
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/\d+/, newTimeStamp));
+        }else if($(inputs[index]).attr("data-cloudinary-field")) {
+          var nameStamp = $(inputs[index]).attr("data-cloudinary-field").match(/\d+/)[0];
+          var newTimeStamp = nameStamp.concat(timeStamp);
+          $(inputs[index]).attr("data-cloudinary-field", $(inputs[index]).attr("data-cloudinary-field").replace(/\d+/, newTimeStamp));
+        }
       }
       if ($(inputs[index]).attr('data-parsley-multiple')) {
         var newTimeStamp = parsleySubstrig.concat(timeStamp);

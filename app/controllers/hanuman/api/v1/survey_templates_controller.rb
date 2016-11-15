@@ -1,5 +1,7 @@
 module Hanuman
   class Api::V1::SurveyTemplatesController < ApplicationController
+    before_action :set_survey_template, only: [:show, :update, :duplicate]
+
     respond_to :json
 
     def index
@@ -7,16 +9,29 @@ module Hanuman
     end
 
     def show
-      respond_with SurveyTemplate.find(params[:id])
+      respond_with @survey_template
+    end
+
+    def create
+      respond_with :api, :v1, SurveyTemplate.create(survey_template_params)
     end
 
     def update
-      survey_template = SurveyTemplate.find(params[:id])
-      survey_template.update(survey_template_params)
-      respond_with survey_template
+      @survey_template.update(survey_template_params)
+      respond_with @survey_template
+    end
+
+    def duplicate
+      survey_template_copy = @survey_template.amoeba_dup
+      survey_template_copy.remap_conditional_logic(@survey_template) if survey_template_copy.save
+      respond_with survey_template_copy
     end
 
     private
+
+    def set_survey_template
+      @survey_template = SurveyTemplate.find(params[:id])
+    end
 
     def survey_template_params
       params.require(:survey_template).permit(:name, :status, :survey_type)

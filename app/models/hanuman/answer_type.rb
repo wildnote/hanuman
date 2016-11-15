@@ -13,6 +13,7 @@ module Hanuman
 
     # Scopes
     scope :active_sorted, -> { where(status: 'active').order('name') }
+    scope :without_taxon, -> { where.not(descriptive_name: 'Taxon') }
 
     # Relations
     has_many :questions, dependent: :restrict_with_exception

@@ -39,7 +39,7 @@
               = survey.created_at.in_time_zone("Pacific Time (US & Canada)").strftime("%I:%M %p")
           %td
             = link_to survey, data: {confirm: "Are you sure you want to delete this Survey?"}, method: :delete, class: "btn btn-xs btn-danger" do
-              %span.glyphicon.glyphicon-trash
+              %span.glyphicons.glyphicons-trash
               Delete Survey
 
 .pull-right= paginate @surveys

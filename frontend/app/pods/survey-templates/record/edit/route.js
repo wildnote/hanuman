@@ -1,21 +1,4 @@
 import Ember from 'ember';
+import SurveyTemplateSaveRoute from 'frontend/mixins/survey-template-save-route';
 
-export default Ember.Route.extend({
-  actions: {
-    save(){
-      let surveyTemplate = this.currentModel;
-      if(surveyTemplate.validate()){
-        surveyTemplate.save().then(
-          // Success
-          (surveyTemplate)=>{
-            this.transitionTo('survey_templates.record',surveyTemplate);
-          },
-          // Error
-          (error)=>{
-            console.error(error);
-          }
-        );
-      }
-    }
-  }
-});
+export default Ember.Route.extend(SurveyTemplateSaveRoute, {});

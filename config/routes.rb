@@ -18,9 +18,13 @@ Hanuman::Engine.routes.draw do
       resources :answer_types
       resources :questions
       resources :survey_steps
-      resources :survey_templates
       resources :rules
       resources :conditions
+      resources :survey_templates do
+        member do
+          post :duplicate
+        end
+      end
     end
   end
 

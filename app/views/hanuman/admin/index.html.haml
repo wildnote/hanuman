@@ -1,0 +1,20 @@
+- content_for :title do
+  Edit Survey
+- content_for :title_parent do
+  Design a Survey
+- content_for :title_icon do
+  glyphicons-edit
+- content_for :title_actions do
+  = render "hanuman/survey_templates/actions", locals: {navbar_hanuman_survey_templates_context: "Edit Survey"}
+- content_for :navbar_hanuman do
+  active
+- content_for :navbar_hanuman_survey_templates do
+  active
+
+:javascript
+  window.superUser = "#{current_user.superuser?}";
+
+#ember-container
+  %base{href: "/hanuman/admin/"}
+  = include_ember_script_tags :frontend
+  = include_ember_stylesheet_tags :frontend

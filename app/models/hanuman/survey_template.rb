@@ -10,7 +10,7 @@ module Hanuman
 
     # Relations
     has_many :survey_steps, -> { order :step }, inverse_of: :survey_template, dependent: :destroy #Deprecated
-    has_many :questions, dependent: :destroy
+    has_many :questions, -> { order :sort_order }, dependent: :destroy
     has_many :surveys, dependent: :restrict_with_exception
 
     # Validations
@@ -19,8 +19,10 @@ module Hanuman
     #validates_uniqueness_of :name MOVED THIS TO CHILD APPLICAITON TO MAKE IT SCOPED BY ORANIZATION-KDH
 
     amoeba do
-      include_association :survey_steps
-      prepend name: "Copy " + Time.now.strftime("%m/%d/%Y %I:%M:%S %p") + " (PLEASE RENAME) - "
+      include_association :questions
+      customize(lambda { |_original_post, new_post|
+        new_post.name = "#{new_post.name} Copy / #{Time.now.strftime("%m/%d/%Y %I:%M:%S %p")}"
+      })
     end
 
     def self.all_sorted
@@ -59,7 +61,7 @@ module Hanuman
         # update conditioanl logic rules
         q.conditions.each do |c|
           old_rule_id = c.rule_id
-          new_rule = Hanuman::Rule.includes(question: :survey_step).where("hanuman_rules.duped_rule_id = ? AND hanuman_survey_steps.survey_template_id = ?", old_rule_id, self.id).references(question: :survey_step).first
+          new_rule = Hanuman::Rule.includes(:question).where("hanuman_rules.duped_rule_id = ? AND hanuman_questions.survey_template_id = ?", old_rule_id, self.id).references(:question).first
           c.rule_id = new_rule.id
           c.save!
         end

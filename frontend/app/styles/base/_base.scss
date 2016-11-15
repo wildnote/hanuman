@@ -1,5 +1,18 @@
 .loading-container {
   position: absolute;
-  top: 10%;
+  top: 300px;
   left: 50%;
+}
+
+.notransition {
+  -webkit-transition: none !important;
+  -moz-transition: none !important;
+  -o-transition: none !important;
+  transition: none !important;
+}
+
+.panel-heading{
+  .panel-title-button-right:nth-child(2){
+    margin-right: 210px;
+  }
 }

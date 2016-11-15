@@ -2,6 +2,7 @@
   forService=true
   name='question-modal'
   closeOnOutsideClick=false
+  closeOnEscape=false
   disableNativeClose=true
 }}
 <div class="panel panel-info">
@@ -28,12 +29,12 @@
               {{#form-field for='answerType'}}
                 <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
                   {{#each sortedAnswerTypes as |answerType|}}
-                    <option value={{answerType.id}} selected={{eq question.answerType.id answerType.id}}>{{answerType.name}}</option>
+                    <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>{{answerType.displayName}}</option>
                   {{/each}}
                 </select>
               {{/form-field}}
             {{else}}
-              {{question.answerType.name}}
+              {{question.answerType.displayName}}
               <div class="alert alert-danger">
                 Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey template to change the Answer Type.
               </div>
@@ -90,11 +91,11 @@
         </div>
         <div class="form-group">
           <div class="col-sm-12">
-            {{#form-field for='ancestry' label='Ancestry'}}
+            {{#form-field for='parentId' label='Ancestry'}}
               <select class="form-control" data-test="ancestry-select" onchange={{action "ancestryChange" value="target.value"}}>
                 <option></option>
                 {{#each ancestryQuestions as |opQuestion|}}
-                  <option value={{opQuestion.id}} selected={{eq opQuestion.id question.ancestry}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
+                  <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
                 {{/each}}
               </select>
             {{/form-field}}
@@ -111,12 +112,12 @@
                 <div class="table-responsive">
                   <table class="table table-hover">
                     <thead>
-                      <tr>
+                      <tr class="no-hover">
                         <th colspan="6">Conditional Logic</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
+                      <tr class="no-hover">
                         <td colspan="6">
                           <select data-test="rule-match-type-select" class="form-control" onchange={{action "setRuleMatchType" value="target.value"}}>
                             <option value="any" selected={{eq question.rule.matchType 'any'}}>match on any question condition</option>
@@ -124,7 +125,7 @@
                           </select>
                         </td>
                       </tr>
-                      <tr>
+                      <tr class="no-hover">
                         <td width="10px"></td>
                         <td>Question</td>
                         <td>Operator</td>
@@ -133,9 +134,9 @@
                         <td width="10px"></td>
                       </tr>
                       {{#each question.rule.conditions as |condition|}}
-                        {{condition-row condition=condition rule=question.rule questions=questions save='saveCondition' isNewCondition=false}}
+                        {{condition-row condition=condition rule=question.rule questions=questions save='saveCondition' remove='removeCondition' isNewCondition=false}}
                       {{/each}}
-                      {{condition-row rule=question.rule questions=questions save='saveCondition' isNewCondition=true}}
+                      {{condition-row rule=question.rule questions=questions save='saveCondition' remove='removeCondition' isNewCondition=true}}
                     </tbody>
                   </table>
                 </div>

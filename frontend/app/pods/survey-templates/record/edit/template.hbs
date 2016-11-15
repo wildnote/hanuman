@@ -4,53 +4,6 @@
   </div>
 
   <div class="panel-body">
-    {{#object-form for=surveyTemplate}}
-      <div class="form-group">
-        <label class="col-sm-2 control-label">Name</label>
-        <div class="col-sm-4">
-          {{#form-field for='name'}}
-            <input type="text"
-                  class="form-control"
-                  data-test="surveyTemplate.name"
-                  value={{surveyTemplate.name}}
-                  oninput={{action (mut surveyTemplate.name) value="target.value"}} />
-          {{/form-field}}
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="survey_template_survey_type">Type</label>
-        <div class="col-sm-4">
-          {{#form-field for='surveyType'}}
-            <input type="text"
-                  class="form-control"
-                  data-test="surveyTemplate.surveyType"
-                  value={{surveyTemplate.surveyType}}
-                  oninput={{action (mut surveyTemplate.surveyType) value="target.value"}} />
-          {{/form-field}}
-        </div>
-      </div>
-      <div class="form-group">
-        <label class="col-sm-2 control-label" for="survey_template_status">Status</label>
-        <div class="col-sm-4">
-          {{#form-field for='answerType'}}
-            <select data-test="surveyTemplate.status" class="form-control" onchange={{action "setStatus" value="target.value"}}>
-              {{#each statuses as |status|}}
-                <option value={{status}} selected={{eq surveyTemplate.status status}}>{{status}}</option>
-              {{/each}}
-            </select>
-          {{/form-field}}
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-          <a class="btn btn-primary" data-test="save-survey-template-link" onclick={{route-action "save"}}>
-            Save
-          </a>
-          {{#link-to 'survey_templates.record' surveyTemplate class="btn btn-default" activeClass=""}}
-            Cancel
-          {{/link-to}}
-        </div>
-      </div>
-    {{/object-form}}
+    {{survey-template-form surveyTemplate=surveyTemplate organizations=organizations}}
   </div>
 </div>

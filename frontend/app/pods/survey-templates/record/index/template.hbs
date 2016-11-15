@@ -1,38 +1,46 @@
 <div class="panel panel-info">
   <div class="panel-heading">
-    <h3 class="panel-title">Survey Template Details</h3>
-    {{#link-to 'survey_templates.record.edit' surveyTemplate data-test="edit-survey-link" class="btn btn-success panel-title-button-right"}}
-      <span class="glyphicon glyphicon-pencil"></span>
-      Edit Survey Template
-    {{/link-to}}
+    <h3 class="panel-title">Survey Details</h3>
   </div>
-
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Survey Template</label>
-    <div class="col-sm-4">
-      <p class="form-control-static" data-test="surveyTemplate.name">
-        {{surveyTemplate.name}}
-      </p>
+  <div class="panel-body">
+    <div class="pull-right">
+      <a class="btn btn-success" data-test="duplicate-survey-link" onclick={{route-action "duplicate"}}>
+        <span class="glyphicons glyphicons-duplicate"></span>
+        Duplicate Survey
+      </a>
+      {{#link-to 'survey_templates.record.edit' surveyTemplate data-test="edit-survey-link" class="btn btn-success"}}
+        <span class="glyphicons glyphicons-pencil"></span>
+        Edit Survey Details
+      {{/link-to}}
     </div>
-    <label class="col-sm-2 control-label">Type</label>
-    <div class="col-sm-4">
-      <p class="form-control-static">
-        {{surveyTemplate.surveyType}}
-      </p>
+    <div class="clearfix"></div>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Name</label>
+      <div class="col-sm-10">
+        <p class="form-control-static" data-test="surveyTemplate.name">
+          {{surveyTemplate.name}}
+        </p>
+      </div>
     </div>
-  </div>
-  <div class="form-group">
-    <label class="col-sm-2 control-label">Status</label>
-    <div class="col-sm-4">
-      <p class="form-control-static" data-test="surveyTemplate.status">
-        {{surveyTemplate.status}}
-      </p>
-    </div>
-    <label class="col-sm-2 control-label">Fully Editable</label>
-    <div class="col-sm-4">
-      <p class="form-control-static">
-        {{surveyTemplate.fullyEditable}}
-      </p>
+    <div class="form-group">
+      <label class="col-sm-2 control-label">Type</label>
+      <div class="col-sm-2">
+        <p class="form-control-static">
+          {{surveyTemplate.surveyType}}
+        </p>
+      </div>
+      <label class="col-sm-2 control-label">Status</label>
+      <div class="col-sm-2">
+        <p class="form-control-static" data-test="surveyTemplate.status">
+          {{surveyTemplate.status}}
+        </p>
+      </div>
+      <label class="col-sm-2 control-label">Fully Editable</label>
+      <div class="col-sm-2">
+        <p class="form-control-static">
+          {{surveyTemplate.fullyEditable}}
+        </p>
+      </div>
     </div>
   </div>
 </div>

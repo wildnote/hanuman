@@ -1,20 +1,6 @@
-<div class="page-header">
-  <div class="pull-left">
-    <a class="btn btn-primary" href="/hanuman/survey_templates"><span class="glyphicon glyphicon-chevron-left"></span>
-      Back to Survey Templates
-    </a>
-  </div>
-  <div class="pull-right">
-    <a class="btn btn-primary" href="/hanuman/survey_templates/{{surveyTemplate.id}}/update_survey_data">
-      Resort Submitted Data
-    </a>
-  </div>
-</div>
-
 <div class="form-horizontal">
   {{liquid-outlet}}
-  {{questions-list surveyTemplate=surveyTemplate}}
+  {{questions-list surveyTemplate=surveyTemplate isLoadingQuestions=isLoadingQuestions loadingProgress=loadingProgress updateSortOrder="updateSortOrder"}}
  </div>
 
 {{outlet 'questions'}}
-
