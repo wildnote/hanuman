@@ -160,7 +160,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
       uploadFormat = "." + data.result.format
     else
       uploadFormat = data.result.public_id.match(/\.[0-9a-z]+$/i)[0]
-    permittenFormats = [".jpg", ".png", ".gif", ".jpeg", ".xls", ".xlsx", ".pdf", ".doc", ".docx", ".txt", ".tif", ".tiff", ".zip", ".eml", ".kmz", ".ppt", ".pptx"]
+    permittenFormats = [".jpg", ".png", ".gif", ".jpeg", ".xls", ".xlsx", ".pdf", ".doc", ".docx", ".txt", ".tif", ".tiff", ".zip", ".eml", ".kmz", ".ppt", ".pptx", ".csv"]
     permited = permittenFormats.find (f) ->
                  f == uploadFormat
     if permited == undefined
