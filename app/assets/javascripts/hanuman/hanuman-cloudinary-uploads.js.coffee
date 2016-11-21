@@ -141,7 +141,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
     $(e.target).siblings('.progress').find('.document-progress-bar').removeAttr("style")
     $(e.target).siblings('.progress').addClass('hidden')
-      
+
     # this if statement sets the pdf file's extension to png for a preview in upload
     # publicId = data.result.public_id
     if data.result.format == "pdf"
@@ -155,13 +155,13 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     if data.result.format != "pdf" && data.result.format != "png" && data.result.format != "jpg"
       $('.document-preview img:last').attr('src', '/assets/file-icon.png')
 
-  # validating upload format. If fomat to supported then handle error
+    # validating upload format. If fomat to supported then handle error
     if data.result.format != undefined
-      uploadFormat = "."+data.result.format
+      uploadFormat = "." + data.result.format
     else
       uploadFormat = data.result.public_id.match(/\.[0-9a-z]+$/i)[0]
     permittenFormats = [".jpg", ".png", ".gif", ".jpeg", ".xls", ".xlsx", ".pdf", ".doc", ".docx", ".txt", ".tif", ".tiff", ".zip", ".eml", ".kmz", ".ppt", ".pptx"]
-    permited  = permittenFormats.find (f) ->
+    permited = permittenFormats.find (f) ->
                  f == uploadFormat
     if permited == undefined
       $(e.target).siblings('.document-upload-error').append "<p style='color:#d6193d;'> document format NOT supported</p>"
