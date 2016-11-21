@@ -122,10 +122,10 @@ $(document).ready(function(){
     }
 
     // listens to file upload and removes parsley errors
-    $('input[type=file]').bind('fileuploadstart', function(){
-      $(this).siblings('ul.parsley-errors-list').remove()
-      $(this).removeClass('parsley-error')
-    })
+    $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
+      $(e.target).siblings('ul.parsley-errors-list').remove()
+      $(e.target).removeClass('parsley-error')
+    });
 
 
     // reads dom for required fields

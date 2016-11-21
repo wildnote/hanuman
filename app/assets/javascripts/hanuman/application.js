@@ -29,8 +29,8 @@
 //
 //= require hanuman/hanuman-conditional-logic
 //= require hanuman/hanuman-repeater
-//= require hanuman/hanuman-required-data
 //= require hanuman/hanuman-cloudinary-uploads
+//= require hanuman/hanuman-required-data
 //= require hanuman/hanuman-maps
 //= require hanuman/hanuman-surveys
 //
