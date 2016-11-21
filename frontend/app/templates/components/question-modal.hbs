@@ -147,19 +147,20 @@
           <hr />
 
         {{/if}}
-
-        <div class="form-group">
-          <div class="col-sm-12">
-            {{#form-field for='externalDataSource' label='External Data Source'}}
-              <input type="text"
-                    class="form-control"
-                    data-test="question.externalDataSource"
-                    value={{question.externalDataSource}}
-                    oninput={{action (mut question.externalDataSource) value="target.value"}} />
-              <small class="text-muted">(Superuser only)</small>
-            {{/form-field}}
+        {{#if isSuperUser}}
+          <div class="form-group">
+            <div class="col-sm-12">
+              {{#form-field for='externalDataSource' label='External Data Source'}}
+                <input type="text"
+                      class="form-control"
+                      data-test="question.externalDataSource"
+                      value={{question.externalDataSource}}
+                      oninput={{action (mut question.externalDataSource) value="target.value"}} />
+                <small class="text-muted">(Superuser only)</small>
+              {{/form-field}}
+            </div>
           </div>
-        </div>
+        {{/if}}
       {{/object-form}}
     </div>
 

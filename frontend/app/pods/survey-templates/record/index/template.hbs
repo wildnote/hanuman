@@ -4,14 +4,18 @@
   </div>
   <div class="panel-body">
     <div class="pull-right">
-      <a class="btn btn-success" data-test="duplicate-survey-link" onclick={{route-action "duplicate"}}>
+      <a class="btn btn-success" data-test="duplicate-survey-link" id="duplicate-survey-link" onclick={{route-action "duplicate"}}>
         <span class="glyphicons glyphicons-duplicate"></span>
-        Duplicate Survey
+        <span class="text">Duplicate Survey</span>
       </a>
       {{#link-to 'survey_templates.record.edit' surveyTemplate data-test="edit-survey-link" class="btn btn-success"}}
         <span class="glyphicons glyphicons-pencil"></span>
         Edit Survey Details
       {{/link-to}}
+      <a class="btn btn-danger" data-test="delete-survey-link" id="delete-survey-link" onclick={{route-action "delete"}}>
+        <span class="glyphicons glyphicons-bin"></span>
+        <span class="text">Delete Survey</span>
+      </a>
     </div>
     <div class="clearfix"></div>
     <div class="form-group">

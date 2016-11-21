@@ -12,8 +12,18 @@ export default Ember.Component.extend({
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   sortTypesBy: ['displayName'],
   sortChoicesBy: ['optionText'],
-  sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
+  sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
   sortedAnswerChoices: sort('question.answerChoices', 'sortChoicesBy'),
+  filteredAnswerTypes: computed('answerTypes', function() {
+    let answerTypes = this.get('answerTypes');
+    if(this.get('isSuperUser')){
+      return answerTypes;
+    }else{
+      return answerTypes.filter((answerType) => {
+        return !answerType.get('displayName').includes('Taxon');
+      });
+    }
+  }),
   ancestryQuestions: computed('questions', function() {
     return this.get('questions').filter((question) => {
       let allowedTypes = ['section','repeater'];

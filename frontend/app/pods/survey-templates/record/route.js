@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import config from 'frontend/config/environment';
 
 const { run, isPresent, isBlank, inject } = Ember;
 
@@ -73,9 +74,9 @@ export default Ember.Route.extend({
       this._checkAncestryConsistency(questions);
     },
     duplicate(){
-      let indexController = this.controllerFor('survey-templates.record.index');
-      let surveyTemplate = this.currentModel;
-      indexController.send('toggleDuplicateLoading');
+      let indexController = this.controllerFor('survey-templates.record.index'),
+          surveyTemplate = this.currentModel;
+      indexController.send('toggleBtnLoading','duplicate');
       surveyTemplate.duplicate().then((duplicateReponse) => {
         this.transitionTo('survey_templates.record', duplicateReponse.survey_template.id);
         run.later(this ,()=> { this.get('notify').success('Survey Template successfully duplicated.'); }, 1000);
@@ -83,8 +84,26 @@ export default Ember.Route.extend({
         console.log(error);
         this.get('notify').alert('There was an error trying to duplicate this Survey Template');
       }).finally(() => {
-        run.later(this ,()=> { indexController.send('toggleDuplicateLoading'); }, 1500);
+        run.later(this ,()=> { indexController.send('toggleBtnLoading','duplicate'); }, 1500);
       });
+    },
+    delete(){
+      let indexController = this.controllerFor('survey-templates.record.index'),
+          surveyTemplate = this.currentModel;
+      indexController.send('toggleBtnLoading','delete');
+      surveyTemplate.deleteRecord();
+      surveyTemplate.save().then(
+        ()=>{
+          if(config.environment !== 'test'){
+            window.location.replace('/hanuman/survey_templates');
+          }
+        },
+        (error)=>{
+          console.log(error);
+          this.get('notify').alert('There was an error trying to duplicate this Survey Template');
+          run.later(this ,()=> { indexController.send('toggleBtnLoading','delete'); }, 1000);
+        }
+      );
     }
   }
 });

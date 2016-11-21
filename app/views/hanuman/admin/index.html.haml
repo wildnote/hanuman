@@ -14,7 +14,7 @@
   = render "hanuman/survey_templates/helper_list"
 
 :javascript
-  window.superUser = "#{current_user.superuser?}";
+  window.superUser = #{current_user.superuser?};
 
 #ember-container
   %base{href: "/hanuman/admin/"}

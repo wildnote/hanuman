@@ -27,6 +27,11 @@ module Hanuman
       respond_with survey_template_copy
     end
 
+    def destroy
+      survey_template = SurveyTemplate.find(params[:id])
+      respond_with survey_template.destroy
+    end
+
     private
 
     def set_survey_template

@@ -24,5 +24,6 @@ module.exports = function(defaults) {
   // along with the exports of each module as its value.
 
   app.import('bower_components/animate.css/animate.min.css');
+  app.import('vendor/bootstrap/dropdown/bootstrap-dropdown.js');
   return app.toTree();
 };
