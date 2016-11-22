@@ -5,11 +5,6 @@
   <div class="panel-body">
     {{#if isLoadingQuestions}}
       <div class="row">
-        <div class="col-sm-12 text-center">
-          <h1><span class="glyphicons gly-spin glyphicons-refresh"></span></h1>
-        </div>
-      </div>
-      <div class="row">
         <div class="col-sm-12">
           <div class="progress-bar progress-bar-striped active notransition" role="progressbar" aria-valuenow="{{loadingProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{loadingProgress}}%;min-width: 2em;">
             {{loadingProgress}}%

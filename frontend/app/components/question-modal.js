@@ -20,7 +20,7 @@ export default Ember.Component.extend({
       return answerTypes;
     }else{
       return answerTypes.filter((answerType) => {
-        return !answerType.get('displayName').includes('Taxon');
+        return !answerType.get('name').includes('taxon');
       });
     }
   }),

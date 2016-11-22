@@ -61,9 +61,11 @@ module Hanuman
         # update conditioanl logic rules
         q.conditions.each do |c|
           old_rule_id = c.rule_id
-          new_rule = Hanuman::Rule.includes(:question).where("hanuman_rules.duped_rule_id = ? AND hanuman_questions.survey_template_id = ?", old_rule_id, self.id).references(:question).first
-          c.rule_id = new_rule.id
-          c.save!
+          new_rule = Hanuman::Rule.includes(:question).where('hanuman_rules.duped_rule_id = ? AND hanuman_questions.survey_template_id = ?', old_rule_id, self.id).references(:question).first
+          if new_rule
+            c.rule_id = new_rule.id
+            c.save!
+          end
         end
       end
     end
