@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
 
     # Constants
-    STATUSES = %w(draft active inactive)
+    STATUSES = %w(active draft inactive)
 
     # Scopes
     scope :all_active_sorted, -> { where("status = 'active'").order('name ASC') }
