@@ -8,6 +8,7 @@
     - else
       %p
         - cbl_answers = ff.object.observation_answers.map{|oa| oa.answer_choice_id}
+        = hidden_field_tag "survey[observations_attributes][#{index}][answer_choice_ids][]", ""
         - ff.object.question.answer_choices.sorted.each do |a|
           = check_box_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
                              a.id, cbl_answers.include?(a.id), class: 'form-control', data: { "label-value" => a.formatted_answer_choice }
