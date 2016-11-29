@@ -57,12 +57,12 @@
                         <th></th>
                       </tr>
                     </thead>
-                    <tbody>
-                      {{#each sortedAnswerChoices as |answerChoice|}}
-                        {{answer-choice-row question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
+                    {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction='sortAnswerChoices' enableSort=true useSwap=true}}
+                      {{#each question.answerChoices as |answerChoice|}}
+                        {{answer-choice-row content=answerChoice isSortable=true question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
                       {{/each}}
-                      {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true}}
-                    </tbody>
+                      {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true isSortable=false}}
+                    {{/sortable-objects-tbody}}
                   </table>
                 </div>
               </div>

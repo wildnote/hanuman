@@ -1,7 +1,7 @@
 module Hanuman
   class AnswerChoiceSerializer < ActiveModel::Serializer
-    attributes :id, :option_text, :scientific_text, :question_id, :group_text
-    
+    attributes :id, :option_text, :scientific_text, :question_id, :group_text, :sort_order
+
     def group_text
       object.parent.option_text unless object.parent.blank?
     end

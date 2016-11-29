@@ -11,9 +11,7 @@ export default Ember.Component.extend({
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   sortTypesBy: ['displayName'],
-  sortChoicesBy: ['optionText'],
   sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
-  sortedAnswerChoices: sort('question.answerChoices', 'sortChoicesBy'),
   filteredAnswerTypes: computed('answerTypes', function() {
     let answerTypes = this.get('answerTypes');
     if(this.get('isSuperUser')){
@@ -99,6 +97,20 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    sortAnswerChoices(){
+      let answerChoices = this.get('question.answerChoices');
+      answerChoices.forEach((answerChoice, index) => {
+        let oldSortOrder = answerChoice.get('sortOrder'),
+            newSortOrder = index + 1;
+        if(oldSortOrder !== newSortOrder){
+          answerChoice.set('sortOrder', newSortOrder);
+          if(!answerChoice.get('isNew')){
+            answerChoice.save();
+          }
+        }
+      });
+    },
+
     ancestryChange(newAncestryId){
       let question = this.get('question');
       if(Ember.isBlank(newAncestryId)){
