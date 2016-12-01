@@ -102,7 +102,7 @@ setupMapWithEdit = (mapDetails) ->
     # handler.bounds.extendWith markers
     # handler.fitMapToBounds()
     $editListener = google.maps.event.addListener handler.getMap(), 'click', (event) ->
-      $(".edit-map").text("Edit location on map")
+      $(".edit-map").text("Edit location plot point")
       mapId = mapId
       $mapElement = $(document.getElementById(mapId))
       $latlongElement = $mapElement.parent().parent().find('.latlong-entry')
@@ -130,7 +130,7 @@ setupMapWithEdit = (mapDetails) ->
 
 @bindButtons = ->
   $(".edit-map").on "click", ->
-    $(this).text("Pin a location on map")
+    $(this).text("Position map then click here to plot")
     # getMapDetails then run callback function setupMapWithEdit
     $mapContainer = $(this).closest(".map-container").find(".latlong")
     $formGroup = $(this).closest('.form-group')
@@ -140,9 +140,9 @@ setupMapWithEdit = (mapDetails) ->
     getMapDetails $mapContainer, setupMapWithEdit
     $(this).hide()
     $cancelButton.show()
-    $helperText.text("Click the Map to Pin a Location").show()
+    $helperText.text("Now click on the map to plot a location").show()
   $(".cancel-map").on "click", ->
-    $(".edit-map").text("Pin a location on map")
+    $(".edit-map").text("Position map then click here to plot")
     $formGroup = $(this).closest('.form-group')
     $editButton = $formGroup.find('.edit-map')
     $helperText = $formGroup.find('.helper-text p')
