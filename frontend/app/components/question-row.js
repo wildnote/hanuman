@@ -10,9 +10,9 @@ export default Ember.Component.extend({
   typeInitial: computed('question.{ancestry,hidden,required}', function() {
     const question = this.get('question');
     let intial = '';
-    if (question.get('ancestry')) { intial += `<span class="label label-default">Ancestry (${question.get('ancestry')})</span>`; }
-    if (question.get('hidden')) { intial += '<span class="label label-info">Hidden</span>'; }
+    if (question.get('hidden')) { intial += '<span class="label label-default">Hidden</span>'; }
     if (question.get('required')) { intial += '<span class="label label-danger">Required</span>'; }
+    if (question.get('rule')) { intial += `<span class="label label-info">Rules</span>`; }
     return Ember.String.htmlSafe(intial);
   }),
 

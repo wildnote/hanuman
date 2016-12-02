@@ -1,6 +1,6 @@
 <div class="panel panel-info">
   <div class="panel-heading">
-    <div class="panel-title">Questions</div>
+    <div class="panel-title">Survey Layout</div>
   </div>
   <div class="panel-body">
     {{#if isLoadingQuestions}}
@@ -12,6 +12,7 @@
         </div>
       </div>
     {{else}}
+    {{#if isSuperUser}}
       <div class="pull-right">
         <a class="btn btn-success" href="/hanuman/survey_templates/{{surveyTemplate.id}}/update_survey_data">
           <i class="glyphicons glyphicons-sort-by-order"></i>
@@ -19,18 +20,33 @@
         </a>
       </div>
       <div class="clearfix"></div>
+    {{/if}}
 
       <div class="row">
         <div class="col-sm-4"><strong>Label</strong></div>
         <div class="col-sm-2"><strong>Question Type</strong></div>
-        <div class="col-sm-4"><strong>Info</strong></div>
-        <div class="col-sm-2"></div>
+        <div class="col-sm-2"><strong>Info</strong></div>
+        {{#if isSuperUser}}
+          <div class="col-sm-2"><strong>Debug</strong></div>
+        {{/if}}
+        <div class="col-sm-4"></div>
       </div>
 
       <div class="row">
         <div class="col-sm-12">
           &nbsp;
         </div>
+      </div>
+
+      <!-- hardcode survey date row here -->
+      <div class="row">
+        <div class="col-sm-4" data-test="question.answerType.displayName">Survey Date</div>
+        <div class="col-sm-2">Date</div>
+        <div class="col-sm-2">Survey Date is automatically added to all surveys.</div>
+        {{#if isSuperUser}}
+          <div class="col-sm-2"></div>
+        {{/if}}
+        <div class="col-sm-2"></div>
       </div>
 
       {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange=(route-action "reorderQuestions") as |group|}}
