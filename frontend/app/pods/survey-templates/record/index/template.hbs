@@ -39,15 +39,13 @@
           {{surveyTemplate.status}}
         </p>
       </div>
-      {{#if surveyTemplate.fullyEditable}}
-      {{else}}
-        <label class="col-sm-2 control-label">This survey has existing data</label>
-        <div class="col-sm-2">
-          <p class="form-control-static">
-            You can make changes to this survey, however, if you delete a question, previously submitted data will be deleted. In addition, if you add a question, previously submitted surveys won't have that question. Also, if you change the sort order, previously submitted surveys will not have that same sort. These kinds of changes could affect the pivot report. If this could be a problem we recommend you duplicate this survey and make changes to the duplicated survey.
-          </p>
-        </div>
-      {{/if}}
     </div>
   </div>
 </div>
+{{#if surveyTemplate.fullyEditable}}
+{{else}}
+    <div class="alert alert-info">
+      <p>This survey has existing data.</p>
+      <p>You can make changes to this survey, however, if you delete a question, previously submitted data will be deleted. In addition, if you add a question, previously submitted surveys won't have that question. Also, if you change the sort order, previously submitted surveys will not have that same sort. These kinds of changes could affect the pivot report. If this could be a problem we recommend you duplicate this survey and make changes to the duplicated survey.</p>
+    </div>
+{{/if}}
