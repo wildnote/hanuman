@@ -19,7 +19,8 @@ module Hanuman
     validates :question_text, presence: true, unless: :question_text_not_required
 
     # Callbacks
-    after_create :submit_blank_observation_data
+    # commenting this out because we are not going to update previously submitted data at this point, leave it alone
+    # after_create :submit_blank_observation_data
     # this flooding the system on a question resort which is resulting in a db deadlock,
     # will manually call this at the survey template level after all changes are made
     #after_update :resort_submitted_observations, if: :sort_order_changed?
