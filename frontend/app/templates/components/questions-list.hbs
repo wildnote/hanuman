@@ -38,18 +38,27 @@
         </div>
       </div>
 
-      <!-- hardcode survey date row here -->
-      <div class="row">
-        <div class="col-sm-4" data-test="question.answerType.displayName">Survey Date</div>
-        <div class="col-sm-2">Date</div>
-        <div class="col-sm-2">Survey Date is automatically added to all surveys.</div>
-        {{#if isSuperUser}}
-          <div class="col-sm-2"></div>
-        {{/if}}
-        <div class="col-sm-2"></div>
-      </div>
 
       {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange=(route-action "reorderQuestions") as |group|}}
+        <!-- hardcode survey date row here -->
+        <li class="li-question row question-border">
+          <div class="row">
+            <div class="col-sm-4" data-test="question.answerType.displayName">
+              <span class="glyphicons glyphicons-sorting text-muted"></span>
+              Survey Date
+            </div>
+            <div class="col-sm-2">Date</div>
+            {{#if isSuperUser}}
+              <div class="col-sm-6">
+                <span class="label label-default">The Survey Date field is automatically added to all surveys and is always at the top of the Survey Layout</span>
+              </div>
+            {{else}}
+              <div class="col-sm-4">
+                <span class="label label-default">The Survey Date field is automatically added to all surveys and is always at the top of the Survey Layout</span>
+              </div>
+            {{/if}}
+          </div>
+        </li>
         {{#each sortedQuestions as |question|}}
           {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
             {{#if question.supportAncestry}}
