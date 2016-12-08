@@ -11,10 +11,6 @@ export default Ember.Route.extend({
     });
   },
 
-  afterModel: function(models) {
-    models.question.set('answerType',models.answerTypes.get('firstObject'));
-  },
-
   setupController(controller, models) {
     controller.setProperties(models);
   }

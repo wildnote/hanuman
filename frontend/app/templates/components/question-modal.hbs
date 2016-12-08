@@ -28,6 +28,9 @@
             {{#if (or isFullyEditable question.isNew)}}
               {{#form-field for='answerType'}}
                 <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
+                  {{#if question.isNew}}
+                    <option></option>
+                  {{/if}}
                   {{#each sortedAnswerTypes as |answerType|}}
                     <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>{{answerType.displayName}}</option>
                   {{/each}}

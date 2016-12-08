@@ -1,7 +1,7 @@
 .ember-view.object-form{
   .form-field{
     &.error{
-      input.form-control{
+      input.form-control, select.form-control{
         background: #fff6f6;
         border-color: #e0b4b4;
       }
@@ -16,4 +16,8 @@
       }
     }
   }
+}
+
+select.form-control{
+  height: 35px;
 }
