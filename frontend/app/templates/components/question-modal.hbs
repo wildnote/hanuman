@@ -46,7 +46,7 @@
         </div>
         <div class="row">
           <div class="col-sm-12 alert alert-info">
-            To add Taxon type of question (plant and or animal list) to survey, contact us via chat below. We can add them for you.
+            Would you like a plant or animal list added to your survey? Contact us via chat below.
           </div>
         </div>
 
@@ -112,6 +112,15 @@
         </div>
 
         <hr />
+
+        {{#if question.isNew}}
+          <div class="row">
+            <div class="col-sm-12 alert alert-info">
+              To add Hide and Show rules for this question. Save and re-open the question to access.
+            </div>
+          </div>
+          <hr />
+        {{/if}}
 
         {{#if question.rule}}
 
