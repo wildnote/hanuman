@@ -185,8 +185,9 @@ export default Ember.Component.extend({
     },
 
     removeCondition(condition){
-      if(this.get('question.isNew') || this.get('question.rule.isNew')){
+      if(this.get('question.rule.isNew') || condition.get('isNew')){
         this.get('conditionsPendingSave').removeObject(condition);
+        condition.deleteRecord();
       }else{
         condition.deleteRecord();
         condition.save();
