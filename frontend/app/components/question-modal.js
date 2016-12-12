@@ -69,21 +69,23 @@ export default Ember.Component.extend({
   },
 
   _saveSuccess(question, promises){
-    let answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
-        conditionsPendingSave = this.get('conditionsPendingSave');
+    question.reload().then((question)=>{
+      let answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
+          conditionsPendingSave = this.get('conditionsPendingSave');
 
-    if(!question.get('answerType.hasAnswerChoices')){
-      this._removeAnswerChoices();
-    }
-    promises = $.makeArray(promises);
-    Ember.RSVP.all(promises).then(()=>{
-      while (answerChoicesPendingSave.length > 0) {
-        answerChoicesPendingSave.popObject();
+      if(!question.get('answerType.hasAnswerChoices')){
+        this._removeAnswerChoices();
       }
-      while (conditionsPendingSave.length > 0) {
-        conditionsPendingSave.popObject();
-      }
-      this.send('closeModal');
+      promises = $.makeArray(promises);
+      Ember.RSVP.all(promises).then(()=>{
+        while (answerChoicesPendingSave.length > 0) {
+          answerChoicesPendingSave.popObject();
+        }
+        while (conditionsPendingSave.length > 0) {
+          conditionsPendingSave.popObject();
+        }
+        this.send('closeModal');
+      });
     });
   },
 
