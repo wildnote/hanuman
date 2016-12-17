@@ -1,7 +1,7 @@
-- content_for :navbar_hanuman_surveys do
-  active
 - content_for :title do
   Surveys
+- content_for :navbar_hanuman_surveys do
+  active
 
 .page-header
   = form_tag new_survey_path, method: 'get' do
@@ -13,7 +13,7 @@
     = label_tag "Select Survey:"
   %h1 Surveys
 
-.pull-right= paginate @surveys
+.pull-left= paginate @surveys
 
 .table-responsive
   %table.table.table-hover
@@ -42,4 +42,4 @@
               %span.glyphicons.glyphicons-trash
               Delete Survey
 
-.pull-right= paginate @surveys
+.pull-left= paginate @surveys

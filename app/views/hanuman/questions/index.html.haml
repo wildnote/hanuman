@@ -1,11 +1,7 @@
 - content_for :title do
   Questions
-- content_for :title_parent do
-  Questions
-- content_for :superuser_label do
-  QS
-- content_for :title_actions do
-  = render "actions", locals: {}
+- content_for :navbar_main_settings do
+  active
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_questions do
@@ -19,8 +15,11 @@
       = link_to import_answer_choices_questions_path, class: "btn btn-success" do
         %span.glyphicons.glyphicons-disk-save
         Import Answer Choices
-    .clearfix
-    .pull-right= paginate(@questions)
+      = link_to new_question_path, class: "btn btn-success" do
+        %i.glyphicons.glyphicons-plus
+        %span.menu-title
+          New Question
+    .pull-left= paginate(@questions)
     .clearfix
     .table-responsive
       %table.table.table-hover
@@ -38,5 +37,5 @@
               %td
                 = link_to question, data: {confirm: "Are you sure you want to delete this Question?"}, method: :delete do
                   %span.glyphicons.glyphicons-trash
-    .pull-right= paginate(@questions)
+    .pull-left= paginate(@questions)
     .clearfix
