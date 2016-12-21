@@ -1,8 +1,5 @@
-<div class="panel panel-info">
-  <div class="panel-heading">
-    <h3 class="panel-title">Survey Details</h3>
-  </div>
-  <div class="panel-body">
+<div class="container">
+  <div class="col-md-12">
     <div class="pull-right">
       <a class="btn btn-success" data-test="duplicate-survey-link" id="duplicate-survey-link" onclick={{route-action "duplicate"}}>
         <span class="glyphicons glyphicons-duplicate"></span>
@@ -40,12 +37,12 @@
         </p>
       </div>
     </div>
+    {{#if surveyTemplate.fullyEditable}}
+    {{else}}
+      <div class="alert alert-info">
+        <p>This survey has existing data.</p>
+        <p>You can make changes to this survey, however, if you delete a question, previously submitted data will be deleted. In addition, if you add a question, previously submitted surveys won't have that question. Also, if you change the sort order, previously submitted surveys will not have that same sort. These kinds of changes could affect the pivot report. If this could be a problem we recommend you duplicate this survey and make changes to the duplicated survey.</p>
+      </div>
+    {{/if}}
   </div>
 </div>
-{{#if surveyTemplate.fullyEditable}}
-{{else}}
-    <div class="alert alert-info">
-      <p>This survey has existing data.</p>
-      <p>You can make changes to this survey, however, if you delete a question, previously submitted data will be deleted. In addition, if you add a question, previously submitted surveys won't have that question. Also, if you change the sort order, previously submitted surveys will not have that same sort. These kinds of changes could affect the pivot report. If this could be a problem we recommend you duplicate this survey and make changes to the duplicated survey.</p>
-    </div>
-{{/if}}
