@@ -15,19 +15,26 @@
     {{/unless}}
     <span data-test="question.questionText">{{question.questionText}}</span>
   </div>
-  <div class="col-sm-2" data-test="question.answerType.name">{{question.answerType.name}}</div>
-  <div class="col-sm-4">
-    {{question.sortOrder}} [{{question.railsId}}]
+  <div class="col-sm-2" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
+  <div class="col-sm-2">
     {{typeInitial}}
-    {{#if (and question.rule question.rule.conditions)}}
-      [CL show
-      {{#each question.rule.conditions as |condition|}}
-        if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
-        {{question.ruleMatchType}}
-      {{/each}}
-      ]
-    {{/if}}
   </div>
+  {{#if isSuperUser}}
+    <div class="col-sm-2">
+      {{question.sortOrder}} [{{question.railsId}}]
+      {{#if question.ancestry}}
+        [A {{question.ancestry}}]
+      {{/if}}
+      {{#if (and question.rule question.rule.conditions)}}
+        [CL show
+        {{#each question.rule.conditions as |condition|}}
+          if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
+          {{question.ruleMatchType}}
+        {{/each}}
+        ]
+      {{/if}}
+    </div>
+  {{/if}}
   <div class="col-sm-2">
     {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
       <span class="glyphicons glyphicons-pencil"></span>

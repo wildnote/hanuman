@@ -1,17 +1,18 @@
-<div class="panel panel-info">
-  <div class="panel-heading">
-    <h3 class="panel-title">Survey Details</h3>
-  </div>
-  <div class="panel-body">
+<div class="container">
+  <div class="col-md-12">
     <div class="pull-right">
-      <a class="btn btn-success" data-test="duplicate-survey-link" onclick={{route-action "duplicate"}}>
+      <a class="btn btn-success" data-test="duplicate-survey-link" id="duplicate-survey-link" onclick={{route-action "duplicate"}}>
         <span class="glyphicons glyphicons-duplicate"></span>
-        Duplicate Survey
+        <span class="text">Duplicate Survey</span>
       </a>
       {{#link-to 'survey_templates.record.edit' surveyTemplate data-test="edit-survey-link" class="btn btn-success"}}
         <span class="glyphicons glyphicons-pencil"></span>
         Edit Survey Details
       {{/link-to}}
+      <a class="btn btn-danger" data-test="delete-survey-link" id="delete-survey-link" onclick={{route-action "delete"}}>
+        <span class="glyphicons glyphicons-bin"></span>
+        <span class="text">Delete Survey</span>
+      </a>
     </div>
     <div class="clearfix"></div>
     <div class="form-group">
@@ -35,12 +36,13 @@
           {{surveyTemplate.status}}
         </p>
       </div>
-      <label class="col-sm-2 control-label">Fully Editable</label>
-      <div class="col-sm-2">
-        <p class="form-control-static">
-          {{surveyTemplate.fullyEditable}}
-        </p>
-      </div>
     </div>
+    {{#if surveyTemplate.fullyEditable}}
+    {{else}}
+      <div class="alert alert-info">
+        <p>This survey has existing data.</p>
+        <p>You can make changes to this survey, however, if you delete a question, previously submitted data will be deleted. In addition, if you add a question, previously submitted surveys won't have that question. Also, if you change the sort order, previously submitted surveys will not have that same sort. These kinds of changes could affect the pivot report. If this could be a problem we recommend you duplicate this survey and make changes to the duplicated survey.</p>
+      </div>
+    {{/if}}
   </div>
 </div>

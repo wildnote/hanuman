@@ -7,12 +7,12 @@ const {
 export default Ember.Component.extend({
   attributeBindings: ['question.id:data-question-id'],
 
-  typeInitial: computed('question.{ancestry,hidden,required}', function() {
+  typeInitial: computed('question.{ancestry,hidden,required,rule.isNew}', function() {
     const question = this.get('question');
     let intial = '';
-    if (question.get('ancestry')) { intial += `<span class="label label-default">Ancestry (${question.get('ancestry')})</span>`; }
-    if (question.get('hidden')) { intial += '<span class="label label-info">Hidden</span>'; }
+    if (question.get('hidden')) { intial += '<span class="label label-default">Hidden</span>'; }
     if (question.get('required')) { intial += '<span class="label label-danger">Required</span>'; }
+    if (question.get('rule') && !question.get('rule.isNew')) { intial += `<span class="label label-info">Rules</span>`; }
     return Ember.String.htmlSafe(intial);
   }),
 

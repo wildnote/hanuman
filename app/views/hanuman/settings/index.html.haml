@@ -1,11 +1,7 @@
 - content_for :title do
   System Settings
-- content_for :title_parent do
-  System Settings
-- content_for :superuser_label do
-  SS
-- content_for :title_actions do
-  = render "actions", locals: {}
+- content_for :navbar_main_settings do
+  active
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_settings do
@@ -16,7 +12,12 @@
     %h3.panel-title System Settings
 
   .panel-body
-    .pull-right= paginate(@settings)
+    .pull-left= paginate(@settings)
+    .pull-right
+      = link_to new_setting_path, class: "btn btn-success" do
+        %i.glyphicons.glyphicons-plus
+        %span.menu-title
+          New System Setting
     .clearfix
     .table-responsive
       %table.table.table-hover
@@ -35,5 +36,5 @@
                 = link_to setting, data: {confirm: "Are you sure you want to delete this Setting?"}, method: :delete do
                   %span.glyphicons.glyphicons-trash
 
-    .pull-right= paginate(@settings)
+    .pull-left= paginate(@settings)
     .clearfix

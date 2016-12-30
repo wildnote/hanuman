@@ -6,13 +6,9 @@ export default Ember.Route.extend({
     return Ember.RSVP.hash({
       question: this.store.createRecord('question',{surveyTemplate}),
       questions: surveyTemplate.get('questions'),
-      answerTypes: this.store.findAll('answer-type'),
+      answerTypes: this.store.findAll('answer-type', { reload: true }),
       surveyTemplate
     });
-  },
-
-  afterModel: function(models) {
-    models.question.set('answerType',models.answerTypes.get('firstObject'));
   },
 
   setupController(controller, models) {

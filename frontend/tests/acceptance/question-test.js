@@ -26,6 +26,7 @@ test('selecting a type with answer choices', function(assert) {
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   andThen(function() {
     assert.equal(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
+    // Select
     fillIn('[data-test="answer-type-id-select"]', 1);
     triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
     Ember.run.later(this,function() {
@@ -67,6 +68,9 @@ test('adding a question', function(assert) {
     click('a:contains("Add")').then(()=>{
       assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
       fillIn('[data-test="question.questionText"]', 'this is DA question');
+      // Select
+      fillIn('[data-test="answer-type-id-select"]', 1);
+      triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
       click('[data-test="save-question-link"]').then(()=>{
         question = server.schema.questions.all().models[0];
         assert.equal(question.questionText, 'this is DA question');

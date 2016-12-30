@@ -3,16 +3,16 @@ $(document).ready(function(){
   //  validates all survey forms for date inputs and forms with required fields.
   $('form').parsley()
 
-// this event listener waits one second after user clicks on submit button so that parsley has enough time to add error elements if needed
+  // this event listener waits one second after user clicks on submit button so that parsley has enough time to add error elements if needed
   if ($('form.parsley-survey').length > 0 && $('[data-required=true]').length > 0) {
 
     $('input[type="submit"]').on('click', function(){
       //  this code runs through all the file inputs on survey edit and removes the parsley attrs if the inputs  already have an upload.
       //  if we dont have this code, then the survey will not save because parsley will think the input file is empty.
-      var fileInputs =  $('input[type=file]').siblings('div.attachinary_container').find('input[type=hidden]')
+      var fileInputs =  $('input[type=file]').siblings('div.preview-container').find('input[type=hidden]')
       for (var i = 0; i < fileInputs.length; i++) {
         if ($(fileInputs[i]).val() != "") {
-          $($(fileInputs[i]).parent().siblings('input[type=file]')).removeAttr('data-parsley-required')
+          $(fileInputs[i]).parents('.file-upload-input-button').find('.cloudinary-fileupload').removeAttr('data-parsley-required')
         }
       }
 
@@ -122,10 +122,10 @@ $(document).ready(function(){
     }
 
     // listens to file upload and removes parsley errors
-    $('input[type=file]').bind('fileuploadstart', function(){
-      $(this).siblings('ul.parsley-errors-list').remove()
-      $(this).removeClass('parsley-error')
-    })
+    $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
+      $(e.target).siblings('ul.parsley-errors-list').remove()
+      $(e.target).removeClass('parsley-error')
+    });
 
 
     // reads dom for required fields

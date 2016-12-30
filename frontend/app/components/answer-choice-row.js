@@ -1,9 +1,12 @@
 import Ember from 'ember';
+import DraggableObject from 'ember-drag-drop/components/draggable-object';
 
-export default Ember.Component.extend({
+export default DraggableObject.extend({
   tagName: 'tr',
-  attributeBindings: ['answerChoice.id:data-answer-choice-id'],
-  classNameBindings: ['isNewAnswerChoice:no-hover'],
+
+  classNameBindings: [':js-draggableObject','isDraggingObject:is-dragging-object:', 'overrideClass','isNewAnswerChoice:no-hover'],
+  attributeBindings: ['dragReady:draggable','answerChoice.id:data-answer-choice-id'],
+
   isEditingAnswerChoice: false,
 
   setNewAnswerChoice() {

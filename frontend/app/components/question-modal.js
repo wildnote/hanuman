@@ -11,9 +11,17 @@ export default Ember.Component.extend({
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   sortTypesBy: ['displayName'],
-  sortChoicesBy: ['optionText'],
-  sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
-  sortedAnswerChoices: sort('question.answerChoices', 'sortChoicesBy'),
+  sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
+  filteredAnswerTypes: computed('answerTypes', function() {
+    let answerTypes = this.get('answerTypes');
+    if(this.get('isSuperUser')){
+      return answerTypes;
+    }else{
+      return answerTypes.filter((answerType) => {
+        return !answerType.get('name').includes('taxon');
+      });
+    }
+  }),
   ancestryQuestions: computed('questions', function() {
     return this.get('questions').filter((question) => {
       let allowedTypes = ['section','repeater'];
@@ -61,21 +69,23 @@ export default Ember.Component.extend({
   },
 
   _saveSuccess(question, promises){
-    let answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
-        conditionsPendingSave = this.get('conditionsPendingSave');
+    question.reload().then((question)=>{
+      let answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
+          conditionsPendingSave = this.get('conditionsPendingSave');
 
-    if(!question.get('answerType.hasAnswerChoices')){
-      this._removeAnswerChoices();
-    }
-    promises = $.makeArray(promises);
-    Ember.RSVP.all(promises).then(()=>{
-      while (answerChoicesPendingSave.length > 0) {
-        answerChoicesPendingSave.popObject();
+      if(!question.get('answerType.hasAnswerChoices')){
+        this._removeAnswerChoices();
       }
-      while (conditionsPendingSave.length > 0) {
-        conditionsPendingSave.popObject();
-      }
-      this.send('closeModal');
+      promises = $.makeArray(promises);
+      Ember.RSVP.all(promises).then(()=>{
+        while (answerChoicesPendingSave.length > 0) {
+          answerChoicesPendingSave.popObject();
+        }
+        while (conditionsPendingSave.length > 0) {
+          conditionsPendingSave.popObject();
+        }
+        this.send('closeModal');
+      });
     });
   },
 
@@ -89,6 +99,20 @@ export default Ember.Component.extend({
   },
 
   actions: {
+    sortAnswerChoices(){
+      let answerChoices = this.get('question.answerChoices');
+      answerChoices.forEach((answerChoice, index) => {
+        let oldSortOrder = answerChoice.get('sortOrder'),
+            newSortOrder = index + 1;
+        if(oldSortOrder !== newSortOrder){
+          answerChoice.set('sortOrder', newSortOrder);
+          if(!answerChoice.get('isNew')){
+            answerChoice.save();
+          }
+        }
+      });
+    },
+
     ancestryChange(newAncestryId){
       let question = this.get('question');
       if(Ember.isBlank(newAncestryId)){
@@ -163,8 +187,9 @@ export default Ember.Component.extend({
     },
 
     removeCondition(condition){
-      if(this.get('question.isNew') || this.get('question.rule.isNew')){
+      if(this.get('question.rule.isNew') || condition.get('isNew')){
         this.get('conditionsPendingSave').removeObject(condition);
+        condition.deleteRecord();
       }else{
         condition.deleteRecord();
         condition.save();

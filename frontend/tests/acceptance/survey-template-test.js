@@ -36,6 +36,14 @@ test('listing questions', function(assert) {
   });
 });
 
+test('deleting a survey template', function(assert) {
+  visit(`/survey_templates/${surveyTemplate.id}`);
+  click('[data-test="delete-survey-link"]').then(()=>{
+    console.log(server.db.surveyTemplates);
+    assert.equal(server.db.surveyTemplates.length, 0);
+  });
+});
+
 test('editing a survey template', function(assert) {
   visit(`/survey_templates/${surveyTemplate.id}`);
   click('[data-test="edit-survey-link"]').then(()=>{

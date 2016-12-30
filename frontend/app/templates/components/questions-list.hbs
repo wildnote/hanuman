@@ -1,14 +1,6 @@
-<div class="panel panel-info">
-  <div class="panel-heading">
-    <div class="panel-title">Questions</div>
-  </div>
-  <div class="panel-body">
+<div class="container">
+  <div class="col-md-12">
     {{#if isLoadingQuestions}}
-      <div class="row">
-        <div class="col-sm-12 text-center">
-          <h1><span class="glyphicons gly-spin glyphicons-refresh"></span></h1>
-        </div>
-      </div>
       <div class="row">
         <div class="col-sm-12">
           <div class="progress-bar progress-bar-striped active notransition" role="progressbar" aria-valuenow="{{loadingProgress}}" aria-valuemin="0" aria-valuemax="100" style="width: {{loadingProgress}}%;min-width: 2em;">
@@ -17,6 +9,7 @@
         </div>
       </div>
     {{else}}
+    {{#if isSuperUser}}
       <div class="pull-right">
         <a class="btn btn-success" href="/hanuman/survey_templates/{{surveyTemplate.id}}/update_survey_data">
           <i class="glyphicons glyphicons-sort-by-order"></i>
@@ -24,12 +17,16 @@
         </a>
       </div>
       <div class="clearfix"></div>
+    {{/if}}
 
       <div class="row">
         <div class="col-sm-4"><strong>Label</strong></div>
         <div class="col-sm-2"><strong>Question Type</strong></div>
-        <div class="col-sm-4"><strong>Info</strong></div>
-        <div class="col-sm-2"></div>
+        <div class="col-sm-2"><strong>Info</strong></div>
+        {{#if isSuperUser}}
+          <div class="col-sm-2"><strong>Debug</strong></div>
+        {{/if}}
+        <div class="col-sm-4"></div>
       </div>
 
       <div class="row">
@@ -38,7 +35,27 @@
         </div>
       </div>
 
+
       {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange=(route-action "reorderQuestions") as |group|}}
+        <!-- hardcode survey date row here -->
+        <li class="li-question row question-border">
+          <div class="row">
+            <div class="col-sm-4" data-test="question.answerType.displayName">
+              <span class="glyphicons glyphicons-sorting text-muted"></span>
+              Survey Date
+            </div>
+            <div class="col-sm-2">Date</div>
+            {{#if isSuperUser}}
+              <div class="col-sm-6">
+                <span class="label label-default">The Survey Date field is automatically added to all surveys and is always at the top of the Survey Layout</span>
+              </div>
+            {{else}}
+              <div class="col-sm-4">
+                <span class="label label-default">The Survey Date field is automatically added to all surveys and is always at the top of the Survey Layout</span>
+              </div>
+            {{/if}}
+          </div>
+        </li>
         {{#each sortedQuestions as |question|}}
           {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
             {{#if question.supportAncestry}}

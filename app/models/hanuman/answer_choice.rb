@@ -4,6 +4,7 @@ module Hanuman
     has_ancestry
 
     # Scopes
+    default_scope { order(sort_order: :asc) }
     scope :second_level, -> { where(ancestry: nil) }
 
     # Relations

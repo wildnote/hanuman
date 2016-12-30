@@ -28,7 +28,7 @@ module Hanuman
     private
 
     def answer_choice_params
-      params.require(:answer_choice).permit(:option_text, :question_id, :scientific_text)
+      params.require(:answer_choice).permit(:option_text, :question_id, :scientific_text, :sort_order)
     end
   end
 end

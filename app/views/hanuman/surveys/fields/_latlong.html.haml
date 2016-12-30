@@ -6,7 +6,7 @@
     .helper-text.helperbelow
       %p
     .map-buttons
-      %a.btn.btn-success.edit-map{:"data-original-latlong" => "#{ff.object.answer}"} Pin a Location on Map
+      %a.btn.btn-success.edit-map{:"data-original-latlong" => "#{ff.object.answer}"} Position map then click here to plot
       %a.btn.btn-default.cancel-map{style: "display:none;"} Cancel
     .col-sm-12
       &nbsp;
@@ -17,8 +17,8 @@
   .col-sm-12
     &nbsp;
   = render "hanuman/surveys/fields/shared/label", ff: ff
-  .col-sm-5
+  .col-sm-4
     = ff.text_field :answer, class: "form-control latlong-entry", maxlength: 230
     = ff.hidden_field :entry
-  .col-sm-2
-    %a.btn.btn-success.map-toggle-button  Enter Location On Map
+  .col-sm-3
+    %a.btn.btn-success.map-toggle-button  Plot Map Location
