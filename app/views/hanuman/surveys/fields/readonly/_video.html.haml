@@ -1,0 +1,26 @@
+.form-group
+  = render "hanuman/surveys/fields/readonly/shared/label", o: o
+  .col-sm-7.videotesting
+    - o.observation_videos.order(sort_order: :asc).each do |v|
+      = cl_video_tag(v.video.my_public_id, options = { controls: true, preload: 'none', width: 350 })
+      %br
+      %br
+      - unless v.video.format.blank?
+        = v.video.my_public_id + "." + v.video.format + " | right click on video to download"
+      -else
+        = v.video.public_id + " | right click on video to download"
+      %br
+      %br
+      %label
+        Photo Description
+      %br
+      = v.description
+      %br
+      %br
+      %label
+        Photo Sort Order
+      %br
+      = v.sort_order
+      %br
+      %br
+      %br

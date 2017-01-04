@@ -1,0 +1,203 @@
+{{#ember-remodal
+  forService=true
+  name='question-modal'
+  closeOnOutsideClick=false
+  closeOnEscape=false
+  disableNativeClose=true
+}}
+<div class="panel panel-info">
+  <div class="panel-heading"><h3 class="panel-title">Question Details</h3></div>
+  <div class="panel-body">
+
+    <div class="form-horizontal" style="text-align: left;">
+      {{#object-form for=question}}
+        <div class="form-group">
+          <div class="col-sm-12">
+            {{#form-field for='questionText' label='Label'}}
+              <input type="text"
+                    class="form-control"
+                    data-test="question.questionText"
+                    value={{question.questionText}}
+                    oninput={{action (mut question.questionText) value="target.value"}} />
+            {{/form-field}}
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-12">
+            <label>Question Type</label>
+            {{#if (or isFullyEditable question.isNew)}}
+              {{#form-field for='answerType'}}
+                <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
+                  {{#if question.isNew}}
+                    <option></option>
+                  {{/if}}
+                  {{#each sortedAnswerTypes as |answerType|}}
+                    <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>{{answerType.displayName}}</option>
+                  {{/each}}
+                </select>
+              {{/form-field}}
+            {{else}}
+              {{question.answerType.displayName}}
+              <div class="alert alert-info">
+                Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey template to change the Answer Type.
+              </div>
+            {{/if}}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12 alert alert-info">
+            Would you like a plant or animal list added to your survey? Contact us via chat below.
+          </div>
+        </div>
+
+        <hr />
+
+        {{#liquid-if showAnswerChoices class='show-answer-choices-liquid'}}
+
+          <div class="panel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr>
+                        <th data-test="answer-choices-label">Answer Choices</th>
+                        <th></th>
+                      </tr>
+                    </thead>
+                    {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction='sortAnswerChoices' enableSort=true useSwap=true}}
+                      {{#each question.answerChoices as |answerChoice|}}
+                        {{answer-choice-row content=answerChoice isSortable=true question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
+                      {{/each}}
+                      {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true isSortable=false}}
+                    {{/sortable-objects-tbody}}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+
+        {{/liquid-if}}
+
+        {{#if canBeRequired}}
+          <div class="form-group">
+            <div class="col-sm-12">
+              <input type="checkbox"
+                    name="isRequired"
+                    checked={{question.required}}
+                    onchange={{action (mut question.required) value="target.checked"}} /> Required
+            </div>
+          </div>
+        {{/if}}
+
+        <div class="form-group">
+          <div class="col-sm-12">
+            <input type="checkbox"
+                  name="isHidden"
+                  checked={{question.hidden}}
+                  onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
+          </div>
+        </div>
+        <hr />
+        <div class="form-group">
+          <div class="col-sm-12">
+            {{#form-field for='parentId' label='Parent Relationship'}}
+              <select class="form-control" data-test="ancestry-select" onchange={{action "ancestryChange" value="target.value"}}>
+                <option></option>
+                {{#each ancestryQuestions as |opQuestion|}}
+                  <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
+                {{/each}}
+              </select>
+            {{/form-field}}
+          </div>
+        </div>
+
+        <hr />
+
+        {{#if question.isNew}}
+          <div class="row">
+            <div class="col-sm-12 alert alert-info">
+              To add Hide and Show rules for this question. Save and re-open the question to access.
+            </div>
+          </div>
+          <hr />
+        {{/if}}
+
+        {{#if question.rule}}
+
+          <div class="panel">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="table-responsive">
+                  <table class="table table-hover">
+                    <thead>
+                      <tr class="no-hover">
+                        <th colspan="6">Hide and Show Rules</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr class="no-hover">
+                        <td colspan="6">
+                          <select data-test="rule-match-type-select" class="form-control" onchange={{action "setRuleMatchType" value="target.value"}}>
+                            <option value="any" selected={{eq question.rule.matchType 'any'}}>match on any question condition</option>
+                            <option value="all" selected={{eq question.rule.matchType 'all'}}>match on all question conditions</option>
+                          </select>
+                        </td>
+                      </tr>
+                      <tr class="no-hover">
+                        <td width="10px"></td>
+                        <td>Question</td>
+                        <td>Operator</td>
+                        <td>Answer</td>
+                        <td width="10px"></td>
+                        <td width="10px"></td>
+                      </tr>
+                      {{#each question.rule.conditions as |condition|}}
+                        {{condition-row condition=condition rule=question.rule questions=questions save='saveCondition' remove='removeCondition' isNewCondition=false}}
+                      {{/each}}
+                      {{condition-row rule=question.rule questions=questions save='saveCondition' remove='removeCondition' isNewCondition=true}}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+
+        {{/if}}
+        {{#if isSuperUser}}
+          <div class="form-group">
+            <div class="col-sm-12">
+              {{#form-field for='externalDataSource' label='External Data Source'}}
+                <input type="text"
+                      class="form-control"
+                      data-test="question.externalDataSource"
+                      value={{question.externalDataSource}}
+                      oninput={{action (mut question.externalDataSource) value="target.value"}} />
+                <small class="text-muted">(Superuser only)</small>
+              {{/form-field}}
+            </div>
+          </div>
+        {{/if}}
+      {{/object-form}}
+    </div>
+
+    <hr/>
+    <div class="row">
+      <div class="form-group">
+        <div class="col-sm-12">
+          <a class="btn btn-primary" data-test="save-question-link" onclick={{action "save"}}>
+            Save
+          </a>
+          <a class="btn btn-default" data-test="cancel-question-link" onclick={{action "closeModal"}}>
+            Cancel
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{/ember-remodal}}

@@ -2,23 +2,34 @@ module Hanuman
   class Question < ActiveRecord::Base
     has_paper_trail
     has_ancestry
+
+    # Relations
     belongs_to :answer_type
-    belongs_to :survey_step
+    belongs_to :survey_step # Deprecated
+    belongs_to :survey_template
     has_many :answer_choices, dependent: :destroy, inverse_of: :question
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
     has_one :rule, dependent: :destroy
     has_many :conditions, dependent: :destroy
 
-    validates_presence_of :answer_type_id
+    # Validations
+    validates :answer_type_id, presence: true
     # wait until after migration for these validations
     #validates_presence_of :sort_order, :survey_step_id
-
     validates :question_text, presence: true, unless: :question_text_not_required
 
-    after_create :submit_blank_observation_data
+    # Callbacks
+    # commenting this out because we are not going to update previously submitted data at this point, leave it alone
+    # after_create :submit_blank_observation_data
     # this flooding the system on a question resort which is resulting in a db deadlock,
     # will manually call this at the survey template level after all changes are made
     #after_update :resort_submitted_observations, if: :sort_order_changed?
+
+    # need to save array of child_ids to pass to native API it's too slow to generate on the fly
+    # if question has ancestors, loop through those ancestors and update the ancestry_children field
+    after_save :set_ancestry_children
+    after_destroy :set_ancestry_children
+    #before_create :set_ancestry_sort_order
 
     amoeba do
       include_association [:rule, :conditions, :answer_choices]
@@ -30,6 +41,19 @@ module Hanuman
 
     def self.sort(sort_column, sort_direction)
       joins(:answer_type).order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc").gsub("desc desc", "desc").gsub("desc asc", "desc"))
+    end
+
+    def set_ancestry_children
+      self.ancestors.each do |a|
+        a.ancestry_children = a.child_ids
+        a.save
+      end
+    end
+
+    def set_ancestry_sort_order
+      if parent && parent.children.last
+        self.sort_order = parent.children.last.sort_order
+      end
     end
 
     def question_text_not_required
@@ -48,8 +72,8 @@ module Hanuman
     def submit_blank_observation_data
       question = self
       parent = self.parent
-      unless survey_step.survey_template.fully_editable
-        surveys = survey_step.survey_template.surveys
+      unless survey_template.fully_editable
+        surveys = survey_template.surveys
         surveys.each do |s|
           if parent.blank?
             Observation.create(
@@ -76,8 +100,8 @@ module Hanuman
     end
 
     def resort_submitted_observations
-      unless survey_step.survey_template.fully_editable
-        surveys = survey_step.survey_template.surveys
+      unless survey_template.fully_editable
+        surveys = survey_template.surveys
         surveys.each do |s|
           s.save
         end
@@ -131,7 +155,7 @@ module Hanuman
       end
 
       # remap sort orders leaving space for new questions before saving new question
-      parent_q.survey_step.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
+      parent_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
         q.sort_order = q.sort_order + increment_sort_by
         q.save
       end
@@ -182,7 +206,7 @@ module Hanuman
       end
 
       # remap sort orders leaving space for new questions before saving new question
-      section_q.survey_step.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
+      section_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
         q.sort_order = q.sort_order + increment_sort_by
         q.save
       end
@@ -255,6 +279,5 @@ module Hanuman
       end
       message
     end
-
   end
 end

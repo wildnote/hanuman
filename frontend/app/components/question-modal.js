@@ -1,0 +1,222 @@
+import Ember from 'ember';
+const {
+  $,
+  run,
+  computed,
+  computed: { alias, sort }
+} = Ember;
+
+export default Ember.Component.extend({
+  remodal: Ember.inject.service(),
+  isFullyEditable: alias('surveyTemplate.fullyEditable'),
+  showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
+  sortTypesBy: ['displayName'],
+  sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
+  filteredAnswerTypes: computed('answerTypes', function() {
+    let answerTypes = this.get('answerTypes');
+    if(this.get('isSuperUser')){
+      return answerTypes;
+    }else{
+      return answerTypes.filter((answerType) => {
+        return !answerType.get('name').includes('taxon');
+      });
+    }
+  }),
+  ancestryQuestions: computed('questions', function() {
+    return this.get('questions').filter((question) => {
+      let allowedTypes = ['section','repeater'];
+      return allowedTypes.includes(question.get('answerType.name'));
+    });
+  }),
+  ancestryQuestion: computed('question.parentId', function() {
+    return this.get('questions').findBy('id',this.get('question.parentId'));
+  }),
+
+  canBeRequired: computed('question', function() {
+    let question = this.get('question'),
+        newRule = question.get('rule.isNew'),
+        notTypes = ['section','repeater','helperabove','helperbelow'];
+    return newRule && !notTypes.includes(question.get('answerType.name'));
+  }),
+
+  init() {
+    this._super(...arguments);
+    this.setProperties({
+      answerChoicesPendingSave: [],
+      conditionsPendingSave: []
+    });
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    Ember.run.scheduleOnce('afterRender', this, function () {
+      this.get('remodal').open('question-modal');
+    });
+    // Tabs
+    $('a[data-toggle="tab"]').on('click', function(e) {
+      e.preventDefault();
+      $(this).tab('show');
+    });
+  },
+
+  _removeAnswerChoices() {
+    this.get('question.answerChoices').then((answerChoices)=>{
+      answerChoices.forEach(function(answerChoice) {
+        answerChoice.deleteRecord();
+        answerChoice.save();
+      });
+    });
+  },
+
+  _pendingObjectsPromises(pendingObjects, toSet, objTo){
+    for (var pendingObject of pendingObjects) {
+      pendingObject.set(toSet, objTo);
+    }
+    return pendingObjects.invoke('save');
+  },
+
+  _saveSuccess(question, promises){
+    question.reload().then((question)=>{
+      let answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
+          conditionsPendingSave = this.get('conditionsPendingSave');
+
+      if(!question.get('answerType.hasAnswerChoices')){
+        this._removeAnswerChoices();
+      }
+      promises = $.makeArray(promises);
+      Ember.RSVP.all(promises).then(()=>{
+        while (answerChoicesPendingSave.length > 0) {
+          answerChoicesPendingSave.popObject();
+        }
+        while (conditionsPendingSave.length > 0) {
+          conditionsPendingSave.popObject();
+        }
+        this.send('closeModal');
+      });
+    });
+  },
+
+  _sortOrder(question){
+    let surveyTemplate = this.get('surveyTemplate'),
+        lastQuestion = surveyTemplate.get('questions').sortBy('sortOrder').get('lastObject');
+    question.set('sortOrder',1);
+    if(lastQuestion && lastQuestion !== question){
+      question.set('sortOrder',lastQuestion.get('sortOrder') + 1);
+    }
+  },
+
+  actions: {
+    sortAnswerChoices(){
+      let answerChoices = this.get('question.answerChoices');
+      answerChoices.forEach((answerChoice, index) => {
+        let oldSortOrder = answerChoice.get('sortOrder'),
+            newSortOrder = index + 1;
+        if(oldSortOrder !== newSortOrder){
+          answerChoice.set('sortOrder', newSortOrder);
+          if(!answerChoice.get('isNew')){
+            answerChoice.save();
+          }
+        }
+      });
+    },
+
+    ancestryChange(newAncestryId){
+      let question = this.get('question');
+      if(Ember.isBlank(newAncestryId)){
+        newAncestryId = null;
+      }
+      question.set('parentId',newAncestryId);
+    },
+
+    setAnswerType(answerTypeId) {
+      const answerType = this.get('answerTypes').findBy('id', answerTypeId);
+      this.set('question.answerType', answerType);
+    },
+
+    setRuleMatchType(matchType) {
+      this.set('question.rule.matchType', matchType);
+    },
+
+    save() {
+      let question = this.get('question'),
+          surveyTemplate = this.get('surveyTemplate');
+      question.set('surveyTemplate', surveyTemplate);
+      if(question.validate()){
+        if(question.get('isNew')){
+          question.set('wasNew', true);
+          this._sortOrder(question);
+        }
+        question.save().then(
+          (question)=>{
+            let promises = [],
+                answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
+                answerChoicesPromises = this._pendingObjectsPromises(answerChoicesPendingSave, 'question', question);
+
+            promises = promises.concat(answerChoicesPromises);
+
+            // We can't save the rule until there is at least one condition associated with the rule
+            if(question.get('rule') && (!question.get('rule.isNew') || this.get('conditionsPendingSave.length') > 0)){
+              let conditionsPendingSave = this.get('conditionsPendingSave'),
+                  rule = question.get('rule');
+              rule.set('question',question);
+              rule.save().then(
+                (rule) =>{
+                  let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
+                  promises = promises.concat(conditionsPromises);
+                  this._saveSuccess(question, promises);
+                },
+                // Rule was deleted on the server
+                () =>{
+                  question.get('store').unloadRecord(rule);
+                  question.reload().then((question)=>{
+                    this._saveSuccess(question, []);
+                  });
+                }
+              );
+            }else{
+              this._saveSuccess(question, promises);
+            }
+          },
+          (error)=>{
+            console.error(`An error has occured: ${error}.`);
+            surveyTemplate.get('questions').removeObject(question);
+          }
+        );
+      }
+    },
+
+    saveCondition(condition){
+      if(this.get('question.isNew') || this.get('question.rule.isNew')){
+        this.get('conditionsPendingSave').pushObject(condition);
+      }else{
+        condition.save();
+      }
+    },
+
+    removeCondition(condition){
+      if(this.get('question.rule.isNew') || condition.get('isNew')){
+        this.get('conditionsPendingSave').removeObject(condition);
+        condition.deleteRecord();
+      }else{
+        condition.deleteRecord();
+        condition.save();
+      }
+    },
+
+    saveAnswerChoice(answerChoice){
+      if(this.get('question.isNew')){
+        this.get('answerChoicesPendingSave').pushObject(answerChoice);
+      }else{
+        answerChoice.save();
+      }
+    },
+
+    closeModal() {
+      if(this.get('question.wasNew')){
+        run.later(this, ()=> { console.log('neea'); $('html, body').animate({ scrollTop: $(document).height() }, 500); }, 500);
+      }
+      this.get('remodal').close('question-modal');
+      this.sendAction('transitionToSurveyStep');
+    }
+  }
+});

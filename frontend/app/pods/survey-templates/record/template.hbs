@@ -1,0 +1,24 @@
+<div class="form-horizontal">
+  <div class="panel panel-info">
+    <div class="panel-title">Edit Survey</div>
+    <div class="tab-base tab-stacked-left">
+      <ul class="nav nav-tabs">
+        <li class="active">
+          <a data-toggle="tab" href="#tab-survey-layout">Survey Layout</a>
+        </li>
+        <li>
+          <a data-toggle="tab" href="#tab-survey-details">Survey Details</a>
+        </li>
+      </ul>
+      <div class="tab-content">
+        <div id="tab-survey-layout" class="tab-pane active">
+          {{questions-list surveyTemplate=surveyTemplate isLoadingQuestions=isLoadingQuestions loadingProgress=loadingProgress updateSortOrder="updateSortOrder"}}
+        </div>
+        <div id="tab-survey-details" class="tab-pane">
+          {{liquid-outlet}}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{outlet 'questions'}}

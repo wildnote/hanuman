@@ -7,7 +7,7 @@ module Hanuman
 
     # GET /questions
     def index
-      @questions = Question.sort(sort_column, sort_direction)
+      @questions = Question.sort(sort_column, sort_direction).page(params[:page])
     end
 
     # GET /questions/1

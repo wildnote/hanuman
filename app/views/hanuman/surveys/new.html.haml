@@ -1,11 +1,11 @@
+- content_for :title do
+  New Survey
 - content_for :navbar_hanuman_surveys do
   active
 - content_for :survey_form_state do
   New Report Entry
 - content_for :current_step do
   1
-- content_for :title do
-  New Survey
 -# = render "form"
 
 - if @survey.errors.any?
@@ -23,13 +23,13 @@
     %h1= f.object.survey_template.name
 
   - steps = @survey.survey_template.survey_steps
-  
+
   .panel.panel-default
-    .panel-body  
+    .panel-body
       .survey-progress
         - steps.each do |step|
           .col-sm-4{class: "#{step.step == 1 ? 'current' : ''}"}
-            %span.glyphicon.progress-mark{class: "#{step_status(@survey, step.step, current_step)}"}
+            %span.glyphicons.progress-mark{class: "#{step_status(@survey, step.step, current_step)}"}
             = "Step " + step.step.to_s
 
   = f.hidden_field :survey_template_id
@@ -37,8 +37,8 @@
   .panel.panel-info
     .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_1_1"}
       %h4.panel-title.pull-left
-        %span.glyphicon.glyphicon-chevron-right
-        %span.glyphicon.glyphicon-chevron-down
+        %span.glyphicons.glyphicons-chevron-right
+        %span.glyphicons.glyphicons-chevron-down
         %strong
           Step 1 Entry 1
       .clearfix

@@ -7,5 +7,8 @@ class AddForeignKeysToHanuman < ActiveRecord::Migration
     add_foreign_key "hanuman_survey_extensions", "hanuman_surveys", name: "hanuman_survey_extensions_survey_id_fk", column: "survey_id"
     add_foreign_key "hanuman_survey_extensions", "users", name: "hanuman_survey_extensions_user_id_fk"
     add_foreign_key "hanuman_surveys", "hanuman_survey_templates", name: "hanuman_surveys_survey_template_id_fk", column: "survey_template_id"
+  rescue Exception => e
+    puts "SQL error in #{ __method__ }"
+    ActiveRecord::Base.connection.execute 'ROLLBACK'
   end
 end

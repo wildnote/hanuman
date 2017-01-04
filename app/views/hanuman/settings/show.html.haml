@@ -1,11 +1,7 @@
 - content_for :title do
-  Setting Details
-- content_for :title_parent do
-  Settings
-- content_for :title_icon do
-  glyphicon-cog
-- content_for :title_actions do
-  = render "actions", locals: {}
+  System Setting Details
+- content_for :navbar_main_settings do
+  active
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_settings do
@@ -13,14 +9,14 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Setting Details
+    %h3.panel-title System Setting Details
 
   %form.form-horizontal
     .panel-body
       .pull-right
-        = link_to edit_setting_path(@setting), class: "btn btn-primary" do
-          %span.glyphicon.glyphicon-pencil
-          Edit Setting
+        = link_to edit_setting_path(@setting), class: "btn btn-success" do
+          %span.glyphicons.glyphicons-pencil
+          Edit System Setting
       .clearfix
       .form-group
         %label.col-sm-2.control-label Key

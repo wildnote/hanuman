@@ -1,11 +1,7 @@
 - content_for :title do
   Answer Choice Details
-- content_for :title_parent do
-  Answer Choices
-- content_for :title_icon do
-  glyphicon-ok-sign
-- content_for :title_actions do
-  = render "actions", locals: {}
+- content_for :navbar_main_settings do
+  active
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_answer_choices do
@@ -18,8 +14,8 @@
   %form.form-horizontal
     .panel-body
       .pull-right
-        = link_to edit_answer_choice_path(@answer_choice), class: "btn btn-primary" do
-          %span.glyphicon.glyphicon-pencil
+        = link_to edit_answer_choice_path(@answer_choice), class: "btn btn-success" do
+          %span.glyphicons.glyphicons-pencil
           Edit Answer Choice
       .clearfix
       .form-group

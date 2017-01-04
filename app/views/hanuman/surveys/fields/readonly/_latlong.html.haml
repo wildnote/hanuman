@@ -1,0 +1,8 @@
+.form-group
+  .col-sm-7.col-sm-offset-5.map-container
+    .hidden
+    .col-sm-12.latlong{id: "map#{o.id}", style: "width:100%; height:320px;", :"data-latlong" => o.answer, :"data-infowindow" => o.question.question_text}
+  .clearfix
+  = render "hanuman/surveys/fields/readonly/shared/label", o: o
+  .col-sm-7.latlong-in-survey-show
+    = render "hanuman/surveys/fields/readonly/shared/answer_single", o: o

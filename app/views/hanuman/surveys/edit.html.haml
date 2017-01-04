@@ -1,9 +1,9 @@
+- content_for :title do
+  Edit Survey
 - content_for :navbar_hanuman_surveys do
   active
 - content_for :survey_form_state do
   Edit Report Entry
-- content_for :title do
-  Edit Survey
 
 - if @survey.errors.any?
   - flash.now[:alert] = @survey.errors.full_messages.join(', ').to_s
@@ -27,7 +27,7 @@
       .survey-progress
         - steps.each do |step|
           .col-sm-4{class: "#{step.step.to_i == current_step.to_i ? 'current' : ''}"}
-            %span.glyphicon.progress-mark{class: "#{step_status(@survey, step.step, current_step)}"}
+            %span.glyphicons.progress-mark{class: "#{step_status(@survey, step.step, current_step)}"}
             = "Step " + step.step.to_s
 
   = f.hidden_field :survey_template_id
@@ -52,8 +52,8 @@
             .panel.panel-info
               .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step.step}_#{entry}"}
                 %h4.panel-title.pull-left
-                  %span.glyphicon.glyphicon-chevron-right
-                  %span.glyphicon.glyphicon-chevron-down
+                  %span.glyphicons.glyphicons-chevron-right
+                  %span.glyphicons.glyphicons-chevron-down
                   %strong
                     Step
                     = step.step
@@ -77,8 +77,8 @@
           .panel.panel-info
             .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{step}_#{entry}"}
               %h4.panel-title.pull-left
-                %span.glyphicon.glyphicon-chevron-right
-                %span.glyphicon.glyphicon-chevron-down
+                %span.glyphicons.glyphicons-chevron-right
+                %span.glyphicons.glyphicons-chevron-down
                 %strong{readonly: true}
                   Step
                   = step.step
@@ -104,8 +104,8 @@
     .panel.panel-info
       .panel-heading.chevron{:"data-toggle" => "collapse", :"data-target" => "#collapse_#{current_step}_#{current_entry}"}
         %h4.panel-title.pull-left
-          %span.glyphicon.glyphicon-chevron-right
-          %span.glyphicon.glyphicon-chevron-down
+          %span.glyphicons.glyphicons-chevron-right
+          %span.glyphicons.glyphicons-chevron-down
           %strong{readonly: true}
             Step
             = current_step
@@ -134,7 +134,7 @@
           %h5= Hanuman::Setting.value("add_entry_helper_text")
         .pull-right
           = button_tag type: "submit", class: "btn btn-success", name: "next_step", data: {disable_with: "Please wait..."} do
-            %span.glyphicon.glyphicon-plus
+            %span.glyphicons.glyphicons-plus
             Add Entry
         .clearfix
 

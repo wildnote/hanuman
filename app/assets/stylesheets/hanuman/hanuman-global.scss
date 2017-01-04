@@ -1,0 +1,155 @@
+body {
+  line-height: 1.42857143 !important;
+}
+
+.page-header input.btn, .page-header button.btn {
+  float: right;
+}
+
+.page-header select.form-control {
+  float: right;
+  width: auto;
+  margin-right: 5px;
+}
+
+.page-header label {
+  float: right;
+  margin-top: 6px;
+  margin-right: 5px;
+  text-transform: capitalize;
+}
+
+.form-banner {
+  background-color: #def;
+  text-align: center;
+}
+
+.form-banner,
+.form-static {
+  font-size: 14px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.form-group {
+  margin-bottom: 0 !important;
+  padding-bottom: 15px;
+}
+
+.form-group.helperabove {
+  margin-bottom: 0;
+}
+
+.form-group.helperbelow {
+  margin-top: -15px;
+}
+
+[class*="animate-"] .ws-popover {
+    overflow: visible;
+}
+
+[class*="animate-"] .ws-popover.ws-po-visible .ws-po-outerbox {
+    opacity: 1;
+    -webkit-transform: translate(0, 0) scale(1);
+    transform: translate(0, 0) scale(1);
+}
+
+.animate-2 .ws-popover {
+    overflow: visible;
+    -webkit-perspective: 600px;
+    -webkit-transform-style: preserve-3d;
+    perspective: 600px;
+    transform-style: preserve-3d;
+}
+
+.animate-2 .ws-po-outerbox {
+    -webkit-transform: rotateX(-60deg);
+    -webkit-transform-origin: 50% 0 0;
+    transform: rotateX(-60deg);
+    transform-origin: 50% 0 0;
+}
+
+.animate-2[data-vertical="bottom"] .ws-po-outerbox {
+    -webkit-transform-origin: -50% 0 0;
+    transform-origin: -50% 0 0;
+}
+
+input[type="checkbox"] {
+  display: inline-block;
+}
+
+.survey-progress .col-sm-4 {
+  display: inline-block;
+  padding: 5px;
+  text-align: center;
+  background-color: rgba(217, 237, 247, 0.5);
+  border: 1px solid rgb(66, 139, 202);
+  padding-bottom: 7px;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.survey-progress .col-sm-4.current {
+  background-color: rgba(66, 139, 202, 0.5);
+}
+
+.survey-progress .progress-mark {
+  border: 1px solid rgb(66, 139, 202);
+  background-color: #fff;
+  padding: 8px;
+  border-radius: 16px;
+  color: #000;
+}
+
+.survey-progress .glyphicons-ok {
+  background-color: rgba(139, 240, 96, 0.5);
+}
+
+.survey-progress .glyphicons-pencil {
+  background-color: rgba(99, 198, 247, 0.5);
+}
+
+.survey-progress .glyphicons-plus-sign {
+  background-color: rgba(252, 221, 63, 0.5);
+}
+
+
+.panel-body .pull-right.edit-delete {
+  padding: 0 0 15px;
+}
+
+.panel-body.kaminari,
+.panel-footer.kaminari {
+  padding: 2px 15px;
+}
+
+.panel-body.kaminari .pagination,
+.panel-footer.kaminari .pagination {
+  margin: 0;
+  float: right;
+}
+
+.panel-heading.chevron .glyphicons-chevron-right,
+.panel-heading.chevron .glyphicons-chevron-down {
+  margin-right: 10px;
+}
+
+.panel-heading.chevron .glyphicons-chevron-down {
+  display: inline-block;
+}
+
+.panel-heading.chevron .glyphicons-chevron-right {
+  display: none;
+}
+
+.panel-heading.chevron.collapsed .glyphicons-chevron-down {
+  display: none;
+}
+
+.panel-heading.chevron.collapsed .glyphicons-chevron-right {
+  display: inline-block;
+}
+
+.chosen-container-multi .chosen-choices li.search-field input[type="text"] {
+  height: 25px;
+}

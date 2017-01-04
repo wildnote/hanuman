@@ -7,7 +7,7 @@ module Hanuman
 
     # GET /answer_choices
     def index
-      @answer_choices = AnswerChoice.filtered_by_question_id_and_sort(params[:question_id], sort_column, sort_direction)
+      @answer_choices = AnswerChoice.filtered_by_question_id_and_sort(params[:question_id], sort_column, sort_direction).page(params[:page])
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @answer_choices.to_json(methods: :formatted_answer_choice)}

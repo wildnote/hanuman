@@ -7,7 +7,7 @@ module Hanuman
     # DELETE /observations/1
     def destroy
       s = @observation.survey
-      s.observations.filtered_by_step_and_entry(@observation.step, @observation.entry).each{|o| o.destroy}
+      s.observations.by_survey_template_and_entry(@observation.survey_template, @observation.entry).each{|o| o.destroy}
       redirect_to survey_path(s), notice: 'Entry was successfully destroyed.'
     end
 

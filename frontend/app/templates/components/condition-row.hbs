@@ -1,0 +1,74 @@
+{{#if isEditingCondition}}
+  {{!-- new and edit --}}
+  <td>if</td>
+  <td>
+    {{#form-field for='question'}}
+      <select data-test="condition-question-id-select" class="form-control" onchange={{action "setConditionQuestion" value="target.value"}}>
+        {{#each questions as |question|}}
+          <option value={{question.id}} selected={{eq question.id condition.questionId}}>{{question.questionText}} - {{question.id}}</option>
+        {{/each}}
+      </select>
+    {{/form-field}}
+  </td>
+  <td>
+    {{#form-field for='operator'}}
+      <select data-test="condition-operator-select" class="form-control" onchange={{action "setConditionOperator" value="target.value"}}>
+        {{#each operators as |operator|}}
+          <option value={{operator}} selected={{eq operator condition.operator}}>{{operator}}</option>
+        {{/each}}
+      </select>
+    {{/form-field}}
+  </td>
+  <td>
+    {{#form-field for='answer'}}
+      <input type="text"
+            data-test="condition.answer"
+            class="form-control"
+            value={{condition.answer}}
+            oninput={{action (mut condition.answer) value="target.value"}} />
+    {{/form-field}}
+  </td>
+  <td>
+    <a class="btn btn-success btn-sm" data-test="save-condition-link" onclick={{action 'save'}}>
+      Save
+    </a>
+  </td>
+  <td>
+    <a class="btn btn-default btn-sm" onclick={{action 'toggleForm'}}>
+      Cancel
+    </a>
+  </td>
+
+{{else}}
+  {{#if isNewCondition}}
+    <!-- + new answer choice button -->
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td>
+      <a class="btn btn-success" data-test="add-condition-link" onclick={{action 'toggleForm'}}>
+        <span class="glyphicons glyphicons-plus"></span>
+        Add
+      </a>
+    </td>
+  {{else}}
+    {{!-- show of existing condition --}}
+    <td>if</td>
+    <td><span class="label label-default" title={{currentQuestion.questionText}}>{{currentQuestion.questionText}} - {{condition.questionId}}</span></td>
+    <td><span class="label label-default">{{condition.operator}}</span></td>
+    <td><span class="label label-default" data-test="condition.answer">{{condition.answer}}</span></td>
+    <td>
+      <a class="btn btn-success btn-sm" data-test="edit-condition-link" onclick={{action 'toggleForm'}}>
+        <span class="glyphicons glyphicons-pencil"></span>
+        Edit
+      </a>
+    </td>
+    <td>
+      <a class="btn" data-test="delete-condition-link" onclick={{action 'delete'}}>
+        <span class="glyphicons glyphicons-bin"></span>
+      </a>
+    </td>
+  {{/if}}
+{{/if}}

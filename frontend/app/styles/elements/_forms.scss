@@ -1,0 +1,23 @@
+.ember-view.object-form{
+  .form-field{
+    &.error{
+      input.form-control, select.form-control{
+        background: #fff6f6;
+        border-color: #e0b4b4;
+      }
+      .help-block{
+        position: relative;
+        right: 3px;
+        bottom: 21px;
+        margin-bottom: 0;
+        text-align: right;
+        color: rgba(248, 121, 97, 0.73);
+        font-size: 11px;
+      }
+    }
+  }
+}
+
+select.form-control{
+  height: 35px;
+}

@@ -5,18 +5,18 @@ module Hanuman
       has_observations = survey.survey_step_has_observations?(step)
       if current_step == nil
         if has_observations
-          "glyphicon-ok"
+          "glyphicons-ok"
         else
-          "glyphicon-plus-sign"
+          "glyphicons-plus-sign"
         end
       else
         if current_step.to_i == step.to_i
-          "glyphicon-pencil"
+          "glyphicons-pencil"
         else
           if has_observations
-            "glyphicon-ok"
+            "glyphicons-ok"
           else
-            "glyphicon-plus-sign"
+            "glyphicons-plus-sign"
           end
         end
       end

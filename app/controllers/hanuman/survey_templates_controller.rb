@@ -36,7 +36,8 @@ module Hanuman
       @survey_template = SurveyTemplate.new(survey_template_params)
 
       if @survey_template.save
-        redirect_to @survey_template, notice: 'Survey template was successfully created.'
+        survey_template_ember_link = admin_path + "/survey_templates/" + @survey_template.id.to_s
+        redirect_to survey_template_ember_link, notice: 'Survey template was successfully created.'
       else
         render action: 'new'
       end
@@ -71,7 +72,7 @@ module Hanuman
       respond_to do |format|
         if survey_template_copy.save!
           remap_conditional_logic(@survey_template)
-          format.html { redirect_to edit_survey_template_path(survey_template_copy.id), notice: 'Survey template was successfully duplicated, please rename.' }
+          format.html { redirect_to admin_path + "/survey_templates/" + survey_template.id.to_s + "/edit", notice: 'Survey template was successfully duplicated, please rename.' }
           format.json { render :show, status: :created, location: @location }
         else
           format.html { redirect_to survey_templates_path, alert: 'There was an error duplicating your template: ' + survey_template_copy.errors.full_messages.to_sentence + '.'}
@@ -82,7 +83,8 @@ module Hanuman
 
     def update_survey_data
       @survey_template.resort_submitted_observations
-      redirect_to survey_templates_url, notice: 'Survey data resorted.'
+      survey_template_ember_link = admin_path + "/survey_templates/" + @survey_template.id.to_s
+      redirect_to survey_template_ember_link, notice: 'Survey data resorted.'
     end
 
     private

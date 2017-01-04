@@ -1,11 +1,7 @@
 - content_for :title do
   Answer Choices
-- content_for :title_parent do
-  Answer Choices
-- content_for :title_icon do
-  glyphicon-ok-sign
-- content_for :title_actions do
-  = render "actions", locals: {}
+- content_for :navbar_main_settings do
+  active
 - content_for :navbar_hanuman do
   active
 - content_for :navbar_hanuman_answer_choices do
@@ -15,6 +11,13 @@
   .panel-heading
     %h3.panel-title Answer Choices
   .panel-body
+    .pull-left= paginate(@answer_choices)
+    .pull-right
+      = link_to new_answer_choice_path, class: "btn btn-success" do
+        %i.glyphicons.glyphicons-plus
+        %span.menu-title
+          New Answer Choice
+    .clearfix
     .table-responsive
       %table.table.table-hover
         %thead
@@ -32,4 +35,6 @@
               %td= link_to answer_choice.scientific_text, answer_choice unless answer_choice.scientific_text.blank?
               %td
                 = link_to answer_choice, data: {confirm: "Are you sure you want to delete this Answer Choice?"}, method: :delete do
-                  %span.glyphicon.glyphicon-trash
+                  %span.glyphicons.glyphicons-trash
+    .pull-left= paginate(@answer_choices)
+    .clearfix

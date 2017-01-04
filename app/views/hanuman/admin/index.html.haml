@@ -1,0 +1,18 @@
+- content_for :title do
+  Edit Survey
+- content_for :navbar_sub_data do
+  active
+- content_for :navbar_hanuman do
+  active
+- content_for :navbar_hanuman_survey_templates do
+  active
+- content_for :helper_list do
+  = render "hanuman/survey_templates/helper_list"
+
+:javascript
+  window.superUser = #{current_user.superuser?};
+
+#ember-container
+  %base{href: "/hanuman/admin/"}
+  = include_ember_script_tags :frontend
+  = include_ember_stylesheet_tags :frontend

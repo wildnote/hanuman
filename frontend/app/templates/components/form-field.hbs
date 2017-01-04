@@ -1,0 +1,14 @@
+{{#if label}}
+  <label class={{labelClass}}>{{label}}</label>
+{{/if}}
+{{#if hasBlock}}
+  {{yield}}
+{{else}}
+  {{input type=type value=value}}
+{{/if}}
+{{#if errors.length}}
+  <span class="help-block">
+    {{errors}}
+  </span>
+  <div class="clear"></div>
+{{/if}}

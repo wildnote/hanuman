@@ -9,7 +9,7 @@ module Hanuman
     def show
       respond_with AnswerChoice.find(params[:id])
     end
-    
+
     def create
       respond_with :api, :v1, AnswerChoice.create(answer_choice_params)
     end
@@ -28,7 +28,7 @@ module Hanuman
     private
 
     def answer_choice_params
-      params.require(:answer_choice).permit(:option_text, :question_id, :scientific_text)
+      params.require(:answer_choice).permit(:option_text, :question_id, :scientific_text, :sort_order)
     end
   end
 end
