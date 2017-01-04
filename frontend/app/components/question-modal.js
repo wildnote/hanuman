@@ -32,6 +32,13 @@ export default Ember.Component.extend({
     return this.get('questions').findBy('id',this.get('question.parentId'));
   }),
 
+  canBeRequired: computed('question', function() {
+    let question = this.get('question'),
+        newRule = question.get('rule.isNew'),
+        notTypes = ['section','repeater','helperabove','helperbelow'];
+    return newRule && !notTypes.includes(question.get('answerType.name'));
+  }),
+
   init() {
     this._super(...arguments);
     this.setProperties({

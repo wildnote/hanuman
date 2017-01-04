@@ -16,12 +16,12 @@
             %p
               = fff.object.video.file.public_id + "." + fff.object.video.file.format
 
-            = fff.label :"description"
+            = fff.label :"Video Description"
             .form-group
               .col-sm-7
                 = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add video description here..."
 
-            = fff.label :"Sort Order"
+            = fff.label :"Video Sort Order"
             .form-group
               .col-sm-7
                 = fff.text_field :sort_order, class:"upload-sort-order"
