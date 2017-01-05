@@ -8,13 +8,14 @@ module Hanuman
     belongs_to :selectable, polymorphic: true
     has_many :observation_answers, dependent: :destroy
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
-    has_many :answer_choices, through: :observation_answers, dependent: :destroy
+    has_many :answer_choices, through: :observation_answers
+    belongs_to :answer_choice
 
-    has_many :observation_photos
+    has_many :observation_photos, dependent: :destroy
     accepts_nested_attributes_for :observation_photos, allow_destroy: true
-    has_many :observation_documents
+    has_many :observation_documents, dependent: :destroy
     accepts_nested_attributes_for :observation_documents, allow_destroy: true
-    has_many :observation_videos
+    has_many :observation_videos, dependent: :destroy
     accepts_nested_attributes_for :observation_videos, allow_destroy: true
 
     has_many :photos, -> { order :sort_order, :id }, class_name: "Hanuman::ObservationPhoto"
