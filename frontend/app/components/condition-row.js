@@ -25,6 +25,15 @@ export default Ember.Component.extend({
     return this.get('questions').findBy('id',this.get('condition.questionId'));
   }),
 
+  questionAnswerChoices: computed('currentQuestion', function() {
+    return this.get('currentQuestion.answerChoices');
+  }),
+
+  useDropDownAnswerSelect: computed('currentQuestion', function() {
+    let currentQuestion = this.get('currentQuestion');
+    return currentQuestion.hasMany('answerChoices').ids().length > 1;
+  }),
+
   setNewCondition() {
     let condition = this.get('rule').store.createRecord('condition',{
       questionId: this.get('questions.firstObject.id')
@@ -61,6 +70,9 @@ export default Ember.Component.extend({
     },
     setConditionQuestion(questionId){
       this.set('condition.questionId',questionId);
+    },
+    setConditionAnswer(answer){
+      this.set('condition.answer',answer);
     }
   }
 });

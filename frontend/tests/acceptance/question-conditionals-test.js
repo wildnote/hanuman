@@ -95,3 +95,32 @@ test('deleting a conditional', function(assert) {
     });
   });
 });
+
+test('selecting a conditional question with answer choices', function(assert) {
+  // Question with answer choices
+  let questionWithAnsweChoices = server.create('question', {surveyTemplate, answer_type_id: 17}),
+      answerChoices = server.createList('answer-choice', 3, { question: questionWithAnsweChoices }),
+      rule = server.create('rule'),
+      toTestCondition = server.create('condition', { rule, question_id: questionWithAnsweChoices.id }),
+      question = server.create('question', { surveyTemplate, rule });
+
+  rule = server.db.rules.update(rule.id, { question: question });
+
+  let firstAnswerChoice = answerChoices[0];
+
+  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+
+  andThen(function() {
+    let selector = `[data-condition-id="${toTestCondition.id}"]`;
+    click(`${selector} [data-test="edit-condition-link"]`);
+
+    // Select operator
+    fillIn(`${selector} [data-test="condition-answer-choice-dropdown"]`, firstAnswerChoice.option_text);
+    triggerEvent(`${selector} [data-test="condition-answer-choice-dropdown"]`, 'onchange');
+
+    click(`${selector} [data-test="save-condition-link"]`).then(()=>{
+      toTestCondition = server.db.conditions.find(toTestCondition.id);
+      assert.equal(toTestCondition.answer, firstAnswerChoice.option_text);
+    });
+  });
+});
