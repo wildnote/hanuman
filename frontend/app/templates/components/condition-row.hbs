@@ -20,13 +20,23 @@
     {{/form-field}}
   </td>
   <td>
-    {{#form-field for='answer'}}
-      <input type="text"
-            data-test="condition.answer"
-            class="form-control"
-            value={{condition.answer}}
-            oninput={{action (mut condition.answer) value="target.value"}} />
-    {{/form-field}}
+    {{#if useDropDownAnswerSelect}}
+      {{#form-field for='answer'}}
+        <select data-test="condition-answer-choice-dropdown" class="form-control" onchange={{action "setConditionAnswer" value="target.value"}}>
+          {{#each questionAnswerChoices as |answerChoice|}}
+            <option value={{answerChoice.optionText}} selected={{eq condition.answer answerChoice.optionText}}>{{answerChoice.optionText}}</option>
+          {{/each}}
+        </select>
+      {{/form-field}}
+    {{else}}
+      {{#form-field for='answer'}}
+        <input type="text"
+              data-test="condition.answer"
+              class="form-control"
+              value={{condition.answer}}
+              oninput={{action (mut condition.answer) value="target.value"}} />
+      {{/form-field}}
+    {{/if}}
   </td>
   <td>
     <a class="btn btn-success btn-sm" data-test="save-condition-link" onclick={{action 'save'}}>
