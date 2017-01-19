@@ -39,6 +39,11 @@ export default Ember.Component.extend({
     return newRule && !notTypes.includes(question.get('answerType.name'));
   }),
 
+  showQuestionTypePlaceholder: computed('question.{isNew,answerType.id}', function() {
+    let question = this.get('question');
+    return question.get('isNew') && question.get('answerType.id') === undefined;
+  }),
+
   init() {
     this._super(...arguments);
     this.setProperties({
