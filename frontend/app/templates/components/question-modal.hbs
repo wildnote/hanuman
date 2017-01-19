@@ -81,16 +81,15 @@
 
         {{/liquid-if}}
 
-        {{#if canBeRequired}}
-          <div class="form-group">
-            <div class="col-sm-12">
-              <input type="checkbox"
-                    name="isRequired"
-                    checked={{question.required}}
-                    onchange={{action (mut question.required) value="target.checked"}} /> Required
-            </div>
+        <div class="form-group">
+          <div class="col-sm-12">
+            <input type="checkbox"
+                  disabled={{isRequiredDisabled}}
+                  name="isRequired"
+                  checked={{question.required}}
+                  onchange={{action (mut question.required) value="target.checked"}} /> Required
           </div>
-        {{/if}}
+        </div>
 
         <div class="form-group">
           <div class="col-sm-12">
