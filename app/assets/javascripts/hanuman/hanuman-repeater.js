@@ -33,6 +33,12 @@ $(document).ready(function(){
     // remove data-observation-id at the repeater level
     $($clonedContainer).removeAttr('data-observation-id')
 
+    //************** BEGIN repeater ids
+    repeaterInputs = $clonedContainer.find(".repeater-inputs")
+    repeaterClosestPanel = $(this).parents(".panel-body")
+    updateRepeaterIds(repeaterInputs, $clonedContainer, repeaterClosestPanel)
+    //************ END repeater ids
+
     // collect all container items inside cloned container for iteration later to update all attributes
     var containerItems = $($clonedContainer).find('.form-container-entry-item');
 
@@ -139,6 +145,39 @@ $(document).ready(function(){
 
      }
   });
+
+  function updateRepeaterIds(repeaterInputs, $clonedContainer, repeaterClosestPanel) {
+    var cloningParentContainer
+    var timeStamp = new Date().getTime();
+
+    repeaterInputs.each(function(idx, repeaterInput){
+      if ($(repeaterInput).attr('is-parent-repeater') == "true") {
+        newParentRepeaterId = $("input[is-parent-repeater=true]").length
+        $(repeaterInput).val(newParentRepeaterId)
+        // keeping as comment for future debugging.
+        // $(repeaterInput).after(" New parent id: **** " + newParentRepeaterId)
+        cloningParentContainer = true
+      }else if ($(repeaterInput).attr('need-parent-repeater-id') == "true") {
+        if (cloningParentContainer) {
+          newParentRepeaterId = $("input[is-parent-repeater=true]").length
+          $(repeaterInput).val(newParentRepeaterId)
+        }else {
+          newParentRepeaterId = $(repeaterClosestPanel).closest('.form-container-repeater').parents('.form-container-repeater').find("input[is-parent-repeater=true]").val()
+          $(repeaterInput).val(newParentRepeaterId)
+        }
+        // keeping as comment for future debugging.
+        // $(repeaterInput).after(" | New parent repeater id: **** " + newParentRepeaterId)
+      }else if ($(repeaterInput).attr('repeater-id') == "true") {
+        var childrenRepeaterId = parseInt($(repeaterInput).val())
+        newRepeaterId = (childrenRepeaterId + 1) + timeStamp
+        $(repeaterInput).val(newRepeaterId)
+        // keeping as comment for future debugging.
+        // $(repeaterInput).after(" New repeater id: **** " + newRepeaterId)
+      }
+      timeStamp = new Date().getTime();
+    })
+  }
+
 
   function clearFileInputsValuesInEdit(files){
     while (files.length >= 1) {
