@@ -67,6 +67,20 @@ module Hanuman
             c.save!
           end
         end
+        # clean up the old_survey_template ancestry_children-kdh
+        # for some reason the original survey template questions are getting new ancestry_children added
+        # I can't figure out why
+        # after we fix our performance problems I should be able to get rid of ancestry_children and just
+        # build the dynamically
+        # until then just re-save each question in original template
+        old_survey_template.questions.each do |q|
+          if q.has_children?
+            unless q.ancestry_children.length == q.child_ids.length
+              q.ancestry_children = q.child_ids
+              q.save
+            end
+          end
+        end
       end
     end
 

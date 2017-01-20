@@ -29,6 +29,7 @@ module Hanuman
     # if question has ancestors, loop through those ancestors and update the ancestry_children field
     after_save :set_ancestry_children
     after_destroy :set_ancestry_children
+    #before_create :set_ancestry_sort_order
 
     amoeba do
       include_association [:rule, :conditions, :answer_choices]
@@ -46,6 +47,12 @@ module Hanuman
       self.ancestors.each do |a|
         a.ancestry_children = a.child_ids
         a.save
+      end
+    end
+
+    def set_ancestry_sort_order
+      if parent && parent.children.last
+        self.sort_order = parent.children.last.sort_order
       end
     end
 
@@ -272,6 +279,5 @@ module Hanuman
       end
       message
     end
-
   end
 end
