@@ -181,9 +181,9 @@ $(document).ready(function(){
     })
 
     // Keeping for future debbuging
-    $("input[name*='[entry]']").each(function(idx, el){
-      $(el).after(" entry id: **** " + $(el).val())
-    })
+    // $("input[name*='[entry]']").each(function(idx, el){
+    //   $(el).after(" entry id: **** " + $(el).val())
+    // })
   }
 
 
