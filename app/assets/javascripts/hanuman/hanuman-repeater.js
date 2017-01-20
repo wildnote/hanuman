@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+  uniquefyEntryIds()
+
   //  This removes the delete button from the first repeater.
   $('.destroy-form-container-repeater').first().hide()
 
@@ -144,7 +146,46 @@ $(document).ready(function(){
       })
 
      }
+     uniquefyEntryIds()
   });
+
+  function uniquefyEntryIds() {
+    entryId = 1
+    // finding and iterating throught all the parent repeaters.
+    $("[is-parent-repeater=true]").each(function(idx, el){
+
+      // Select parent repeater conatiners
+      parent = $(el).closest(".form-container-repeater")
+
+      // select all the contaienrs that contain entry id hidden inputs
+      entryContainers = parent.find('.form-container-entry-item')
+
+      // find the entry id hidden inputs
+      $entryInputs = entryContainers.find("input[name*='[entry]']")
+
+      // in the parent repeater, find all the nested repeater container
+      nestedRepeater = parent.find(".form-container-repeater")
+
+      // update all entry inputs found on page.
+      $entryInputs.val(entryId)
+
+      // iterating through nested repeaters to update the entry ids with unique id.
+      nestedRepeater.each(function(i,el){
+        if (i > 0) {
+          entryInputWithinRepeaters = $(el).find("input[name*='[entry]']")
+          var timeStamp = new Date().getTime();
+          entryInputWithinRepeaters.val(timeStamp+i)
+        }
+      })
+      entryId += 1000
+    })
+
+    // Keeping for future debbuging
+    $("input[name*='[entry]']").each(function(idx, el){
+      $(el).after(" entry id: **** " + $(el).val())
+    })
+  }
+
 
   function updateRepeaterIds(repeaterInputs, $clonedContainer, repeaterClosestPanel) {
     var cloningParentContainer
