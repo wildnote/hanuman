@@ -13,6 +13,7 @@ export default Model.extend({
   postType: attr('string'),
   elementType: attr('string'),
   descriptiveName: attr('string'),
+  description: attr('string'),
 
   types: ['checkboxlist', 'hiddencheckboxlist', 'chosenmultiselect',
       'hiddenchosenmultiselect', 'chosenmultiselectgrouped',
