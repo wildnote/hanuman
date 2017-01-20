@@ -32,11 +32,18 @@ export default Ember.Component.extend({
     return this.get('questions').findBy('id',this.get('question.parentId'));
   }),
 
-  canBeRequired: computed('question', function() {
+  isRequiredDisabled: computed('question,question.{rule.isNew,answerType.name}', function() {
     let question = this.get('question'),
         newRule = question.get('rule.isNew'),
         notTypes = ['section','repeater','helperabove','helperbelow'];
-    return newRule && !notTypes.includes(question.get('answerType.name'));
+    if(newRule === undefined){
+      newRule = true;
+    }
+    let isDisabled = !newRule || notTypes.includes(question.get('answerType.name'));
+    if(isDisabled){
+      this.set('question.required', false);
+    }
+    return isDisabled;
   }),
 
   showQuestionTypePlaceholder: computed('question.{isNew,answerType.id}', function() {
