@@ -63,6 +63,7 @@ export default Ember.Component.extend({
     this._super(...arguments);
     Ember.run.scheduleOnce('afterRender', this, function () {
       this.get('remodal').open('question-modal');
+      $('[data-toggle="popover"]').popover({});
     });
     // Tabs
     $('a[data-toggle="tab"]').on('click', function(e) {
