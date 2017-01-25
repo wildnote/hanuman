@@ -24,7 +24,113 @@
         </div>
         <div class="form-group">
           <div class="col-sm-12">
-            <label>Question Type</label>
+            <label>
+              Question Type
+            </label>
+              <span class="qm-popover-container">
+                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" data-html="true" title="Question Type Glossary" data-placement="right"
+                    data-template='<div class="popover glossary-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
+                    data-content="<p>
+                      <b>Basic</b>
+                    </p>
+                    <p>
+                      <b>Check box</b>
+                      Single check box for true or false.
+                    </p>
+                    <p>
+                      <b>Counter</b>
+                      Incremental counter with button click. Great for inventories.
+                    </p>
+                    <p>
+                      <b>Date</b>
+                      Input your date.
+                    </p>
+                    <p>
+                      <b>Latitude/Longitude</b>
+                      Drop a geographical point.
+                    </p>
+                    <p>
+                      <b>Number</b>
+                      Input numbers, integers or decimals.
+                    </p>
+                    <p>
+                      <b>Text, multi-line</b>
+                      Multi-line text box. Good for very long descriptions.
+                    </p>
+                    <p>
+                      <b>Text, single line</b>
+                      Single line text box.
+                    </p>
+                    <p>
+                      <b>Time</b>
+                      Input time.
+                    </p>
+                    <hr>
+                    <p>
+                      <b>Choices</b>
+                    </p>
+                    <p>
+                      <b>Check boxes</b>
+                      Multiple choice check boxes.
+                    </p>
+                    <p>
+                      <b>Location single select</b>
+                      Locations list setup in project admin.
+                    </p>
+                    <p>
+                      <b>Multiple select</b>
+                      Multiple select answer choices with search.
+                    </p>
+                    <p>
+                      <b>Single select</b>
+                      Single select answer choices with search.
+                    </p>
+                    <p>
+                      <b>Radio button</b>
+                      Single select with radio buttons.
+                    </p>
+                    <hr>
+                    <p>
+                      <b>Media</b>
+                    </p>
+                    <p>
+                      <b>Documents</b>
+                      Document upload.
+                    </p>
+                    <p>
+                      <b>Photos</b>
+                      Photo upload(s). You can upload one or more photos. You can capture from your mobile device or select from your gallery.
+                    </p>
+                    <p>
+                      <b>Video</b>
+                      Video upload(s). You can upload one or more videos. You can capture from your mobile device or form your gallery.
+                    </p>
+                    <hr>
+                    <p>
+                      <b>Design</b>
+                    </p>
+                    <p>
+                      <b>Helper text</b>
+                      Helper text can be used to give instructions to field data collectors.
+                    </p>
+                    <p>
+                      <b>Line</b>
+                      Line to separate sections.
+                    </p>
+                    <p>
+                      <b>Repeater</b>
+                      Repeated set of questions. Useful for the same set of data repeatedly collected in the same survey.
+                    </p>
+                    <p>
+                      <b>Section</b>
+                      A set of questions grouped together.
+                    </p>" class="bootstrap-popover">
+                  <span class="glyphicons glyphicons-info-sign"></span>
+                </a>
+                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Taxonomy" data-content="Would you like a plant or animal list added to your survey? Contact us via chat below." class="bootstrap-popover">
+                  <span class="glyphicons glyphicons-leaf"></span>
+                </a>
+              </span>
             {{#if (or isFullyEditable question.isNew)}}
               {{#form-field for='answerType'}}
                 <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
@@ -47,12 +153,6 @@
             {{/if}}
           </div>
         </div>
-        <div class="row">
-          <div class="col-sm-12 alert alert-info">
-            Would you like a plant or animal list added to your survey? Contact us via chat below.
-          </div>
-        </div>
-
         <hr />
 
         {{#liquid-if showAnswerChoices class='show-answer-choices-liquid'}}
