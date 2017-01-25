@@ -26,6 +26,8 @@ module.exports = function(defaults) {
   app.import('bower_components/animate.css/animate.min.css');
   app.import('vendor/bootstrap/dropdown/bootstrap-dropdown.js');
   app.import('vendor/bootstrap/tab/bootstrap-tab.js');
+  app.import('vendor/bootstrap/tooltip/bootstrap-tooltip.js');
+  app.import('vendor/bootstrap/popover/bootstrap-popover.js');
   app.import('vendor/wildnote/wildnote-helper-list.js');
   return app.toTree();
 };
