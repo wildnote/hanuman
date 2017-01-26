@@ -63,7 +63,6 @@ export default Ember.Component.extend({
     this._super(...arguments);
     Ember.run.scheduleOnce('afterRender', this, function () {
       this.get('remodal').open('question-modal');
-      $('[data-toggle="popover"]').popover({});
     });
     // Tabs
     $('a[data-toggle="tab"]').on('click', function(e) {
@@ -88,7 +87,7 @@ export default Ember.Component.extend({
     return pendingObjects.invoke('save');
   },
 
-  _saveSuccess(question, promises){
+  _saveSuccess(question, promises, keepOpen){
     question.reload().then((question)=>{
       let answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
           conditionsPendingSave = this.get('conditionsPendingSave');
@@ -104,7 +103,14 @@ export default Ember.Component.extend({
         while (conditionsPendingSave.length > 0) {
           conditionsPendingSave.popObject();
         }
-        this.send('closeModal');
+        if(keepOpen){
+          if(!question.get('rule')){
+            let store = question.get('store');
+            question.set('rule', store.createRecord('rule'));
+          }
+        }else{
+          this.send('closeModal');
+        }
       });
     });
   },
@@ -150,7 +156,7 @@ export default Ember.Component.extend({
       this.set('question.rule.matchType', matchType);
     },
 
-    save() {
+    save(_e, keepOpen = false) {
       let question = this.get('question'),
           surveyTemplate = this.get('surveyTemplate');
       question.set('surveyTemplate', surveyTemplate);
@@ -176,18 +182,18 @@ export default Ember.Component.extend({
                 (rule) =>{
                   let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
                   promises = promises.concat(conditionsPromises);
-                  this._saveSuccess(question, promises);
+                  this._saveSuccess(question, promises, keepOpen);
                 },
                 // Rule was deleted on the server
                 () =>{
                   question.get('store').unloadRecord(rule);
                   question.reload().then((question)=>{
-                    this._saveSuccess(question, []);
+                    this._saveSuccess(question, [], keepOpen);
                   });
                 }
               );
             }else{
-              this._saveSuccess(question, promises);
+              this._saveSuccess(question, promises, keepOpen);
             }
           },
           (error)=>{
@@ -226,7 +232,7 @@ export default Ember.Component.extend({
 
     closeModal() {
       if(this.get('question.wasNew')){
-        run.later(this, ()=> { console.log('neea'); $('html, body').animate({ scrollTop: $(document).height() }, 500); }, 500);
+        run.later(this, ()=> { $('html, body').animate({ scrollTop: $(document).height() }, 500); }, 500);
       }
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');

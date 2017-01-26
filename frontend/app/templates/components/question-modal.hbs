@@ -220,8 +220,14 @@
 
         {{#if question.isNew}}
           <div class="row">
-            <div class="col-sm-12 alert alert-info">
-              To add Hide and Show rules for this question. Save and re-open the question to access.
+            <div class="col-sm-12">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <a class="btn btn-primary" onclick={{action "save" true}}>
+                    Add a rule
+                  </a>
+                </div>
+              </div>
             </div>
           </div>
           <hr />
