@@ -32,16 +32,17 @@ export default Ember.Component.extend({
     return this.get('questions').findBy('id',this.get('question.parentId'));
   }),
 
-  isRequiredDisabled: computed('question,question.{rule.isNew,answerType.name}', function() {
+  isRequiredDisabled: computed('question.{rule.isNew,answerType.name}','conditionsPendingSave.[]', function() {
     let question = this.get('question'),
         newRule = question.get('rule.isNew'),
-        notTypes = ['section','repeater','helperabove','helperbelow'];
+        notTypes = ['section','repeater','helperabove','helperbelow'],
+        pendingConditions = this.get('conditionsPendingSave.length') > 0;
     if(newRule === undefined){
       newRule = true;
     }
-    let isDisabled = !newRule || notTypes.includes(question.get('answerType.name'));
+    let isDisabled = !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
     if(isDisabled){
-      this.set('question.required', false);
+      run.later(this, ()=> { this.set('question.required', false); }, 0);
     }
     return isDisabled;
   }),
@@ -220,7 +221,7 @@ export default Ember.Component.extend({
 
     closeModal() {
       if(this.get('question.wasNew')){
-        run.later(this, ()=> { console.log('neea'); $('html, body').animate({ scrollTop: $(document).height() }, 500); }, 500);
+        run.later(this, ()=> { $('html, body').animate({ scrollTop: $(document).height() }, 500); }, 500);
       }
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');
