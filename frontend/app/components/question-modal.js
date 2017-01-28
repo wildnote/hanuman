@@ -11,7 +11,9 @@ export default Ember.Component.extend({
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   sortTypesBy: ['displayName'],
+  sortAnswerChoicesBy: ['sortOrder'],
   sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
+  sortedAnswerChoices: sort('question.answerChoices', 'sortAnswerChoicesBy'),
   filteredAnswerTypes: computed('answerTypes', function() {
     let answerTypes = this.get('answerTypes');
     if(this.get('isSuperUser')){
