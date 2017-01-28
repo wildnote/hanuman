@@ -9,6 +9,7 @@ const {
   computed: { filterBy }
 } = Ember;
 
+// Constants
 const STATUSES = ['draft', 'active', 'inactive'];
 
 const SurveyTemplate = Model.extend(Validator, {
