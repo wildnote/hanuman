@@ -3,7 +3,19 @@ import attr from 'ember-data/attr';
 import { belongsTo } from 'ember-data/relationships';
 import Validator from './../mixins/model-validator';
 
-export default Model.extend(Validator, {
+// Constants
+const OPERATORS = [
+  'is equal to',
+  'is not equal to',
+  'is empty',
+  'is not empty',
+  'is greater than',
+  'is less than',
+  'starts with',
+  'contains'
+];
+
+const Condition = Model.extend(Validator, {
   // Attributes
   operator: attr('string', { defaultValue: 'is equal to' }),
   answer: attr('string'),
@@ -19,17 +31,14 @@ export default Model.extend(Validator, {
     },
     operator:{
       inclusion: {
-        in: [
-          'is equal to',
-          'is not equal to',
-          'is empty',
-          'is not empty',
-          'is greater than',
-          'is less than',
-          'starts with',
-          'contains'
-        ]
+        in: OPERATORS
       }
     }
   }
 });
+
+Condition.reopenClass({
+  OPERATORS: OPERATORS
+});
+
+export default Condition;
