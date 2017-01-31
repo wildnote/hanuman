@@ -169,7 +169,7 @@
                       </tr>
                     </thead>
                     {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction='sortAnswerChoices' enableSort=true useSwap=true}}
-                      {{#each question.answerChoices as |answerChoice|}}
+                      {{#each sortedAnswerChoices as |answerChoice|}}
                         {{answer-choice-row content=answerChoice isSortable=true question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
                       {{/each}}
                       {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true isSortable=false}}
@@ -292,7 +292,7 @@
       <div class="form-group">
         <div class="col-sm-12">
           <a class="btn btn-primary" data-test="save-question-link" onclick={{action "save"}}>
-            Save
+            {{ if question.isSaving 'Saving...' 'Save' }}
           </a>
           <a class="btn btn-default" data-test="cancel-question-link" onclick={{action "closeModal"}}>
             Cancel

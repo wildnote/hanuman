@@ -15,7 +15,7 @@ module Hanuman
     validates :rule_id, presence: true
     validates :operator, inclusion: { in: OPERATORS }
     #validates :question_id, presence: true - this validation breaks the duplicate functionality-kdh
-    #validates :answer, presence: true - is empty and is not empty have nil values for answer so we can't validate presene of answer-kdh
+    #validates :answer, presence: true - is empty and is not empty have nil values for answer so we can't validate presence of answer-kdh
 
     # Callbacks
     after_destroy :cleanup_rule_if_single_condition
