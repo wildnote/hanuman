@@ -9,12 +9,15 @@ $(document).ready(function(){
     $('input[type="submit"]').on('click', function(){
       //  this code runs through all the file inputs on survey edit and removes the parsley attrs if the inputs  already have an upload.
       //  if we dont have this code, then the survey will not save because parsley will think the input file is empty.
-      var fileInputs =  $('input[type=file]').siblings('div.preview-container').find('input[type=hidden]')
-      for (var i = 0; i < fileInputs.length; i++) {
-        if ($(fileInputs[i]).val() != "") {
-          $(fileInputs[i]).parents('.file-upload-input-button').find('.cloudinary-fileupload').removeAttr('data-parsley-required')
+      if ($(".edit-mode-file").length > 0) {
+        var fileInputs = $('input[type=file]').siblings('div.upload-view-mode').find('input[type=hidden]')
+        for (var i = 0; i < fileInputs.length; i++) {
+          if ($(fileInputs[i]).val() != "") {
+            $(fileInputs[i]).parents('.file-upload-input-button').find('.cloudinary-fileupload').removeAttr('data-parsley-required')
+          }
         }
       }
+
 
       // special elements that don't work out of the box with parsley, having to write code to validate and position error messages
       setTimeout(function(){
