@@ -210,10 +210,10 @@ $(document).ready(function(){
       if ($(el).attr('need-parent-repeater-id') == "true") {
         parentRepeaterContainerId = $(el).closest(".parent-repeater-container").find("input[is-parent-repeater=true]").val()
         $(el).val(parentRepeaterContainerId)
-        $(el).after("updated parent repeater id: " + parentRepeaterContainerId)
+        // $(el).after("updated parent repeater id: " + parentRepeaterContainerId)
       }else if ($(el).attr('repeater-id') == "true") {
         $(el).val(childrenRepeaterId)
-        $(el).after("updated repeater id: " + childrenRepeaterId)
+        // $(el).after("updated repeater id: " + childrenRepeaterId)
         childrenRepeaterId += 1
       }
     });
