@@ -38,7 +38,6 @@ $(document).ready(function(){
     //************** BEGIN repeater ids
     repeaterInputs = $clonedContainer.find(".repeater-inputs")
     repeaterClosestPanel = $(this).parents(".panel-body")
-    updateRepeaterIds(repeaterInputs, $clonedContainer, repeaterClosestPanel)
     //************ END repeater ids
 
     // collect all container items inside cloned container for iteration later to update all attributes
@@ -147,37 +146,41 @@ $(document).ready(function(){
 
      }
      uniquefyEntryIds()
+     UpdateIdsInRepeaters()
   });
 
   function uniquefyEntryIds() {
     entryId = 1
-    // finding and iterating throught all the parent repeaters.
-    $("[is-parent-repeater=true]").each(function(idx, el){
+    nestedRepeaterCount = 0
 
-      // Select parent repeater conatiners
-      parent = $(el).closest(".form-container-repeater")
+    // finding and iterating through all the parent repeaters.
+    $("[is-parent-repeater=true]").closest(".form-container-repeater").each(function(idx, el){
 
-      // select all the contaienrs that contain entry id hidden inputs
-      entryContainers = parent.find('.form-container-entry-item')
+      // select all the containers that have entry id hidden inputs
+      entryContainers = $(el).find('.form-container-entry-item')
 
       // find the entry id hidden inputs
       $entryInputs = entryContainers.find("input[name*='[entry]']")
 
-      // in the parent repeater, find all the nested repeater container
-      nestedRepeater = parent.find(".form-container-repeater")
-
-      // update all entry inputs found on page.
+      // update all entry inputs found on parent container.
       $entryInputs.val(entryId)
 
-      // iterating through nested repeaters to update the entry ids with unique id.
+      // in the parent repeater, find all the nested repeater container
+      nestedRepeater = $(el).find(".form-container-repeater")
+
+      // then iterate through nested repeaters to update the entry ids with unique ids.
+      nestedRepeaterIndex = entryId + 1
       nestedRepeater.each(function(i,el){
         if (i > 0) {
           entryInputWithinRepeaters = $(el).find("input[name*='[entry]']")
-          var timeStamp = new Date().getTime();
-          entryInputWithinRepeaters.val(timeStamp+i)
+          entryInputWithinRepeaters.val(nestedRepeaterIndex)
+          nestedRepeaterIndex += 1
         }
+        // incrementing the count of nested repeaters for next loop to make use of
+        nestedRepeaterCount += 1
       })
-      entryId += 1000
+      // updating the entry id based on the nested repeater count
+      entryId = nestedRepeaterCount + 1
     })
 
     // Keeping for future debbuging
@@ -186,38 +189,35 @@ $(document).ready(function(){
     // })
   }
 
+  function UpdateIdsInRepeaters(){
+    //  Grabbing all the parent repeater containers
+    parentRepeaters = $("input[is-parent-repeater=true]")
+    parentRepeaterId = 1000
 
-  function updateRepeaterIds(repeaterInputs, $clonedContainer, repeaterClosestPanel) {
-    var cloningParentContainer
-    var timeStamp = new Date().getTime();
+    // update all parent repeaters with unique id
+    parentRepeaters.each(function(idx, el){
+      $(el).val(parentRepeaterId)
+      // $(el).after("updated parent repeater id: " + parentRepeaterId)
+      parentRepeaterId += 1
+    });
 
-    repeaterInputs.each(function(idx, repeaterInput){
-      if ($(repeaterInput).attr('is-parent-repeater') == "true") {
-        newParentRepeaterId = $("input[is-parent-repeater=true]").length
-        $(repeaterInput).val(newParentRepeaterId)
-        // keeping as comment for future debugging.
-        // $(repeaterInput).after(" New parent id: **** " + newParentRepeaterId)
-        cloningParentContainer = true
-      }else if ($(repeaterInput).attr('need-parent-repeater-id') == "true") {
-        if (cloningParentContainer) {
-          newParentRepeaterId = $("input[is-parent-repeater=true]").length
-          $(repeaterInput).val(newParentRepeaterId)
-        }else {
-          newParentRepeaterId = $(repeaterClosestPanel).closest('.form-container-repeater').parents('.form-container-repeater').find("input[is-parent-repeater=true]").val()
-          $(repeaterInput).val(newParentRepeaterId)
-        }
-        // keeping as comment for future debugging.
-        // $(repeaterInput).after(" | New parent repeater id: **** " + newParentRepeaterId)
-      }else if ($(repeaterInput).attr('repeater-id') == "true") {
-        var childrenRepeaterId = parseInt($(repeaterInput).val())
-        newRepeaterId = (childrenRepeaterId + 1) + timeStamp
-        $(repeaterInput).val(newRepeaterId)
-        // keeping as comment for future debugging.
-        // $(repeaterInput).after(" New repeater id: **** " + newRepeaterId)
+    // Grabbing all the children repeaters
+    childrenRepeaters = $("input[nested-child=true")
+    childrenRepeaterId = 1
+
+    // update all childer repeaters with unique id
+    childrenRepeaters.each(function(idx, el){
+      if ($(el).attr('need-parent-repeater-id') == "true") {
+        parentRepeaterContainerId = $(el).closest(".parent-repeater-container").find("input[is-parent-repeater=true]").val()
+        $(el).val(parentRepeaterContainerId)
+        $(el).after("updated parent repeater id: " + parentRepeaterContainerId)
+      }else if ($(el).attr('repeater-id') == "true") {
+        $(el).val(childrenRepeaterId)
+        $(el).after("updated repeater id: " + childrenRepeaterId)
+        childrenRepeaterId += 1
       }
-      timeStamp = new Date().getTime();
-    })
-  }
+    });
+  };
 
 
   function clearFileInputsValuesInEdit(files){
