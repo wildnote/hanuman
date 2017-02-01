@@ -1,7 +1,9 @@
 $(document).ready(function(){
 
   //  This removes the delete button from the first repeater.
-  $('.destroy-form-container-repeater').first().hide()
+  $(".form-container-repeater").each(function(i,el){
+    $(el).find('.destroy-form-container-repeater').first().hide()
+  })
 
   // need to find the max data entry on the page and start incrementing from there
   $dataEntry = 0;
