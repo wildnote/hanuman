@@ -11,7 +11,9 @@ export default Ember.Component.extend({
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   sortTypesBy: ['displayName'],
+  sortAnswerChoicesBy: ['sortOrder'],
   sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
+  sortedAnswerChoices: sort('question.answerChoices', 'sortAnswerChoicesBy'),
   filteredAnswerTypes: computed('answerTypes', function() {
     let answerTypes = this.get('answerTypes');
     if(this.get('isSuperUser')){
@@ -32,16 +34,17 @@ export default Ember.Component.extend({
     return this.get('questions').findBy('id',this.get('question.parentId'));
   }),
 
-  isRequiredDisabled: computed('question,question.{rule.isNew,answerType.name}', function() {
+  isRequiredDisabled: computed('question.{rule.isNew,answerType.name}','conditionsPendingSave.[]', function() {
     let question = this.get('question'),
         newRule = question.get('rule.isNew'),
-        notTypes = ['section','repeater','helperabove','helperbelow'];
+        notTypes = ['section','repeater','helperabove','helperbelow'],
+        pendingConditions = this.get('conditionsPendingSave.length') > 0;
     if(newRule === undefined){
       newRule = true;
     }
-    let isDisabled = !newRule || notTypes.includes(question.get('answerType.name'));
+    let isDisabled = !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
     if(isDisabled){
-      this.set('question.required', false);
+      run.later(this, ()=> { this.set('question.required', false); }, 0);
     }
     return isDisabled;
   }),
@@ -64,6 +67,7 @@ export default Ember.Component.extend({
     Ember.run.scheduleOnce('afterRender', this, function () {
       this.get('remodal').open('question-modal');
       $('[data-toggle="popover"]').popover({});
+
     });
     // Tabs
     $('a[data-toggle="tab"]').on('click', function(e) {
@@ -88,7 +92,7 @@ export default Ember.Component.extend({
     return pendingObjects.invoke('save');
   },
 
-  _saveSuccess(question, promises){
+  _saveSuccess(question, promises, keepOpen){
     question.reload().then((question)=>{
       let answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
           conditionsPendingSave = this.get('conditionsPendingSave');
@@ -104,7 +108,14 @@ export default Ember.Component.extend({
         while (conditionsPendingSave.length > 0) {
           conditionsPendingSave.popObject();
         }
-        this.send('closeModal');
+        if(keepOpen){
+          if(!question.get('rule')){
+            let store = question.get('store');
+            question.set('rule', store.createRecord('rule'));
+          }
+        }else{
+          this.send('closeModal');
+        }
       });
     });
   },
@@ -150,7 +161,7 @@ export default Ember.Component.extend({
       this.set('question.rule.matchType', matchType);
     },
 
-    save() {
+    save(_e, keepOpen = false) {
       let question = this.get('question'),
           surveyTemplate = this.get('surveyTemplate');
       question.set('surveyTemplate', surveyTemplate);
@@ -176,18 +187,18 @@ export default Ember.Component.extend({
                 (rule) =>{
                   let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
                   promises = promises.concat(conditionsPromises);
-                  this._saveSuccess(question, promises);
+                  this._saveSuccess(question, promises, keepOpen);
                 },
                 // Rule was deleted on the server
                 () =>{
                   question.get('store').unloadRecord(rule);
                   question.reload().then((question)=>{
-                    this._saveSuccess(question, []);
+                    this._saveSuccess(question, [], keepOpen);
                   });
                 }
               );
             }else{
-              this._saveSuccess(question, promises);
+              this._saveSuccess(question, promises, keepOpen);
             }
           },
           (error)=>{
@@ -200,7 +211,9 @@ export default Ember.Component.extend({
 
     saveCondition(condition){
       if(this.get('question.isNew') || this.get('question.rule.isNew')){
-        this.get('conditionsPendingSave').pushObject(condition);
+        if(this.get('conditionsPendingSave').indexOf(condition) === -1){
+          this.get('conditionsPendingSave').pushObject(condition);
+        }
       }else{
         condition.save();
       }
@@ -218,7 +231,9 @@ export default Ember.Component.extend({
 
     saveAnswerChoice(answerChoice){
       if(this.get('question.isNew')){
-        this.get('answerChoicesPendingSave').pushObject(answerChoice);
+        if(this.get('answerChoicesPendingSave').indexOf(answerChoice) === -1){
+          this.get('answerChoicesPendingSave').pushObject(answerChoice);
+        }
       }else{
         answerChoice.save();
       }
@@ -226,7 +241,7 @@ export default Ember.Component.extend({
 
     closeModal() {
       if(this.get('question.wasNew')){
-        run.later(this, ()=> { console.log('neea'); $('html, body').animate({ scrollTop: $(document).height() }, 500); }, 500);
+        run.later(this, ()=> { $('html, body').animate({ scrollTop: $(document).height() }, 500); }, 500);
       }
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');

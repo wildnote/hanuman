@@ -10,8 +10,11 @@ export default DraggableObject.extend({
   isEditingAnswerChoice: false,
 
   setNewAnswerChoice() {
+    let lastAnswer = this.get('question.answerChoices.lastObject'),
+        sortOrder = lastAnswer ? lastAnswer.get('sortOrder') : 0;
     let answerChoice = this.get('question').store.createRecord('answerChoice',{
-      optionText: ''
+      optionText: '',
+      sortOrder: sortOrder + 1
     });
     this.set('answerChoice', answerChoice);
   },
