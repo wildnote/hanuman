@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import Condition from "../models/condition";
 
 const {
   computed,
@@ -11,16 +12,8 @@ export default Ember.Component.extend({
   attributeBindings: ['condition.id:data-condition-id'],
   classNameBindings: ['isNewCondition:no-hover'],
   isEditingCondition: false,
-  operators: [
-                'is equal to',
-                'is not equal to',
-                'is empty',
-                'is not empty',
-                'is greater than',
-                'is less than',
-                'starts with',
-                'contains'
-              ],
+  operators: Condition.OPERATORS,
+
   currentQuestion: computed('condition.questionId', function() {
     return this.get('questions').findBy('id',this.get('condition.questionId'));
   }),
@@ -52,13 +45,6 @@ export default Ember.Component.extend({
     save() {
       let condition = this.get('condition');
       if(condition.validate()){
-
-        if(this.get('useDropDownAnswerSelect')){
-          let currentQuestion = this.get('currentQuestion'),
-              firstAnswerChoice = currentQuestion.get('answerChoices.firstObject');
-          condition.set('answer',firstAnswerChoice.get('optionText'));
-        }
-
         condition.set('rule', this.get('rule'));
         this.sendAction('save',condition);
         if(this.get('isNewCondition')){
