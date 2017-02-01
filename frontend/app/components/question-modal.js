@@ -209,7 +209,9 @@ export default Ember.Component.extend({
 
     saveCondition(condition){
       if(this.get('question.isNew') || this.get('question.rule.isNew')){
-        this.get('conditionsPendingSave').pushObject(condition);
+        if(this.get('conditionsPendingSave').indexOf(condition) === -1){
+          this.get('conditionsPendingSave').pushObject(condition);
+        }
       }else{
         condition.save();
       }
@@ -227,7 +229,9 @@ export default Ember.Component.extend({
 
     saveAnswerChoice(answerChoice){
       if(this.get('question.isNew')){
-        this.get('answerChoicesPendingSave').pushObject(answerChoice);
+        if(this.get('answerChoicesPendingSave').indexOf(answerChoice) === -1){
+          this.get('answerChoicesPendingSave').pushObject(answerChoice);
+        }
       }else{
         answerChoice.save();
       }
