@@ -45,13 +45,6 @@ export default Ember.Component.extend({
     save() {
       let condition = this.get('condition');
       if(condition.validate()){
-
-        if(this.get('useDropDownAnswerSelect')){
-          let currentQuestion = this.get('currentQuestion'),
-              firstAnswerChoice = currentQuestion.get('answerChoices.firstObject');
-          condition.set('answer',firstAnswerChoice.get('optionText'));
-        }
-
         condition.set('rule', this.get('rule'));
         this.sendAction('save',condition);
         if(this.get('isNewCondition')){
