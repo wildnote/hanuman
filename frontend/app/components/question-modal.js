@@ -3,6 +3,8 @@ const {
   $,
   run,
   computed,
+  observer,
+  on,
   computed: { alias, sort }
 } = Ember;
 
@@ -53,6 +55,20 @@ export default Ember.Component.extend({
     let question = this.get('question');
     return question.get('isNew') && question.get('answerType.id') === undefined;
   }),
+
+  // If a question has a rule associated with it, it should automatically be set to Hidden
+  hideQuestion: on('init', observer('question.{rule.isNew}','conditionsPendingSave.[]', function() {
+    let question = this.get('question'),
+        newRule = question.get('rule.isNew'),
+        pendingConditions = this.get('conditionsPendingSave.length') > 0;
+    if(newRule === undefined){
+      newRule = true;
+    }
+    let toHide = !newRule || pendingConditions;
+    if(toHide && !question.isDeleted){
+      run.later(this, ()=> { this.set('question.hidden', true); }, 0);
+    }
+  })),
 
   init() {
     this._super(...arguments);
