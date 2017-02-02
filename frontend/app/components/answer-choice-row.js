@@ -11,7 +11,7 @@ export default DraggableObject.extend({
 
   setNewAnswerChoice() {
     let lastAnswer = this.get('question.answerChoices.lastObject'),
-        sortOrder = lastAnswer.get('sortOrder') || 0;
+        sortOrder = lastAnswer ? lastAnswer.get('sortOrder') : 0;
     let answerChoice = this.get('question').store.createRecord('answerChoice',{
       optionText: '',
       sortOrder: sortOrder + 1

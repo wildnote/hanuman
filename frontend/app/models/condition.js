@@ -18,7 +18,7 @@ const OPERATORS = [
 const Condition = Model.extend(Validator, {
   // Attributes
   operator: attr('string', { defaultValue: 'is equal to' }),
-  answer: attr('string'),
+  answer: attr('string', { defaultValue: '' }),
   questionId: attr('string'),
 
   // Associations

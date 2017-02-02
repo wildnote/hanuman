@@ -202,20 +202,23 @@
                   onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
           </div>
         </div>
-        <hr />
-        <div class="form-group">
-          <div class="col-sm-12">
-            {{#form-field for='parentId' label='Parent Relationship'}}
-              <select class="form-control" data-test="ancestry-select" onchange={{action "ancestryChange" value="target.value"}}>
-                <option></option>
-                {{#each ancestryQuestions as |opQuestion|}}
-                  <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
-                {{/each}}
-              </select>
-            {{/form-field}}
-          </div>
-        </div>
 
+        {{#if isSuperUser}}
+          <hr />
+          <div class="form-group">
+            <div class="col-sm-12">
+              {{#form-field for='parentId' label='Parent Relationship'}}
+                <select class="form-control" data-test="ancestry-select" onchange={{action "ancestryChange" value="target.value"}}>
+                  <option></option>
+                  {{#each ancestryQuestions as |opQuestion|}}
+                    <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
+                  {{/each}}
+                </select>
+              {{/form-field}}
+            </div>
+          </div>
+        {{/if}}
+        
         <hr />
 
         {{#if question.isNew}}
