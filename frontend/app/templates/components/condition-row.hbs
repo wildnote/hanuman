@@ -53,17 +53,16 @@
 {{else}}
   {{#if isNewCondition}}
     <!-- + new answer choice button -->
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td>
+    <td colspan="2">
       <a class="btn btn-success" data-test="add-condition-link" onclick={{action 'toggleForm'}}>
         <span class="glyphicons glyphicons-plus"></span>
-        Add
+        Add Condition
       </a>
     </td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
   {{else}}
     {{!-- show of existing condition --}}
     <td>if</td>
