@@ -13,17 +13,6 @@
       {{#object-form for=question}}
         <div class="form-group">
           <div class="col-sm-12">
-            {{#form-field for='questionText' label='Label'}}
-              <input type="text"
-                    class="form-control"
-                    data-test="question.questionText"
-                    value={{question.questionText}}
-                    oninput={{action (mut question.questionText) value="target.value"}} />
-            {{/form-field}}
-          </div>
-        </div>
-        <div class="form-group">
-          <div class="col-sm-12">
             <label>
               Question Type
             </label>
@@ -153,21 +142,47 @@
             {{/if}}
           </div>
         </div>
-        <hr />
+
+
+        <div class="form-group">
+          <div class="col-sm-12">
+            {{#form-field for='questionText' label='Question Text'}}
+              <input type="text"
+                    class="form-control"
+                    data-test="question.questionText"
+                    value={{question.questionText}}
+                    oninput={{action (mut question.questionText) value="target.value"}} />
+            {{/form-field}}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-12">
+            <input type="checkbox"
+                  disabled={{isRequiredDisabled}}
+                  name="isRequired"
+                  checked={{question.required}}
+                  onchange={{action (mut question.required) value="target.checked"}} /> Required
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="A required question must be answered in order to save the survey." class="bootstrap-popover">
+                    <span class="glyphicons glyphicons-info-sign"></span>
+                  </a>
+          </div>
+        </div>
 
         {{#liquid-if showAnswerChoices class='show-answer-choices-liquid'}}
+          <hr/>
+
+          <div class="form-group">
+            <div class="col-sm-12">
+              <label>Answer Choices</label>
+            </div>
+          </div>
 
           <div class="panel">
             <div class="row">
               <div class="col-md-12">
                 <div class="table-responsive">
                   <table class="table table-hover">
-                    <thead>
-                      <tr>
-                        <th data-test="answer-choices-label">Answer Choices</th>
-                        <th></th>
-                      </tr>
-                    </thead>
                     {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction='sortAnswerChoices' enableSort=true useSwap=true}}
                       {{#each sortedAnswerChoices as |answerChoice|}}
                         {{answer-choice-row content=answerChoice isSortable=true question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
@@ -180,60 +195,30 @@
             </div>
           </div>
 
-          <hr />
-
         {{/liquid-if}}
 
-        <div class="form-group">
-          <div class="col-sm-12">
-            <input type="checkbox"
-                  disabled={{isRequiredDisabled}}
-                  name="isRequired"
-                  checked={{question.required}}
-                  onchange={{action (mut question.required) value="target.checked"}} /> Required
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="col-sm-12">
-            <input type="checkbox"
-                  name="isHidden"
-                  checked={{question.hidden}}
-                  onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
-          </div>
-        </div>
-
-        {{#if isSuperUser}}
-          <hr />
-          <div class="form-group">
-            <div class="col-sm-12">
-              {{#form-field for='parentId' label='Parent Relationship'}}
-                <select class="form-control" data-test="ancestry-select" onchange={{action "ancestryChange" value="target.value"}}>
-                  <option></option>
-                  {{#each ancestryQuestions as |opQuestion|}}
-                    <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
-                  {{/each}}
-                </select>
-              {{/form-field}}
-            </div>
-          </div>
-        {{/if}}
-        
         <hr />
+
+        <div class="form-group">
+          <div class="col-sm-12">
+            <label>Hide and Show Rules</label>
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hide and Show Rules" data-content="Add a rule to hide this question by default. If the rule conditions are met the question will then be revealed in the survey." class="bootstrap-popover">
+              <span class="glyphicons glyphicons-info-sign"></span>
+            </a>
+          </div>
+        </div>
 
         {{#if question.isNew}}
           <div class="row">
             <div class="col-sm-12">
-              <div class="col-sm-12">
-                <div class="form-group">
-                  <a class="btn btn-primary" onclick={{action "save" true}}>
-                    Add a rule
-                  </a>
-                </div>
+              <div class="form-group">
+                <a class="btn btn-success" onclick={{action "save" true}}>
+                  <span class="glyphicons glyphicons-plus"></span>
+                  Add rule
+                </a>
               </div>
             </div>
           </div>
-          <hr />
         {{/if}}
 
         {{#if question.rule}}
@@ -243,11 +228,6 @@
               <div class="col-md-12">
                 <div class="table-responsive">
                   <table class="table table-hover">
-                    <thead>
-                      <tr class="no-hover">
-                        <th colspan="6">Hide and Show Rules</th>
-                      </tr>
-                    </thead>
                     <tbody>
                       <tr class="no-hover">
                         <td colspan="6">
@@ -276,10 +256,41 @@
             </div>
           </div>
 
-          <hr />
-
         {{/if}}
+
+
+
+        <div class="form-group">
+          <div class="col-sm-12">
+            <input type="checkbox"
+                  name="isHidden"
+                  checked={{question.hidden}}
+                  onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hidden" data-content="A question will be automatically hidden if there is a rule associated with it." class="bootstrap-popover">
+                    <span class="glyphicons glyphicons-info-sign"></span>
+                  </a>
+          </div>
+        </div>
+
         {{#if isSuperUser}}
+          <div class="form-group">
+            <div class="col-sm-12">
+              <h4>superuser only</h4>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="col-sm-12">
+              {{#form-field for='parentId' label='Parent Relationship'}}
+                <select class="form-control" data-test="ancestry-select" onchange={{action "ancestryChange" value="target.value"}}>
+                  <option></option>
+                  {{#each ancestryQuestions as |opQuestion|}}
+                    <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
+                  {{/each}}
+                </select>
+              {{/form-field}}
+            </div>
+          </div>
+
           <div class="form-group">
             <div class="col-sm-12">
               {{#form-field for='externalDataSource' label='External Data Source'}}
@@ -288,7 +299,6 @@
                       data-test="question.externalDataSource"
                       value={{question.externalDataSource}}
                       oninput={{action (mut question.externalDataSource) value="target.value"}} />
-                <small class="text-muted">(Superuser only)</small>
               {{/form-field}}
             </div>
           </div>
