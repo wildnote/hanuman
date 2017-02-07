@@ -16,4 +16,7 @@
 	   overflow-y: scroll;
 		 height: 400px;
 	}
+	.sortable-objects td {
+		cursor: move;
+	}
 }

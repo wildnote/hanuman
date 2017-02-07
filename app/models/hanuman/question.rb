@@ -7,7 +7,7 @@ module Hanuman
     belongs_to :answer_type
     belongs_to :survey_step # Deprecated
     belongs_to :survey_template
-    has_many :answer_choices, dependent: :destroy, inverse_of: :question
+    has_many :answer_choices, -> { order :sort_order, :option_text }, dependent: :destroy, inverse_of: :question
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
     has_one :rule, dependent: :destroy
     has_many :conditions, dependent: :destroy
