@@ -5,7 +5,7 @@
     {{#form-field for='question'}}
       <select data-test="condition-question-id-select" class="form-control" onchange={{action "setConditionQuestion" value="target.value"}}>
         {{#each questions as |question|}}
-          <option value={{question.id}} selected={{eq question.id condition.questionId}}>{{question.questionText}} - {{question.id}}</option>
+          <option value={{question.id}} selected={{eq question.id condition.questionId}}>{{question.questionText}}</option>
         {{/each}}
       </select>
     {{/form-field}}
