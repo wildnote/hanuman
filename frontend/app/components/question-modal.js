@@ -13,7 +13,7 @@ export default Ember.Component.extend({
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   sortTypesBy: ['displayName'],
-  sortAnswerChoicesBy: ['sortOrder'],
+  sortAnswerChoicesBy: ['sortOrder','optionText'],
   sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
   sortedAnswerChoices: sort('question.answerChoices', 'sortAnswerChoicesBy'),
   filteredAnswerTypes: computed('answerTypes', function() {
@@ -30,6 +30,12 @@ export default Ember.Component.extend({
     return this.get('questions').filter((question) => {
       let allowedTypes = ['section','repeater'];
       return allowedTypes.includes(question.get('answerType.name'));
+    });
+  }),
+  conditionalQuestions: computed('questions','question', function() {
+    let question = this.get('question');
+    return this.get('questions').filter((condQuestion) => {
+      return condQuestion !== question;
     });
   }),
   ancestryQuestion: computed('question.parentId', function() {
