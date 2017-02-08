@@ -1,11 +1,10 @@
 $(document).ready(function(){
 
-  uniquefyEntryIds()
-
   //  This removes the delete button from the first repeater.
-  // $('.destroy-form-container-repeater').first().hide()
+  //  and adds flag to original repeaters. This flag is needed so that we can skip updating its entry values in the uniquefyEntryIds function
   $(".parent-repeater-container").each(function(i, el){
     $(el).find('.destroy-form-container-repeater').first().hide()
+    $(el).attr("original-repeater","true")
   });
 
   // need to find the max data entry on the page and start incrementing from there
@@ -37,6 +36,8 @@ $(document).ready(function(){
     $($clonedContainer).find('.hidden-field-observation-id').remove();
     // remove data-observation-id at the repeater level
     $($clonedContainer).removeAttr('data-observation-id')
+
+    $clonedContainer.removeAttr("original-repeater")
 
     //************** BEGIN repeater ids
     repeaterInputs = $clonedContainer.find(".repeater-inputs")
@@ -156,34 +157,38 @@ $(document).ready(function(){
     entryId = 1
     nestedRepeaterCount = 0
 
-    // finding and iterating through all the parent repeaters.
-    $("[is-parent-repeater=true]").closest(".form-container-repeater").each(function(idx, el){
+    // finding and iterating through all the new parent repeaters.
+    $(".parent-repeater-container").each(function(idx, el){
 
-      // select all the containers that have entry id hidden inputs
-      entryContainers = $(el).find('.form-container-entry-item')
+      //  only update the entry values of the repeaters that are added to the dom via the "add repeater" button./ skip the original repeaters
+      if ($(el).attr("original-repeater") != "true") {
 
-      // find the entry id hidden inputs
-      $entryInputs = entryContainers.find("input[name*='[entry]']")
+        // select all the containers that have entry id hidden inputs
+        entryContainers = $(el).find('.form-container-entry-item')
 
-      // update all entry inputs found on parent container.
-      $entryInputs.val(entryId)
+        // find the entry id hidden inputs
+        $entryInputs = entryContainers.find("input[name*='[entry]']")
 
-      // in the parent repeater, find all the nested repeater container
-      nestedRepeater = $(el).find(".form-container-repeater")
+        // update all entry inputs found on parent container.
+        $entryInputs.val(entryId)
 
-      // then iterate through nested repeaters to update the entry ids with unique ids.
-      nestedRepeaterIndex = entryId + 1
-      nestedRepeater.each(function(i,el){
-        if (i > 0) {
-          entryInputWithinRepeaters = $(el).find("input[name*='[entry]']")
-          entryInputWithinRepeaters.val(nestedRepeaterIndex)
-          nestedRepeaterIndex += 1
-        }
-        // incrementing the count of nested repeaters for next loop to make use of
-        nestedRepeaterCount += 1
-      })
-      // updating the entry id based on the nested repeater count
-      entryId = nestedRepeaterCount + 1
+        // in the parent repeater, find all the nested repeater container
+        nestedRepeater = $(el).find(".form-container-repeater")
+
+        // then iterate through nested repeaters to update the entry ids with unique ids.
+        nestedRepeaterIndex = entryId + 1
+        nestedRepeater.each(function(i,el){
+          if (i > 0) {
+            entryInputWithinRepeaters = $(el).find("input[name*='[entry]']")
+            entryInputWithinRepeaters.val(nestedRepeaterIndex)
+            nestedRepeaterIndex += 1
+          }
+          // incrementing the count of nested repeaters for next loop to make use of
+          nestedRepeaterCount += 1
+        })
+        // updating the entry id based on the nested repeater count
+        entryId = nestedRepeaterCount + 1
+      }
     })
 
     // Keeping for future debbuging
