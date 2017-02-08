@@ -35,7 +35,7 @@ export default Ember.Component.extend({
   conditionalQuestions: computed('questions','question', function() {
     let question = this.get('question');
     return this.get('questions').filter((condQuestion) => {
-      return condQuestion !== question;
+      return condQuestion !== question && condQuestion.get('answerType.hasAnAnswer');
     });
   }),
   ancestryQuestion: computed('question.parentId', function() {
