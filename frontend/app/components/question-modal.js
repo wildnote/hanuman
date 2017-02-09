@@ -277,11 +277,11 @@ export default Ember.Component.extend({
     },
 
     closeModal() {
-      if(this.get('question.wasNew')){
-        run.later(this, ()=> { $('html, body').animate({ scrollTop: $('.add-new-question').height() }, 500); }, 500);
-      }
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');
+      if(this.get('question.wasNew')){
+        run.later(this, ()=> { $('html, body').animate({ scrollTop: $('.add-new-question').offset().top }, 500); }, 500);
+      }
     }
   }
 });
