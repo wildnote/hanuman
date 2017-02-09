@@ -183,9 +183,11 @@
               <div class="col-md-12">
                 <div class="table-responsive">
                   <table class="table table-hover">
-                    {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction='sortAnswerChoices' enableSort=true useSwap=true}}
-                      {{#each sortedAnswerChoices as |answerChoice|}}
-                        {{answer-choice-row content=answerChoice isSortable=true question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
+                    {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction='sortAnswerChoices' enableSort=true}}
+                      {{#each question.answerChoices as |answerChoice|}}
+                        {{#unless answerChoice.hideFromList}}
+                          {{answer-choice-row content=answerChoice isSortable=true question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
+                        {{/unless}}
                       {{/each}}
                       {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true isSortable=false}}
                     {{/sortable-objects-tbody}}

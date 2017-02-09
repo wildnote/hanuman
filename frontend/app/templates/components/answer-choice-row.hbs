@@ -13,7 +13,7 @@
   </td>
   <td>
     <a class="btn btn-success" data-test="save-answer-choice-link" onclick={{action 'save'}}>
-      Save
+      {{ if answerChoice.isSaving 'Saving...' 'Save' }}
     </a>
     <a class="btn btn-default" onclick={{action 'toggleForm'}}>
       Cancel
@@ -24,7 +24,7 @@
   {{#if isNewAnswerChoice}}
     <!-- + new answer choice button -->
     <td>
-      <a class="btn btn-success" data-test="add-answer-choice-link" onclick={{action 'toggleForm'}}>
+      <a class="btn btn-success" data-test="add-answer-choice-link" onclick={{action 'toggleForm' true}}>
         <span class="glyphicons glyphicons-plus"></span>
         Add Answer Choice
       </a>
@@ -49,7 +49,7 @@
       <a class="btn" data-test="delete-answer-choice-link" onclick={{action 'delete'}}>
         <span class="glyphicons glyphicons-bin"></span>
       </a>
-      <span class="glyphicons glyphicons-sorting">
+      <span class="glyphicons glyphicons-sorting answer-draggable-handle">
       </span>
     </td>
   {{/if}}

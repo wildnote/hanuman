@@ -13,9 +13,7 @@ export default Ember.Component.extend({
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   sortTypesBy: ['displayName'],
-  sortAnswerChoicesBy: ['sortOrder','optionText'],
   sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
-  sortedAnswerChoices: sort('question.answerChoices', 'sortAnswerChoicesBy'),
   filteredAnswerTypes: computed('answerTypes', function() {
     let answerTypes = this.get('answerTypes');
     if(this.get('isSuperUser')){
@@ -154,7 +152,8 @@ export default Ember.Component.extend({
 
   actions: {
     sortAnswerChoices(){
-      let answerChoices = this.get('question.answerChoices');
+      let question = this.get('question'),
+          answerChoices = question.get('answerChoices');
       answerChoices.forEach((answerChoice, index) => {
         let oldSortOrder = answerChoice.get('sortOrder'),
             newSortOrder = index + 1;
@@ -165,6 +164,9 @@ export default Ember.Component.extend({
           }
         }
       });
+      if(!question.get('isNew')){
+        question.reload();
+      }
     },
 
     ancestryChange(newAncestryId){
@@ -252,13 +254,25 @@ export default Ember.Component.extend({
       }
     },
 
-    saveAnswerChoice(answerChoice){
-      if(this.get('question.isNew')){
+    saveAnswerChoice(answerChoice, cb){
+      let question = this.get('question');
+      if(question.get('isNew')){
         if(this.get('answerChoicesPendingSave').indexOf(answerChoice) === -1){
+          answerChoice.set('hideFromList',false);
           this.get('answerChoicesPendingSave').pushObject(answerChoice);
+          cb();
         }
       }else{
-        answerChoice.save();
+        answerChoice.save().then(function(answerChoice) {
+          answerChoice.set('hideFromList',false);
+          if(question.get('isNew')){
+            cb();
+          }else{
+            question.reload().then(function() {
+              cb();
+            });
+          }
+        });
       }
     },
 
