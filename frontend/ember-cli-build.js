@@ -29,5 +29,6 @@ module.exports = function(defaults) {
   app.import('vendor/bootstrap/tooltip/bootstrap-tooltip.js');
   app.import('vendor/bootstrap/popover/bootstrap-popover.js');
   app.import('vendor/wildnote/wildnote-helper-list.js');
+  app.import('vendor/rails-ujs-handlers.js');
   return app.toTree();
 };
