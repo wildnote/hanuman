@@ -35,7 +35,7 @@ class @ConditionalLogic
         else
           if $conditionElement.is(":checkbox")
             # limit binding of each checkbox if data-label-value and answer are the same-kdh
-            $conditionElement = $conditionContainer.find(".form-control[data-label-value=" + condition.answer.replace("/","\\/") + "]")
+            $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/") + "']")
             self.bindConditions($conditionElement)
           else
             for element in $conditionElement
@@ -118,7 +118,7 @@ class @ConditionalLogic
 
       if $conditionElement.is(":checkbox")# || $triggerElement.is(":radio"))
         # limit binding of each checkbox if data-label-value and answer are the same-kdh
-        $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value=" + condition.answer.replace("/","\\/") + "]")
+        $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value='" + condition.answer.replace("/","\\/") + "']")
       hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
       conditionMet = !hideQuestions
       conditionMetTracker.push conditionMet
