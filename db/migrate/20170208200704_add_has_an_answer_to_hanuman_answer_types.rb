@@ -1,5 +1,5 @@
 class AddGpsDataToHanumanObservationVideos < ActiveRecord::Migration
-  NO_ANSWER_TYPES = %w(repeater section helperabove helperbelow line static photo document video)
+  NO_ANSWER_TYPES = %w(repeater section helperabove helperbelow line static photo document video latlong)
 
   def up
     add_column :hanuman_answer_types, :has_an_answer, :boolean, default: true
