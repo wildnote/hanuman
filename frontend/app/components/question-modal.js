@@ -61,18 +61,15 @@ export default Ember.Component.extend({
   }),
 
   // If a question has a rule associated with it, it should automatically be set to Hidden
-  hideQuestion: on('afterRender', observer('question.{rule.isNew}','conditionsPendingSave.[]', function() {
+  hideQuestion: on('afterRender', observer('question.{rule.isNew,rule.conditions.[]}','conditionsPendingSave.[]', function() {
     let question = this.get('question'),
         newRule = question.get('rule.isNew'),
-        pendingConditions = this.get('conditionsPendingSave.length') > 0;
+        hasConditions = (this.get('conditionsPendingSave.length') > 0) || (question.get('rule').hasMany('conditions').ids().length > 0);
     if(newRule === undefined){
       newRule = true;
     }
-
-    let toHide = !newRule || pendingConditions;
-    if(toHide){
-      this.set('question.hidden', true);
-    }
+    let toHide = !newRule || hasConditions;
+    this.set('question.hidden', toHide);
   })),
 
   init() {
