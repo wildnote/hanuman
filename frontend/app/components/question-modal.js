@@ -64,7 +64,7 @@ export default Ember.Component.extend({
   hideQuestion: on('afterRender', observer('question.{rule.isNew,rule.conditions.[]}','conditionsPendingSave.[]', function() {
     let question = this.get('question'),
         newRule = question.get('rule.isNew'),
-        hasConditions = (this.get('conditionsPendingSave.length') > 0) || (question.get('rule').hasMany('conditions').ids().length > 0);
+        hasConditions = (this.get('conditionsPendingSave.length') > 0) || (question.get('rule') && question.get('rule').hasMany('conditions').ids().length > 0);
     if(newRule === undefined){
       newRule = true;
     }
