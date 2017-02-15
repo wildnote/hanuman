@@ -11,18 +11,19 @@ export default DraggableObject.extend({
 
   setNewAnswerChoice() {
     let lastAnswer = this.get('question.answerChoices.lastObject'),
-        sortOrder = lastAnswer ? lastAnswer.get('sortOrder') : 0;
+        sortOrder = lastAnswer && lastAnswer.get('sortOrder') ? lastAnswer.get('sortOrder') + 1 : null;
     let answerChoice = this.get('question').store.createRecord('answerChoice',{
       optionText: '',
-      sortOrder: sortOrder + 1
+      sortOrder: sortOrder,
+      hideFromList: true
     });
     this.set('answerChoice', answerChoice);
   },
 
   actions: {
-    toggleForm() {
+    toggleForm(_e, forceToSetNew = false) {
       this.toggleProperty('isEditingAnswerChoice');
-      if(Ember.isNone(this.get('answerChoice'))){
+      if(forceToSetNew || Ember.isNone(this.get('answerChoice'))){
         this.setNewAnswerChoice();
       }
     },
@@ -31,11 +32,12 @@ export default DraggableObject.extend({
       let answerChoice = this.get('answerChoice');
       if(answerChoice.validate()){
         answerChoice.set('question', this.get('question'));
-        this.sendAction('save',answerChoice);
-        if(this.get('isNewAnswerChoice')){
-          this.set('answerChoice',null);
-        }
-        this.send('toggleForm');
+        this.sendAction('save',answerChoice, () => {
+          this.send('toggleForm');
+          if(this.get('isNewAnswerChoice')){
+            this.set('answerChoice',null);
+          }
+        });
       }
     },
 

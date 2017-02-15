@@ -43,6 +43,7 @@ export default Model.extend(Validator, {
     let rule = this.get('rule');
     return (rule.get('matchType') === 'all') ? 'AND' : 'OR';
   }),
+
   supportAncestry: match('answerType.name', /section|repeater/),
 
   // Validations

@@ -11,6 +11,7 @@ export default Model.extend(Validator, {
   conditions: hasMany('condition'),
   question: belongsTo('question'),
 
+  // Validations
   validations: {
     matchType:{
       inclusion: { in: ['any', 'all'] }

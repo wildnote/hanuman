@@ -7,15 +7,14 @@ This project rocks and uses MIT-LICENSE.
 
 Hanuman is a rails engine that gives the rails application the ability to create surveys for data collection.
 
-It is still pretty early in the development stage. However, we are using it in two of our applications.
-
+It is "still pretty early" in the development stage. However, we are using it in two of our applications.
 
 
 ### Frontend
 
 Part of this engine is built with [Emberjs](http://emberjs.com/) using [ember-cli-rails](https://github.com/thoughtbot/ember-cli-rails), so you need:
 
-###### Node
+#### Node
 
 Install the latest version of Node. To do so, either follow the installation instructions on nodejs.org, or use your preferred package manager (such as Homebrew on OSX) if you have one.
 
@@ -26,11 +25,11 @@ node -v
 npm -v
 ````
 
-###### Setup in parent app
+#### Setup in parent app
 
 The following commands should be done in the parent app.
 
-###### Ember CLI
+##### Ember CLI
 
 Once you’ve installed Node, you’ll need to globally install Ember CLI:
 
@@ -38,7 +37,7 @@ Once you’ve installed Node, you’ll need to globally install Ember CLI:
 npm install -g ember-cli
 ````
 
-###### Bower
+##### Bower
 
 You’ll need to globally install Bower, a package manager that keeps your front-end dependencies (including jQuery, Ember, and QUnit) up-to-date:
 
@@ -63,3 +62,13 @@ You may need to run the following to get the tests running
 ```
 npm install -g phantomjs-prebuilt
 ```
+
+#### Keep it dependecies updated
+
+If you're working/developing Hamunan frontend's code, it's recommened to re-install bower and npm packages because some versions have may changed by another dev. You can save this *alias* and run it to keep your js packages updated within the ember app.
+
+`ember-clean`: aliased to `npm cache clean && bower cache clean && rm -rf node_modules bower_components dist tmp && npm install && bower install`.
+
+> Run this commands within the frontend folder.
+
+
