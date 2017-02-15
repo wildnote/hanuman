@@ -1,5 +1,5 @@
 module Hanuman
-  class Api::V1::SurveyTemplatesController < ApplicationController
+  class Api::V1::SurveyTemplatesController < Api::V1::BaseController
     before_action :set_survey_template, only: [:show, :update, :duplicate]
 
     respond_to :json

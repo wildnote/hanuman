@@ -14,6 +14,7 @@ export default Model.extend({
   elementType: attr('string'),
   descriptiveName: attr('string'),
   description: attr('string'),
+  hasAnAnswer: attr('boolean', { defaultValue: false }),
 
   types: ['checkboxlist', 'hiddencheckboxlist', 'chosenmultiselect',
       'hiddenchosenmultiselect', 'chosenmultiselectgrouped',

@@ -63,13 +63,16 @@ export default Ember.Route.extend({
       this.send('updateSortOrder',questions);
     },
     updateSortOrder(questions){
+      let lastSortOrder = 0;
       questions.forEach((question, index) => {
         let oldSortOrder = question.get('sortOrder'),
             newSortOrder = index + 1;
+        if(lastSortOrder === newSortOrder){ newSortOrder++; }
         if(oldSortOrder !== newSortOrder){
           question.set('sortOrder', newSortOrder);
           question.save();
         }
+        lastSortOrder = newSortOrder;
       });
       this._checkAncestryConsistency(questions);
     },
