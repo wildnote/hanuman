@@ -10,7 +10,7 @@ module Hanuman
     validates :survey_template_id, presence: true
     validates :survey_date, presence: true
 
-    #before_save :apply_group_sort
+    before_save :apply_group_sort
 
     amoeba do
       enable
