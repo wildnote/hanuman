@@ -19,10 +19,8 @@ module Hanuman
     validates :question_text, presence: true, unless: :question_text_not_required
 
     # Callbacks
-    after_create :submit_blank_observation_data
-    # this flooding the system on a question resort which is resulting in a db deadlock,
-    # will manually call this at the survey template level after all changes are made
-    #after_update :resort_submitted_observations, if: :sort_order_changed?
+    after_create :process_question_changes_on_observations
+    after_update :process_question_changes_on_observations, if: :sort_order_changed?
 
     # need to save array of child_ids to pass to native API it's too slow to generate on the fly
     # if question has ancestors, loop through those ancestors and update the ancestry_children field
@@ -66,6 +64,10 @@ module Hanuman
       end
     end
 
+    def process_question_changes_on_observations
+      ProcessQuestionChangesWorker.perform_async(self.id)
+    end
+
     # if survey has data submitted against it, then submit blank data for each
     # survey for newly added question
     def submit_blank_observation_data
@@ -75,19 +77,21 @@ module Hanuman
         surveys = survey_template.surveys
         surveys.each do |s|
           if parent.blank?
-            Observation.create(
+            Observation.create_with(
+              answer: ''
+            ).find_or_create_by(
               survey_id: s.id,
               question_id: self.id,
-              answer: '',
               entry: 1
             )
           # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
           else
             s.observations.where(question_id: parent.id).each do |o|
-              Observation.create(
+              Observation.create_with(
+                answer: ''
+              ).find_or_create_by(
                 survey_id: s.id,
                 question_id: self.id,
-                answer: '',
                 entry: o.entry
               )
             end
@@ -98,14 +102,14 @@ module Hanuman
       end
     end
 
-    def resort_submitted_observations
-      unless survey_template.fully_editable
-        surveys = survey_template.surveys
-        surveys.each do |s|
-          s.save
-        end
-      end
-    end
+    # def resort_submitted_observations
+    #   unless survey_template.fully_editable
+    #     surveys = survey_template.surveys
+    #     surveys.each do |s|
+    #       s.save
+    #     end
+    #   end
+    # end
 
     # build the rule_hash to pass into rails to then be used by javascript for hide/show functions
     def rule_hash
