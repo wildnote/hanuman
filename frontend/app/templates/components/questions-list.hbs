@@ -9,15 +9,6 @@
         </div>
       </div>
     {{else}}
-    {{#if isSuperUser}}
-      <div class="pull-right">
-        <a class="btn btn-success" href="/hanuman/survey_templates/{{surveyTemplate.id}}/update_survey_data">
-          <i class="glyphicons glyphicons-sort-by-order"></i>
-          Resort Submitted Data
-        </a>
-      </div>
-      <div class="clearfix"></div>
-    {{/if}}
     {{#if surveyTemplate.fullyEditable}}
     {{else}}
       <div class="alert alert-info">
