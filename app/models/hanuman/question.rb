@@ -73,6 +73,7 @@ module Hanuman
     def submit_blank_observation_data
       question = self
       parent = self.parent
+      survey_template = self.survey_template
       unless survey_template.fully_editable
         surveys = survey_template.surveys
         surveys.each do |s|
