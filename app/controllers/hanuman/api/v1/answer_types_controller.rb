@@ -1,5 +1,5 @@
 module Hanuman
-  class Api::V1::AnswerTypesController < ApplicationController
+  class Api::V1::AnswerTypesController < Api::V1::BaseController
     respond_to :json
 
     def index

@@ -3,6 +3,8 @@ const {
   $,
   run,
   computed,
+  observer,
+  on,
   computed: { alias, sort }
 } = Ember;
 
@@ -11,9 +13,7 @@ export default Ember.Component.extend({
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   sortTypesBy: ['displayName'],
-  sortAnswerChoicesBy: ['sortOrder'],
   sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
-  sortedAnswerChoices: sort('question.answerChoices', 'sortAnswerChoicesBy'),
   filteredAnswerTypes: computed('answerTypes', function() {
     let answerTypes = this.get('answerTypes');
     if(this.get('isSuperUser')){
@@ -28,6 +28,12 @@ export default Ember.Component.extend({
     return this.get('questions').filter((question) => {
       let allowedTypes = ['section','repeater'];
       return allowedTypes.includes(question.get('answerType.name'));
+    });
+  }),
+  conditionalQuestions: computed('questions','question', function() {
+    let question = this.get('question');
+    return this.get('questions').filter((condQuestion) => {
+      return condQuestion !== question && condQuestion.get('answerType.hasAnAnswer');
     });
   }),
   ancestryQuestion: computed('question.parentId', function() {
@@ -53,6 +59,18 @@ export default Ember.Component.extend({
     let question = this.get('question');
     return question.get('isNew') && question.get('answerType.id') === undefined;
   }),
+
+  // If a question has a rule associated with it, it should automatically be set to Hidden
+  hideQuestion: on('afterRender', observer('question.{rule.isNew,rule.conditions.[]}','conditionsPendingSave.[]', function() {
+    let question = this.get('question'),
+        newRule = question.get('rule.isNew'),
+        hasConditions = (this.get('conditionsPendingSave.length') > 0) || (question.get('rule') && question.get('rule').hasMany('conditions').ids().length > 0);
+    if(newRule === undefined){
+      newRule = true;
+    }
+    let toHide = !newRule || hasConditions;
+    this.set('question.hidden', toHide);
+  })),
 
   init() {
     this._super(...arguments);
@@ -131,7 +149,8 @@ export default Ember.Component.extend({
 
   actions: {
     sortAnswerChoices(){
-      let answerChoices = this.get('question.answerChoices');
+      let question = this.get('question'),
+          answerChoices = question.get('answerChoices');
       answerChoices.forEach((answerChoice, index) => {
         let oldSortOrder = answerChoice.get('sortOrder'),
             newSortOrder = index + 1;
@@ -142,6 +161,9 @@ export default Ember.Component.extend({
           }
         }
       });
+      if(!question.get('isNew')){
+        question.reload();
+      }
     },
 
     ancestryChange(newAncestryId){
@@ -229,22 +251,34 @@ export default Ember.Component.extend({
       }
     },
 
-    saveAnswerChoice(answerChoice){
-      if(this.get('question.isNew')){
+    saveAnswerChoice(answerChoice, cb){
+      let question = this.get('question');
+      if(question.get('isNew')){
         if(this.get('answerChoicesPendingSave').indexOf(answerChoice) === -1){
+          answerChoice.set('hideFromList',false);
           this.get('answerChoicesPendingSave').pushObject(answerChoice);
+          cb();
         }
       }else{
-        answerChoice.save();
+        answerChoice.save().then(function(answerChoice) {
+          answerChoice.set('hideFromList',false);
+          if(question.get('isNew')){
+            cb();
+          }else{
+            question.reload().then(function() {
+              cb();
+            });
+          }
+        });
       }
     },
 
     closeModal() {
-      if(this.get('question.wasNew')){
-        run.later(this, ()=> { $('html, body').animate({ scrollTop: $(document).height() }, 500); }, 500);
-      }
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');
+      if(this.get('question.wasNew')){
+        run.later(this, ()=> { $('html, body').animate({ scrollTop: $('.add-new-question').offset().top }, 500); }, 500);
+      }
     }
   }
 });

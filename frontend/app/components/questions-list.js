@@ -23,15 +23,23 @@ export default Ember.Component.extend({
       });
     },
     setAncestry(question, opts){
-      let ancestryQuestion = opts.target.acenstry;
+      let ancestryQuestion = opts.target.acenstry,
+          parentId = ancestryQuestion.get('id'),
+          lastChildren = this.get('surveyTemplate.questions').filterBy('parentId',parentId).get('lastObject'),
+          sortOrder = lastChildren ? lastChildren.get('sortOrder') : ancestryQuestion.get('sortOrder');
+
+      sortOrder++;
+
       question.set('loading', true);
-      question.set('parentId', ancestryQuestion.get('id'));
-      question.set('sortOrder', ancestryQuestion.get('sortOrder') + 1);
+      question.set('parentId', parentId);
+      question.set('sortOrder', sortOrder);
       question.save().then(() => {
         question.reload();
-        run.later(this ,()=> { question.set('loading', false); }, 1000);
+        run.later(this ,()=> {
+          this.sendAction('updateSortOrder',this.get('sortedQuestions'));
+          question.set('loading', false);
+        }, 1000);
       });
-      this.sendAction('updateSortOrder',this.get('sortedQuestions'));
     },
     dragStarted(question){
       $('.draggable-object-target').parent(`:not(.model-id-${question.get('parentId')})`).addClass('dragging-coming-active');
