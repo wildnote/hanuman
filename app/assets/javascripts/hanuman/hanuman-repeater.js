@@ -3,8 +3,12 @@ $(document).ready(function(){
   //  This removes the delete button from the first repeater.
   //  and adds flag to original repeaters. This flag is needed so that we can skip updating its entry values in the uniquefyEntryIds function
   $(".parent-repeater-container").each(function(i, el){
-    $(el).find('.destroy-form-container-repeater').first().hide()
+    nested = $(el).find(".form-container-repeater")
+    if (nested.length > 1) {
+      $(nested).first().find('.destroy-form-container-repeater').first().hide()
+    }
   });
+  $(".parent-repeater-container").find('.destroy-form-container-repeater:last').first().hide()
 
   // need to find the max data entry on the page and start incrementing from there
   $dataEntry = 0;
@@ -35,8 +39,6 @@ $(document).ready(function(){
     $($clonedContainer).find('.hidden-field-observation-id').remove();
     // remove data-observation-id at the repeater level
     $($clonedContainer).removeAttr('data-observation-id')
-
-    $clonedContainer.removeAttr("original-repeater")
 
     //************** BEGIN repeater ids
     repeaterInputs = $clonedContainer.find(".repeater-inputs")
@@ -193,9 +195,9 @@ $(document).ready(function(){
     })
 
     // Keeping for future debbuging
-    // $("input[name*='[entry]']").each(function(idx, el){
-    //   $(el).after(" entry id: **** " + $(el).val())
-    // })
+    $("input[name*='[entry]']").each(function(idx, el){
+      $(el).after(" entry id: **** " + $(el).val())
+    })
   }
 
   function UpdateIdsInRepeaters(){
