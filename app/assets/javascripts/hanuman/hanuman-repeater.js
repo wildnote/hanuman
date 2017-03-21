@@ -4,7 +4,6 @@ $(document).ready(function(){
   //  and adds flag to original repeaters. This flag is needed so that we can skip updating its entry values in the uniquefyEntryIds function
   $(".parent-repeater-container").each(function(i, el){
     $(el).find('.destroy-form-container-repeater').first().hide()
-    $(el).attr("original-repeater","true")
   });
 
   // need to find the max data entry on the page and start incrementing from there
@@ -159,10 +158,6 @@ $(document).ready(function(){
 
     // finding and iterating through all the new parent repeaters.
     $(".parent-repeater-container").each(function(idx, el){
-
-      //  only update the entry values of the repeaters that are added to the dom via the "add repeater" button./ skip the original repeaters
-      if ($(el).attr("original-repeater") != "true") {
-
         // select all the containers that have entry id hidden inputs
         entryContainers = $(el).find('.form-container-entry-item')
 
@@ -186,9 +181,15 @@ $(document).ready(function(){
           // incrementing the count of nested repeaters for next loop to make use of
           nestedRepeaterCount += 1
         })
+
         // updating the entry id based on the nested repeater count
-        entryId = nestedRepeaterCount + 1
-      }
+        // if we have a parent repeater with 0 nestedRepeaters then we have to move on to the next repeater and increment entryId by 1.
+        // otherwise we have to get the count of the nestedRepeaters and add 1
+        if (nestedRepeater.length == 0) {
+          entryId ++
+        }else {
+          entryId = nestedRepeaterCount + 1
+        }
     })
 
     // Keeping for future debbuging
@@ -205,7 +206,7 @@ $(document).ready(function(){
     // update all parent repeaters with unique id
     parentRepeaters.each(function(idx, el){
       $(el).val(parentRepeaterId)
-      // $(el).after("updated parent repeater id: " + parentRepeaterId)
+      // $(el).after("updated parent repeater id: " + parentRepeaterId + "| ")
       parentRepeaterId += 1
     });
 
@@ -218,10 +219,10 @@ $(document).ready(function(){
       if ($(el).attr('need-parent-repeater-id') == "true") {
         parentRepeaterContainerId = $(el).closest(".parent-repeater-container").find("input[is-parent-repeater=true]").val()
         $(el).val(parentRepeaterContainerId)
-        // $(el).after("updated parent repeater id: " + parentRepeaterContainerId)
+        // $(el).after("updated parent repeater id: " + parentRepeaterContainerId + "| ")
       }else if ($(el).attr('repeater-id') == "true") {
         $(el).val(childrenRepeaterId)
-        // $(el).after("updated repeater id: " + childrenRepeaterId)
+        // $(el).after("updated repeater id: " + childrenRepeaterId + "| ")
         childrenRepeaterId += 1
       }
     });
