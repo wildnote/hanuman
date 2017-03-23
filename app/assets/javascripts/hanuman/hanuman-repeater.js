@@ -3,6 +3,7 @@ $(document).ready(function(){
   //  This removes the delete button from the first repeater.
   //  and adds flag to original repeaters. This flag is needed so that we can skip updating its entry values in the uniquefyEntryIds function
   $(".parent-repeater-container").each(function(i, el){
+    $(el).attr("original-repeater","true")
     nested = $(el).find(".form-container-repeater")
     if (nested.length > 1) {
       $(nested).first().find('.destroy-form-container-repeater').first().hide()
@@ -160,6 +161,8 @@ $(document).ready(function(){
 
     // finding and iterating through all the new parent repeaters.
     $(".parent-repeater-container").each(function(idx, el){
+      //  only update the entry values of the repeaters that are added to the dom via the "add repeater" button./ skip the original repeaters
+      if ($(el).attr("original-repeater") != "true") {
         // select all the containers that have entry id hidden inputs
         entryContainers = $(el).find('.form-container-entry-item')
 
@@ -192,6 +195,7 @@ $(document).ready(function(){
         }else {
           entryId = nestedRepeaterCount + 1
         }
+      }
     })
 
     // Keeping for future debbuging
