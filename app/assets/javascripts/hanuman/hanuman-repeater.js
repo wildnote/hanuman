@@ -1,16 +1,5 @@
 $(document).ready(function(){
 
-  //  This removes the delete button from the first repeater.
-  //  and adds flag to original repeaters. This flag is needed so that we can skip updating its entry values in the uniquefyEntryIds function
-  $(".parent-repeater-container").each(function(i, el){
-    $(el).attr("original-repeater","true")
-    nested = $(el).find(".form-container-repeater")
-    if (nested.length > 1) {
-      $(nested).first().find('.destroy-form-container-repeater').first().hide()
-    }
-  });
-  $(".parent-repeater-container").find('.destroy-form-container-repeater:last').first().hide()
-
   // need to find the max data entry on the page and start incrementing from there
   $dataEntry = 0;
   $('.form-container-repeater').each(function() {
@@ -18,6 +7,14 @@ $(document).ready(function(){
       $dataEntry = parseInt($(this).attr('data-entry'));
     }
   });
+
+  // add attribute 'original-repeater' to repeaters on page load new/edit. This flag is needed so that we can skip/avoid updating the entry ID on those in uniquefyEntryIds function
+  $(".parent-repeater-container").each(function(i, el){
+    $(el).attr("original-repeater","true")
+  });
+
+  // on page load run through repeater and hide delete buttons
+  hideDeleteButtons()
 
   // clicking on button to add repeater
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
@@ -134,9 +131,6 @@ $(document).ready(function(){
     // resetting parsley required field styling on clonedContainer
     $clonedContainer.find('.parsley-error').removeClass('parsley-error')
 
-    // shows delete button for new repeaters.
-    $clonedContainer.find('.destroy-form-container-repeater').show()
-
     // on edit treat photo, video and doc sections as if new since on edit there is already saved files
     if ($('.survey-edit-mode').length > 0) {
       files = $clonedContainer.find("[data-element-type=file]").find('.custom-cloudinary li a')
@@ -153,7 +147,36 @@ $(document).ready(function(){
      }
      uniquefyEntryIds()
      UpdateIdsInRepeaters()
+
+     $($clonedContainer).find('.destroy-form-container-repeater:last').show()
+     $($clonedContainer).find(".form-container-repeater").first().find('.destroy-form-container-repeater').hide()
   });
+
+  function hideDeleteButtons(){
+    //  This removes the delete button from the first repeater.
+    $(".parent-repeater-container").each(function(i, el){
+      // if parent repeater is original, then hide the delete button
+      if ($(el).attr('data-entry') == "1" ) {
+        $(el).find('.destroy-form-container-repeater:last').hide()
+        nested = $(el).find(".form-container-repeater")
+
+        // Go through all nested repeaters and hide delete buttons from original repeaters ( non-duplicates )
+        nested.each(function(i,el){
+          if ($(el).attr('data-entry') == "1" ) {
+            $(el).find('.destroy-form-container-repeater').hide()
+          }
+        });
+      }else {
+        nested = $(el).find(".form-container-repeater")
+        nested.each(function(i, childR){
+          if ($(el).data("entry") == $(childR).data("entry") ) {
+            $(childR).find('.destroy-form-container-repeater').hide()
+          }
+        })
+      }
+    });
+
+  };
 
   function uniquefyEntryIds() {
     entryId = 1
