@@ -10,18 +10,7 @@ $(document).ready(function(){
 
   // if there are no 2nd level repeaters present, then we increment the repeater ID's for all top level repeaters and questions within.
   // this is necessary because the repeater_id logic in surveys/_form.html.haml does not work when there are no existing nested repeaters.
-  if (!$("[need-parent-repeater-id=true]").length > 0) {
-    $(".parent-repeater-container").each(function(i, el){
-      parentId = i + 1
-      rId = $(el).find("[is-parent-repeater=true]").val(parentId)
-      questions = $(el).find(".form-container-entry-item")
-
-      questions.each(function(idx, element){
-        input = $(element).find("input.parent-repeater-id")
-        input.val(parentId)
-      });
-    });
-  }
+  updateParentRepeaterId()
 
   // add attribute 'original-repeater' to repeaters on page load new/edit. This flag is needed so that we can skip/avoid updating the entry ID on those in uniquefyEntryIds function
   $(".parent-repeater-container").each(function(i, el){
@@ -162,10 +151,28 @@ $(document).ready(function(){
      }
      uniquefyEntryIds()
      UpdateIdsInRepeaters()
+     updateParentRepeaterId()
 
      $($clonedContainer).find('.destroy-form-container-repeater:last').show()
      $($clonedContainer).find(".form-container-repeater").first().find('.destroy-form-container-repeater').hide()
   });
+
+  function updateParentRepeaterId(){
+
+    if (!$("[need-parent-repeater-id=true]").length > 0) {
+      $(".parent-repeater-container").each(function(i, el){
+        parentId = i + 1
+        rId = $(el).find("[is-parent-repeater=true]").val(parentId)
+        questions = $(el).find(".form-container-entry-item")
+
+        questions.each(function(idx, element){
+          input = $(element).find("input.parent-repeater-id")
+          input.val(parentId)
+        });
+      });
+    }
+  }
+
 
   function hideDeleteButtons(){
     //  This removes the delete button from the first repeater.
