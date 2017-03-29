@@ -160,7 +160,7 @@ $(document).ready(function(){
     // this is necessary because the repeater_id logic in surveys/_form.html.haml does not work when there are no existing nested repeaters.
     if (!$("[need-parent-repeater-id=true]").length > 0) {
       $(".parent-repeater-container").each(function(i, el){
-        parentId = i
+        parentId = i+1
         rId = $(el).find("[is-parent-repeater=true]").val(parentId)
         questions = $(el).find(".form-container-entry-item")
 
