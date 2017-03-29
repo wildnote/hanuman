@@ -8,8 +8,6 @@ $(document).ready(function(){
     }
   });
 
-  // if there are no 2nd level repeaters present, then we increment the repeater ID's for all top level repeaters and questions within.
-  // this is necessary because the repeater_id logic in surveys/_form.html.haml does not work when there are no existing nested repeaters.
   updateParentRepeaterId()
 
   // add attribute 'original-repeater' to repeaters on page load new/edit. This flag is needed so that we can skip/avoid updating the entry ID on those in uniquefyEntryIds function
@@ -36,6 +34,7 @@ $(document).ready(function(){
     // find and clone container
     var container = $(this).closest('.form-container-repeater');
     $clonedContainer = container.clone(true);
+    var parentRepeater = $($clonedContainer).closest(".parent-repeater-container")
 
     // remove hidden field observation ids
     $($clonedContainer).find('.hidden-field-observation-id').remove();
@@ -55,7 +54,7 @@ $(document).ready(function(){
 
     // loop through collected container items and update attributes with timestamps
     // CONTAINER ITEMS ARE RELATIVE TO CLONED CONTAINER, THINK OF CLONED CONTAINER AS A SECONDARY DOM OF ITS OWN.
-    updateDom(containerItems, $dataEntry);
+    updateDom(containerItems, $dataEntry, parentRepeater);
 
     // fix repeater container data-entry numbers
     $clonedContainer.attr("data-entry", $dataEntry);
@@ -151,17 +150,17 @@ $(document).ready(function(){
      }
      uniquefyEntryIds()
      UpdateIdsInRepeaters()
-     updateParentRepeaterId()
 
      $($clonedContainer).find('.destroy-form-container-repeater:last').show()
      $($clonedContainer).find(".form-container-repeater").first().find('.destroy-form-container-repeater').hide()
   });
 
   function updateParentRepeaterId(){
-
+    // if there are no 2nd level repeaters present, then we increment the repeater ID's for all top level repeaters and questions within.
+    // this is necessary because the repeater_id logic in surveys/_form.html.haml does not work when there are no existing nested repeaters.
     if (!$("[need-parent-repeater-id=true]").length > 0) {
       $(".parent-repeater-container").each(function(i, el){
-        parentId = i + 1
+        parentId = i
         rId = $(el).find("[is-parent-repeater=true]").val(parentId)
         questions = $(el).find(".form-container-entry-item")
 
@@ -170,8 +169,8 @@ $(document).ready(function(){
           input.val(parentId)
         });
       });
-    }
-  }
+    };
+  };
 
 
   function hideDeleteButtons(){
@@ -186,16 +185,16 @@ $(document).ready(function(){
         nested.each(function(i,el){
           if ($(el).attr('data-entry') == "1" ) {
             $(el).find('.destroy-form-container-repeater').hide()
-          }
+          };
         });
       }else {
         nested = $(el).find(".form-container-repeater")
         nested.each(function(i, childR){
           if ($(el).data("entry") == $(childR).data("entry") ) {
             $(childR).find('.destroy-form-container-repeater').hide()
-          }
-        })
-      }
+          };
+        });
+      };
     });
 
   };
@@ -239,15 +238,15 @@ $(document).ready(function(){
           entryId ++
         }else {
           entryId = nestedRepeaterCount + 1
-        }
-      }
-    })
+        };
+      };
+    });
 
     // Keeping for future debbuging
     // $("input[name*='[entry]']").each(function(idx, el){
     //   $(el).after(" entry id: **** " + $(el).val())
     // })
-  }
+  };;
 
   function UpdateIdsInRepeaters(){
     //  Grabbing all the parent repeater containers
@@ -256,6 +255,12 @@ $(document).ready(function(){
 
     // update all parent repeaters with unique id
     parentRepeaters.each(function(idx, el){
+      questions = $(el).closest(".parent-repeater-container").find(".form-container-entry-item")
+
+      questions.each(function(idx, element){
+        input = $(element).find("input.parent-repeater-id")
+        input.val(parentRepeaterId)
+      });
       $(el).val(parentRepeaterId)
       // $(el).after("updated parent repeater id: " + parentRepeaterId + "| ")
       parentRepeaterId += 1
@@ -275,7 +280,7 @@ $(document).ready(function(){
         $(el).val(childrenRepeaterId)
         // $(el).after("updated repeater id: " + childrenRepeaterId + "| ")
         childrenRepeaterId += 1
-      }
+      };
     });
   };
 
@@ -284,8 +289,8 @@ $(document).ready(function(){
     while (files.length >= 1) {
       $(files[0]).click();
       files = $clonedContainer.find("[data-element-type=file]").find('.custom-cloudinary li a')
-    }
-  }
+    };
+  };
 
   function cleartFilePreviewContainers(container){
     if ($('.survey-edit-mode').length > 0) {
@@ -301,7 +306,7 @@ $(document).ready(function(){
 
 
     }
-  }
+  };
 
   function removeErrorBackground(type, $clonedContainer){
     $clonedContainer.find('div.form-container-entry-item[data-element-type='+ type +']').find('div.col-sm-7').removeAttr('style')
@@ -346,7 +351,7 @@ $(document).ready(function(){
           $removeContainer.remove();
       }
     );
-  }
+  };
 
   function resetMapButtons($clonedContainer){
     var map = $clonedContainer.find('div.form-container-entry-item[data-element-type=map] div.map-buttons')
@@ -392,9 +397,10 @@ $(document).ready(function(){
     $(inputs[lastInputIndex]).attr("value", dataEntry);
     var parsleySubstrig = Math.random().toString(36).substring(13);
     inputs.each(function(){
+
       // removing uploaded photos, docs and videos from $clonedContainer
       if ($(inputs[index]).attr('type') == 'file') {
-        $(inputs[index]).siblings('.attachinary_container').last().remove()
+        $(inputs[index]).siblings('.attachinary_container').last().remove();
       }
       if ($(inputs[index]).attr('id')) {
         var idStamp = $(inputs[index]).attr("id").match(/\d+/)[0];
@@ -437,7 +443,7 @@ $(document).ready(function(){
 
       index ++;
     });
-  }
+  };
 
   function updateClonedLabels($clonedRepeater, timeStamp){
     var labels = $($clonedRepeater).find('label');
@@ -450,7 +456,7 @@ $(document).ready(function(){
       }
       index ++
     });
-  }
+  };
 
   function updateClonedTextareas($clonedRepeater, timeStamp){
     var textareas = $($clonedRepeater).find('textarea');
@@ -469,10 +475,20 @@ $(document).ready(function(){
       $(textareas[index]).val("");
       index ++;
     });
-  }
+  };
 
-  function updateDom(clonedRepeater, dataEntry){
+  function updateDom(clonedRepeater, dataEntry, parentRepeater){
+
+    // setting the timeStamp for the inputs to be updated
     var timeStamp = new Date().getTime();
+
+    // update the parent repeater id input
+    parentRepeaterInput = $(parentRepeater).find('.repeater-inputs')
+    var nameStamp = parentRepeaterInput.attr("name").match(/\d+/)[0];
+    var nameAttr = parentRepeaterInput.attr("name")
+    parentRepeaterInput.attr('name', nameAttr.replace(/(\d+)/, nameStamp.concat(timeStamp)))
+
+    // begin updating all the inputs found in the cloned repeater
     for (var i = 0; i < clonedRepeater.length; i++) {
       $($(clonedRepeater[i]).find('.latlong')).attr('id', "map".concat(timeStamp));
       updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp);
