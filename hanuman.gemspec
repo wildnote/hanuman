@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'cloudinary', '~> 1.1.0'
   s.add_dependency 'sidekiq', '~> 3.5.0'
   s.add_dependency 'gmaps4rails', '~> 2.1.2'
+  s.add_dependency 'pg_search', '~> 2.0.1'
 
   s.add_development_dependency 'pg', '0.18.4'
   s.add_development_dependency 'foreigner'

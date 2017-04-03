@@ -1,6 +1,17 @@
 module Hanuman
   class Observation < ActiveRecord::Base
+    include ::PgSearch
     has_paper_trail
+
+    # PG Search
+    pg_search_scope :search,
+      against: :answer,
+      associated_against: {
+        answer_choice: [:option_text],
+        answer_choices: [:option_text],
+
+      },
+      using: { tsearch: { dictionary: 'english'} }
 
     # Relations
     belongs_to :survey, touch: true
@@ -82,7 +93,7 @@ module Hanuman
     # Deprecated
     def self.filtered_by_step_and_entry(step, entry)
       includes(:question => [:survey_step, :answer_type]).
-      where("hanuman_survey_steps.step = ? AND hanuman_observations.entry = ?", step, entry)
+      where('hanuman_survey_steps.step = ? AND hanuman_observations.entry = ?', step, entry)
     end
 
     def self.entries
