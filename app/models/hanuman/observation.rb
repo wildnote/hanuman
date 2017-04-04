@@ -6,11 +6,6 @@ module Hanuman
     # PG Search
     pg_search_scope :search,
       against: :answer,
-      associated_against: {
-        answer_choice: [:option_text],
-        answer_choices: [:option_text],
-
-      },
       using: { tsearch: { dictionary: 'english'} }
 
     # Relations
@@ -29,9 +24,9 @@ module Hanuman
     has_many :observation_videos, dependent: :destroy
     accepts_nested_attributes_for :observation_videos, allow_destroy: true
 
-    has_many :photos, -> { order :sort_order, :id }, class_name: "Hanuman::ObservationPhoto"
-    has_many :documents, -> { order :sort_order, :id }, class_name: "Hanuman::ObservationDocument"
-    has_many :videos, -> { order :sort_order, :id }, class_name: "Hanuman::ObservationVideo"
+    has_many :photos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationPhoto'
+    has_many :documents, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationDocument'
+    has_many :videos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationVideo'
 
     belongs_to :selectable, polymorphic: true
 
@@ -41,7 +36,10 @@ module Hanuman
     # rows in database for editing of survey - kdh - 10.30.14
 
     # Scopes
-    default_scope {includes(:question).order('hanuman_observations.entry ASC, hanuman_questions.sort_order ASC').references(:question)}
+    default_scope {
+      includes(:question).order('hanuman_observations.entry ASC, hanuman_questions.sort_order ASC')
+        .references(:question)
+    }
     scope :by_survey_template_and_entry, -> (survey_template, entry) do
       includes(question: [:survey_template, :answer_type])
       .where(hanuman_survey_templates: {id: survey_template.id}, entry: entry)

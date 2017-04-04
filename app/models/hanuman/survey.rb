@@ -4,6 +4,9 @@ module Hanuman
     belongs_to :survey_template
     has_many :observations, dependent: :destroy
     has_many :observation_answers, through: :observations
+    has_many :observation_documents, through: :observations
+    has_many :observation_photos, through: :observations
+    has_many :observation_videos, through: :observations
     accepts_nested_attributes_for :observations, :allow_destroy => true#, reject_if: lambda {|attributes| attributes['answer'].blank?}
     has_one :survey_extension, dependent: :destroy
     accepts_nested_attributes_for :survey_extension, :allow_destroy => true
@@ -12,9 +15,7 @@ module Hanuman
 
     before_save :apply_group_sort
 
-    amoeba do
-      enable
-    end
+    amoeba { enable }
 
     def survey_steps
       self.survey_template.survey_steps.collect(&:step).uniq
