@@ -163,6 +163,9 @@ $(document).ready(function(){
   $('.panel-body').on('change', '.datepicker', function(){
     $(this).parsley().validate()
   })
+  $('.panel-body').on('change', '.latlong-entry', function(){
+    $(this).parsley().validate()
+  })
 
 });
 
@@ -174,5 +177,15 @@ window.Parsley.addValidator('dateformat', {
   },
   messages: {
     en: 'date must match format MM/DD/YYYY',
+  }
+});
+
+window.Parsley.addValidator('latlong', {
+  validateString: function(cordinates) {
+    var reg = /^-?\d+\.\d+\,\s?-?\d+\.\d+$/ ;
+    return cordinates.match(reg) != null
+  },
+  messages: {
+    en: 'LatLog cordinates must be valid. EX: 35.22767235493586, -120.38131713867188',
   }
 });
