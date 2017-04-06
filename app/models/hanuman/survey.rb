@@ -2,20 +2,23 @@ module Hanuman
   class Survey < ActiveRecord::Base
     has_paper_trail
     belongs_to :survey_template
-    has_many :observations, dependent: :destroy
+    has_many :observations, -> { unscope(:includes, :order) }, dependent: :destroy
     has_many :observation_answers, through: :observations
     has_many :observation_documents, through: :observations
     has_many :observation_photos, through: :observations
     has_many :observation_videos, through: :observations
-    accepts_nested_attributes_for :observations, :allow_destroy => true#, reject_if: lambda {|attributes| attributes['answer'].blank?}
+    accepts_nested_attributes_for :observations, allow_destroy: true#, reject_if: lambda {|attributes| attributes['answer'].blank?}
     has_one :survey_extension, dependent: :destroy
-    accepts_nested_attributes_for :survey_extension, :allow_destroy => true
+    accepts_nested_attributes_for :survey_extension, allow_destroy: true
     validates :survey_template_id, presence: true
     validates :survey_date, presence: true
 
     before_save :apply_group_sort
 
     amoeba { enable }
+
+    # Delegations
+    delegate :name, to: :survey_template, prefix: true
 
     def survey_steps
       self.survey_template.survey_steps.collect(&:step).uniq
@@ -39,12 +42,11 @@ module Hanuman
     end
 
     def survey_step_has_observations?(step)
-      survey_id = self.id
-      if self.survey_template.survey_steps.where(step: step).first.questions.first.observations.where('hanuman_observations.survey_id = ?', survey_id).count > 0
-        true
-      else
-        false
-      end
+      survey_template.survey_steps
+        .where(step: step)
+        .first.questions
+        .first.observations
+        .where('hanuman_observations.survey_id = ?', id).count > 0
     end
 
     def apply_group_sort
