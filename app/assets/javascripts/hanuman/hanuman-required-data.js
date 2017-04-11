@@ -99,8 +99,9 @@ $(document).ready(function(){
       var singleChoiceInputs = $('a.chosen-single span:first-child');
       // Changes single choice input background-color to red/pink if input is empty
       for (var i = 0; i < singleChoiceInputs.length; i++) {
-        if ($(singleChoiceInputs[i]).text() === "Please select") {
-          $($($(singleChoiceInputs[i]).parent().parent()).find('.chosen-single ')).css('background',"#F2DEDE")
+        findRequiredSelect = $(singleChoiceInputs[i]).parent().parent().siblings('select').attr('data-parsley-required')
+        if ($(singleChoiceInputs[i]).text() === "Please select" && findRequiredSelect ) {
+          $($($(singleChoiceInputs[i]).parent().parent()).find('.chosen-single')).css('background',"#F2DEDE")
           $(singleChoiceInputs[i]).attr("style",'margin-right: 0px; background-color:#F2DEDE;');
         }else if ($(singleChoiceInputs[i]).text() != "Please select"){
           $(singleChoiceInputs[i]).parent().parent().siblings('select.chosen-select').siblings('ul').remove();
