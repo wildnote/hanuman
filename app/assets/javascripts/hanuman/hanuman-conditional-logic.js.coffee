@@ -17,6 +17,14 @@ class @ConditionalLogic
         $ruleContainer = $ruleContainer
         # the condition container
         $conditionContainer = $ruleContainer.siblings("[data-question-id=" + conditionQuestionId + "]")
+
+        # if condition is outside of $ruleContainer siblings context, let's looks for it globally
+        if $conditionContainer.length < 1
+          $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
+
+        #TODO add some kind of message to the user and honeybadger notification so that we know the rule is not working on the web
+
+
         # the condition element, which we need to check value for conditional logic
         $conditionElement = $conditionContainer.find(".form-control")
         # show
