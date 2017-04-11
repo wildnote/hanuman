@@ -28,6 +28,7 @@ class @ConditionalLogic
             type: "FAILED: conditional logic => condition container not found or found more than once"
             details: window.location.href
 
+          alert("we found a problem with the hide and show logic and we've been notified.")
 
 
         # the condition element, which we need to check value for conditional logic
