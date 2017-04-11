@@ -17,12 +17,17 @@ class @ConditionalLogic
         $ruleContainer = $ruleContainer
         # the condition container
         $conditionContainer = $ruleContainer.siblings("[data-question-id=" + conditionQuestionId + "]")
-
         # if condition is outside of $ruleContainer siblings context, let's looks for it globally
         if $conditionContainer.length < 1
           $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
 
-        #TODO add some kind of message to the user and honeybadger notification so that we know the rule is not working on the web
+        if $conditionContainer.length == 0 || $conditionContainer.length > 1
+          e = new Error("conditional Logic # findRules")
+          e.name = 'FAILED: conditional logic'
+          Honeybadger.notify e, context:
+            type: "FAILED: conditional logic => condition container not found or found more than once"
+            details: window.location.href
+
 
 
         # the condition element, which we need to check value for conditional logic
