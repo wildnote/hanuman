@@ -29,6 +29,7 @@ class @ConditionalLogic
             details: window.location.href
 
           alert("we found a problem with the hide and show logic and we've been notified.")
+          return true
 
 
         # the condition element, which we need to check value for conditional logic
@@ -36,6 +37,15 @@ class @ConditionalLogic
         # show
         if $conditionElement.length < 1
           $conditionElement = $conditionContainer.find(".form-control-static")
+
+        if $conditionElement.length == 0
+          e = new Error("conditional Logic # findRules")
+          e.name = 'FAILED: conditional logic'
+          Honeybadger.notify e, context:
+            type: "FAILED: conditional logic => condition element not found or found more than once"
+            details: window.location.href
+
+          alert("we found a problem with the hide and show logic and we've been notified.")
 
         # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
         hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
