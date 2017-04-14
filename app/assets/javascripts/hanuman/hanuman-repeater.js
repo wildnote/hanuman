@@ -11,18 +11,19 @@ $(document).ready(function(){
   updateParentRepeaterId()
 
   // add attribute 'original-repeater' to repeaters on page load new/edit. This flag is needed so that we can skip/avoid updating the entry ID on those in uniquefyEntryIds function
-  repeaterCountIndex = 1
+  // repeaterCountIndex = 1
   $(".parent-repeater-container").each(function(i, el){
     $(el).attr("original-repeater","true")
 
+    // <<<<<<<<<<< temporarily commenting out this code >>>>>>>>>>>>>>
     // add repeater number on page load. This value is used for identifying each original repater.
-    $(el).attr('data-repeater-number', repeaterCountIndex)
-    repeaterCountIndex ++
-    nested = $(el).find(".form-container-repeater")
-    nested.each(function(idx, nested){
-      $(nested).attr('data-nested-repeater-number', repeaterCountIndex)
-      repeaterCountIndex ++
-    });
+    // $(el).attr('data-repeater-number', repeaterCountIndex)
+    // repeaterCountIndex ++
+    // nested = $(el).find(".form-container-repeater")
+    // nested.each(function(idx, nested){
+    //   $(nested).attr('data-nested-repeater-number', repeaterCountIndex)
+    //   repeaterCountIndex ++
+    // });
   });
 
   // on page load run through repeater and hide delete buttons
@@ -154,29 +155,31 @@ $(document).ready(function(){
      uniquefyEntryIds()
      UpdateIdsInRepeaters()
 
-     if ($clonedContainer.hasClass("parent-repeater-container")) {
-       repeaterDataNumber = $clonedContainer.data('repeater-number')
-       duplicatedRepeaters = $("[data-repeater-number="+repeaterDataNumber+"]")
-       updateRepeaterCount(duplicatedRepeaters)
-     }else{
-       repeaterDataNumber = $clonedContainer.data('nested-repeater-number')
-       duplicatedRepeaters = $clonedContainer.closest(".parent-repeater-container").find("[data-nested-repeater-number="+repeaterDataNumber+"]")
-       updateRepeaterCount(duplicatedRepeaters)
-     };
+    // <<<<<<<<<<< temporarily commenting out this code >>>>>>>>>>>>>>
+    //  if ($clonedContainer.hasClass("parent-repeater-container")) {
+    //    repeaterDataNumber = $clonedContainer.data('repeater-number')
+    //    duplicatedRepeaters = $("[data-repeater-number="+repeaterDataNumber+"]")
+    //    updateRepeaterCount(duplicatedRepeaters)
+    //  }else{
+    //    repeaterDataNumber = $clonedContainer.data('nested-repeater-number')
+    //    duplicatedRepeaters = $clonedContainer.closest(".parent-repeater-container").find("[data-nested-repeater-number="+repeaterDataNumber+"]")
+    //    updateRepeaterCount(duplicatedRepeaters)
+    //  };
 
 
      $($clonedContainer).find('.destroy-form-container-repeater:last').show()
      $($clonedContainer).find(".form-container-repeater").first().find('.destroy-form-container-repeater').hide()
   });
 
-  function updateRepeaterCount(duplicatedRepeaters){
-    duplicatedRepeaters.each(function(i, e){
-      if (i > 0) {
-        count = i+1
-        $(e).find(".repeater-count:first").text(" " +count)
-      }
-    });
-  }
+  // <<<<<<<<<<< temporarily commenting out this code >>>>>>>>>>>>>>
+  // function updateRepeaterCount(duplicatedRepeaters){
+  //   duplicatedRepeaters.each(function(i, e){
+  //     if (i > 0) {
+  //       count = i+1
+  //       $(e).find(".repeater-count:first").text(" " +count)
+  //     }
+  //   });
+  // }
 
   function updateParentRepeaterId(){
     // if there are no 2nd level repeaters present, then we increment the repeater ID's for all top level repeaters and questions within.
