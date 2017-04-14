@@ -11,41 +11,19 @@ $(document).ready(function(){
   updateParentRepeaterId()
 
   // add attribute 'original-repeater' to repeaters on page load new/edit. This flag is needed so that we can skip/avoid updating the entry ID on those in uniquefyEntryIds function
+  repeaterCountIndex = 1
   $(".parent-repeater-container").each(function(i, el){
-    flagOriginalRepeaters(el, i, true)
+    $(el).attr("original-repeater","true")
+
+    // add repeater number on page load. This value is used for identifying each original repater.
+    $(el).attr('data-repeater-number', repeaterCountIndex)
+    repeaterCountIndex ++
     nested = $(el).find(".form-container-repeater")
     nested.each(function(idx, nested){
-      flagOriginalRepeaters(nested, idx, false)
-      $(nested).attr('data-nested-repeater-number', idx+1)
+      $(nested).attr('data-nested-repeater-number', repeaterCountIndex)
+      repeaterCountIndex ++
     });
   });
-
-  function flagOriginalRepeaters(element, i, isParent){
-    // The first repeater at any level willa always be original
-    if (isParent) {
-      if (i == 0) {
-        $(element).attr("original-repeater","true")
-        $(element).attr('data-repeater-number', i+1)
-
-      // if the next element is not a duplicate of the previous repeater then, its original
-      } else if ($($(".parent-repeater-container")[i-1]).data('question-id') != $(element).data('question-id') ) {
-        $(element).attr("original-repeater","true")
-        $(element).attr('data-repeater-number', i+1)
-      }else if ($($(".parent-repeater-container")[i-1]).data('question-id') == $(element).data('question-id') ) {
-        $(element).attr("original-repeater","true")
-        $(element).attr('data-repeater-number', i)
-      }
-    }else {
-      if (i == 0) {
-        $(element).attr("original-repeater","true")
-
-      // if the next element is not a duplicate of the previous repeater then, its original
-      } else if ($($(".form-container-repeater")[i-1]).data('question-id') != $(element).data('question-id') ) {
-        $(element).attr("original-repeater","true")
-      }
-    }
-
-  }
 
   // on page load run through repeater and hide delete buttons
   hideDeleteButtons()
@@ -185,9 +163,6 @@ $(document).ready(function(){
        duplicatedRepeaters = $clonedContainer.closest(".parent-repeater-container").find("[data-nested-repeater-number="+repeaterDataNumber+"]")
        updateRepeaterCount(duplicatedRepeaters)
      };
-
-    //  a newly added repeater is no longer an original
-     $clonedContainer.removeAttr("original-repeater")
 
 
      $($clonedContainer).find('.destroy-form-container-repeater:last').show()
