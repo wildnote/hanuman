@@ -169,6 +169,7 @@ $(document).ready(function(){
 
      $($clonedContainer).find('.destroy-form-container-repeater:last').show()
      $($clonedContainer).find(".form-container-repeater").first().find('.destroy-form-container-repeater').hide()
+     hideDeleteButtons()
   });
 
   // <<<<<<<<<<< temporarily commenting out this code >>>>>>>>>>>>>>
@@ -202,28 +203,55 @@ $(document).ready(function(){
   function hideDeleteButtons(){
     //  This removes the delete button from the first repeater.
     $(".parent-repeater-container").each(function(i, el){
+      // for each top parent repeater check for added repeaters and hide buttons of added repeaters
+      hideDeleteButtonHelper(el, true);
+
       // if parent repeater is original, then hide the delete button
       if ($(el).attr('data-entry') == "1" ) {
         $(el).find('.destroy-form-container-repeater:last').hide()
         nested = $(el).find(".form-container-repeater")
 
         // Go through all nested repeaters and hide delete buttons from original repeaters ( non-duplicates )
-        nested.each(function(i,el){
-          if ($(el).attr('data-entry') == "1" ) {
-            $(el).find('.destroy-form-container-repeater').hide()
+        nested.each(function(i,nestedR){
+        hideDeleteButtonHelper(nestedR, false);
+          if ($(nestedR).attr('data-entry') == "1" ) {
+            $(nestedR).find('.destroy-form-container-repeater').hide()
           };
         });
       }else {
         nested = $(el).find(".form-container-repeater")
         nested.each(function(i, childR){
-          if ($(el).data("entry") == $(childR).data("entry") ) {
+          hideDeleteButtonHelper(childR, false);
+          if ( nested.length == 1 ) {
             $(childR).find('.destroy-form-container-repeater').hide()
-          };
+          }else if (i != nested.length-1 ) {
+            $(childR).find('.duplicate-form-container-repeater').hide()
+          }
         });
       };
     });
 
   };
+
+  function hideDeleteButtonHelper(repeater, isParent) {
+    // find all the unique parent repeaters by their question-id attr.
+    qId = $(repeater).data('question-id')
+    if (isParent) {
+      repeaterGroup = $(".parent-repeater-container[data-question-id="+qId+"]")
+    }else {
+      parent = repeater.closest(".parent-repeater-container")
+      repeaterGroup = $(parent).find(".form-container-repeater[data-question-id="+qId+"]")
+    }
+
+    // then queck for duplicated repeaters and hide all the "add buttons" from repeaper EXCEPT THE LAST ONE
+    if (repeaterGroup.length > 1) {
+      repeaterGroup.each(function(idx, element){
+        if (idx != repeaterGroup.length-1) {
+          $(element).find('.duplicate-form-container-repeater:last').hide()
+        }
+      });
+    }
+  }
 
   function uniquefyEntryIds() {
     entryId = 1
@@ -358,6 +386,8 @@ $(document).ready(function(){
         removeObservationFromDom(that, entry);
       }
     }
+    $(".duplicate-form-container-repeater").show()
+    $(".destroy-form-container-repeater").show()
     return false;
   });
 
@@ -375,6 +405,7 @@ $(document).ready(function(){
       2000,
       function() {
           $removeContainer.remove();
+          hideDeleteButtons()
       }
     );
   };
