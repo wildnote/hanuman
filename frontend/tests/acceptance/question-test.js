@@ -89,12 +89,13 @@ test('saving a question with answer_type with answers without adding any answers
       fillIn('[data-test="question.questionText"]', 'question with answers');
       // Select
       fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer type
-      triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
-      click('[data-test="save-question-link"]').then(()=>{
-        const el = find('[data-test="answer-choices-error"]');
-        const count = el.length;
-        assert.equal(count, 1);
-        assert.equal(el.text(), 'plase add at least one answers choice');
+      triggerEvent('[data-test="answer-type-id-select"]', 'onchange').then(function() {
+        click('[data-test="save-question-link"]').then(()=>{
+          const el = find('[data-test="answer-choices-error"]');
+          const count = el.length;
+          assert.equal(count, 1);
+          assert.equal(el.text().trim(), 'Please add at least one answers choice.');
+        });
       });
     });
   });

@@ -44,6 +44,14 @@ export default Model.extend(Validator, {
     return (rule.get('matchType') === 'all') ? 'AND' : 'OR';
   }),
 
+  answerChoicesCount: computed('answerChoices.[]', function() {
+    if (this.hasMany('answerChoices').value() === null) {
+      return 0;
+    }
+
+    return this.hasMany('answerChoices').ids().length;
+  }),
+
   supportAncestry: match('answerType.name', /section|repeater/),
 
   // Validations
@@ -53,6 +61,15 @@ export default Model.extend(Validator, {
     },
     answerType:{
       presence: true
+    },
+    answerChoices: {
+      custom: {
+        validation: function(_key, _value, model){
+          let hasAnswerChoices = model.get('answerType.hasAnswerChoices');
+          return hasAnswerChoices && model.get('answerChoicesCount') === 0 ? false : true;
+        },
+        message: 'Please add at least one answers choice.'
+      }
     }
   }
 });
