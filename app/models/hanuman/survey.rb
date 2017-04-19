@@ -158,8 +158,7 @@ module Hanuman
             if o.entry == n
               # find matching question id from entry 1 observations
               self.observations.each do |sub_o|
-                if sub_o.entry == 1 and sub_o.question_id == o.question_id
-
+                if sub_o.entry == 1 && sub_o.question_id == o.question_id
                   # we have a matching question id
                   # grab group_sort from matching observation and parse
                   parsed_group_sort = sub_o.group_sort.split("-")
@@ -209,26 +208,35 @@ module Hanuman
 
       (2..(last_entry)).each do |n|
         self.observations.each do |o|
+
           # have to check for existence of question because mobile device may be submitting a survey with a question that has since been deleted-kdh
           unless o.question.blank?
+
             if o.entry == n
+
               # find the current entry observation group sort and store it in master variables for continual evaluation
               if master_group_sort.blank? || master_entry != n
                 master_entry = n
                 master_group_sort = o.group_sort
                 master_prefix = master_group_sort[0..14]
               end
+
               # parse and fix the current entry observation group sort based on master variables
+
               current_group_sort = o.group_sort
               current_prefix = current_group_sort[0..14]
               current_suffix = current_group_sort.gsub(current_prefix, "")
               o.group_sort = master_prefix + current_suffix
+
               if debug
                 puts o.group_sort
                 puts o.inspect
               end
+
             end
+
           end
+
         end
       end
     end

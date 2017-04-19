@@ -1,27 +1,13 @@
-import startMirage from '../../../../helpers/setup-mirage-for-integration';
-import wait from 'ember-test-helpers/wait';
 import { moduleFor, test } from 'ember-qunit';
 import Ember from 'ember';
+import RSVP from 'rsvp';
 
-const { run } = Ember;
+const { A } = Ember;
+const { Promise } = RSVP;
 
 moduleFor('route:survey-templates/record', 'Unit | Route | survey templates/record', {
   // Specify the other units that are required for this test.
-  needs: [
-    'adapter:application',
-    'serializer:question',
-    'model:question',
-    'model:answer-type',
-    'model:survey-template',
-    'model:rule',
-    'model:answer-choice'
-  ],
-  beforeEach() {
-    startMirage(this.container);
-  },
-  afterEach() {
-    window.server.shutdown();
-  }
+  // needs: []
 });
 
 test('it exists', function(assert) {
@@ -32,36 +18,25 @@ test('it exists', function(assert) {
 
 test('check ancestry consistency when sorting up', function(assert) {
   let route = this.subject(),
-      store = route.get('store');
-  setUpQuestions(store).then((questions) => {
-    run(function() {
-      assert.equal(questions.objectAt(4).get('parentId'), 4 );
-      // Simulate drang sort
-      questions.objectAt(3).set('sortOrder', 5);
-      questions.objectAt(4).set('sortOrder', 4);
-    });
-    route._checkAncestryConsistency(questions, questions.objectAt(4));
-  return wait()
-    .then(() => {
-      assert.equal(questions.objectAt(4).get('parentId'), 3, 'Parent id was updated' );
-    });
-  });
+      questions = A([
+        Ember.Object.create({id: 1, sortOrder: 1, save: fakeSave }),
+        Ember.Object.create({id: 2, sortOrder: 2, save: fakeSave }),
+        Ember.Object.create({id: 3, sortOrder: 3, parentId: 2, save: fakeSave }),
+        Ember.Object.create({id: 4, sortOrder: 4, parentId: 3, save: fakeSave }),
+        Ember.Object.create({id: 5, sortOrder: 5, parentId: 4, save: fakeSave }),
+        Ember.Object.create({id: 6, sortOrder: 6, parentId: 2, save: fakeSave }),
+        Ember.Object.create({id: 7, sortOrder: 7, parentId: 2, save: fakeSave })
+      ]);
+
+  assert.equal(questions.objectAt(4).get('parentId'), 4 );
+  // Simulate drang sort
+  questions[3].set('sortOrder', 5);
+  questions[4].set('sortOrder', 4);
+  route._checkAncestryConsistency(questions);
+  assert.equal(questions.objectAt(4).get('parentId'), 3, 'Parent id was updated' );
 });
 
-function setUpQuestions(store) {
-  let server = window.server;
-  server.db.questions.remove();
-  store.unloadAll('question');
-  run(function() {
-    server.create('question', { sortOrder: 1 });
-    server.create('question', { sortOrder: 2 });
-    server.create('question', { sortOrder: 3, parentId: 2 });
-    server.create('question', { sortOrder: 4, parentId: 3 });
-    server.create('question', { sortOrder: 5, parentId: 4 });
-    server.create('question', { sortOrder: 6, parentId: 2 });
-    server.create('question', { sortOrder: 7, parentId: 2 });
-  });
-  return store.findAll('question');
+function fakeSave() {
+  return new Promise(function() {});
 }
-
 

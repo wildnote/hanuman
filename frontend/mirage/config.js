@@ -34,7 +34,10 @@ export default function() {
   // Questions
   this.get('/questions');
   this.get('/questions/:id');
-  this.post('/questions');
+  this.post('/questions', (schema, request) => {
+    const attrs = JSON.parse(request.requestBody).question;
+    return schema.questions.create(attrs);
+  });
   this.del('/questions/:id');
   this.put('/questions/:id', ({ questions }, request) => {
     let attrs = JSON.parse(request.requestBody)['question'],
