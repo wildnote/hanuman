@@ -44,15 +44,15 @@ export default Ember.Route.extend({
             parent = questions.findBy('id', parentId),
             sortOrder = question.get('sortOrder');
         if(isBlank(parent)) { return; }
-        let questionToAskDown = questions.findBy('sortOrder', question.get('sortOrder') + 1);
         if(parent.get('sortOrder') > sortOrder){
           question.set('parentId', null);
+          let questionToAskDown = questions.findBy('sortOrder', question.get('sortOrder') + 1);
           if(isPresent(questionToAskDown)){
             question.set('parentId', questionToAskDown.get('parentId'));
-            question.save().then(()=>{
-              question.reload();
-            });
           }
+          question.save().then(()=>{
+            question.reload();
+          });
         }
       }
     });

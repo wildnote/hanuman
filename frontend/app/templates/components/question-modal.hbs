@@ -178,6 +178,12 @@
             </div>
           </div>
 
+          {{#each question.errors.answerChoices as |error|}}
+            <div  class="alert alert-danger" role="alert" data-test="answer-choices-error">
+              {{error.message}}
+            </div>
+          {{/each}}
+
           <div class="panel">
             <div class="row">
               <div class="col-md-12">
@@ -259,8 +265,6 @@
           </div>
 
         {{/if}}
-
-
 
         <div class="form-group">
           <div class="col-sm-12">
