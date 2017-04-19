@@ -69,11 +69,33 @@ test('adding a question', function(assert) {
       assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
       fillIn('[data-test="question.questionText"]', 'this is DA question');
       // Select
-      fillIn('[data-test="answer-type-id-select"]', 1);
+      fillIn('[data-test="answer-type-id-select"]', 15);
       triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
       click('[data-test="save-question-link"]').then(()=>{
         question = server.schema.questions.all().models[0];
-        assert.equal(question.questionText, 'this is DA question');
+        assert.equal(question.attrs.question_text, 'this is DA question');
+      });
+    });
+  });
+});
+
+
+test('saving a question with answer_type with answers without adding any answers', function(assert) {
+  visit(`/survey_templates/${surveyTemplate.id}`);
+
+  andThen(function() {
+    click('a:contains("Add")').then(()=>{
+      assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
+      fillIn('[data-test="question.questionText"]', 'question with answers');
+      // Select
+      fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer type
+      triggerEvent('[data-test="answer-type-id-select"]', 'onchange').then(function() {
+        click('[data-test="save-question-link"]').then(()=>{
+          const el = find('[data-test="answer-choices-error"]');
+          const count = el.length;
+          assert.equal(count, 1);
+          assert.equal(el.text().trim(), 'Please add at least one answers choice.');
+        });
       });
     });
   });

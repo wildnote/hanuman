@@ -4,6 +4,7 @@ class @ConditionalLogic
 
   #scan page and find all objects with conditional logic rules
   findRules: ->
+    problemWithCL = false
     $("[data-rule!=''][data-rule]").each ->
       $ruleContainer = $(this)
       #if $ruleElement.attr('data-rule').length > 0
@@ -17,11 +18,21 @@ class @ConditionalLogic
         $ruleContainer = $ruleContainer
         # the condition container
         $conditionContainer = $ruleContainer.siblings("[data-question-id=" + conditionQuestionId + "]")
+        # if condition is outside of $ruleContainer siblings context, let's looks for it globally
+        if $conditionContainer.length < 1
+          $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
+
+        if $conditionContainer.length == 0 || $conditionContainer.length > 1
+          problemWithCL = true
+
         # the condition element, which we need to check value for conditional logic
         $conditionElement = $conditionContainer.find(".form-control")
         # show
         if $conditionElement.length < 1
           $conditionElement = $conditionContainer.find(".form-control-static")
+
+        if $conditionElement.length == 0
+          problemWithCL = true
 
         # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
         hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
@@ -52,6 +63,15 @@ class @ConditionalLogic
           self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType)
         else
           self.hideShowQuestions(hideQuestions, ancestorId, $ruleContainer, $ruleContainer, inRepeater)
+
+    if problemWithCL
+      e = new Error("conditional Logic # findRules")
+      e.name = 'FAILED: conditional logic'
+      Honeybadger.notify e, context:
+        type: "FAILED: conditional logic => condition container or element not found or found more than once"
+        details: window.location.href
+
+      alert("We found a problem with the hide and show rules. We've been notified and are looking into it.")
     return
 
   #bind conditions to question
