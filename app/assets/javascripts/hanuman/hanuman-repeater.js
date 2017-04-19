@@ -140,7 +140,6 @@ $(document).ready(function(){
      uniquefyEntryIds()
      UpdateIdsInRepeaters()
 
-     incrementRepeaterHeader()
      if ($clonedContainer.hasClass("parent-repeater-container")) {
        repeaterDataNumber = $clonedContainer.data('repeater-number')
        duplicatedRepeaters = $("[data-repeater-number="+repeaterDataNumber+"]")
@@ -150,6 +149,8 @@ $(document).ready(function(){
        duplicatedRepeaters = $clonedContainer.closest(".parent-repeater-container").find("[data-nested-repeater-number="+repeaterDataNumber+"]")
        updateRepeaterCount(duplicatedRepeaters)
      };
+    //  must call this function after the updating the repeater number attribute in the code above ^^
+     incrementRepeaterHeader()
 
 
      $($clonedContainer).find('.destroy-form-container-repeater:last').show()
