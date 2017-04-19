@@ -7,26 +7,11 @@ $(document).ready(function(){
       $dataEntry = parseInt($(this).attr('data-entry'));
     }
   });
+  duplicatedRepeatersOnEdit = []
 
   updateParentRepeaterId()
-
-  // add attribute 'original-repeater' to repeaters on page load new/edit. This flag is needed so that we can skip/avoid updating the entry ID on those in uniquefyEntryIds function
-  // repeaterCountIndex = 1
-  $(".parent-repeater-container").each(function(i, el){
-    $(el).attr("original-repeater","true")
-
-    // <<<<<<<<<<< temporarily commenting out this code >>>>>>>>>>>>>>
-    // add repeater number on page load. This value is used for identifying each original repater.
-    // $(el).attr('data-repeater-number', repeaterCountIndex)
-    // repeaterCountIndex ++
-    // nested = $(el).find(".form-container-repeater")
-    // nested.each(function(idx, nested){
-    //   $(nested).attr('data-nested-repeater-number', repeaterCountIndex)
-    //   repeaterCountIndex ++
-    // });
-  });
-
-  // on page load run through repeater and hide delete buttons
+  incrementRepeaterHeader()
+  // run through repeater and hide delete buttons
   hideDeleteButtons()
 
   // clicking on button to add repeater
@@ -155,16 +140,16 @@ $(document).ready(function(){
      uniquefyEntryIds()
      UpdateIdsInRepeaters()
 
-    // <<<<<<<<<<< temporarily commenting out this code >>>>>>>>>>>>>>
-    //  if ($clonedContainer.hasClass("parent-repeater-container")) {
-    //    repeaterDataNumber = $clonedContainer.data('repeater-number')
-    //    duplicatedRepeaters = $("[data-repeater-number="+repeaterDataNumber+"]")
-    //    updateRepeaterCount(duplicatedRepeaters)
-    //  }else{
-    //    repeaterDataNumber = $clonedContainer.data('nested-repeater-number')
-    //    duplicatedRepeaters = $clonedContainer.closest(".parent-repeater-container").find("[data-nested-repeater-number="+repeaterDataNumber+"]")
-    //    updateRepeaterCount(duplicatedRepeaters)
-    //  };
+     incrementRepeaterHeader()
+     if ($clonedContainer.hasClass("parent-repeater-container")) {
+       repeaterDataNumber = $clonedContainer.data('repeater-number')
+       duplicatedRepeaters = $("[data-repeater-number="+repeaterDataNumber+"]")
+       updateRepeaterCount(duplicatedRepeaters)
+     }else{
+       repeaterDataNumber = $clonedContainer.data('nested-repeater-number')
+       duplicatedRepeaters = $clonedContainer.closest(".parent-repeater-container").find("[data-nested-repeater-number="+repeaterDataNumber+"]")
+       updateRepeaterCount(duplicatedRepeaters)
+     };
 
 
      $($clonedContainer).find('.destroy-form-container-repeater:last').show()
@@ -172,15 +157,52 @@ $(document).ready(function(){
      hideDeleteButtons()
   });
 
-  // <<<<<<<<<<< temporarily commenting out this code >>>>>>>>>>>>>>
-  // function updateRepeaterCount(duplicatedRepeaters){
-  //   duplicatedRepeaters.each(function(i, e){
-  //     if (i > 0) {
-  //       count = i+1
-  //       $(e).find(".repeater-count:first").text(" " +count)
-  //     }
-  //   });
-  // }
+  function incrementRepeaterHeader() {
+    repeaterCountIndex = 1
+    $(".parent-repeater-container").each(function(i, el){
+      // add attribute 'original-repeater' to repeaters on page load new/edit. This flag is needed so that we can skip/avoid updating the entry ID on those in uniquefyEntryIds function
+      $(el).attr("original-repeater","true")
+      // get the question-id from all the repeaters. All the added repeaters can be found with the question-id since the question-id remains unique through all the added repeaters.
+      qId = $(el).data("question-id")
+      // in every iteration we check for dupicated repeaters. If we find two repeaters with the same question-id, then that means that one of those were duplicated/added to dom.
+      if ($("[data-question-id="+qId+"]").length > 1) {
+        // if current repeater's question-id is in the duplicatedRepeatersOnEdit array, then it means that a repeater with that question-id has added.
+        if (duplicatedRepeatersOnEdit.includes(qId)) {
+          // then grab data-repeater-number and add it to the current repeater element.
+          rNumber = $("[data-question-id="+qId+"]").first().data('repeater-number')
+          $(el).attr('data-repeater-number', rNumber)
+        }else {
+          // if current repeater has duplicates/added, then add the question-id of the added repeater to array. This allows us to know which repaters were added
+          duplicatedRepeatersOnEdit.push(qId)
+          $(el).attr('data-repeater-number', repeaterCountIndex)
+        }
+      }else {
+        $(el).attr('data-repeater-number', repeaterCountIndex)
+      }
+      repeaterCountIndex ++
+      nested = $(el).find(".form-container-repeater")
+      nested.each(function(idx, nested){
+        $(nested).attr('data-nested-repeater-number', repeaterCountIndex)
+        repeaterCountIndex ++
+      });
+    });
+
+    // after having grouped all repeaters with their corresponding repeater number attribute update the repeater header number
+    $(".parent-repeater-container[data-entry=1]").each(function(i, e){
+      rNumber = $(e).data('repeater-number')
+      updateRepeaterCount($("[data-repeater-number="+rNumber+"]"))
+    })
+  }
+
+  // this function takes the collection of repeaters with the same "data-repeater-number" and numbers them.
+  function updateRepeaterCount(duplicatedRepeaters){
+    duplicatedRepeaters.each(function(i, e){
+      if (i > 0) {
+        count = i+1
+        $(e).find(".repeater-count:first").text(" " +count)
+      }
+    });
+  }
 
   function updateParentRepeaterId(){
     // if there are no 2nd level repeaters present, then we increment the repeater ID's for all top level repeaters and questions within.
@@ -406,6 +428,7 @@ $(document).ready(function(){
       function() {
           $removeContainer.remove();
           hideDeleteButtons()
+          incrementRepeaterHeader()
       }
     );
   };
