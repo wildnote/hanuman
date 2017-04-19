@@ -203,7 +203,8 @@ $ ->
       $(element).find('.upload-sort-order').val(idx+1)
 
   # on click removes uploaded files on survey new.
-  $('.file-upload').on 'click', '.remove-upload', ->
+  $('.file-upload').on 'click', '.remove-upload', (e) ->
+    e.preventDefault()
     file = $(@).attr('id')
     containerClass = "."+file+"-preview"
     fileToDelete = $(@).closest(".file-upload-input-button")
