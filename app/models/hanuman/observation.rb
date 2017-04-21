@@ -1,12 +1,7 @@
 module Hanuman
   class Observation < ActiveRecord::Base
-    include ::PgSearch
     has_paper_trail
 
-    # PG Search
-    pg_search_scope :search,
-      against: :answer,
-      using: { tsearch: { dictionary: 'english'} }
 
     # Relations
     belongs_to :survey, touch: true
