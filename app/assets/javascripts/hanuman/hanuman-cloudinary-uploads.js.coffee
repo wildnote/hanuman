@@ -188,7 +188,8 @@ removeFileHiddenInput = ->
 
 $ ->
   # when a user removes an upload in edit, we are resetting the sortorder
-  $('.delete-saved-file').on 'click', ->
+  $('.delete-saved-file').on 'click', (e) ->
+    e.preventDefault()
     $($(@).closest('.delete-box').find(".delete-checkbox")).prop( "checked", true )
     $(@).closest('.delete-box').closest('.upload-view-mode').hide()
     if $(@).closest(".file-upload-input-button").hasClass('photo-column')
@@ -202,7 +203,8 @@ $ ->
       $(element).find('.upload-sort-order').val(idx+1)
 
   # on click removes uploaded files on survey new.
-  $('.file-upload').on 'click', '.remove-upload', ->
+  $('.file-upload').on 'click', '.remove-upload', (e) ->
+    e.preventDefault()
     file = $(@).attr('id')
     containerClass = "."+file+"-preview"
     fileToDelete = $(@).closest(".file-upload-input-button")

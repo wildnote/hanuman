@@ -1,6 +1,7 @@
 module Hanuman
   class ObservationVideo < ActiveRecord::Base
     include ::PgSearch
+    has_paper_trail
     mount_uploader :video, VideoUploader
 
     # PG Search

@@ -8,8 +8,10 @@ const { RSVP: { Promise } } = Ember;
 export default function(name, options = {}) {
   module(name, {
     beforeEach() {
+      if(window.server !== undefined) { window.server.shutdown(); }
       window.superUser = true;
       this.application = startApp();
+      // server.logging = true;
 
       if (options.beforeEach) {
         return options.beforeEach.apply(this, arguments);
@@ -18,6 +20,7 @@ export default function(name, options = {}) {
 
     afterEach() {
       window.superUser = undefined;
+      if(window.server !== undefined) { window.server.shutdown(); }
       let afterEach = options.afterEach && options.afterEach.apply(this, arguments);
       return Promise.resolve(afterEach).then(() => destroyApp(this.application));
     }

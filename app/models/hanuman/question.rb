@@ -19,17 +19,8 @@ module Hanuman
     validates :question_text, presence: true, unless: :question_text_not_required
 
     # Callbacks
-    # commenting this out because we are not going to update previously submitted data at this point, leave it alone
-    # after_create :submit_blank_observation_data
-    # this flooding the system on a question resort which is resulting in a db deadlock,
-    # will manually call this at the survey template level after all changes are made
-    #after_update :resort_submitted_observations, if: :sort_order_changed?
-
-    # need to save array of child_ids to pass to native API it's too slow to generate on the fly
-    # if question has ancestors, loop through those ancestors and update the ancestry_children field
-    after_save :set_ancestry_children
-    after_destroy :set_ancestry_children
-    #before_create :set_ancestry_sort_order
+    after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
+    after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
 
     amoeba do
       include_association [:rule, :conditions, :answer_choices]
@@ -43,19 +34,6 @@ module Hanuman
       joins(:answer_type).order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc").gsub("desc desc", "desc").gsub("desc asc", "desc"))
     end
 
-    def set_ancestry_children
-      self.ancestors.each do |a|
-        a.ancestry_children = a.child_ids
-        a.save
-      end
-    end
-
-    def set_ancestry_sort_order
-      if parent && parent.children.last
-        self.sort_order = parent.children.last.sort_order
-      end
-    end
-
     def question_text_not_required
       unless answer_type.blank?
         case answer_type.name
@@ -67,46 +45,64 @@ module Hanuman
       end
     end
 
-    # if survey has data submitted against it, then submit blank data for each
-    # survey for newly added question
-    def submit_blank_observation_data
-      question = self
-      parent = self.parent
-      unless survey_template.fully_editable
-        surveys = survey_template.surveys
-        surveys.each do |s|
-          if parent.blank?
-            Observation.create(
-              survey_id: s.id,
-              question_id: self.id,
-              answer: '',
-              entry: 1
-            )
-          # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
-          else
-            s.observations.where(question_id: parent.id).each do |o|
-              Observation.create(
-                survey_id: s.id,
-                question_id: self.id,
-                answer: '',
-                entry: o.entry
-              )
-            end
-          end
-          # calling save so that before_save method apply_group_sort is called to resort observations after inserting new ones for new questions-kdh
-          s.save
-        end
+    # adding this method so I can check it before calling the job to process question changes on observations to try and decrease the number of 404 errors coming through
+    def survey_template_not_fully_editable?
+      !self.survey_template.fully_editable
+    end
+
+    # adding this method so I can check it before calling the job to process question changes on observations to try and decrease the number of 404 errors coming through
+    def survey_template_not_fully_editable_or_sort_order_changed?
+      if survey_template_not_fully_editable? && sort_order_changed?
+        true
       end
     end
 
-    def resort_submitted_observations
-      unless survey_template.fully_editable
-        surveys = survey_template.surveys
-        surveys.each do |s|
-          s.save
+    # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
+    def process_question_changes_on_observations
+      ProcessQuestionChangesWorker.perform_async(self.id)
+    end
+
+    # if survey has data submitted against it, then submit blank data for each
+    # survey for newly added question, then re-save survey so that group_sort gets reset
+    def submit_blank_observation_data
+      question = self
+      parent = self.parent
+      survey_template = self.survey_template
+      surveys = survey_template.surveys
+      surveys.each do |s|
+        if parent.blank?
+          Observation.create_with(
+            answer: ''
+          ).find_or_create_by(
+            survey_id: s.id,
+            question_id: self.id,
+            entry: 1
+          )
+        # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
+        else
+          s.observations.where(question_id: parent.id).each do |o|
+            Observation.create_with(
+              answer: ''
+            ).find_or_create_by(
+              survey_id: s.id,
+              question_id: self.id,
+              entry: o.entry
+            )
+          end
         end
+        # calling save so that before_save method apply_group_sort is called to resort observations after inserting new ones for new questions-kdh
+        s.save
       end
     end
+
+    # def resort_submitted_observations
+    #   unless survey_template.fully_editable
+    #     surveys = survey_template.surveys
+    #     surveys.each do |s|
+    #       s.save
+    #     end
+    #   end
+    # end
 
     # build the rule_hash to pass into rails to then be used by javascript for hide/show functions
     def rule_hash

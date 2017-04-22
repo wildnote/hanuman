@@ -1,6 +1,7 @@
 module Hanuman
   class ObservationPhoto < ActiveRecord::Base
     include ::PgSearch
+    has_paper_trail
     mount_uploader :photo, PhotoUploader
 
     # PG Search

@@ -1,6 +1,7 @@
 module Hanuman
   class ObservationDocument < ActiveRecord::Base
     include ::PgSearch
+    has_paper_trail
     mount_uploader :document, DocumentUploader
 
     # PG Search
