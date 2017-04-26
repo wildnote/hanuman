@@ -2,7 +2,6 @@ module Hanuman
   class Observation < ActiveRecord::Base
     has_paper_trail
 
-
     # Relations
     belongs_to :survey, touch: true
     belongs_to :question
@@ -74,12 +73,12 @@ module Hanuman
     end
 
     def self.filtered_by_entry(entry)
-      includes(:question => [:survey_step, :answer_type]).
+      includes(question: [:survey_step, :answer_type]).
       where(entry: entry)
     end
 
     def self.filtered_by_step(step)
-      includes(:question => [:survey_step, :answer_type]).
+      includes(question: [:survey_step, :answer_type]).
       where("hanuman_survey_steps.step = ?", step)
     end
 
