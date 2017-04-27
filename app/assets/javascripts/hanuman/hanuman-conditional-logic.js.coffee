@@ -251,9 +251,9 @@ class @ConditionalLogic
       else
         return
     if $conditionElement.is('select[multiple]')
-      if $('#' + $conditionElement.attr('id') + ' option:selected').size() > 0
+      if $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").size() > 0
         option_strings = []
-        $('#' + $conditionElement.attr('id') + ' option:selected').each ->
+        $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").each ->
           option_strings.push this.innerHTML
         return option_strings.join(", ")
       else
