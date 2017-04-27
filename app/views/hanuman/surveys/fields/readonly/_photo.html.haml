@@ -9,13 +9,20 @@
       %br
       %br
       %label
-        Photo Description
+        Photo description
       %br
       = p.description
       %br
       %br
       %label
-        Photo Sort Order
+        Photo lat-long
+      %br
+      =p.latitude.to_s + ","
+      =p.longitude
+      %br
+      %br
+      %label
+        Photo sort order
       %br
       = p.sort_order
       %br
