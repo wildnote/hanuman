@@ -20,7 +20,8 @@ module Hanuman
     end
 
     describe 'Callbacks' do
-      it { is_expected.to callback(:submit_blank_observation_data).after(:create) }
+      it { is_expected.to callback(:process_question_changes_on_observations).after(:create) }
+      it { is_expected.to callback(:process_question_changes_on_observations).after(:update) }
     end
   end
 end

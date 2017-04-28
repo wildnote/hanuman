@@ -1,17 +1,16 @@
 module Hanuman
   class SurveyStep < ActiveRecord::Base
+    # Relations
     belongs_to :survey_template, inverse_of: :survey_steps
     has_many :questions, -> { order :sort_order }, dependent: :destroy
 
-    validates_presence_of :survey_template, :step
-    validates_uniqueness_of :step, scope: :survey_template_id
+    # Validations
+    validates :survey_template, presence: true
+    validates :step, presence: true, uniqueness: { scope: :survey_template_id }
 
-    amoeba do
-      enable
-    end
+    # Scopes
+    scope :by_step, ->(step) { where(step: step) }
 
-    def self.by_step(step)
-      where(step: step)
-    end
+    amoeba { enable }
   end
 end

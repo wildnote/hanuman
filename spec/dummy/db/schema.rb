@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161012233207) do
+ActiveRecord::Schema.define(version: 20170208200704) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,7 @@ ActiveRecord::Schema.define(version: 20161012233207) do
     t.datetime "updated_at"
     t.string   "scientific_text"
     t.string   "ancestry"
+    t.integer  "sort_order"
   end
 
   add_index "hanuman_answer_choices", ["ancestry"], name: "index_hanuman_answer_choices_on_ancestry", using: :btree
@@ -41,6 +42,7 @@ ActiveRecord::Schema.define(version: 20161012233207) do
     t.string   "post_name"
     t.string   "post_type"
     t.string   "element_type"
+    t.boolean  "has_an_answer",        default: true
   end
 
   create_table "hanuman_conditions", force: :cascade do |t|
@@ -64,6 +66,51 @@ ActiveRecord::Schema.define(version: 20161012233207) do
     t.string   "multiselectable_type"
   end
 
+  create_table "hanuman_observation_documents", force: :cascade do |t|
+    t.integer  "observation_id"
+    t.string   "document"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "sort_order"
+  end
+
+  add_index "hanuman_observation_documents", ["observation_id"], name: "index_hanuman_observation_documents_on_observation_id", using: :btree
+
+  create_table "hanuman_observation_photos", force: :cascade do |t|
+    t.integer  "observation_id"
+    t.string   "photo"
+    t.text     "description"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "sort_order"
+    t.integer  "width"
+    t.integer  "height"
+    t.float    "speed"
+    t.float    "direction"
+    t.float    "altitude"
+  end
+
+  add_index "hanuman_observation_photos", ["observation_id"], name: "index_hanuman_observation_photos_on_observation_id", using: :btree
+
+  create_table "hanuman_observation_videos", force: :cascade do |t|
+    t.integer  "observation_id"
+    t.string   "video"
+    t.text     "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "sort_order"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.float    "speed"
+    t.float    "direction"
+    t.float    "altitude"
+  end
+
+  add_index "hanuman_observation_videos", ["observation_id"], name: "index_hanuman_observation_videos_on_observation_id", using: :btree
+
   create_table "hanuman_observations", force: :cascade do |t|
     t.integer  "survey_id"
     t.text     "answer"
@@ -76,6 +123,13 @@ ActiveRecord::Schema.define(version: 20161012233207) do
     t.integer  "selectable_id"
     t.string   "selectable_type"
     t.string   "group_sort"
+    t.integer  "repeater_id"
+    t.integer  "parent_repeater_id"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.float    "speed"
+    t.float    "direction"
+    t.float    "altitude"
   end
 
   add_index "hanuman_observations", ["survey_id"], name: "index_hanuman_observations_on_survey_id", using: :btree
@@ -167,6 +221,8 @@ ActiveRecord::Schema.define(version: 20161012233207) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.date     "survey_date"
+    t.string   "mobile_request_id"
+    t.datetime "mobile_created_at"
   end
 
   add_index "hanuman_surveys", ["survey_template_id"], name: "index_hanuman_surveys_on_survey_template_id", using: :btree
