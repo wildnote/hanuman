@@ -177,6 +177,7 @@ export default Ember.Component.extend({
     setAnswerType(answerTypeId) {
       const answerType = this.get('answerTypes').findBy('id', answerTypeId);
       this.set('question.answerType', answerType);
+      $('input[name=questionText]').focus();
     },
 
     setRuleMatchType(matchType) {
