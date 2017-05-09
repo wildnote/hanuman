@@ -22,9 +22,10 @@ export default Ember.Component.extend({
     return this.get('currentQuestion.answerChoices');
   }),
 
-  useDropDownAnswerSelect: computed('currentQuestion', function() {
-    let currentQuestion = this.get('currentQuestion');
-    return currentQuestion && currentQuestion.hasMany('answerChoices').ids().length > 1;
+  useDropDownAnswerSelect: computed('currentQuestion', 'condition.operator', function() {
+    let currentQuestion = this.get('currentQuestion'),
+        conditionOperator = this.get('condition.operator');
+    return conditionOperator !== 'contains' && currentQuestion && currentQuestion.hasMany('answerChoices').ids().length > 1;
   }),
 
   setNewCondition() {
