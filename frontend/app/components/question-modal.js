@@ -12,6 +12,7 @@ export default Ember.Component.extend({
   remodal: Ember.inject.service(),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
+  hasAnAnswer: alias('question.answerType.hasAnAnswer'),
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
   filteredAnswerTypes: computed('answerTypes', function() {
