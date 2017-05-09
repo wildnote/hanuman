@@ -1,15 +1,19 @@
 module Hanuman
   class Survey < ActiveRecord::Base
     has_paper_trail
+
+    # Relations
     belongs_to :survey_template
     has_many :observations, -> { unscope(:includes, :order) }, dependent: :destroy
     has_many :observation_answers, through: :observations
     has_many :observation_documents, through: :observations
     has_many :observation_photos, through: :observations
     has_many :observation_videos, through: :observations
-    accepts_nested_attributes_for :observations, allow_destroy: true#, reject_if: lambda {|attributes| attributes['answer'].blank?}
+    accepts_nested_attributes_for :observations, allow_destroy: true
     has_one :survey_extension, dependent: :destroy
     accepts_nested_attributes_for :survey_extension, allow_destroy: true
+
+    # Validations
     validates :survey_template_id, presence: true
     validates :survey_date, presence: true
 
@@ -21,24 +25,24 @@ module Hanuman
     delegate :name, to: :survey_template, prefix: true
 
     def survey_steps
-      self.survey_template.survey_steps.collect(&:step).uniq
+      survey_template.survey_steps.collect(&:step).uniq
     end
 
     def survey_step_is_duplicator?(step)
-      self.survey_template.survey_steps.by_step(step).first.duplicator
+      survey_template.survey_steps.by_step(step).first.duplicator
     end
 
     def observation_entries_by_step(step)
-      self.observations.filtered_by_step(step).collect(&:entry).uniq
+      observations.filtered_by_step(step).collect(&:entry).uniq
     end
 
     def max_observation_entry_by_step(step)
-      max = self.observations.filtered_by_step(step).collect(&:entry).uniq.max
+      max = observations.filtered_by_step(step).collect(&:entry).uniq.max
       max.blank? ? 0 : max
     end
 
     def author
-      self.versions.first.whodunnit unless self.versions.blank? rescue nil
+      versions.first.whodunnit unless versions.blank? rescue nil
     end
 
     def survey_step_has_observations?(step)
@@ -86,8 +90,7 @@ module Hanuman
               sort << 0
             end
 
-            group_sort = ""
-
+            group_sort = ''
             (1..(form_container_nesting_level + 2)).each_with_index do |n, index|
               group_sort += (index == 0 ? "g" : "-g") + group[index].to_s.rjust(3, '0') + ":s" + sort[index].to_s.rjust(3, '0')
             end
@@ -191,7 +194,6 @@ module Hanuman
                     puts group_sort
                     puts o.inspect
                   end
-
                 end
               end
             end
@@ -214,9 +216,7 @@ module Hanuman
 
           # have to check for existence of question because mobile device may be submitting a survey with a question that has since been deleted-kdh
           unless o.question.blank?
-
             if o.entry == n
-
               # find the current entry observation group sort and store it in master variables for continual evaluation
               if master_group_sort.blank? || master_entry != n
                 master_entry = n
@@ -235,11 +235,8 @@ module Hanuman
                 puts o.group_sort
                 puts o.inspect
               end
-
             end
-
           end
-
         end
       end
     end
@@ -251,9 +248,6 @@ module Hanuman
           indentation += "      "
         end
       end
-      puts indentation + ""
-      puts indentation + ""
-      puts indentation + ""
       puts indentation + ""
       puts indentation + ""
       puts indentation + "^^^^^^"
@@ -272,8 +266,6 @@ module Hanuman
       puts indentation + "group: " + group.to_s
       puts indentation + "sort: " + sort.to_s
       puts indentation + "vvvvvv"
-      puts indentation + ""
-      puts indentation + ""
       puts indentation + ""
       puts indentation + ""
       puts indentation + ""
