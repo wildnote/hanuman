@@ -149,6 +149,7 @@
             {{#form-field for='questionText' label='Question Text'}}
               <input type="text"
                     class="form-control"
+                    name="questionText"
                     data-test="question.questionText"
                     value={{question.questionText}}
                     oninput={{action (mut question.questionText) value="target.value"}} />

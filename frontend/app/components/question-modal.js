@@ -178,6 +178,7 @@ export default Ember.Component.extend({
     setAnswerType(answerTypeId) {
       const answerType = this.get('answerTypes').findBy('id', answerTypeId);
       this.set('question.answerType', answerType);
+      $('input[name=questionText]').focus();
     },
 
     setRuleMatchType(matchType) {
@@ -263,7 +264,7 @@ export default Ember.Component.extend({
       }else{
         answerChoice.save().then(function(answerChoice) {
           answerChoice.set('hideFromList',false);
-          if(question.get('isNew')){
+          if(question.get('isNew') || !question.get('isValid')){
             cb();
           }else{
             question.reload().then(function() {
