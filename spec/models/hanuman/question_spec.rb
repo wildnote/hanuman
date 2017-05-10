@@ -20,7 +20,32 @@ module Hanuman
     end
 
     describe 'Callbacks' do
-      it { is_expected.to callback(:submit_blank_observation_data).after(:create) }
+      it { is_expected.to callback(:process_question_changes_on_observations).after(:create) }
+      it { is_expected.to callback(:process_question_changes_on_observations).after(:update) }
+    end
+
+    describe 'Instance methods' do
+      let(:question) { create(:question) }
+      describe '#question_text_not_required' do
+        context 'when `answer_type` is equals to `line`' do
+          before do
+            question.answer_type.name = 'line'
+            question.answer_type.save
+          end
+          it 'returns `true`' do
+            expect(question.question_text_not_required).to be_truthy
+          end
+        end
+        context 'when `answer_type` is not equal to `line` or `nil`' do
+          before do
+            question.answer_type.name = 'fasdfasd'
+            question.answer_type.save
+          end
+          it 'returns `false`' do
+            expect(question.question_text_not_required).to be_falsy
+          end
+        end
+      end
     end
   end
 end

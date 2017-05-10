@@ -1,9 +1,0 @@
-# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
-
-one:
-  question_id: 
-  option_text: MyString
-
-two:
-  question_id: 
-  option_text: MyString

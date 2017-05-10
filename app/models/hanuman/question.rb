@@ -35,14 +35,8 @@ module Hanuman
     end
 
     def question_text_not_required
-      unless answer_type.blank?
-        case answer_type.name
-        when "line"
-          true
-        else
-          false
-        end
-      end
+      return false if answer_type.blank?
+      return answer_type.name == 'line'
     end
 
     # adding this method so I can check it before calling the job to process question changes on observations to try and decrease the number of 404 errors coming through
