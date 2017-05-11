@@ -275,10 +275,15 @@ export default Ember.Component.extend({
     },
 
     closeModal() {
+      let question = this.get('question');
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');
-      if(this.get('question.wasNew')){
-        run.later(this, ()=> { $('html, body').animate({ scrollTop: $('.add-new-question').offset().top }, 500); }, 500);
+      if(question.get('wasNew')){
+        run.later(this, ()=> { $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500); }, 500);
+        // Question is no longer new after shwoing the visual effect.
+        run.later(this, function() {
+          question.set('wasNew',false);
+        },1500);
       }
     }
   }
