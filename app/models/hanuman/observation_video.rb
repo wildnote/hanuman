@@ -10,6 +10,7 @@ module Hanuman
       using: { tsearch: { dictionary: 'english'} }
 
     # Relations
-    belongs_to :observation
+    belongs_to :observation, -> { unscope(:includes, :order) }
+    has_one    :survey, through: :observation
   end
 end
