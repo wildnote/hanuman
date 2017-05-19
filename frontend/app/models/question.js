@@ -22,6 +22,7 @@ export default Model.extend(Validator, {
   ancestry: attr('string'),
   parentId: attr('string'),
   railsId: attr('number'),
+  captureLocationData: attr('boolean'),
 
   // Associations
   answerType:     belongsTo('answer-type'),
