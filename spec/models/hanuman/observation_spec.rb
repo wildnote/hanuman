@@ -18,7 +18,7 @@ module Hanuman
       it { is_expected.to belong_to(:selectable) }
 
       it { is_expected.to have_many(:observation_answers).dependent(:destroy) }
-      it { is_expected.to have_many(:answer_choices).through(:observation_answers).dependent(:destroy) }
+      it { is_expected.to have_many(:answer_choices).through(:observation_answers) }
     end
 
     describe 'Callbacks' do

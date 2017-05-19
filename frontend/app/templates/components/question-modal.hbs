@@ -149,6 +149,7 @@
             {{#form-field for='questionText' label='Question Text'}}
               <input type="text"
                     class="form-control"
+                    name="questionText"
                     data-test="question.questionText"
                     value={{question.questionText}}
                     oninput={{action (mut question.questionText) value="target.value"}} />
@@ -156,16 +157,34 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <div class="col-sm-12">
-            <input type="checkbox"
-                  disabled={{isRequiredDisabled}}
-                  name="isRequired"
-                  checked={{question.required}}
-                  onchange={{action (mut question.required) value="target.checked"}} /> Required
-                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="A required question must be answered in order to save the survey." class="bootstrap-popover">
-                    <span class="glyphicons glyphicons-info-sign"></span>
-                  </a>
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <div class="col-sm-12">
+                <input type="checkbox"
+                      disabled={{isRequiredDisabled}}
+                      name="isRequired"
+                      checked={{question.required}}
+                      onchange={{action (mut question.required) value="target.checked"}} /> Required
+                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="A required question must be answered in order to save the survey." class="bootstrap-popover">
+                  <span class="glyphicons glyphicons-info-sign"></span>
+                </a>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            {{#if isSuperUser}}
+              {{#if hasAnAnswer}}
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <input type="checkbox"
+                          name="captureLocationData"
+                          checked={{question.captureLocationData}}
+                          onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data (Superuser Only)
+                  </div>
+                </div>
+              {{/if}}
+            {{/if}}
           </div>
         </div>
 
@@ -279,35 +298,38 @@
         </div>
 
         {{#if isSuperUser}}
-          <div class="form-group">
-            <div class="col-sm-12">
-              <h4>superuser only</h4>
+          <hr/>
+          <section class="super-user">
+            <div class="form-group">
+              <div class="col-sm-12">
+                <h4>Superuser only</h4>
+              </div>
             </div>
-          </div>
-          <div class="form-group">
-            <div class="col-sm-12">
-              {{#form-field for='parentId' label='Parent Relationship'}}
-                <select class="form-control" data-test="ancestry-select" onchange={{action "ancestryChange" value="target.value"}}>
-                  <option></option>
-                  {{#each ancestryQuestions as |opQuestion|}}
-                    <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
-                  {{/each}}
-                </select>
-              {{/form-field}}
+            <div class="form-group">
+              <div class="col-sm-12">
+                {{#form-field for='parentId' label='Parent Relationship'}}
+                  <select class="form-control" data-test="ancestry-select" onchange={{action "ancestryChange" value="target.value"}}>
+                    <option></option>
+                    {{#each ancestryQuestions as |opQuestion|}}
+                      <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
+                    {{/each}}
+                  </select>
+                {{/form-field}}
+              </div>
             </div>
-          </div>
 
-          <div class="form-group">
-            <div class="col-sm-12">
-              {{#form-field for='externalDataSource' label='External Data Source'}}
-                <input type="text"
-                      class="form-control"
-                      data-test="question.externalDataSource"
-                      value={{question.externalDataSource}}
-                      oninput={{action (mut question.externalDataSource) value="target.value"}} />
-              {{/form-field}}
+            <div class="form-group">
+              <div class="col-sm-12">
+                {{#form-field for='externalDataSource' label='External Data Source'}}
+                  <input type="text"
+                        class="form-control"
+                        data-test="question.externalDataSource"
+                        value={{question.externalDataSource}}
+                        oninput={{action (mut question.externalDataSource) value="target.value"}} />
+                {{/form-field}}
+              </div>
             </div>
-          </div>
+          </section>
         {{/if}}
       {{/object-form}}
     </div>

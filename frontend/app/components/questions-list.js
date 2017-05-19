@@ -25,10 +25,9 @@ export default Ember.Component.extend({
     setAncestry(question, opts){
       let ancestryQuestion = opts.target.acenstry,
           parentId = ancestryQuestion.get('id'),
-          lastChildren = this.get('surveyTemplate.questions').filterBy('parentId',parentId).get('lastObject'),
-          sortOrder = lastChildren ? lastChildren.get('sortOrder') : ancestryQuestion.get('sortOrder');
-
-      sortOrder++;
+          parentChildren = this.get('surveyTemplate.questions').filterBy('parentId',parentId).sortBy('sortOrder'),
+          lastChild = parentChildren.get('lastObject'),
+          sortOrder = lastChild ? lastChild.get('sortOrder') : ancestryQuestion.get('sortOrder');
 
       question.set('loading', true);
       question.set('parentId', parentId);

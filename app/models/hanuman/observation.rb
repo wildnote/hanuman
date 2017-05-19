@@ -18,9 +18,9 @@ module Hanuman
     has_many :observation_videos, dependent: :destroy
     accepts_nested_attributes_for :observation_videos, allow_destroy: true
 
-    has_many :photos, -> { order :sort_order, :id }, class_name: "Hanuman::ObservationPhoto"
-    has_many :documents, -> { order :sort_order, :id }, class_name: "Hanuman::ObservationDocument"
-    has_many :videos, -> { order :sort_order, :id }, class_name: "Hanuman::ObservationVideo"
+    has_many :photos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationPhoto'
+    has_many :documents, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationDocument'
+    has_many :videos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationVideo'
 
     belongs_to :selectable, polymorphic: true
 
@@ -30,7 +30,10 @@ module Hanuman
     # rows in database for editing of survey - kdh - 10.30.14
 
     # Scopes
-    default_scope {includes(:question).order('hanuman_observations.entry ASC, hanuman_questions.sort_order ASC').references(:question)}
+    default_scope {
+      includes(:question).order('hanuman_observations.entry ASC, hanuman_questions.sort_order ASC')
+        .references(:question)
+    }
     scope :by_survey_template_and_entry, -> (survey_template, entry) do
       includes(question: [:survey_template, :answer_type])
       .where(hanuman_survey_templates: {id: survey_template.id}, entry: entry)
@@ -70,19 +73,19 @@ module Hanuman
     end
 
     def self.filtered_by_entry(entry)
-      includes(:question => [:survey_step, :answer_type]).
+      includes(question: [:survey_step, :answer_type]).
       where(entry: entry)
     end
 
     def self.filtered_by_step(step)
-      includes(:question => [:survey_step, :answer_type]).
+      includes(question: [:survey_step, :answer_type]).
       where("hanuman_survey_steps.step = ?", step)
     end
 
     # Deprecated
     def self.filtered_by_step_and_entry(step, entry)
       includes(:question => [:survey_step, :answer_type]).
-      where("hanuman_survey_steps.step = ? AND hanuman_observations.entry = ?", step, entry)
+      where('hanuman_survey_steps.step = ? AND hanuman_observations.entry = ?', step, entry)
     end
 
     def self.entries

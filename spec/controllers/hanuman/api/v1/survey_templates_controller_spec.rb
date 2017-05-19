@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Hanuman::Api::V1::SurveyTemplatesController, type: :controller do
 	routes { Hanuman::Engine.routes }
 
-  it { expect(subject.class.superclass.name).to eq('ApplicationController') }
+  it { expect(subject.class.superclass.name).to eq('Hanuman::Api::V1::BaseController') }
 
   before :each do
     request.env["HTTP_ACCEPT"] = 'application/json'
@@ -11,7 +11,7 @@ describe Hanuman::Api::V1::SurveyTemplatesController, type: :controller do
 
   let(:survey_template) { create(:survey_template) }
 
-  describe "PUT#update" do
+  describe 'PUT#update' do
     context 'with valid params' do
       let(:valid_params_to_update) {{name: "New name"}}
       it "updates the survey_template" do
