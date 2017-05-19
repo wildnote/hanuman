@@ -173,15 +173,17 @@
             </div>
           </div>
           <div class="col-md-6">
-            {{#if hasAnAnswer}}
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input type="checkbox"
-                        name="captureLocationData"
-                        checked={{question.captureLocationData}}
-                        onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data
+            {{#if isSuperUser}}
+              {{#if hasAnAnswer}}
+                <div class="form-group">
+                  <div class="col-sm-12">
+                    <input type="checkbox"
+                          name="captureLocationData"
+                          checked={{question.captureLocationData}}
+                          onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data (Superuser Only)
+                  </div>
                 </div>
-              </div>
+              {{/if}}
             {{/if}}
           </div>
         </div>
