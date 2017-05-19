@@ -12,6 +12,7 @@ export default Ember.Component.extend({
   remodal: Ember.inject.service(),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
+  hasAnAnswer: alias('question.answerType.hasAnAnswer'),
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
   filteredAnswerTypes: computed('answerTypes', function() {
@@ -177,6 +178,7 @@ export default Ember.Component.extend({
     setAnswerType(answerTypeId) {
       const answerType = this.get('answerTypes').findBy('id', answerTypeId);
       this.set('question.answerType', answerType);
+      $('input[name=questionText]').focus();
     },
 
     setRuleMatchType(matchType) {
@@ -262,7 +264,7 @@ export default Ember.Component.extend({
       }else{
         answerChoice.save().then(function(answerChoice) {
           answerChoice.set('hideFromList',false);
-          if(question.get('isNew')){
+          if(question.get('isNew') || !question.get('isValid')){
             cb();
           }else{
             question.reload().then(function() {
@@ -274,10 +276,15 @@ export default Ember.Component.extend({
     },
 
     closeModal() {
+      let question = this.get('question');
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');
-      if(this.get('question.wasNew')){
-        run.later(this, ()=> { $('html, body').animate({ scrollTop: $('.add-new-question').offset().top }, 500); }, 500);
+      if(question.get('wasNew')){
+        run.later(this, ()=> { $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500); }, 500);
+        // Question is no longer new after shwoing the visual effect.
+        run.later(this, function() {
+          question.set('wasNew',false);
+        },1500);
       }
     }
   }

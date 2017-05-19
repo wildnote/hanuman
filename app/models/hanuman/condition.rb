@@ -1,5 +1,6 @@
 module Hanuman
   class Condition < ActiveRecord::Base
+    has_paper_trail
 
     # Constants
     OPERATORS = [
@@ -23,8 +24,11 @@ module Hanuman
     # when a condition gets deleted, check to see of the rule attached to that condition has other conditions attached to it
     # if it does do NOT delete, if it doen NOT have any more conditions attached go ahead and delete
     def cleanup_rule_if_single_condition
-      if rule.conditions.blank?
-        self.rule.destroy
+      # adding this line because we have some conditions referencing a rule that no longer exists and that is making survey template delete fail
+      unless rule.blank?
+        if rule.conditions.blank?
+          self.rule.destroy
+        end
       end
     end
   end

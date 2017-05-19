@@ -1,5 +1,6 @@
 module Hanuman
   class Rule < ActiveRecord::Base
+    has_paper_trail
 
     # Constants
     MATCH_TYPES = %w(any all)

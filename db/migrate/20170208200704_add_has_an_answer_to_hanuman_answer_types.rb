@@ -1,4 +1,4 @@
-class AddGpsDataToHanumanObservationVideos < ActiveRecord::Migration
+class AddHasAnAnswerToHanumanAnswerTypes < ActiveRecord::Migration
   NO_ANSWER_TYPES = %w(repeater section helperabove helperbelow line static photo document video latlong)
 
   def up
