@@ -9,6 +9,19 @@ Hanuman is a rails engine that gives the rails application the ability to create
 
 It is "still pretty early" in the development stage. However, we are using it in two of our applications.
 
+##### Ruby Tests
+
+Before running any tests setup the testing database:
+
+`bundle exec rake db:reset RAILS_ENV=test`
+
+[RSpec](http://rspec.info/) is used to write unit tests for all of the Ruby code.
+
+To run all the Ruby tests:
+`$ time rspec`
+
+> As we're using Rspec please try to follow this [guideline](http://betterspecs.org/).
+
 
 ### Frontend
 
@@ -43,25 +56,26 @@ You’ll need to globally install Bower, a package manager that keeps your front
 
 ````
 npm install -g bower
+
 ````
 
 Once you have Bower and Ember CLI installed you need to install npm and bower dependencies before running the rails server:
 
 ````
 BUNDLE_GEMFILE="Gemfile.development" rake ember:install
-```
+````
 
-To run tests
+###### To run tests
 
-```
+````
 BUNDLE_GEMFILE="Gemfile.development" rake ember:test
-```
+````
 
 You may need to run the following to get the tests running
 
-```
+````
 npm install -g phantomjs-prebuilt
-```
+````
 
 #### Keep it dependecies updated
 
