@@ -4,7 +4,7 @@ module Hanuman
 
     # Relations
     belongs_to :survey_template
-    has_many :observations, -> { unscope(:includes, :order) }, dependent: :destroy
+    has_many :observations, dependent: :destroy
     has_many :observation_answers, through: :observations
     has_many :observation_documents, through: :observations
     has_many :observation_photos, through: :observations
