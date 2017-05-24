@@ -5,11 +5,12 @@ module Hanuman
     # Relations
     belongs_to :survey_template
     has_many :observations, dependent: :destroy
-    has_many :observation_answers, through: :observations
-    has_many :observation_documents, through: :observations
-    has_many :observation_photos, through: :observations
-    has_many :observation_videos, through: :observations
     accepts_nested_attributes_for :observations, allow_destroy: true
+    has_many :unscope_observations, -> { unscope(:includes, :order) }, class_name: 'Hanuman::Observation'
+    has_many :observation_answers, through: :unscope_observations
+    has_many :observation_documents, through: :unscope_observations
+    has_many :observation_photos, through: :unscope_observations
+    has_many :observation_videos, through: :unscope_observations
     has_one :survey_extension, dependent: :destroy
     accepts_nested_attributes_for :survey_extension, allow_destroy: true
 
