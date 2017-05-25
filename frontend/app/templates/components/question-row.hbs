@@ -34,6 +34,25 @@
         ]
       {{/if}}
     </div>
+  {{else}}
+    {{#if question.ancestry}}
+      <div class="col-sm-1">
+        #{{question.railsId}}
+      </div>
+      <div class="col-sm-1">
+        <b>#{{question.ancestry}}</b>
+      </div>
+    {{else}}
+      <div class="col-sm-1">
+        {{#if ancestrable}}
+          <b>#{{question.railsId}}</b>
+        {{else}}
+          #{{question.railsId}}
+        {{/if}}
+      </div>
+      <div class="col-sm-1">
+      </div>
+    {{/if}}
   {{/if}}
   <div class="col-sm-2">
     {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
