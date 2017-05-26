@@ -120,7 +120,18 @@ class @ConditionalLogic
             else
               operator = conditions[0].operator
               answer = conditions[0].answer
-              hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
+
+              element_type = $triggerElement.closest('.form-container-entry-item').attr('data-element-type')
+              if element_type == 'checkboxes'
+                # concatenate all the values of checboxes selected
+                $triggerElement.attr('name')
+                named_string = "input:checkbox[name='" + $triggerElement.attr('name') + "']:checked"
+                selected_array = $(named_string).map(->
+                  $(this).attr('data-label-value')
+                ).get()
+                hideQuestions = self.evaluateCondition(operator, answer, selected_array)
+              else
+                hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
               self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
     return
 
