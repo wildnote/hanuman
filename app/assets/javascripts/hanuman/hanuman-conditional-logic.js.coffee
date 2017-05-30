@@ -35,7 +35,7 @@ class @ConditionalLogic
           problemWithCL = true
 
         # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
-        hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
+        hideQuestions = self.setHideQuestions(condition, $conditionElement)
 
         ancestorId = rule.question_id
         # bind conditions based on element type
@@ -97,16 +97,13 @@ class @ConditionalLogic
             if conditions.length > 1
               self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType)
             else
-              operator = conditions[0].operator
-              answer = conditions[0].answer
-              hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
+              hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
               self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
       # if not then lets assume its at the top most level outside of a repeater
       else
         $($triggerElement).closest(".form-container-survey").find("[data-rule!=''][data-rule]").each ->
           inRepeater = false
           $ruleElement = $(this)
-          #$container = $(this).closest(".form-container-survey")
           $container = $ruleElement
           rule = $.parseJSON($ruleElement.attr("data-rule")).rule_hash
           matchType = rule.match_type
@@ -118,20 +115,7 @@ class @ConditionalLogic
             if conditions.length > 1
               self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType)
             else
-              operator = conditions[0].operator
-              answer = conditions[0].answer
-
-              element_type = $triggerElement.closest('.form-container-entry-item').attr('data-element-type')
-              if element_type == 'checkboxes'
-                # concatenate all the values of checboxes selected
-                $triggerElement.attr('name')
-                named_string = "input:checkbox[name='" + $triggerElement.attr('name') + "']:checked"
-                selected_array = $(named_string).map(->
-                  $(this).attr('data-label-value')
-                ).get()
-                hideQuestions = self.evaluateCondition(operator, answer, selected_array)
-              else
-                hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
+              hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
               self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
     return
 
@@ -150,7 +134,8 @@ class @ConditionalLogic
       if $conditionElement.is(":checkbox")# || $triggerElement.is(":radio"))
         # limit binding of each checkbox if data-label-value and answer are the same-kdh
         $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value='" + condition.answer.replace("/","\\/") + "']")
-      hideQuestions = self.evaluateCondition(condition.operator, condition.answer, self.getValue($conditionElement))
+
+      hideQuestions = self.setHideQuestions(condition, $conditionElement)
       conditionMet = !hideQuestions
       conditionMetTracker.push conditionMet
     # match type any (or)
@@ -169,6 +154,24 @@ class @ConditionalLogic
         hideShow = true
     self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
 
+  #setHideQuestions variable
+  setHideQuestions: (condition, $triggerElement) ->
+    operator = condition.operator
+    answer = condition.answer
+    # grab element type so we can branch off for checkboxes
+    element_type = $triggerElement.closest('.form-container-entry-item').attr('data-element-type')
+    if element_type == 'checkboxes'
+      # concatenate all the values of checboxes selecteds
+      named_string = "input:checkbox[name='" + $triggerElement.attr('name') + "']:checked"
+      selected_array = $(named_string).map(->
+        $(this).attr('data-label-value')
+      ).get()
+      # force is equal to operator to contains since multiple checkboxes with multiple rules associated with them needs to check for contains
+      if operator == "is equal to"
+        operator = "contains"
+      hideQuestions = self.evaluateCondition(operator, answer, selected_array)
+    else
+      hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
 
   #hide or show questions
   hideShowQuestions: (hide_questions, ancestor_id, $ruleElement, $container, inRepeater) ->
