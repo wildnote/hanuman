@@ -1,4 +1,4 @@
-%p.form-control-static
+%p.form-control-static.multiselect{multiselect_array: o.observation_answers.map{|oa| oa.answer_choice.formatted_answer_choice}}
   - o.observation_answers.each do |oa|
     - unless oa.answer_choice.blank?
       = oa.answer_choice.formatted_answer_choice
