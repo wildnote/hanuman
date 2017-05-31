@@ -160,37 +160,32 @@ class @ConditionalLogic
     answer = condition.answer
     # grab element type so we can branch off for checkboxes
     element_type = $triggerElement.closest('.form-container-entry-item').attr('data-element-type')
+    # element_class = $triggerElement
     if element_type == 'checkboxes'
-      # concatenate all the values of checboxes selecteds
+      # concatenate all the values of checboxes selected
       named_string = "input:checkbox[name='" + $triggerElement.attr('name') + "']:checked"
       selected_array = $(named_string).map(->
         $(this).attr('data-label-value')
       ).get()
-      # force is equal to operator to contains since multiple checkboxes with multiple rules associated with them needs to check for contains
-      if operator == "is equal to"
-        operator = "contains"
-      hideQuestions = self.evaluateCondition(operator, answer, selected_array)
+      # # force is equal to operator to contains since multiple checkboxes with multiple rules associated with them needs to check for contains
+      # if operator == "is equal to"
+      #   operator = "contains"
+      hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
+    else if $triggerElement.hasClass('multiselect')
+      # concatenate all the values of checboxes selected
+      selected_array = JSON.parse($triggerElement.attr('multiselect_array'))
+      hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
     else
       hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
 
   #hide or show questions
   hideShowQuestions: (hide_questions, ancestor_id, $ruleElement, $container, inRepeater) ->
-    #all_questions = $($container).find(".form-container-repeater[data-question-id=" + ancestor_id + "][data-entry=],[data-question-id=" + ancestor_id + "],[data-ancestor=" + ancestor_id + "]")
-
     # deal with container
-    #unless $container.hasClass("form-container-survey")
     if hide_questions
       $container.addClass("conditional-logic-hidden")
       self.clearQuestions($container)
     else
       $container.removeClass("conditional-logic-hidden")
-
-    # deal with questions
-    # if hide_questions
-    #   all_questions.addClass("conditional-logic-hidden")
-    #   self.clearQuestions(all_questions)
-    # else
-    #   all_questions.removeClass("conditional-logic-hidden")
 
   #clear questions
   clearQuestions: (container) ->
@@ -244,6 +239,44 @@ class @ConditionalLogic
       when "contains"
         if value and value.indexOf(answer) > -1 then hide_questions = false
     return hide_questions
+
+  # need a special evaluate condition method to determine if one of the values in the checkbox array matches the condition
+  evaluateCheckboxConditions: (operator, answer, value_array) ->
+    hide_questions = true
+    for value in value_array
+      switch operator
+        when "is equal to"
+          if value == answer
+            hide_questions = false
+        when "is not equal to"
+          if value != answer
+            hide_questions = false
+        when "is empty"
+          if value.length < 1
+            hide_questions = false
+        when "is not empty"
+          if value.length > 0
+            hide_questions = false
+        when "is greater than"
+          if $.isNumeric(value)
+            if parseFloat(value) > parseFloat(answer)
+              hide_questions = false
+        when "is less than"
+          if $.isNumeric(value)
+            if parseFloat(value) < parseFloat(answer)
+              hide_questions = false
+        when "starts with"
+          if value and value.slice(0, answer.length) == answer
+            hide_questions = false
+        when "contains"
+          if value and value.indexOf(answer) > -1
+            hide_questions = false
+      # break out of loop if we found a match
+      if hide_questions == false
+        return hide_questions
+    return hide_questions
+
+
 
   # get value of triggering question
   getValue: ($conditionElement) ->
