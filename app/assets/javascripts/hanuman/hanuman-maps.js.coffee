@@ -9,11 +9,14 @@ setMapMarkers = ->
           provider: {scrollwheel: false, zoomControl: true}
           internal: id: 'map'
         }, ->
-          markers = handler.addMarkers(data)
-          $(markers).each ->
-            this.serviceObject.icon = 'https://s3-us-west-1.amazonaws.com/wildnote/google-maps-utility-library-v3/chart_marker_green.png'
-          handler.map.centerOn markers[0]
-          handler.getMap().setZoom(8)
+          if data.length > 0
+            markers = handler.addMarkers(data)
+            $(markers).each ->
+              this.serviceObject.icon = 'https://s3-us-west-1.amazonaws.com/wildnote/google-maps-utility-library-v3/chart_marker_green.png'
+            handler.map.centerOn markers[0]
+            handler.getMap().setZoom(8)
+          else
+            handler.getMap().setZoom(2)
       dataType: 'JSON'
 
 @setupDefaultMaps = ->
