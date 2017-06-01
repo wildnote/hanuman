@@ -37,4 +37,5 @@ script:
 
 
 notifications:
+  slack: suntoucher:VLwFnuhlLQDFquO2NnKZUvwV
   email: false
