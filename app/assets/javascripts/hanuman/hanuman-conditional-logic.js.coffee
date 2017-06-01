@@ -158,9 +158,8 @@ class @ConditionalLogic
   setHideQuestions: (condition, $triggerElement) ->
     operator = condition.operator
     answer = condition.answer
-    # grab element type so we can branch off for checkboxes
+    # grab element type so we can branch off for checkboxes or multiselects
     element_type = $triggerElement.closest('.form-container-entry-item').attr('data-element-type')
-    # element_class = $triggerElement
     if element_type == 'checkboxes'
       # concatenate all the values of checboxes selected
       named_string = "input:checkbox[name='" + $triggerElement.attr('name') + "']:checked"
@@ -171,8 +170,15 @@ class @ConditionalLogic
       # if operator == "is equal to"
       #   operator = "contains"
       hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
+    else if element_type == 'multiselect'
+      selected_values = self.getValue($triggerElement)
+      if selected_values
+        selected_array = selected_values.split(', ')
+        hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
+      else
+        return true
+    # on survey show, grab oject of all saved items from checkboxes or multiselects
     else if $triggerElement.hasClass('multiselect')
-      # concatenate all the values of checboxes selected
       selected_array = JSON.parse($triggerElement.attr('multiselect_array'))
       hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
     else
