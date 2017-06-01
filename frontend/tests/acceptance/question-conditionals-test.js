@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 
@@ -38,10 +39,12 @@ test('adding a conditional with a question without rule previously created', fun
     fillIn('[data-test="condition.answer"]', 'e quiai');
     click('[data-test="save-condition-link"]').then(()=>{
       click('[data-test="save-question-link"]').then(()=>{
-        assert.equal(1, server.schema.rules.all().models.length);
-        let condition = server.schema.conditions.all().models[0];
-        assert.equal(condition.answer, 'e quiai');
-        assert.equal(condition.operator, 'is greater than');
+        Ember.run.later(this,function() {
+          assert.equal(1, server.schema.rules.all().models.length);
+          let condition = server.schema.conditions.all().models[0];
+          assert.equal(condition.answer, 'e quiai');
+          assert.equal(condition.operator, 'is greater than');
+        },0);
       });
     });
 
