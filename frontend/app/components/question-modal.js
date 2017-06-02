@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import groupBy from 'ember-group-by';
 const {
   $,
   run,
@@ -15,6 +16,7 @@ export default Ember.Component.extend({
   hasAnAnswer: alias('question.answerType.hasAnAnswer'),
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
+  groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
   filteredAnswerTypes: computed('answerTypes', function() {
     let answerTypes = this.get('answerTypes');
     if(this.get('isSuperUser')){
