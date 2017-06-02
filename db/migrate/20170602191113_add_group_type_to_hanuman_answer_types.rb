@@ -4,7 +4,7 @@ class AddGroupTypeToHanumanAnswerTypes < ActiveRecord::Migration
       "Basic": ['checkbox', 'counter', 'date', 'number', 'text', 'textarea', 'time'],
       "Multiple Choice": ['checkboxlist', 'chosenmultiselect'],
       "Single Choice": ['chosenselect', 'locationchosensingleselect', 'radio'],
-      "Media": ['document', 'document', 'video'],
+      "Media": ['document', 'photo', 'video'],
       "Design": ['helperabove', 'repeater', 'section', 'static', 'line'],
       "Taxon": ['taxonchosenmultiselect', 'taxonchosensingleselect'],
       "Geographic": ['latlong']
@@ -23,6 +23,6 @@ class AddGroupTypeToHanumanAnswerTypes < ActiveRecord::Migration
   end
 
   def down
-    add_column :hanuman_answer_types, :group_type, :string
+    remove_column :hanuman_answer_types, :group_type, :string
   end
 end
