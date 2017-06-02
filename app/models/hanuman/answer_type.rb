@@ -10,7 +10,10 @@ module Hanuman
       'email', 'file', 'helper', 'line', 'map', 'multiselect', 'number', 'photo',
       'radio', 'select', 'static', 'text', 'textarea', 'time', 'video'
     ].freeze
-    GROUP_TYPES = ['Basic', 'Multiple Choice', 'Single Choice', 'Media', 'Design', 'Taxon', 'Geographic'].freeze
+    GROUP_TYPES = [
+      '', 'Basic', 'Multiple Choice', 'Single Choice', 'Media', 'Design', 'Taxon',
+      'Geographic'
+    ].freeze
 
     # Scopes
     scope :active_sorted, -> { where(status: 'active').order('name') }
