@@ -166,9 +166,7 @@ class @ConditionalLogic
       selected_array = $(named_string).map(->
         $(this).attr('data-label-value')
       ).get()
-      # # force is equal to operator to contains since multiple checkboxes with multiple rules associated with them needs to check for contains
-      # if operator == "is equal to"
-      #   operator = "contains"
+      # force is equal to operator to contains since multiple checkboxes with multiple rules associated with them needs to check for contains
       hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
     else if element_type == 'multiselect'
       selected_values = self.getValue($triggerElement)
