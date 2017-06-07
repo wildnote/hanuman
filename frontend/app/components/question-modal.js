@@ -255,22 +255,24 @@ export default Ember.Component.extend({
       }
     },
 
-    saveAnswerChoice(answerChoice, cb){
+    saveAnswerChoice(answerChoice, callback){
       let question = this.get('question');
       if(question.get('isNew')){
         if(this.get('answerChoicesPendingSave').indexOf(answerChoice) === -1){
           answerChoice.set('hideFromList',false);
           this.get('answerChoicesPendingSave').pushObject(answerChoice);
-          cb();
+          callback();
         }
       }else{
         answerChoice.save().then(function(answerChoice) {
           answerChoice.set('hideFromList',false);
           if(question.get('isNew') || !question.get('isValid')){
-            cb();
+            callback();
           }else{
-            question.reload().then(function() {
-              cb();
+            question.save().then(function(question) {
+              question.reload().then(function() {
+                callback();
+              });
             });
           }
         });
