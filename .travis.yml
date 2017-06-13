@@ -10,7 +10,10 @@ sudo: false
 
 cache:
   directories:
+    - $HOME/.npm
+    - $HOME/.yarn-cache
     - node_modules
+    - bower_components
 
 before_install:
   - gem install bundler -v 1.12.5
@@ -27,12 +30,12 @@ before_script:
 
 install:
   - npm install -g bower
-  - npm install
+  - yarn install --frozen-lockfile
   - bower install
   - bower --version
 
 script:
-  - ember test
+  - npm test
   - cd .. && bundle exec rspec
 
 
