@@ -1,14 +1,16 @@
 ---
 language: node_js
 node_js:
-  - "4"
+  - "7.7.2"
 
 sudo: false
 
 cache:
   directories:
     - $HOME/.npm
-    - $HOME/.cache # includes bowers cache
+    - $HOME/.yarn-cache
+    - node_modules
+    - bower_components
 
 before_install:
   - npm config set spin false
@@ -17,7 +19,7 @@ before_install:
   - phantomjs --version
 
 install:
-  - npm install
+  - yarn install --frozen-lockfile
   - bower install
 
 script:
