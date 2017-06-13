@@ -2,13 +2,14 @@ dist: trusty
 language: ruby
 cache: bundler
 node_js:
-  - "0.12"
+  - "7.7.2"
 rvm:
   - 2.2.3
 
 sudo: false
 
 cache:
+  yarn: true
   directories:
     - $HOME/.npm
     - $HOME/.yarn-cache
