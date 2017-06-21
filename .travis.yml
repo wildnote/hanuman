@@ -8,9 +8,6 @@ rvm:
 
 sudo: required
 
-services:
-  - docker
-
 cache:
   yarn: true
   directories:
@@ -38,7 +35,7 @@ before_script:
 
 install:
   - npm install -g bower
-  - yarn install
+  - yarn install --frozen-lockfile
   - ./node_modules/testem/testem.js launchers
   - bower install
   - bower --version
