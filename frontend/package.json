@@ -11,7 +11,7 @@
   "scripts": {
     "build": "ember build",
     "start": "ember server",
-    "test": "ember exam"
+    "test": "ember exam --launch='Chrome' --random"
   },
   "engines": {
     "node": ">= 0.12.0"
