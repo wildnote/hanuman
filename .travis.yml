@@ -6,7 +6,7 @@ node_js:
 rvm:
   - 2.2.3
 
-sudo: required
+sudo: false
 
 cache:
   yarn: true
@@ -36,9 +36,9 @@ before_script:
 install:
   - npm install -g bower
   - yarn install --frozen-lockfile
-  - ./node_modules/testem/testem.js launchers
   - bower install
   - bower --version
+  - ./node_modules/testem/testem.js launchers
 
 script:
   - npm test
