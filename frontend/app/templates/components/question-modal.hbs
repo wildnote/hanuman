@@ -126,8 +126,12 @@
                   {{#if showQuestionTypePlaceholder}}
                     <option disabled selected>Please select</option>
                   {{/if}}
-                  {{#each sortedAnswerTypes as |answerType|}}
-                    <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>{{answerType.displayName}}</option>
+                  {{#each groupedAnswerTypes as |group|}}
+                    <optgroup label={{group.value}}>
+                      {{#each group.items as |answerType|}}
+                        <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>{{answerType.displayName}}</option>
+                      {{/each}}
+                    </optgroup>
                   {{/each}}
                 </select>
               {{/form-field}}

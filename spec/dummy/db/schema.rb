@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170208200704) do
+ActiveRecord::Schema.define(version: 20170602191113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20170208200704) do
     t.string   "post_type"
     t.string   "element_type"
     t.boolean  "has_an_answer",        default: true
+    t.string   "group_type"
   end
 
   create_table "hanuman_conditions", force: :cascade do |t|
@@ -141,13 +142,14 @@ ActiveRecord::Schema.define(version: 20170208200704) do
     t.datetime "updated_at"
     t.integer  "survey_step_id"
     t.integer  "sort_order"
-    t.boolean  "required",             default: false
+    t.boolean  "required",              default: false
     t.string   "external_data_source"
     t.string   "ancestry"
-    t.boolean  "hidden",               default: false
+    t.boolean  "hidden",                default: false
     t.integer  "duped_question_id"
     t.integer  "survey_template_id"
-    t.text     "ancestry_children",    default: [],    array: true
+    t.text     "ancestry_children",     default: [],    array: true
+    t.boolean  "capture_location_data", default: false
   end
 
   add_index "hanuman_questions", ["ancestry"], name: "index_hanuman_questions_on_ancestry", using: :btree
