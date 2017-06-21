@@ -38,7 +38,7 @@ before_script:
 
 install:
   - npm install -g bower
-  - yarn install --frozen-lockfile
+  - yarn install
   - ./node_modules/testem/testem.js launchers
   - bower install
   - bower --version
