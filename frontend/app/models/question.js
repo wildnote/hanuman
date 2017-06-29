@@ -25,6 +25,7 @@ export default Model.extend(Validator, {
   captureLocationData: attr('boolean'),
 
   // Associations
+  dataSource:     belongsTo('data-source'),
   answerType:     belongsTo('answer-type'),
   surveyTemplate: belongsTo('survey-template'),
   rule:           belongsTo('rule', {async: false}),
