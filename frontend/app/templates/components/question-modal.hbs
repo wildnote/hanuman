@@ -146,8 +146,20 @@
             {{/if}}
           </div>
         </div>
-
-
+        {{#if showDataSourceSelector}}
+          <div class="form-group">
+            <div class="col-sm-12">
+              {{#form-field for='dataSource' label='Data Source'}}
+                <select class="form-control" data-test="data-source-select" onchange={{action "setDataSource" value="target.value"}}>
+                  <option></option>
+                  {{#each dataSources as |opDataSource|}}
+                    <option value={{opDataSource.id}} selected={{eq opDataSource.id question.dataSource.id}}>{{opDataSource.name}}</option>
+                  {{/each}}
+                </select>
+              {{/form-field}}
+            </div>
+          </div>
+        {{/if}}
         <div class="form-group">
           <div class="col-sm-12">
             {{#form-field for='questionText' label='Question Text'}}

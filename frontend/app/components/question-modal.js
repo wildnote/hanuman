@@ -54,6 +54,11 @@ export default Ember.Component.extend({
     return question.get('isNew') && question.get('answerType.id') === undefined;
   }),
 
+  showDataSourceSelector: computed('question.answerType', function() {
+    let name = this.get('question.answerType.name');
+    return name && name.includes('taxon');
+  }),
+
   // If a question has a rule associated with it, it should automatically be set to Hidden
   hideQuestion: on('afterRender', observer('question.{rule.isNew,rule.conditions.[]}','conditionsPendingSave.[]', function() {
     let question = this.get('question'),
@@ -172,6 +177,11 @@ export default Ember.Component.extend({
       const answerType = this.get('answerTypes').findBy('id', answerTypeId);
       this.set('question.answerType', answerType);
       $('input[name=questionText]').focus();
+    },
+
+    setDataSource(dataSourceId){
+      const dataSource = this.get('dataSources').findBy('id', dataSourceId);
+      this.set('question.dataSource', dataSource);
     },
 
     setRuleMatchType(matchType) {
