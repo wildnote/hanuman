@@ -71,7 +71,6 @@ class @ConditionalLogic
         type: "FAILED: conditional logic => condition container or element not found or found more than once"
         details: window.location.href
 
-      alert("We found a problem with the hide and show rules. We've been notified and are looking into it.")
     return
 
   #bind conditions to question
