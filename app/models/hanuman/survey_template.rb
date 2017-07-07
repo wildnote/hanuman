@@ -22,7 +22,7 @@ module Hanuman
     amoeba do
       include_association :questions
       customize(lambda { |_original_post, new_post|
-        new_post.name = "#{new_post.name} Copy / #{Time.zone.now.strftime('%m/%d/%Y %I:%M:%S %p')}"
+        new_post.name = "#{new_post.name} Duplicate"
       })
     end
 
