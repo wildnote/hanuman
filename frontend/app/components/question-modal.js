@@ -3,14 +3,18 @@ import groupBy from 'ember-group-by';
 const {
   $,
   run,
+  Component,
   computed,
   observer,
   on,
-  computed: { alias, sort }
+  computed: { alias, sort },
+  inject: {
+    service
+  }
 } = Ember;
 
-export default Ember.Component.extend({
-  remodal: Ember.inject.service(),
+export default Component.extend({
+  remodal: service(),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   hasAnAnswer: alias('question.answerType.hasAnAnswer'),
@@ -85,7 +89,7 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    Ember.run.scheduleOnce('afterRender', this, function () {
+    run.scheduleOnce('afterRender', this, function () {
       this.get('remodal').open('question-modal');
       $('[data-toggle="popover"]').popover({});
 
