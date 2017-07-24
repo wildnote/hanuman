@@ -33,10 +33,10 @@ const SurveyTemplate = Model.extend(Validator, {
 
   // Validations
   validations: {
-    name:{
+    name: {
       presence: true
     },
-    status:{
+    status: {
       inclusion: {
         in: STATUSES
       }
@@ -45,7 +45,7 @@ const SurveyTemplate = Model.extend(Validator, {
 });
 
 SurveyTemplate.reopenClass({
-  STATUSES: STATUSES
+  STATUSES
 });
 
 export default SurveyTemplate;

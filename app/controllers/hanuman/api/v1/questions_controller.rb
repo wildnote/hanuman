@@ -30,7 +30,8 @@ module Hanuman
     def question_params
       params.require(:question).permit(
         :question_text, :answer_type_id, :sort_order, :survey_template_id,
-        :required, :external_data_source, :hidden, :parent_id, :capture_location_data
+        :required, :external_data_source, :hidden, :parent_id, :capture_location_data,
+        :combine_latlong_as_polygon, :combine_latlong_as_line
       )
     end
 

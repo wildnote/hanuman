@@ -1,4 +1,4 @@
-export default function(){
+export default function() {
   this.transition(
     this.fromRoute('survey_templates.record'),
     this.toRoute('survey_templates.record.edit'),

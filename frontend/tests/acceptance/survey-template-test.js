@@ -1,7 +1,7 @@
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 
-var surveyTemplate, questions;
+let surveyTemplate, questions;
 
 moduleForAcceptance('Acceptance | survey template', {
   beforeEach() {
@@ -22,16 +22,16 @@ test('visiting /survey_templates/:id', function(assert) {
 test('displaying survey template info', function(assert) {
   visit(`/survey_templates/${surveyTemplate.id}`);
   andThen(function() {
-    assert.equal(surveyTemplate.name,find('[data-test="surveyTemplate.name"]').text().trim());
-    assert.equal(surveyTemplate.status,find('[data-test="surveyTemplate.status"]').text().trim());
+    assert.equal(surveyTemplate.name, find('[data-test="surveyTemplate.name"]').text().trim());
+    assert.equal(surveyTemplate.status, find('[data-test="surveyTemplate.status"]').text().trim());
   });
 });
 
 test('listing questions', function(assert) {
   visit(`/survey_templates/${surveyTemplate.id}`);
   andThen(function() {
-    for (var question of questions) {
-      assert.equal(question.question_text,find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
+    for (let question of questions) {
+      assert.equal(question.question_text, find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
     }
   });
 });
@@ -39,7 +39,6 @@ test('listing questions', function(assert) {
 test('deleting a survey template', function(assert) {
   visit(`/survey_templates/${surveyTemplate.id}`);
   click('[data-test="delete-survey-link"]').then(()=>{
-    console.log(server.db.surveyTemplates);
     assert.equal(server.db.surveyTemplates.length, 0);
   });
 });

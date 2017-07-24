@@ -1,27 +1,33 @@
 import Ember from 'ember';
 import groupBy from 'ember-group-by';
 const {
+  Component,
   $,
   run,
   computed,
+  inject: {
+    service
+  },
   observer,
   on,
-  computed: { alias, sort }
+  computed: { alias, sort, equal }
 } = Ember;
 
-export default Ember.Component.extend({
-  remodal: Ember.inject.service(),
+export default Component.extend({
+  remodal: service(),
+
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   hasAnAnswer: alias('question.answerType.hasAnAnswer'),
+  isARepeater: equal('question.answerType.name', 'repeater'),
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
   filteredAnswerTypes: computed('answerTypes', function() {
     let answerTypes = this.get('answerTypes');
-    if(this.get('isSuperUser')){
+    if (this.get('isSuperUser')) {
       return answerTypes;
-    }else{
+    } else {
       return answerTypes.filter((answerType) => {
         return !answerType.get('name').includes('taxon');
       });
@@ -29,31 +35,33 @@ export default Ember.Component.extend({
   }),
   ancestryQuestions: computed('questions', function() {
     return this.get('questions').filter((question) => {
-      let allowedTypes = ['section','repeater'];
+      let allowedTypes = ['section', 'repeater'];
       return allowedTypes.includes(question.get('answerType.name'));
     });
   }),
-  conditionalQuestions: computed('questions','question', function() {
+  conditionalQuestions: computed('questions', 'question', function() {
     let question = this.get('question');
     return this.get('questions').filter((condQuestion) => {
       return condQuestion !== question && condQuestion.get('answerType.hasAnAnswer');
     });
   }),
   ancestryQuestion: computed('question.parentId', function() {
-    return this.get('questions').findBy('id',this.get('question.parentId'));
+    return this.get('questions').findBy('id', this.get('question.parentId'));
   }),
 
-  isRequiredDisabled: computed('question.{rule.isNew,answerType.name}','conditionsPendingSave.[]', function() {
-    let question = this.get('question'),
-        newRule = question.get('rule.isNew'),
-        notTypes = ['section','repeater','helperabove','helperbelow'],
-        pendingConditions = this.get('conditionsPendingSave.length') > 0;
-    if(newRule === undefined){
+  isRequiredDisabled: computed('question.{rule.isNew,answerType.name}', 'conditionsPendingSave.[]', function() {
+    let question = this.get('question');
+    let newRule = question.get('rule.isNew');
+    let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow'];
+    let pendingConditions = this.get('conditionsPendingSave.length') > 0;
+    if (newRule === undefined) {
       newRule = true;
     }
     let isDisabled = !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
-    if(isDisabled){
-      run.later(this, ()=> { this.set('question.required', false); }, 0);
+    if (isDisabled) {
+      run.later(this, ()=> {
+        this.set('question.required', false);
+      }, 0);
     }
     return isDisabled;
   }),
@@ -64,11 +72,11 @@ export default Ember.Component.extend({
   }),
 
   // If a question has a rule associated with it, it should automatically be set to Hidden
-  hideQuestion: on('afterRender', observer('question.{rule.isNew,rule.conditions.[]}','conditionsPendingSave.[]', function() {
-    let question = this.get('question'),
-        newRule = question.get('rule.isNew'),
-        hasConditions = (this.get('conditionsPendingSave.length') > 0) || (question.get('rule') && question.get('rule').hasMany('conditions').ids().length > 0);
-    if(newRule === undefined){
+  hideQuestion: on('afterRender', observer('question.{rule.isNew,rule.conditions.[]}', 'conditionsPendingSave.[]', function() {
+    let question = this.get('question');
+    let newRule = question.get('rule.isNew');
+    let hasConditions = (this.get('conditionsPendingSave.length') > 0) || (question.get('rule') && question.get('rule').hasMany('conditions').ids().length > 0);
+    if (newRule === undefined) {
       newRule = true;
     }
     let toHide = !newRule || hasConditions;
@@ -85,10 +93,9 @@ export default Ember.Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    Ember.run.scheduleOnce('afterRender', this, function () {
+    Ember.run.scheduleOnce('afterRender', this, function() {
       this.get('remodal').open('question-modal');
       $('[data-toggle="popover"]').popover({});
-
     });
     // Tabs
     $('a[data-toggle="tab"]').on('click', function(e) {
@@ -106,19 +113,19 @@ export default Ember.Component.extend({
     });
   },
 
-  _pendingObjectsPromises(pendingObjects, toSet, objTo){
-    for (var pendingObject of pendingObjects) {
+  _pendingObjectsPromises(pendingObjects, toSet, objTo) {
+    for (let pendingObject of pendingObjects) {
       pendingObject.set(toSet, objTo);
     }
     return pendingObjects.invoke('save');
   },
 
-  _saveSuccess(question, promises, keepOpen){
+  _saveSuccess(question, promises, keepOpen) {
     question.reload().then((question)=>{
-      let answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
-          conditionsPendingSave = this.get('conditionsPendingSave');
+      let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
+      let conditionsPendingSave = this.get('conditionsPendingSave');
 
-      if(!question.get('answerType.hasAnswerChoices')){
+      if (!question.get('answerType.hasAnswerChoices')) {
         this._removeAnswerChoices();
       }
       promises = $.makeArray(promises);
@@ -129,56 +136,56 @@ export default Ember.Component.extend({
         while (conditionsPendingSave.length > 0) {
           conditionsPendingSave.popObject();
         }
-        if(keepOpen){
-          if(!question.get('rule')){
+        if (keepOpen) {
+          if (!question.get('rule')) {
             let store = question.get('store');
             question.set('rule', store.createRecord('rule'));
           }
-        }else{
+        } else {
           this.send('closeModal');
         }
       });
     });
   },
 
-  _sortOrder(question){
-    let surveyTemplate = this.get('surveyTemplate'),
-        lastQuestion = surveyTemplate.get('questions').sortBy('sortOrder').get('lastObject');
-    question.set('sortOrder',1);
-    if(lastQuestion && lastQuestion !== question){
-      question.set('sortOrder',lastQuestion.get('sortOrder') + 1);
+  _sortOrder(question) {
+    let surveyTemplate = this.get('surveyTemplate');
+    let lastQuestion = surveyTemplate.get('questions').sortBy('sortOrder').get('lastObject');
+    question.set('sortOrder', 1);
+    if (lastQuestion && lastQuestion !== question) {
+      question.set('sortOrder', lastQuestion.get('sortOrder') + 1);
     }
   },
 
   actions: {
-    sortAnswerChoices(){
-      let question = this.get('question'),
-          answerChoices = question.get('answerChoices');
+    sortAnswerChoices() {
+      let question = this.get('question');
+      let answerChoices = question.get('answerChoices');
       answerChoices.forEach((answerChoice, index) => {
-        let oldSortOrder = answerChoice.get('sortOrder'),
-            newSortOrder = index + 1;
-        if(oldSortOrder !== newSortOrder){
+        let oldSortOrder = answerChoice.get('sortOrder');
+        let newSortOrder = index + 1;
+        if (oldSortOrder !== newSortOrder) {
           answerChoice.set('sortOrder', newSortOrder);
-          if(!answerChoice.get('isNew')){
+          if (!answerChoice.get('isNew')) {
             answerChoice.save();
           }
         }
       });
-      if(!question.get('isNew')){
+      if (!question.get('isNew')) {
         question.reload();
       }
     },
 
-    ancestryChange(newAncestryId){
+    ancestryChange(newAncestryId) {
       let question = this.get('question');
-      if(Ember.isBlank(newAncestryId)){
+      if (Ember.isBlank(newAncestryId)) {
         newAncestryId = null;
       }
-      question.set('parentId',newAncestryId);
+      question.set('parentId', newAncestryId);
     },
 
     setAnswerType(answerTypeId) {
-      const answerType = this.get('answerTypes').findBy('id', answerTypeId);
+      let answerType = this.get('answerTypes').findBy('id', answerTypeId);
       this.set('question.answerType', answerType);
       $('input[name=questionText]').focus();
     },
@@ -188,87 +195,87 @@ export default Ember.Component.extend({
     },
 
     save(_e, keepOpen = false) {
-      let question = this.get('question'),
-          surveyTemplate = this.get('surveyTemplate');
+      let question = this.get('question');
+      let surveyTemplate = this.get('surveyTemplate');
       question.set('surveyTemplate', surveyTemplate);
-      if(question.validate()){
-        if(question.get('isNew')){
+      if (question.validate()) {
+        if (question.get('isNew')) {
           question.set('wasNew', true);
           this._sortOrder(question);
         }
         question.save().then(
-          (question)=>{
-            let promises = [],
-                answerChoicesPendingSave = this.get('answerChoicesPendingSave'),
-                answerChoicesPromises = this._pendingObjectsPromises(answerChoicesPendingSave, 'question', question);
+          (question) => {
+            let promises = [];
+            let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
+            let answerChoicesPromises = this._pendingObjectsPromises(answerChoicesPendingSave, 'question', question);
 
             promises = promises.concat(answerChoicesPromises);
 
             // We can't save the rule until there is at least one condition associated with the rule
-            if(question.get('rule') && (!question.get('rule.isNew') || this.get('conditionsPendingSave.length') > 0)){
-              let conditionsPendingSave = this.get('conditionsPendingSave'),
-                  rule = question.get('rule');
-              rule.set('question',question);
+            if (question.get('rule') && (!question.get('rule.isNew') || this.get('conditionsPendingSave.length') > 0)) {
+              let conditionsPendingSave = this.get('conditionsPendingSave');
+              let rule = question.get('rule');
+
+              rule.set('question', question);
               rule.save().then(
-                (rule) =>{
+                (rule) => {
                   let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
                   promises = promises.concat(conditionsPromises);
                   this._saveSuccess(question, promises, keepOpen);
                 },
                 // Rule was deleted on the server
-                () =>{
+                () => {
                   question.get('store').unloadRecord(rule);
                   question.reload().then((question)=>{
                     this._saveSuccess(question, [], keepOpen);
                   });
                 }
               );
-            }else{
+            } else {
               this._saveSuccess(question, promises, keepOpen);
             }
           },
-          (error)=>{
-            console.error(`An error has occured: ${error}.`);
+          (_error) => {
             surveyTemplate.get('questions').removeObject(question);
           }
         );
       }
     },
 
-    saveCondition(condition){
-      if(this.get('question.isNew') || this.get('question.rule.isNew')){
-        if(this.get('conditionsPendingSave').indexOf(condition) === -1){
+    saveCondition(condition) {
+      if (this.get('question.isNew') || this.get('question.rule.isNew')) {
+        if (this.get('conditionsPendingSave').indexOf(condition) === -1) {
           this.get('conditionsPendingSave').pushObject(condition);
         }
-      }else{
+      } else {
         condition.save();
       }
     },
 
-    removeCondition(condition){
-      if(this.get('question.rule.isNew') || condition.get('isNew')){
+    removeCondition(condition) {
+      if (this.get('question.rule.isNew') || condition.get('isNew')) {
         this.get('conditionsPendingSave').removeObject(condition);
         condition.deleteRecord();
-      }else{
+      } else {
         condition.deleteRecord();
         condition.save();
       }
     },
 
-    saveAnswerChoice(answerChoice, callback){
+    saveAnswerChoice(answerChoice, callback) {
       let question = this.get('question');
-      if(question.get('isNew')){
-        if(this.get('answerChoicesPendingSave').indexOf(answerChoice) === -1){
-          answerChoice.set('hideFromList',false);
+      if (question.get('isNew')) {
+        if (this.get('answerChoicesPendingSave').indexOf(answerChoice) === -1) {
+          answerChoice.set('hideFromList', false);
           this.get('answerChoicesPendingSave').pushObject(answerChoice);
           callback();
         }
-      }else{
+      } else {
         answerChoice.save().then(function(answerChoice) {
-          answerChoice.set('hideFromList',false);
-          if(question.get('isNew') || !question.get('isValid')){
+          answerChoice.set('hideFromList', false);
+          if (question.get('isNew') || !question.get('isValid')) {
             callback();
-          }else{
+          } else {
             question.save().then(function(question) {
               question.reload().then(function() {
                 callback();
@@ -283,12 +290,14 @@ export default Ember.Component.extend({
       let question = this.get('question');
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');
-      if(question.get('wasNew')){
-        run.later(this, ()=> { $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500); }, 500);
+      if (question.get('wasNew')) {
+        run.later(this, ()=> {
+          $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500);
+        }, 500);
         // Question is no longer new after shwoing the visual effect.
         run.later(this, function() {
-          question.set('wasNew',false);
-        },1500);
+          question.set('wasNew', false);
+        }, 1500);
       }
     }
   }

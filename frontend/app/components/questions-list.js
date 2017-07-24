@@ -1,57 +1,58 @@
 import Ember from 'ember';
 const {
+  Component,
   run,
   computed: { sort, alias },
   $
 } = Ember;
 
-export default Ember.Component.extend({
+export default Component.extend({
   questionsSorting: ['sortOrder'],
   sortedQuestions: sort('surveyTemplate.filteredquestions', 'questionsSorting'),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
-  actions:{
-    deleteQuestion(question, elRow){
-      let $confirm = Ember.$('.delete-confirm', elRow),
-          questionId = question.get('id');
+  actions: {
+    deleteQuestion(question, elRow) {
+      let $confirm = Ember.$('.delete-confirm', elRow);
+      let questionId = question.get('id');
       question.deleteRecord();
-      question.save().then(()=>{
-        let childrenQuestions = this.get('surveyTemplate.questions').filterBy('ancestry',questionId.toString());
-        for (var childQuestion of childrenQuestions) {
+      question.save().then(() => {
+        let childrenQuestions = this.get('surveyTemplate.questions').filterBy('ancestry', questionId.toString());
+        for (let childQuestion of childrenQuestions) {
           childQuestion.deleteRecord();
         }
         $confirm.fadeOut();
       });
     },
-    setAncestry(question, opts){
-      let ancestryQuestion = opts.target.acenstry,
-          parentId = ancestryQuestion.get('id'),
-          parentChildren = this.get('surveyTemplate.questions').filterBy('parentId',parentId).sortBy('sortOrder'),
-          lastChild = parentChildren.get('lastObject'),
-          sortOrder = lastChild ? lastChild.get('sortOrder') : ancestryQuestion.get('sortOrder');
+    setAncestry(question, opts) {
+      let ancestryQuestion = opts.target.acenstry;
+      let parentId = ancestryQuestion.get('id');
+      let parentChildren = this.get('surveyTemplate.questions').filterBy('parentId', parentId).sortBy('sortOrder');
+      let lastChild = parentChildren.get('lastObject');
+      let sortOrder = lastChild ? lastChild.get('sortOrder') : ancestryQuestion.get('sortOrder');
 
       question.set('loading', true);
       question.set('parentId', parentId);
       question.set('sortOrder', sortOrder);
       question.save().then(() => {
         question.reload();
-        run.later(this ,()=> {
-          this.sendAction('updateSortOrder',this.get('sortedQuestions'));
+        run.later(this, ()=> {
+          this.sendAction('updateSortOrder', this.get('sortedQuestions'));
           question.set('loading', false);
         }, 1000);
       });
     },
-    dragStarted(question){
+    dragStarted(question) {
       $('.draggable-object-target').parent(`:not(.model-id-${question.get('parentId')})`).addClass('dragging-coming-active');
     },
-    dragEnded(){
+    dragEnded() {
       $('.draggable-object-target').parent().removeClass('dragging-coming-active');
     },
-    dragOver(){
+    dragOver() {
       run.next(this, function() {
         $('.accepts-drag').parent().addClass('dragging-over');
       });
     },
-    dragOut(){
+    dragOut() {
       $('.draggable-object-target').parent().removeClass('dragging-over');
     }
   }

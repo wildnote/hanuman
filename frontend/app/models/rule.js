@@ -13,7 +13,7 @@ export default Model.extend(Validator, {
 
   // Validations
   validations: {
-    matchType:{
+    matchType: {
       inclusion: { in: ['any', 'all'] }
     }
   }

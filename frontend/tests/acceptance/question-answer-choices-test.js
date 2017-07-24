@@ -1,7 +1,8 @@
+/* eslint-disable camelcase */
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 
-var surveyTemplate, question, answerChoices;
+let surveyTemplate, question, answerChoices;
 
 moduleForAcceptance('Acceptance | question answer choices', {
   beforeEach() {
@@ -11,7 +12,7 @@ moduleForAcceptance('Acceptance | question answer choices', {
 });
 
 test('adding an answer choice', function(assert) {
-  question = server.create('question', {surveyTemplate, answer_type_id: 17}); // Answer Type id 17 = `Radio`
+  question = server.create('question', { surveyTemplate, answer_type_id: 17 }); // Answer Type id 17 = `Rad io`
 
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
@@ -26,7 +27,7 @@ test('adding an answer choice', function(assert) {
 });
 
 test('editing an answer choice', function(assert) {
-  question = server.create('question', {surveyTemplate, answer_type_id: 17});
+  question = server.create('question', { surveyTemplate, answer_type_id: 17 });
   answerChoices = server.createList('answer-choice', 3, { question });
 
   let firstAnswerChoices = answerChoices[0];
@@ -34,8 +35,8 @@ test('editing an answer choice', function(assert) {
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
   andThen(function() {
-    for (var answerChoice of answerChoices) {
-      assert.equal(answerChoice.option_text,find(`[data-answer-choice-id="${answerChoice.id}"] [data-test="answerChoice.optionText"]`).text().trim());
+    for (let answerChoice of answerChoices) {
+      assert.equal(answerChoice.option_text, find(`[data-answer-choice-id="${answerChoice.id}"] [data-test="answerChoice.optionText"]`).text().trim());
     }
     let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
     click(`${selector} [data-test="edit-answer-choice-link"]`);
@@ -47,28 +48,25 @@ test('editing an answer choice', function(assert) {
   });
 });
 
-test('deleting an answer choice', function(assert) {
-  question = server.create('question', {surveyTemplate, answer_type_id: 17});
+test('deleting an answer choice', async function(assert) {
+  question = server.create('question', { surveyTemplate, answer_type_id: 17 });
   answerChoices = server.createList('answer-choice', 2, { question });
 
   let firstAnswerChoices = answerChoices[0];
 
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
-  andThen(function() {
-    let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
+  let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
 
-    click(`${selector} [data-test="delete-answer-choice-link"]`).then(()=>{
-      assert.notEqual(firstAnswerChoices.option_text,find('[data-test="answerChoice.optionText"]:first').text().trim());
-    });
-    visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`).then(()=>{
-      assert.notEqual(firstAnswerChoices.option_text,find('[data-test="answerChoice.optionText"]:first').text().trim());
-    });
-  });
+  await click(`${selector} [data-test="delete-answer-choice-link"]`);
+  assert.notEqual(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
+
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  assert.notEqual(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
 });
 
 test('changing the answer type to one with no answer choices deletes all the previously created', function(assert) {
-  question = server.create('question', {surveyTemplate, answer_type_id: 17});
+  question = server.create('question', { surveyTemplate, answer_type_id: 17 });
   answerChoices = server.createList('answer-choice', 2, { question });
 
   let firstAnswerChoices = answerChoices.sortBy('sort_order').get('firstObject');
@@ -76,12 +74,12 @@ test('changing the answer type to one with no answer choices deletes all the pre
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
   andThen(function() {
-    assert.equal(firstAnswerChoices.option_text,find('[data-test="answerChoice.optionText"]:first').text().trim());
+    assert.equal(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
     fillIn('[data-test="answer-type-id-select"]', 1);
     triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
     click('[data-test="save-question-link"]').then(()=>{
       visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`).then(()=>{
-        assert.notEqual(firstAnswerChoices.option_text,find('[data-test="answerChoice.optionText"]:first').text().trim());
+        assert.notEqual(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
         assert.notEqual(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
         assert.equal(0, server.schema.answerChoices.all().models.length);
       });

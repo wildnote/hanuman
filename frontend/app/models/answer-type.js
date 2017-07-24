@@ -18,9 +18,10 @@ export default Model.extend({
   hasAnAnswer: attr('boolean', { defaultValue: false }),
 
   types: ['checkboxlist', 'hiddencheckboxlist', 'chosenmultiselect',
-      'hiddenchosenmultiselect', 'chosenmultiselectgrouped',
-      'hiddenchosenmultiselectgrouped', 'radio', 'hiddenradio', 'select',
-      'hiddenselect', 'chosenselect'],
+    'hiddenchosenmultiselect', 'chosenmultiselectgrouped',
+    'hiddenchosenmultiselectgrouped', 'radio', 'hiddenradio', 'select',
+    'hiddenselect', 'chosenselect'
+  ],
 
   // Associations
   questions: hasMany('question'),
