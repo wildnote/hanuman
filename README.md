@@ -75,6 +75,6 @@ If you're working/developing Hamunan frontend's code, it's recommened to re-inst
 
 `ember-clean`: aliased to
 
-`npm cache clean && bower cache clean && rm -rf node_modules bower_components dist tmp && yarn install && bower install`.
+`npm cache clean && bower cache clean && rm -rf node_modules bower_components dist tmp && yarn install && bower install`
 
 > Run this commands within the frontend folder.
