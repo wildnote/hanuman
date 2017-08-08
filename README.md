@@ -53,7 +53,7 @@ yarn global add bower
 
 Once you have Bower and Ember CLI installed you need to install yarn and bower dependencies before running the rails server:
 
-````
+```
 BUNDLE_GEMFILE="Gemfile.development" rake ember:install
 ```
 
@@ -73,8 +73,8 @@ yarn global add phantomjs-prebuilt
 
 If you're working/developing Hamunan frontend's code, it's recommened to re-install bower and npm packages because some versions have may changed by another dev. You can save this *alias* and run it to keep your js packages updated within the ember app.
 
-`ember-clean`: aliased to `npm cache clean && bower cache clean && rm -rf node_modules bower_components dist tmp && yarn install && bower install`.
+`ember-clean`: aliased to
+
+`npm cache clean && bower cache clean && rm -rf node_modules bower_components dist tmp && yarn install && bower install`.
 
 > Run this commands within the frontend folder.
-
-
