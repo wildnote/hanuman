@@ -10,10 +10,5 @@ module Hanuman
     def rails_id
       object.id
     end
-
-    # retrive data source name from data source table now instead of string external_data_source stored in question table-kdh
-    def external_data_source
-      object.data_source.reference
-    end
   end
 end
