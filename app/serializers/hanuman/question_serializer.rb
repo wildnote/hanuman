@@ -13,7 +13,7 @@ module Hanuman
 
     # retrive data source name from data source table now instead of string external_data_source stored in question table-kdh
     def external_data_source
-      objects.data_source.reference
+      object.data_source.reference
     end
   end
 end
