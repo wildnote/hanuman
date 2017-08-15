@@ -10,12 +10,13 @@ module Hanuman
     has_many :observation_photos, through: :observations
     has_many :observation_videos, through: :observations
     accepts_nested_attributes_for :observations, allow_destroy: true
-    has_one :survey_extension, dependent: :destroy
+    has_one :survey_extension, dependent: :delete
     accepts_nested_attributes_for :survey_extension, allow_destroy: true
 
     # Validations
     validates :survey_template_id, presence: true
     validates :survey_date, presence: true
+    validates :survey_extension, presence: true
 
     before_save :apply_group_sort
 
