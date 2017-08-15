@@ -14,7 +14,7 @@ module Hanuman
     describe 'Relations' do
       it { is_expected.to belong_to(:survey_template) }
       it { is_expected.to have_many(:observations).dependent(:destroy) }
-      it { is_expected.to have_one(:survey_extension).dependent(:destroy) }
+      it { is_expected.to have_one(:survey_extension).dependent(:delete) }
     end
 
     describe 'Callbacks' do
