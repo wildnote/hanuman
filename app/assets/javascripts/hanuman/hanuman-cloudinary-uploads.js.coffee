@@ -36,7 +36,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
   $previewContainer.find("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:0px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea><br>"
   $previewContainer.find("."+file+"-preview").last().append "<label>Sort Order</label>"
   $previewContainer.find("."+file+"-preview").last().append "<p><input class='upload-sort-order' type='number' value='' name="+orderNameAttr+"></input></p>"
-  $previewContainer.find("."+file+"-preview").last().append "<p><a id="+file+" class='remove-upload' href='#'>Remove "+file+"</a></p>"
+  $previewContainer.find("."+file+"-preview").last().append "<p><a id="+file+" class='btn btn-danger remove-upload' href='#'>Remove "+file+"</a></p>"
   $previewContainer.find("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
   $previewContainer.find("."+file+"-preview").last().append "<br>"
   $previewContainer.find("."+file+"-preview").last().append "<hr>"
