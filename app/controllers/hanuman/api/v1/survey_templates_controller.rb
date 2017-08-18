@@ -29,7 +29,11 @@ module Hanuman
 
     def destroy
       survey_template = SurveyTemplate.find(params[:id])
-      respond_with survey_template.destroy
+      if survey_template.fully_editable
+        respond_with survey_template.destroy
+      else
+        render json: { "errors" => [ { "detail": "associated-data-restriction" } ] }, status: :unprocessable_entity
+      end
     end
 
     private
