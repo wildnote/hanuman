@@ -103,7 +103,7 @@ export default Ember.Route.extend({
         },
         (error)=>{
           console.log(error);
-          this.get('notify').alert('There was an error trying to duplicate this Survey Template');
+          this.get('notify').alert('There was an error trying to delete this Survey Template');
           run.later(this ,()=> { indexController.send('toggleBtnLoading','delete'); }, 1000);
         }
       );
