@@ -56,6 +56,8 @@ export default Model.extend(Validator, {
 
   supportAncestry: match('answerType.name', /section|repeater/),
 
+  isTaxonType: match('answerType.name', /taxon/),
+
   // Validations
   validations: {
     questionText:{
@@ -71,6 +73,13 @@ export default Model.extend(Validator, {
           return hasAnswerChoices && model.get('answerChoicesCount') === 0 ? false : true;
         },
         message: 'Please add at least one answers choice.'
+      }
+    },
+    dataSource: {
+      presence: {
+        'if': function(object, validator, model) {
+          return model.get('isTaxonType');
+        }
       }
     }
   }
