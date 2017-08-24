@@ -3,11 +3,12 @@ import { moduleForModel, test } from 'ember-qunit';
 moduleForModel('question', 'Unit | Serializer | question', {
   // Specify the other units that are required for this test.
   needs: [
-  	'serializer:question',
-  	'model:answer-type',
-  	'model:survey-template',
-  	'model:rule',
-  	'model:answer-choice'
+    'serializer:question',
+    'model:answer-type',
+    'model:survey-template',
+    'model:rule',
+    'model:answer-choice',
+    'model:data-source'
   ]
 });
 
