@@ -46,6 +46,12 @@ $(document).ready(function(){
     };
 
     function mapClickListener(){
+      $(".map-container, .map-toggle-button").on("click", function(){
+        setTimeout(function(){
+          $(".latlong-entry").parsley().validate()
+        }, 200);
+      })
+
       // run parsley validation whenever user clicks on div with class map-listener
       $(".panel-body").on('click',"div.map-listener",  function(){
         setTimeout( function(){
