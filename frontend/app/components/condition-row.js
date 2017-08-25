@@ -2,17 +2,28 @@ import Ember from 'ember';
 import Condition from "../models/condition";
 
 const {
+  Component,
   computed,
   computed: { alias }
 } = Ember;
 
-export default Ember.Component.extend({
+export default Component.extend({
   for: alias('condition'),
   tagName: 'tr',
   attributeBindings: ['condition.id:data-condition-id'],
   classNameBindings: ['isNewCondition:no-hover'],
   isEditingCondition: false,
-  operators: Condition.OPERATORS,
+
+  operators: computed('currentQuestion', function() {
+    let answerType = this.get('currentQuestion.answerType');
+    if(['checkboxes', 'multiselect'].includes(answerType.get('elementType'))) {
+      return Condition.OPERATORS.filter(function(op){
+        return op.includes('equal');
+      });
+    }else{
+      return Condition.OPERATORS;
+    }
+  }),
 
   currentQuestion: computed('condition.questionId', function() {
     return this.get('questions').findBy('id',this.get('condition.questionId'));

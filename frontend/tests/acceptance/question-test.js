@@ -117,8 +117,7 @@ test('editing a question', function(assert) {
   question = server.create('question', {surveyTemplate});
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   fillIn('[data-test="question.externalDataSource"]', 'chuchucu');
-  click('[data-test="save-question-link"]');
-  andThen(()=>{
+  click('[data-test="save-question-link"]').then(()=>{
     question = server.db.questions.find(question.id);
     assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
     assert.equal(question.external_data_source, 'chuchucu');
