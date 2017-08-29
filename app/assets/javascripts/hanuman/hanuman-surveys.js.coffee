@@ -53,17 +53,21 @@ $ ->
   # END TYPEAHEAD
 
 
-  # CHOSEN
+  # CHOSEN SINGLE SELECT
   $(".chosen-select").chosen
+    allow_single_deselect: true
     no_results_text: "No results matched"
     size: "100%"
+    single_backstroke_delete: false
+    search_contains: true
 
-  # chosen multiselect
+  # CHOSEN MULTISELECT
   $(".chosen-multiselect").chosen
     allow_single_deselect: true
     no_results_text: "No results matched"
     size: "100%"
     single_backstroke_delete: false
+    search_contains: true
 
   # END CHOSEN
 

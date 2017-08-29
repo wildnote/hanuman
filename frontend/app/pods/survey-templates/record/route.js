@@ -117,11 +117,19 @@ export default Route.extend({
             window.location.replace('/hanuman/survey_templates');
           }
         },
-        (_error) => {
-          this.get('notify').alert('There was an error trying to duplicate this Survey Template');
-          run.later(this, ()=> {
-            indexController.send('toggleBtnLoading', 'delete');
-          }, 1000);
+        (error)=>{
+          console.log(error);
+          if(error.errors[0].detail.detail == "associated-data-restriction") {
+            this.get('notify').alert('Survey template cannot be deleted as it has associated survey data. To complete deletion first delete survey data.', {
+              closeAfter: 5000
+            });
+          }
+          else {
+            this.get('notify').alert('There was an error trying to delete this Survey Template', {
+              closeAfter: 5000
+            });
+          }
+          run.later(this ,()=> { indexController.send('toggleBtnLoading','delete'); }, 1000);
         }
       );
     }

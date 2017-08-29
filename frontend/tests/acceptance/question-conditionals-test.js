@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 
@@ -32,9 +32,15 @@ test('adding a conditional with a question without rule previously created', asy
   fillIn('[data-test="condition-question-id-select"]', 3);
   await triggerEvent('[data-test="condition-question-id-select"]', 'onchange');
 
-  // Select operator
-  fillIn('[data-test="condition-operator-select"]', 'is greater than');
-  await triggerEvent('[data-test="condition-operator-select"]', 'onchange');
+    fillIn('[data-test="condition.answer"]', 'e quiai');
+    click('[data-test="save-condition-link"]').then(()=>{
+      click('[data-test="save-question-link"]').then(()=>{
+        assert.equal(1, server.schema.rules.all().models.length);
+        let condition = server.db.conditions[0];
+        assert.equal(condition.answer, 'e quiai');
+        assert.equal(condition.operator, 'is greater than');
+      });
+    });
 
   fillIn('[data-test="condition.answer"]', 'e quiai');
   await click('[data-test="save-condition-link"]');

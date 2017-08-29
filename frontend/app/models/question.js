@@ -27,7 +27,8 @@ export default Model.extend(Validator, {
   combineLatlongAsLine: attr('boolean'),
 
   // Associations
-  answerType: belongsTo('answer-type'),
+  dataSource:     belongsTo('data-source'),
+  answerType:     belongsTo('answer-type'),
   surveyTemplate: belongsTo('survey-template'),
   rule: belongsTo('rule', { async: false }),
   answerChoices: hasMany('answer-choice'),
@@ -57,6 +58,8 @@ export default Model.extend(Validator, {
 
   supportAncestry: match('answerType.name', /section|repeater/),
 
+  isTaxonType: match('answerType.name', /taxon/),
+
   // Validations
   validations: {
     questionText: {
@@ -72,6 +75,13 @@ export default Model.extend(Validator, {
           return hasAnswerChoices && model.get('answerChoicesCount') === 0 ? false : true;
         },
         message: 'Please add at least one answers choice.'
+      }
+    },
+    dataSource: {
+      presence: {
+        'if': function(object, validator, model) {
+          return model.get('isTaxonType');
+        }
       }
     }
   }

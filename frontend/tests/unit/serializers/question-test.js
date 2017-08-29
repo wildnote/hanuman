@@ -7,7 +7,8 @@ moduleForModel('question', 'Unit | Serializer | question', {
     'model:answer-type',
     'model:survey-template',
     'model:rule',
-    'model:answer-choice'
+    'model:answer-choice',
+    'model:data-source'
   ]
 });
 

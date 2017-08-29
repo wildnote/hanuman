@@ -8,7 +8,8 @@ moduleForModel('question', 'Unit | Model | question', {
     'model:survey-template',
     'model:rule',
     'model:answer-choice',
-    'model:condition'
+    'model:condition',
+    'model:data-source'
   ]
 });
 

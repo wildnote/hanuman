@@ -15,13 +15,12 @@ const {
 
 export default Component.extend({
   remodal: service(),
-
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   hasAnAnswer: alias('question.answerType.hasAnAnswer'),
   isARepeater: equal('question.answerType.name', 'repeater'),
   sortTypesBy: ['displayName'],
-  sortedAnswerTypes: sort('filteredAnswerTypes', 'sortTypesBy'),
+  sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
   filteredAnswerTypes: computed('answerTypes', function() {
     let answerTypes = this.get('answerTypes');
@@ -71,6 +70,11 @@ export default Component.extend({
     return question.get('isNew') && question.get('answerType.id') === undefined;
   }),
 
+  showDataSourceSelector: computed('question.answerType', function() {
+    let name = this.get('question.answerType.name');
+    return name && name.includes('taxon');
+  }),
+
   // If a question has a rule associated with it, it should automatically be set to Hidden
   hideQuestion: on('afterRender', observer('question.{rule.isNew,rule.conditions.[]}', 'conditionsPendingSave.[]', function() {
     let question = this.get('question');
@@ -93,7 +97,7 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    Ember.run.scheduleOnce('afterRender', this, function() {
+    run.scheduleOnce('afterRender', this, function () {
       this.get('remodal').open('question-modal');
       $('[data-toggle="popover"]').popover({});
     });
@@ -188,6 +192,11 @@ export default Component.extend({
       let answerType = this.get('answerTypes').findBy('id', answerTypeId);
       this.set('question.answerType', answerType);
       $('input[name=questionText]').focus();
+    },
+
+    setDataSource(dataSourceId){
+      const dataSource = this.get('dataSources').findBy('id', dataSourceId);
+      this.set('question.dataSource', dataSource);
     },
 
     setRuleMatchType(matchType) {
