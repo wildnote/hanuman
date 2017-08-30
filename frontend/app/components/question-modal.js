@@ -19,6 +19,7 @@ export default Component.extend({
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   hasAnAnswer: alias('question.answerType.hasAnAnswer'),
   isARepeater: equal('question.answerType.name', 'repeater'),
+  isALatLong: equal('question.answerType.name', 'latlong'),
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
@@ -32,20 +33,32 @@ export default Component.extend({
       });
     }
   }),
+
   ancestryQuestions: computed('questions', function() {
     return this.get('questions').filter((question) => {
       let allowedTypes = ['section', 'repeater'];
       return allowedTypes.includes(question.get('answerType.name'));
     });
   }),
+
   conditionalQuestions: computed('questions', 'question', function() {
     let question = this.get('question');
     return this.get('questions').filter((condQuestion) => {
       return condQuestion !== question && condQuestion.get('answerType.hasAnAnswer');
     });
   }),
+
   ancestryQuestion: computed('question.parentId', function() {
     return this.get('questions').findBy('id', this.get('question.parentId'));
+  }),
+
+  isALatLongInsideARepeater: computed('question', function() {
+    if (this.get('isALatLong')) {
+      let ancestryQuestion = this.get('ancestryQuestion');
+      return ancestryQuestion.get('isARepeater');
+    } else {
+      return false;
+    }
   }),
 
   isRequiredDisabled: computed('question.{rule.isNew,answerType.name}', 'conditionsPendingSave.[]', function() {
