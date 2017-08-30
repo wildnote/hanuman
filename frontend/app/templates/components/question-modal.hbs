@@ -195,6 +195,31 @@
           </div>
         </div>
 
+        {{#if isALatLongInsideARepeater}}
+          <div data-test="capture-lat-long" class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="captureLocationData"
+                        checked={{question.combineLatlongAsLine}}
+                        onchange={{action (mut question.combineLatlongAsLine) value="target.checked"}} /> Combine lat/long as a Line
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="captureLocationData"
+                        checked={{question.combineLatlongAsPolygon}}
+                        onchange={{action (mut question.combineLatlongAsPolygon) value="target.checked"}} /> Combine lat/long as a Polygon
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+
         <div class="row">
           <div class="col-md-3">
             <div class="form-group">
@@ -223,30 +248,6 @@
             {{/if}}
           </div>
         </div>
-        {{#if isALatLongInsideARepeater}}
-          <div data-test="capture-lat-long" class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input type="checkbox"
-                        name="captureLocationData"
-                        checked={{question.combineLatlongAsPolygon}}
-                        onchange={{action (mut question.combineLatlongAsPolygon) value="target.checked"}} /> Capture lat/long as a Polygon?
-                </div>
-              </div>
-            </div>
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input type="checkbox"
-                        name="captureLocationData"
-                        checked={{question.combineLatlongAsLine}}
-                        onchange={{action (mut question.combineLatlongAsLine) value="target.checked"}} /> Capture lat/long as a Line?
-                </div>
-              </div>
-            </div>
-          </div>
-        {{/if}}
 
         {{#liquid-if showAnswerChoices class='show-answer-choices-liquid'}}
           <hr/>
