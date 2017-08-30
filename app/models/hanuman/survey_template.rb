@@ -22,7 +22,7 @@ module Hanuman
     amoeba do
       include_association :questions
       customize(lambda { |_original_post, new_post|
-        new_post.name = "#{new_post.name} Copy / #{Time.zone.now.strftime('%m/%d/%Y %I:%M:%S %p')}"
+        new_post.name = "#{new_post.name} Duplicate"
       })
     end
 
@@ -66,19 +66,6 @@ module Hanuman
           if new_rule
             c.rule_id = new_rule.id
             c.save!
-          end
-        end
-        # clean up the old_survey_template ancestry_children-kdh
-        # for some reason the original survey template questions are getting new ancestry_children added
-        # I can't figure out why
-        # after we fix our performance problems I should be able to get rid of ancestry_children and just
-        # build the dynamically
-        # until then just re-save each question in original template
-        old_survey_template.questions.each do |old_question|
-          next unless old_question.has_children?
-          if old_question.ancestry_children.length != old_question.child_ids.length
-            old_question.ancestry_children = old_question.child_ids
-            old_question.save
           end
         end
       end

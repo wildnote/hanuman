@@ -10,8 +10,7 @@ module Hanuman
     end
 
     # GET /answer_types/1
-    def show
-    end
+    def show; end
 
     # GET /answer_types/new
     def new
@@ -19,8 +18,7 @@ module Hanuman
     end
 
     # GET /answer_types/1/edit
-    def edit
-    end
+    def edit; end
 
     # POST /answer_types
     def create
@@ -50,22 +48,27 @@ module Hanuman
 
     # helper methods
     def sort_column
-      !params[:sort].blank? ? params[:sort] : "hanuman_answer_types.name asc, hanuman_answer_types.element_type asc, hanuman_answer_types.descriptive_name asc, hanuman_answer_types.description asc, hanuman_answer_types.has_answer_choices asc, hanuman_answer_types.answer_choice_type asc, hanuman_answer_types.external_data_source asc, hanuman_answer_types.status asc"
+      return params[:sort] if params[:sort].present?
+      "hanuman_answer_types.name asc, hanuman_answer_types.element_type asc, hanuman_answer_types.descriptive_name asc, " \
+      "hanuman_answer_types.description asc, hanuman_answer_types.has_answer_choices asc, hanuman_answer_types.answer_choice_type asc, " \
+      "hanuman_answer_types.external_data_source asc, hanuman_answer_types.status asc"
     end
 
     def sort_direction
-      %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+      %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
     end
 
     private
-      # Use callbacks to share common setup or constraints between actions.
-      def set_answer_type
-        @answer_type = AnswerType.find(params[:id])
-      end
 
-      # Only allow a trusted parameter "white list" through.
-      def answer_type_params
-        params.require(:answer_type).permit(:name, :status, :descriptive_name, :has_answer_choices, :external_data_source, :description, :answer_choice_type, :element_type)
-      end
+    def set_answer_type
+      @answer_type = AnswerType.find(params[:id])
+    end
+
+    def answer_type_params
+      params.require(:answer_type).permit(
+        :name, :status, :descriptive_name, :has_answer_choices, :external_data_source,
+        :description, :answer_choice_type, :element_type, :group_type
+      )
+    end
   end
 end

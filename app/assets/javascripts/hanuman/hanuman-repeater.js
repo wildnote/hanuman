@@ -465,8 +465,20 @@ $(document).ready(function(){
   }
 
   function bindChosenTypes(){
-    $(".chosen-multiselect").chosen();
-    $(".chosen-select").chosen();
+    $(".chosen-multiselect").chosen({
+      allow_single_deselect: true,
+      no_results_text: "No results matched",
+      size: "100%",
+      single_backstroke_delete: false,
+      search_contains: true
+    });
+    $(".chosen-select").chosen({
+      allow_single_deselect: true,
+      no_results_text: "No results matched",
+      size: "100%",
+      single_backstroke_delete: false,
+      search_contains: true
+    });
     $(".bootstrap-checkbox-multiselect").multiselect();
   }
 
@@ -530,7 +542,7 @@ $(document).ready(function(){
     var labels = $($clonedRepeater).find('label');
     var index = 0;
     labels.each(function(){
-      if ($(labels[index]).attr("for")) {
+      if ($(labels[index]).attr("for") && $(labels[index]).attr("for").match(/\d+/)) {
         var forStamp = $(labels[index]).attr("for").match(/\d+/)[0];
         var newTimeStamp = forStamp.concat(timeStamp);
         $(labels[index]).attr("for", $(labels[index]).attr("for").replace(/(\d+)/, newTimeStamp));

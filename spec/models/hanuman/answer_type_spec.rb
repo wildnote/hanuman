@@ -13,6 +13,11 @@ module Hanuman
         is_expected.to validate_inclusion_of(:status)
                             .in_array(Hanuman::AnswerType::ANSWER_CHOICE_STATUSES)
       end
+      it do
+        is_expected.to validate_inclusion_of(:group_type)
+                            .in_array(Hanuman::AnswerType::GROUP_TYPES)
+                            .allow_blank
+      end
     end
 
     describe 'Relations' do

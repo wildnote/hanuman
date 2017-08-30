@@ -7,6 +7,7 @@ export default Ember.Route.extend({
       question: this.store.findRecord('question', params.question_id),
       questions: surveyTemplate.get('questions'),
       answerTypes: this.store.findAll('answer-type'),
+      dataSources: this.store.findAll('data-source'),
       surveyTemplate
     });
   },

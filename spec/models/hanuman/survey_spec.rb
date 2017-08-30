@@ -15,8 +15,7 @@ module Hanuman
       it { is_expected.to belong_to(:survey_template) }
       it { is_expected.to have_many(:observations).dependent(:destroy) }
       it { is_expected.to have_many(:unscope_observations).class_name('Hanuman::Observation') }
-      it { is_expected.to have_one(:survey_extension).dependent(:destroy) }
-
+      it { is_expected.to have_one(:survey_extension).dependent(:delete) }
       it { is_expected.to have_many(:observation_answers).through(:unscope_observations) }
     end
 

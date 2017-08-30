@@ -17,9 +17,14 @@
               Question Type
             </label>
               <span class="qm-popover-container">
-                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" data-html="true" title="Question Type Glossary" data-placement="right"
+                <a tabindex="0" role="button" data-toggle="popover" data-html="true" title="Question Type Glossary" data-placement="right"
                     data-template='<div class="popover glossary-popover" role="tooltip"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
-                    data-content="<p>
+                    data-content="
+                    <p>
+                      <b>Question Type Glossary</b>
+                    </p>
+                    <hr>
+                    <p>
                       <b>Basic</b>
                     </p>
                     <p>
@@ -33,10 +38,6 @@
                     <p>
                       <b>Date</b>
                       Input your date.
-                    </p>
-                    <p>
-                      <b>Latitude/Longitude</b>
-                      Drop a geographical point.
                     </p>
                     <p>
                       <b>Number</b>
@@ -53,46 +54,6 @@
                     <p>
                       <b>Time</b>
                       Input time.
-                    </p>
-                    <hr>
-                    <p>
-                      <b>Choices</b>
-                    </p>
-                    <p>
-                      <b>Check boxes</b>
-                      Multiple choice check boxes.
-                    </p>
-                    <p>
-                      <b>Location single select</b>
-                      Locations list setup in project admin.
-                    </p>
-                    <p>
-                      <b>Multiple select</b>
-                      Multiple select answer choices with search.
-                    </p>
-                    <p>
-                      <b>Single select</b>
-                      Single select answer choices with search.
-                    </p>
-                    <p>
-                      <b>Radio button</b>
-                      Single select with radio buttons.
-                    </p>
-                    <hr>
-                    <p>
-                      <b>Media</b>
-                    </p>
-                    <p>
-                      <b>Documents</b>
-                      Document upload.
-                    </p>
-                    <p>
-                      <b>Photos</b>
-                      Photo upload(s). You can upload one or more photos. You can capture from your mobile device or select from your gallery.
-                    </p>
-                    <p>
-                      <b>Video</b>
-                      Video upload(s). You can upload one or more videos. You can capture from your mobile device or form your gallery.
                     </p>
                     <hr>
                     <p>
@@ -113,11 +74,72 @@
                     <p>
                       <b>Section</b>
                       A set of questions grouped together.
+                    </p>
+                    <hr>
+                    <p>
+                      <b>Geographic</b>
+                    </p>
+                    <p>
+                      <b>Latitude/Longitude</b>
+                      Drop a geographical point.
+                    </p>
+                    <hr>
+                    <p>
+                      <b>Media</b>
+                    </p>
+                    <p>
+                      <b>Documents</b>
+                      Document upload.
+                    </p>
+                    <p>
+                      <b>Photos</b>
+                      Photo upload(s). You can upload one or more photos. You can capture from your mobile device or select from your gallery.
+                    </p>
+                    <p>
+                      <b>Video</b>
+                      Video upload(s). You can upload one or more videos. You can capture from your mobile device or form your gallery.
+                    </p>
+                    <hr>
+                    <p>
+                      <b>Multiple Choice</b>
+                    </p>
+                    <p>
+                      <b>Check boxes</b>
+                      Multiple choice check boxes.
+                    </p>
+                    <p>
+                      <b>Multiple select</b>
+                      Multiple select answer choices with search.
+                    </p>
+                    <hr>
+                    <p>
+                      <b>Single Choice</b>
+                    </p>
+                    <p>
+                      <b>Location single select</b>
+                      Locations list setup in project admin.
+                    </p>
+                    <p>
+                      <b>Single select</b>
+                      Single select answer choices with search.
+                    </p>
+                    <p>
+                      <b>Radio button</b>
+                      Single select with radio buttons.
+                    </p>
+                    <hr>
+                    <p>
+                      <b>Taxonomy</b>
+                    </p>
+                    <p>
+                      <b>Taxon multiple select</b>
+                      Plant or wildlife taxon list, multiple choice, auto-filters as you type. Select the data source to pick a particular list.
+                    </p>
+                    <p>
+                      <b>Taxon single select</b>
+                      Plant or wildlife taxon list, single choice, auto-filters as you type. Select the data source to pick a particular list.
                     </p>" class="bootstrap-popover">
                   <span class="glyphicons glyphicons-info-sign"></span>
-                </a>
-                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Taxonomy" data-content="Would you like a plant or animal list added to your survey? Contact us via chat below." class="bootstrap-popover">
-                  <span class="glyphicons glyphicons-leaf"></span>
                 </a>
               </span>
             {{#if (or isFullyEditable question.isNew)}}
@@ -126,8 +148,12 @@
                   {{#if showQuestionTypePlaceholder}}
                     <option disabled selected>Please select</option>
                   {{/if}}
-                  {{#each sortedAnswerTypes as |answerType|}}
-                    <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>{{answerType.displayName}}</option>
+                  {{#each groupedAnswerTypes as |group|}}
+                    <optgroup label={{group.value}}>
+                      {{#each group.items as |answerType|}}
+                        <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>{{answerType.displayName}}</option>
+                      {{/each}}
+                    </optgroup>
                   {{/each}}
                 </select>
               {{/form-field}}
@@ -142,8 +168,20 @@
             {{/if}}
           </div>
         </div>
-
-
+        {{#if showDataSourceSelector}}
+          <div class="form-group">
+            <div class="col-sm-12">
+              {{#form-field for='dataSource' label='Data Source'}}
+                <select class="form-control" data-test="data-source-select" onchange={{action "setDataSource" value="target.value"}}>
+                  <option></option>
+                  {{#each dataSources as |opDataSource|}}
+                    <option value={{opDataSource.id}} selected={{eq opDataSource.id question.dataSource.id}}>{{opDataSource.name}}</option>
+                  {{/each}}
+                </select>
+              {{/form-field}}
+            </div>
+          </div>
+        {{/if}}
         <div class="form-group">
           <div class="col-sm-12">
             {{#form-field for='questionText' label='Question Text'}}

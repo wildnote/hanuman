@@ -54,6 +54,9 @@ export default function() {
         id = request.params.id;
     return answerChoices.find(id).update(attrs);
   });
+  // Data Sources
+  this.get('/data_sources');
+  this.get('/data_sources/:id');
 
   // Custom Organizations
   this.get('/organizations', () => {

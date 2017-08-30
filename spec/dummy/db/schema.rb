@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170508185600) do
+ActiveRecord::Schema.define(version: 20170602191113) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20170508185600) do
     t.string   "post_type"
     t.string   "element_type"
     t.boolean  "has_an_answer",        default: true
+    t.string   "group_type"
   end
 
   create_table "hanuman_conditions", force: :cascade do |t|

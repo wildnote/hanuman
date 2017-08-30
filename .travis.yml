@@ -2,15 +2,19 @@ dist: trusty
 language: ruby
 cache: bundler
 node_js:
-  - "0.12"
+  - "7.7.2"
 rvm:
   - 2.2.3
 
 sudo: false
 
 cache:
+  yarn: true
   directories:
+    - $HOME/.npm
+    - $HOME/.yarn-cache
     - node_modules
+    - bower_components
 
 before_install:
   - gem install bundler -v 1.12.5
@@ -18,23 +22,29 @@ before_install:
   - export PATH=/usr/local/phantomjs-2.0.0/bin:$PATH
   - "npm config set spin false"
   - "npm install -g npm@^2"
+  - "npm install -g yarn --cache-min 99999999"
 
 before_script:
   - cd ..
   - psql -c 'create database hanuman_test;' -U postgres
   - bundle install && bundle exec rake db:migrate --trace
   - cd frontend
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
 
 install:
   - npm install -g bower
-  - npm install
+  - yarn install --frozen-lockfile
   - bower install
   - bower --version
+  - ./node_modules/testem/testem.js launchers
 
 script:
-  - ember test
+  - npm test
   - cd .. && bundle exec rspec
 
 
 notifications:
+  slack: suntoucher:VLwFnuhlLQDFquO2NnKZUvwV
   email: false

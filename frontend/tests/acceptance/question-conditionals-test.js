@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 
@@ -39,7 +40,7 @@ test('adding a conditional with a question without rule previously created', fun
     click('[data-test="save-condition-link"]').then(()=>{
       click('[data-test="save-question-link"]').then(()=>{
         assert.equal(1, server.schema.rules.all().models.length);
-        let condition = server.schema.conditions.all().models[0];
+        let condition = server.db.conditions[0];
         assert.equal(condition.answer, 'e quiai');
         assert.equal(condition.operator, 'is greater than');
       });
@@ -53,12 +54,11 @@ test('editing a conditional', function(assert) {
   rule = server.create('rule');
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
   question = server.create('question', { surveyTemplate, rule });
-  rule = server.db.rules.update(rule.id, { question: question });
+  server.db.rules.update(rule.id, { question_id: question.id });
 
   let firstCondition = conditions[0];
 
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-
   andThen(function() {
     for (var condition of conditions) {
       assert.equal(condition.answer, find(`[data-condition-id="${condition.id}"] [data-test="condition.answer"]`).text().trim());
@@ -78,7 +78,7 @@ test('deleting a conditional', function(assert) {
   rule = server.create('rule');
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
   question = server.create('question', { surveyTemplate, rule });
-  rule = server.db.rules.update(rule.id, { question: question });
+  rule = server.db.rules.update(rule.id, { question_id: question.id });
 
   let firstCondition = conditions[0];
 
@@ -104,7 +104,7 @@ test('selecting a conditional question with answer choices', function(assert) {
       toTestCondition = server.create('condition', { rule, question_id: questionWithAnsweChoices.id }),
       question = server.create('question', { surveyTemplate, rule });
 
-  rule = server.db.rules.update(rule.id, { question: question });
+  rule = server.db.rules.update(rule.id, { question_id: question.id });
 
   let firstAnswerChoice = answerChoices[0];
 

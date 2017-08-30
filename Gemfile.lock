@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hanuman (1.3.4)
+    hanuman (1.3.19)
       active_model_serializers (~> 0.8.1)
       amoeba (~> 3.0.0)
       ancestry
@@ -66,8 +66,8 @@ GEM
       tzinfo (~> 1.1)
     amoeba (3.0.0)
       activerecord (>= 3.2.6)
-    ancestry (2.2.2)
-      activerecord (>= 3.0.0)
+    ancestry (3.0.1)
+      activerecord (>= 3.2.0)
     arel (6.0.3)
     ast (2.3.0)
     aws_cf_signer (0.1.3)
@@ -95,7 +95,7 @@ GEM
       timers (>= 4.1.1)
     celluloid-supervision (0.20.6)
       timers (>= 4.1.1)
-    climate_control (0.1.0)
+    climate_control (0.2.0)
     cloudinary (1.1.7)
       aws_cf_signer
       rest-client
@@ -114,9 +114,9 @@ GEM
     database_cleaner (1.5.3)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    domain_name (0.5.20170223)
+    domain_name (0.5.20170404)
       unf (>= 0.0.5, < 1.0.0)
-    ember-cli-rails (0.8.4)
+    ember-cli-rails (0.8.7)
       cocaine (~> 0.5.8)
       ember-cli-rails-assets (~> 0.6.2)
       html_page (~> 0.1.0)
@@ -134,8 +134,8 @@ GEM
     fakeweb (1.3.0)
     foreigner (1.7.4)
       activerecord (>= 3.0.0)
-    globalid (0.3.7)
-      activesupport (>= 4.1.0)
+    globalid (0.4.0)
+      activesupport (>= 4.2.0)
     gmaps4rails (2.1.2)
     haml (4.0.7)
       tilt
@@ -145,7 +145,7 @@ GEM
       haml (>= 3.1, < 5.0)
       railties (>= 4.0.1)
     hike (1.2.3)
-    hitimes (1.2.4)
+    hitimes (1.2.6)
     html_page (0.1.0)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
@@ -159,7 +159,7 @@ GEM
       activesupport (>= 3.0.0)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
-    mail (2.6.4)
+    mail (2.6.6)
       mime-types (>= 1.16, < 4)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
@@ -216,9 +216,10 @@ GEM
     redis-namespace (1.5.3)
       redis (~> 3.0, >= 3.0.4)
     request_store (1.3.2)
-    responders (2.3.0)
-      railties (>= 4.2.0, < 5.1)
-    rest-client (2.0.1)
+    responders (2.4.0)
+      actionpack (>= 4.2.0, < 5.3)
+      railties (>= 4.2.0, < 5.3)
+    rest-client (2.0.2)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
@@ -292,7 +293,7 @@ GEM
       json (>= 1.8.0)
     unf (0.1.4)
       unf_ext
-    unf_ext (0.0.7.2)
+    unf_ext (0.0.7.4)
     unicode-display_width (1.1.1)
 
 PLATFORMS
@@ -311,3 +312,6 @@ DEPENDENCIES
   rubocop (~> 0.40.0)
   shoulda-callback-matchers
   shoulda-matchers
+
+BUNDLED WITH
+   1.15.3
