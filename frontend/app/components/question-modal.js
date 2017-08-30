@@ -18,7 +18,6 @@ export default Component.extend({
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   hasAnAnswer: alias('question.answerType.hasAnAnswer'),
-  isARepeater: equal('question.answerType.name', 'repeater'),
   isALatLong: equal('question.answerType.name', 'latlong'),
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
@@ -55,8 +54,7 @@ export default Component.extend({
   isALatLongInsideARepeater: computed('question', function() {
     if (this.get('isALatLong')) {
       let ancestryQuestion = this.get('ancestryQuestion');
-      // return ancestryQuestion.get('isARepeater');
-      return ancestryQuestion.get('answerType').get('name') == 'repeater'
+      return ancestryQuestion.get('isARepeater');
     } else {
       return false;
     }
