@@ -10,7 +10,7 @@ export default Ember.Component.extend({
 
   fieldClass: Ember.computed('group', {
     get() {
-      var isGroup = this.get('group'),
+      let isGroup = this.get('group'),
         fieldClass =  isGroup ? 'fields' : 'field';
 
       return fieldClass;
@@ -19,7 +19,7 @@ export default Ember.Component.extend({
 
   hasError: Ember.computed('object.errors.[]', {
     get() {
-      var _ref = this.get('object.errors');
+      let _ref = this.get('object.errors');
 
       return _ref != null ? _ref.has(this.get('for')) : void 0;
     }
