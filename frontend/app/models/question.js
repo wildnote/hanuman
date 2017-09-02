@@ -23,21 +23,24 @@ export default Model.extend(Validator, {
   parentId: attr('string'),
   railsId: attr('number'),
   captureLocationData: attr('boolean'),
+  combineLatlongAsPolygon: attr('boolean'),
+  combineLatlongAsLine: attr('boolean'),
 
   // Associations
   dataSource:     belongsTo('data-source'),
   answerType:     belongsTo('answer-type'),
   surveyTemplate: belongsTo('survey-template'),
-  rule:           belongsTo('rule', {async: false}),
-  answerChoices:  hasMany('answer-choice'),
+  rule: belongsTo('rule', { async: false }),
+  answerChoices: hasMany('answer-choice'),
 
   // Computed Properties
-  childQuestion:  bool('ancestry'),
-  isContainer:    equal('answerType.name', 'section'),
-  numChildren:    computed('childQuestion', function() {
-    if(this.get('childQuestion')){
+  childQuestion: bool('ancestry'),
+  isContainer: equal('answerType.name', 'section'),
+  isARepeater: equal('answerType.name', 'repeater'),
+  numChildren: computed('childQuestion', function() {
+    if (this.get('childQuestion')) {
       return this.get('ancestry').split('/').length;
-    }else{
+    } else {
       return 0;
     }
   }),
@@ -60,15 +63,15 @@ export default Model.extend(Validator, {
 
   // Validations
   validations: {
-    questionText:{
+    questionText: {
       presence: true
     },
-    answerType:{
+    answerType: {
       presence: true
     },
     answerChoices: {
       custom: {
-        validation: function(_key, _value, model){
+        validation(_key, _value, model) {
           let hasAnswerChoices = model.get('answerType.hasAnswerChoices');
           return hasAnswerChoices && model.get('answerChoicesCount') === 0 ? false : true;
         },

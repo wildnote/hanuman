@@ -1,13 +1,13 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
-  renderTemplate: function(){
-    this.render({outlet: 'questions'});
+  renderTemplate() {
+    this.render({ outlet: 'questions' });
   },
   actions: {
     transitionToSurveyStep() {
       let surveyTemplate = this.modelFor('survey-templates.record');
-      this.transitionTo('survey_templates.record',surveyTemplate);
+      this.transitionTo('survey_templates.record', surveyTemplate);
     }
   }
 });

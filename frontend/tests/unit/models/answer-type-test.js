@@ -17,9 +17,9 @@ test('it exists', function(assert) {
 test('hasAnswerChoices', function(assert) {
   let model = this.subject();
   assert.notOk(model.get('hasAnswerChoices'));
-  Ember.run(function(){
-    for (var htmlType of model.get('types')) {
-      model.set('name',htmlType);
+  Ember.run(function() {
+    for (let htmlType of model.get('types')) {
+      model.set('name', htmlType);
       assert.ok(model.get('hasAnswerChoices'));
     }
   });
