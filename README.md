@@ -78,3 +78,5 @@ If you're working/developing Hamunan frontend's code, it's recommened to re-inst
 `npm cache clean && bower cache clean && rm -rf node_modules bower_components dist tmp && yarn install && bower install`
 
 > Run this commands within the frontend folder.
+
+If this doesn't work you may need to downgrade your node to version 7.7.2 using nvm (nvm should be installed from their github page and not using brew).
