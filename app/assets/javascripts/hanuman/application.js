@@ -32,7 +32,6 @@
 //= require hanuman/hanuman-repeater
 //= require hanuman/hanuman-cloudinary-uploads
 //= require hanuman/hanuman-required-data
-//= require hanuman/hanuman-maps
 //
 // END JS FILE REFERENCES (DO NOT MODIFY)
 //
