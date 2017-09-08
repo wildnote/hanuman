@@ -11,14 +11,14 @@ export default Model.extend(Validator, {
   sortOrder: attr('number'),
 
   // On fly attribute
-  hideFromList: attr('boolean', {defaultValue: false}),
+  hideFromList: attr('boolean', { defaultValue: false }),
 
   // Associations
   question: belongsTo('question'),
 
   // Validations
   validations: {
-    optionText:{
+    optionText: {
       presence: true
     }
   }

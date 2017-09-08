@@ -1,8 +1,11 @@
 import Ember from 'ember';
 
-const { inject } = Ember;
+const {
+  Mixin,
+  inject
+} = Ember;
 
-export default Ember.Mixin.create({
+export default Mixin.create({
   ajax: inject.service(),
   notify: inject.service('notify'),
   setupController(controller, model) {
@@ -12,17 +15,16 @@ export default Ember.Mixin.create({
     });
   },
   actions: {
-    save(){
+    save() {
       let surveyTemplate = this.currentModel;
-      if(surveyTemplate.validate()){
+      if (surveyTemplate.validate()) {
         surveyTemplate.save().then(
           // Success
-          (surveyTemplate)=>{
+          (surveyTemplate) => {
             this.transitionTo('survey_templates.record', surveyTemplate);
           },
           // Error
-          (error)=>{
-            console.error(error);
+          (_error) => {
             this.get('notify').alert('There was an error trying to save this Survey Template');
           }
         );

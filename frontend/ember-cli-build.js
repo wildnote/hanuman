@@ -1,5 +1,5 @@
-/*jshint node:true*/
 /* global require, module */
+/* eslint-env node */
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
@@ -7,6 +7,10 @@ module.exports = function(defaults) {
     "ember-cli-babel": {
       optional: ['es6.spec.symbols'],
       includePolyfill: true
+    },
+    eslint: {
+      testGenerator: 'qunit',
+      group: true
     }
   });
 
