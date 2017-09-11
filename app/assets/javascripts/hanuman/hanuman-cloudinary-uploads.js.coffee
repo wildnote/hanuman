@@ -75,7 +75,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
 
     $photoPreviewContainer = $(e.target).siblings('.photo-preview-container')
-    $photoPreviewContainer.append "<div class='photo-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
+    $photoPreviewContainer.append "<div class='photo-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350, type: "authenticated").prop('outerHTML') + "</div>"
     addTexareaForUpload("photo", data, photoIdx, $photoPreviewContainer)
 
   # handle errors
