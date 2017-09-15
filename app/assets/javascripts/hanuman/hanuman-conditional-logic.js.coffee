@@ -176,8 +176,11 @@ class @ConditionalLogic
         return true
     # on survey show, grab oject of all saved items from checkboxes or multiselects
     else if $triggerElement.hasClass('multiselect')
-      selected_array = JSON.parse($triggerElement.attr('multiselect_array'))
+      selected_array = JSON.parse($triggerElement.attr('multiselectarray'))
       hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
+    else if $triggerElement.hasClass('singleselect')
+      selectedValue = $triggerElement.attr('selectedvalue')
+      hideQuestions = self.evaluateCondition(operator, answer, selectedValue)
     else
       hideQuestions = self.evaluateCondition(operator, answer, self.getValue($triggerElement))
 
