@@ -174,10 +174,11 @@ class @ConditionalLogic
         hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
       else
         return true
-    # on survey show, grab oject of all saved items from checkboxes or multiselects
+    # on survey show, grab oject of all saved items from checkboxes or multiselects in attribute in the HTML
     else if $triggerElement.hasClass('multiselect')
       selected_array = JSON.parse($triggerElement.attr('multiselectarray'))
       hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
+    # on caskey word export, radio buttons are displayed different so we need to grab the selected value from a data attribute in the HTML
     else if $triggerElement.hasClass('singleselect')
       selectedValue = $triggerElement.attr('selectedvalue')
       hideQuestions = self.evaluateCondition(operator, answer, selectedValue)
@@ -281,8 +282,6 @@ class @ConditionalLogic
       if hide_questions == false
         return hide_questions
     return hide_questions
-
-
 
   # get value of triggering question
   getValue: ($conditionElement) ->
