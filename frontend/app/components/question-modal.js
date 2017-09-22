@@ -63,7 +63,7 @@ export default Component.extend({
   isRequiredDisabled: computed('question.{rule.isNew,answerType.name}', 'conditionsPendingSave.[]', function() {
     let question = this.get('question');
     let newRule = question.get('rule.isNew');
-    let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow'];
+    let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow', 'static', 'line'];
     let pendingConditions = this.get('conditionsPendingSave.length') > 0;
     if (newRule === undefined) {
       newRule = true;
