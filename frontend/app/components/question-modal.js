@@ -54,7 +54,12 @@ export default Component.extend({
   isALatLongInsideARepeater: computed('question', function() {
     if (this.get('isALatLong')) {
       let ancestryQuestion = this.get('ancestryQuestion');
-      return ancestryQuestion.get('isARepeater');
+      if (ancestryQuestion === undefined) {
+        return false;
+      }
+      else {
+        return ancestryQuestion.get('isARepeater');
+      }
     } else {
       return false;
     }
