@@ -206,6 +206,13 @@ export default Component.extend({
       $('input[name=questionText]').focus();
     },
 
+    // if answerType is set to anything other than Taxon single or multislect make sure data_source_id is cleared out
+    checkToResetDataSource(answerTypeId) {
+      if (answerTypeId != 53 || answerTypeId != 58) {
+        this.set('question.dataSource', null);
+      }
+    },
+
     setDataSource(dataSourceId){
       const dataSource = this.get('dataSources').findBy('id', dataSourceId);
       this.set('question.dataSource', dataSource);
