@@ -67,7 +67,24 @@ export default Model.extend(Validator, {
       presence: true
     },
     answerType: {
-      presence: true
+      presence: true,
+      custom: {
+        validation(_key, _value, model) {
+          let childrenQuestions = model.get('surveyTemplate.questions').filterBy('ancestry', model.get('id').toString());
+          if (childrenQuestions.length > 0 ) {
+            if (model.get('supportAncestry')) {
+              return true;
+            }
+            else {
+              return false;
+            }
+          }
+          else {
+            return true;
+          }
+        },
+        message: 'This question has children questions, therefore the question type must be section or repeater.'
+      }
     },
     answerChoices: {
       custom: {
