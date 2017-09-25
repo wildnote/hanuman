@@ -70,13 +70,18 @@ export default Model.extend(Validator, {
       presence: true,
       custom: {
         validation(_key, _value, model) {
-          let childrenQuestions = model.get('surveyTemplate.questions').filterBy('ancestry', model.get('id').toString());
-          if (childrenQuestions.length > 0 ) {
-            if (model.get('supportAncestry')) {
-              return true;
+          if (!model.get('isNew')) {
+            let childrenQuestions = model.get('surveyTemplate.questions').filterBy('ancestry', model.get('id').toString());
+            if (childrenQuestions.length > 0 ) {
+              if (model.get('supportAncestry')) {
+                return true;
+              }
+              else {
+                return false;
+              }
             }
             else {
-              return false;
+              return true;
             }
           }
           else {
