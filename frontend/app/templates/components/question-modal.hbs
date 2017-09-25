@@ -144,7 +144,7 @@
               </span>
             {{#if (or isFullyEditable question.isNew)}}
               {{#form-field for='answerType'}}
-                <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
+                <select data-test="answer-type-id-select" class="form-control" onchange={{action (queue (action "setAnswerType") (action "checkToResetDataSource")) value="target.value"}}>
                   {{#if showQuestionTypePlaceholder}}
                     <option disabled selected>Please select</option>
                   {{/if}}
