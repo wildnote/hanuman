@@ -54,7 +54,12 @@ export default Component.extend({
   isALatLongInsideARepeater: computed('question', function() {
     if (this.get('isALatLong')) {
       let ancestryQuestion = this.get('ancestryQuestion');
-      return ancestryQuestion.get('isARepeater');
+      if (ancestryQuestion === undefined) {
+        return false;
+      }
+      else {
+        return ancestryQuestion.get('isARepeater');
+      }
     } else {
       return false;
     }
@@ -63,7 +68,7 @@ export default Component.extend({
   isRequiredDisabled: computed('question.{rule.isNew,answerType.name}', 'conditionsPendingSave.[]', function() {
     let question = this.get('question');
     let newRule = question.get('rule.isNew');
-    let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow'];
+    let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow', 'static', 'line'];
     let pendingConditions = this.get('conditionsPendingSave.length') > 0;
     if (newRule === undefined) {
       newRule = true;
@@ -204,6 +209,13 @@ export default Component.extend({
       let answerType = this.get('answerTypes').findBy('id', answerTypeId);
       this.set('question.answerType', answerType);
       $('input[name=questionText]').focus();
+    },
+
+    // if answerType is set to anything other than Taxon single or multislect make sure data_source_id is cleared out
+    checkToResetDataSource(answerTypeId) {
+      if (answerTypeId != 53 || answerTypeId != 58) {
+        this.set('question.dataSource', null);
+      }
     },
 
     setDataSource(dataSourceId){
