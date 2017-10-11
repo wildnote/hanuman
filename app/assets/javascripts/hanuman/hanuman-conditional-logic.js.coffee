@@ -67,6 +67,7 @@ class @ConditionalLogic
     if problemWithCL
       e = new Error("conditional Logic # findRules")
       e.name = 'FAILED: conditional logic'
+      console.log e.name
       Honeybadger.notify e, context:
         type: "FAILED: conditional logic => condition container or element not found or found more than once"
         details: window.location.href
