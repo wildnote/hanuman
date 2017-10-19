@@ -40,15 +40,11 @@
       <label class="col-sm-2 control-label" for="survey_template_status">Owner</label>
       <div class="col-sm-4">
         {{#form-field for='organizationId'}}
-          {{#power-select
-              selected=(find-by 'id' surveyTemplate.organizationId sortedOrganizations)
-              options=sortedOrganizations
-              searchField="name"
-              onchange=(action (mut surveyTemplate.organizationId) value="id")
-              as |organization|
-            }}
-              {{organization.name}}
-          {{/power-select}}
+          <select data-test="surveyTemplate.organizationId" class="form-control" onchange={{action "setOrganizationId" value="target.value"}}>
+            {{#each sortedOrganizations as |organization|}}
+              <option value={{organization.id}} selected={{eq surveyTemplate.organizationId organization.id}}>{{organization.name}}</option>
+            {{/each}}
+          </select>
         {{/form-field}}
       </div>
     </div>
