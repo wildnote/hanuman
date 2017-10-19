@@ -7,18 +7,11 @@ const {
 
 export default Ember.Component.extend({
   statuses: SurveyTemplate.STATUSES,
-  sortOrganizationsBy: ['name'],
-  sortedOrganizations: sort('organizations', 'sortOrganizationsBy'),
 
   actions: {
     setStatus(status) {
       let surveyTemplate = this.get('surveyTemplate');
       surveyTemplate.set('status', status);
-    },
-    // experimenting with different way to set organization dropdown
-    setOrganizationId(organizationId) {
-      let surveyTemplate = this.get('surveyTemplate');
-      surveyTemplate.set('organizationId', organizationId);
     }
   }
 });
