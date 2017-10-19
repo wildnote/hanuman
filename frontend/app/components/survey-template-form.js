@@ -14,6 +14,10 @@ export default Ember.Component.extend({
     setStatus(status) {
       let surveyTemplate = this.get('surveyTemplate');
       surveyTemplate.set('status', status);
+    },
+    setOrganizationId(organizationId) {
+      let surveyTemplate = this.get('surveyTemplate');
+      surveyTemplate.set('organizationId', organizationId);
     }
   }
 });
