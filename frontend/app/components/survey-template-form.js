@@ -15,6 +15,7 @@ export default Ember.Component.extend({
       let surveyTemplate = this.get('surveyTemplate');
       surveyTemplate.set('status', status);
     },
+    // experimenting with different way to set organization dropdown
     setOrganizationId(organizationId) {
       let surveyTemplate = this.get('surveyTemplate');
       surveyTemplate.set('organizationId', organizationId);
