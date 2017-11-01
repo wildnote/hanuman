@@ -144,7 +144,7 @@
               </span>
             {{#if (or isFullyEditable question.isNew)}}
               {{#form-field for='answerType'}}
-                <select data-test="answer-type-id-select" class="form-control" onchange={{action "setAnswerType" value="target.value"}}>
+                <select data-test="answer-type-id-select" class="form-control" onchange={{action (queue (action "setAnswerType") (action "checkToResetDataSource")) value="target.value"}}>
                   {{#if showQuestionTypePlaceholder}}
                     <option disabled selected>Please select</option>
                   {{/if}}
@@ -195,6 +195,31 @@
           </div>
         </div>
 
+        {{#if isALatLongInsideARepeater}}
+          <div data-test="capture-lat-long" class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="captureLocationData"
+                        checked={{question.combineLatlongAsLine}}
+                        onchange={{action (mut question.combineLatlongAsLine) value="target.checked"}} /> Combine Lat/Long points inside the repeater as a Line
+                </div>
+              </div>
+            </div>
+            <!-- <div class="col-md-6">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="captureLocationData"
+                        checked={{question.combineLatlongAsPolygon}}
+                        onchange={{action (mut question.combineLatlongAsPolygon) value="target.checked"}} /> Combine Lat/Long points inside the repeater as a Polygon
+                </div>
+              </div>
+            </div> -->
+          </div>
+        {{/if}}
+
         <div class="row">
           <div class="col-md-3">
             <div class="form-group">
@@ -211,17 +236,15 @@
             </div>
           </div>
           <div class="col-md-6">
-            {{#if isSuperUser}}
-              {{#if hasAnAnswer}}
-                <div class="form-group">
-                  <div class="col-sm-12">
-                    <input type="checkbox"
-                          name="captureLocationData"
-                          checked={{question.captureLocationData}}
-                          onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data (Superuser Only)
-                  </div>
+            {{#if (and isSuperUser hasAnAnswer)}}
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="captureLocationData"
+                        checked={{question.captureLocationData}}
+                        onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data (Superuser Only)
                 </div>
-              {{/if}}
+              </div>
             {{/if}}
           </div>
         </div>

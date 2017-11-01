@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import Condition from "../models/condition";
+import Condition from '../models/condition';
 
 const {
   Component,
@@ -26,7 +26,7 @@ export default Component.extend({
   }),
 
   currentQuestion: computed('condition.questionId', function() {
-    return this.get('questions').findBy('id',this.get('condition.questionId'));
+    return this.get('questions').findBy('id', this.get('condition.questionId'));
   }),
 
   questionAnswerChoices: computed('currentQuestion', function() {
@@ -34,13 +34,13 @@ export default Component.extend({
   }),
 
   useDropDownAnswerSelect: computed('currentQuestion', 'condition.operator', function() {
-    let currentQuestion = this.get('currentQuestion'),
-        conditionOperator = this.get('condition.operator');
+    let currentQuestion = this.get('currentQuestion');
+    let conditionOperator = this.get('condition.operator');
     return conditionOperator !== 'contains' && currentQuestion && currentQuestion.hasMany('answerChoices').ids().length > 1;
   }),
 
   setNewCondition() {
-    let condition = this.get('rule').store.createRecord('condition',{
+    let condition = this.get('rule').store.createRecord('condition', {
       questionId: this.get('questions.firstObject.id')
     });
     this.set('condition', condition);
@@ -49,18 +49,18 @@ export default Component.extend({
   actions: {
     toggleForm() {
       this.toggleProperty('isEditingCondition');
-      if(Ember.isNone(this.get('condition'))){
+      if (Ember.isNone(this.get('condition'))) {
         this.setNewCondition();
       }
     },
 
     save() {
       let condition = this.get('condition');
-      if(condition.validate()){
+      if (condition.validate()) {
         condition.set('rule', this.get('rule'));
-        this.sendAction('save',condition);
-        if(this.get('isNewCondition')){
-          this.set('condition',null);
+        this.sendAction('save', condition);
+        if (this.get('isNewCondition')) {
+          this.set('condition', null);
         }
         this.send('toggleForm');
       }
@@ -68,16 +68,16 @@ export default Component.extend({
 
     delete() {
       let condition = this.get('condition');
-      this.sendAction('remove',condition);
+      this.sendAction('remove', condition);
     },
-    setConditionOperator(operator){
-      this.set('condition.operator',operator);
+    setConditionOperator(operator) {
+      this.set('condition.operator', operator);
     },
-    setConditionQuestion(questionId){
-      this.set('condition.questionId',questionId);
+    setConditionQuestion(questionId) {
+      this.set('condition.questionId', questionId);
     },
-    setConditionAnswer(answer){
-      this.set('condition.answer',answer);
+    setConditionAnswer(answer) {
+      this.set('condition.answer', answer);
     }
   }
 });

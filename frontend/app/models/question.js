@@ -23,21 +23,24 @@ export default Model.extend(Validator, {
   parentId: attr('string'),
   railsId: attr('number'),
   captureLocationData: attr('boolean'),
+  combineLatlongAsPolygon: attr('boolean'),
+  combineLatlongAsLine: attr('boolean'),
 
   // Associations
   dataSource:     belongsTo('data-source'),
   answerType:     belongsTo('answer-type'),
   surveyTemplate: belongsTo('survey-template'),
-  rule:           belongsTo('rule', {async: false}),
-  answerChoices:  hasMany('answer-choice'),
+  rule: belongsTo('rule', { async: false }),
+  answerChoices: hasMany('answer-choice'),
 
   // Computed Properties
-  childQuestion:  bool('ancestry'),
-  isContainer:    equal('answerType.name', 'section'),
-  numChildren:    computed('childQuestion', function() {
-    if(this.get('childQuestion')){
+  childQuestion: bool('ancestry'),
+  isContainer: equal('answerType.name', 'section'),
+  isARepeater: equal('answerType.name', 'repeater'),
+  numChildren: computed('childQuestion', function() {
+    if (this.get('childQuestion')) {
       return this.get('ancestry').split('/').length;
-    }else{
+    } else {
       return 0;
     }
   }),
@@ -60,15 +63,37 @@ export default Model.extend(Validator, {
 
   // Validations
   validations: {
-    questionText:{
+    questionText: {
       presence: true
     },
-    answerType:{
-      presence: true
+    answerType: {
+      presence: true,
+      custom: {
+        validation(_key, _value, model) {
+          if (!model.get('isNew')) {
+            let childrenQuestions = model.get('surveyTemplate.questions').filterBy('ancestry', model.get('id').toString());
+            if (childrenQuestions.length > 0 ) {
+              if (model.get('supportAncestry')) {
+                return true;
+              }
+              else {
+                return false;
+              }
+            }
+            else {
+              return true;
+            }
+          }
+          else {
+            return true;
+          }
+        },
+        message: 'This question has children questions, therefore the question type must be section or repeater.'
+      }
     },
     answerChoices: {
       custom: {
-        validation: function(_key, _value, model){
+        validation(_key, _value, model) {
           let hasAnswerChoices = model.get('answerType.hasAnswerChoices');
           return hasAnswerChoices && model.get('answerChoicesCount') === 0 ? false : true;
         },

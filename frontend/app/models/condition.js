@@ -26,10 +26,10 @@ const Condition = Model.extend(Validator, {
 
   // Validations
   validations: {
-    questionId:{
+    questionId: {
       presence: true
     },
-    operator:{
+    operator: {
       inclusion: {
         in: OPERATORS
       }
@@ -38,7 +38,7 @@ const Condition = Model.extend(Validator, {
 });
 
 Condition.reopenClass({
-  OPERATORS: OPERATORS
+  OPERATORS
 });
 
 export default Condition;

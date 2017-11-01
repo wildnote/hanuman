@@ -41,8 +41,8 @@
       <div class="col-sm-4">
         {{#form-field for='organizationId'}}
           {{#power-select
-              selected=(find-by 'id' surveyTemplate.organizationId sortedOrganizations)
-              options=sortedOrganizations
+              selected=(find-by 'id' surveyTemplate.organizationId organizations)
+              options=organizations
               searchField="name"
               onchange=(action (mut surveyTemplate.organizationId) value="id")
               as |organization|

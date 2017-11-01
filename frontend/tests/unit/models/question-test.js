@@ -20,13 +20,13 @@ test('it exists', function(assert) {
 });
 
 test('ruleMatchType', function(assert) {
-  let model = this.subject(),
-      store = this.store();
-  Ember.run(function(){
-    let rule = store.createRecord('rule', {matchType: 'all'});
-    model.set('rule',rule);
+  let model = this.subject();
+  let store = this.store();
+  Ember.run(function() {
+    let rule = store.createRecord('rule', { matchType: 'all' });
+    model.set('rule', rule);
     assert.equal(model.get('ruleMatchType'), 'AND');
-    rule.set('matchType',null);
+    rule.set('matchType', null);
     assert.equal(model.get('ruleMatchType'), 'OR');
   });
 });
