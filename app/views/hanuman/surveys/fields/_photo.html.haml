@@ -2,13 +2,7 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7.photo-column.file-upload-input-button
     - if !@survey.id.nil?
-      .edit-mode-file
-      = ff.fields_for :observation_photos,o do |fff|
-        = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "photo-upload survey-photo-upload"}
-      .photo-upload-error
-      .progress.hidden
-        .progress-bar.progress-bar-success.photo-progress-bar
-      .photo-preview-container
+
       - o.observation_photos.order(sort_order: :asc).each do |p|
         = ff.fields_for :observation_photos, p do |fff|
           .upload-view-mode
@@ -21,6 +15,9 @@
               = link_to cl_image_tag(p.photo, :crop => :fill, :width => 350, :sign_url => true), cloudinary_url(p.photo, :sign_url => true), html_options = {"data-gallery" => "", class: "gallery-item gallery-photo", id: "photo_" + p.id.to_s, :"data-content-type" => p.photo.resource_type, :"data-download-url" => cloudinary_url(p.photo, :sign_url => true), :"data-file-name" => p.photo.public_id}
               %p
                 = link_to p.photo.my_public_id + "." + p.photo.format + " | download file", cloudinary_url(p.photo, attachment: true, :sign_url => true), html_options = { download: true }
+            %p.delete-box
+              = fff.check_box :_destroy, class:"hidden delete-checkbox"
+              %a{class:"btn btn-danger delete-saved-file", style:'font-size: .8em;', href:"#"}Remove photo
             = fff.label :"Photo description"
             .form-group
               .col-sm-7
@@ -34,18 +31,22 @@
             .form-group
               .col-sm-7
                 = fff.text_field :sort_order, class:"upload-sort-order"
-            %p.delete-box
-              = fff.check_box :_destroy, class:"hidden delete-checkbox"
-              %a{class:"btn btn-danger delete-saved-file", href:"#"}Remove photo
             %hr
-
+      .photo-preview-container
+      .edit-mode-file
+      = ff.fields_for :observation_photos,o do |fff|
+        = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "photo-upload survey-photo-upload"}
+      .photo-upload-error
+      .progress.hidden
+        .progress-bar.progress-bar-success.photo-progress-bar
     - else
       = ff.fields_for :observation_photos do |fff|
+        .photo-preview-container.preview-container
         = fff.cl_image_upload :photo, :html => { :multiple => true , :class => "photo-upload survey-photo-upload"}
+
         .photo-upload-error
         .progress.hidden
           .progress-bar.progress-bar-success.photo-progress-bar
-        .photo-preview-container.preview-container
 
 
 
