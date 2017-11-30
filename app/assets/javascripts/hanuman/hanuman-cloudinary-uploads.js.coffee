@@ -31,12 +31,12 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
   else
     file_id = data.result.public_id+"."+data.result.format
 
-  $previewContainer.find("."+file+"-preview").last().append "<p>"+file_id+"</p>"
+  $previewContainer.find("."+file+"-preview").last().append "<p class='upload-file-name'>"+file_id+"</p>"
   $previewContainer.find("."+file+"-preview").last().append "<label>Description</label><br>"
   $previewContainer.find("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:0px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea><br>"
   $previewContainer.find("."+file+"-preview").last().append "<label>Sort Order</label>"
   $previewContainer.find("."+file+"-preview").last().append "<p><input class='upload-sort-order' type='number' value='' name="+orderNameAttr+"></input></p>"
-  $previewContainer.find("."+file+"-preview").last().append "<p><a id="+file+" class='btn btn-danger remove-upload' href='#'>Remove "+file+"</a></p>"
+  $previewContainer.find("."+file+"-preview").last().find('.upload-file-name').after "<p><a id="+file+" class='btn btn-danger remove-upload' style='font-size: .8em;' href='#'>Remove "+file+"</a></p>"
   $previewContainer.find("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
   $previewContainer.find("."+file+"-preview").last().append "<br>"
   $previewContainer.find("."+file+"-preview").last().append "<hr>"
@@ -180,11 +180,9 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
 #  this fuction removes unnecessary inputs type hidden placed on the dom by "=fff.cl_image_tag" and "=fff.cl_image_tag" on edit mode
 removeFileHiddenInput = ->
-  $(".file-upload-input-button").each (i, e) ->
-    name = $(e).attr('name')
-    if $(e).find("input[type='hidden']:first").length > 0
-      console.log $(e).find("input[type='hidden']:first")
-      $(e).find("input[type='hidden']:first").remove()
+  $(".cloudinary-fileupload").each (i, e) ->
+    if !$(e).next().is(":visible")
+      $(e).next().remove()
 
 $ ->
   # when a user removes an upload in edit, we are resetting the sortorder
