@@ -344,7 +344,7 @@ $(document).ready(function(){
     });
 
     // Grabbing all the children repeaters
-    childrenRepeaters = $("input[nested-child=true")
+    childrenRepeaters = $("input[nested-child=true]")
     childrenRepeaterId = 1
 
     // update all childer repeaters with unique id
