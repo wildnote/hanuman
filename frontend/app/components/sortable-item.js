@@ -1,7 +1,7 @@
-import Ember from 'ember';
+import { computed, observer } from '@ember/object';
+import { run } from '@ember/runloop';
+import { on } from '@ember/object/evented';
 import SortableItem from 'ember-sortable/components/sortable-item';
-
-const { observer, computed, run, on } = Ember;
 
 export default SortableItem.extend({
   classNames: ['animated'],

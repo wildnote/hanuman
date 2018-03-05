@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { isNone } from '@ember/utils';
 import DraggableObject from 'ember-drag-drop/components/draggable-object';
 
 export default DraggableObject.extend({
@@ -23,7 +23,7 @@ export default DraggableObject.extend({
   actions: {
     toggleForm(_e, forceToSetNew = false) {
       this.toggleProperty('isEditingAnswerChoice');
-      if (forceToSetNew || Ember.isNone(this.get('answerChoice'))) {
+      if (forceToSetNew || isNone(this.get('answerChoice'))) {
         this.setNewAnswerChoice();
       }
     },

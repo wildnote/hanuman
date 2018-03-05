@@ -1,9 +1,10 @@
-import Ember from 'ember';
+import { hash } from 'rsvp';
+import Route from '@ember/routing/route';
 
-export default Ember.Route.extend({
+export default Route.extend({
   model() {
     let surveyTemplate = this.modelFor('survey-templates.record');
-    return Ember.RSVP.hash({
+    return hash({
       question: this.store.createRecord('question', { surveyTemplate }),
       questions: surveyTemplate.get('questions'),
       answerTypes: this.store.findAll('answer-type', { reload: true }),

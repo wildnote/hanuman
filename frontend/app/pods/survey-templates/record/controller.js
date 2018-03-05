@@ -1,9 +1,7 @@
-import Ember from 'ember';
-const {
-  computed: { alias }
-} = Ember;
+import Controller from '@ember/controller';
+import { alias } from '@ember/object/computed';
 
-export default Ember.Controller.extend({
+export default Controller.extend({
   isLoadingQuestions: true,
   surveyTemplate: alias('model')
 });

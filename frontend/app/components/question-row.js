@@ -1,9 +1,7 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  computed
-} = Ember;
+import $ from 'jquery';
+import { htmlSafe } from '@ember/string';
+import Component from '@ember/component';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   attributeBindings: ['question.id:data-question-id'],
@@ -20,18 +18,18 @@ export default Component.extend({
     if (question.get('rule') && !question.get('rule.isNew')) {
       intial += `<span class="label label-info">Rules</span>`;
     }
-    return Ember.String.htmlSafe(intial);
+    return htmlSafe(intial);
   }),
 
   actions: {
     confirm() {
       let el = this.get('element');
-      let $confirm = Ember.$('.delete-confirm', el);
+      let $confirm = $('.delete-confirm', el);
       $confirm.fadeIn();
     },
     cancel() {
       let el = this.get('element');
-      let $confirm = Ember.$('.delete-confirm', el);
+      let $confirm = $('.delete-confirm', el);
       $confirm.fadeOut();
     },
     delete() {

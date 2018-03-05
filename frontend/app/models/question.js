@@ -1,13 +1,9 @@
-import Ember from 'ember';
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import { belongsTo, hasMany } from 'ember-data/relationships';
+import { computed } from '@ember/object';
+import { match, equal, bool } from '@ember/object/computed';
 import Validator from './../mixins/model-validator';
-
-const {
-  computed,
-  computed: { bool, equal, match }
-} = Ember;
 
 export default Model.extend(Validator, {
   // Accessors
@@ -27,8 +23,8 @@ export default Model.extend(Validator, {
   combineLatlongAsLine: attr('boolean'),
 
   // Associations
-  dataSource:     belongsTo('data-source'),
-  answerType:     belongsTo('answer-type'),
+  dataSource: belongsTo('data-source'),
+  answerType: belongsTo('answer-type'),
   surveyTemplate: belongsTo('survey-template'),
   rule: belongsTo('rule', { async: false }),
   answerChoices: hasMany('answer-choice'),
@@ -72,19 +68,16 @@ export default Model.extend(Validator, {
         validation(_key, _value, model) {
           if (!model.get('isNew')) {
             let childrenQuestions = model.get('surveyTemplate.questions').filterBy('ancestry', model.get('id').toString());
-            if (childrenQuestions.length > 0 ) {
+            if (childrenQuestions.length > 0) {
               if (model.get('supportAncestry')) {
                 return true;
-              }
-              else {
+              } else {
                 return false;
               }
-            }
-            else {
+            } else {
               return true;
             }
-          }
-          else {
+          } else {
             return true;
           }
         },
@@ -102,7 +95,7 @@ export default Model.extend(Validator, {
     },
     dataSource: {
       presence: {
-        'if': function(object, validator, model) {
+        if(object, validator, model) {
           return model.get('isTaxonType');
         }
       }

@@ -1,10 +1,7 @@
-import Ember from 'ember';
-const {
-  Component,
-  run,
-  computed: { sort, alias },
-  $
-} = Ember;
+import Component from '@ember/component';
+import { run } from '@ember/runloop';
+import { alias, sort } from '@ember/object/computed';
+import $ from 'jquery';
 
 export default Component.extend({
   questionsSorting: ['sortOrder'],
@@ -12,7 +9,7 @@ export default Component.extend({
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   actions: {
     deleteQuestion(question, elRow) {
-      let $confirm = Ember.$('.delete-confirm', elRow);
+      let $confirm = $('.delete-confirm', elRow);
       let questionId = question.get('id');
       question.deleteRecord();
       question.save().then(() => {

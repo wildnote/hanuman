@@ -18,6 +18,7 @@ module.exports = {
     'Stripe': true,
     'deparam': true,
     'google': true,
+    'superUser': true,
     'md5': true
   },
   rules: {
