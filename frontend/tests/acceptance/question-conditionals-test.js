@@ -67,7 +67,8 @@ test('editing a conditional', function(assert) {
   });
 });
 
-test('deleting a conditional', function(assert) {
+test('deleting a conditional', async function(assert) {
+  assert.expect(2);
   server.createList('question', 5, { surveyTemplate });
   rule = server.create('rule');
   /* eslint-disable camelcase */
@@ -77,18 +78,14 @@ test('deleting a conditional', function(assert) {
   /* eslint-enable camelcase */
   let firstCondition = conditions[0];
 
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
-  andThen(function() {
-    let selector = `[data-condition-id="${firstCondition.id}"]`;
+  let selector = `[data-condition-id="${firstCondition.id}"]`;
+  await click(`${selector} [data-test="delete-condition-link"]`);
 
-    click(`${selector} [data-test="delete-condition-link"]`).then(()=>{
-      assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
-    });
-    visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`).then(()=>{
-      assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
-    });
-  });
+  assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
 });
 
 test('selecting a conditional question with answer choices', function(assert) {

@@ -1,3 +1,6 @@
+if (!window.superUser) {
+  window.superUser = false;
+}
 export function initialize(application) {
   application.register('global:superUser', window.superUser, { instantiate: false });
   application.inject('route', 'isSuperUser', 'global:superUser');

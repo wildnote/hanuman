@@ -11,41 +11,36 @@ moduleForAcceptance('Acceptance | question answer choices', {
   }
 });
 
-test('adding an answer choice', function(assert) {
+test('adding an answer choice', async function(assert) {
+  assert.expect(1);
   question = server.create('question', { surveyTemplate, answer_type_id: 17 }); // Answer Type id 17 = `Rad io`
 
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-
-  andThen(function() {
-    click('[data-test="add-answer-choice-link"]');
-    fillIn('[data-test="answerChoice.optionText"]', 'A new answer choice');
-    click('[data-test="save-answer-choice-link"]').then(()=>{
-      let answerChoice = server.schema.answerChoices.all().models[0];
-      assert.equal(answerChoice.optionText, 'A new answer choice');
-    });
-  });
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await click('[data-test="add-answer-choice-link"]');
+  fillIn('[data-test="answerChoice.optionText"]', 'A new answer choice');
+  await click('[data-test="save-answer-choice-link"]');
+  let answerChoice = server.schema.answerChoices.all().models[0];
+  assert.equal(answerChoice.optionText, 'A new answer choice');
 });
 
-test('editing an answer choice', function(assert) {
+test('editing an answer choice', async function(assert) {
   question = server.create('question', { surveyTemplate, answer_type_id: 17 });
   answerChoices = server.createList('answer-choice', 3, { question });
 
   let firstAnswerChoices = answerChoices[0];
 
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
-  andThen(function() {
-    for (let answerChoice of answerChoices) {
-      assert.equal(answerChoice.option_text, find(`[data-answer-choice-id="${answerChoice.id}"] [data-test="answerChoice.optionText"]`).text().trim());
-    }
-    let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
-    click(`${selector} [data-test="edit-answer-choice-link"]`);
-    fillIn(`${selector} [data-test="answerChoice.optionText"]`, 'OOOU YEAH');
-    click(`${selector} [data-test="save-answer-choice-link"]`).then(()=>{
-      firstAnswerChoices = server.db.answerChoices.find(firstAnswerChoices.id);
-      assert.equal(firstAnswerChoices.option_text, 'OOOU YEAH');
-    });
-  });
+  for (let answerChoice of answerChoices) {
+    assert.equal(answerChoice.option_text, find(`[data-answer-choice-id="${answerChoice.id}"] [data-test="answerChoice.optionText"]`).text().trim());
+  }
+  let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
+  await click(`${selector} [data-test="edit-answer-choice-link"]`);
+  fillIn(`${selector} [data-test="answerChoice.optionText"]`, 'OOOU YEAH');
+  await click(`${selector} [data-test="save-answer-choice-link"]`);
+
+  firstAnswerChoices = server.db.answerChoices.find(firstAnswerChoices.id);
+  assert.equal(firstAnswerChoices.option_text, 'OOOU YEAH');
 });
 
 test('deleting an answer choice', async function(assert) {
