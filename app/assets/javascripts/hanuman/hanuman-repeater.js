@@ -344,7 +344,7 @@ $(document).ready(function(){
     });
 
     // Grabbing all the children repeaters
-    childrenRepeaters = $("input[nested-child=true")
+    childrenRepeaters = $("input[nested-child=true]")
     childrenRepeaterId = 1
 
     // update all childer repeaters with unique id
@@ -627,7 +627,7 @@ $(document).ready(function(){
       checkboxes = $(clonedRepeater[i]).find(":checkbox");
       $(checkboxes).each(function() {
         $(this).prop('checked', false);
-        });
+      });
       // un-select radio buttons
       radiobuttons = $(clonedRepeater[i]).find(":radio");
       $(radiobuttons).each(function() {
@@ -635,7 +635,8 @@ $(document).ready(function(){
       });
 
       // trigger onchange event which is needed for embedded conditional logic
-      $(clonedRepeater[i]).find('.form-control').trigger('change');
+      // Commented this line of code below beacause When adding a repeater, it was clearing values of CL text field of first repeater. IT doesnt seem to be nessesary.
+      // $(clonedRepeater[i]).find('.form-control').trigger('change');
     };
   };
 });
