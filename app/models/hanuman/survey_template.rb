@@ -6,7 +6,7 @@ module Hanuman
     STATUSES = %w(active draft inactive).freeze
 
     # Relations
-    has_many :survey_steps, -> { order :step }, inverse_of: :survey_template, dependent: :destroy # Deprecated
+    has_many :survey_steps, -> { order :step }, inverse_of: :survey_template#, dependent: :destroy # Deprecated
     has_many :questions, -> { order :sort_order }, dependent: :destroy
     has_many :surveys, dependent: :restrict_with_exception
 
