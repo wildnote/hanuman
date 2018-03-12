@@ -2,7 +2,7 @@ module Hanuman
   class SurveyStep < ActiveRecord::Base
     # Relations
     belongs_to :survey_template, inverse_of: :survey_steps
-    has_many :questions, -> { order :sort_order }, dependent: :destroy
+    has_many :questions, -> { order :sort_order }#, dependent: :destroy
 
     # Validations
     validates :survey_template, presence: true
