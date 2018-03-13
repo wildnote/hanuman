@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 
@@ -32,16 +31,6 @@ test('adding a conditional with a question without rule previously created', asy
   fillIn('[data-test="condition-question-id-select"]', 3);
   await triggerEvent('[data-test="condition-question-id-select"]', 'onchange');
 
-    fillIn('[data-test="condition.answer"]', 'e quiai');
-    click('[data-test="save-condition-link"]').then(()=>{
-      click('[data-test="save-question-link"]').then(()=>{
-        assert.equal(1, server.schema.rules.all().models.length);
-        let condition = server.db.conditions[0];
-        assert.equal(condition.answer, 'e quiai');
-        assert.equal(condition.operator, 'is greater than');
-      });
-    });
-
   fillIn('[data-test="condition.answer"]', 'e quiai');
   await click('[data-test="save-condition-link"]');
   await click('[data-test="save-question-link"]');
@@ -50,16 +39,17 @@ test('adding a conditional with a question without rule previously created', asy
 
   let condition = server.db.conditions[0];
   assert.equal(condition.answer, 'e quiai');
-  assert.equal(condition.operator, 'is greater than');
+  assert.equal(condition.operator, 'is equal to');
 });
 
 test('editing a conditional', function(assert) {
   server.createList('question', 5, { surveyTemplate });
   rule = server.create('rule');
+  /* eslint-disable camelcase */
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
   question = server.create('question', { surveyTemplate, rule });
   server.db.rules.update(rule.id, { question_id: question.id });
-
+  /* eslint-enable camelcase */
   let firstCondition = conditions[0];
 
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
@@ -77,31 +67,30 @@ test('editing a conditional', function(assert) {
   });
 });
 
-test('deleting a conditional', function(assert) {
+test('deleting a conditional', async function(assert) {
+  assert.expect(2);
   server.createList('question', 5, { surveyTemplate });
   rule = server.create('rule');
+  /* eslint-disable camelcase */
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
   question = server.create('question', { surveyTemplate, rule });
   rule = server.db.rules.update(rule.id, { question_id: question.id });
-
+  /* eslint-enable camelcase */
   let firstCondition = conditions[0];
 
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
-  andThen(function() {
-    let selector = `[data-condition-id="${firstCondition.id}"]`;
+  let selector = `[data-condition-id="${firstCondition.id}"]`;
+  await click(`${selector} [data-test="delete-condition-link"]`);
 
-    click(`${selector} [data-test="delete-condition-link"]`).then(()=>{
-      assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
-    });
-    visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`).then(()=>{
-      assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
-    });
-  });
+  assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
 });
 
 test('selecting a conditional question with answer choices', function(assert) {
   // Question with answer choices
+  /* eslint-disable camelcase */
   let questionWithAnsweChoices = server.create('question', { surveyTemplate, answer_type_id: 17 });
   let answerChoices = server.createList('answer-choice', 3, { question: questionWithAnsweChoices });
   let rule = server.create('rule');
@@ -109,6 +98,7 @@ test('selecting a conditional question with answer choices', function(assert) {
   let question = server.create('question', { surveyTemplate, rule });
 
   rule = server.db.rules.update(rule.id, { question_id: question.id });
+  /* eslint-enable camelcase */
 
   let firstAnswerChoice = answerChoices[0];
 

@@ -1,13 +1,9 @@
-import Ember from 'ember';
+import { filterBy } from '@ember/object/computed';
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import { hasMany } from 'ember-data/relationships';
 import Validator from './../mixins/model-validator';
 import { memberAction } from 'ember-api-actions';
-
-const {
-  computed: { filterBy }
-} = Ember;
 
 // Constants
 const STATUSES = ['draft', 'active', 'inactive'];

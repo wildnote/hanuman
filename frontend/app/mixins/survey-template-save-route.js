@@ -1,13 +1,9 @@
-import Ember from 'ember';
-
-const {
-  Mixin,
-  inject
-} = Ember;
+import { inject as service } from '@ember/service';
+import Mixin from '@ember/object/mixin';
 
 export default Mixin.create({
-  ajax: inject.service(),
-  notify: inject.service('notify'),
+  ajax: service(),
+  notify: service('notify'),
   setupController(controller, model) {
     this._super(controller, model);
     return this.get('ajax').request('/organizations').then((response) =>{

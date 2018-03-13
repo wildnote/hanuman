@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import Ember from 'ember';
+import { later } from '@ember/runloop';
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 
@@ -21,7 +21,7 @@ test('selecting a type with answer choices', function(assert) {
     // Select
     fillIn('[data-test="answer-type-id-select"]', 1);
     triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
-    Ember.run.later(this, function() {
+    later(this, function() {
       assert.notEqual(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
     }, 0);
   });
@@ -106,9 +106,9 @@ test('canceling question edition', function(assert) {
   });
 });
 
-test('editing a question', function(assert) {
-  question = server.create('question', {surveyTemplate});
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+test('editing a question', async function(assert) {
+  question = server.create('question', { surveyTemplate });
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   fillIn('[data-test="question.externalDataSource"]', 'chuchucu');
   click('[data-test="save-question-link"]').then(()=>{
     Ember.run.later(this,function() {
@@ -139,7 +139,8 @@ test('deleting a question', function(assert) {
 });
 
 test('showing `Capture lat/long` checkboxes', async function(assert) {
-  let question1 = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
+  let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
+  let question1 = server.create('question', { surveyTemplate, parent_id: ancestryQuestion.id, answer_type_id: 52 }); // Answer Type id 57 = `latlong`
   let question2 = server.create('question', { surveyTemplate, answer_type_id: 18 }); // Answer Type id 18 = `Checkbox`
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question1.id}`);

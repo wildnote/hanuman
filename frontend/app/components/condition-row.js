@@ -1,11 +1,8 @@
-import Ember from 'ember';
+import Component from '@ember/component';
+import { alias } from '@ember/object/computed';
+import { computed } from '@ember/object';
+import { isNone } from '@ember/utils';
 import Condition from '../models/condition';
-
-const {
-  Component,
-  computed,
-  computed: { alias }
-} = Ember;
 
 export default Component.extend({
   for: alias('condition'),
@@ -16,11 +13,11 @@ export default Component.extend({
 
   operators: computed('currentQuestion', function() {
     let answerType = this.get('currentQuestion.answerType');
-    if(['checkboxes', 'multiselect'].includes(answerType.get('elementType'))) {
-      return Condition.OPERATORS.filter(function(op){
+    if (['checkboxes', 'multiselect'].includes(answerType.get('elementType'))) {
+      return Condition.OPERATORS.filter(function(op) {
         return op.includes('equal');
       });
-    }else{
+    } else {
       return Condition.OPERATORS;
     }
   }),
@@ -49,7 +46,7 @@ export default Component.extend({
   actions: {
     toggleForm() {
       this.toggleProperty('isEditingCondition');
-      if (Ember.isNone(this.get('condition'))) {
+      if (isNone(this.get('condition'))) {
         this.setNewCondition();
       }
     },

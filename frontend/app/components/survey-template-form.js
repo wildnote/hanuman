@@ -1,11 +1,7 @@
-import Ember from 'ember';
+import Component from '@ember/component';
 import SurveyTemplate from '../models/survey-template';
 
-const {
-  computed: { sort }
-} = Ember;
-
-export default Ember.Component.extend({
+export default Component.extend({
   statuses: SurveyTemplate.STATUSES,
 
   actions: {
