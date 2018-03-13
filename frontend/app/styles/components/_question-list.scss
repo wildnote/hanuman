@@ -1,0 +1,40 @@
+.progress-bar {
+  margin-top: 35px;
+}
+
+.header-selected {
+  text-rendering: optimizeLegibility;
+  background-color: #5a87cf;
+  height: 60px;
+  color: #fff;
+  position: relative;
+  padding: 12px;
+
+  .selected-questions-controls-status {
+    height: 34px;
+    background-color: #4c76b8;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+    font-family: open-sans,EmojiFontFace,helvetica,arial,sans-serif;
+    font-size: 12px;
+    font-weight: 300;
+    line-height: normal;
+    max-width: 240px;
+    padding: 0 5px 0 5px;
+    a {
+      margin-left: 5px;
+      color: #fff;
+      cursor: pointer;
+      &:hover {
+        color: #ddd;
+      }
+    }
+    .label-warning {
+      margin-right: -3px;
+    }
+  }
+}

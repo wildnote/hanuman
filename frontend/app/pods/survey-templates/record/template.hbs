@@ -12,7 +12,12 @@
       </ul>
       <div class="tab-content">
         <div id="tab-survey-layout" class="tab-pane active">
-          {{questions-list surveyTemplate=surveyTemplate isLoadingQuestions=isLoadingQuestions loadingProgress=loadingProgress updateSortOrder="updateSortOrder"}}
+          {{questions-list
+            surveyTemplate=surveyTemplate
+            isLoadingQuestions=isLoadingQuestions
+            loadingProgress=loadingProgress
+            updateSortOrder="updateSortOrder"
+          }}
         </div>
         <div id="tab-survey-details" class="tab-pane">
           {{liquid-outlet}}

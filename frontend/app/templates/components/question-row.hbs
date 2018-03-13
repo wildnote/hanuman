@@ -1,5 +1,5 @@
 {{!-- called from surveyTemplate and dislpays each answer type as readonly --}}
-<div class="row">
+<div data-test-question-row class="row">
   <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
   <div class="col-sm-4">
     {{#if question.loading}}
@@ -68,6 +68,9 @@
       <button class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
       <button class="btn" onclick={{action 'cancel'}}>No</button>
     </div>
+    <span class="float-right">
+      <input data-test-question-selector type="checkbox" checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
+    </span>
   </div>
 </div>
 

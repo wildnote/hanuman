@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 import { alias, sort } from '@ember/object/computed';
 import $ from 'jquery';
@@ -7,7 +8,24 @@ export default Component.extend({
   questionsSorting: ['sortOrder'],
   sortedQuestions: sort('surveyTemplate.filteredquestions', 'questionsSorting'),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
+
+  init() {
+    this._super(...arguments);
+    this.selectedQuestions = A();
+  },
+
   actions: {
+    clearAll() {
+      this.set('selectedQuestions', A());
+    },
+    toggleQuestion(question) {
+      let selectedQuestions = this.get('selectedQuestions');
+      if (selectedQuestions.includes(question)) {
+        selectedQuestions.removeObject(question);
+      } else {
+        selectedQuestions.addObject(question);
+      }
+    },
     deleteQuestion(question, elRow) {
       let $confirm = $('.delete-confirm', elRow);
       let questionId = question.get('id');
