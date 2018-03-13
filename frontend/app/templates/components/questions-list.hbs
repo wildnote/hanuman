@@ -1,8 +1,8 @@
 {{#if (gt selectedQuestions.length 0)}}
-  <div class="header-selected">
+  <div data-test-selected-questions class="header-selected">
     <div class="selected-questions-controls-status float-left">
       <span data-test-total-selected-questions class="label label-warning">{{selectedQuestions.length}}</span> questions selected
-      <a onclick={{action 'clearAll'}}><span class="glyphicons glyphicons-remove"></span> Deselect all</a>
+      <a data-test-deselect-all onclick={{action 'clearAll'}}><span class="glyphicons glyphicons-remove"></span> Deselect all</a>
     </div>
   </div>
 {{/if}}

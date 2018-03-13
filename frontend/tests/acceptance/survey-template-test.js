@@ -56,17 +56,15 @@ test('editing a survey template', function(assert) {
   });
 });
 
-test('creating a survey template', function(assert) {
-  visit('/survey_templates/new');
-  andThen(function() {
-    assert.equal(currentURL(), '/survey_templates/new');
-    fillIn('[data-test="surveyTemplate.name"]', 'Yo te vi salir campeón del continente 2 veces');
-    fillIn('[data-test="surveyTemplate.surveyType"]', 'campeon');
-    click('[data-test="save-survey-template-link"]').then(()=>{
-      surveyTemplate = server.schema.surveyTemplates.all().models.slice(-1).pop();
-      assert.equal(surveyTemplate.name, 'Yo te vi salir campeón del continente 2 veces');
-      assert.equal(surveyTemplate.surveyType, 'campeon');
-      assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
-    });
-  });
+test('creating a survey template', async function(assert) {
+  assert.expect(4);
+  await visit('/survey_templates/new');
+  assert.equal(currentURL(), '/survey_templates/new');
+  fillIn('[data-test="surveyTemplate.name"]', 'Yo te vi salir campeón del continente 2 veces');
+  fillIn('[data-test="surveyTemplate.surveyType"]', 'campeon');
+  await click('[data-test="save-survey-template-link"]');
+  surveyTemplate = server.schema.surveyTemplates.all().models.slice(-1).pop();
+  assert.equal(surveyTemplate.name, 'Yo te vi salir campeón del continente 2 veces');
+  assert.equal(surveyTemplate.surveyType, 'campeon');
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
 });
