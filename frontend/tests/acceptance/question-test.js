@@ -12,15 +12,6 @@ moduleForAcceptance('Acceptance | question', {
   }
 });
 
-test('visiting survey_templates/:survey_step_id/questions/:id', function(assert) {
-  question = server.create('question', { surveyTemplate });
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-
-  andThen(function() {
-    assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-  });
-});
-
 test('selecting a type with answer choices', function(assert) {
   question = server.create('question', { surveyTemplate, answer_type_id: 17 }); // Answer Type id 17 = `Radio`
 
