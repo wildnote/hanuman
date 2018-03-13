@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
 
     # Relations
-    belongs_to  :observation, touch: true
+    belongs_to  :observation, -> { unscope(:includes, :order) }, touch: true
     has_one     :survey, through: :observation
     belongs_to  :answer_choice
     belongs_to  :multiselectable, polymorphic: true
