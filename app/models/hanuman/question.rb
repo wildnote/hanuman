@@ -5,7 +5,6 @@ module Hanuman
 
     # Relations
     belongs_to :answer_type
-    belongs_to :survey_step # Deprecated
     belongs_to :survey_template
     has_many :answer_choices, -> { order :sort_order, :option_text }, dependent: :destroy, inverse_of: :question
     # if a user deletes a question from survey admin we need to delete related observations, giving warning in survey admin
@@ -16,7 +15,6 @@ module Hanuman
     # Validations
     validates :answer_type_id, presence: true
     # wait until after migration for these validations
-    #validates_presence_of :sort_order, :survey_step_id
     validates :question_text, presence: true, unless: :question_text_not_required
 
     # Callbacks

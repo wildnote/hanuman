@@ -6,7 +6,6 @@ module Hanuman
     STATUSES = %w(active draft inactive).freeze
 
     # Relations
-    has_many :survey_steps, -> { order :step }, inverse_of: :survey_template#, dependent: :destroy # Deprecated
     has_many :questions, -> { order :sort_order }, dependent: :destroy
     has_many :surveys, dependent: :restrict_with_exception
 
@@ -24,10 +23,6 @@ module Hanuman
       customize(lambda { |_original_post, new_post|
         new_post.name = "#{new_post.name} Duplicate"
       })
-    end
-
-    def survey_step_is_duplicator?(step)
-      survey_steps.by_step(step).first.duplicator
     end
 
     def num_reports_submitted

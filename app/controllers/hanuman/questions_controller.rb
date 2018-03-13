@@ -93,7 +93,7 @@ module Hanuman
       # Only allow a trusted parameter "white list" through.
       def question_params
         params.require(:question).permit(
-          :question_text, :answer_type_id, :sort_order, :survey_step_id,
+          :question_text, :answer_type_id, :sort_order, 
           :combine_latlong_as_polygon, :combine_latlong_as_line
         )
       end

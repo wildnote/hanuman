@@ -8,8 +8,6 @@ Hanuman::Engine.routes.draw do
 
   resources :conditions
 
-  resources :survey_steps
-
   resources :settings
 
   namespace :api do
@@ -17,7 +15,6 @@ Hanuman::Engine.routes.draw do
       resources :answer_choices
       resources :answer_types
       resources :questions
-      resources :survey_steps
       resources :rules
       resources :conditions
       resources :survey_templates do
