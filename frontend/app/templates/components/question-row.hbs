@@ -68,6 +68,9 @@
       <button class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
       <button class="btn" onclick={{action 'cancel'}}>No</button>
     </div>
+    <span class="float-right">
+      <input data-test-question-selector type="checkbox" checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
+    </span>
   </div>
 </div>
 

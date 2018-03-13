@@ -1,3 +1,11 @@
+{{#if (gt selectedQuestions.length 0)}}
+  <div class="header-selected">
+    <div class="selected-questions-controls-status float-left">
+      <span data-test-total-selected-questions class="label label-warning">{{selectedQuestions.length}}</span> questions selected
+      <a onclick={{action 'clearAll'}}><span class="glyphicons glyphicons-remove"></span> Deselect all</a>
+    </div>
+  </div>
+{{/if}}
 <div class="container">
   <div class="col-md-12">
     {{#if isLoadingQuestions}}
@@ -9,14 +17,12 @@
         </div>
       </div>
     {{else}}
-    {{#if surveyTemplate.fullyEditable}}
-    {{else}}
-      <div class="alert alert-info">
-        <p>This survey has existing data.</p>
-        <p>You can make changes to this survey, however, if you delete a question, previously submitted data will be deleted. In addition, if you add a question, previously submitted surveys won't have data for that question. Also, if you change the sort order, previously submitted data will be resorted. If you don't want to change previsouly submitted data then duplicate this survey template and make edits to the duplicated survey template.</p>
-      </div>
-    {{/if}}
-
+      {{#unless surveyTemplate.fullyEditable}}
+        <div class="alert alert-info">
+          <p>This survey has existing data.</p>
+          <p>You can make changes to this survey, however, if you delete a question, previously submitted data will be deleted. In addition, if you add a question, previously submitted surveys won't have data for that question. Also, if you change the sort order, previously submitted data will be resorted. If you don't want to change previsouly submitted data then duplicate this survey template and make edits to the duplicated survey template.</p>
+        </div>
+      {{/unless}}
       <div class="row">
         <div class="col-sm-4"><strong>Label</strong></div>
         <div class="col-sm-2"><strong>Question Type</strong></div>
@@ -61,11 +67,24 @@
           {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
             {{#if question.supportAncestry}}
               {{#draggable-object-target action="setAncestry" acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
-                {{question-row question=question deleteQuestion='deleteQuestion' isFullyEditable=isFullyEditable ancestrable=true}}
+                {{question-row
+                  question=question
+                  deleteQuestion='deleteQuestion'
+                  toggleQuestion=(action "toggleQuestion")
+                  isFullyEditable=isFullyEditable
+                  ancestrable=true
+                  selectedQuestions=selectedQuestions
+                }}
               {{/draggable-object-target}}
             {{else}}
               {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded' dragHandle='.glyphicons-move-square'}}
-                {{question-row question=question deleteQuestion='deleteQuestion' isFullyEditable=isFullyEditable}}
+                {{question-row
+                  question=question
+                  deleteQuestion='deleteQuestion'
+                  toggleQuestion=(action "toggleQuestion")
+                  isFullyEditable=isFullyEditable
+                  selectedQuestions=selectedQuestions
+                }}
               {{/draggable-object}}
             {{/if}}
           {{/sortable-item}}
