@@ -124,6 +124,7 @@ module Hanuman
       new_q = self.amoeba_dup
       new_q.sort_order = self.sort_order + 1
       new_q.save
+      new_q
     end
 
     # duplicate a question set which contains a parent question, followed by a
