@@ -16,7 +16,11 @@ Hanuman::Engine.routes.draw do
     namespace :v1 do
       resources :answer_choices
       resources :answer_types
-      resources :questions
+      resources :questions do
+        member do
+          post :duplicate
+        end
+      end
       resources :survey_steps
       resources :rules
       resources :conditions

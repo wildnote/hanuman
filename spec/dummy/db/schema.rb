@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170724033212) do
+ActiveRecord::Schema.define(version: 20180111200453) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -152,6 +152,7 @@ ActiveRecord::Schema.define(version: 20170724033212) do
     t.boolean  "capture_location_data",      default: false
     t.boolean  "combine_latlong_as_line",    default: false
     t.boolean  "combine_latlong_as_polygon", default: false
+    t.boolean  "noncompliance",              default: false
   end
 
   add_index "hanuman_questions", ["ancestry"], name: "index_hanuman_questions_on_ancestry", using: :btree
