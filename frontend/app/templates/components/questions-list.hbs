@@ -1,11 +1,18 @@
-{{#if (gt selectedQuestions.length 0)}}
+{{#liquid-if (gt selectedQuestions.length 0)}}
   <div data-test-selected-questions class="header-selected">
-    <div class="selected-questions-controls-status float-left">
+    <div class="selected-questions-controls-status">
       <span data-test-total-selected-questions class="label label-warning">{{selectedQuestions.length}}</span> questions selected
       <a data-test-deselect-all onclick={{action 'clearAll'}}><span class="glyphicons glyphicons-remove"></span> Deselect all</a>
     </div>
+
+    <div class="selected-questions-actions">
+      <button>
+        <span class="glyphicons glyphicons-duplicate"></span>
+        <span>Clone</span>
+      </button>
+    </div>
   </div>
-{{/if}}
+{{/liquid-if}}
 <div class="container">
   <div class="col-md-12">
     {{#if isLoadingQuestions}}
