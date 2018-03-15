@@ -24,9 +24,14 @@
           </div>
 
           <div class="selected-questions-actions">
-            <button>
-              <span class="glyphicons glyphicons-duplicate"></span>
-              <span style="margin-left: 4px;" >Clone</span>
+            <button onclick={{perform duplicateQuestionsTask}} class="{{if duplicateQuestionsTask.isRunning "disabled"}}">
+              {{#liquid-if duplicateQuestionsTask.isRunning}}
+                <span class="glyphicons glyphicons-repeat gly-spin"></span>
+                <span style="margin-left: 4px;">Cloning...</span>
+              {{else}}
+                <span class="glyphicons glyphicons-duplicate"></span>
+                <span style="margin-left: 4px;">Clone</span>
+              {{/liquid-if}}
             </button>
           </div>
         </div>
