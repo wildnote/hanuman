@@ -33,6 +33,8 @@ before_script:
   - psql -c 'create database hanuman_test;' -U postgres
   - bundle install && bundle exec rake db:migrate --trace
   - cd frontend
+  - "sudo chown root /opt/google/chrome/chrome-sandbox"
+  - "sudo chmod 4755 /opt/google/chrome/chrome-sandbox"
 
 install:
   - yarn install --non-interactive
