@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
 
     # Relations
-    belongs_to :survey, touch: true
+    belongs_to :survey#, touch: true -kdh removing touch to we don't update surveys table everytime the observations table is updated
     belongs_to :question
     belongs_to :selectable, polymorphic: true
     has_many :observation_answers, dependent: :destroy
