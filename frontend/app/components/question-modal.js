@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import Component from '@ember/component';
 import { isBlank } from '@ember/utils';
 import { all } from 'rsvp';
@@ -8,6 +9,7 @@ import { on } from '@ember/object/evented';
 import { equal, sort, alias } from '@ember/object/computed';
 import $ from 'jquery';
 import groupBy from 'ember-group-by';
+const { testing } = Ember;
 
 export default Component.extend({
   remodal: service(),
@@ -319,6 +321,9 @@ export default Component.extend({
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');
       if (question.get('wasNew')) {
+        if (testing) {
+          return question.set('wasNew', false);
+        }
         run.later(this, ()=> {
           $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500);
         }, 500);
