@@ -74,11 +74,13 @@ test('adding a question', async function(assert) {
   fillIn('[data-test="question.questionText"]', 'this is DA question');
   // Select
   await fillIn('[data-test="answer-type-id-select"]', 15);
+  await fillIn('[data-test-order]', 99);
   await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
   await click('[data-test="save-question-link"]');
 
   question = server.schema.questions.all().models[0];
   assert.equal(question.attrs.question_text, 'this is DA question');
+  assert.equal(question.attrs.sort_order, 99);
 });
 
 test('saving a question with answer_type with answers without adding any answers', function(assert) {

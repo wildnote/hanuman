@@ -229,7 +229,7 @@ export default Component.extend({
       let surveyTemplate = this.get('surveyTemplate');
       question.set('surveyTemplate', surveyTemplate);
       if (question.validate()) {
-        if (question.get('isNew')) {
+        if (question.get('isNew') && isBlank(question.get('sortOrder'))) {
           question.set('wasNew', true);
           this._sortOrder(question);
         }

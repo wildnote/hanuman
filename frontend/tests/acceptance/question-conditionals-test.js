@@ -26,7 +26,7 @@ test('adding a conditional with a question without rule previously created', asy
   assert.equal(0, server.schema.rules.all().models.length);
   await click('[data-test="add-condition-link"]');
   // Select question
-  fillIn('[data-test="condition-question-id-select"]', 3);
+  await fillIn('[data-test="condition-question-id-select"]', 3);
   await triggerEvent('[data-test="condition-question-id-select"]', 'onchange');
 
   fillIn('[data-test="condition.answer"]', '    e quiai ');
