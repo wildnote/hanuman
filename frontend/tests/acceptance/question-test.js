@@ -65,22 +65,20 @@ test('selecting ancestry', function(assert) {
   });
 });
 
-test('adding a question', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
+test('adding a question', async function(assert) {
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  await click('a:contains("Add")');
 
-  andThen(function() {
-    click('a:contains("Add")').then(()=>{
-      assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
-      fillIn('[data-test="question.questionText"]', 'this is DA question');
-      // Select
-      fillIn('[data-test="answer-type-id-select"]', 15);
-      triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
-      click('[data-test="save-question-link"]').then(()=>{
-        question = server.schema.questions.all().models[0];
-        assert.equal(question.attrs.question_text, 'this is DA question');
-      });
-    });
-  });
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
+
+  fillIn('[data-test="question.questionText"]', 'this is DA question');
+  // Select
+  await fillIn('[data-test="answer-type-id-select"]', 15);
+  await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
+  await click('[data-test="save-question-link"]');
+
+  question = server.schema.questions.all().models[0];
+  assert.equal(question.attrs.question_text, 'this is DA question');
 });
 
 test('saving a question with answer_type with answers without adding any answers', function(assert) {

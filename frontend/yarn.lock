@@ -52,11 +52,12 @@ acorn@^5.2.1, acorn@^5.5.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.5.0.tgz#1abb587fbf051f94e3de20e6b26ef910b1828298"
 
-active-model-adapter@2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/active-model-adapter/-/active-model-adapter-2.1.1.tgz#ec088f391dc1cd4f163ad9ec0ecf61c69bc53613"
+active-model-adapter@2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/active-model-adapter/-/active-model-adapter-2.2.0.tgz#6885d6968574809f17f398c499b688a921c30f91"
   dependencies:
-    ember-cli-babel "^5.1.6"
+    ember-cli-babel "^6.8.2"
+    ember-inflector "^2.0.0"
 
 after@0.8.1:
   version "0.8.1"
@@ -2711,9 +2712,9 @@ ember-concurrency@^0.8.1, ember-concurrency@^0.8.16:
     ember-cli-babel "^6.8.2"
     ember-maybe-import-regenerator "^0.1.5"
 
-ember-data@2.13.1:
-  version "2.13.1"
-  resolved "https://registry.yarnpkg.com/ember-data/-/ember-data-2.13.1.tgz#fd85daf3c4c7bfe6a0c2e42cedf72048979f94ae"
+ember-data@2.13.2:
+  version "2.13.2"
+  resolved "https://registry.yarnpkg.com/ember-data/-/ember-data-2.13.2.tgz#151c93ad5152885d4ca50b1942d7c66e15865c74"
   dependencies:
     amd-name-resolver "0.0.5"
     babel-plugin-feature-flags "^0.3.1"
@@ -2951,9 +2952,9 @@ ember-sortable@1.9.3:
     ember-invoke-action "^1.4.0"
     ember-new-computed "^1.0.2"
 
-ember-source@^2.13.3:
-  version "2.18.2"
-  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-2.18.2.tgz#75d00eef5488bfe504044b025c752ba924eaf87f"
+ember-source@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/ember-source/-/ember-source-3.0.0.tgz#51811cae98d2ceec53bcfbaa876d02b2b5b2159f"
   dependencies:
     broccoli-funnel "^2.0.1"
     broccoli-merge-trees "^2.0.0"
@@ -2962,7 +2963,6 @@ ember-source@^2.13.3:
     ember-cli-normalize-entity-name "^1.0.0"
     ember-cli-path-utils "^1.0.0"
     ember-cli-string-utils "^1.1.0"
-    ember-cli-test-info "^1.0.0"
     ember-cli-valid-component-name "^1.0.0"
     ember-cli-version-checker "^2.1.0"
     ember-router-generator "^1.2.3"
