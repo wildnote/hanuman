@@ -83,6 +83,7 @@
               {{#draggable-object-target action="setAncestry" acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
                 {{question-row
                   question=question
+                  otherQuetions=sortedQuestions
                   deleteQuestion='deleteQuestion'
                   toggleQuestion=(action "toggleQuestion")
                   isFullyEditable=isFullyEditable
@@ -94,6 +95,7 @@
               {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded' dragHandle='.glyphicons-move-square'}}
                 {{question-row
                   question=question
+                  otherQuetions=sortedQuestions
                   deleteQuestion='deleteQuestion'
                   toggleQuestion=(action "toggleQuestion")
                   isFullyEditable=isFullyEditable
