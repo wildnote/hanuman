@@ -2,9 +2,14 @@ import Component from '@ember/component';
 import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 import { alias, sort } from '@ember/object/computed';
+import { task, all } from 'ember-concurrency';
+import { inject as service } from '@ember/service';
 import $ from 'jquery';
 
 export default Component.extend({
+  store: service(),
+  notify: service(),
+
   questionsSorting: ['sortOrder'],
   sortedQuestions: sort('surveyTemplate.filteredquestions', 'questionsSorting'),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
@@ -13,6 +18,26 @@ export default Component.extend({
     this._super(...arguments);
     this.selectedQuestions = A();
   },
+
+  duplicateQuestionsTask: task(function*() {
+    let selectedQuestions = this.get('selectedQuestions');
+    let store = this.get('store');
+    let surveyTemplate = this.get('surveyTemplate');
+
+    try {
+      let duplicatedResponse = yield all(selectedQuestions.map((question) => question.duplicate()));
+      duplicatedResponse.forEach((response) =>{
+        store.pushPayload(response);
+        // Refactor once `ds-pushpayload-return` is enabled on ember data
+        let duplicated = store.peekRecord('question', response.question.id);
+        surveyTemplate.get('questions').pushObject(duplicated);
+      });
+      this.get('notify').success('Questions successfully duplicated');
+      this.set('selectedQuestions', A());
+    } catch(e) {
+      this.get('notify').alert('There was an error trying to duplicate questions');
+    }
+  }).drop(),
 
   actions: {
     clearAll() {

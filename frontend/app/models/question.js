@@ -3,6 +3,7 @@ import attr from 'ember-data/attr';
 import { belongsTo, hasMany } from 'ember-data/relationships';
 import { computed } from '@ember/object';
 import { match, equal, bool } from '@ember/object/computed';
+import { memberAction } from 'ember-api-actions';
 import Validator from './../mixins/model-validator';
 
 export default Model.extend(Validator, {
@@ -54,8 +55,10 @@ export default Model.extend(Validator, {
   }),
 
   supportAncestry: match('answerType.name', /section|repeater/),
-
   isTaxonType: match('answerType.name', /taxon/),
+
+  // Custom actions
+  duplicate: memberAction({ path: 'duplicate', type: 'post' }),
 
   // Validations
   validations: {

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Hanuman::Api::V1::SurveyTemplatesController, type: :controller do
-	routes { Hanuman::Engine.routes }
+  routes { Hanuman::Engine.routes }
 
   it { expect(subject.class.superclass.name).to eq('Hanuman::Api::V1::BaseController') }
 
