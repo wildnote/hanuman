@@ -10,13 +10,11 @@ moduleForAcceptance('Acceptance | question conditionals', {
 });
 
 // Conditional tabs shouldn't be enable on for new questions
-test('creating new question hides conditional tab', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
-  andThen(function() {
-    click('a:contains("Add")').then(()=>{
-      assert.notEqual(find('[href="#tab-question-conditionals"]').text().trim(), 'Conditionals', 'Hide conditional tab');
-    });
-  });
+test('creating new question hides conditional tab', async function(assert) {
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  await click('a:contains("Add")');
+
+  assert.notEqual(find('[href="#tab-question-conditionals"]').text().trim(), 'Conditionals', 'Hide conditional tab');
 });
 
 test('adding a conditional with a question without rule previously created', async function(assert) {
@@ -28,17 +26,17 @@ test('adding a conditional with a question without rule previously created', asy
   assert.equal(0, server.schema.rules.all().models.length);
   await click('[data-test="add-condition-link"]');
   // Select question
-  fillIn('[data-test="condition-question-id-select"]', 3);
+  await fillIn('[data-test="condition-question-id-select"]', 3);
   await triggerEvent('[data-test="condition-question-id-select"]', 'onchange');
 
-  fillIn('[data-test="condition.answer"]', 'e quiai');
+  fillIn('[data-test="condition.answer"]', '    e quiai ');
   await click('[data-test="save-condition-link"]');
   await click('[data-test="save-question-link"]');
 
   assert.equal(1, server.schema.rules.all().models.length);
 
   let condition = server.db.conditions[0];
-  assert.equal(condition.answer, 'e quiai');
+  assert.equal(condition.answer, 'e quiai', 'answer is correct and trim');
   assert.equal(condition.operator, 'is equal to');
 });
 

@@ -12,6 +12,12 @@ moduleForAcceptance('Acceptance | question', {
   }
 });
 
+test('visiting survey_templates/:survey_step_id/questions/:id', async function(assert) {
+  question = server.create('question', { surveyTemplate });
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+});
+
 test('selecting a type with answer choices', function(assert) {
   question = server.create('question', { surveyTemplate, answer_type_id: 17 }); // Answer Type id 17 = `Radio`
 
@@ -56,22 +62,22 @@ test('selecting ancestry', function(assert) {
   });
 });
 
-test('adding a question', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
+test('adding a question', async function(assert) {
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  await click('a:contains("Add")');
 
-  andThen(function() {
-    click('a:contains("Add")').then(()=>{
-      assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
-      fillIn('[data-test="question.questionText"]', 'this is DA question');
-      // Select
-      fillIn('[data-test="answer-type-id-select"]', 15);
-      triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
-      click('[data-test="save-question-link"]').then(()=>{
-        question = server.schema.questions.all().models[0];
-        assert.equal(question.attrs.question_text, 'this is DA question');
-      });
-    });
-  });
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
+
+  fillIn('[data-test="question.questionText"]', 'this is DA question');
+  // Select
+  await fillIn('[data-test="answer-type-id-select"]', 15);
+  await fillIn('[data-test-order]', 99);
+  await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
+  await click('[data-test="save-question-link"]');
+
+  question = server.schema.questions.all().models[0];
+  assert.equal(question.attrs.question_text, 'this is DA question');
+  assert.equal(question.attrs.sort_order, 99);
 });
 
 test('saving a question with answer_type with answers without adding any answers', function(assert) {
@@ -116,23 +122,35 @@ test('editing a question', async function(assert) {
   assert.equal(question.external_data_source, 'chuchucu');
 });
 
-test('deleting a question', function(assert) {
+test('deleting a question', async function(assert) {
   surveyTemplate = server.create('survey-template', { fully_editable: false });
   let questions = server.createList('question', 2, { surveyTemplate });
   question = questions[0];
-  visit(`/survey_templates/${surveyTemplate.id}`);
 
-  andThen(function() {
-    assert.equal(question.question_text, find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
-    click(`[data-question-id="${question.id}"] [data-test="confirm-delete-question-link"]`).then(()=>{
-      click(`[data-question-id="${question.id}"] [data-test="delete-question-link"]`).then(()=>{
-        assert.notEqual(question.question_text, find('[data-test="question.questionText"]:first').text().trim());
-      });
-    });
-    visit(`/survey_templates/${surveyTemplate.id}`).then(()=>{
-      assert.notEqual(question.question_text, find('[data-test="question.questionText"]:first').text().trim());
-    });
-  });
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+
+  assert.equal(question.question_text, find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
+
+  await click(`[data-question-id="${question.id}"] [data-test="confirm-delete-question-link"]`);
+  await click(`[data-question-id="${question.id}"] [data-test="delete-question-link"]`);
+  assert.notEqual(question.question_text, find('[data-test="question.questionText"]:first').text().trim());
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  assert.notEqual(question.question_text, find('[data-test="question.questionText"]:first').text().trim());
+});
+
+test('wording when deleting a question', async function(assert) {
+  let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
+  let ancestryId = ancestryQuestion.id;
+  server.create('question', { surveyTemplate, parent_id: ancestryId, ancestry: ancestryId, answer_type_id: 52 }); // Answer Type id 57 = `latlong`
+
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  await click(`[data-question-id="${ancestryQuestion.id}"] [data-test="confirm-delete-question-link"]`);
+
+  assert.equal(
+    'Performing this delete will also destroy associated questions within this section/repeater.',
+    find(`[data-question-id="${ancestryQuestion.id}"] [data-test-delete-confirm-message]`).text().trim(),
+    'has the correct wording'
+  );
 });
 
 test('showing `Capture lat/long` checkboxes', async function(assert) {

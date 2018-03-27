@@ -5,7 +5,7 @@ import { run } from '@ember/runloop';
 import config from 'frontend/config/environment';
 
 export default Route.extend({
-  notify: service('notify'),
+  notify: service(),
   setupController(controller, model) {
     this._super(controller, model);
     // Progress bar indicators

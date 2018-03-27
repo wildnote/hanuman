@@ -53,6 +53,11 @@ export default Component.extend({
 
     save() {
       let condition = this.get('condition');
+
+      // Strip any trailing spaces off of a condition answer before saving it.
+      let answer = condition.get('answer');
+      condition.set('answer', answer.trim());
+
       if (condition.validate()) {
         condition.set('rule', this.get('rule'));
         this.sendAction('save', condition);

@@ -27,6 +27,11 @@ export default Component.extend({
     return htmlSafe(intial);
   }),
 
+  totalChildren: computed('otherQuetions.@each.ancestry', 'question.id', function() {
+    let questionId = this.get('question.id');
+    return this.get('otherQuetions').filter((question) => question.get('ancestry') === questionId).length;
+  }),
+
   actions: {
     confirm() {
       let el = this.get('element');

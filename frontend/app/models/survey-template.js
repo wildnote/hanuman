@@ -1,9 +1,9 @@
-import { filterBy } from '@ember/object/computed';
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import { hasMany } from 'ember-data/relationships';
 import Validator from './../mixins/model-validator';
 import { memberAction } from 'ember-api-actions';
+import { filterBy } from '@ember/object/computed';
 
 // Constants
 const STATUSES = ['draft', 'active', 'inactive'];

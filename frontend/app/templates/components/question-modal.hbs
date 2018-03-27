@@ -195,9 +195,21 @@
           </div>
         </div>
 
-        {{#if isALatLongInsideARepeater}}
-          <div data-test="capture-lat-long" class="row">
-            <div class="col-md-6">
+        <div class="row">
+          <div class="col-md-3">
+            <div class="form-group">
+              <div class="col-sm-12">
+                {{#form-field for='sortOrder' label='Order'}}
+                  <input data-test-order type="text"
+                        class="form-control"
+                        value={{question.sortOrder}}
+                        oninput={{action (mut question.sortOrder) value="target.value"}} />
+                {{/form-field}}
+              </div>
+            </div>
+          </div>
+          {{#if isALatLongInsideARepeater}}
+            <div style="padding-top: 25px;" data-test="capture-lat-long" class="col-md-9">
               <div class="form-group">
                 <div class="col-sm-12">
                   <input type="checkbox"
@@ -207,8 +219,8 @@
                 </div>
               </div>
             </div>
-          </div>
-        {{/if}}
+          {{/if}}
+        </div>
 
         <div class="row">
           <div class="col-md-3">

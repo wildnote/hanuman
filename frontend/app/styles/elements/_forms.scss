@@ -9,10 +9,16 @@
         position: relative;
         right: 3px;
         bottom: 21px;
-        margin-bottom: 0;
+        margin-bottom: -16px;
         text-align: right;
         color: rgba(248, 121, 97, 0.73);
         font-size: 11px;
+      }
+      &.answerType {
+        .help-block{
+          right: 15px;
+          bottom: 23px;
+        }
       }
     }
   }

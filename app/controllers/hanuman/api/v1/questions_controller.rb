@@ -25,6 +25,12 @@ module Hanuman
       respond_with question.destroy
     end
 
+    def duplicate
+      question = Question.find(params[:id])
+      duplicated_question = question.dup_and_save
+      respond_with duplicated_question
+    end
+
     private
 
     def question_params
