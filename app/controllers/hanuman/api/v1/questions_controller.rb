@@ -17,7 +17,6 @@ module Hanuman
     def update
       question = Question.find(params[:id])
       question.update_attributes(question_params)
-      puts question.inspect
       respond_with question
     end
 
