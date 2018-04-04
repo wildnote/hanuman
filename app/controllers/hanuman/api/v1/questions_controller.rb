@@ -17,6 +17,7 @@ module Hanuman
     def update
       question = Question.find(params[:id])
       question.update_attributes(question_params)
+      puts question.inspect
       respond_with question
     end
 
@@ -37,7 +38,7 @@ module Hanuman
       params.require(:question).permit(
         :question_text, :answer_type_id, :sort_order, :survey_template_id,
         :required, :external_data_source, :hidden, :parent_id, :capture_location_data, :data_source_id,
-        :combine_latlong_as_polygon, :combine_latlong_as_line
+        :combine_latlong_as_polygon, :combine_latlong_as_line, :enable_survey_history
       )
     end
 

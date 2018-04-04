@@ -248,6 +248,16 @@
                 </div>
               </div>
             {{/if}}
+            {{#if (and isSuperUser question.isLocationSelect) }}
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="enableSurveyHistory"
+                        checked={{question.enableSurveyHistory}}
+                        onchange={{action (mut question.enableSurveyHistory) value="target.checked"}} /> Enable Survey History (Superuser Only)
+                </div>
+              </div>
+            {{/if}}
           </div>
         </div>
 
