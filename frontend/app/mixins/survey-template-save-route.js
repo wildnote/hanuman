@@ -1,5 +1,6 @@
-import { inject as service } from '@ember/service';
 import Mixin from '@ember/object/mixin';
+import { inject as service } from '@ember/service';
+import { task } from 'ember-concurrency';
 
 export default Mixin.create({
   ajax: service(),
@@ -10,20 +11,22 @@ export default Mixin.create({
       return controller.set('organizations', response.organizations);
     });
   },
+
+  saveSurveyTemplateTask: task(function*() {
+    let surveyTemplate = this.currentModel;
+    try {
+      surveyTemplate = yield surveyTemplate.save();
+      this.transitionTo('survey_templates.record', surveyTemplate);
+    } catch(e) {
+      this.get('notify').alert('There was an error trying to save this Survey Template');
+    }
+  }).drop(),
+
   actions: {
     save() {
       let surveyTemplate = this.currentModel;
       if (surveyTemplate.validate()) {
-        surveyTemplate.save().then(
-          // Success
-          (surveyTemplate) => {
-            this.transitionTo('survey_templates.record', surveyTemplate);
-          },
-          // Error
-          (_error) => {
-            this.get('notify').alert('There was an error trying to save this Survey Template');
-          }
-        );
+        this.get('saveSurveyTemplateTask').perform();
       }
     }
   }
