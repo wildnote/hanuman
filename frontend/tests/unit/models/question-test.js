@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import { moduleForModel, test } from 'ember-qunit';
 
 moduleForModel('question', 'Unit | Model | question', {
@@ -13,16 +13,10 @@ moduleForModel('question', 'Unit | Model | question', {
   ]
 });
 
-test('it exists', function(assert) {
-  let model = this.subject();
-  // let store = this.store();
-  assert.ok(!!model);
-});
-
 test('ruleMatchType', function(assert) {
   let model = this.subject();
   let store = this.store();
-  Ember.run(function() {
+  run(function() {
     let rule = store.createRecord('rule', { matchType: 'all' });
     model.set('rule', rule);
     assert.equal(model.get('ruleMatchType'), 'AND');

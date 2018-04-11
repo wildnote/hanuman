@@ -5,11 +5,12 @@ module Hanuman
     # Relations
     belongs_to :survey_template
     has_many :observations, dependent: :destroy
-    has_many :observation_answers, through: :observations
-    has_many :observation_documents, through: :observations
-    has_many :observation_photos, through: :observations
-    has_many :observation_videos, through: :observations
     accepts_nested_attributes_for :observations, allow_destroy: true
+    has_many :unscope_observations, -> { unscope(:includes, :order) }, class_name: 'Hanuman::Observation'
+    has_many :observation_answers, through: :unscope_observations
+    has_many :observation_documents, through: :unscope_observations
+    has_many :observation_photos, through: :unscope_observations
+    has_many :observation_videos, through: :unscope_observations
     has_one :survey_extension, dependent: :delete
     accepts_nested_attributes_for :survey_extension, allow_destroy: true
 
@@ -25,33 +26,8 @@ module Hanuman
     # Delegations
     delegate :name, to: :survey_template, prefix: true
 
-    def survey_steps
-      survey_template.survey_steps.collect(&:step).uniq
-    end
-
-    def survey_step_is_duplicator?(step)
-      survey_template.survey_steps.by_step(step).first.duplicator
-    end
-
-    def observation_entries_by_step(step)
-      observations.filtered_by_step(step).collect(&:entry).uniq
-    end
-
-    def max_observation_entry_by_step(step)
-      max = observations.filtered_by_step(step).collect(&:entry).uniq.max
-      max.blank? ? 0 : max
-    end
-
     def author
       versions.first.whodunnit unless versions.blank? rescue nil
-    end
-
-    def survey_step_has_observations?(step)
-      survey_template.survey_steps
-        .where(step: step)
-        .first.questions
-        .first.observations
-        .where('hanuman_observations.survey_id = ?', id).count > 0
     end
 
     def apply_group_sort

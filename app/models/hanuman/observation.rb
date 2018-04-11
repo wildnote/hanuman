@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
 
     # Relations
-    belongs_to :survey, touch: true
+    belongs_to :survey#, touch: true -kdh removing touch to we don't update surveys table everytime the observations table is updated
     belongs_to :question
     belongs_to :selectable, polymorphic: true
     has_many :observation_answers, dependent: :destroy
@@ -50,10 +50,6 @@ module Hanuman
       enable
     end
 
-    def step
-      question.survey_step.step
-    end
-
     def strip_and_squish_answer
       answer.strip.squish unless answer.blank?
     end
@@ -70,22 +66,6 @@ module Hanuman
     def parent_text
       a = answer.split(' ( ')[1]
       a.blank? ? '' : a.gsub(' )', '')
-    end
-
-    def self.filtered_by_entry(entry)
-      includes(question: [:survey_step, :answer_type]).
-      where(entry: entry)
-    end
-
-    def self.filtered_by_step(step)
-      includes(question: [:survey_step, :answer_type]).
-      where("hanuman_survey_steps.step = ?", step)
-    end
-
-    # Deprecated
-    def self.filtered_by_step_and_entry(step, entry)
-      includes(:question => [:survey_step, :answer_type]).
-      where('hanuman_survey_steps.step = ? AND hanuman_observations.entry = ?', step, entry)
     end
 
     def self.entries

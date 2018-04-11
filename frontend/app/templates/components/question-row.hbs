@@ -1,5 +1,5 @@
 {{!-- called from surveyTemplate and dislpays each answer type as readonly --}}
-<div class="row">
+<div data-test-question-row class="row">
   <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
   <div class="col-sm-4">
     {{#if question.loading}}
@@ -13,7 +13,9 @@
         {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
       </span>
     {{/unless}}
-    <span data-test="question.questionText">{{question.questionText}}</span>
+    <span data-test="question.questionText">
+      {{question.questionText}}
+    </span>
   </div>
   <div class="col-sm-2" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
   <div class="col-sm-2">
@@ -63,11 +65,20 @@
       <span class="glyphicons glyphicons-bin"></span>
     </a>
     <div class="delete-confirm">
-      <small class="{{if isFullyEditable 'hide'}}">Performing this delete will also destroy associated historical data.<br></small>
+      {{#if (and (gt totalChildren 0) (not isFullyEditable)) }}
+        <small data-test-delete-confirm-message>Performing this delete will also destroy associated historical data and questions within this section/repeater.<br></small>
+      {{else if (gt totalChildren 0)}}
+        <small data-test-delete-confirm-message>Performing this delete will also destroy associated questions within this section/repeater.<br></small>
+      {{else if (not isFullyEditable)}}
+        <small data-test-delete-confirm-message>Performing this delete will also destroy associated historical data.<br></small>
+      {{/if}}
       <small>Are you sure you want to delete this question?</small><br>
-      <button class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
-      <button class="btn" onclick={{action 'cancel'}}>No</button>
+      <button style="margin-top: 10px;" class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
+      <button style="margin-top: 10px;" class="btn" onclick={{action 'cancel'}}>No</button>
     </div>
+    <span class="float-right hide">
+      <input data-test-question-selector type="checkbox" checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
+    </span>
   </div>
 </div>
 

@@ -1,12 +1,16 @@
-import Ember from 'ember';
-
-const {
-  Component,
-  computed
-} = Ember;
+import Component from '@ember/component';
+import { htmlSafe } from '@ember/string';
+import { computed } from '@ember/object';
+import $ from 'jquery';
 
 export default Component.extend({
   attributeBindings: ['question.id:data-question-id'],
+
+  isSelected: computed('selectedQuestions.[]', 'question.id', function() {
+    let selectedQuestions = this.get('selectedQuestions');
+    let questionId = this.get('question.id');
+    return selectedQuestions.some((question) => question.get('id') === questionId);
+  }),
 
   typeInitial: computed('question.{ancestry,hidden,required,rule.isNew}', function() {
     let question = this.get('question');
@@ -20,24 +24,33 @@ export default Component.extend({
     if (question.get('rule') && !question.get('rule.isNew')) {
       intial += `<span class="label label-info">Rules</span>`;
     }
-    return Ember.String.htmlSafe(intial);
+    return htmlSafe(intial);
+  }),
+
+  totalChildren: computed('otherQuetions.@each.ancestry', 'question.id', function() {
+    let questionId = this.get('question.id');
+    return this.get('otherQuetions').filter((question) => question.get('ancestry') === questionId).length;
   }),
 
   actions: {
     confirm() {
       let el = this.get('element');
-      let $confirm = Ember.$('.delete-confirm', el);
+      let $confirm = $('.delete-confirm', el);
       $confirm.fadeIn();
     },
     cancel() {
       let el = this.get('element');
-      let $confirm = Ember.$('.delete-confirm', el);
+      let $confirm = $('.delete-confirm', el);
       $confirm.fadeOut();
     },
     delete() {
       let question = this.get('question');
       let el = this.get('element');
       this.sendAction('deleteQuestion', question, el);
+    },
+    toggleQuestion() {
+      let question = this.get('question');
+      this.get('toggleQuestion')(question);
     }
   }
 });

@@ -5,7 +5,6 @@ module Hanuman
 
     # Relations
     belongs_to :answer_type
-    belongs_to :survey_step # Deprecated
     belongs_to :survey_template
     has_many :answer_choices, -> { order :sort_order, :option_text }, dependent: :destroy, inverse_of: :question
     # if a user deletes a question from survey admin we need to delete related observations, giving warning in survey admin
@@ -16,7 +15,6 @@ module Hanuman
     # Validations
     validates :answer_type_id, presence: true
     # wait until after migration for these validations
-    #validates_presence_of :sort_order, :survey_step_id
     validates :question_text, presence: true, unless: :question_text_not_required
 
     # Callbacks
@@ -32,7 +30,11 @@ module Hanuman
     end
 
     def self.sort(sort_column, sort_direction)
-      joins(:answer_type).order((sort_column + " " + sort_direction).gsub("asc asc", "asc").gsub("asc desc", "asc").gsub("desc desc", "desc").gsub("desc asc", "desc"))
+      joins(:answer_type).order(("#{sort_column}  #{sort_direction}")
+        .gsub('asc asc', 'asc')
+        .gsub('asc desc', 'asc')
+        .gsub('desc desc', 'desc')
+        .gsub('desc asc', 'desc'))
     end
 
     def question_text_not_required
@@ -42,19 +44,17 @@ module Hanuman
 
     # adding this method so I can check it before calling the job to process question changes on observations to try and decrease the number of 404 errors coming through
     def survey_template_not_fully_editable?
-      !self.survey_template.fully_editable
+      !survey_template.try(:fully_editable)
     end
 
     # adding this method so I can check it before calling the job to process question changes on observations to try and decrease the number of 404 errors coming through
     def survey_template_not_fully_editable_or_sort_order_changed?
-      if survey_template_not_fully_editable? && sort_order_changed?
-        true
-      end
+      survey_template_not_fully_editable? && sort_order_changed?
     end
 
     # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
     def process_question_changes_on_observations
-      ProcessQuestionChangesWorker.perform_async(self.id)
+      ProcessQuestionChangesWorker.perform_async(id)
     end
 
     # if survey has data submitted against it, then submit blank data for each
@@ -122,8 +122,9 @@ module Hanuman
     # duplicate and save a single question with answer choices and conditions
     def dup_and_save
       new_q = self.amoeba_dup
-      new_q.sort_order = self.sort_order + 1
+      new_q.sort_order = self.sort_order.to_i + 1
       new_q.save
+      new_q
     end
 
     # duplicate a question set which contains a parent question, followed by a

@@ -1,4 +1,4 @@
-import Ember from 'ember';
+import { run } from '@ember/runloop';
 import { moduleForModel, test } from 'ember-qunit';
 
 moduleForModel('answer-type', 'Unit | Model | answer type', {
@@ -8,16 +8,10 @@ moduleForModel('answer-type', 'Unit | Model | answer type', {
   ]
 });
 
-test('it exists', function(assert) {
-  let model = this.subject();
-  // let store = this.store();
-  assert.ok(!!model);
-});
-
 test('hasAnswerChoices', function(assert) {
   let model = this.subject();
   assert.notOk(model.get('hasAnswerChoices'));
-  Ember.run(function() {
+  run(function() {
     for (let htmlType of model.get('types')) {
       model.set('name', htmlType);
       assert.ok(model.get('hasAnswerChoices'));

@@ -25,13 +25,19 @@ module Hanuman
       respond_with question.destroy
     end
 
+    def duplicate
+      question = Question.find(params[:id])
+      duplicated_question = question.dup_and_save
+      respond_with duplicated_question
+    end
+
     private
 
     def question_params
       params.require(:question).permit(
         :question_text, :answer_type_id, :sort_order, :survey_template_id,
         :required, :external_data_source, :hidden, :parent_id, :capture_location_data, :data_source_id,
-        :combine_latlong_as_polygon, :combine_latlong_as_line
+        :combine_latlong_as_polygon, :combine_latlong_as_line, :enable_survey_history
       )
     end
 

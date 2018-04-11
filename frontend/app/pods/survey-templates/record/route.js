@@ -1,16 +1,11 @@
-import Ember from 'ember';
+import Route from '@ember/routing/route';
+import { inject as service } from '@ember/service';
+import { isBlank, isPresent } from '@ember/utils';
+import { run } from '@ember/runloop';
 import config from 'frontend/config/environment';
 
-const {
-  Route,
-  run,
-  isPresent,
-  isBlank,
-  inject
-} = Ember;
-
 export default Route.extend({
-  notify: inject.service('notify'),
+  notify: service(),
   setupController(controller, model) {
     this._super(controller, model);
     // Progress bar indicators
@@ -118,18 +113,19 @@ export default Route.extend({
           }
         },
         (error)=>{
-          console.log(error);
-          if(error.errors[0].detail.detail == "associated-data-restriction") {
+          console.log(error); // eslint-disable-line no-console
+          if (error.errors[0].detail.detail == 'associated-data-restriction') {
             this.get('notify').alert('Survey template cannot be deleted as it has associated survey data. To complete deletion first delete survey data.', {
               closeAfter: 5000
             });
-          }
-          else {
+          } else {
             this.get('notify').alert('There was an error trying to delete this Survey Template', {
               closeAfter: 5000
             });
           }
-          run.later(this ,()=> { indexController.send('toggleBtnLoading','delete'); }, 1000);
+          run.later(this, () => {
+            return indexController.send('toggleBtnLoading', 'delete');
+          }, 1000);
         }
       );
     }

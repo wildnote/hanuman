@@ -14,8 +14,7 @@ module.exports = {
     'selectSearch': true,
     'server': true,
     'wait': true,
-    'withFeature': true
-  },
-  rules: {
+    'withFeature': true,
+    'superUser': true
   }
 };

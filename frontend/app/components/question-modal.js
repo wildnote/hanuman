@@ -1,17 +1,15 @@
 import Ember from 'ember';
+import Component from '@ember/component';
+import { isBlank } from '@ember/utils';
+import { all } from 'rsvp';
+import { run } from '@ember/runloop';
+import { inject as service } from '@ember/service';
+import { observer, computed } from '@ember/object';
+import { on } from '@ember/object/evented';
+import { equal, sort, alias } from '@ember/object/computed';
+import $ from 'jquery';
 import groupBy from 'ember-group-by';
-const {
-  Component,
-  $,
-  run,
-  computed,
-  inject: {
-    service
-  },
-  observer,
-  on,
-  computed: { alias, sort, equal }
-} = Ember;
+const { testing } = Ember;
 
 export default Component.extend({
   remodal: service(),
@@ -56,8 +54,7 @@ export default Component.extend({
       let ancestryQuestion = this.get('ancestryQuestion');
       if (ancestryQuestion === undefined) {
         return false;
-      }
-      else {
+      } else {
         return ancestryQuestion.get('isARepeater');
       }
     } else {
@@ -114,7 +111,7 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    run.scheduleOnce('afterRender', this, function () {
+    run.scheduleOnce('afterRender', this, function() {
       this.get('remodal').open('question-modal');
       $('[data-toggle="popover"]').popover({});
     });
@@ -150,7 +147,7 @@ export default Component.extend({
         this._removeAnswerChoices();
       }
       promises = $.makeArray(promises);
-      Ember.RSVP.all(promises).then(()=>{
+      all(promises).then(()=>{
         while (answerChoicesPendingSave.length > 0) {
           answerChoicesPendingSave.popObject();
         }
@@ -199,7 +196,7 @@ export default Component.extend({
 
     ancestryChange(newAncestryId) {
       let question = this.get('question');
-      if (Ember.isBlank(newAncestryId)) {
+      if (isBlank(newAncestryId)) {
         newAncestryId = null;
       }
       question.set('parentId', newAncestryId);
@@ -218,8 +215,8 @@ export default Component.extend({
       }
     },
 
-    setDataSource(dataSourceId){
-      const dataSource = this.get('dataSources').findBy('id', dataSourceId);
+    setDataSource(dataSourceId) {
+      let dataSource = this.get('dataSources').findBy('id', dataSourceId);
       this.set('question.dataSource', dataSource);
     },
 
@@ -232,7 +229,7 @@ export default Component.extend({
       let surveyTemplate = this.get('surveyTemplate');
       question.set('surveyTemplate', surveyTemplate);
       if (question.validate()) {
-        if (question.get('isNew')) {
+        if (question.get('isNew') && isBlank(question.get('sortOrder'))) {
           question.set('wasNew', true);
           this._sortOrder(question);
         }
@@ -324,6 +321,9 @@ export default Component.extend({
       this.get('remodal').close('question-modal');
       this.sendAction('transitionToSurveyStep');
       if (question.get('wasNew')) {
+        if (testing) {
+          return question.set('wasNew', false);
+        }
         run.later(this, ()=> {
           $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500);
         }, 500);

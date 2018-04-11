@@ -1,4 +1,5 @@
-import Ember from 'ember';
+import Application from '@ember/application';
+import { run } from '@ember/runloop';
 import SuperUserInitializer from 'frontend/initializers/super-user';
 import { module, test } from 'qunit';
 
@@ -7,8 +8,8 @@ let application;
 module('Unit | Initializer | super user', {
   beforeEach() {
     window.superUser = true;
-    Ember.run(function() {
-      application = Ember.Application.create();
+    run(function() {
+      application = Application.create();
       application.deferReadiness();
     });
   },
