@@ -113,7 +113,7 @@ test('canceling question edition', function(assert) {
 });
 
 test('editing a question', async function(assert) {
-  question = server.create('question', { surveyTemplate });
+  question = server.create('question', { surveyTemplate, answer_type_id: 15 });
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   await fillIn('[data-test="question.externalDataSource"]', 'chuchucu');
   await click('[data-test="save-question-link"]');
