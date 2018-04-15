@@ -17,10 +17,10 @@ test('adding an answer choice', async function(assert) {
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   await click('[data-test="add-answer-choice-link"]');
-  fillIn('[data-test="answerChoice.optionText"]', 'A new answer choice');
+  fillIn('[data-test="answerChoice.optionText"]', 'A new answer choice     ');
   await click('[data-test="save-answer-choice-link"]');
   let answerChoice = server.schema.answerChoices.all().models[0];
-  assert.equal(answerChoice.optionText, 'A new answer choice');
+  assert.equal(answerChoice.optionText, 'A new answer choice', 'answer is correct and trim');
 });
 
 test('editing an answer choice', async function(assert) {
@@ -45,9 +45,8 @@ test('editing an answer choice', async function(assert) {
 
 test('deleting an answer choice', async function(assert) {
   question = server.create('question', { surveyTemplate, answer_type_id: 17 });
-  answerChoices = server.createList('answer-choice', 2, { question });
-
-  let firstAnswerChoices = answerChoices[0];
+  let firstAnswerChoices = server.create('answer-choice', { question, option_text: 'a' });
+  server.create('answer-choice', { question, option_text: 'b' });
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 

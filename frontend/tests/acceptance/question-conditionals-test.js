@@ -29,14 +29,14 @@ test('adding a conditional with a question without rule previously created', asy
   await fillIn('[data-test="condition-question-id-select"]', 3);
   await triggerEvent('[data-test="condition-question-id-select"]', 'onchange');
 
-  fillIn('[data-test="condition.answer"]', '    e quiai ');
+  await fillIn('[data-test="condition.answer"]', '    e quiai ');
   await click('[data-test="save-condition-link"]');
   await click('[data-test="save-question-link"]');
 
   assert.equal(1, server.schema.rules.all().models.length);
 
   let condition = server.db.conditions[0];
-  assert.equal(condition.answer, 'e quiai', 'answer is correct and trim');
+  assert.equal(condition.answer, 'e quiai', 'conditional answer is correct and trim');
   assert.equal(condition.operator, 'is equal to');
 });
 
@@ -86,7 +86,7 @@ test('deleting a conditional', async function(assert) {
   assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
 });
 
-test('selecting a conditional question with answer choices', function(assert) {
+test('selecting a conditional question with answer choices', async function(assert) {
   // Question with answer choices
   /* eslint-disable camelcase */
   let questionWithAnsweChoices = server.create('question', { surveyTemplate, answer_type_id: 17 });
@@ -100,19 +100,16 @@ test('selecting a conditional question with answer choices', function(assert) {
 
   let firstAnswerChoice = answerChoices[0];
 
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
-  andThen(function() {
-    let selector = `[data-condition-id="${toTestCondition.id}"]`;
-    click(`${selector} [data-test="edit-condition-link"]`);
+  let selector = `[data-condition-id="${toTestCondition.id}"]`;
+  await click(`${selector} [data-test="edit-condition-link"]`);
 
-    // Select operator
-    fillIn(`${selector} [data-test="condition-answer-choice-dropdown"]`, firstAnswerChoice.option_text);
-    triggerEvent(`${selector} [data-test="condition-answer-choice-dropdown"]`, 'onchange');
+  // Select operator
+  await fillIn(`${selector} [data-test="condition-answer-choice-dropdown"]`, firstAnswerChoice.option_text);
+  await triggerEvent(`${selector} [data-test="condition-answer-choice-dropdown"]`, 'onchange');
 
-    click(`${selector} [data-test="save-condition-link"]`).then(()=>{
-      toTestCondition = server.db.conditions.find(toTestCondition.id);
-      assert.equal(toTestCondition.answer, firstAnswerChoice.option_text);
-    });
-  });
+  await click(`${selector} [data-test="save-condition-link"]`);
+  toTestCondition = server.db.conditions.find(toTestCondition.id);
+  assert.equal(toTestCondition.answer, firstAnswerChoice.option_text);
 });
