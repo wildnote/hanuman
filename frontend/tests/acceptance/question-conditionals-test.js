@@ -70,11 +70,11 @@ test('deleting a conditional', async function(assert) {
   server.createList('question', 5, { surveyTemplate });
   rule = server.create('rule');
   /* eslint-disable camelcase */
+  let firstCondition = server.create('condition', { rule, question_id: 3, answer: 'to be deleted...' });
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
   question = server.create('question', { surveyTemplate, rule });
   rule = server.db.rules.update(rule.id, { question_id: question.id });
   /* eslint-enable camelcase */
-  let firstCondition = conditions[0];
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
