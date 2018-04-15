@@ -41,6 +41,8 @@ export default Component.extend({
 
   actions: {
     clearAll() {
+      // Clean state
+      this.get('selectedQuestions').forEach((question) => question.set('ancestrySelected', false));
       this.set('selectedQuestions', A());
     },
     toggleQuestion(question) {

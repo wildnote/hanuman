@@ -50,7 +50,21 @@ export default Component.extend({
     },
     toggleQuestion() {
       let question = this.get('question');
+      let questionId = this.get('question.id');
+      let otherQuetions = this.get('otherQuetions');
       this.get('toggleQuestion')(question);
+      // Toggle children questions
+      otherQuetions.forEach((otherQuetion) => {
+        if(otherQuetion.get('ancestry')) {
+          let ancestrires = otherQuetion.get('ancestry').split('/');
+          console.log(otherQuetion.get('ancestry'), ' and ', questionId);
+          if(ancestrires.includes(questionId)){
+            let ancestrySelected = otherQuetion.get('ancestrySelected');
+            otherQuetion.set('ancestrySelected', !ancestrySelected);
+            this.get('toggleQuestion')(otherQuetion);
+          }
+        }
+      });
     }
   }
 });

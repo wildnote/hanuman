@@ -9,6 +9,7 @@ import Validator from './../mixins/model-validator';
 export default Model.extend(Validator, {
   // Accessors
   loading: attr('boolean', { defaultValue: false }),
+  ancestrySelected: attr('boolean', { defaultValue: false }),
 
   // Attributes
   questionText: attr('string'),

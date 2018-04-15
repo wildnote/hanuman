@@ -1,4 +1,8 @@
 .li-question{
+  &.disabled {
+    pointer-events:none;
+    opacity: 0.3;
+  }
   &.animated {
     -vendor-animation-duration: 3s;
   }
