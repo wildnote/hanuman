@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import Application from '@ember/application';
 import LinkComponent from '@ember/routing/link-component';
 import Resolver from './resolver';
