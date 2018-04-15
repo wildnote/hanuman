@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180111200453) do
+ActiveRecord::Schema.define(version: 20180404093022) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,6 +153,7 @@ ActiveRecord::Schema.define(version: 20180111200453) do
     t.boolean  "combine_latlong_as_line",    default: false
     t.boolean  "combine_latlong_as_polygon", default: false
     t.boolean  "noncompliance",              default: false
+    t.boolean  "enable_survey_history"
   end
 
   add_index "hanuman_questions", ["ancestry"], name: "index_hanuman_questions_on_ancestry", using: :btree
@@ -188,27 +189,6 @@ ActiveRecord::Schema.define(version: 20180111200453) do
 
   create_table "hanuman_survey_extensions", force: :cascade do |t|
     t.integer  "survey_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "hanuman_survey_questions", force: :cascade do |t|
-    t.integer  "survey_template_id"
-    t.integer  "question_id"
-    t.integer  "sort_order"
-    t.boolean  "duplicator",         default: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "step"
-  end
-
-  add_index "hanuman_survey_questions", ["question_id"], name: "index_hanuman_survey_questions_on_question_id", using: :btree
-  add_index "hanuman_survey_questions", ["survey_template_id"], name: "index_hanuman_survey_questions_on_survey_template_id", using: :btree
-
-  create_table "hanuman_survey_steps", force: :cascade do |t|
-    t.integer  "survey_template_id"
-    t.integer  "step"
-    t.boolean  "duplicator"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
