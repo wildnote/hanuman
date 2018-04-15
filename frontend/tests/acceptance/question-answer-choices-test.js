@@ -45,9 +45,8 @@ test('editing an answer choice', async function(assert) {
 
 test('deleting an answer choice', async function(assert) {
   question = server.create('question', { surveyTemplate, answer_type_id: 17 });
-  answerChoices = server.createList('answer-choice', 2, { question });
-
-  let firstAnswerChoices = answerChoices[0];
+  let firstAnswerChoices = server.create('answer-choice', { question, option_text: 'a' });
+  server.create('answer-choice', { question, option_text: 'b' });
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
