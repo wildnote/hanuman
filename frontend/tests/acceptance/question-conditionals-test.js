@@ -19,7 +19,7 @@ test('creating new question hides conditional tab', async function(assert) {
 
 test('adding a conditional with a question without rule previously created', async function(assert) {
   server.createList('question', 5, { surveyTemplate });
-  question = server.create('question', { surveyTemplate });
+  question = server.create('question', { surveyTemplate, answer_type_id: 15 });
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
