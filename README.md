@@ -1,7 +1,7 @@
 Hanuman
 ========
 
-[![Build Status](https://travis-ci.org/kristenhazard/hanuman.svg?branch=master)](https://travis-ci.org/kristenhazard/hanuman)
+[![Build Status](https://travis-ci.org/wildnote/hanuman.svg?branch=master)](https://travis-ci.org/wildnote/hanuman)
 
 This project rocks and uses MIT-LICENSE.
 
