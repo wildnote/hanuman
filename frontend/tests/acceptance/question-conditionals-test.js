@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 
