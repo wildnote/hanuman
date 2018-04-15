@@ -9,8 +9,6 @@ LinkComponent.reopen({
   attributeBindings: ['data-test']
 });
 
-Ember.MODEL_FACTORY_INJECTIONS = true;
-
 const App = Application.extend({
   rootElement: '#ember-container',
   modulePrefix: config.modulePrefix,
