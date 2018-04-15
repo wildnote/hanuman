@@ -45,12 +45,13 @@ export default Component.extend({
       this.get('selectedQuestions').forEach((question) => question.set('ancestrySelected', false));
       this.set('selectedQuestions', A());
     },
-    toggleQuestion(question) {
+    toggleQuestion(question, add = true) {
       let selectedQuestions = this.get('selectedQuestions');
-      if (selectedQuestions.includes(question)) {
-        selectedQuestions.removeObject(question);
-      } else {
+      let included = selectedQuestions.includes(question);
+      if (add && !included) {
         selectedQuestions.addObject(question);
+      } else if (!add && included) {
+        selectedQuestions.removeObject(question);
       }
     },
     deleteQuestion(question, elRow) {
