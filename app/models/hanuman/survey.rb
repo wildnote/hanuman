@@ -24,6 +24,7 @@ module Hanuman
     amoeba { 
       enable 
       include_association :survey_extension
+      include_association :observations
     }
 
     # Delegations
