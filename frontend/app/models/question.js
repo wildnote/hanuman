@@ -9,10 +9,7 @@ import Validator from './../mixins/model-validator';
 export default Model.extend(Validator, {
   // Accessors
   loading: attr('boolean', { defaultValue: false }),
-<<<<<<< HEAD
-=======
   ancestrySelected: attr('boolean', { defaultValue: false }),
->>>>>>> master
 
   // Attributes
   questionText: attr('string'),
@@ -24,10 +21,7 @@ export default Model.extend(Validator, {
   parentId: attr('string'),
   railsId: attr('number'),
   captureLocationData: attr('boolean'),
-<<<<<<< HEAD
   enableSurveyHistory: attr('boolean'),
-=======
->>>>>>> master
   combineLatlongAsPolygon: attr('boolean'),
   combineLatlongAsLine: attr('boolean'),
 
@@ -113,8 +107,4 @@ export default Model.extend(Validator, {
       }
     }
   }
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> master
