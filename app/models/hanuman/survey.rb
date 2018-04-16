@@ -21,7 +21,10 @@ module Hanuman
 
     before_save :apply_group_sort
 
-    amoeba { enable }
+    amoeba { 
+      enable 
+      include_association :survey_extension
+    }
 
     # Delegations
     delegate :name, to: :survey_template, prefix: true
