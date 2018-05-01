@@ -25,6 +25,7 @@ export default Model.extend(Validator, {
 
   combineLatlongAsPolygon: attr('boolean'),
   combineLatlongAsLine: attr('boolean'),
+  newProjectLocation: attr('boolean'),
 
   // Associations
   dataSource: belongsTo('data-source'),
@@ -38,7 +39,7 @@ export default Model.extend(Validator, {
   isContainer: equal('answerType.name', 'section'),
   isARepeater: equal('answerType.name', 'repeater'),
   isLocationSelect: equal('answerType.name', 'locationchosensingleselect'),
-
+  isTextField: equal('answerType.name', 'text'),
   numChildren: computed('childQuestion', function() {
     if (this.get('childQuestion')) {
       return this.get('ancestry').split('/').length;

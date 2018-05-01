@@ -243,6 +243,23 @@
           </div>
         {{/if}}
 
+        {{#if (and isSuperUser question.isTextField) }}
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="enableSurveyHistory"
+                        checked={{question.newProjectLocation}}
+                        onchange={{action (mut question.newProjectLocation) value="target.checked"}} /> Create Project Location (Superuser Only)
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+
+        
+
         {{#liquid-if showAnswerChoices class='show-answer-choices-liquid'}}
           <hr/>
 
