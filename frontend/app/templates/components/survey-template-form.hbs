@@ -35,21 +35,46 @@
       {{/form-field}}
     </div>
   </div>
-  {{#if isSuperUser}}
+  {{#if isSuperUser }}
     <div class="form-group">
-      <label class="col-sm-2 control-label" for="survey_template_status">Owner</label>
+      <label class="col-sm-2 control-label" for="organization_id">Owner</label>
       <div class="col-sm-4">
-        {{#form-field for='organizationId'}}
-          {{#power-select
-              selected=(find-by 'id' surveyTemplate.organizationId organizations)
-              options=organizations
-              searchField="name"
-              onchange=(action (mut surveyTemplate.organizationId) value="id")
-              as |organization|
-            }}
-              {{organization.name}}
-          {{/power-select}}
-        {{/form-field}}
+        {{#if loadCompaniesTask.isRunning}}
+          Loading companies...
+        {{else}}
+          {{#form-field for='organizationId'}}
+            {{#power-select
+                selected=(find-by 'id' surveyTemplate.organizationId organizations)
+                options=organizations
+                searchField="name"
+                onchange=(action (mut surveyTemplate.organizationId) value="id")
+                as |organization|
+              }}
+                {{organization.name}}
+            {{/power-select}}
+          {{/form-field}}
+        {{/if}}
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="col-sm-2 control-label" for="export_type_id">Export Types</label>
+      <div class="col-sm-4">
+        {{#if loadSurveyTemplateExportTypesTask.isRunning}}
+          Loading export types...
+        {{else}}
+          {{#form-field for='surveyTemplateExportTypeId'}}
+            {{#power-select
+                selected=(find-by 'id' surveyTemplate.surveyTemplateExportTypeId exportTypes)
+                options=exportTypes
+                searchField="name"
+                onchange=(action (mut surveyTemplate.surveyTemplateExportTypeId) value="id")
+                as |exportType|
+              }}
+                {{exportType.name}}
+            {{/power-select}}
+          {{/form-field}}
+        {{/if}}
       </div>
     </div>
   {{/if}}
