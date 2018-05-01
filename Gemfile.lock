@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hanuman (1.4.9)
+    hanuman (1.4.10)
       active_model_serializers (~> 0.8.1)
       amoeba (~> 3.0.0)
       ancestry
