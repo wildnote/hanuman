@@ -22,6 +22,7 @@ export default Model.extend(Validator, {
   railsId: attr('number'),
   captureLocationData: attr('boolean'),
   enableSurveyHistory: attr('boolean'),
+
   combineLatlongAsPolygon: attr('boolean'),
   combineLatlongAsLine: attr('boolean'),
 
@@ -37,6 +38,7 @@ export default Model.extend(Validator, {
   isContainer: equal('answerType.name', 'section'),
   isARepeater: equal('answerType.name', 'repeater'),
   isLocationSelect: equal('answerType.name', 'locationchosensingleselect'),
+
   numChildren: computed('childQuestion', function() {
     if (this.get('childQuestion')) {
       return this.get('ancestry').split('/').length;

@@ -17,10 +17,10 @@ test('adding an answer choice', async function(assert) {
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   await click('[data-test="add-answer-choice-link"]');
-  fillIn('[data-test="answerChoice.optionText"]', 'A new answer choice');
+  fillIn('[data-test="answerChoice.optionText"]', 'A new answer choice     ');
   await click('[data-test="save-answer-choice-link"]');
   let answerChoice = server.schema.answerChoices.all().models[0];
-  assert.equal(answerChoice.optionText, 'A new answer choice');
+  assert.equal(answerChoice.optionText, 'A new answer choice', 'answer is correct and trim');
 });
 
 test('editing an answer choice', async function(assert) {
