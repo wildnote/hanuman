@@ -63,4 +63,8 @@ export default function() {
     return new Mirage.Response(200, {}, { organizations: []});
   });
 
+  this.get('/survey_template_export_types', () => {
+    return new Mirage.Response(200, {}, { survey_template_export_types: []});
+  });
+
 }

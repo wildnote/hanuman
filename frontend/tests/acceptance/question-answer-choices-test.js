@@ -17,10 +17,10 @@ test('adding an answer choice', async function(assert) {
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   await click('[data-test="add-answer-choice-link"]');
-  fillIn('[data-test="answerChoice.optionText"]', 'A new answer choice');
+  fillIn('[data-test="answerChoice.optionText"]', 'A new answer choice     ');
   await click('[data-test="save-answer-choice-link"]');
   let answerChoice = server.schema.answerChoices.all().models[0];
-  assert.equal(answerChoice.optionText, 'A new answer choice');
+  assert.equal(answerChoice.optionText, 'A new answer choice', 'answer is correct and trim');
 });
 
 test('editing an answer choice', async function(assert) {
@@ -59,24 +59,22 @@ test('deleting an answer choice', async function(assert) {
   assert.notEqual(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
 });
 
-test('changing the answer type to one with no answer choices deletes all the previously created', function(assert) {
+test('changing the answer type to one with no answer choices deletes all the previously created', async function(assert) {
   question = server.create('question', { surveyTemplate, answer_type_id: 17 });
   answerChoices = server.createList('answer-choice', 2, { question });
 
   let firstAnswerChoices = answerChoices.sortBy('sort_order').get('firstObject');
 
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
-  andThen(function() {
-    assert.equal(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
-    fillIn('[data-test="answer-type-id-select"]', 1);
-    triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
-    click('[data-test="save-question-link"]').then(()=>{
-      visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`).then(()=>{
-        assert.notEqual(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
-        assert.notEqual(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
-        assert.equal(0, server.schema.answerChoices.all().models.length);
-      });
-    });
-  });
+  assert.equal(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
+
+  fillIn('[data-test="answer-type-id-select"]', 1);
+  await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
+  await click('[data-test="save-question-link"]');
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+
+  assert.notEqual(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
+  assert.notEqual(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
+  assert.equal(0, server.schema.answerChoices.all().models.length);
 });
