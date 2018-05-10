@@ -48,9 +48,23 @@ export default Component.extend({
       let el = this.get('element');
       this.sendAction('deleteQuestion', question, el);
     },
-    toggleQuestion() {
+    toggleQuestion(e) {
+      let checked = e.target.checked;
       let question = this.get('question');
-      this.get('toggleQuestion')(question);
+      let questionId = this.get('question.id');
+      let otherQuetions = this.get('otherQuetions');
+      this.get('toggleQuestion')(question, checked);
+      // Toggle children questions
+      otherQuetions.forEach((otherQuetion) => {
+        if (otherQuetion.get('ancestry')) {
+          let ancestrires = otherQuetion.get('ancestry').split('/');
+          if (ancestrires.includes(questionId)) {
+            let ancestrySelected = otherQuetion.get('ancestrySelected');
+            otherQuetion.set('ancestrySelected', !ancestrySelected);
+            this.get('toggleQuestion')(otherQuetion, checked);
+          }
+        }
+      });
     }
   }
 });
