@@ -385,32 +385,71 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <div class="col-sm-12">
+                {{#form-field for='sortOrder' label='Sort Order'}}
+                  <input data-test-order type="text"
+                        class="form-control"
+                        value={{question.sortOrder}}
+                        oninput={{action (mut question.sortOrder) value="target.value"}} />
+                {{/form-field}}
+              </div>
+            </div>
 
+            <div class="form-group">
+              <div class="col-sm-12">
+                {{#form-field for='sortOrder' label='Layout Section'}    }
+                  <input data-test-order type="number"
+                        class="form-control"
+                        value={{question.layoutSection}}
+                        oninput={{action (mut question.layoutSection) value="target.value"}} />
+                {{/form-field}}
+              </div>
+            </div>
 
-                <div class="form-group">
-                  <div class="col-sm-12">
-                    {{#form-field for='sortOrder' label='Sort Order'}}
-                      <input data-test-order type="text"
-                            class="form-control"
-                            value={{question.sortOrder}}
-                            oninput={{action (mut question.sortOrder) value="target.value"}} />
-                    {{/form-field}}
-                  </div>
+            <div class="form-group">
+              <div class="col-sm-12">
+                {{#form-field for='sortOrder' label='Layout Row'}}
+                  <input data-test-order type="number"
+                        class="form-control"
+                        value={{question.layoutRow}}
+                        oninput={{action (mut question.layoutRow) value="target.value"}} />
+                {{/form-field}}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-12">
+                {{#form-field for='sortOrder' label='Layout Column'}}
+                  <input data-test-order type="number"
+                        class="form-control"
+                        value={{question.layoutColumn}}
+                        oninput={{action (mut question.layoutColumn) value="target.value"}} />
+                {{/form-field}}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="col-sm-12">
+                {{#form-field for='sortOrder' label='Layout Column Position'}}
+                  <input data-test-order type="text"
+                        class="form-control"
+                        value={{question.layoutColumnPosition}}
+                        oninput={{action (mut question.layoutColumnPosition) value="target.value"}} />
+                {{/form-field}}
+              </div>
+            </div>
+
+            {{#if (and isSuperUser hasAnAnswer)}}
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="captureLocationData"
+                        checked={{question.captureLocationData}}
+                        onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data (Superuser Only)
                 </div>
-
-
-
-
-                {{#if (and isSuperUser hasAnAnswer)}}
-                  <div class="form-group">
-                    <div class="col-sm-12">
-                      <input type="checkbox"
-                            name="captureLocationData"
-                            checked={{question.captureLocationData}}
-                            onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data (Superuser Only)
-                    </div>
-                  </div>
-                {{/if}}
+              </div>
+            {{/if}}
 
           </section>
         {{/if}}

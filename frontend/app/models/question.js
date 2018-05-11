@@ -24,6 +24,10 @@ export default Model.extend(Validator, {
   enableSurveyHistory: attr('boolean'),
   combineLatlongAsPolygon: attr('boolean'),
   combineLatlongAsLine: attr('boolean'),
+  layoutSection: attr('number'),
+  layoutRow: attr('number'),
+  layoutColumn: attr('number'),
+  layoutColumnPosition: attr('string'),
 
   // Associations
   dataSource: belongsTo('data-source'),
