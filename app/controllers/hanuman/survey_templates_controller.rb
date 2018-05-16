@@ -29,6 +29,7 @@ module Hanuman
 
     # GET /survey_templates/1/edit
     def edit
+      @project_id = request.fullpath.split("/")[3]
     end
 
     # POST /survey_templates
