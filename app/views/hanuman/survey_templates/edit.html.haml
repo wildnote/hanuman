@@ -9,13 +9,13 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Edit Survey
+    %h3.panel-title Edit Survey Template
   .tab-base.tab-stacked-left
     %ul.nav.nav-tabs
       %li
-        %a{"data-toggle" => "tab", :href => "#tab-survey-layout"} Survey Layout
+        %a{:href => "/hanuman/admin/projects/7/survey_templates/#{@survey_template.id}/edit"} Survey Layout
       %li.active
-        %a{:href => "/hanuman/projects/7/survey_templates/{{surveyTemplate.id}}/edit"} Survey Details
+        %a Survey Details
     .tab-content
       = render "form"
     

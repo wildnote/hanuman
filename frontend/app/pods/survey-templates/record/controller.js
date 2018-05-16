@@ -3,6 +3,7 @@ import { alias } from '@ember/object/computed';
 
 export default Controller.extend({
   isLoadingQuestions: true,
-  surveyTemplate: alias('model')
+  surveyTemplate: alias('model'),
+  projectId: window.location.href.split('/')[6]
 });
 
