@@ -53,4 +53,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "faker", "~> 1.6.5"
   s.add_development_dependency "rubocop", "~> 0.40.0"
   s.add_development_dependency "codeclimate-test-reporter", "~> 0.5.1"
+  s.add_development_dependency "pry", "~> 0.11.3"
 end
