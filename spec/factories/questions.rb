@@ -1,6 +1,6 @@
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :question, class: 'Hanuman::Question' do
     answer_type
     survey_template
