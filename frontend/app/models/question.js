@@ -26,6 +26,10 @@ export default Model.extend(Validator, {
   combineLatlongAsPolygon: attr('boolean'),
   combineLatlongAsLine: attr('boolean'),
   newProjectLocation: attr('boolean'),
+  layoutSection: attr('number'),
+  layoutRow: attr('number'),
+  layoutColumn: attr('number'),
+  layoutColumnPosition: attr('string'),
 
   // Associations
   dataSource: belongsTo('data-source'),
