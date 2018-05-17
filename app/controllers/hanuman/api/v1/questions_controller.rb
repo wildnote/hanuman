@@ -27,7 +27,12 @@ module Hanuman
 
     def duplicate
       question = Question.find(params[:id])
-      duplicated_question = question.dup_and_save
+      duplicated_question =
+        if params[:section]
+          question.dup_question_set_and_save
+        else
+          question.dup_and_save
+        end
       respond_with duplicated_question
     end
 

@@ -5,11 +5,14 @@ import SortableItem from 'ember-sortable/components/sortable-item';
 
 export default SortableItem.extend({
   classNames: ['animated'],
-  classNameBindings: ['ancestryClassName', 'modelIdClassName', 'wasJustCreated:zoomInDown'],
+  classNameBindings: ['ancestryClassName', 'modelIdClassName', 'wasJustCreated:zoomInDown', 'ancestrySelected:disabled'],
   ancestryClassName: '',
   modelIdClassName: '',
   wasJustCreated: computed('model.wasNew', function() {
     return this.get('model.wasNew');
+  }),
+  ancestrySelected: computed('model.ancestrySelected', function() {
+    return this.get('model.ancestrySelected');
   }),
   numChildrenChanged: on('init', observer('model.{numChildren,childQuestion}', function() {
     let childQuestion = this.get('model.childQuestion');

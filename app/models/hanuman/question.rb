@@ -134,8 +134,8 @@ module Hanuman
     # complete duplication process-kdh
     def dup_question_set_and_save
       parent_q = self
-      section_q = parent_q.conditions.first.rule.question
-      children_qs = section_q.children
+      section_q = parent_q.try(:conditions).try(:first).try(:rule).try(:question) || self
+      children_qs = section_q.children || parent_q.children
       start_sort_order = 10000
       increment_sort_by = 2
       unless children_qs.blank?
@@ -154,10 +154,10 @@ module Hanuman
 
       # this will create new question, answer choices and conditions,
       # but the conditions will be pointed to the old rule which we will need to remap
-      new_parent_q = parent_q.amoeba_dup
-      # now that we have resorted save new_parent_q into open slot
-      new_parent_q.sort_order = new_parent_q.sort_order + increment_sort_by
-      new_parent_q.save
+      # new_parent_q = parent_q.amoeba_dup
+      # # now that we have resorted save new_parent_q into open slot
+      # new_parent_q.sort_order = new_parent_q.sort_order + increment_sort_by
+      # new_parent_q.save
 
       # this will duplicate the question, will need to create a new rule,
       # and then set the condtions to new rule id
@@ -168,7 +168,7 @@ module Hanuman
       # update newly created conditions with rule relationship now that the rule has been created
       # the rule gets created with the section question
       new_rule = new_section_q.rule
-      new_parent_q.conditions.each do |c|
+      new_section_q.conditions.each do |c|
         c.rule_id = new_rule.id
         c.save
       end
@@ -182,6 +182,7 @@ module Hanuman
         new_child_q.sort_order = new_child_q.sort_order + increment_sort_by
         new_child_q.save
       end
+      new_section_q
     end
 
     def dup_section

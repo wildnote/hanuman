@@ -24,6 +24,10 @@
           </div>
 
           <div class="selected-questions-actions">
+            <button style="margin-right: 4px;">
+              <span class="glyphicons glyphicons-bin"></span>
+              <span style="margin-left: 4px;">Delete</span>
+            </button>
             <button onclick={{perform duplicateQuestionsTask}} class="{{if duplicateQuestionsTask.isRunning "disabled"}}">
               {{#liquid-if duplicateQuestionsTask.isRunning}}
                 <span class="glyphicons glyphicons-repeat gly-spin"></span>
