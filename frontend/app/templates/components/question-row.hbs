@@ -57,13 +57,23 @@
     {{/if}}
   {{/if}}
   <div class="col-sm-2">
-    {{#link-to "survey_templates.record.questions.edit" question.id disabled="{{question.surveyTemplate.lock}}" class="btn btn-sm btn-success"}}
-      <span class="glyphicons glyphicons-pencil"></span>
-      Edit
-    {{/link-to}}
-    <a class="btn btn-delete" disabled="{{question.surveyTemplate.lock}}" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
-      <span class="glyphicons glyphicons-bin"></span>
-    </a>
+    {{#if question.surveyTemplate.lock}}
+      {{#link-to "survey_templates.record.questions.edit" question.id disabled="true" class="btn btn-sm btn-success"}}
+        <span class="glyphicons glyphicons-pencil"></span>
+        Edit
+      {{/link-to}}
+      <a class="btn btn-delete" disabled data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
+        <span class="glyphicons glyphicons-bin"></span>
+      </a>
+    {{else}}
+      {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
+        <span class="glyphicons glyphicons-pencil"></span>
+        Edit
+      {{/link-to}}
+      <a class="btn btn-delete" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
+        <span class="glyphicons glyphicons-bin"></span>
+      </a>
+    {{/if}}
     <div class="delete-confirm">
       {{#if (and (gt totalChildren 0) (not isFullyEditable)) }}
         <small data-test-delete-confirm-message>Performing this delete will also destroy associated historical data and questions within this section/repeater.<br></small>
