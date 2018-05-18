@@ -5,11 +5,11 @@
     {{#if question.loading}}
       <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{/if}}
-    <span class="glyphicons glyphicons-sorting {{if question.loading 'hide'}}">
+    <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
       {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
     </span>
     {{#unless ancestrable}}
-      <span class="glyphicons glyphicons-move-square {{if question.loading 'hide'}}">
+      <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
         {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
       </span>
     {{/unless}}
@@ -57,11 +57,11 @@
     {{/if}}
   {{/if}}
   <div class="col-sm-2">
-    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
+    {{#link-to "survey_templates.record.questions.edit" question.id disabled="{{question.surveyTemplate.lock}}" class="btn btn-sm btn-success"}}
       <span class="glyphicons glyphicons-pencil"></span>
       Edit
     {{/link-to}}
-    <a class="btn btn-delete" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
+    <a class="btn btn-delete" disabled="{{question.surveyTemplate.lock}}" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
       <span class="glyphicons glyphicons-bin"></span>
     </a>
     <div class="delete-confirm">
