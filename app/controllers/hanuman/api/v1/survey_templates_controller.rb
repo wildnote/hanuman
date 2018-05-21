@@ -38,7 +38,7 @@ module Hanuman
 
     def available_tags
       survey_template = SurveyTemplate.find(params[:id])
-      tags = survey_template.questions.map(&:tag_list).split(',').flatten
+      tags = survey_template.questions.map(&:tag_list).split(',').flatten.uniq
       render json: { tags: tags }, status: :ok
     end
 
