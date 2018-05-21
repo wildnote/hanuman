@@ -22,6 +22,7 @@ export default Model.extend(Validator, {
   railsId: attr('number'),
   captureLocationData: attr('boolean'),
   enableSurveyHistory: attr('boolean'),
+  tagList: attr('string', { defaultValue: '' }),
 
   combineLatlongAsPolygon: attr('boolean'),
   combineLatlongAsLine: attr('boolean'),
@@ -59,7 +60,6 @@ export default Model.extend(Validator, {
 
     return this.hasMany('answerChoices').ids().length;
   }),
-
   supportAncestry: match('answerType.name', /section|repeater/),
   isTaxonType: match('answerType.name', /taxon/),
 

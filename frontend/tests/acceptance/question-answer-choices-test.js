@@ -60,6 +60,7 @@ test('deleting an answer choice', async function(assert) {
 });
 
 test('changing the answer type to one with no answer choices deletes all the previously created', async function(assert) {
+  assert.expect(4);
   question = server.create('question', { surveyTemplate, answer_type_id: 17 });
   answerChoices = server.createList('answer-choice', 2, { question });
 
