@@ -32,7 +32,7 @@ export default DraggableObject.extend({
       let answerChoice = this.get('answerChoice');
 
       // Strip any trailing spaces off of an answer before saving it.
-      let optionText = answerChoice.get('optionText');
+      let optionText = answerChoice.get('optionText') || '';
       answerChoice.set('optionText', optionText.trim());
 
       if (answerChoice.validate()) {
