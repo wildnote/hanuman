@@ -13,27 +13,28 @@ moduleForAcceptance('Acceptance | question', {
 });
 
 test('visiting survey_templates/:survey_step_id/questions/:id', async function(assert) {
+  assert.expect(1);
   question = server.create('question', { surveyTemplate });
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 });
 
-test('selecting a type with answer choices', function(assert) {
+test('selecting a type with answer choices', async function(assert) {
+  assert.expect(2);
   question = server.create('question', { surveyTemplate, answer_type_id: 17 }); // Answer Type id 17 = `Radio`
 
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-  andThen(function() {
-    assert.equal(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
-    // Select
-    fillIn('[data-test="answer-type-id-select"]', 1);
-    triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
-    later(this, function() {
-      assert.notEqual(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
-    }, 0);
-  });
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  assert.equal(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
+  // Select
+  await fillIn('[data-test="answer-type-id-select"]', 1);
+  await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
+  later(this, function() {
+    assert.notEqual(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
+  }, 0);
 });
 
-test('selecting ancestry', function(assert) {
+test('selecting ancestry', async function(assert) {
+  assert.expect(6);
   question = server.create('question', { surveyTemplate, answer_type_id: 17 }); // Answer Type id 17 = `Radio`
 
   let ancestryAnswerTypesId = [57, 56];
@@ -48,21 +49,20 @@ test('selecting ancestry', function(assert) {
 
   let notAncestryQuestions = server.createList('question', 2, { surveyTemplate, answer_type_id: 19 });
 
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-  andThen(function() {
-    for (let ancestry of ancestryQuestions) {
-      assert.equal(`${ancestry.question_text} - ${ancestry.id}`, find(`[data-test="ancestry-select"] option[value="${ancestry.id}"]`).text().trim());
-    }
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  for (let ancestry of ancestryQuestions) {
+    assert.equal(`${ancestry.question_text} - ${ancestry.id}`, find(`[data-test="ancestry-select"] option[value="${ancestry.id}"]`).text().trim());
+  }
 
-    find('[data-test="ancestry-select"] option[value]').each(function() {
-      for (let notAncestry of notAncestryQuestions) {
-        assert.notEqual(`${notAncestry.question_text} - ${notAncestry.id}`, $(this).text().trim());
-      }
-    });
+  find('[data-test="ancestry-select"] option[value]').each(function() {
+    for (let notAncestry of notAncestryQuestions) {
+      assert.notEqual(`${notAncestry.question_text} - ${notAncestry.id}`, $(this).text().trim());
+    }
   });
 });
 
 test('adding a question', async function(assert) {
+  assert.expect(3);
   await visit(`/survey_templates/${surveyTemplate.id}`);
   await click('a:contains("Add")');
 
@@ -80,39 +80,34 @@ test('adding a question', async function(assert) {
   assert.equal(question.attrs.sort_order, 99);
 });
 
-test('saving a question with answer_type with answers without adding any answers', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
+test('saving a question with answer_type with answers without adding any answers', async function(assert) {
+  assert.expect(3);
+  await visit(`/survey_templates/${surveyTemplate.id}`);
 
-  andThen(function() {
-    click('a:contains("Add")').then(()=>{
-      assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
-      fillIn('[data-test="question.questionText"]', 'question with answers');
-      // Select
-      fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer type
-      triggerEvent('[data-test="answer-type-id-select"]', 'onchange').then(function() {
-        click('[data-test="save-question-link"]').then(()=>{
-          let el = find('[data-test="answer-choices-error"]');
-          let count = el.length;
-          assert.equal(count, 1);
-          assert.equal(el.text().trim(), 'Please add at least one answers choice.');
-        });
-      });
-    });
-  });
+  await click('a:contains("Add")');
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
+  fillIn('[data-test="question.questionText"]', 'question with answers');
+  // Select
+  fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer type
+  await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
+  await click('[data-test="save-question-link"]');
+  let el = find('[data-test="answer-choices-error"]');
+  let count = el.length;
+  assert.equal(count, 1);
+  assert.equal(el.text().trim(), 'Please add at least one answers choice.');
 });
 
-test('canceling question edition', function(assert) {
+test('canceling question edition', async function(assert) {
+  assert.expect(2);
   question = server.create('question', { surveyTemplate });
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-  andThen(function() {
-    assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-    click('[data-test="cancel-question-link"]').then(()=>{
-      assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
-    });
-  });
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await click('[data-test="cancel-question-link"]');
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
 });
 
 test('editing a question', async function(assert) {
+  assert.expect(2);
   question = server.create('question', { surveyTemplate, answer_type_id: 15 });
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   await fillIn('[data-test="question.externalDataSource"]', 'chuchucu');
@@ -123,6 +118,7 @@ test('editing a question', async function(assert) {
 });
 
 test('deleting a question', async function(assert) {
+  assert.expect(3);
   surveyTemplate = server.create('survey-template', { fully_editable: false });
   let questions = server.createList('question', 2, { surveyTemplate });
   question = questions[0];
@@ -139,6 +135,7 @@ test('deleting a question', async function(assert) {
 });
 
 test('wording when deleting a question', async function(assert) {
+  assert.expect(1);
   let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
   let ancestryId = ancestryQuestion.id;
   server.create('question', { surveyTemplate, parent_id: ancestryId, ancestry: ancestryId, answer_type_id: 52 }); // Answer Type id 57 = `latlong`
@@ -154,6 +151,7 @@ test('wording when deleting a question', async function(assert) {
 });
 
 test('showing `Capture lat/long` checkboxes', async function(assert) {
+  assert.expect(2);
   let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
   let question1 = server.create('question', { surveyTemplate, parent_id: ancestryQuestion.id, answer_type_id: 52 }); // Answer Type id 57 = `latlong`
   let question2 = server.create('question', { surveyTemplate, answer_type_id: 18 }); // Answer Type id 18 = `Checkbox`
