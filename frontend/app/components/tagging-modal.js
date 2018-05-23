@@ -1,6 +1,7 @@
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { isPresent } from '@ember/utils';
+import { isPresent, isBlank } from '@ember/utils';
 import { task, all } from 'ember-concurrency';
 
 export default Component.extend({
@@ -13,6 +14,16 @@ export default Component.extend({
     this.set('selectedTags', []);
     this.set('availableTags', []);
   },
+
+  hasChanges: computed('selectedTags.[]', 'filteredTags.[]', 'searchTerm', function() {
+    let selectedTags = this.get('selectedTags');
+    let filteredTags = this.get('filteredTags');
+    let searchTerm = this.get('searchTerm');
+    if(isBlank(filteredTags) && isPresent(searchTerm)){
+      return true;
+    }
+    return isPresent(selectedTags);
+  }),
 
   fetchAvailableTags: task(function*() {
     if (isPresent(this.get('availableTags'))) {
