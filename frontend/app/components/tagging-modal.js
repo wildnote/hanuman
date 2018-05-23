@@ -19,7 +19,7 @@ export default Component.extend({
     let selectedTags = this.get('selectedTags');
     let filteredTags = this.get('filteredTags');
     let searchTerm = this.get('searchTerm');
-    if(isBlank(filteredTags) && isPresent(searchTerm)){
+    if (isBlank(filteredTags) && isPresent(searchTerm)) {
       return true;
     }
     return isPresent(selectedTags);
@@ -69,6 +69,7 @@ export default Component.extend({
         this.set('filteredTags', availableTags);
         this.set('searchTerm', '');
         this.get('unSelectAll')();
+        this.set('showingModal', false);
       });
   },
 

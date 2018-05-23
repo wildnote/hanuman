@@ -1,6 +1,6 @@
 import Component from '@ember/component';
 import { A } from '@ember/array';
-import { run } from '@ember/runloop';
+import { run, next } from '@ember/runloop';
 import { alias, sort } from '@ember/object/computed';
 import { task, all } from 'ember-concurrency';
 import { inject as service } from '@ember/service';
@@ -74,7 +74,10 @@ export default Component.extend({
 
   actions: {
     openTaggingModal() {
-      this.get('remodal').open('tagging-modal');
+      this.set('showingTaggingModal', true);
+      next(() => {
+        this.get('remodal').open('tagging-modal');
+      });
     },
     clearAll() {
       // Clean state

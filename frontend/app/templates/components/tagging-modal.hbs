@@ -35,7 +35,7 @@
       {{#if (gt filteredTags.length 0)}}
         <div class="tags-list">
           {{#each filteredTags as |tag|}}
-            {{tagging-list-row tag=tag selectedQuestions=selectedQuestions}}
+            {{tagging-list-row tag=tag selectedQuestions=selectedQuestions selectedTags=selectedTags}}
           {{/each}}
         </div>
       {{else if searchTerm}}
