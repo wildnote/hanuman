@@ -59,19 +59,22 @@ export default Component.extend({
           surveyTemplate.get('questions').pushObject(duplicated);
         });
       }
-      selectedQuestions.forEach((q) => q.set('ancestrySelected', false));
       this.get('notify').success('Questions successfully duplicated');
-      this.set('selectedQuestions', A());
+      this.unSelectAll();
     } catch(e) {
       this.get('notify').alert('There was an error trying to duplicate questions');
     }
   }).drop(),
 
+  unSelectAll() {
+    this.get('selectedQuestions').forEach((question) => question.set('ancestrySelected', false));
+    this.set('selectedQuestions', A());
+  },
+
   actions: {
     clearAll() {
       // Clean state
-      this.get('selectedQuestions').forEach((question) => question.set('ancestrySelected', false));
-      this.set('selectedQuestions', A());
+      this.unSelectAll();
     },
     toggleQuestion(question, add = true) {
       let selectedQuestions = this.get('selectedQuestions');
