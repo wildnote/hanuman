@@ -14,6 +14,9 @@ export default function() {
         id = request.params.id;
     return surveyTemplates.find(id).update(attrs);
   });
+  this.get('survey_templates/:id/available_tags', () => {
+    return new Mirage.Response(200, {}, { tags: []});
+  });
 
   // Conditions
   this.get('/conditions/:id');

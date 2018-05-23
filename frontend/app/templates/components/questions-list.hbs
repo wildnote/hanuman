@@ -24,7 +24,7 @@
           </div>
 
           <div class="selected-questions-actions">
-            <button style="margin-right: 4px;">
+            <button data-test-open-tagging-modal onclick={{action 'openTaggingModal'}} style="margin-right: 4px;">
               <span class="glyphicons glyphicons-bookmark"></span>
               <span style="margin-left: 4px;">Tag </span>
             </button>
@@ -127,3 +127,4 @@
     {{/if}}
   </div>
 </div>
+{{tagging-modal selectedQuestions=selectedQuestions surveyTemplate=surveyTemplate unSelectAll=(action unSelectAll)}}

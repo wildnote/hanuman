@@ -8,6 +8,7 @@ import { isBlank } from '@ember/utils';
 import $ from 'jquery';
 
 export default Component.extend({
+  remodal: service(),
   store: service(),
   notify: service(),
 
@@ -72,6 +73,9 @@ export default Component.extend({
   },
 
   actions: {
+    openTaggingModal() {
+      this.get('remodal').open('tagging-modal');
+    },
     clearAll() {
       // Clean state
       this.unSelectAll();
