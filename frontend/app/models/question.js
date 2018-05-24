@@ -41,6 +41,12 @@ export default Model.extend(Validator, {
   isARepeater: equal('answerType.name', 'repeater'),
   isLocationSelect: equal('answerType.name', 'locationchosensingleselect'),
   isTextField: equal('answerType.name', 'text'),
+
+  tags: computed('tagList', function() {
+    let tagList = this.get('tagList') || '';
+    return tagList.split(',').filter(Boolean);
+  }),
+
   numChildren: computed('childQuestion', function() {
     if (this.get('childQuestion')) {
       return this.get('ancestry').split('/').length;
@@ -48,6 +54,7 @@ export default Model.extend(Validator, {
       return 0;
     }
   }),
+
   ruleMatchType: computed('rule.matchType', function() {
     let rule = this.get('rule');
     return rule.get('matchType') === 'all' ? 'AND' : 'OR';

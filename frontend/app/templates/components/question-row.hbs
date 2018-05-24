@@ -16,6 +16,11 @@
     <span data-test="question.questionText">
       {{question.questionText}}
     </span>
+    <div class="row bottom-tags">
+      {{#each question.tags as |tag|}}
+        <span class="glyphicons glyphicons-bookmark"></span><span>{{tag}}</span>
+      {{/each}}
+    </div>
   </div>
   <div class="col-sm-2" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
   <div class="col-sm-2">{{typeInitial}}</div>

@@ -46,19 +46,14 @@ export default Component.extend({
     let addedTags = A();
     let removedTags = A();
     if (isBlank(filteredTags)) {
-      addedTags = A(this.get('searchTerm').trim());
+      addedTags = A([this.get('searchTerm').trim()]);
     } else {
       addedTags = this.get('addedTags');
       removedTags = this.get('removedTags');
     }
 
     selectedQuestions.forEach(function(question) {
-      let currentTags = A(
-        question
-          .get('tagList')
-          .split(',')
-          .filter((tag) => isPresent(tag))
-      );
+      let currentTags = A(question.get('tags'));
       currentTags.addObjects(addedTags);
       currentTags.removeObjects(removedTags);
       question.set('tagList', currentTags.toArray().join(','));
