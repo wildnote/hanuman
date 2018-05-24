@@ -94,8 +94,8 @@ module Hanuman
       def question_params
         params.require(:question).permit(
           :question_text, :answer_type_id, :sort_order,
-          :combine_latlong_as_polygon, :combine_latlong_as_line,:enable_survey_history,
-          :layout_section, :layout_row, :layout_column, :layout_column_position
+          :combine_latlong_as_polygon, :combine_latlong_as_line, :enable_survey_history,
+          :layout_section, :layout_row, :layout_column, :layout_column_position, :export_continuation_characters
         )
       end
   end
