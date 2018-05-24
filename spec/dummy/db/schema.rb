@@ -151,17 +151,17 @@ ActiveRecord::Schema.define(version: 20180612042207) do
     t.datetime "updated_at"
     t.integer  "survey_step_id"
     t.integer  "sort_order"
-    t.boolean  "required",                   default: false
+    t.boolean  "required",                       default: false
     t.string   "external_data_source"
     t.string   "ancestry"
-    t.boolean  "hidden",                     default: false
+    t.boolean  "hidden",                         default: false
     t.integer  "duped_question_id"
     t.integer  "survey_template_id"
-    t.text     "ancestry_children",          default: [],    array: true
-    t.boolean  "capture_location_data",      default: false
-    t.boolean  "combine_latlong_as_line",    default: false
-    t.boolean  "combine_latlong_as_polygon", default: false
-    t.boolean  "noncompliance",              default: false
+    t.text     "ancestry_children",              default: [],    array: true
+    t.boolean  "capture_location_data",          default: false
+    t.boolean  "combine_latlong_as_line",        default: false
+    t.boolean  "combine_latlong_as_polygon",     default: false
+    t.boolean  "noncompliance",                  default: false
     t.boolean  "enable_survey_history"
     t.boolean  "new_project_location"
     t.text     "default_answer"
@@ -169,6 +169,7 @@ ActiveRecord::Schema.define(version: 20180612042207) do
     t.integer  "layout_row"
     t.integer  "layout_column"
     t.string   "layout_column_position"
+    t.integer  "export_continuation_characters"
   end
 
   add_index "hanuman_questions", ["ancestry"], name: "index_hanuman_questions_on_ancestry", using: :btree
