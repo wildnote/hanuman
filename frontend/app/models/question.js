@@ -30,6 +30,7 @@ export default Model.extend(Validator, {
   layoutRow: attr('number'),
   layoutColumn: attr('number'),
   layoutColumnPosition: attr('string'),
+  exportContinuationCharacters: attr('number'),
 
   // Associations
   dataSource: belongsTo('data-source'),
