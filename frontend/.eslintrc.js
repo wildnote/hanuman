@@ -5,22 +5,20 @@ module.exports = {
     ecmaVersion: 2017,
     sourceType: 'module'
   },
-  extends: [
-    'eslint:recommended',
-    'plugin:ember-suave/recommended'
-  ],
+  plugins: ['prettier'],
+  extends: ['eslint:recommended', 'plugin:ember-suave/recommended', 'prettier'],
   env: {
     browser: true,
-    'es6': true
+    es6: true
   },
   globals: {
-    'BoxSelect': true,
-    'ColorThief': true,
-    'Stripe': true,
-    'deparam': true,
-    'google': true,
-    'superUser': true,
-    'md5': true
+    BoxSelect: true,
+    ColorThief: true,
+    Stripe: true,
+    deparam: true,
+    google: true,
+    superUser: true,
+    md5: true
   },
   rules: {
     'ember-suave/no-direct-property-access': 'off',
@@ -28,9 +26,10 @@ module.exports = {
     'ember-suave/require-access-in-comments': 'off',
     'ember-suave/require-const-for-ember-properties': 'off',
     'generator-star-spacing': ['error', 'neither'],
-    'no-constant-condition': ['error', { 'checkLoops': false }],
-    'no-unused-vars': ['error', { 'argsIgnorePattern': '^_', 'varsIgnorePattern': "^_" }],
+    'no-constant-condition': ['error', { checkLoops: false }],
+    'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],
     'one-var': 'off',
-    'quotes': ['error', 'single', { 'allowTemplateLiterals': true, 'avoidEscape': true }]
+    'prettier/prettier': ['error', { singleQuote: true }],
+    quotes: ['error', 'single', { allowTemplateLiterals: true, avoidEscape: true }]
   }
 };

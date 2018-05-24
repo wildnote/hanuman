@@ -18,14 +18,29 @@ test('visiting /survey_templates/:id', async function(assert) {
 
 test('displaying survey template info', async function(assert) {
   await visit(`/survey_templates/${surveyTemplate.id}`);
-  assert.equal(surveyTemplate.name, find('[data-test="surveyTemplate.name"]').text().trim());
-  assert.equal(surveyTemplate.status, find('[data-test="surveyTemplate.status"]').text().trim());
+  assert.equal(
+    surveyTemplate.name,
+    find('[data-test="surveyTemplate.name"]')
+      .text()
+      .trim()
+  );
+  assert.equal(
+    surveyTemplate.status,
+    find('[data-test="surveyTemplate.status"]')
+      .text()
+      .trim()
+  );
 });
 
 test('listing questions', async function(assert) {
   await visit(`/survey_templates/${surveyTemplate.id}`);
   for (let question of questions) {
-    assert.equal(question.question_text, find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
+    assert.equal(
+      question.question_text,
+      find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`)
+        .text()
+        .trim()
+    );
   }
 });
 
@@ -53,7 +68,10 @@ test('creating a survey template', async function(assert) {
   fillIn('[data-test="surveyTemplate.name"]', 'Yo te vi salir campeón del continente 2 veces');
   fillIn('[data-test="surveyTemplate.surveyType"]', 'campeon');
   await click('[data-test="save-survey-template-link"]');
-  surveyTemplate = server.schema.surveyTemplates.all().models.slice(-1).pop();
+  surveyTemplate = server.schema.surveyTemplates
+    .all()
+    .models.slice(-1)
+    .pop();
   assert.equal(surveyTemplate.name, 'Yo te vi salir campeón del continente 2 veces');
   assert.equal(surveyTemplate.surveyType, 'campeon');
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);

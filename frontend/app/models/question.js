@@ -50,7 +50,7 @@ export default Model.extend(Validator, {
   }),
   ruleMatchType: computed('rule.matchType', function() {
     let rule = this.get('rule');
-    return (rule.get('matchType') === 'all') ? 'AND' : 'OR';
+    return rule.get('matchType') === 'all' ? 'AND' : 'OR';
   }),
 
   answerChoicesCount: computed('answerChoices.[]', function() {
@@ -76,7 +76,9 @@ export default Model.extend(Validator, {
       custom: {
         validation(_key, _value, model) {
           if (!model.get('isNew')) {
-            let childrenQuestions = model.get('surveyTemplate.questions').filterBy('ancestry', model.get('id').toString());
+            let childrenQuestions = model
+              .get('surveyTemplate.questions')
+              .filterBy('ancestry', model.get('id').toString());
             if (childrenQuestions.length > 0) {
               if (model.get('supportAncestry')) {
                 return true;

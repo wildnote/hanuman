@@ -24,13 +24,29 @@ test('selecting a type with answer choices', async function(assert) {
   question = server.create('question', { surveyTemplate, answer_type_id: 17 }); // Answer Type id 17 = `Radio`
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-  assert.equal(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
+  assert.equal(
+    find('[data-test="answer-choices-label"]')
+      .text()
+      .trim(),
+    'Answer Choices',
+    'Shows answer choices'
+  );
   // Select
   await fillIn('[data-test="answer-type-id-select"]', 1);
   await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
-  later(this, function() {
-    assert.notEqual(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
-  }, 0);
+  later(
+    this,
+    function() {
+      assert.notEqual(
+        find('[data-test="answer-choices-label"]')
+          .text()
+          .trim(),
+        'Answer Choices',
+        'Shows answer choices'
+      );
+    },
+    0
+  );
 });
 
 test('selecting ancestry', async function(assert) {
@@ -38,25 +54,31 @@ test('selecting ancestry', async function(assert) {
   question = server.create('question', { surveyTemplate, answer_type_id: 17 }); // Answer Type id 17 = `Radio`
 
   let ancestryAnswerTypesId = [57, 56];
-  let ancestryQuestions = server.createList(
-    'question',
-    2,
-    {
-      surveyTemplate,
-      answer_type_id: ancestryAnswerTypesId[Math.floor(Math.random() * ancestryAnswerTypesId.length)]
-    }
-  );
+  let ancestryQuestions = server.createList('question', 2, {
+    surveyTemplate,
+    answer_type_id: ancestryAnswerTypesId[Math.floor(Math.random() * ancestryAnswerTypesId.length)]
+  });
 
   let notAncestryQuestions = server.createList('question', 2, { surveyTemplate, answer_type_id: 19 });
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   for (let ancestry of ancestryQuestions) {
-    assert.equal(`${ancestry.question_text} - ${ancestry.id}`, find(`[data-test="ancestry-select"] option[value="${ancestry.id}"]`).text().trim());
+    assert.equal(
+      `${ancestry.question_text} - ${ancestry.id}`,
+      find(`[data-test="ancestry-select"] option[value="${ancestry.id}"]`)
+        .text()
+        .trim()
+    );
   }
 
   find('[data-test="ancestry-select"] option[value]').each(function() {
     for (let notAncestry of notAncestryQuestions) {
-      assert.notEqual(`${notAncestry.question_text} - ${notAncestry.id}`, $(this).text().trim());
+      assert.notEqual(
+        `${notAncestry.question_text} - ${notAncestry.id}`,
+        $(this)
+          .text()
+          .trim()
+      );
     }
   });
 });
@@ -125,13 +147,28 @@ test('deleting a question', async function(assert) {
 
   await visit(`/survey_templates/${surveyTemplate.id}`);
 
-  assert.equal(question.question_text, find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
+  assert.equal(
+    question.question_text,
+    find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`)
+      .text()
+      .trim()
+  );
 
   await click(`[data-question-id="${question.id}"] [data-test="confirm-delete-question-link"]`);
   await click(`[data-question-id="${question.id}"] [data-test="delete-question-link"]`);
-  assert.notEqual(question.question_text, find('[data-test="question.questionText"]:first').text().trim());
+  assert.notEqual(
+    question.question_text,
+    find('[data-test="question.questionText"]:first')
+      .text()
+      .trim()
+  );
   await visit(`/survey_templates/${surveyTemplate.id}`);
-  assert.notEqual(question.question_text, find('[data-test="question.questionText"]:first').text().trim());
+  assert.notEqual(
+    question.question_text,
+    find('[data-test="question.questionText"]:first')
+      .text()
+      .trim()
+  );
 });
 
 test('wording when deleting a question', async function(assert) {
@@ -145,7 +182,9 @@ test('wording when deleting a question', async function(assert) {
 
   assert.equal(
     'Performing this delete will also destroy associated questions within this section/repeater.',
-    find(`[data-question-id="${ancestryQuestion.id}"] [data-test-delete-confirm-message]`).text().trim(),
+    find(`[data-question-id="${ancestryQuestion.id}"] [data-test-delete-confirm-message]`)
+      .text()
+      .trim(),
     'has the correct wording'
   );
 });

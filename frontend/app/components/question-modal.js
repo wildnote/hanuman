@@ -72,9 +72,13 @@ export default Component.extend({
     }
     let isDisabled = !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
     if (isDisabled) {
-      run.later(this, ()=> {
-        this.set('question.required', false);
-      }, 0);
+      run.later(
+        this,
+        () => {
+          this.set('question.required', false);
+        },
+        0
+      );
     }
     return isDisabled;
   }),
@@ -90,16 +94,25 @@ export default Component.extend({
   }),
 
   // If a question has a rule associated with it, it should automatically be set to Hidden
-  hideQuestion: on('afterRender', observer('question.{rule.isNew,rule.conditions.[]}', 'conditionsPendingSave.[]', function() {
-    let question = this.get('question');
-    let newRule = question.get('rule.isNew');
-    let hasConditions = (this.get('conditionsPendingSave.length') > 0) || (question.get('rule') && question.get('rule').hasMany('conditions').ids().length > 0);
-    if (newRule === undefined) {
-      newRule = true;
-    }
-    let toHide = !newRule || hasConditions;
-    this.set('question.hidden', toHide);
-  })),
+  hideQuestion: on(
+    'afterRender',
+    observer('question.{rule.isNew,rule.conditions.[]}', 'conditionsPendingSave.[]', function() {
+      let question = this.get('question');
+      let newRule = question.get('rule.isNew');
+      let hasConditions =
+        this.get('conditionsPendingSave.length') > 0 ||
+        (question.get('rule') &&
+          question
+            .get('rule')
+            .hasMany('conditions')
+            .ids().length > 0);
+      if (newRule === undefined) {
+        newRule = true;
+      }
+      let toHide = !newRule || hasConditions;
+      this.set('question.hidden', toHide);
+    })
+  ),
 
   init() {
     this._super(...arguments);
@@ -123,7 +136,7 @@ export default Component.extend({
   },
 
   _removeAnswerChoices() {
-    this.get('question.answerChoices').then((answerChoices)=>{
+    this.get('question.answerChoices').then((answerChoices) => {
       answerChoices.forEach(function(answerChoice) {
         answerChoice.deleteRecord();
         answerChoice.save();
@@ -139,7 +152,7 @@ export default Component.extend({
   },
 
   _saveSuccess(question, promises, keepOpen) {
-    question.reload().then((question)=>{
+    question.reload().then((question) => {
       let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
       let conditionsPendingSave = this.get('conditionsPendingSave');
 
@@ -147,7 +160,7 @@ export default Component.extend({
         this._removeAnswerChoices();
       }
       promises = $.makeArray(promises);
-      all(promises).then(()=>{
+      all(promises).then(() => {
         while (answerChoicesPendingSave.length > 0) {
           answerChoicesPendingSave.popObject();
         }
@@ -168,7 +181,10 @@ export default Component.extend({
 
   _sortOrder(question) {
     let surveyTemplate = this.get('surveyTemplate');
-    let lastQuestion = surveyTemplate.get('questions').sortBy('sortOrder').get('lastObject');
+    let lastQuestion = surveyTemplate
+      .get('questions')
+      .sortBy('sortOrder')
+      .get('lastObject');
     question.set('sortOrder', 1);
     if (lastQuestion && lastQuestion !== question) {
       question.set('sortOrder', lastQuestion.get('sortOrder') + 1);
@@ -256,7 +272,7 @@ export default Component.extend({
                 // Rule was deleted on the server
                 () => {
                   question.get('store').unloadRecord(rule);
-                  question.reload().then((question)=>{
+                  question.reload().then((question) => {
                     this._saveSuccess(question, [], keepOpen);
                   });
                 }
@@ -324,13 +340,21 @@ export default Component.extend({
         if (testing) {
           return question.set('wasNew', false);
         }
-        run.later(this, ()=> {
-          $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500);
-        }, 500);
+        run.later(
+          this,
+          () => {
+            $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500);
+          },
+          500
+        );
         // Question is no longer new after shwoing the visual effect.
-        run.later(this, function() {
-          question.set('wasNew', false);
-        }, 1500);
+        run.later(
+          this,
+          function() {
+            question.set('wasNew', false);
+          },
+          1500
+        );
       }
     }
   }

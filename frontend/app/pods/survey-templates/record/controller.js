@@ -5,4 +5,3 @@ export default Controller.extend({
   isLoadingQuestions: true,
   surveyTemplate: alias('model')
 });
-

@@ -33,7 +33,9 @@ export default Component.extend({
   useDropDownAnswerSelect: computed('currentQuestion', 'condition.operator', function() {
     let currentQuestion = this.get('currentQuestion');
     let conditionOperator = this.get('condition.operator');
-    return conditionOperator !== 'contains' && currentQuestion && currentQuestion.hasMany('answerChoices').ids().length > 1;
+    return (
+      conditionOperator !== 'contains' && currentQuestion && currentQuestion.hasMany('answerChoices').ids().length > 1
+    );
   }),
 
   setNewCondition() {
@@ -55,7 +57,7 @@ export default Component.extend({
       let condition = this.get('condition');
 
       // Strip any trailing spaces off of a condition answer before saving it.
-      let answer = condition.get('answer')  || '';
+      let answer = condition.get('answer') || '';
       condition.set('answer', answer.trim());
 
       if (condition.validate()) {

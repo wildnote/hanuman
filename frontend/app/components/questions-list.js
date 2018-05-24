@@ -62,7 +62,7 @@ export default Component.extend({
       }
       this.get('notify').success('Questions successfully duplicated');
       this.unSelectAll();
-    } catch(e) {
+    } catch (e) {
       this.get('notify').alert('There was an error trying to duplicate questions');
     }
   }).drop(),

@@ -32,7 +32,12 @@ test('editing an answer choice', async function(assert) {
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
   for (let answerChoice of answerChoices) {
-    assert.equal(answerChoice.option_text, find(`[data-answer-choice-id="${answerChoice.id}"] [data-test="answerChoice.optionText"]`).text().trim());
+    assert.equal(
+      answerChoice.option_text,
+      find(`[data-answer-choice-id="${answerChoice.id}"] [data-test="answerChoice.optionText"]`)
+        .text()
+        .trim()
+    );
   }
   let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
   await click(`${selector} [data-test="edit-answer-choice-link"]`);
@@ -53,10 +58,20 @@ test('deleting an answer choice', async function(assert) {
   let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
 
   await click(`${selector} [data-test="delete-answer-choice-link"]`);
-  assert.notEqual(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
+  assert.notEqual(
+    firstAnswerChoices.option_text,
+    find('[data-test="answerChoice.optionText"]:first')
+      .text()
+      .trim()
+  );
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-  assert.notEqual(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
+  assert.notEqual(
+    firstAnswerChoices.option_text,
+    find('[data-test="answerChoice.optionText"]:first')
+      .text()
+      .trim()
+  );
 });
 
 test('changing the answer type to one with no answer choices deletes all the previously created', async function(assert) {
@@ -68,14 +83,30 @@ test('changing the answer type to one with no answer choices deletes all the pre
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
-  assert.equal(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
+  assert.equal(
+    firstAnswerChoices.option_text,
+    find('[data-test="answerChoice.optionText"]:first')
+      .text()
+      .trim()
+  );
 
   fillIn('[data-test="answer-type-id-select"]', 1);
   await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
   await click('[data-test="save-question-link"]');
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
-  assert.notEqual(firstAnswerChoices.option_text, find('[data-test="answerChoice.optionText"]:first').text().trim());
-  assert.notEqual(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
+  assert.notEqual(
+    firstAnswerChoices.option_text,
+    find('[data-test="answerChoice.optionText"]:first')
+      .text()
+      .trim()
+  );
+  assert.notEqual(
+    find('[data-test="answer-choices-label"]')
+      .text()
+      .trim(),
+    'Answer Choices',
+    'Shows answer choices'
+  );
   assert.equal(0, server.schema.answerChoices.all().models.length);
 });
