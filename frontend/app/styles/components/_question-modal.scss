@@ -1,25 +1,25 @@
-.question-modal{
-  &.ember-remodal{
+.question-modal {
+  &.ember-remodal {
     padding: 5px;
   }
-  .panel{
+  .panel {
     margin-bottom: 0px;
   }
-  .selectize-control{
+  .selectize-control {
     text-align: left;
   }
-  .tabbable.tabs-below{
+  .tabbable.tabs-below {
     margin-top: -18px;
   }
   .glossary-popover {
-     max-width: 700px;
-     overflow-y: scroll;
-     height: 400px;
+    max-width: 700px;
+    overflow-y: scroll;
+    height: 400px;
   }
   .sortable-objects .answer-draggable-handle {
     cursor: move;
   }
-  section.super-user{
+  section.super-user {
     background-color: rgba(226, 226, 226, 0.36);
     padding: 10px;
     margin-bottom: -5px;

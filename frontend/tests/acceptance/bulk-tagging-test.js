@@ -23,6 +23,5 @@ test('when there no available tags', async function(assert) {
 
   await waitUntil(() => find('[data-test-tag-input-search]:enabled').length);
   await fillIn('[data-test-tag-input-search]', 'a new tag');
-
   assert.equal(find('[data-test-new-tag-label]').text(), 'a new tag', 'new tag text');
 });

@@ -1,4 +1,5 @@
 import Component from '@ember/component';
+import { A } from '@ember/array';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 import { isPresent, isBlank } from '@ember/utils';
@@ -11,18 +12,22 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    this.set('selectedTags', []);
-    this.set('availableTags', []);
+    this.setProperties({
+      addedTags: A(),
+      removedTags: A(),
+      availableTags: []
+    });
   },
 
-  hasChanges: computed('selectedTags.[]', 'filteredTags.[]', 'searchTerm', function() {
-    let selectedTags = this.get('selectedTags');
+  hasChanges: computed('addedTags.[]', 'filteredTags.[]', 'removedTags.[]', 'searchTerm', function() {
+    let addedTags = this.get('addedTags');
+    let removedTags = this.get('removedTags');
     let filteredTags = this.get('filteredTags');
     let searchTerm = this.get('searchTerm');
     if (isBlank(filteredTags) && isPresent(searchTerm)) {
       return true;
     }
-    return isPresent(selectedTags);
+    return isPresent(addedTags) || isPresent(removedTags);
   }),
 
   fetchAvailableTags: task(function*() {
@@ -37,26 +42,33 @@ export default Component.extend({
 
   saveQuestions: task(function*() {
     let selectedQuestions = this.get('selectedQuestions');
-    let selectedTags = this.get('selectedTags');
-    let tags = isPresent(selectedTags) ? selectedTags.join(',') : this.get('searchTerm').trim();
+    let filteredTags = this.get('filteredTags');
+    let addedTags = A();
+    let removedTags = A();
+    if (isBlank(filteredTags)) {
+      addedTags = A(this.get('searchTerm').trim());
+    } else {
+      addedTags = this.get('addedTags');
+      removedTags = this.get('removedTags');
+    }
 
     selectedQuestions.forEach(function(question) {
-      let currentTags = question
-        .get('tagList')
-        .split(',')
-        .filter((tag) => isPresent(tag));
-      currentTags.push(tags);
-      question.set('tagList', currentTags.join(','));
+      let currentTags = A(
+        question
+          .get('tagList')
+          .split(',')
+          .filter((tag) => isPresent(tag))
+      );
+      currentTags.addObjects(addedTags);
+      currentTags.removeObjects(removedTags);
+      question.set('tagList', currentTags.toArray().join(','));
     });
 
     try {
       yield all(selectedQuestions.map((question) => question.save()));
-      // add just created tags
-      let availableTags = this.get('availableTags');
-      tags.split(',').forEach((tag) => availableTags.add(tag));
       this.cleanAndClose();
       this.get('notify').success('Questions successfully tagged');
-    } catch(e) {
+    } catch (e) {
       this.get('notify').alert(e);
     }
   }).drop(),
@@ -65,9 +77,6 @@ export default Component.extend({
     this.get('remodal')
       .close('tagging-modal')
       .then(() => {
-        let availableTags = [...this.get('availableTags')];
-        this.set('filteredTags', availableTags);
-        this.set('searchTerm', '');
         this.get('unSelectAll')();
         this.set('showingModal', false);
       });

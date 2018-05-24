@@ -1,4 +1,4 @@
-.tagging-modal{
+.tagging-modal {
   &.ember-remodal {
     padding: 5px;
   }
@@ -12,16 +12,20 @@
     .searcher-container {
       padding-left: 20px;
       padding-right: 20px;
-      margin-bottom:10px;
+      margin-bottom: 10px;
     }
   }
   .tags-list {
     max-height: 450 px;
     .tag-row {
+      &:hover {
+        background-color: #e8e8e8;
+      }
+      cursor: pointer;
       height: 50px;
       cursor: pointer;
       display: flex;
-      background-color: #f3f3f3;
+      background-color: #ffffff;
       flex-direction: row;
       padding: 0 20px;
       align-items: center;
