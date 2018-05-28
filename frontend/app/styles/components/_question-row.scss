@@ -1,37 +1,48 @@
-.li-question{
+.li-question {
   &.disabled {
-    pointer-events:none;
+    pointer-events: none;
     opacity: 0.3;
   }
   &.animated {
     -vendor-animation-duration: 3s;
   }
 
-  &:hover{
+  &:hover {
     background-color: #e8e8e8;
   }
-  &.is-dragging{
+  &.is-dragging {
     background-color: white;
     z-index: 9999999999;
   }
 
-  &.dragging-coming-active{
+  &.dragging-coming-active {
     background-color: #466873;
     color: white;
-    .draggable-target-message{
+    .draggable-target-message {
       display: inline;
     }
   }
-  &.dragging-coming-active.dragging-over{
+  &.dragging-coming-active.dragging-over {
     background-color: #b9b508 !important;
-    .draggable-target-message{
+    .draggable-target-message {
       background-color: #b15959 !important;
     }
   }
-  .gly-spin.glyphicons-refresh{
+
+  .bottom-tags {
+    .glyphicons-bookmark {
+      color: #6795c7;
+    }
+    padding-left: 75px;
+    margin-top: 5px;
+    font-size: 10px;
+    color: #9c9c9c;
+  }
+
+  .gly-spin.glyphicons-refresh {
     margin-right: 10px;
   }
-  .draggable-target-message{
+  .draggable-target-message {
     display: none;
     left: 50%;
     margin-top: -11px;
@@ -42,26 +53,32 @@
     z-index: 2;
     opacity: 0.9;
   }
-
-  &.has-ancestry-1{
+  &.has-ancestry-1 {
     margin-left: 10px;
   }
-  &.has-ancestry-2{
+  &.has-ancestry-2 {
     margin-left: 25px;
   }
-  &.has-ancestry-3{
+  &.has-ancestry-3 {
     margin-left: 35px;
   }
-  .glyphicons-sorting, .glyphicons-move-square{
+  &.has-ancestry-4 {
+    margin-left: 45px;
+  }
+  &.has-ancestry-5 {
+    margin-left: 55px;
+  }
+  .glyphicons-sorting,
+  .glyphicons-move-square {
     font-size: 14px;
     margin-right: 15px;
     padding-top: 5px;
     cursor: move;
-    &:hover{
+    &:hover {
       color: #afa9aa;
     }
   }
-  .delete-confirm{
+  .delete-confirm {
     top: -50px !important;
   }
 }
