@@ -33,9 +33,15 @@
       <br>
     {{else}}
       {{#if (gt filteredTags.length 0)}}
-        <div class="tags-list">
+        <div data-test-tag-list class="tags-list">
           {{#each filteredTags as |tag|}}
-            {{tagging-list-row tag=tag selectedQuestions=selectedQuestions addedTags=addedTags removedTags=removedTags}}
+            {{tagging-list-row
+              tag=tag
+              selectedQuestions=selectedQuestions
+              addedTags=addedTags
+              removedTags=removedTags
+              data-test-tagging-row=tag
+            }}
           {{/each}}
         </div>
       {{else if searchTerm}}
@@ -48,7 +54,10 @@
     <div class="row">
       <div class="form-group">
         <div class="col-sm-12">
-          <a class="btn btn-primary {{if (or saveQuestions.isRunning (not hasChanges)) 'disabled'}}" onclick={{action "save"}}>
+          <a data-test-apply-tag-changes
+            class="btn btn-primary {{if (or saveQuestions.isRunning (not hasChanges)) 'disabled'}}"
+            onclick={{action "save"}}
+          >
             {{#if saveQuestions.isRunning}}
               Applying...
             {{else}}

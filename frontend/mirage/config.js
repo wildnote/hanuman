@@ -11,11 +11,14 @@ export default function() {
   this.del('/survey_templates/:id');
   this.put('/survey_templates/:id', ({ surveyTemplates }, request) => {
     let attrs = JSON.parse(request.requestBody)['survey_template'],
-        id = request.params.id;
+      id = request.params.id;
     return surveyTemplates.find(id).update(attrs);
   });
-  this.get('survey_templates/:id/available_tags', () => {
-    return new Mirage.Response(200, {}, { tags: []});
+  this.get('survey_templates/:id/available_tags', ({ questions }, request) => {
+    let tags = questions.all().models.map((question) => question.tag_list.split(','));
+    tags = tags.flatten().filter(Boolean);
+    tags = [...new Set(tags)];
+    return new Mirage.Response(200, {}, { tags });
   });
 
   // Conditions
@@ -24,14 +27,14 @@ export default function() {
   this.del('/conditions/:id');
   this.put('/conditions/:id', ({ conditions }, request) => {
     let attrs = JSON.parse(request.requestBody)['condition'],
-        id = request.params.id;
+      id = request.params.id;
     return conditions.find(id).update(attrs);
   });
   // Rules
   this.post('/rules');
   this.put('/rules/:id', ({ rules }, request) => {
     let attrs = JSON.parse(request.requestBody)['rule'],
-        id = request.params.id;
+      id = request.params.id;
     return rules.find(id).update(attrs);
   });
   // Questions
@@ -44,7 +47,7 @@ export default function() {
   this.del('/questions/:id');
   this.put('/questions/:id', ({ questions }, request) => {
     let attrs = JSON.parse(request.requestBody)['question'],
-        id = request.params.id;
+      id = request.params.id;
     delete attrs.rule;
     return questions.find(id).update(attrs);
   });
@@ -54,7 +57,7 @@ export default function() {
   this.del('/answer_choices/:id');
   this.put('/answer_choices/:id', ({ answerChoices }, request) => {
     let attrs = JSON.parse(request.requestBody)['answer_choice'],
-        id = request.params.id;
+      id = request.params.id;
     return answerChoices.find(id).update(attrs);
   });
   // Data Sources
@@ -63,11 +66,10 @@ export default function() {
 
   // Custom Organizations
   this.get('/organizations', () => {
-    return new Mirage.Response(200, {}, { organizations: []});
+    return new Mirage.Response(200, {}, { organizations: [] });
   });
 
   this.get('/survey_template_export_types', () => {
-    return new Mirage.Response(200, {}, { survey_template_export_types: []});
+    return new Mirage.Response(200, {}, { survey_template_export_types: [] });
   });
-
 }
