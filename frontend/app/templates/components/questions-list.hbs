@@ -9,12 +9,21 @@
         </div>
       </div>
     {{else}}
-      {{#unless surveyTemplate.fullyEditable}}
+      {{#if surveyTemplate.lock}} 
         <div class="alert alert-info">
-          <p>This survey has existing data.</p>
-          <p>You can make changes to this survey, however, if you delete a question, previously submitted data will be deleted. In addition, if you add a question, previously submitted surveys won't have data for that question. Also, if you change the sort order, previously submitted data will be resorted. If you don't want to change previsouly submitted data then duplicate this survey template and make edits to the duplicated survey template.</p>
+          <p>          
+            <span class="glyphicons glyphicons-lock" style="margin-right: 10px"></span>
+            This survey has been locked because it is connected with a specific custom export.
+        </p>
         </div>
-      {{/unless}}
+      {{else}}
+        {{#unless surveyTemplate.fullyEditable}}
+          <div class="alert alert-info">
+            <p>This survey has existing data.</p>
+            <p>You can make changes to this survey, however, if you delete a question, previously submitted data will be deleted. In addition, if you add a question, previously submitted surveys won't have data for that question. Also, if you change the sort order, previously submitted data will be resorted. If you don't want to change previsouly submitted data then duplicate this survey template and make edits to the duplicated survey template.</p>
+          </div>
+        {{/unless}}
+      {{/if}}
 
       {{#if (gt selectedQuestions.length 0)}}
         <div data-test-selected-questions class="header-selected">
@@ -112,7 +121,7 @@
       {{/sortable-group}}
 
       {{!-- Add new question --}}
-      <ul class="sortable ui-sortable ember-view add-new-question">
+      <ul class="sortable ui-sortable ember-view add-new-question {{if surveyTemplate.lock 'icon-disabled'}}">
         {{#link-to "survey_templates.record.questions.new"}}
           <li class="li-question row question-border question-border-add-row item">
             <span class="glyphicons glyphicons-plus-sign"></span>

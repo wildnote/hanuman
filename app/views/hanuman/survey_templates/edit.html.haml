@@ -9,6 +9,15 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Edit Survey
+    %h3.panel-title Edit Survey Template
+  .tab-base.tab-stacked-left
+    %ul.nav.nav-tabs
+      %li
+        %a{:href => "/hanuman/admin/projects/#{@project_id}/survey_templates/#{@survey_template.id}/edit"} Survey Layout
+      %li.active
+        %a Survey Details
+    .tab-content
+      = render "form"
+    
 
-  = render "form"
+
