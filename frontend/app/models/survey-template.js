@@ -23,7 +23,7 @@ const SurveyTemplate = Model.extend(Validator, {
   questions: hasMany('question'),
   // Computed
   questionsNotNew: filterBy('questions', 'isNew', false),
-  filteredquestions: filterBy('questionsNotNew', 'isDeleted', false),
+  filteredQuestions: filterBy('questionsNotNew', 'isDeleted', false),
 
   // Custom actions
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),

@@ -84,7 +84,7 @@
         {{#each sortedQuestions as |question|}}
           {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
             {{#if question.supportAncestry}}
-              {{#draggable-object-target action="setAncestry" acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
+              {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
                 {{question-row
                   question=question
                   otherQuetions=sortedQuestions

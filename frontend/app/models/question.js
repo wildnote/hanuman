@@ -4,6 +4,7 @@ import { belongsTo, hasMany } from 'ember-data/relationships';
 import { computed } from '@ember/object';
 import { match, equal, bool } from '@ember/object/computed';
 import { memberAction } from 'ember-api-actions';
+import { isPresent } from '@ember/utils';
 import Validator from './../mixins/model-validator';
 
 export default Model.extend(Validator, {
@@ -37,6 +38,7 @@ export default Model.extend(Validator, {
   surveyTemplate: belongsTo('survey-template'),
   rule: belongsTo('rule', { async: false }),
   answerChoices: hasMany('answer-choice'),
+  childIds: attr('array'),
 
   // Computed Properties
   childQuestion: bool('ancestry'),
@@ -44,6 +46,11 @@ export default Model.extend(Validator, {
   isARepeater: equal('answerType.name', 'repeater'),
   isLocationSelect: equal('answerType.name', 'locationchosensingleselect'),
   isTextField: equal('answerType.name', 'text'),
+
+  hasChild: computed('childIds.[]', function() {
+    return isPresent(this.get('childIds'));
+  }),
+
   numChildren: computed('childQuestion', function() {
     if (this.get('childQuestion')) {
       return this.get('ancestry').split('/').length;
@@ -51,9 +58,10 @@ export default Model.extend(Validator, {
       return 0;
     }
   }),
+
   ruleMatchType: computed('rule.matchType', function() {
     let rule = this.get('rule');
-    return (rule.get('matchType') === 'all') ? 'AND' : 'OR';
+    return rule.get('matchType') === 'all' ? 'AND' : 'OR';
   }),
 
   answerChoicesCount: computed('answerChoices.[]', function() {
@@ -80,7 +88,9 @@ export default Model.extend(Validator, {
       custom: {
         validation(_key, _value, model) {
           if (!model.get('isNew')) {
-            let childrenQuestions = model.get('surveyTemplate.questions').filterBy('ancestry', model.get('id').toString());
+            let childrenQuestions = model
+              .get('surveyTemplate.questions')
+              .filterBy('ancestry', model.get('id').toString());
             if (childrenQuestions.length > 0) {
               if (model.get('supportAncestry')) {
                 return true;
