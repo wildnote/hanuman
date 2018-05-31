@@ -48,6 +48,25 @@ export default Component.extend({
       let el = this.get('element');
       this.sendAction('deleteQuestion', question, el);
     },
+
+    toggleCollapsed() {
+      let question = this.get('question');
+      let collapsed = question.get('collapsed');
+      let questionId = this.get('question.id');
+      let otherQuetions = this.get('otherQuetions');
+
+      question.set('collapsed', !collapsed);
+      // Toggle children questions
+      otherQuetions.forEach(otherQuetion => {
+        if (otherQuetion.get('ancestry')) {
+          let ancestrires = otherQuetion.get('ancestry').split('/');
+          if (ancestrires.includes(questionId)) {
+            otherQuetion.set('ancestryCollapsed', !collapsed);
+          }
+        }
+      });
+    },
+
     toggleQuestion(e) {
       let checked = e.target.checked;
       let question = this.get('question');

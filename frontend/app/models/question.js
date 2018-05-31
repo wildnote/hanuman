@@ -11,6 +11,8 @@ export default Model.extend(Validator, {
   // Accessors
   loading: attr('boolean', { defaultValue: false }),
   ancestrySelected: attr('boolean', { defaultValue: false }),
+  ancestryCollapsed: attr('boolean', { defaultValue: false }),
+  collapsed: attr('boolean', { defaultValue: false }),
 
   // Attributes
   questionText: attr('string'),
