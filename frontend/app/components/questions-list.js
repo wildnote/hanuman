@@ -83,6 +83,7 @@ export default Component.extend({
       }
       this.get('notify').success('Questions successfully duplicated');
     } catch (e) {
+      console.log('Error:', e); // eslint-disable-line no-console
       this.get('notify').alert('There was an error trying to duplicate questions');
     }
     this.unSelectAll();
