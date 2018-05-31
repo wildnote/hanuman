@@ -65,3 +65,10 @@
     }
   }
 }
+
+.icon-disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: .65;
+}
