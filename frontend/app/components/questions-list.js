@@ -20,6 +20,36 @@ export default Component.extend({
     this.selectedQuestions = A();
   },
 
+  deleteQuestionTask: task(function*(question, row) {
+    let questionId = question.get('id');
+    question.deleteRecord();
+    yield question.save();
+    let childrenQuestions = this.get('surveyTemplate.questions').filterBy('ancestry', questionId.toString());
+    for (let childQuestion of childrenQuestions) {
+      childQuestion.deleteRecord();
+    }
+    if (row) {
+      $('.delete-confirm', row).fadeOut();
+    }
+  }),
+
+  deleteQuestionsTask: task(function*() {
+    let selectedQuestions = this.get('selectedQuestions');
+
+    // If there are entire sections / repeaters then dont copy them all
+    let toDeleteQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
+    let deleteQuestionTask = this.get('deleteQuestionTask');
+    try {
+      yield all(toDeleteQuestions.map(question => deleteQuestionTask.perform(question)));
+
+      this.get('notify').success('Questions successfully deleted');
+    } catch (e) {
+      console.log('Error:', e); // eslint-disable-line no-console
+      this.get('notify').alert('There was an error trying to delete questions');
+    }
+    this.unSelectAll();
+  }),
+
   duplicateQuestionsTask: task(function*() {
     let selectedQuestions = this.get('selectedQuestions');
     let store = this.get('store');
@@ -27,15 +57,7 @@ export default Component.extend({
     let duplicatingSection = false;
 
     // If there are entire sections / repeaters then dont copy them all
-    let toDuplicateQuestions = selectedQuestions.filter(function(toDuplicateQuestion) {
-      if (isBlank(toDuplicateQuestion.get('ancestry'))) {
-        return true;
-      }
-      let ancestrires = toDuplicateQuestion.get('ancestry').split('/');
-      return selectedQuestions.some(function(question) {
-        ancestrires.includes(question.get('id'));
-      });
-    });
+    let toDuplicateQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
 
     try {
       let duplicatedResponse = yield all(
@@ -59,12 +81,11 @@ export default Component.extend({
           surveyTemplate.get('questions').pushObject(duplicated);
         });
       }
-      selectedQuestions.forEach(q => q.set('ancestrySelected', false));
       this.get('notify').success('Questions successfully duplicated');
-      this.set('selectedQuestions', A());
     } catch (e) {
       this.get('notify').alert('There was an error trying to duplicate questions');
     }
+    this.unSelectAll();
   }).drop(),
 
   setAncestryTask: task(function*(question, opts) {
@@ -88,11 +109,31 @@ export default Component.extend({
     question.set('loading', false);
   }),
 
+  _filterSectionsAndRepeaters(selectedQuestions) {
+    return selectedQuestions.filter(function(toCheckQuestion) {
+      if (isBlank(toCheckQuestion.get('ancestry'))) {
+        return true;
+      }
+      let ancestrires = toCheckQuestion.get('ancestry').split('/');
+      return selectedQuestions.some(function(question) {
+        ancestrires.includes(question.get('id'));
+      });
+    });
+  },
+
+  unSelectAll() {
+    this.get('selectedQuestions').forEach(question => {
+      if (!question.get('isDeleted')) {
+        question.set('ancestrySelected', false);
+      }
+    });
+    this.set('selectedQuestions', A());
+  },
+
   actions: {
     clearAll() {
       // Clean state
-      this.get('selectedQuestions').forEach(question => question.set('ancestrySelected', false));
-      this.set('selectedQuestions', A());
+      this.unSelectAll();
     },
     toggleQuestion(question, add = true) {
       let selectedQuestions = this.get('selectedQuestions');
@@ -104,16 +145,7 @@ export default Component.extend({
       }
     },
     deleteQuestion(question, elRow) {
-      let $confirm = $('.delete-confirm', elRow);
-      let questionId = question.get('id');
-      question.deleteRecord();
-      question.save().then(() => {
-        let childrenQuestions = this.get('surveyTemplate.questions').filterBy('ancestry', questionId.toString());
-        for (let childQuestion of childrenQuestions) {
-          childQuestion.deleteRecord();
-        }
-        $confirm.fadeOut();
-      });
+      this.get('deleteQuestionTask').perform(question, elRow);
     },
     dragStarted(question) {
       $('.draggable-object-target')
