@@ -23,13 +23,29 @@ test('selecting a type with answer choices', function(assert) {
 
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   andThen(function() {
-    assert.equal(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
+    assert.equal(
+      find('[data-test="answer-choices-label"]')
+        .text()
+        .trim(),
+      'Answer Choices',
+      'Shows answer choices'
+    );
     // Select
     fillIn('[data-test="answer-type-id-select"]', 1);
     triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
-    later(this, function() {
-      assert.notEqual(find('[data-test="answer-choices-label"]').text().trim(), 'Answer Choices', 'Shows answer choices');
-    }, 0);
+    later(
+      this,
+      function() {
+        assert.notEqual(
+          find('[data-test="answer-choices-label"]')
+            .text()
+            .trim(),
+          'Answer Choices',
+          'Shows answer choices'
+        );
+      },
+      0
+    );
   });
 });
 
@@ -37,26 +53,32 @@ test('selecting ancestry', function(assert) {
   question = server.create('question', { surveyTemplate, answer_type_id: 17 }); // Answer Type id 17 = `Radio`
 
   let ancestryAnswerTypesId = [57, 56];
-  let ancestryQuestions = server.createList(
-    'question',
-    2,
-    {
-      surveyTemplate,
-      answer_type_id: ancestryAnswerTypesId[Math.floor(Math.random() * ancestryAnswerTypesId.length)]
-    }
-  );
+  let ancestryQuestions = server.createList('question', 2, {
+    surveyTemplate,
+    answer_type_id: ancestryAnswerTypesId[Math.floor(Math.random() * ancestryAnswerTypesId.length)]
+  });
 
   let notAncestryQuestions = server.createList('question', 2, { surveyTemplate, answer_type_id: 19 });
 
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   andThen(function() {
     for (let ancestry of ancestryQuestions) {
-      assert.equal(`${ancestry.question_text} - ${ancestry.id}`, find(`[data-test="ancestry-select"] option[value="${ancestry.id}"]`).text().trim());
+      assert.equal(
+        `${ancestry.question_text} - ${ancestry.id}`,
+        find(`[data-test="ancestry-select"] option[value="${ancestry.id}"]`)
+          .text()
+          .trim()
+      );
     }
 
     find('[data-test="ancestry-select"] option[value]').each(function() {
       for (let notAncestry of notAncestryQuestions) {
-        assert.notEqual(`${notAncestry.question_text} - ${notAncestry.id}`, $(this).text().trim());
+        assert.notEqual(
+          `${notAncestry.question_text} - ${notAncestry.id}`,
+          $(this)
+            .text()
+            .trim()
+        );
       }
     });
   });
@@ -84,13 +106,13 @@ test('saving a question with answer_type with answers without adding any answers
   visit(`/survey_templates/${surveyTemplate.id}`);
 
   andThen(function() {
-    click('a:contains("Add")').then(()=>{
+    click('a:contains("Add")').then(() => {
       assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
       fillIn('[data-test="question.questionText"]', 'question with answers');
       // Select
       fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer type
       triggerEvent('[data-test="answer-type-id-select"]', 'onchange').then(function() {
-        click('[data-test="save-question-link"]').then(()=>{
+        click('[data-test="save-question-link"]').then(() => {
           let el = find('[data-test="answer-choices-error"]');
           let count = el.length;
           assert.equal(count, 1);
@@ -106,7 +128,7 @@ test('canceling question edition', function(assert) {
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   andThen(function() {
     assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-    click('[data-test="cancel-question-link"]').then(()=>{
+    click('[data-test="cancel-question-link"]').then(() => {
       assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
     });
   });
@@ -129,13 +151,28 @@ test('deleting a question', async function(assert) {
 
   await visit(`/survey_templates/${surveyTemplate.id}`);
 
-  assert.equal(question.question_text, find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`).text().trim());
+  assert.equal(
+    question.question_text,
+    find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`)
+      .text()
+      .trim()
+  );
 
   await click(`[data-question-id="${question.id}"] [data-test="confirm-delete-question-link"]`);
   await click(`[data-question-id="${question.id}"] [data-test="delete-question-link"]`);
-  assert.notEqual(question.question_text, find('[data-test="question.questionText"]:first').text().trim());
+  assert.notEqual(
+    question.question_text,
+    find('[data-test="question.questionText"]:first')
+      .text()
+      .trim()
+  );
   await visit(`/survey_templates/${surveyTemplate.id}`);
-  assert.notEqual(question.question_text, find('[data-test="question.questionText"]:first').text().trim());
+  assert.notEqual(
+    question.question_text,
+    find('[data-test="question.questionText"]:first')
+      .text()
+      .trim()
+  );
 });
 
 test('wording when deleting a question', async function(assert) {
@@ -148,7 +185,9 @@ test('wording when deleting a question', async function(assert) {
 
   assert.equal(
     'Performing this delete will also destroy associated questions within this section/repeater.',
-    find(`[data-question-id="${ancestryQuestion.id}"] [data-test-delete-confirm-message]`).text().trim(),
+    find(`[data-question-id="${ancestryQuestion.id}"] [data-test-delete-confirm-message]`)
+      .text()
+      .trim(),
     'has the correct wording'
   );
 });

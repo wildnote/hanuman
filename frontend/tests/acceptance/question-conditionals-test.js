@@ -15,7 +15,13 @@ test('creating new question hides conditional tab', async function(assert) {
   await visit(`/survey_templates/${surveyTemplate.id}`);
   await click('a:contains("Add")');
 
-  assert.notEqual(find('[href="#tab-question-conditionals"]').text().trim(), 'Conditionals', 'Hide conditional tab');
+  assert.notEqual(
+    find('[href="#tab-question-conditionals"]')
+      .text()
+      .trim(),
+    'Conditionals',
+    'Hide conditional tab'
+  );
 });
 
 test('adding a conditional with a question without rule previously created', async function(assert) {
@@ -54,12 +60,17 @@ test('editing a conditional', function(assert) {
   visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   andThen(function() {
     for (let condition of conditions) {
-      assert.equal(condition.answer, find(`[data-condition-id="${condition.id}"] [data-test="condition.answer"]`).text().trim());
+      assert.equal(
+        condition.answer,
+        find(`[data-condition-id="${condition.id}"] [data-test="condition.answer"]`)
+          .text()
+          .trim()
+      );
     }
     let selector = `[data-condition-id="${firstCondition.id}"]`;
     click(`${selector} [data-test="edit-condition-link"]`);
     fillIn(`${selector} [data-test="condition.answer"]`, 'eh eh epa colombia');
-    click(`${selector} [data-test="save-condition-link"]`).then(()=>{
+    click(`${selector} [data-test="save-condition-link"]`).then(() => {
       firstCondition = server.db.conditions.find(firstCondition.id);
       assert.equal(firstCondition.answer, 'eh eh epa colombia');
     });
@@ -82,9 +93,19 @@ test('deleting a conditional', async function(assert) {
   let selector = `[data-condition-id="${firstCondition.id}"]`;
   await click(`${selector} [data-test="delete-condition-link"]`);
 
-  assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
+  assert.notEqual(
+    firstCondition.answer,
+    find('[data-test="condition.answer"]:first')
+      .text()
+      .trim()
+  );
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-  assert.notEqual(firstCondition.answer, find('[data-test="condition.answer"]:first').text().trim());
+  assert.notEqual(
+    firstCondition.answer,
+    find('[data-test="condition.answer"]:first')
+      .text()
+      .trim()
+  );
 });
 
 test('selecting a conditional question with answer choices', async function(assert) {
