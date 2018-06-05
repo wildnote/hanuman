@@ -7,13 +7,26 @@ export default Controller.extend({
   isLoadingQuestions: true,
   surveyTemplate: alias('model'),
 
-  updateSortOrderTask: task(function*(questions) {
+  updateSortOrderTask: task(function*(questions, reSort = false) {
     let lastSortOrder = 0;
-
+    if (reSort) {
+      questions = [...questions.toArray()];
+      // Re-sort
+      questions.sort(function(q1, q2) {
+        let q1Sort = q1.get('sortOrder');
+        let q2Sort = q2.get('sortOrder');
+        if (q1Sort === q2Sort) {
+          return q1.get('parentId') === q2.get('id') ? 1 : -1;
+        } else {
+          return q1Sort - q2Sort;
+        }
+      });
+    }
     for (let index = 0; index < questions.get('length'); index++) {
       let question = questions.objectAt(index);
       let oldSortOrder = question.get('sortOrder');
       let newSortOrder = index + 1;
+
       if (lastSortOrder === newSortOrder) {
         newSortOrder++;
       }

@@ -36,7 +36,6 @@ export default Component.extend({
   deleteQuestionsTask: task(function*() {
     let selectedQuestions = this.get('selectedQuestions');
 
-    // If there are entire sections / repeaters then dont copy them all
     let toDeleteQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
     let deleteQuestionTask = this.get('deleteQuestionTask');
     try {
@@ -100,26 +99,35 @@ export default Component.extend({
     if (lastChild) {
       sortOrder = lastChild.get('sortOrder');
     } else {
-      sortOrder = ancestryQuestion.get('sortOrder') + 1;
+      sortOrder = ancestryQuestion.get('sortOrder') + 0.1;
     }
-
     question.setProperties({ loading: true, parentId, sortOrder });
     yield question.save();
     yield question.reload();
-    yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'));
+    yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
     question.set('loading', false);
   }),
 
   _filterSectionsAndRepeaters(selectedQuestions) {
-    return selectedQuestions.filter(function(toCheckQuestion) {
+    let filtered = selectedQuestions.filter(function(toCheckQuestion) {
       if (isBlank(toCheckQuestion.get('ancestry'))) {
+        // top level question
         return true;
+      } else if (toCheckQuestion.get('supportAncestry')) {
+        // no top level question but parent
+        let isMyParentSelectd = selectedQuestions.find(function(question) {
+          return question.get('id') === toCheckQuestion.get('parentId');
+        });
+        if (!isMyParentSelectd) {
+          return true;
+        }
       }
       let ancestrires = toCheckQuestion.get('ancestry').split('/');
       return selectedQuestions.some(function(question) {
         ancestrires.includes(question.get('id'));
       });
     });
+    return isBlank(filtered) ? selectedQuestions : filtered;
   },
 
   unSelectAll() {
