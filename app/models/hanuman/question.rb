@@ -22,7 +22,7 @@ module Hanuman
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
 
     amoeba do
-      include_association [:rule, :conditions, :answer_choices]
+      include_association [:rule, :answer_choices]
       # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
       customize(lambda { |original_question,new_question|
         new_question.duped_question_id = original_question.id
@@ -167,11 +167,11 @@ module Hanuman
 
       # update newly created conditions with rule relationship now that the rule has been created
       # the rule gets created with the section question
-      new_rule = new_section_q.rule
-      new_section_q.conditions.each do |c|
-        c.rule_id = new_rule.id
-        c.save
-      end
+      # new_rule = new_section_q.rule
+      # new_section_q.conditions.each do |c|
+      #   c.rule_id = new_rule.id
+      #   c.save
+      # end
 
       children_qs.each do |q|
         new_child_q = q.amoeba_dup

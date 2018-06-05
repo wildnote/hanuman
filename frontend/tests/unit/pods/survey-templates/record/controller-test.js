@@ -5,13 +5,13 @@ import RSVP from 'rsvp';
 
 const { Promise } = RSVP;
 
-moduleFor('route:survey-templates/record', 'Unit | Route | survey templates/record', {
+moduleFor('controller:survey-templates/record', 'Unit | Controller | survey templates/record', {
   // Specify the other units that are required for this test.
   needs: ['service:notify']
 });
 
 test('check ancestry consistency when sorting up', function(assert) {
-  let route = this.subject();
+  let controller = this.subject();
   let questions = A([
     EmberObject.create({ id: 1, sortOrder: 1, save: fakeSave }),
     EmberObject.create({ id: 2, sortOrder: 2, save: fakeSave }),
@@ -26,7 +26,7 @@ test('check ancestry consistency when sorting up', function(assert) {
   // Simulate drang sort
   questions[3].set('sortOrder', 5);
   questions[4].set('sortOrder', 4);
-  route._checkAncestryConsistency(questions);
+  controller._checkAncestryConsistency(questions);
   assert.equal(questions.objectAt(4).get('parentId'), 3, 'Parent id was updated');
 });
 
