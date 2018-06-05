@@ -9,7 +9,11 @@
           <a data-toggle="tab" href="/hanuman/admin/survey_templates/{{surveyTemplate.id}}/edit">Survey Layout</a>
         </li>
         <li>
-          <a href="/hanuman/survey_templates/{{surveyTemplate.id}}">Survey Details</a>
+          {{#if hasProjectId}}
+            <a href="/hanuman/projects/{{projectId}}/survey_templates/{{surveyTemplate.id}}">Survey Details</a>
+          {{else}}
+            <a href="/hanuman/survey_templates/{{surveyTemplate.id}}">Survey Details</a>
+          {{/if}}
         </li>
       </ul>
       <div class="tab-content">
