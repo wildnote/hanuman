@@ -78,8 +78,7 @@ export default Component.extend({
         if (otherQuetion.get('ancestry')) {
           let ancestrires = otherQuetion.get('ancestry').split('/');
           if (ancestrires.includes(questionId)) {
-            let ancestrySelected = otherQuetion.get('ancestrySelected');
-            otherQuetion.set('ancestrySelected', !ancestrySelected);
+            otherQuetion.set('ancestrySelected', checked);
             this.get('toggleQuestion')(otherQuetion, checked);
           }
         }
