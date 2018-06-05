@@ -122,7 +122,7 @@ module Hanuman
     # duplicate and save a single question with answer choices and conditions
     def dup_and_save
       new_q = self.amoeba_dup
-      new_q.sort_order = self.sort_order.to_i + 1
+      new_q.sort_order = self.sort_order.to_i
       new_q.save
       new_q
     end
@@ -188,7 +188,7 @@ module Hanuman
     def dup_section
       section_q = self
       children_qs = section_q.children
-      start_sort_order = 10000
+      start_sort_order = 100000
       increment_sort_by = 2
       unless children_qs.blank?
         start_sort_order = children_qs.last.sort_order
@@ -203,7 +203,6 @@ module Hanuman
         q.sort_order = q.sort_order + increment_sort_by
         q.save
       end
-
       # this will duplicate the question, will need to create a new rule,
       # and then set the condtions to new rule id
       new_section_q = section_q.amoeba_dup
@@ -219,6 +218,7 @@ module Hanuman
         new_child_q.sort_order = new_child_q.sort_order + increment_sort_by
         new_child_q.save
       end
+      new_section_q
 
       # update newly created conditions with rule relationship now that the rule has been created
       # the rule gets created with the section question

@@ -46,6 +46,7 @@ export default Component.extend({
       console.log('Error:', e); // eslint-disable-line no-console
       this.get('notify').alert('There was an error trying to delete questions');
     }
+    yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
     this.unSelectAll();
   }),
 
@@ -59,6 +60,8 @@ export default Component.extend({
     let toDuplicateQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
 
     try {
+      // make sure the list is clean in terms of sorting values
+      yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
       let duplicatedResponse = yield all(
         toDuplicateQuestions.map(question => {
           let params = { section: false };
@@ -71,7 +74,14 @@ export default Component.extend({
       );
       if (duplicatingSection) {
         yield surveyTemplate.reload();
-        yield surveyTemplate.get('questions');
+        yield all(
+          surveyTemplate.get('questions').map(question => {
+            if (question.get('currentState.stateName') !== 'root.loading') {
+              return question.reload();
+            }
+            return question;
+          })
+        );
       } else {
         duplicatedResponse.forEach(response => {
           store.pushPayload(response);
