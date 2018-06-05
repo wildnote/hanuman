@@ -2,6 +2,9 @@
 <div data-test-question-row class="row">
   <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
   <div class="col-sm-4">
+    {{#if question.hasChild}}
+      <span onclick={{action 'toggleCollapsed'}} class="glyphicon glyphicon-collapse-{{if question.collapsed 'up' 'down'}}"></span>
+    {{/if}}
     {{#if question.loading}}
       <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{/if}}
