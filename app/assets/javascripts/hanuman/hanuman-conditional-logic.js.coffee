@@ -221,8 +221,10 @@ class @ConditionalLogic
     radiobuttons = container.find(":radio")
     radiobuttons.each ->
       $(this).prop('checked', false)
+
+    # kdh commenting out triggering change event because it is having an exponential effect and causing performance problems on conditional logic #157849774
     # trigger onchange event which is needed for embedded conditional logic
-    container.find('.form-control').trigger('change')
+    # container.find('.form-control').trigger('change')
 
   #evaluate conditional logic rules
   evaluateCondition: (operator, answer, value) ->
