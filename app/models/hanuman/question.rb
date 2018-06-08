@@ -22,7 +22,7 @@ module Hanuman
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
 
     amoeba do
-      include_association [:rule, :answer_choices]
+      include_association [:rule, :conditions, :answer_choices]
       # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
       customize(lambda { |original_question,new_question|
         new_question.duped_question_id = original_question.id
@@ -35,6 +35,23 @@ module Hanuman
         .gsub('asc desc', 'asc')
         .gsub('desc desc', 'desc')
         .gsub('desc asc', 'desc'))
+    end
+
+    def self.remap_conditionals(questions, survey_template)
+      questions.each do |q|
+        q.conditions.each do |c|
+          old_rule_id = c.rule_id
+          new_rule =
+            Hanuman::Rule.includes(:question)
+                         .where('hanuman_rules.duped_rule_id = ? AND hanuman_questions.survey_template_id = ?', old_rule_id, survey_template.id)
+                         .references(:question)
+                         .first
+          if new_rule
+            c.rule_id = new_rule.id
+            c.save!
+          end
+        end
+      end
     end
 
     def question_text_not_required
@@ -124,6 +141,7 @@ module Hanuman
       new_q = self.amoeba_dup
       new_q.sort_order = self.sort_order.to_i
       new_q.save
+      self.class.remap_conditionals([new_q], survey_template)
       new_q
     end
 
@@ -167,11 +185,11 @@ module Hanuman
 
       # update newly created conditions with rule relationship now that the rule has been created
       # the rule gets created with the section question
-      # new_rule = new_section_q.rule
-      # new_section_q.conditions.each do |c|
-      #   c.rule_id = new_rule.id
-      #   c.save
-      # end
+      new_rule = new_section_q.rule
+      new_section_q.conditions.each do |c|
+        c.rule_id = new_rule.id
+        c.save
+      end
 
       children_qs.each do |q|
         new_child_q = q.amoeba_dup
@@ -218,21 +236,11 @@ module Hanuman
         new_child_q.sort_order = new_child_q.sort_order + increment_sort_by
         new_child_q.save
       end
+
+      # update conditioanl logic rules
+      self.class.remap_conditionals(new_section_q.children, survey_template)
+
       new_section_q
-
-      # update newly created conditions with rule relationship now that the rule has been created
-      # the rule gets created with the section question
-      # new_children_questions = new_section_q.children
-      # new_children_questions.each do |q|
-      #   new_rule = q.rule
-      #   unless q.rule.blank?
-      #     new_parent_q.conditions.each do |c|
-      #       c.rule_id = new_rule.id
-      #       c.save
-      #     end
-      #   end
-      # end
-
     end
 
     def import_answer_choices(file_name, file_path)
