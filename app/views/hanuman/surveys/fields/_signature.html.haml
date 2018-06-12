@@ -20,7 +20,7 @@
       .signature-preview-container
       .edit-mode-file
       = ff.fields_for :observation_signature, o do |fff|
-        = fff.cl_image_upload :signature, :html => { :multiple => false , :class => "signature-upload survey-signature-upload"}
+        = fff.cl_image_upload :signature, :html => { :multiple => false, :hidden => true, :class => "signature-upload survey-signature-upload"}
       .signature-upload-error
       .progress.hidden
         .progress-bar.progress-bar-success.signature-progress-bar

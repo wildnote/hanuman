@@ -1,16 +1,17 @@
 .form-group
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
-  .col-sm-7
-    - signature_url = cloudinary_url(o.observation_signature.signature, :sign_url => true)
-    - if signature_url.blank?
-      %p.form-control-static.bg-danger PHOTO NOT FOUND
-      = o.observation_signature.signature.my_public_id + "." + o.observation_signature.signature.format + " | this photo failed to upload successfully, please retry upload or remove"
-      %br
-      %br
-    - else
-      = link_to cl_image_tag(o.observation_signature.signature, :crop => :fill, :width => 350, :sign_url => true), cloudinary_url(o.observation_signature.signature, :sign_url => true), html_options = {"data-gallery" => "", class: "gallery-item gallery-photo", id: "photo_" + o.observation_signature.id.to_s, :"data-content-type" => o.observation_signature.signature.resource_type, :"data-download-url" => cloudinary_url(o.observation_signature.signature, :sign_url => true), :"data-file-name" => o.observation_signature.signature.public_id}
-      = link_to o.observation_signature.signature.my_public_id + "." + o.observation_signature.signature.format + " | download file", cloudinary_url(o.observation_signature.signature, attachment: true, :sign_url => true), html_options = { download: true }
-      %br
-      %br
-  %br
+  - if o.observation_signature.present?
+    .col-sm-7
+      - signature_url = cloudinary_url(o.observation_signature.signature, :sign_url => true)
+      - if signature_url.blank?
+        %p.form-control-static.bg-danger PHOTO NOT FOUND
+        = o.observation_signature.signature.my_public_id + "." + o.observation_signature.signature.format + " | this photo failed to upload successfully, please retry upload or remove"
+        %br
+        %br
+      - else
+        = link_to cl_image_tag(o.observation_signature.signature, :crop => :fill, :width => 350, :sign_url => true), cloudinary_url(o.observation_signature.signature, :sign_url => true), html_options = {"data-gallery" => "", class: "gallery-item gallery-photo", id: "photo_" + o.observation_signature.id.to_s, :"data-content-type" => o.observation_signature.signature.resource_type, :"data-download-url" => cloudinary_url(o.observation_signature.signature, :sign_url => true), :"data-file-name" => o.observation_signature.signature.public_id}
+        = link_to o.observation_signature.signature.my_public_id + "." + o.observation_signature.signature.format + " | download file", cloudinary_url(o.observation_signature.signature, attachment: true, :sign_url => true), html_options = { download: true }
+        %br
+        %br
+    %br
   

@@ -235,8 +235,7 @@ $ ->
     else if $(@).closest(".file-upload-input-button").hasClass('document-column')
       file = "document"
     else if $(@).closest(".file-upload-input-button").hasClass('signature-column')
-      console.log "test"
-      console.log $(@).closest('.signature-upload')
+      $(@).closest(".file-upload-input-button").find('.signature-upload').show()
       return
 
     $(@).closest('.file-upload-input-button').find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
@@ -244,7 +243,6 @@ $ ->
 
   # on click removes uploaded files on survey new.
   $('.file-upload').on 'click', '.remove-upload', (e) ->
-    console.log 'remove'
     e.preventDefault()
     file = $(@).attr('id')
     containerClass = "."+file+"-preview"
@@ -254,13 +252,12 @@ $ ->
       $(element).find('.upload-sort-order').val(idx+1)
     
     if $(fileToDelete).hasClass('signature-column')
-      console.log '256'
-      console.log $(fileToDelete).closest('.signature-upload')
       $(fileToDelete).find('.signature-upload').show()
 
 
   if $('.edit-mode-file').length > 0
     removeFileHiddenInput()
+    $('.upload-view-mode ~ .signature-upload').hide()
     $('input[type=submit]').on 'click',(e) ->
 
       # this loop checks for documents that are flagged for delete
