@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hanuman (1.4.10)
+    hanuman (1.4.11)
       active_model_serializers (~> 0.8.1)
       amoeba (~> 3.0.0)
       ancestry
@@ -66,7 +66,7 @@ GEM
       tzinfo (~> 1.1)
     amoeba (3.0.0)
       activerecord (>= 3.2.6)
-    ancestry (3.0.1)
+    ancestry (3.0.2)
       activerecord (>= 3.2.0)
     arel (6.0.3)
     ast (2.3.0)
@@ -110,11 +110,11 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    connection_pool (2.2.1)
+    connection_pool (2.2.2)
     database_cleaner (1.5.3)
     diff-lcs (1.2.5)
     docile (1.1.5)
-    domain_name (0.5.20170404)
+    domain_name (0.5.20180417)
       unf (>= 0.0.5, < 1.0.0)
     ember-cli-rails (0.10.0)
       cocaine (~> 0.5.8)
@@ -150,7 +150,7 @@ GEM
     http-cookie (1.0.3)
       domain_name (~> 0.5)
     i18n (0.7.0)
-    jquery-rails (3.1.4)
+    jquery-rails (3.1.5)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     json (1.8.3)
