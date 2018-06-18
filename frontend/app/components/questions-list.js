@@ -89,13 +89,13 @@ export default Component.extend({
           let duplicated = store.peekRecord('question', response.question.id);
           surveyTemplate.get('questions').pushObject(duplicated);
         });
+        yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
       }
       this.get('notify').success('Questions successfully duplicated');
     } catch (e) {
       console.log('Error:', e); // eslint-disable-line no-console
       this.get('notify').alert('There was an error trying to duplicate questions');
     }
-    yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
     this.unSelectAll();
   }).drop(),
 

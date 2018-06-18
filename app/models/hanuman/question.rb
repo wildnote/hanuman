@@ -152,7 +152,7 @@ module Hanuman
       unless children_qs.blank?
         start_sort_order = children_qs.last.sort_order
         # number of new children questions + condition (parent) and children (rule) questions
-        increment_sort_by = children_qs.count + 2
+        increment_sort_by = children_qs.count + 1
       else
         start_sort_order = section_q.sort_order
       end
