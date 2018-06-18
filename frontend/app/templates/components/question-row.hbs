@@ -84,7 +84,7 @@
       <button style="margin-top: 10px;" class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
       <button style="margin-top: 10px;" class="btn" onclick={{action 'cancel'}}>No</button>
     </div>
-    <span class="float-right hide">
+    <span class="float-right">
       {{#if question.surveyTemplate.lock}}
         <input data-test-question-selector type="checkbox" disabled checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
       {{else}}
