@@ -146,13 +146,13 @@ module Hanuman
 
     def dup_section
       section_q = self
-      children_qs = section_q.children.order(:sort_order)
+      descendants_qs = section_q.descendants.order(:sort_order)
       start_sort_order = 100000
       increment_sort_by = 2
-      unless children_qs.blank?
-        start_sort_order = children_qs.last.sort_order
-        # number of new children questions + condition (parent) and children (rule) questions
-        increment_sort_by = children_qs.count + 1
+      unless descendants_qs.blank?
+        start_sort_order = descendants_qs.last.sort_order
+        # number of new descendants questions + condition (parent) and descendants (rule) questions
+        increment_sort_by = descendants_qs.count + 1
       else
         start_sort_order = section_q.sort_order
       end
@@ -168,10 +168,11 @@ module Hanuman
       new_section_q = section_q.amoeba_dup
       new_section_q.sort_order = new_section_q.sort_order + increment_sort_by
       new_section_q.save
-      children_qs.each do |q|
+      descendants_qs.each do |q|
         new_child_q = q.dup_and_save
-        # update ancestry relationship
-        new_child_q.parent = new_section_q
+
+        # Update ancestry relationship dynamically
+        new_child_q.parent = new_section_q.descendants.find_by(duped_question_id: q.parent.id) || new_section_q
 
         # set sort_order
         new_child_q.sort_order = new_child_q.sort_order + increment_sort_by
@@ -179,11 +180,11 @@ module Hanuman
       end
 
       # Re-organize / map conditions
-      new_section_q.children.order(:sort_order).each do |question|
+      new_section_q.descendants.order(:sort_order).each do |question|
         next if question.rule_conditions.empty?
         question.rule_conditions.each do |condition|
-          next unless children_qs.include?(condition.question)
-          condition.question_id = new_section_q.children.find_by(duped_question_id: condition.question.id).id
+          next unless descendants_qs.include?(condition.question)
+          condition.question_id = new_section_q.descendants.find_by(duped_question_id: condition.question.id).id
           condition.save
         end
       end
