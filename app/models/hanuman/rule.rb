@@ -14,7 +14,7 @@ module Hanuman
     validates :match_type, inclusion: { in: MATCH_TYPES }
 
     amoeba do
-      exclude_association [:conditions]
+      exclude_association :conditions
       customize(lambda { |original_rule, new_rule|
         # Prevent de validation to run
         # new_rule.conditions.each { |new_condition| new_condition.dup_copying = true}
