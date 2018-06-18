@@ -146,7 +146,7 @@ module Hanuman
 
     def dup_section
       section_q = self
-      children_qs = section_q.children
+      children_qs = section_q.children.order(:sort_order)
       start_sort_order = 100000
       increment_sort_by = 2
       unless children_qs.blank?
@@ -158,16 +158,16 @@ module Hanuman
       end
 
       # remap sort orders leaving space for new questions before saving new question
-      section_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
+      section_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|  
         q.sort_order = q.sort_order + increment_sort_by
         q.save
       end
+
       # this will duplicate the question, will need to create a new rule,
       # and then set the condtions to new rule id
       new_section_q = section_q.amoeba_dup
       new_section_q.sort_order = new_section_q.sort_order + increment_sort_by
       new_section_q.save
-
       children_qs.each do |q|
         new_child_q = q.dup_and_save
         # update ancestry relationship
@@ -179,7 +179,7 @@ module Hanuman
       end
 
       # Re-organize / map conditions
-      new_section_q.children.each do |question|
+      new_section_q.children.order(:sort_order).each do |question|
         next if question.rule_conditions.empty?
         question.rule_conditions.each do |condition|
           next unless children_qs.include?(condition.question)
