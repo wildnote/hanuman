@@ -175,6 +175,7 @@ test('deleting a question', async function(assert) {
   );
 });
 
+/* Action not duable any more directly
 test('wording when deleting a question', async function(assert) {
   let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
   let ancestryId = ancestryQuestion.id;
@@ -191,6 +192,7 @@ test('wording when deleting a question', async function(assert) {
     'has the correct wording'
   );
 });
+*/
 
 test('showing `Capture lat/long` checkboxes', async function(assert) {
   let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`

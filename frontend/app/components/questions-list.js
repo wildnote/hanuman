@@ -21,17 +21,21 @@ export default Component.extend({
   },
 
   deleteQuestionTask: task(function*(question, row) {
-    let questionId = question.get('id');
     question.deleteRecord();
     yield question.save();
-    let childrenQuestions = this.get('surveyTemplate.questions').filterBy('ancestry', questionId.toString());
-    for (let childQuestion of childrenQuestions) {
-      childQuestion.deleteRecord();
-    }
+    this._recursivelyDelete(question.get('id'));
     if (row) {
       $('.delete-confirm', row).fadeOut();
     }
   }),
+
+  _recursivelyDelete(questionId) {
+    let childrenQuestions = this.get('surveyTemplate.questions').filterBy('parentId', questionId.toString());
+    for (let childQuestion of childrenQuestions) {
+      this._recursivelyDelete(childQuestion.get('id'));
+      childQuestion.deleteRecord();
+    }
+  },
 
   deleteQuestionsTask: task(function*() {
     let selectedQuestions = this.get('selectedQuestions');
@@ -166,6 +170,7 @@ export default Component.extend({
     },
     deleteQuestion(question, elRow) {
       this.get('deleteQuestionTask').perform(question, elRow);
+      this.set('selectedQuestions', A());
       this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
     },
     dragStarted(question) {

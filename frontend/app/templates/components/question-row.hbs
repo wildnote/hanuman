@@ -64,17 +64,18 @@
         <span class="glyphicons glyphicons-pencil"></span>
         Edit
       {{/link-to}}
-      <a class="btn btn-delete" disabled data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
-        <span class="glyphicons glyphicons-bin"></span>
-      </a>
     {{else}}
       {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
         <span class="glyphicons glyphicons-pencil"></span>
         Edit
       {{/link-to}}
-      <a class="btn btn-delete" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
-        <span class="glyphicons glyphicons-bin"></span>
-      </a>
+      {{#if (not ancestrable)}}      
+        <a class="btn btn-delete" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
+          <span class="glyphicons glyphicons-bin"></span>
+        </a>
+      {{else}}
+        <div style="margin-right: 53px;display: inline-block;"></div>
+      {{/if}}
     {{/if}}
     <div class="delete-confirm">
       {{#if (and (gt totalChildren 0) (not isFullyEditable)) }}
