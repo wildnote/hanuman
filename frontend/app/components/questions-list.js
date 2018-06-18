@@ -166,6 +166,7 @@ export default Component.extend({
     },
     deleteQuestion(question, elRow) {
       this.get('deleteQuestionTask').perform(question, elRow);
+      this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
     },
     dragStarted(question) {
       $('.draggable-object-target')
