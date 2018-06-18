@@ -5,14 +5,18 @@
     {{#if question.loading}}
       <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{/if}}
-    <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
-      {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
-    </span>
-    {{#unless ancestrable}}
+    {{#if (not isSelected)}}
+      <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+        {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
+      </span>
+    {{else}}
+      <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
+    {{/if}}
+    {{#if (and (not ancestrable) (not isSelected))}}
       <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
         {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
       </span>
-    {{/unless}}
+    {{/if}}
     <span data-test="question.questionText">
       {{question.questionText}}
     </span>
