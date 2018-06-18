@@ -25,8 +25,8 @@ module Hanuman
     end
 
     describe 'Instance methods' do
-      let(:question) { create(:question) }
       describe '#question_text_not_required' do
+        let(:question) { create(:question) }
         context 'when `answer_type` is equals to `line`' do
           before do
             question.answer_type.name = 'line'
@@ -44,6 +44,14 @@ module Hanuman
           it 'returns `false`' do
             expect(question.question_text_not_required).to be_falsy
           end
+        end
+      end
+      describe '#dup_and_save' do
+        let(:question_to_duplicate) { create(:question, :with_rule_and_coditions, number_of_conditions: 2) }
+        it 'duplicates and saves a single question with answer choices and conditions' do
+          new_question = question_to_duplicate.dup_and_save
+          expect(new_question.rule.conditions.count).to equal(2)
+          expect(new_question.rule.id).to_not equal(question_to_duplicate.rule.id)
         end
       end
     end

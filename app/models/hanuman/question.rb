@@ -10,7 +10,8 @@ module Hanuman
     # if a user deletes a question from survey admin we need to delete related observations, giving warning in survey admin
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
     has_one :rule, dependent: :destroy
-    has_many :conditions, dependent: :destroy
+    has_many :conditions, dependent: :destroy # The conditions this question is dependent of
+    has_many :rule_conditions, through: :rule, source: :conditions
 
     # Validations
     validates :answer_type_id, presence: true
@@ -141,7 +142,12 @@ module Hanuman
       new_q = self.amoeba_dup
       new_q.sort_order = self.sort_order.to_i
       new_q.save
-      self.class.remap_conditionals([new_q], survey_template)
+      # Associate the conditions from the rule
+      self.rule_conditions.each do |condition|
+        new_condition = condition.amoeba_dup
+        new_condition.rule = new_q.rule
+        new_condition.save
+      end
       new_q
     end
 
