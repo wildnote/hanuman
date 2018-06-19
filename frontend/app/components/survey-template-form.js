@@ -17,7 +17,7 @@ export default Component.extend({
     try {
       let response = yield this.get('ajax').request('/organizations');
       this.set('organizations', response.organizations);
-    } catch(e) {
+    } catch (e) {
       this.get('notify').alert('There was an error trying to load the organizations');
     }
   }).drop(),
@@ -26,7 +26,7 @@ export default Component.extend({
     try {
       let response = yield this.get('ajax').request('/survey_template_export_types');
       this.set('exportTypes', response.survey_template_export_types);
-    } catch(e) {
+    } catch (e) {
       this.get('notify').alert('There was an error trying to load the export types');
     }
   }).drop(),

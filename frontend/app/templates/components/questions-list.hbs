@@ -33,9 +33,14 @@
           </div>
 
           <div class="selected-questions-actions">
-            <button style="margin-right: 4px;">
-              <span class="glyphicons glyphicons-bin"></span>
-              <span style="margin-left: 4px;">Delete</span>
+            <button onclick={{perform deleteQuestionsTask}} class="{{if deleteQuestionsTask.isRunning "disabled"}}" style="margin-right: 4px;">
+              {{#liquid-if deleteQuestionsTask.isRunning}}
+                <span class="glyphicons glyphicons-repeat gly-spin"></span>
+                <span style="margin-left: 4px;">Deleting...</span>
+              {{else}}
+                <span class="glyphicons glyphicons-bin"></span>
+                <span style="margin-left: 4px;">Delete</span>
+              {{/liquid-if}}
             </button>
             <button onclick={{perform duplicateQuestionsTask}} class="{{if duplicateQuestionsTask.isRunning "disabled"}}">
               {{#liquid-if duplicateQuestionsTask.isRunning}}
@@ -93,7 +98,7 @@
         {{#each sortedQuestions as |question|}}
           {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
             {{#if question.supportAncestry}}
-              {{#draggable-object-target action="setAncestry" acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
+              {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
                 {{question-row
                   question=question
                   otherQuetions=sortedQuestions
