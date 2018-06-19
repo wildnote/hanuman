@@ -1,13 +1,19 @@
 <div class="form-horizontal">
   <div class="panel panel-info">
-    <div class="panel-title">Edit Survey - {{surveyTemplate.name}}</div>
+    <div class="panel-title">
+      Edit Survey - {{surveyTemplate.name}}
+    </div>
     <div class="tab-base tab-stacked-left">
       <ul class="nav nav-tabs">
         <li class="active">
-          <a data-toggle="tab" href="#tab-survey-layout">Survey Layout</a>
+          <a data-toggle="tab" href="/hanuman/admin/survey_templates/{{surveyTemplate.id}}/edit">Survey Layout</a>
         </li>
         <li>
-          <a data-toggle="tab" href="#tab-survey-details">Survey Details</a>
+          {{#if hasProjectId}}
+            <a href="/hanuman/projects/{{projectId}}/survey_templates/{{surveyTemplate.id}}">Survey Details</a>
+          {{else}}
+            <a href="/hanuman/survey_templates/{{surveyTemplate.id}}">Survey Details</a>
+          {{/if}}
         </li>
       </ul>
       <div class="tab-content">
@@ -16,7 +22,7 @@
             surveyTemplate=surveyTemplate
             isLoadingQuestions=isLoadingQuestions
             loadingProgress=loadingProgress
-            updateSortOrder="updateSortOrder"
+            updateSortOrderTask=updateSortOrderTask
           }}
         </div>
         <div id="tab-survey-details" class="tab-pane">

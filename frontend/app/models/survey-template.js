@@ -16,6 +16,10 @@ const SurveyTemplate = Model.extend(Validator, {
   fullyEditable: attr('boolean'),
   duplicatorLabel: attr('string'),
   // Wildnote specific data
+  lock: attr('boolean'),
+  version: attr('string'),
+  description: attr('string'),
+  // Custom hack for Wildnote
   organizationId: attr('number'),
   surveyTemplateExportTypeId: attr('number'),
 
@@ -23,7 +27,7 @@ const SurveyTemplate = Model.extend(Validator, {
   questions: hasMany('question'),
   // Computed
   questionsNotNew: filterBy('questions', 'isNew', false),
-  filteredquestions: filterBy('questionsNotNew', 'isDeleted', false),
+  filteredQuestions: filterBy('questionsNotNew', 'isDeleted', false),
 
   // Custom actions
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),

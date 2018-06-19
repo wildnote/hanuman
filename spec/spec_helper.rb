@@ -9,6 +9,7 @@ require 'database_cleaner'
 require 'factory_girl_rails'
 require 'codeclimate-test-reporter'
 require 'fakeweb'
+require 'pry'
 CodeClimate::TestReporter.start
 FakeWeb.allow_net_connect = true
 

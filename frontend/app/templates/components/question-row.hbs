@@ -5,22 +5,24 @@
     {{#if question.loading}}
       <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{/if}}
-    <span class="glyphicons glyphicons-sorting {{if question.loading 'hide'}}">
-      {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
-    </span>
-    {{#unless ancestrable}}
-      <span class="glyphicons glyphicons-move-square {{if question.loading 'hide'}}">
+    {{#if (not isSelected)}}
+      <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+        {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
+      </span>
+    {{else}}
+      <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
+    {{/if}}
+    {{#if (and (not ancestrable) (not isSelected))}}
+      <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
         {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
       </span>
-    {{/unless}}
+    {{/if}}
     <span data-test="question.questionText">
       {{question.questionText}}
     </span>
   </div>
   <div class="col-sm-2" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
-  <div class="col-sm-2">
-    {{typeInitial}}
-  </div>
+  <div class="col-sm-2">{{typeInitial}}</div>
   {{#if isSuperUser}}
     <div class="col-sm-2">
       {{question.sortOrder}} [{{question.railsId}}]
@@ -57,13 +59,24 @@
     {{/if}}
   {{/if}}
   <div class="col-sm-2">
-    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
-      <span class="glyphicons glyphicons-pencil"></span>
-      Edit
-    {{/link-to}}
-    <a class="btn btn-delete" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
-      <span class="glyphicons glyphicons-bin"></span>
-    </a>
+    {{#if question.surveyTemplate.lock}}
+      {{#link-to "survey_templates.record.questions.edit" question.id disabled="true" class="btn btn-sm btn-success"}}
+        <span class="glyphicons glyphicons-pencil"></span>
+        Edit
+      {{/link-to}}
+    {{else}}
+      {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
+        <span class="glyphicons glyphicons-pencil"></span>
+        Edit
+      {{/link-to}}
+      {{#if (not ancestrable)}}      
+        <a class="btn btn-delete" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
+          <span class="glyphicons glyphicons-bin"></span>
+        </a>
+      {{else}}
+        <div style="margin-right: 53px;display: inline-block;"></div>
+      {{/if}}
+    {{/if}}
     <div class="delete-confirm">
       {{#if (and (gt totalChildren 0) (not isFullyEditable)) }}
         <small data-test-delete-confirm-message>Performing this delete will also destroy associated historical data and questions within this section/repeater.<br></small>
@@ -76,8 +89,12 @@
       <button style="margin-top: 10px;" class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
       <button style="margin-top: 10px;" class="btn" onclick={{action 'cancel'}}>No</button>
     </div>
-    <span class="float-right hide">
-      <input data-test-question-selector type="checkbox" checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
+    <span class="float-right">
+      {{#if question.surveyTemplate.lock}}
+        <input data-test-question-selector type="checkbox" disabled checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
+      {{else}}
+        <input data-test-question-selector type="checkbox" checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
+      {{/if}}
     </span>
   </div>
 </div>

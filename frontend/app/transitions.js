@@ -6,8 +6,5 @@ export default function() {
     this.reverse('toRight')
   );
 
-  this.transition(
-    this.hasClass('show-answer-choices-liquid'),
-    this.use('flyTo')
-  );
+  this.transition(this.hasClass('show-answer-choices-liquid'), this.use('flyTo'));
 }

@@ -4,4 +4,3 @@ import { alias } from '@ember/object/computed';
 export default Controller.extend({
   surveyTemplate: alias('model')
 });
-

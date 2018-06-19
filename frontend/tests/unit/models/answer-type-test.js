@@ -3,9 +3,7 @@ import { moduleForModel, test } from 'ember-qunit';
 
 moduleForModel('answer-type', 'Unit | Model | answer type', {
   // Specify the other units that are required for this test.
-  needs: [
-    'model:question'
-  ]
+  needs: ['model:question']
 });
 
 test('hasAnswerChoices', function(assert) {

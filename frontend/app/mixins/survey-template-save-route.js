@@ -10,7 +10,7 @@ export default Mixin.create({
     try {
       surveyTemplate = yield surveyTemplate.save();
       this.transitionTo('survey_templates.record', surveyTemplate);
-    } catch(e) {
+    } catch (e) {
       this.get('notify').alert('There was an error trying to save this Survey Template');
     }
   }).drop(),

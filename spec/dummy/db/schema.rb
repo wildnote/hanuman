@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180424042525) do
+ActiveRecord::Schema.define(version: 20180516063517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -155,6 +155,11 @@ ActiveRecord::Schema.define(version: 20180424042525) do
     t.boolean  "noncompliance",              default: false
     t.boolean  "enable_survey_history"
     t.boolean  "new_project_location"
+    t.text     "default_answer"
+    t.integer  "layout_section"
+    t.integer  "layout_row"
+    t.integer  "layout_column"
+    t.string   "layout_column_position"
   end
 
   add_index "hanuman_questions", ["ancestry"], name: "index_hanuman_questions_on_ancestry", using: :btree
@@ -200,6 +205,9 @@ ActiveRecord::Schema.define(version: 20180424042525) do
     t.string   "survey_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "version"
+    t.boolean  "lock"
+    t.string   "description"
   end
 
   create_table "hanuman_surveys", force: :cascade do |t|
