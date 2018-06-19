@@ -43,7 +43,7 @@ module Hanuman
         :question_text, :answer_type_id, :sort_order, :survey_template_id,
         :required, :external_data_source, :hidden, :parent_id, :capture_location_data, :data_source_id,
         :combine_latlong_as_polygon, :combine_latlong_as_line, :enable_survey_history, :new_project_location,
-        :layout_section, :layout_row, :layout_column, :layout_column_position
+        :layout_section, :layout_row, :layout_column, :layout_column_position, :default_answer
       )
     end
 

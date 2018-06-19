@@ -23,9 +23,9 @@ export default Model.extend(Validator, {
   ancestry: attr('string'),
   parentId: attr('string'),
   railsId: attr('number'),
+
   captureLocationData: attr('boolean'),
   enableSurveyHistory: attr('boolean'),
-
   combineLatlongAsPolygon: attr('boolean'),
   combineLatlongAsLine: attr('boolean'),
   newProjectLocation: attr('boolean'),
@@ -33,6 +33,7 @@ export default Model.extend(Validator, {
   layoutRow: attr('number'),
   layoutColumn: attr('number'),
   layoutColumnPosition: attr('string'),
+  defaultAnswer: attr('string'),
 
   // Associations
   dataSource: belongsTo('data-source'),
