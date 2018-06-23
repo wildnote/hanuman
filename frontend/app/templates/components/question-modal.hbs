@@ -258,7 +258,7 @@
           </div>
         {{/if}}
 
-        
+
 
         {{#liquid-if showAnswerChoices class='show-answer-choices-liquid'}}
           <hr/>
@@ -298,7 +298,7 @@
 
         <hr />
 
-        {{#if question.defaultAnswerEnabled}}
+        {{#if (and isSuperUser question.defaultAnswerEnabled)}}
           <div class="form-group">
             <div class="col-sm-12">
               {{#form-field for='defaultAnswer' label='Default Answer'}}
@@ -310,7 +310,6 @@
               {{/form-field}}
             </div>
           </div>
-
           <hr />
         {{/if}}
 
