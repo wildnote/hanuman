@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180516063517) do
+ActiveRecord::Schema.define(version: 20180612042207) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -95,6 +95,15 @@ ActiveRecord::Schema.define(version: 20180516063517) do
   end
 
   add_index "hanuman_observation_photos", ["observation_id"], name: "index_hanuman_observation_photos_on_observation_id", using: :btree
+
+  create_table "hanuman_observation_signatures", force: :cascade do |t|
+    t.integer  "observation_id"
+    t.string   "signature"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "hanuman_observation_signatures", ["observation_id"], name: "index_hanuman_observation_signatures_on_observation_id", using: :btree
 
   create_table "hanuman_observation_videos", force: :cascade do |t|
     t.integer  "observation_id"
@@ -232,4 +241,5 @@ ActiveRecord::Schema.define(version: 20180516063517) do
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
+  add_foreign_key "hanuman_observation_signatures", "hanuman_observations", column: "observation_id"
 end

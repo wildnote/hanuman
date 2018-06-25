@@ -24,24 +24,33 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     nameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][description]")
     orderNameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][sort_order]")
     hiddenNameAttr = data.cloudinaryField.replace(/\[observation_videos_attributes]\[\d+]\[video]/, "[observation_videos_attributes][" + idx + "][video]")
-
+  else if file == "signature"
+    regex = /\[observation_signature_attributes]\[\d+]\[signature]/
+    hiddenNameAttr = data.cloudinaryField.replace(/\[observation_signature_attributes]\[\d+]\[signature]/, "[observation_signature_attributes][signature]")
   # this is simply appending the textarea and the hidden input. I am adding the hidden input right next to the img video-preview
   if data.result.format == undefined
     file_id = data.result.public_id
   else
     file_id = data.result.public_id+"."+data.result.format
 
-  $previewContainer.find("."+file+"-preview").last().append "<p class='upload-file-name'>"+file_id+"</p>"
-  $previewContainer.find("."+file+"-preview").last().append "<label>Description</label><br>"
-  $previewContainer.find("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:0px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea><br>"
-  $previewContainer.find("."+file+"-preview").last().append "<label>Sort Order</label>"
-  $previewContainer.find("."+file+"-preview").last().append "<p><input class='upload-sort-order' type='number' value='' name="+orderNameAttr+"></input></p>"
-  $previewContainer.find("."+file+"-preview").last().find('.upload-file-name').after "<p><a id="+file+" class='btn btn-danger remove-upload' style='font-size: .8em;' href='#'>Remove "+file+"</a></p>"
-  $previewContainer.find("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
-  $previewContainer.find("."+file+"-preview").last().append "<br>"
-  $previewContainer.find("."+file+"-preview").last().append "<hr>"
+  if file == "signature"
+    $previewContainer.find("."+file+"-preview").last().append "<p class='upload-file-name'>"+file_id+"</p>"
+    $previewContainer.find("."+file+"-preview").last().find('.upload-file-name').after "<p><a id="+file+" class='btn btn-danger remove-upload' style='font-size: .8em;' href='#'>Remove "+file+"</a></p>"
+    $previewContainer.find("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
+    $previewContainer.find("."+file+"-preview").last().append "<br>"
 
-  # this code is setting the sort_order every time we upload. It takes care of both scenearios, survey new ands survey edit
+  else 
+    $previewContainer.find("."+file+"-preview").last().append "<p class='upload-file-name'>"+file_id+"</p>"
+    $previewContainer.find("."+file+"-preview").last().append "<label>Description</label><br>"
+    $previewContainer.find("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:0px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea><br>"
+    $previewContainer.find("."+file+"-preview").last().append "<label>Sort Order</label>"
+    $previewContainer.find("."+file+"-preview").last().append "<p><input class='upload-sort-order' type='number' value='' name="+orderNameAttr+"></input></p>"
+    $previewContainer.find("."+file+"-preview").last().find('.upload-file-name').after "<p><a id="+file+" class='btn btn-danger remove-upload' style='font-size: .8em;' href='#'>Remove "+file+"</a></p>"
+    $previewContainer.find("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
+    $previewContainer.find("."+file+"-preview").last().append "<br>"
+    $previewContainer.find("."+file+"-preview").last().append "<hr>"
+
+  # this code is setting the sort_order every time we upload. It takes care of both scenarios, survey new ands survey edit
   $($previewContainer).closest('.file-upload-input-button').find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
     $(element).find('.upload-sort-order').val(idx+1)
 
@@ -175,7 +184,36 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     $(".survey-document-upload").on 'click', ->
       $(e.target).siblings('.document-upload-error').find('p').remove()
 
+# ***** SIGNATURES *****
+@bindSignatureUploads = ->
+  $('.survey-signature-upload').on 'click', (e, data) ->
+    $(e.target).siblings('.progress').removeClass('hidden')
+    # progress bar
+    $('.cloudinary-fileupload.survey-signature-upload').bind 'fileuploadprogress', (e, data) ->
+      # implement progress indicator
+      $(e.target).siblings('.progress').find(".signature-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
+  $('.cloudinary-fileupload.survey-signature-upload').bind 'cloudinarydone', (e, data) ->
+    # Im setting the upload's index based on the count of existing attachements
+
+    $(e.target).siblings('.progress').find('.signature-progress-bar').removeAttr("style")
+    $(e.target).siblings('.progress').addClass('hidden')
+
+
+    $signaturePreviewContainer = $(e.target).siblings('.signature-preview-container')
+    $signaturePreviewContainer.append "<div class='signature-preview'>" + $.cloudinary.image(data.result.public_id, format: data.result.format, version: data.result.version, crop: 'fill', width: 350).prop('outerHTML') + "</div>"
+
+    $(@).closest('.signature-upload').hide()
+
+    addTexareaForUpload("signature", data, 1, $signaturePreviewContainer)
+
+
+  # handle errors
+  $('.cloudinary-fileupload.survey-signature-upload').bind 'fileuploadfail', (e, data) ->
+    # append error message
+    $(e.target).siblings('.signature-upload-error').append "<p> Failed to upload signature, please try again</p>"
+    $(".survey-signature-upload").on 'click', (e, data) ->
+      $(e.target).siblings('.signature-upload-error').find('p').remove()
 
 
 #  this fuction removes unnecessary inputs type hidden placed on the dom by "=fff.cl_image_tag" and "=fff.cl_image_tag" on edit mode
@@ -196,6 +234,9 @@ $ ->
       file = "video"
     else if $(@).closest(".file-upload-input-button").hasClass('document-column')
       file = "document"
+    else if $(@).closest(".file-upload-input-button").hasClass('signature-column')
+      $(@).closest(".file-upload-input-button").find('.signature-upload').show()
+      return
 
     $(@).closest('.file-upload-input-button').find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
       $(element).find('.upload-sort-order').val(idx+1)
@@ -209,9 +250,14 @@ $ ->
     $(@).closest(containerClass).remove()
     $(fileToDelete).find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
       $(element).find('.upload-sort-order').val(idx+1)
+    
+    if $(fileToDelete).hasClass('signature-column')
+      $(fileToDelete).find('.signature-upload').show()
+
 
   if $('.edit-mode-file').length > 0
     removeFileHiddenInput()
+    $('.upload-view-mode ~ .signature-upload').hide()
     $('input[type=submit]').on 'click',(e) ->
 
       # this loop checks for documents that are flagged for delete
@@ -265,3 +311,4 @@ $ ->
   bindPhotoUploads()
   bindVideoUploads()
   bindDocumentUploads()
+  bindSignatureUploads()

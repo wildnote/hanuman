@@ -27,7 +27,7 @@ module Hanuman
     amoeba do
       include_association :rule
       include_association :answer_choices
-      include_association :conditions, if: :survey_cloning?
+      # include_association :conditions, if: :survey_cloning?
 
       # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
       customize(lambda { |original_question,new_question|

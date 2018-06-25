@@ -17,10 +17,13 @@ module Hanuman
     accepts_nested_attributes_for :observation_documents, allow_destroy: true
     has_many :observation_videos, dependent: :destroy
     accepts_nested_attributes_for :observation_videos, allow_destroy: true
+    has_one :observation_signature, dependent: :destroy
+    accepts_nested_attributes_for :observation_signature, allow_destroy: true
 
     has_many :photos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationPhoto'
     has_many :documents, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationDocument'
     has_many :videos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationVideo'
+    has_one :signature, class_name: 'Hanuman::ObservationSignature'
 
     belongs_to :selectable, polymorphic: true
 

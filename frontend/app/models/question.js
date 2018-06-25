@@ -23,9 +23,9 @@ export default Model.extend(Validator, {
   ancestry: attr('string'),
   parentId: attr('string'),
   railsId: attr('number'),
+
   captureLocationData: attr('boolean'),
   enableSurveyHistory: attr('boolean'),
-
   combineLatlongAsPolygon: attr('boolean'),
   combineLatlongAsLine: attr('boolean'),
   newProjectLocation: attr('boolean'),
@@ -33,6 +33,7 @@ export default Model.extend(Validator, {
   layoutRow: attr('number'),
   layoutColumn: attr('number'),
   layoutColumnPosition: attr('string'),
+  defaultAnswer: attr('string'),
 
   // Associations
   dataSource: belongsTo('data-source'),
@@ -72,6 +73,21 @@ export default Model.extend(Validator, {
     }
 
     return this.hasMany('answerChoices').ids().length;
+  }),
+
+  defaultAnswerEnabled: computed('defaultAnswerEnabled', 'answerType.name', function() {
+    let allowableTypes = [
+      'checkbox',
+      'counter',
+      'date',
+      'number',
+      'radio',
+      'text',
+      'textarea',
+      'time',
+      'chosensingleselect'
+    ];
+    return allowableTypes.includes(this.get('answerType').get('name'));
   }),
 
   supportAncestry: match('answerType.name', /section|repeater/),
