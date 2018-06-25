@@ -118,6 +118,7 @@ $(document).ready(function(){
 
     bindPhotoUploads()
     bindVideoUploads()
+    bindSignatureUploads()
     bindDocumentUploads()
 
     // resetting parsley required field styling on clonedContainer
@@ -375,14 +376,17 @@ $(document).ready(function(){
       $(container).find(".photo-preview").empty()
       $(container).find(".video-preview").empty()
       $(container).find(".document-preview").empty()
+      $(container).find(".signature-preview").empty()
 
     }else {
       $($(container).find('.photo-preview-container')).empty();
       $($(container).find('.video-preview-container')).empty();
       $($(container).find('.document-preview-container')).empty();
+      $($(container).find('.signature-preview-container')).empty();
 
 
     }
+    $($(container)).find('.signature-upload').show();
   };
 
   function removeErrorBackground(type, $clonedContainer){

@@ -258,7 +258,7 @@
           </div>
         {{/if}}
 
-        
+
 
         {{#liquid-if showAnswerChoices class='show-answer-choices-liquid'}}
           <hr/>
@@ -297,6 +297,21 @@
         {{/liquid-if}}
 
         <hr />
+
+        {{#if (and isSuperUser question.defaultAnswerEnabled)}}
+          <div class="form-group">
+            <div class="col-sm-12">
+              {{#form-field for='defaultAnswer' label='Default Answer'}}
+                <input type="text"
+                      class="form-control"
+                      data-test="question.defaultAnswer"
+                      value={{question.defaultAnswer}}
+                      oninput={{action (mut question.defaultAnswer) value="target.value"}} />
+              {{/form-field}}
+            </div>
+          </div>
+          <hr />
+        {{/if}}
 
         <div class="form-group">
           <div class="col-sm-12">
