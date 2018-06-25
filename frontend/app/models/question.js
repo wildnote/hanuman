@@ -76,7 +76,7 @@ export default Model.extend(Validator, {
   }),
 
   defaultAnswerEnabled: computed('defaultAnswerEnabled', function () {
-    return ['checkbox', 'counter', 'date', 'number', 'radio', 'text', 'textarea', 'time'].includes(this.get('answerType').get('name'))
+    return ['checkbox', 'counter', 'date', 'number', 'radio', 'text', 'textarea', 'time', 'chosensingleselect'].includes(this.get('answerType').get('name'))
   }),
 
   supportAncestry: match('answerType.name', /section|repeater/),
