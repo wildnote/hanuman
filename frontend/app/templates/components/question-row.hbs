@@ -2,10 +2,13 @@
 <div data-test-question-row class="row">
   <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
   <div class="col-sm-4">
+   {{#if question.hasChild}}
+     <span onclick={{action 'toggleCollapsed'}} class="glyphicon glyphicon-collapse-{{if question.collapsed 'up' 'down'}}"></span>
+   {{/if}}
     {{#if question.loading}}
       <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{/if}}
-    {{#if (not isSelected)}}
+    {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
       <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
         {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
       </span>
@@ -69,12 +72,12 @@
         <span class="glyphicons glyphicons-pencil"></span>
         Edit
       {{/link-to}}
-      {{#if (not ancestrable)}}      
+      {{#if (not ancestrable)}}
         <a class="btn btn-delete" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
           <span class="glyphicons glyphicons-bin"></span>
         </a>
       {{else}}
-        <div style="margin-right: 53px;display: inline-block;"></div>
+        <div style="margin-right: 50px;display: inline-block;"></div>
       {{/if}}
     {{/if}}
     <div class="delete-confirm">
