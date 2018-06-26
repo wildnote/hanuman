@@ -9,9 +9,9 @@
         </div>
       </div>
     {{else}}
-      {{#if surveyTemplate.lock}} 
+      {{#if surveyTemplate.lock}}
         <div class="alert alert-info">
-          <p>          
+          <p>
             <span class="glyphicons glyphicons-lock" style="margin-right: 10px"></span>
             This survey has been locked because it is connected with a specific custom export.
         </p>
@@ -74,8 +74,7 @@
         </div>
       </div>
 
-
-      {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange=(route-action "reorderQuestions") as |group|}}
+      {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange="sortedDropped" as |group|}}
         <!-- hardcode survey date row here -->
         <li class="li-question row question-border">
           <div class="row">
@@ -101,7 +100,7 @@
               {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
                 {{question-row
                   question=question
-                  otherQuetions=sortedQuestions
+                  otherQuetions=surveyTemplate.questions
                   deleteQuestion='deleteQuestion'
                   toggleQuestion=(action "toggleQuestion")
                   isFullyEditable=isFullyEditable
@@ -113,7 +112,7 @@
               {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded' dragHandle='.glyphicons-move-square'}}
                 {{question-row
                   question=question
-                  otherQuetions=sortedQuestions
+                  otherQuetions=surveyTemplate.questions
                   deleteQuestion='deleteQuestion'
                   toggleQuestion=(action "toggleQuestion")
                   isFullyEditable=isFullyEditable
