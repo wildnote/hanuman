@@ -27,7 +27,7 @@ module Hanuman
     amoeba do
       include_association :rule
       include_association :answer_choices
-      # include_association :conditions, if: :survey_cloning?
+      include_association :conditions, if: :survey_cloning?
 
       # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
       customize(lambda { |original_question,new_question|
@@ -158,7 +158,7 @@ module Hanuman
       end
 
       # remap sort orders leaving space for new questions before saving new question
-      section_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|  
+      section_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
         q.sort_order = q.sort_order + increment_sort_by
         q.save
       end
