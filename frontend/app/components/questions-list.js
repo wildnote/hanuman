@@ -119,6 +119,7 @@ export default Component.extend({
     question.setProperties({ loading: true, parentId, sortOrder });
     yield question.save();
     yield question.reload();
+    yield ancestryQuestion.reload();
     yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
     question.set('loading', false);
   }),
@@ -173,6 +174,29 @@ export default Component.extend({
       this.set('selectedQuestions', A());
       this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
     },
+
+    sortedDropped(viewableSortedQuestions, _draggedQuestion) {
+      let allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
+      let sortableQuestions = A();
+      // Handle collapsed question. When there are questions collapsed we completely removed them fomr the DOM
+      // so we have to re-add them so we can update the sort order attributes
+      viewableSortedQuestions.forEach(viewableQuestion => {
+        sortableQuestions.addObject(viewableQuestion);
+        if (viewableQuestion.get('collapsed')) {
+          let id = viewableQuestion.get('id');
+          let collapsedChild = allQuestions.filter(question => {
+            if (isBlank(question.get('ancestry'))) {
+              return false;
+            }
+            let ancestrires = question.get('ancestry').split('/');
+            return ancestrires.includes(id);
+          });
+          sortableQuestions.addObjects(collapsedChild);
+        }
+      });
+      this.get('updateSortOrderTask').perform(sortableQuestions);
+    },
+
     dragStarted(question) {
       $('.draggable-object-target')
         .parent(`:not(.model-id-${question.get('parentId')})`)
