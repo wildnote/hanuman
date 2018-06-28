@@ -86,7 +86,7 @@ export default Model.extend(Validator, {
       'text',
       'textarea',
       'time',
-      'chosensingleselect'
+      'chosenselect'
     ];
     return allowableTypes.includes(this.get('answerType').get('name'));
   }),
