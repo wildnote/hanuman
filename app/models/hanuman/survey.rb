@@ -43,6 +43,10 @@ module Hanuman
       SortObservationsWorker.perform_async(self.id)
     end 
 
+    def get_sorted_observations 
+      observations_sorted ? observations : sort_observations!
+    end
+
     def sorted_observations
       # This sort results in an array of observations where all repeaters of each type are grouped, and all child observations are grouped by question
       sorted_observations = self.observations.reorder('hanuman_questions.sort_order ASC, repeater_id ASC, parent_repeater_id ASC')
@@ -99,11 +103,15 @@ module Hanuman
     end
 
     def sort_observations!
-      self.sorted_observations.each_with_index do |sorted_observation, index|
+      sorted_obs = self.sorted_observations
+
+      sorted_obs.each_with_index do |sorted_observation, index|
         Hanuman::Observation.find(sorted_observation.id).update_column(:sort_order, index)
       end
 
       self.update_column(:observations_sorted, true)
+
+      sorted_obs
     end
   end
 end

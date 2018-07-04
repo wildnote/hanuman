@@ -3,6 +3,9 @@ class SortObservationsWorker
 
   def perform(survey_id)
     survey = Hanuman::Survey.find(survey_id)
-    survey.sort_observations!
+    
+    unless survey.observations_sorted
+      survey.sort_observations!
+    end
   end
 end
