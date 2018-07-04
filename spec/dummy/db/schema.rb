@@ -164,6 +164,8 @@ ActiveRecord::Schema.define(version: 20180704051348) do
     t.boolean  "combine_latlong_as_polygon", default: false
     t.boolean  "noncompliance",              default: false
     t.boolean  "enable_survey_history"
+    t.boolean  "new_project_location"
+    t.text     "default_answer"
     t.integer  "layout_section"
     t.integer  "layout_row"
     t.integer  "layout_column"
@@ -241,3 +243,5 @@ ActiveRecord::Schema.define(version: 20180704051348) do
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
+  add_foreign_key "hanuman_observation_signatures", "hanuman_observations", column: "observation_id"
+end
