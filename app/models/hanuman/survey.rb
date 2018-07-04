@@ -44,7 +44,7 @@ module Hanuman
     end 
 
     def get_sorted_observations 
-      observations_sorted ? observations : sort_observations!
+      observations_sorted ? observations.reorder('hanuman_observations.sort_order ASC') : sort_observations!
     end
 
     def sorted_observations
