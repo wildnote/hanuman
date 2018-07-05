@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hanuman (1.4.12)
+    hanuman (1.5.2)
       active_model_serializers (~> 0.8.1)
       amoeba (~> 3.1.0)
       ancestry
@@ -279,7 +279,7 @@ GEM
       json (>= 1.8, < 3)
       simplecov-html (~> 0.10.0)
     simplecov-html (0.10.0)
-    sprockets (2.12.4)
+    sprockets (2.12.5)
       hike (~> 1.2)
       multi_json (~> 1.0)
       rack (~> 1.0)
