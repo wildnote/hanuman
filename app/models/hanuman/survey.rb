@@ -19,11 +19,11 @@ module Hanuman
     validates :survey_date, presence: true
     validates :survey_extension, presence: true
 
-    before_save :set_observations_unsorted
+    before_update :set_observations_unsorted
     after_save :schedule_observation_sorting
 
-    amoeba { 
-      enable 
+    amoeba {
+      enable
       include_association :survey_extension
       include_association :observations
     }
@@ -41,9 +41,9 @@ module Hanuman
 
     def schedule_observation_sorting
       SortObservationsWorker.perform_async(self.id)
-    end 
+    end
 
-    def sorted_observations 
+    def sorted_observations
       observations_sorted ? observations.reorder('hanuman_observations.sort_order ASC') : sort_observations!
     end
 
@@ -52,14 +52,14 @@ module Hanuman
       sorted_observations = self.observations.reorder('hanuman_questions.sort_order ASC, repeater_id ASC, parent_repeater_id ASC').to_ary
 
       # This loop iterates over the observations, finds each repeater, and reorders each child with the given parent_repeater_id to be next to its parent observation
-      sorted_observations.each_with_index do |possible_repeater, possible_repeater_index| 
+      sorted_observations.each_with_index do |possible_repeater, possible_repeater_index|
         if possible_repeater.question.answer_type.name == "repeater" && possible_repeater.repeater_id.present?
 
           # the number of children reordered so far for this repeater
-          current_repeater_child_index = 0 
-          
+          current_repeater_child_index = 0
+
           # we start at the end of the observations array and test each observation to see if it's a child of the current repeater
-          test_if_child_index = sorted_observations.count - 1 
+          test_if_child_index = sorted_observations.count - 1
 
           # == LHS ==
           # the left side of this equation is the index of the observation most recently tested (to see if it's a child of the current repeater)
@@ -69,7 +69,7 @@ module Hanuman
           # the right hand side of this equation is the index of the current repeater we are working with, plus the number of this repeater's children that have been reordered so far
           # this value represents the index of the last already-reordered child of the current repeater
           #
-          # == END CONDITION == 
+          # == END CONDITION ==
           # hence, the loop will run as long as the index of the next child to test is greater than the index of the last child reordered
           # i.e. until every child has been reordered
           while test_if_child_index > (possible_repeater_index + current_repeater_child_index)
@@ -79,19 +79,19 @@ module Hanuman
             if possible_child_of_current_repeater.parent_repeater_id == possible_repeater.repeater_id
 
               # remove the child observation from the array
-              sorted_observations.delete(possible_child_of_current_repeater) 
+              sorted_observations.delete(possible_child_of_current_repeater)
 
               # add the child observation back into the array
               # we start the loop at the end of the observation array, so each subsequent child has a lower question sort_order value than the last
               # hence we get the correct order by inserting it at the index BEFORE the previous child that was reordered
-              sorted_observations.insert(possible_repeater_index + 1, possible_child_of_current_repeater) 
+              sorted_observations.insert(possible_repeater_index + 1, possible_child_of_current_repeater)
 
               # increment the tracking variable for the number of children that have been reordered for this repeater
               current_repeater_child_index += 1
             else
               # if the observation was not a child of the repeater, test the next one
-              # note that this variable does not need to be decremented if the observation is found to be a child, as in that case the child is reordered 
-              # the same index then points to a new observation 
+              # note that this variable does not need to be decremented if the observation is found to be a child, as in that case the child is reordered
+              # the same index then points to a new observation
               test_if_child_index -= 1
             end
           end
