@@ -39,6 +39,8 @@ module Hanuman
 
     def set_observations_unsorted
       self.observations_sorted = false
+
+      true # need this so that a before_save callback doesn't return false
     end
 
     def should_schedule_sort?
