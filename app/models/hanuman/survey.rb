@@ -14,13 +14,15 @@ module Hanuman
     has_one :survey_extension, dependent: :delete
     accepts_nested_attributes_for :survey_extension, allow_destroy: true
 
+    attr_accessor :should_schedule_sort, :skip_sort
+
     # Validations
     validates :survey_template_id, presence: true
     validates :survey_date, presence: true
     validates :survey_extension, presence: true
 
-    before_update :set_observations_unsorted
-    after_save :schedule_observation_sorting
+    before_save :set_observations_unsorted, unless: :skip_sort?
+    after_save :schedule_observation_sorting, if: :should_schedule_sort?
 
     amoeba {
       enable
@@ -36,7 +38,15 @@ module Hanuman
     end
 
     def set_observations_unsorted
-      self.update_column(:observations_sorted, false)
+      self.observations_sorted = false
+    end
+
+    def should_schedule_sort?
+      !skip_sort? && (@should_schedule_sort || false)
+    end
+
+    def skip_sort?
+      @skip_sort || false
     end
 
     def schedule_observation_sorting
