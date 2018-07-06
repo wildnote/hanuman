@@ -91,7 +91,10 @@ module Hanuman
             )
           end
         end
-        # calling save so that before_save method apply_group_sort is called to resort observations after inserting new ones for new questions-kdh
+
+        # we are already in a job so we can sort the observations inline
+        s.sort_observations!
+        s.skip_sort = true
         s.save
       end
     end
