@@ -39,6 +39,7 @@
     color: #9c9c9c;
   }
 
+  .glyphicons-sunglasses,
   .glyphicon.glyphicon-collapse-up,
   .glyphicon.glyphicon-collapse-down {
     color: rgb(143, 98, 71) !important;
@@ -91,5 +92,8 @@
   }
   .delete-confirm {
     top: -50px !important;
+  }
+  .preview-section {
+    padding: 10px 20px 10px 20px;
   }
 }
