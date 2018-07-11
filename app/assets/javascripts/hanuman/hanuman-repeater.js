@@ -11,7 +11,6 @@ $(document).ready(function(){
 
   updateRepeaterControls()
   updateRepeaterIds()
-  // hideDeleteButtons()
 
   // clicking on button to add repeater
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
@@ -29,7 +28,7 @@ $(document).ready(function(){
     // find and clone container
     var container = $(this).closest('.form-container-repeater');
     $clonedContainer = container.clone(true);
-    var parentRepeater = $($clonedContainer).closest(".parent-repeater-container")
+    var parentRepeater = $clonedContainer.parent().closest(".form-container-repeater");
 
     // remove hidden field observation ids
     $($clonedContainer).find('.hidden-field-observation-id').remove();
@@ -37,7 +36,7 @@ $(document).ready(function(){
     $($clonedContainer).removeAttr('data-observation-id')
 
     //************** BEGIN repeater ids
-    repeaterInputs = $clonedContainer.find(".repeater-inputs")
+    repeaterInputs = $clonedContainer.find(".repeater-id")
     repeaterClosestPanel = $(this).parents(".panel-body")
     //************ END repeater ids
 
@@ -135,8 +134,7 @@ $(document).ready(function(){
           $(e).remove()
         }
       })
-
-     }
+    }
 
      updateRepeaterIds()
      updateRepeaterControls()
@@ -436,7 +434,7 @@ $(document).ready(function(){
     });
   };
 
-  function updateDom(clonedRepeater, dataEntry, parentRepeater){
+  function updateDom(clonedRepeater, dataEntry, parentRepeater) {
 
     // setting the timeStamp for the inputs to be updated
     var timeStamp = new Date().getTime();
