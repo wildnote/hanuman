@@ -9,10 +9,9 @@ $(document).ready(function(){
   });
   duplicatedRepeatersOnEdit = []
 
-  updateParentRepeaterId()
-  updateRepeaterCounts()
-  // run through repeater and hide delete buttons
-  hideDeleteButtons()
+  updateRepeaterControls()
+  updateRepeaterIds()
+  // hideDeleteButtons()
 
   // clicking on button to add repeater
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
@@ -59,7 +58,7 @@ $(document).ready(function(){
     // set cloned container to display none for fading in
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
     // commenting out because we don't use fancy preview code for docs and videos, if we bring this back probably need this at this point
-    cleartFilePreviewContainers($clonedContainer);
+    clearFilePreviewContainers($clonedContainer);
 
     // clear values
     clearValues($clonedContainer);
@@ -138,24 +137,18 @@ $(document).ready(function(){
       })
 
      }
-     uniquefyEntryIds()
+
      updateRepeaterIds()
-
-     updateRepeaterCounts()
-
-
-     $($clonedContainer).find('.destroy-form-container-repeater:last').show()
-     $($clonedContainer).find(".form-container-repeater").first().find('.destroy-form-container-repeater').hide()
-     hideDeleteButtons()
+     updateRepeaterControls()
   });
 
-  function updateRepeaterCounts() {
+  function updateRepeaterControls() {
     var topLevelRepeaterTypes = [];
-    $(".form-container-repeater").each(function (i, repeater) {
+    $(".form-container-repeater").each(function (_, repeater) {
       var directChildRepeaterTypes = [];
       var $directChildRepeaters = $(repeater).find("> .panel-collapse > .panel-body > .form-container-repeater");
       if ($directChildRepeaters.length) { 
-        $directChildRepeaters.each(function (index, child) {
+        $directChildRepeaters.each(function (_, child) {
           var childRepeaterQuestionId = $(child).data("question-id");
           if(!directChildRepeaterTypes.includes(childRepeaterQuestionId)) {
             directChildRepeaterTypes.push(childRepeaterQuestionId);
@@ -171,143 +164,48 @@ $(document).ready(function(){
       }
 
       directChildRepeaterTypes.forEach(function (typeId) {
+        var repeaterCount = $(repeater).find(".form-container-repeater[data-question-id=" + typeId + "]").length;
         $(repeater).find(".form-container-repeater[data-question-id=" + typeId + "]").each(function(index, element) {
+          var $destroyButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .destroy-form-container-repeater');
+          var $duplicateButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .duplicate-form-container-repeater');
+
           if (index > 0) {
-            console.log(index)
             $(element).find(".repeater-count:first").text(" " + (index + 1));
+            $destroyButton.show();
+          } else {
+            $destroyButton.hide();
+          }
+          
+          if ((index + 1) === repeaterCount) {
+            $duplicateButton.show();
+          } else {
+            $duplicateButton.hide();
           }
         });
       });
     });
 
     topLevelRepeaterTypes.forEach(function (typeId) {
+      var repeaterCount = $(".form-container-repeater[data-question-id=" + typeId + "]").length;
       $(".form-container-repeater[data-question-id=" + typeId + "]").each(function(index, element) {
+        var $destroyButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .destroy-form-container-repeater');
+        var $duplicateButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .duplicate-form-container-repeater');
+
         if (index > 0) {
           $(element).find(".repeater-count:first").text(" " + (index + 1));
+          $destroyButton.show();
+        } else {
+          $destroyButton.hide();
+        }
+
+        if (index + 1 === repeaterCount) {
+          $duplicateButton.show();
+        } else {
+          $duplicateButton.hide();
         }
       });
     });
   }
-
-  function updateParentRepeaterId() {
-    // if there are no 2nd level repeaters present, then we increment the repeater ID's for all top level repeaters and questions within.
-    // this is necessary because the repeater_id logic in surveys/_form.html.haml does not work when there are no existing nested repeaters.
-    if (!$("[need-parent-repeater-id=true]").length > 0) {
-      $(".parent-repeater-container").each(function(i, el){
-        parentId = i+1
-        rId = $(el).find("[is-parent-repeater=true]").val(parentId)
-        questions = $(el).find(".form-container-entry-item")
-
-        questions.each(function(idx, element){
-          input = $(element).find("input.parent-repeater-id")
-          input.val(parentId)
-        });
-      });
-    };
-  };
-
-
-  function hideDeleteButtons(){
-    //  This removes the delete button from the first repeater.
-    $(".parent-repeater-container").each(function(i, el){
-      // for each top parent repeater check for added repeaters and hide buttons of added repeaters
-      hideDeleteButtonHelper(el, true);
-
-      // if parent repeater is original, then hide the delete button
-      if ($(el).attr('data-entry') == "1" ) {
-        $(el).find('.destroy-form-container-repeater:last').hide()
-        nested = $(el).find(".form-container-repeater")
-
-        // Go through all nested repeaters and hide delete buttons from original repeaters ( non-duplicates )
-        nested.each(function(i,nestedR){
-        hideDeleteButtonHelper(nestedR, false);
-          if ($(nestedR).attr('data-entry') == "1" ) {
-            $(nestedR).find('.destroy-form-container-repeater').hide()
-          };
-        });
-      }else {
-        nested = $(el).find(".form-container-repeater")
-        nested.each(function(i, childR){
-          hideDeleteButtonHelper(childR, false);
-          if ( nested.length == 1 ) {
-            $(childR).find('.destroy-form-container-repeater').hide()
-          }else if (i != nested.length-1 ) {
-            $(childR).find('.duplicate-form-container-repeater').hide()
-          }
-        });
-      };
-    });
-
-  };
-
-  function hideDeleteButtonHelper(repeater, isParent) {
-    // find all the unique parent repeaters by their question-id attr.
-    qId = $(repeater).data('question-id')
-    if (isParent) {
-      repeaterGroup = $(".parent-repeater-container[data-question-id="+qId+"]")
-    }else {
-      parent = repeater.closest(".parent-repeater-container")
-      repeaterGroup = $(parent).find(".form-container-repeater[data-question-id="+qId+"]")
-    }
-
-    // then queck for duplicated repeaters and hide all the "add buttons" from repeaper EXCEPT THE LAST ONE
-    if (repeaterGroup.length > 1) {
-      repeaterGroup.each(function(idx, element){
-        if (idx != repeaterGroup.length-1) {
-          $(element).find('.duplicate-form-container-repeater:last').hide()
-        }
-      });
-    }
-  }
-
-  function uniquefyEntryIds() {
-    entryId = 1
-    nestedRepeaterCount = 0
-
-    // finding and iterating through all the new parent repeaters.
-    $(".parent-repeater-container").each(function(idx, el){
-      //  only update the entry values of the repeaters that are added to the dom via the "add repeater" button./ skip the original repeaters
-      if ($(el).attr("original-repeater") != "true") {
-        // select all the containers that have entry id hidden inputs
-        entryContainers = $(el).find('.form-container-entry-item')
-
-        // find the entry id hidden inputs
-        $entryInputs = entryContainers.find("input[name*='[entry]']")
-
-        // update all entry inputs found on parent container.
-        $entryInputs.val(entryId)
-
-        // in the parent repeater, find all the nested repeater container
-        nestedRepeater = $(el).find(".form-container-repeater")
-
-        // then iterate through nested repeaters to update the entry ids with unique ids.
-        nestedRepeaterIndex = entryId + 1
-        nestedRepeater.each(function(i,el){
-          if (i > 0) {
-            entryInputWithinRepeaters = $(el).find("input[name*='[entry]']")
-            entryInputWithinRepeaters.val(nestedRepeaterIndex)
-            nestedRepeaterIndex += 1
-          }
-          // incrementing the count of nested repeaters for next loop to make use of
-          nestedRepeaterCount += 1
-        })
-
-        // updating the entry id based on the nested repeater count
-        // if we have a parent repeater with 0 nestedRepeaters then we have to move on to the next repeater and increment entryId by 1.
-        // otherwise we have to get the count of the nestedRepeaters and add 1
-        if (nestedRepeater.length == 0) {
-          entryId ++
-        }else {
-          entryId = nestedRepeaterCount + 1
-        };
-      };
-    });
-
-    // Keeping for future debbuging
-    // $("input[name*='[entry]']").each(function(idx, el){
-    //   $(el).after(" entry id: **** " + $(el).val())
-    // })
-  };;
 
   function updateRepeaterIds() {
     $(".repeater-id").each(function (index, element) {
@@ -336,22 +234,20 @@ $(document).ready(function(){
     };
   };
 
-  function cleartFilePreviewContainers(container){
+  function clearFilePreviewContainers(container){
     if ($('.survey-edit-mode').length > 0) {
       $($(container).find('.upload-view-mode')).empty();
       $(container).find(".photo-preview").empty()
       $(container).find(".video-preview").empty()
       $(container).find(".document-preview").empty()
       $(container).find(".signature-preview").empty()
-
-    }else {
+    } else {
       $($(container).find('.photo-preview-container')).empty();
       $($(container).find('.video-preview-container')).empty();
       $($(container).find('.document-preview-container')).empty();
       $($(container).find('.signature-preview-container')).empty();
-
-
     }
+
     $($(container)).find('.signature-upload').show();
   };
 
@@ -399,7 +295,7 @@ $(document).ready(function(){
       function() {
           $removeContainer.remove();
           hideDeleteButtons()
-          updateRepeaterCounts()
+          updateRepeaterControls()
       }
     );
   };
