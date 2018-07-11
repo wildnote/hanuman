@@ -25,6 +25,8 @@ module Hanuman
     has_many :videos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationVideo'
     has_one :signature, class_name: 'Hanuman::ObservationSignature'
 
+    before_save :set_entry
+
     belongs_to :selectable, polymorphic: true
 
     # Validations
@@ -47,6 +49,10 @@ module Hanuman
 
     amoeba do
       enable
+    end
+
+    def set_entry
+      self.entry = (self.repeater_id.present? || self.parent_repeater_id.present?) ? (self.repeater_id || self.parent_repeater_id) : 1
     end
 
     def strip_and_squish_answer
