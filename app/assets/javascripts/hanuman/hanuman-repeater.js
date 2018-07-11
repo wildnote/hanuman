@@ -10,7 +10,7 @@ $(document).ready(function(){
   duplicatedRepeatersOnEdit = []
 
   updateParentRepeaterId()
-  incrementRepeaterHeader()
+  updateRepeaterCounts()
   // run through repeater and hide delete buttons
   hideDeleteButtons()
 
@@ -141,17 +141,7 @@ $(document).ready(function(){
      uniquefyEntryIds()
      updateRepeaterIds()
 
-     if ($clonedContainer.hasClass("parent-repeater-container")) {
-       repeaterDataNumber = $clonedContainer.data('repeater-number')
-       duplicatedRepeaters = $("[data-repeater-number="+repeaterDataNumber+"]")
-       updateRepeaterCount(duplicatedRepeaters)
-     }else{
-       repeaterDataNumber = $clonedContainer.data('nested-repeater-number')
-       duplicatedRepeaters = $clonedContainer.closest(".parent-repeater-container").find("[data-nested-repeater-number="+repeaterDataNumber+"]")
-       updateRepeaterCount(duplicatedRepeaters)
-     };
-    //  must call this function after the updating the repeater number attribute in the code above ^^
-     incrementRepeaterHeader()
+     updateRepeaterCounts()
 
 
      $($clonedContainer).find('.destroy-form-container-repeater:last').show()
@@ -159,54 +149,47 @@ $(document).ready(function(){
      hideDeleteButtons()
   });
 
-  function incrementRepeaterHeader() {
-    repeaterCountIndex = 1
-    $(".parent-repeater-container").each(function(i, el){
-      // add attribute 'original-repeater' to repeaters on page load new/edit. This flag is needed so that we can skip/avoid updating the entry ID on those in uniquefyEntryIds function
-      $(el).attr("original-repeater","true")
-      // get the question-id from all the repeaters. All the added repeaters can be found with the question-id since the question-id remains unique through all the added repeaters.
-      qId = $(el).data("question-id")
-      // in every iteration we check for dupicated repeaters. If we find two repeaters with the same question-id, then that means that one of those were duplicated/added to dom.
-      if ($("[data-question-id="+qId+"]").length > 1) {
-        // if current repeater's question-id is in the duplicatedRepeatersOnEdit array, then it means that a repeater with that question-id has added.
-        if (duplicatedRepeatersOnEdit.includes(qId)) {
-          // then grab data-repeater-number and add it to the current repeater element.
-          rNumber = $("[data-question-id="+qId+"]").first().data('repeater-number')
-          $(el).attr('data-repeater-number', rNumber)
-        }else {
-          // if current repeater has duplicates/added, then add the question-id of the added repeater to array. This allows us to know which repaters were added
-          duplicatedRepeatersOnEdit.push(qId)
-          $(el).attr('data-repeater-number', repeaterCountIndex)
-        }
-      }else {
-        $(el).attr('data-repeater-number', repeaterCountIndex)
+  function updateRepeaterCounts() {
+    var topLevelRepeaterTypes = [];
+    $(".form-container-repeater").each(function (i, repeater) {
+      var directChildRepeaterTypes = [];
+      var $directChildRepeaters = $(repeater).find("> .panel-collapse > .panel-body > .form-container-repeater");
+      if ($directChildRepeaters.length) { 
+        $directChildRepeaters.each(function (index, child) {
+          var childRepeaterQuestionId = $(child).data("question-id");
+          if(!directChildRepeaterTypes.includes(childRepeaterQuestionId)) {
+            directChildRepeaterTypes.push(childRepeaterQuestionId);
+          }
+        });
       }
-      repeaterCountIndex ++
-      nested = $(el).find(".form-container-repeater")
-      nested.each(function(idx, nested){
-        $(nested).attr('data-nested-repeater-number', repeaterCountIndex)
-        repeaterCountIndex ++
+
+      if($(repeater).parent().parent().parent().first().hasClass("form-container-survey")) {
+        var questionId = $(repeater).data("question-id");
+        if(!topLevelRepeaterTypes.includes(questionId)) {
+          topLevelRepeaterTypes.push(questionId);
+        }
+      }
+
+      directChildRepeaterTypes.forEach(function (typeId) {
+        $(repeater).find(".form-container-repeater[data-question-id=" + typeId + "]").each(function(index, element) {
+          if (index > 0) {
+            console.log(index)
+            $(element).find(".repeater-count:first").text(" " + (index + 1));
+          }
+        });
       });
     });
 
-    // after having grouped all repeaters with their corresponding repeater number attribute update the repeater header number
-    $(".parent-repeater-container[data-entry=1]").each(function(i, e){
-      rNumber = $(e).data('repeater-number')
-      updateRepeaterCount($("[data-repeater-number="+rNumber+"]"))
-    })
-  }
-
-  // this function takes the collection of repeaters with the same "data-repeater-number" and numbers them.
-  function updateRepeaterCount(duplicatedRepeaters){
-    duplicatedRepeaters.each(function(i, e){
-      if (i > 0) {
-        count = i+1
-        $(e).find(".repeater-count:first").text(" " +count)
-      }
+    topLevelRepeaterTypes.forEach(function (typeId) {
+      $(".form-container-repeater[data-question-id=" + typeId + "]").each(function(index, element) {
+        if (index > 0) {
+          $(element).find(".repeater-count:first").text(" " + (index + 1));
+        }
+      });
     });
   }
 
-  function updateParentRepeaterId(){
+  function updateParentRepeaterId() {
     // if there are no 2nd level repeaters present, then we increment the repeater ID's for all top level repeaters and questions within.
     // this is necessary because the repeater_id logic in surveys/_form.html.haml does not work when there are no existing nested repeaters.
     if (!$("[need-parent-repeater-id=true]").length > 0) {
@@ -334,7 +317,6 @@ $(document).ready(function(){
     $(".form-container-repeater").each(function (_, repeater) {
       if ($(repeater).parents(".form-container-repeater").length) {
         var parentRepeaterId = $(repeater).parent().closest(".form-container-repeater").find('> .repeater-id').val();
-        console.log(parentRepeaterId);
         $(repeater).find(".parent-repeater-id:first").val(parentRepeaterId);
       }
 
@@ -417,7 +399,7 @@ $(document).ready(function(){
       function() {
           $removeContainer.remove();
           hideDeleteButtons()
-          incrementRepeaterHeader()
+          updateRepeaterCounts()
       }
     );
   };
