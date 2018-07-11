@@ -139,7 +139,7 @@ $(document).ready(function(){
 
      }
      uniquefyEntryIds()
-     UpdateIdsInRepeaters()
+     updateRepeaterIds()
 
      if ($clonedContainer.hasClass("parent-repeater-container")) {
        repeaterDataNumber = $clonedContainer.data('repeater-number')
@@ -326,39 +326,23 @@ $(document).ready(function(){
     // })
   };;
 
-  function UpdateIdsInRepeaters(){
-    //  Grabbing all the parent repeater containers
-    parentRepeaters = $("input[is-parent-repeater=true]")
-    parentRepeaterId = 1000
-
-    // update all parent repeaters with unique id
-    parentRepeaters.each(function(idx, el){
-      questions = $(el).closest(".parent-repeater-container").find(".form-container-entry-item")
-
-      questions.each(function(idx, element){
-        input = $(element).find("input.parent-repeater-id")
-        input.val(parentRepeaterId)
-      });
-      $(el).val(parentRepeaterId)
-      // $(el).after("updated parent repeater id: " + parentRepeaterId + "| ")
-      parentRepeaterId += 1
+  function updateRepeaterIds() {
+    $(".repeater-id").each(function (index, element) {
+      $(element).val(index + 1);
     });
 
-    // Grabbing all the children repeaters
-    childrenRepeaters = $("input[nested-child=true]")
-    childrenRepeaterId = 1
+    $(".form-container-repeater").each(function (_, repeater) {
+      if ($(repeater).parents(".form-container-repeater").length) {
+        var parentRepeaterId = $(repeater).parent().closest(".form-container-repeater").find('> .repeater-id').val();
+        console.log(parentRepeaterId);
+        $(repeater).find(".parent-repeater-id:first").val(parentRepeaterId);
+      }
 
-    // update all childer repeaters with unique id
-    childrenRepeaters.each(function(idx, el){
-      if ($(el).attr('need-parent-repeater-id') == "true") {
-        parentRepeaterContainerId = $(el).closest(".parent-repeater-container").find("input[is-parent-repeater=true]").val()
-        $(el).val(parentRepeaterContainerId)
-        // $(el).after("updated parent repeater id: " + parentRepeaterContainerId + "| ")
-      }else if ($(el).attr('repeater-id') == "true") {
-        $(el).val(childrenRepeaterId)
-        // $(el).after("updated repeater id: " + childrenRepeaterId + "| ")
-        childrenRepeaterId += 1
-      };
+      var currentRepeaterId = $(repeater).find('.repeater-id:first').val();
+      var directObservationChildren = $(repeater).find("> .panel-collapse > .panel-body > .form-container-entry-item[data-question-id]");
+      directObservationChildren.each(function (_, observation) {
+        $(observation).find(".parent-repeater-id").val(currentRepeaterId);
+      });
     });
   };
 
