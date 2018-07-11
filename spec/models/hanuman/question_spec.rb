@@ -19,11 +19,6 @@ module Hanuman
       it { is_expected.to have_many(:conditions).dependent(:destroy) }
     end
 
-    describe 'Callbacks' do
-      it { is_expected.to callback(:process_question_changes_on_observations).after(:create) }
-      it { is_expected.to callback(:process_question_changes_on_observations).after(:update) }
-    end
-
     describe 'Instance methods' do
       describe '#question_text_not_required' do
         let(:question) { create(:question) }
