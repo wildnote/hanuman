@@ -35,8 +35,6 @@ Hanuman::Engine.routes.draw do
   mount_ember_app :frontend, to: '/admin', controller: 'admin', action: 'index', as: 'admin'
   get 'admin/show'
 
-  get 'surveys/:id/edit/:step/:entry' => 'surveys#edit', as: :edit_survey
-
   resources :surveys do
     member do
       patch :duplicate

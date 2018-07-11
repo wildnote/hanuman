@@ -1,12 +1,5 @@
 $(document).ready(function(){
 
-  // need to find the max data entry on the page and start incrementing from there
-  $dataEntry = 0;
-  $('.form-container-repeater').each(function() {
-    if ($dataEntry < $(this).attr('data-entry')) {
-      $dataEntry = parseInt($(this).attr('data-entry'));
-    }
-  });
   duplicatedRepeatersOnEdit = []
 
   updateRepeaterControls()
@@ -43,16 +36,9 @@ $(document).ready(function(){
     // collect all container items inside cloned container for iteration later to update all attributes
     var containerItems = $($clonedContainer).find('.form-container-entry-item');
 
-    // increment data-entry by 1 on every click
-    $dataEntry = $dataEntry + 1;
-
     // loop through collected container items and update attributes with timestamps
     // CONTAINER ITEMS ARE RELATIVE TO CLONED CONTAINER, THINK OF CLONED CONTAINER AS A SECONDARY DOM OF ITS OWN.
-    updateDom(containerItems, $dataEntry, parentRepeater);
-
-    // fix repeater container data-entry numbers
-    $clonedContainer.attr("data-entry", $dataEntry);
-    $clonedContainer.find(".form-container-repeater").attr("data-entry", $dataEntry);
+    updateDom(containerItems, parentRepeater);
 
     // set cloned container to display none for fading in
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
@@ -256,7 +242,7 @@ $(document).ready(function(){
   $('.form-container-survey').on('click', ".destroy-form-container-repeater", function(){
     var response = window.confirm('Are you sure you want to delete this observation?')
     var that = this;
-    var entry = $($(this).closest('.form-container-repeater')).attr('data-entry');
+    var repeaterId = $(this).closest('.form-container-repeater').find('.repeater-id').val();
     var dataObservationId = $($(this).closest('.form-container-repeater')).attr('data-observation-id');
     // if we have a dataObservationId then the observation has been saved to the DB, thus we need to delete from the DB otherwise just remove from the DOM
     if (response === true) {
@@ -264,22 +250,21 @@ $(document).ready(function(){
         var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1];
         var surveyId = window.location.pathname.match(/\/surveys\/(\d+)/)[1];
         $.ajax({
-          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/entry/"+ entry,
+          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/repeater/"+ repeaterId,
           method: "Delete"
         }).done(function(response) {
-          removeObservationFromDom(that, entry);
+          removeObservationFromDom(that);
         });
       }else{
-        removeObservationFromDom(that, entry);
+        removeObservationFromDom(that);
       }
     }
-    $(".duplicate-form-container-repeater").show()
-    $(".destroy-form-container-repeater").show()
+
+    updateRepeaterControls();
     return false;
   });
 
-  function removeObservationFromDom(observationContainerToDelete, entry) {
-    $(".form-entry-item-container[data-entry=" + entry + "]").not('.form-entry-item-container[data-element-type=time]').remove();
+  function removeObservationFromDom(observationContainerToDelete) {
     $removeContainer = $(observationContainerToDelete).closest('.form-container-repeater');
 
     setTimeout(function() {
@@ -346,12 +331,10 @@ $(document).ready(function(){
     $(".bootstrap-checkbox-multiselect").multiselect();
   }
 
-  function updateClonedInputs($clonedRepeater, dataEntry, timeStamp){
-    $($clonedRepeater).attr('data-entry', dataEntry);
+  function updateClonedInputs($clonedRepeater, timeStamp){
     var inputs = $($clonedRepeater).find('input');
     var lastInputIndex = inputs.length - 1;
     var index = 0;
-    $(inputs[lastInputIndex]).attr("value", dataEntry);
     var parsleySubstrig = Math.random().toString(36).substring(13);
     inputs.each(function(){
 
@@ -434,7 +417,7 @@ $(document).ready(function(){
     });
   };
 
-  function updateDom(clonedRepeater, dataEntry, parentRepeater) {
+  function updateDom(clonedRepeater, parentRepeater) {
 
     // setting the timeStamp for the inputs to be updated
     var timeStamp = new Date().getTime();
@@ -449,7 +432,7 @@ $(document).ready(function(){
     // begin updating all the inputs found in the cloned repeater
     for (var i = 0; i < clonedRepeater.length; i++) {
       $($(clonedRepeater[i]).find('.latlong')).attr('id', "map".concat(timeStamp));
-      updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp);
+      updateClonedInputs(clonedRepeater[i], timeStamp);
       updateClonedLabels(clonedRepeater[i], timeStamp);
       updateClonedSelects(clonedRepeater[i], timeStamp);
       updateClonedTextareas(clonedRepeater[i], timeStamp);

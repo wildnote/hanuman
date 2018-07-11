@@ -8,7 +8,6 @@ module Hanuman
       end
 
       it { is_expected.to validate_presence_of(:question_id) }
-      it { is_expected.to validate_presence_of(:entry) }
       it { is_expected.to delegate_method(:question_text).to(:question) }
     end
 

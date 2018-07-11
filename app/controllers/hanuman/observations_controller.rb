@@ -7,8 +7,11 @@ module Hanuman
     # DELETE /observations/1
     def destroy
       s = @observation.survey
-      s.observations.by_survey_template_and_entry(@observation.survey_template, @observation.entry).each{|o| o.destroy}
-      redirect_to survey_path(s), notice: 'Entry was successfully destroyed.'
+      if @observation.repeater_id.present?
+        s.observations.where(parent_repeater_id: @observation.repeater_id).destroy_all
+      end
+      @observation.destroy
+      redirect_to survey_path(s), notice: 'Observation was successfully destroyed.'
     end
 
     private
