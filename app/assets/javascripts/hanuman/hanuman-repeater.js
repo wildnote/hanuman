@@ -277,7 +277,6 @@ $(document).ready(function(){
       2000,
       function() {
           $removeContainer.remove();
-          hideDeleteButtons()
           updateRepeaterControls()
       }
     );
