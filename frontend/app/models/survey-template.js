@@ -31,6 +31,7 @@ const SurveyTemplate = Model.extend(Validator, {
 
   // Custom actions
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),
+  resortQuestions: memberAction({ path: 'resort_questions', type: 'patch' }),
 
   // Validations
   validations: {

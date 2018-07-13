@@ -472,6 +472,17 @@
               </div>
             </div>
 
+            <div class="form-group">
+              <div class="col-sm-12">
+                {{#form-field for='sortOrder' label='Export Continuation Characters'}}
+                  <input data-test-order type="number"
+                        class="form-control"
+                        value={{question.exportContinuationCharacters}}
+                        oninput={{action (mut question.exportContinuationCharacters) value="target.value"}} />
+                {{/form-field}}
+              </div>
+            </div>
+
             {{#if (and isSuperUser hasAnAnswer)}}
               <div class="form-group">
                 <div class="col-sm-12">
