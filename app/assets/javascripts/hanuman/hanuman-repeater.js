@@ -38,7 +38,7 @@ $(document).ready(function(){
 
     // loop through collected container items and update attributes with timestamps
     // CONTAINER ITEMS ARE RELATIVE TO CLONED CONTAINER, THINK OF CLONED CONTAINER AS A SECONDARY DOM OF ITS OWN.
-    updateDom(containerItems, parentRepeater);
+    updateDom(containerItems, $clonedContainer);
 
     // set cloned container to display none for fading in
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
@@ -198,7 +198,7 @@ $(document).ready(function(){
 
     $(".form-container-repeater").each(function (_, repeater) {
       if ($(repeater).parents(".form-container-repeater").length) {
-        var parentRepeaterId = $(repeater).parent().closest(".form-container-repeater").find('> .repeater-id').val();
+        var parentRepeaterId = $(repeater).parent().closest(".form-container-repeater").find('.repeater-id:first').val(); d
         $(repeater).find(".parent-repeater-id:first").val(parentRepeaterId);
       }
 
@@ -423,12 +423,13 @@ $(document).ready(function(){
     var timeStamp = new Date().getTime();
 
     // update the parent repeater id input
-    parentRepeaterInput = $(parentRepeater).find('.repeater-inputs')
-    if (parentRepeater.length > 0) {
-      var nameStamp = parentRepeaterInput.attr("name").match(/\d+/)[0];
-      var nameAttr = parentRepeaterInput.attr("name")
-      parentRepeaterInput.attr('name', nameAttr.replace(/(\d+)/, nameStamp.concat(timeStamp)))
-    }
+    // parentRepeaterInput = $(parentRepeater).find('.repeater-id')
+    // parentRepeaterInput.each(function(index, element) {
+    //   var nameStamp = $(element).attr("name").match(/\d+/)[0];
+    //   var nameAttr = $(element).attr("name")
+    //   $(element).attr('name', nameAttr.replace(/(\d+)/, nameStamp.concat(timeStamp)))
+    // });
+
     // begin updating all the inputs found in the cloned repeater
     for (var i = 0; i < clonedRepeater.length; i++) {
       $($(clonedRepeater[i]).find('.latlong')).attr('id', "map".concat(timeStamp));
