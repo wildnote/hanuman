@@ -52,7 +52,14 @@ module Hanuman
     end
 
     def set_entry
-      self.entry = (self.repeater_id.present? || self.parent_repeater_id.present?) ? (self.repeater_id || self.parent_repeater_id) : 1
+      self.entry = 
+        if self.repeater_id.present? && !self.repeater_id.zero?
+          self.repeater_id
+        elsif self.parent_repeater_id.present? && !self.parent_repeater_id.zero?
+          self.parent_repeater_id
+        else 
+          1
+        end 
     end
 
     def strip_and_squish_answer
