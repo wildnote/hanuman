@@ -140,7 +140,7 @@ $(document).ready(function(){
         });
       }
 
-      if($(repeater).parent().parent().parent().first().hasClass("form-container-survey")) {
+      if(!$(repeater).parent().parent().parent().first().hasClass("form-container-repeater")) {
         var questionId = $(repeater).data("question-id");
         if(!topLevelRepeaterTypes.includes(questionId)) {
           topLevelRepeaterTypes.push(questionId);
