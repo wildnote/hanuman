@@ -24,6 +24,9 @@ module Hanuman
     before_save :set_observations_unsorted, unless: :skip_sort?
     after_save :schedule_observation_sorting, if: :should_schedule_sort?
 
+    after_save :set_entries
+
+
     amoeba {
       enable
       include_association :survey_extension
@@ -37,6 +40,15 @@ module Hanuman
       versions.first.whodunnit unless versions.blank? rescue nil
     end
 
+    def set_entries
+      question_ids = []
+      self.observations.reorder('hanuman_questions.sort_order ASC, repeater_id ASC, parent_repeater_id ASC').each do |observation|
+        question_ids << observation.question_id
+        observation.entry = question_ids.count(observation.question_id)
+        observation.save
+      end
+    end
+    
     def set_observations_unsorted
       self.observations_sorted = false
 

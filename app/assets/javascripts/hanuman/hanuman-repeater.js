@@ -198,7 +198,7 @@ $(document).ready(function(){
 
     $(".form-container-repeater").each(function (_, repeater) {
       if ($(repeater).parents(".form-container-repeater").length) {
-        var parentRepeaterId = $(repeater).parent().closest(".form-container-repeater").find('.repeater-id:first').val(); d
+        var parentRepeaterId = $(repeater).parent().closest(".form-container-repeater").find('.repeater-id:first').val();
         $(repeater).find(".parent-repeater-id:first").val(parentRepeaterId);
       }
 
