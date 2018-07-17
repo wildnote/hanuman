@@ -41,11 +41,25 @@ module Hanuman
     end
 
     def set_entries
-      question_ids = []
-      self.observations.reorder('hanuman_questions.sort_order ASC, repeater_id ASC, parent_repeater_id ASC').each do |observation|
-        question_ids << observation.question_id
-        observation.entry = question_ids.count(observation.question_id)
-        observation.save
+      first_of_type_repeater_ids = []
+      first_of_type_captured_question_ids = []
+
+      # iterate throught the repeaters in the survey and grab the first one of each type only
+      self.observations.reorder('repeater_id ASC').where.not(repeater_id: 0).each do |observation|
+        next if first_of_type_captured_question_ids.include?(observation.question_id)
+        first_of_type_repeater_ids << observation.repeater_id
+        first_of_type_captured_question_ids << observation.question_id
+      end
+
+      # Set entry to 1 for all first-of-type repeaters and top-level observations
+      self.observations.joins(:question).where(repeater_id: first_of_type_repeater_ids).update_all(entry: 1)
+      self.observations.joins(:question).where(parent_repeater_id: first_of_type_repeater_ids).where('repeater_id IS NULL OR repeater_id = 0').update_all(entry: 1)
+      self.observations.joins(:question).where('(repeater_id IS NULL OR repeater_id = 0) AND (parent_repeater_id IS NULL OR parent_repeater_id = 0)').update_all(entry: 1)
+
+      # Iterate through the remaining repeaters and increment the entry for each one
+      self.observations.joins(:question).reorder('repeater_id ASC').where.not(repeater_id: first_of_type_repeater_ids).where('repeater_id IS NOT NULL AND repeater_id != 0').each_with_index do |observation, index|
+        # we need to be careful not to include repeater children that are themselves repeaters 
+        self.observations.joins(:question).where('repeater_id = ? OR (parent_repeater_id = ? AND (repeater_id IS NULL OR repeater_id = 0))', observation.repeater_id, observation.repeater_id).update_all(entry: index + 2)
       end
     end
     
