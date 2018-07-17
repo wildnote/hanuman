@@ -20,10 +20,6 @@ module Hanuman
     # wait until after migration for these validations
     validates :question_text, presence: true, unless: :question_text_not_required
 
-    # Callbacks
-    after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
-    after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
-
     amoeba do
       include_association :rule
       include_association :answer_choices
