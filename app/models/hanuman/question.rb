@@ -20,6 +20,10 @@ module Hanuman
     # wait until after migration for these validations
     validates :question_text, presence: true, unless: :question_text_not_required
 
+    # Callbacks
+    after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
+    after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
+
     amoeba do
       include_association :rule
       include_association :answer_choices
@@ -52,6 +56,47 @@ module Hanuman
     # adding this method so I can check it before calling the job to process question changes on observations to try and decrease the number of 404 errors coming through
     def survey_template_not_fully_editable_or_sort_order_changed?
       survey_template_not_fully_editable? && sort_order_changed?
+    end
+
+      # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
+    def process_question_changes_on_observations
+      ProcessQuestionChangesWorker.perform_async(id)
+    end
+
+    # if survey has data submitted against it, then submit blank data for each
+    # survey for newly added question, then re-save survey so that group_sort gets reset
+    def submit_blank_observation_data
+      question = self
+      parent = self.parent
+      survey_template = self.survey_template
+      surveys = survey_template.surveys
+      surveys.each do |s|
+        if parent.blank?
+          Observation.create_with(
+            answer: ''
+          ).find_or_create_by(
+            survey_id: s.id,
+            question_id: self.id,
+            entry: 1
+          )
+        # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
+        else
+          s.observations.where(question_id: parent.id).each do |o|
+            Observation.create_with(
+              answer: ''
+            ).find_or_create_by(
+              survey_id: s.id,
+              question_id: self.id,
+              entry: o.entry
+            )
+          end
+        end
+
+        # we are already in a job so we can sort the observations inline
+        s.sort_observations!
+        s.skip_sort = true
+        s.save
+      end
     end
 
     # build the rule_hash to pass into rails to then be used by javascript for hide/show functions
