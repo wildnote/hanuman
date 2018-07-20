@@ -7,6 +7,7 @@ import { inject as service } from '@ember/service';
 import { observer, computed } from '@ember/object';
 import { on } from '@ember/object/evented';
 import { equal, sort, alias } from '@ember/object/computed';
+import { bind } from '@ember/runloop';
 import $ from 'jquery';
 import groupBy from 'ember-group-by';
 const { testing } = Ember;
@@ -133,6 +134,19 @@ export default Component.extend({
       e.preventDefault();
       $(this).tab('show');
     });
+
+    $(document).on('keydown.close-modal', bind(this, this._escapeHandler));
+  },
+
+  willDestroyElement() {
+    this._super(...arguments);
+    $(document).off('keydown.close-modal');
+  },
+
+  _escapeHandler(e) {
+    if (e.keyCode == 27) {
+      this.send('closeModal');
+    }
   },
 
   _removeAnswerChoices() {
@@ -334,27 +348,35 @@ export default Component.extend({
 
     closeModal() {
       let question = this.get('question');
-      this.get('remodal').close('question-modal');
-      this.sendAction('transitionToSurveyStep');
-      if (question.get('wasNew')) {
-        if (testing) {
-          return question.set('wasNew', false);
+      if (
+        !question.get('hasDirtyAttributes') ||
+        window.confirm('You will lose any unsaved changes. Are you sure you want to continue?')
+      ) {
+        if (question.get('hasDirtyAttributes')) {
+          question.rollbackAttributes();
         }
-        run.later(
-          this,
-          () => {
-            $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500);
-          },
-          500
-        );
-        // Question is no longer new after shwoing the visual effect.
-        run.later(
-          this,
-          function() {
-            question.set('wasNew', false);
-          },
-          1500
-        );
+        this.get('remodal').close('question-modal');
+        this.sendAction('transitionToSurveyStep');
+        if (question.get('wasNew')) {
+          if (testing) {
+            return question.set('wasNew', false);
+          }
+          run.later(
+            this,
+            () => {
+              $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500);
+            },
+            500
+          );
+          // Question is no longer new after shwoing the visual effect.
+          run.later(
+            this,
+            function() {
+              question.set('wasNew', false);
+            },
+            1500
+          );
+        }
       }
     }
   }
