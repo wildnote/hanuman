@@ -1,10 +1,15 @@
 import Component from '@ember/component';
+import { or } from '@ember/object/computed';
 import { htmlSafe } from '@ember/string';
 import { computed } from '@ember/object';
 import $ from 'jquery';
 
 export default Component.extend({
   attributeBindings: ['question.id:data-question-id'],
+
+  isPreviewing: false,
+
+  isPreviewable: or('question.isTaxonType', 'question.answerType.hasAnswerChoices'),
 
   isSelected: computed('selectedQuestions.[]', 'question.id', function() {
     let selectedQuestions = this.get('selectedQuestions');

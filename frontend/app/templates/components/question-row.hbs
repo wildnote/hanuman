@@ -17,6 +17,11 @@
         {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
       </span>
     {{/if}}
+    {{#if isPreviewable}}
+      <span class="glyphicons glyphicons-sunglasses" onclick={{action (toggle "isPreviewing" this)}}>
+        {{#tooltip-on-element duration=1500 side='right'}}Preview question info{{/tooltip-on-element}}
+      </span>
+    {{/if}}
     <span data-test="question.questionText">
       {{question.questionText}}
     </span>
@@ -69,7 +74,7 @@
         <span class="glyphicons glyphicons-pencil"></span>
         Edit
       {{/link-to}}
-      {{#if (not ancestrable)}}      
+      {{#if (not ancestrable)}}
         <a class="btn btn-delete" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
           <span class="glyphicons glyphicons-bin"></span>
         </a>
@@ -97,6 +102,35 @@
       {{/if}}
     </span>
   </div>
+  {{#if isPreviewing}}
+    <div class="clear"></div>
+    <div class="preview-section col-sm-12">
+      <div class="col-sm-4">&nbsp;</div>
+      <div class="col-sm-8">
+        {{#if question.isTaxonType}}
+          <span>
+            {{#if question.dataSource.isLoaded}}
+              {{question.dataSource.name}}
+            {{else}}
+              Loading...
+            {{/if}}
+          </span>
+        {{else}}
+          <ul>
+            {{#each question.answerChoices as |answerChoice|}}
+              <li>
+                {{#if answerChoice.isLoaded}}
+                  {{answerChoice.optionText}}
+                {{else}}
+                  Loading...
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
 </div>
 
 {{yield}}
