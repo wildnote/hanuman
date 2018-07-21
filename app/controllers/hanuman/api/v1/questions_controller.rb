@@ -3,7 +3,11 @@ module Hanuman
     respond_to :json
 
     def index
-      respond_with Question.all
+      if params[:ids]
+        respond_with Question.where(id: params[:ids])
+      else
+        respond_with []
+      end
     end
 
     def show

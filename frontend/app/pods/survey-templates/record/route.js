@@ -1,4 +1,5 @@
 import Route from '@ember/routing/route';
+import { isBlank } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import { run } from '@ember/runloop';
 import config from 'frontend/config/environment';
@@ -11,32 +12,38 @@ export default Route.extend({
     let i = 0;
     let p = 0;
     let surveyTemplate = model;
-    let total = surveyTemplate.get('questions.length');
+    let questionIds = surveyTemplate.hasMany('questions').ids();
+    let total = questionIds.length;
     if (total === 0) {
       controller.set('isLoadingQuestions', false);
     } else {
-      surveyTemplate
-        .hasMany('questions')
-        .ids()
-        .forEach(questionId => {
-          if (!questionId) {
-            i += 1;
-            return;
+      let maxLength = 50;
+
+      let questionGroups = questionIds.reduce((all, one, i) => {
+        let ch = Math.floor(i / maxLength);
+        all[ch] = [].concat(all[ch] || [], one);
+        return all;
+      }, []);
+      total = questionGroups.length;
+      questionGroups.forEach(questionGroup => {
+        if (isBlank(questionGroup)) {
+          i += 1;
+          return;
+        }
+        this.store.query('question', { ids: questionGroup }).then(function() {
+          let pp = p;
+          i += 1;
+          p = (i * 10) / total - (((i * 10) / total) % 0.5);
+          if (pp !== p) {
+            controller.set('loadingProgress', p * 10 + 5);
           }
-          this.store.findRecord('question', questionId).then(function() {
-            let pp = p;
-            i += 1;
-            p = (i * 10) / total - (((i * 10) / total) % 0.5);
-            if (pp !== p) {
-              controller.set('loadingProgress', p * 10 + 5);
-            }
-            if (i + 1 >= total) {
-              run.next(this, function() {
-                controller.set('isLoadingQuestions', false);
-              });
-            }
-          });
+          if (i + 1 >= total) {
+            run.next(this, function() {
+              controller.set('isLoadingQuestions', false);
+            });
+          }
         });
+      });
     }
   },
 
