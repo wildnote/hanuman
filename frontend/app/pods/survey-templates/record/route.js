@@ -18,9 +18,6 @@ export default Route.extend({
   },
 
   actions: {
-    reorderQuestions(questions) {
-      this.controller.get('updateSortOrderTask').perform(questions);
-    },
     duplicate() {
       let indexController = this.controllerFor('survey-templates.record.index');
       let surveyTemplate = this.currentModel;

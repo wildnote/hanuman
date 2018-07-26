@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hanuman (1.5.1)
+    hanuman (1.5.3)
       active_model_serializers (~> 0.8.1)
       amoeba (~> 3.1.0)
       ancestry
@@ -181,7 +181,7 @@ GEM
     paper_trail (6.0.2)
       activerecord (>= 4.0, < 5.2)
       request_store (~> 1.1)
-    parser (2.5.1.0)
+    parser (2.5.1.2)
       ast (~> 2.4.0)
     pg (0.18.4)
     pg_search (2.0.1)
@@ -326,4 +326,4 @@ DEPENDENCIES
   shoulda-matchers
 
 BUNDLED WITH
-   1.16.1
+   1.15.1
