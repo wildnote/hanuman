@@ -150,11 +150,10 @@ export default Component.extend({
   },
 
   _removeAnswerChoices() {
-    this.get('question.answerChoices').then(answerChoices => {
-      answerChoices.forEach(function(answerChoice) {
-        answerChoice.deleteRecord();
-        answerChoice.save();
-      });
+    let answerChoices = this.get('question.answerChoices');
+    answerChoices.forEach(function(answerChoice) {
+      answerChoice.deleteRecord();
+      answerChoice.save();
     });
   },
 

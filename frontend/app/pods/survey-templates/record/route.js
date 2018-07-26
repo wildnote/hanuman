@@ -1,50 +1,20 @@
 import Route from '@ember/routing/route';
-import { isBlank } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import { run } from '@ember/runloop';
+
 import config from 'frontend/config/environment';
 
 export default Route.extend({
   notify: service(),
-  setupController(controller, model) {
-    this._super(controller, model);
-    // Progress bar indicators
-    let i = 0;
-    let p = 0;
-    let surveyTemplate = model;
-    let questionIds = surveyTemplate.hasMany('questions').ids();
-    let total = questionIds.length;
-    if (total === 0) {
-      controller.set('isLoadingQuestions', false);
-    } else {
-      let maxLength = 50;
 
-      let questionGroups = questionIds.reduce((all, one, i) => {
-        let ch = Math.floor(i / maxLength);
-        all[ch] = [].concat(all[ch] || [], one);
-        return all;
-      }, []);
-      total = questionGroups.length;
-      questionGroups.forEach(questionGroup => {
-        if (isBlank(questionGroup)) {
-          i += 1;
-          return;
-        }
-        this.store.query('question', { ids: questionGroup }).then(function() {
-          let pp = p;
-          i += 1;
-          p = (i * 10) / total - (((i * 10) / total) % 0.5);
-          if (pp !== p) {
-            controller.set('loadingProgress', p * 10 + 5);
-          }
-          if (i + 1 >= total) {
-            run.next(this, function() {
-              controller.set('isLoadingQuestions', false);
-            });
-          }
-        });
-      });
-    }
+  afterModel(model) {
+    let promises = [];
+    // load answer-types
+    promises.push(this.store.findAll('answer-Type'));
+    // load questions
+    promises.push(model.get('questions'));
+
+    return promises;
   },
 
   actions: {
