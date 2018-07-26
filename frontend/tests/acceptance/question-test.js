@@ -145,6 +145,7 @@ test('editing a question', async function(assert) {
 });
 
 test('deleting a question', async function(assert) {
+  assert.expect(3);
   surveyTemplate = server.create('survey-template', { fully_editable: false });
   let questions = server.createList('question', 2, { surveyTemplate });
   question = questions[0];

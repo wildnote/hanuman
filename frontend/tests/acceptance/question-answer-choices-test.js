@@ -49,12 +49,12 @@ test('editing an answer choice', async function(assert) {
 });
 
 test('deleting an answer choice', async function(assert) {
+  assert.expect(2);
   question = server.create('question', { surveyTemplate, answer_type_id: 17 });
   let firstAnswerChoices = server.create('answer-choice', { question, option_text: 'a' });
   server.create('answer-choice', { question, option_text: 'b' });
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-
   let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
 
   await click(`${selector} [data-test="delete-answer-choice-link"]`);
@@ -75,6 +75,7 @@ test('deleting an answer choice', async function(assert) {
 });
 
 test('changing the answer type to one with no answer choices deletes all the previously created', async function(assert) {
+  assert.expect(4);
   question = server.create('question', { surveyTemplate, answer_type_id: 17 });
   answerChoices = server.createList('answer-choice', 2, { question });
 
@@ -92,8 +93,8 @@ test('changing the answer type to one with no answer choices deletes all the pre
   fillIn('[data-test="answer-type-id-select"]', 1);
   await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
   await click('[data-test="save-question-link"]');
-  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   assert.notEqual(
     firstAnswerChoices.option_text,
     find('[data-test="answerChoice.optionText"]:first')

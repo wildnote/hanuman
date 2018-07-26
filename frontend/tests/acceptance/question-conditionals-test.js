@@ -25,6 +25,7 @@ test('creating new question hides conditional tab', async function(assert) {
 });
 
 test('adding a conditional with a question without rule previously created', async function(assert) {
+  assert.expect(4);
   server.createList('question', 5, { surveyTemplate });
   question = server.create('question', { surveyTemplate, answer_type_id: 15 });
 
@@ -47,7 +48,7 @@ test('adding a conditional with a question without rule previously created', asy
   assert.equal(condition.operator, 'is equal to');
 });
 
-test('editing a conditional', function(assert) {
+test('editing a conditional', async function(assert) {
   server.createList('question', 5, { surveyTemplate });
   rule = server.create('rule');
   /* eslint-disable camelcase */
@@ -57,24 +58,21 @@ test('editing a conditional', function(assert) {
   /* eslint-enable camelcase */
   let firstCondition = conditions[0];
 
-  visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-  andThen(function() {
-    for (let condition of conditions) {
-      assert.equal(
-        condition.answer,
-        find(`[data-condition-id="${condition.id}"] [data-test="condition.answer"]`)
-          .text()
-          .trim()
-      );
-    }
-    let selector = `[data-condition-id="${firstCondition.id}"]`;
-    click(`${selector} [data-test="edit-condition-link"]`);
-    fillIn(`${selector} [data-test="condition.answer"]`, 'eh eh epa colombia');
-    click(`${selector} [data-test="save-condition-link"]`).then(() => {
-      firstCondition = server.db.conditions.find(firstCondition.id);
-      assert.equal(firstCondition.answer, 'eh eh epa colombia');
-    });
-  });
+  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  for (let condition of conditions) {
+    assert.equal(
+      condition.answer,
+      find(`[data-condition-id="${condition.id}"] [data-test="condition.answer"]`)
+        .text()
+        .trim()
+    );
+  }
+  let selector = `[data-condition-id="${firstCondition.id}"]`;
+  await click(`${selector} [data-test="edit-condition-link"]`);
+  fillIn(`${selector} [data-test="condition.answer"]`, 'eh eh epa colombia');
+  await click(`${selector} [data-test="save-condition-link"]`);
+  firstCondition = server.db.conditions.find(firstCondition.id);
+  assert.equal(firstCondition.answer, 'eh eh epa colombia');
 });
 
 test('deleting a conditional', async function(assert) {
@@ -89,7 +87,6 @@ test('deleting a conditional', async function(assert) {
   /* eslint-enable camelcase */
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
-
   let selector = `[data-condition-id="${firstCondition.id}"]`;
   await click(`${selector} [data-test="delete-condition-link"]`);
 
