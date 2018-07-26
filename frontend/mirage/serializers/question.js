@@ -1,14 +1,7 @@
 import BaseSerializer from './application';
+import { isPresent } from '@ember/utils';
 
 export default BaseSerializer.extend({
-  include: ['answerChoices','surveyTemplate','rule'],
-  serialize() {
-    let json = BaseSerializer.prototype.serialize.apply(this, arguments);
-    // Rule has to be embed
-    if(json.rules){
-      json.rule = json.rules[0];
-      delete json.rules;
-    }
-    return json;
-  }
+  embed: true,
+  include: ['answerChoices', 'rule']
 });

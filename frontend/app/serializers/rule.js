@@ -5,7 +5,6 @@ export default ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
   isNewSerializerAPI: true,
 
   attrs: {
-    rule: { embedded: 'always' },
-    answerChoices: { embedded: 'always' }
+    conditions: { embedded: 'always' }
   }
 });

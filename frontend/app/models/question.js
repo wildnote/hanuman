@@ -41,7 +41,7 @@ export default Model.extend(Validator, {
   answerType: belongsTo('answer-type'),
   surveyTemplate: belongsTo('survey-template'),
   rule: belongsTo('rule', { async: false }),
-  answerChoices: hasMany('answer-choice'),
+  answerChoices: hasMany('answer-choice', { async: false }),
   childIds: attr('array'),
 
   // Computed Properties

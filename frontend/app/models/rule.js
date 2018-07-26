@@ -8,7 +8,7 @@ export default Model.extend(Validator, {
   matchType: attr('string', { defaultValue: 'any' }),
 
   // Relations
-  conditions: hasMany('condition'),
+  conditions: hasMany('condition', { async: false }),
   question: belongsTo('question'),
 
   // Validations
