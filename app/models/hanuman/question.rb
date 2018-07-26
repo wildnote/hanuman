@@ -58,7 +58,7 @@ module Hanuman
       survey_template_not_fully_editable? && sort_order_changed?
     end
 
-    # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
+      # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
     def process_question_changes_on_observations
       ProcessQuestionChangesWorker.perform_async(id)
     end
@@ -91,19 +91,13 @@ module Hanuman
             )
           end
         end
-        # calling save so that before_save method apply_group_sort is called to resort observations after inserting new ones for new questions-kdh
+
+        # we are already in a job so we can sort the observations inline
+        s.sort_observations!
+        s.skip_sort = true
         s.save
       end
     end
-
-    # def resort_submitted_observations
-    #   unless survey_template.fully_editable
-    #     surveys = survey_template.surveys
-    #     surveys.each do |s|
-    #       s.save
-    #     end
-    #   end
-    # end
 
     # build the rule_hash to pass into rails to then be used by javascript for hide/show functions
     def rule_hash

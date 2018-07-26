@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180612042207) do
+ActiveRecord::Schema.define(version: 20180704051348) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -140,6 +140,7 @@ ActiveRecord::Schema.define(version: 20180612042207) do
     t.float    "speed"
     t.float    "direction"
     t.float    "altitude"
+    t.integer  "sort_order"
   end
 
   add_index "hanuman_observations", ["survey_id"], name: "index_hanuman_observations_on_survey_id", using: :btree
@@ -227,6 +228,7 @@ ActiveRecord::Schema.define(version: 20180612042207) do
     t.date     "survey_date"
     t.string   "mobile_request_id"
     t.datetime "mobile_created_at"
+    t.boolean  "observations_sorted"
   end
 
   add_index "hanuman_surveys", ["survey_template_id"], name: "index_hanuman_surveys_on_survey_template_id", using: :btree

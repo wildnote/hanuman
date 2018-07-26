@@ -133,11 +133,6 @@ $ ->
           this.selectedIndex = 0
         $('.search-choice-close').click()
 
-        # increment entry value(s)
-        $entry = $('input[type=hidden][name*=\\[entry\\]]')
-        entryVal = parseInt $($entry[0]).val()
-        $entry.val(entryVal + 1)
-
     ).fail (jqXHR, textStatus, errorThrown) ->
       errorRow = HandlebarsTemplates['surveys/error'](errorThrown)
       $(errorRow).insertAfter($('.form-control-static').last().closest('.form-group'))

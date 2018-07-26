@@ -6,7 +6,7 @@ node_js:
 rvm:
   - 2.2.3
 
-sudo: false
+sudo: true
 dist: trusty
 
 addons:

@@ -44,13 +44,12 @@ export default Component.extend({
     let deleteQuestionTask = this.get('deleteQuestionTask');
     try {
       yield all(toDeleteQuestions.map(question => deleteQuestionTask.perform(question)));
-
+      yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
       this.get('notify').success('Questions successfully deleted');
     } catch (e) {
       console.log('Error:', e); // eslint-disable-line no-console
       this.get('notify').alert('There was an error trying to delete questions');
     }
-    yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
     this.unSelectAll();
   }),
 
