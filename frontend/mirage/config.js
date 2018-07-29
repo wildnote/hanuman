@@ -50,7 +50,17 @@ export default function() {
     return rules.find(id).update(attrs);
   });
   // Questions
-  this.get('/questions');
+  this.get('/questions', ({ questions }) => {
+    let questionsResponse = questions.all();
+    questionsResponse.models.forEach(function(question) {
+      question.attrs.child_ids = questions
+        .all()
+        .models.filter(q => q.parent_id === question.id)
+        .map(q => q.id);
+    });
+    return questionsResponse;
+  });
+
   this.get('/questions/:id');
   this.post('/questions', (schema, request) => {
     const attrs = JSON.parse(request.requestBody).question;
