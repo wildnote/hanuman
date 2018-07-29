@@ -11,44 +11,39 @@ moduleForAcceptance('Acceptance | survey template', {
   }
 });
 
-test('visiting /survey_templates/:id', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
-
-  andThen(function() {
-    assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
-  });
+test('visiting /survey_templates/:id', async function(assert) {
+  assert.expect(1);
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
 });
 
-test('displaying survey template info', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
-  andThen(function() {
+test('displaying survey template info', async function(assert) {
+  assert.expect(2);
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  assert.equal(
+    surveyTemplate.name,
+    find('[data-test="surveyTemplate.name"]')
+      .text()
+      .trim()
+  );
+  assert.equal(
+    surveyTemplate.status,
+    find('[data-test="surveyTemplate.status"]')
+      .text()
+      .trim()
+  );
+});
+
+test('listing questions', async function(assert) {
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  for (let question of questions) {
     assert.equal(
-      surveyTemplate.name,
-      find('[data-test="surveyTemplate.name"]')
+      question.question_text,
+      find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`)
         .text()
         .trim()
     );
-    assert.equal(
-      surveyTemplate.status,
-      find('[data-test="surveyTemplate.status"]')
-        .text()
-        .trim()
-    );
-  });
-});
-
-test('listing questions', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
-  andThen(function() {
-    for (let question of questions) {
-      assert.equal(
-        question.question_text,
-        find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`)
-          .text()
-          .trim()
-      );
-    }
-  });
+  }
 });
 
 test('deleting a survey template', function(assert) {
