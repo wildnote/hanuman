@@ -2,14 +2,15 @@ import Component from '@ember/component';
 import { or } from '@ember/object/computed';
 import { htmlSafe } from '@ember/string';
 import { computed } from '@ember/object';
+import { run } from '@ember/runloop';
 import $ from 'jquery';
 
 export default Component.extend({
   attributeBindings: ['question.id:data-question-id'],
 
   isPreviewing: false,
-
   isPreviewable: or('question.isTaxonType', 'question.answerType.hasAnswerChoices'),
+  pendingRecursive: 0,
 
   isSelected: computed('selectedQuestions.[]', 'question.id', function() {
     let selectedQuestions = this.get('selectedQuestions');
@@ -37,6 +38,19 @@ export default Component.extend({
     return this.get('otherQuetions').filter(question => question.get('ancestry') === questionId).length;
   }),
 
+  _collapseChild(questions, collapsedValue) {
+    questions.forEach(question => {
+      question.set('ancestryCollapsed', collapsedValue);
+      if (question.get('hasChild') && !question.get('collapsed')) {
+        this.incrementProperty('pendingRecursive');
+        run.next(this, function() {
+          this._collapseChild(question.get('child'), collapsedValue);
+        });
+      }
+    });
+    this.decrementProperty('pendingRecursive');
+  },
+
   actions: {
     confirm() {
       let el = this.get('element');
@@ -57,18 +71,11 @@ export default Component.extend({
     toggleCollapsed() {
       let question = this.get('question');
       let collapsed = question.get('collapsed');
-      let questionId = this.get('question.id');
-      let otherQuetions = this.get('otherQuetions');
-
       question.set('collapsed', !collapsed);
+      this.set('pendingRecursive', 1);
       // Toggle children questions
-      otherQuetions.forEach(otherQuetion => {
-        if (otherQuetion.get('ancestry')) {
-          let ancestrires = otherQuetion.get('ancestry').split('/');
-          if (ancestrires.includes(questionId)) {
-            otherQuetion.set('ancestryCollapsed', !collapsed);
-          }
-        }
+      run.next(this, function() {
+        this._collapseChild(question.get('child'), !collapsed);
       });
     },
 

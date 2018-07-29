@@ -7,28 +7,29 @@
   {{else}}
     <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
     <div class="col-sm-4">
-      {{#if question.hasChild}}
-        <span onclick={{action 'toggleCollapsed'}} class="glyphicon glyphicon-collapse-{{if question.collapsed 'up' 'down'}}"></span>
-      {{/if}}
-      {{#if question.loading}}
+      {{#if (or question.loading (gt pendingRecursive 0))}}
         <span class="glyphicons gly-spin glyphicons-refresh"></span>
-      {{/if}}
-      {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
-        <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
-          {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
-        </span>
       {{else}}
-        <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
-      {{/if}}
-      {{#if (and (not ancestrable) (not isSelected))}}
-        <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
-          {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
-        </span>
-      {{/if}}
-      {{#if isPreviewable}}
-        <span class="glyphicons glyphicons-sunglasses" onclick={{action (toggle "isPreviewing" this)}}>
-          {{#tooltip-on-element duration=1500 side='right'}}Preview question info{{/tooltip-on-element}}
-        </span>
+        {{#if question.hasChild}}
+          <span onclick={{action 'toggleCollapsed'}} class="glyphicon glyphicon-collapse-{{if question.collapsed 'up' 'down'}}"></span>
+        {{/if}}
+        {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
+          <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+            {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
+          </span>
+        {{else}}
+          <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
+        {{/if}}
+        {{#if (and (not ancestrable) (not isSelected))}}
+          <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+            {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
+          </span>
+        {{/if}}
+        {{#if isPreviewable}}
+          <span class="glyphicons glyphicons-sunglasses" onclick={{action (toggle "isPreviewing" this)}}>
+            {{#tooltip-on-element duration=1500 side='right'}}Preview question info{{/tooltip-on-element}}
+          </span>
+        {{/if}}
       {{/if}}
       <span data-test="question.questionText">
         {{question.questionText}}
