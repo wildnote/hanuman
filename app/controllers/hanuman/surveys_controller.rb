@@ -21,10 +21,7 @@ module Hanuman
       @survey = Survey.new(survey_template_id: survey_template_id)
       @survey.build_survey_extension
       survey_template.questions.each do |q|
-        @survey.observations.build(
-          question_id: q.id,
-          entry: 1
-        )
+        @survey.observations.build(question_id: q.id)
 
         if q.answer_type.name.eql? "photo"
           o.observation_photos.build()
@@ -95,7 +92,6 @@ module Hanuman
             :id,
             :question_id,
             :answer,
-            :entry,
             :answer_choice_id,
             :selectable_id,
             :selectable_type,
@@ -132,7 +128,6 @@ module Hanuman
             :id,
             :question_id,
             :answer,
-            :entry,
             :answer_choice_id,
             :selectable_id,
             :selectable_type,

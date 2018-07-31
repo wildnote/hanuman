@@ -25,22 +25,19 @@ module Hanuman
     has_many :videos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationVideo'
     has_one :signature, class_name: 'Hanuman::ObservationSignature'
 
+
     belongs_to :selectable, polymorphic: true
 
     # Validations
-    validates :question_id, :entry, presence: true
+    validates :question_id, presence: true
     # no validation for answer - because of structure of data we need empty
     # rows in database for editing of survey - kdh - 10.30.14
 
     # Scopes
     default_scope {
-      includes(:question).order('hanuman_observations.entry ASC, hanuman_questions.sort_order ASC')
+      includes(:question).order('hanuman_observations.parent_repeater_id ASC, hanuman_questions.sort_order ASC')
         .references(:question)
     }
-    scope :by_survey_template_and_entry, -> (survey_template, entry) do
-      includes(question: [:survey_template, :answer_type])
-      .where(hanuman_survey_templates: {id: survey_template.id}, entry: entry)
-    end
 
     # Callbackas
     before_save :strip_and_squish_answer
@@ -69,10 +66,6 @@ module Hanuman
     def parent_text
       a = answer.split(' ( ')[1]
       a.blank? ? '' : a.gsub(' )', '')
-    end
-
-    def self.entries
-      self.pluck(:entry).uniq
     end
   end
 end

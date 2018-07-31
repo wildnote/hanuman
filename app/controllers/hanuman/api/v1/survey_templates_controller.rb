@@ -36,6 +36,16 @@ module Hanuman
       end
     end
 
+    def resort_questions
+      survey_template = SurveyTemplate.find(params[:id])
+      single_update_statement = {}
+      params[:ids].each_with_index do |id, i|
+        single_update_statement[id] = { sort_order: i + 1 }
+      end
+      Question.update(single_update_statement.keys, single_update_statement.values)
+      respond_with survey_template
+    end
+
     private
 
     def set_survey_template

@@ -11,6 +11,8 @@ export default Controller.extend({
 
   updateSortOrderTask: task(function*(questions, reSort = false) {
     let lastSortOrder = 0;
+    let surveyTemplate = this.get('surveyTemplate');
+    let ids = [];
     if (reSort) {
       questions = [...questions.toArray()];
       // Re-sort
@@ -34,10 +36,11 @@ export default Controller.extend({
       }
       if (oldSortOrder !== newSortOrder) {
         question.set('sortOrder', newSortOrder);
-        yield question.save();
       }
       lastSortOrder = newSortOrder;
+      ids.push(question.get('id'));
     }
+    yield surveyTemplate.resortQuestions({ ids });
     this._checkAncestryConsistency(questions);
   }),
 

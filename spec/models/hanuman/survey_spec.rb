@@ -20,7 +20,8 @@ module Hanuman
     end
 
     describe 'Callbacks' do
-      it { is_expected.to callback(:apply_group_sort).before(:save) }
+      it { is_expected.to callback(:set_observations_unsorted).before(:save) }
+      it { is_expected.to callback(:schedule_observation_sorting).after(:save) }
     end
   end
 end
