@@ -12,10 +12,10 @@ export default Model.extend(Validator, {
   storeService: service('store'),
 
   // Accessors
-  loading: attr('boolean', { defaultValue: false }),
-  ancestrySelected: attr('boolean', { defaultValue: false }),
-  ancestryCollapsed: attr('boolean', { defaultValue: false }),
-  collapsed: attr('boolean', { defaultValue: false }),
+  loading: false,
+  ancestrySelected: false,
+  ancestryCollapsed: false,
+  collapsed: false,
 
   // Attributes
   questionText: attr('string'),
