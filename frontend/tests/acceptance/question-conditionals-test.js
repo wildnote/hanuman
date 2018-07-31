@@ -12,6 +12,7 @@ moduleForAcceptance('Acceptance | question conditionals', {
 
 // Conditional tabs shouldn't be enable on for new questions
 test('creating new question hides conditional tab', async function(assert) {
+  assert.expect(1);
   await visit(`/survey_templates/${surveyTemplate.id}`);
   await click('a:contains("Add")');
 
@@ -49,6 +50,7 @@ test('adding a conditional with a question without rule previously created', asy
 });
 
 test('editing a conditional', async function(assert) {
+  assert.expect(4);
   server.createList('question', 5, { surveyTemplate });
   rule = server.create('rule');
   /* eslint-disable camelcase */
@@ -106,6 +108,7 @@ test('deleting a conditional', async function(assert) {
 });
 
 test('selecting a conditional question with answer choices', async function(assert) {
+  assert.expect(1);
   // Question with answer choices
   /* eslint-disable camelcase */
   let questionWithAnsweChoices = server.create('question', { surveyTemplate, answer_type_id: 17 });

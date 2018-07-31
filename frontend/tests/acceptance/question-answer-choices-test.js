@@ -24,6 +24,7 @@ test('adding an answer choice', async function(assert) {
 });
 
 test('editing an answer choice', async function(assert) {
+  assert.expect(4);
   question = server.create('question', { surveyTemplate, answer_type_id: 17 });
   answerChoices = server.createList('answer-choice', 3, { question });
 
