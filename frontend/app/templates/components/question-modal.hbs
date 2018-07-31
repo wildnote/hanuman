@@ -185,12 +185,13 @@
         <div class="form-group">
           <div class="col-sm-12">
             {{#form-field for='questionText' label='Question Text'}}
-              <input type="text"
-                    class="form-control"
-                    name="questionText"
-                    data-test="question.questionText"
-                    value={{question.questionText}}
-                    oninput={{action (mut question.questionText) value="target.value"}} />
+            <textarea data-test="question.questionText"
+                      name="questionText"
+                      class="form-control"
+                      style="height: 33px;"
+                      onkeyup={{action (mut question.questionText) value="target.value"}}
+                      onchange={{action (mut question.questionText) value="target.value"}}
+                      maxlength=998>{{question.questionText}}</textarea>
             {{/form-field}}
           </div>
         </div>
