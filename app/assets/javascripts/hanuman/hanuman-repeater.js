@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
   duplicatedRepeatersOnEdit = []
+  var selectizeElements = {};
 
   updateRepeaterControls()
   updateRepeaterIds()
@@ -13,13 +14,14 @@ $(document).ready(function(){
     $scrollPosition = $(this).offset().top - 50;
 
     // unbinding events on plugins
-    unbindChosenTypes();
+    
     $('.datepicker').datepicker('destroy');
     // cloudinary events
     $.cleanData( $('input.cloudinary-fileupload[type=file]') );
 
     // find and clone container
     var container = $(this).closest('.form-container-repeater');
+    unbindChosenTypes(container);
     $clonedContainer = container.clone(true);
     var parentRepeater = $clonedContainer.parent().closest(".form-container-repeater");
 
@@ -64,7 +66,7 @@ $(document).ready(function(){
     }, 200);
 
     // TODO: figure out how to fix the way we are doing our bind
-    bindChosenTypes();
+    bindChosenTypes([container, $clonedContainer]);
 
     // remove parsley classes and error messages on clonedContainer
     $clonedContainer.find('div.form-container-entry-item[data-required=true]').find('ul.parsley-errors-list').remove();
@@ -306,28 +308,78 @@ $(document).ready(function(){
     }
   }
 
-  function unbindChosenTypes(){
-    $(".chosen-multiselect").chosen('destroy');
-    $(".chosen-select").chosen('destroy');
-    $(".bootstrap-checkbox-multiselect").multiselect('destroy');
+  function unbindChosenTypes(element){
+    $(element).find(".selectize-taxon-select").each(function () {
+      if ($(this)[0].selectize) {
+        selectizeElements[$(this).attr('id')] = {
+          inputOptions: $(this)[0].selectize.options,
+          inputValue:   $(this)[0].selectize.getValue(),
+          inputText: $(this)[0].selectize.getItem($(this)[0].selectize.getValue()).text(),
+        }
+
+        $(this)[0].selectize.destroy();
+      }
+    });
+
+    $(element).find(".chosen-multiselect").chosen('destroy');
+    $(element).find(".chosen-select").chosen('destroy');
+    $(element).find(".bootstrap-checkbox-multiselect").multiselect('destroy');
   }
 
-  function bindChosenTypes(){
-    $(".chosen-multiselect").chosen({
-      allow_single_deselect: true,
-      no_results_text: "No results matched",
-      size: "100%",
-      single_backstroke_delete: false,
-      search_contains: true
-    });
-    $(".chosen-select").chosen({
-      allow_single_deselect: true,
-      no_results_text: "No results matched",
-      size: "100%",
-      single_backstroke_delete: false,
-      search_contains: true
-    });
-    $(".bootstrap-checkbox-multiselect").multiselect();
+  function bindChosenTypes(elements){
+    $.each(elements, function () {
+      $(this).find('.selectize-taxon-select').selectize({
+        load: function(query, callback) {
+          var dataSourceId = this.$input.data("source");
+          var self = this;
+          $.ajax({
+            url: "/taxa/select_list/" + dataSourceId,
+            type: "GET",
+            dataType: "json",
+            data: {
+              query: query 
+            },
+            error: function() {
+              callback();
+            },
+            success: function(res) {
+              for (var option in self.options) {
+                if ($.inArray(option, self.items) === -1) {
+                  self.removeOption(option);
+                }
+              }
+              callback(res.taxa);
+            }
+          });
+        },
+        onInitialize: function () {
+          var selectId = this.$input.attr("id");
+          if (selectId in selectizeElements) {
+            var data = selectizeElements[selectId];
+            this.addOption({value: data.inputValue, text: data.inputText});
+            this.addItem(data.inputValue);
+          }
+        },
+        preload: true,
+        create: false,
+      });
+  
+      $(this).find(".chosen-multiselect").chosen({
+        allow_single_deselect: true,
+        no_results_text: "No results matched",
+        size: "100%",
+        single_backstroke_delete: false,
+        search_contains: true
+      });
+      $(this).find(".chosen-select").chosen({
+        allow_single_deselect: true,
+        no_results_text: "No results matched",
+        size: "100%",
+        single_backstroke_delete: false,
+        search_contains: true
+      });
+      $(this).find(".bootstrap-checkbox-multiselect").multiselect();
+    }); 
   }
 
   function updateClonedInputs($clonedRepeater, timeStamp){
@@ -453,15 +505,18 @@ $(document).ready(function(){
       // un-select dropdown
       selects = $(clonedRepeater[i]).find("select");
       $(selects).each(function() {
+        if ($(this).hasClass('selectized')) {
+          if ($(this)[0].selectize) {
+            console.log($(this)[0].selectize.items)
+          }
+        }
         $(this).val("");
 
         // if we don't add please select at this point the dropdown will show blank with no prompt
         if ($(this).find('option:contains("Please select")').length < 1) {
           $(this).prepend("<option value>Please select</option>");
         }
-        if ($(this).hasClass('chosen')) {
-          $(this).trigger("chosen:updated");
-        }
+
       });
       multiselects = $(clonedRepeater[i]).find("select[multiple]");
       $(multiselects).each(function() {
