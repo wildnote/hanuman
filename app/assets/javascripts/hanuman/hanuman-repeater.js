@@ -311,11 +311,21 @@ $(document).ready(function(){
   function unbindChosenTypes(element){
     $(element).find(".selectize-taxon-select").each(function () {
       if ($(this)[0].selectize) {
-        selectizeElements[$(this).attr('id')] = {
-          inputOptions: $(this)[0].selectize.options,
-          inputValue:   $(this)[0].selectize.getValue(),
-          inputText: $(this)[0].selectize.getItem($(this)[0].selectize.getValue()).text(),
+        var data = {};
+        data.inputValue = $(this)[0].selectize.getValue();
+        data.inputOptions = $(this)[0].selectize.options;
+
+        if (data.inputValue instanceof Array) {
+          data.inputText = [];
+          var self = this;
+          $.each(data.inputValue, function () {
+            data.inputText.push($(self)[0].selectize.getItem(this).text());
+          });
+        } else {
+          data.inputText = $(this)[0].selectize.getItem(data.inputValue).text();
         }
+
+        selectizeElements[$(this).attr("id")] = data;
 
         $(this)[0].selectize.destroy();
       }
@@ -356,8 +366,15 @@ $(document).ready(function(){
           var selectId = this.$input.attr("id");
           if (selectId in selectizeElements) {
             var data = selectizeElements[selectId];
-            this.addOption({value: data.inputValue, text: data.inputText});
-            this.addItem(data.inputValue);
+            if (data.inputValue instanceof Array) {
+              for (var i = 0; i < data.inputValue.length; i++) {
+                this.addOption({value: data.inputValue[i], text: data.inputText[i]});
+                this.addItem(data.inputValue[i]);
+              }
+            } else {
+              this.addOption({value: data.inputValue, text: data.inputText});
+              this.addItem(data.inputValue);
+            }
           }
         },
         preload: true,
