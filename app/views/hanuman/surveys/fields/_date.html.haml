@@ -1,5 +1,5 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    = ff.text_field :answer, class: "form-control datepicker", type: "text", maxlength: 255
+    = ff.text_field :answer, class: "form-control datepicker", type: "text", maxlength: 255, autocomplete: "off"
     
