@@ -11,7 +11,11 @@
         <span class="glyphicons gly-spin glyphicons-refresh"></span>
       {{else}}
         {{#if question.hasChild}}
-          <span data-test-collapse onclick={{action 'toggleCollapsed'}} class="glyphicon glyphicon-collapse-{{if question.collapsed 'up' 'down'}}"></span>
+          <span data-test-collapse onclick={{action 'toggleCollapsed'}} class="glyphicon glyphicon-collapse-{{if question.collapsed 'up' 'down'}}">
+            {{#tooltip-on-element duration=1500 side='right'}}
+              {{if question.collapsed 'Uncollapse' 'Collapse'}}
+            {{/tooltip-on-element}}
+          </span>
         {{/if}}
         {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
           <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">

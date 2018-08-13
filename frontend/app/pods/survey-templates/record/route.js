@@ -12,8 +12,15 @@ export default Route.extend({
     // load answer-types
     promises.push(this.store.findAll('answer-Type'));
     // load questions
-    promises.push(model.get('questions'));
-
+    promises.push(
+      model.get('questions').then(function(questions) {
+        // Collpase by default
+        questions.filterBy('hasChild', true).forEach(question => {
+          question.set('collapsed', true);
+          question.get('child').forEach(child => child.set('ancestryCollapsed', true));
+        });
+      })
+    );
     return promises;
   },
 

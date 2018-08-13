@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 import { alias, sort } from '@ember/object/computed';
+import { computed } from '@ember/object';
 import { task, all } from 'ember-concurrency';
 import { inject as service } from '@ember/service';
 import { isBlank } from '@ember/utils';
@@ -11,6 +12,8 @@ export default Component.extend({
   store: service(),
   notify: service(),
 
+  isLoadingQuestions: true,
+
   questionsSorting: ['sortOrder'],
   sortedQuestions: sort('surveyTemplate.filteredQuestions', 'questionsSorting'),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
@@ -19,6 +22,20 @@ export default Component.extend({
     this._super(...arguments);
     this.selectedQuestions = A();
   },
+
+  loadingProgress: computed('surveyTemplate.questions.@each.isLoading', function() {
+    let questions = this.get('surveyTemplate.questions');
+    let total = questions.get('length');
+    let loaded = questions.filterBy('isLoading', false).length;
+    console.log({ total, loaded });
+    console.log('Loaded %:', (loaded * 100.0) / total);
+    if (total === loaded) {
+      run.next(this, function() {
+        this.set('isLoadingQuestions', false);
+      });
+    }
+    return parseInt((loaded * 100) / total);
+  }),
 
   deleteQuestionTask: task(function*(question, row) {
     question.deleteRecord();
