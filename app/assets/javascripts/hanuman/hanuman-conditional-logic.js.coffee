@@ -321,7 +321,10 @@ class @ConditionalLogic
       return $conditionElement.text().replace(/\↵/g,"").trim()
     # survey report preview
     if $conditionElement.is('td')
-      return $conditionElement.text().replace(/\↵/g, "").trim()
+      if $conditionElement.hasClass('checklist')
+        return $conditionElement.find('span.hidden-answer').text().replace(/\↵/g, '').trim()
+      else
+        return $conditionElement.text().replace(/\↵/g, '').trim()
     $conditionElement.val()
 
 $ ->
