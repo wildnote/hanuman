@@ -1,5 +1,5 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    = ff.number_field :answer, class: "form-control", maxlength: 255, step: "1"
+    = ff.number_field :answer, class: "form-control", data: { "default-answer" => o.question.default_answer }, maxlength: 255, step: "1"
     
