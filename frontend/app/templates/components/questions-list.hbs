@@ -73,68 +73,69 @@
           &nbsp;
         </div>
       </div>
-
-      {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange="sortedDropped" as |group|}}
-        <!-- hardcode survey date row here -->
-        <li class="li-question row question-border">
-          <div class="row">
-            <div class="col-sm-4" data-test="question.answerType.displayName">
-              <span class="glyphicons glyphicons-sorting text-muted"></span>
-              Survey Date
-            </div>
-            <div class="col-sm-2">Date</div>
-            {{#if isSuperUser}}
-              <div class="col-sm-6">
-                <span class="label label-default">Survey Date is automatically added and cannot be moved</span>
+      <div class="{{if isPerformingBulk 'opacited'}}">
+        {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange="sortedDropped" as |group|}}
+          <!-- hardcode survey date row here -->
+          <li class="li-question row question-border">
+            <div class="row">
+              <div class="col-sm-4" data-test="question.answerType.displayName">
+                <span class="glyphicons glyphicons-sorting text-muted"></span>
+                Survey Date
               </div>
-            {{else}}
-              <div class="col-sm-4">
-                <span class="label label-default">Survey Date is automatically added and cannot be moved</span>
-              </div>
-            {{/if}}
-          </div>
-        </li>
-        {{#each sortedQuestions as |question|}}
-          {{#if (not question.isLoading)}}
-            {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
-              {{#if question.supportAncestry}}
-                {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
-                  {{question-row
-                    question=question
-                    otherQuetions=surveyTemplate.questions
-                    deleteQuestion='deleteQuestion'
-                    toggleQuestion=(action "toggleQuestion")
-                    isFullyEditable=isFullyEditable
-                    ancestrable=true
-                    selectedQuestions=selectedQuestions
-                  }}
-                {{/draggable-object-target}}
+              <div class="col-sm-2">Date</div>
+              {{#if isSuperUser}}
+                <div class="col-sm-6">
+                  <span class="label label-default">Survey Date is automatically added and cannot be moved</span>
+                </div>
               {{else}}
-                {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded' dragHandle='.glyphicons-move-square'}}
-                  {{question-row
-                    question=question
-                    otherQuetions=surveyTemplate.questions
-                    deleteQuestion='deleteQuestion'
-                    toggleQuestion=(action "toggleQuestion")
-                    isFullyEditable=isFullyEditable
-                    selectedQuestions=selectedQuestions
-                  }}
-                {{/draggable-object}}
+                <div class="col-sm-4">
+                  <span class="label label-default">Survey Date is automatically added and cannot be moved</span>
+                </div>
               {{/if}}
-            {{/sortable-item}}
-          {{/if}}
-        {{/each}}
-      {{/sortable-group}}
-
-      {{!-- Add new question --}}
-      <ul class="sortable ui-sortable ember-view add-new-question {{if surveyTemplate.lock 'icon-disabled'}}">
-        {{#link-to "survey_templates.record.questions.new"}}
-          <li class="li-question row question-border question-border-add-row item">
-            <span class="glyphicons glyphicons-plus-sign"></span>
-            Add Question
+            </div>
           </li>
-        {{/link-to}}
-      </ul>
+          {{#each sortedQuestions as |question|}}
+            {{#if (not question.isLoading)}}
+              {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
+                {{#if question.supportAncestry}}
+                  {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
+                    {{question-row
+                      question=question
+                      otherQuetions=surveyTemplate.questions
+                      deleteQuestion='deleteQuestion'
+                      toggleQuestion=(action "toggleQuestion")
+                      isFullyEditable=isFullyEditable
+                      ancestrable=true
+                      selectedQuestions=selectedQuestions
+                    }}
+                  {{/draggable-object-target}}
+                {{else}}
+                  {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded' dragHandle='.glyphicons-move-square'}}
+                    {{question-row
+                      question=question
+                      otherQuetions=surveyTemplate.questions
+                      deleteQuestion='deleteQuestion'
+                      toggleQuestion=(action "toggleQuestion")
+                      isFullyEditable=isFullyEditable
+                      selectedQuestions=selectedQuestions
+                    }}
+                  {{/draggable-object}}
+                {{/if}}
+              {{/sortable-item}}
+            {{/if}}
+          {{/each}}
+        {{/sortable-group}}
+
+        {{!-- Add new question --}}
+        <ul class="sortable ui-sortable ember-view add-new-question {{if surveyTemplate.lock 'icon-disabled'}}">
+          {{#link-to "survey_templates.record.questions.new"}}
+            <li class="li-question row question-border question-border-add-row item">
+              <span class="glyphicons glyphicons-plus-sign"></span>
+              Add Question
+            </li>
+          {{/link-to}}
+        </ul>
+      </div>
     {{/if}}
   </div>
 </div>

@@ -12,6 +12,7 @@ export default Component.extend({
   notify: service(),
 
   isLoadingQuestions: true,
+  isPerformingBulk: false,
 
   questionsSorting: ['sortOrder'],
   fullQuestions: sort('surveyTemplate.questionsNotDeleted', 'questionsSorting'),
@@ -53,8 +54,9 @@ export default Component.extend({
   },
 
   deleteQuestionsTask: task(function*() {
-    let selectedQuestions = this.get('selectedQuestions');
+    this.set('isPerformingBulk', true);
 
+    let selectedQuestions = this.get('selectedQuestions');
     let toDeleteQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
     let deleteQuestionTask = this.get('deleteQuestionTask');
     try {
@@ -66,9 +68,11 @@ export default Component.extend({
       this.get('notify').alert('There was an error trying to delete questions');
     }
     this.unSelectAll();
+    this.set('isPerformingBulk', false);
   }),
 
   duplicateQuestionsTask: task(function*() {
+    this.set('isPerformingBulk', true);
     let selectedQuestions = this.get('selectedQuestions');
     let surveyTemplate = this.get('surveyTemplate');
 
@@ -94,6 +98,7 @@ export default Component.extend({
       this.get('notify').alert('There was an error trying to duplicate questions');
     }
     this.unSelectAll();
+    this.set('isPerformingBulk', false);
   }).drop(),
 
   setAncestryTask: task(function*(question, opts) {
