@@ -7,7 +7,15 @@ module Hanuman
     def extension_white_list
       %w(png)
     end
-    
+
+    # overriding method so that we don't delete files on cloudinary when they are deleted on rails app
+    # doing this to handle situation where the we have a duplicate survey because initial sync didn't return back to native app successful create of a survey,
+    # so then the user creates another copy of the survey by syncing. the photos are shared across both surveys and we don't want to delete those photos when
+    # the duplicated on is deleted.-kdh
+    def delete_remote?
+      false
+    end
+
     # Choose what kind of storage to use for this uploader:
     #storage :file
     # storage :fog
