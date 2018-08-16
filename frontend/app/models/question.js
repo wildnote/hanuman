@@ -80,9 +80,11 @@ export default Model.extend(Validator, {
     }
   }),
 
-  ruleMatchType: computed('rule.matchType', function() {
+  ruleMatchType: computed('rule', 'rule.matchType', function() {
     let rule = this.get('rule');
-    return rule.get('matchType') === 'all' ? 'AND' : 'OR';
+    if (rule) {
+      return rule.get('matchType') === 'all' ? 'AND' : 'OR';
+    }
   }),
 
   answerChoicesCount: computed('answerChoices.[]', function() {

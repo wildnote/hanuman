@@ -61,8 +61,8 @@ export default Component.extend({
     let deleteQuestionTask = this.get('deleteQuestionTask');
     try {
       yield all(toDeleteQuestions.map(question => deleteQuestionTask.perform(question)));
-      this.get('notify').success('Questions successfully deleted');
       yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
+      this.get('notify').success('Questions successfully deleted');
     } catch (e) {
       console.log('Error:', e); // eslint-disable-line no-console
       this.get('notify').alert('There was an error trying to delete questions');
@@ -91,6 +91,9 @@ export default Component.extend({
         })
       );
       yield surveyTemplate.reload();
+      surveyTemplate.get('questions').forEach(question => {
+        question.rollbackAttributes();
+      });
       yield surveyTemplate.hasMany('questions').reload();
       this.get('notify').success('Questions successfully duplicated');
     } catch (e) {
