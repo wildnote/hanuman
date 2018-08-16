@@ -9,7 +9,6 @@ import { isBlank } from '@ember/utils';
 import $ from 'jquery';
 
 export default Component.extend({
-  store: service(),
   notify: service(),
 
   isLoadingQuestions: true,
@@ -71,7 +70,6 @@ export default Component.extend({
 
   duplicateQuestionsTask: task(function*() {
     let selectedQuestions = this.get('selectedQuestions');
-    let store = this.get('store');
     let surveyTemplate = this.get('surveyTemplate');
 
     // If there are entire sections / repeaters then dont copy them all
