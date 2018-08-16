@@ -26,18 +26,22 @@ module Hanuman
 
     def destroy
       question = Question.find(params[:id])
-      respond_with question.destroy
+      question.paper_trail.without_versioning do
+        respond_with question.destroy
+      end
     end
 
     def duplicate
       question = Question.find(params[:id])
-      duplicated_question =
-        if params[:section]
-          question.dup_section
-        else
-          question.dup_and_save
-        end
-      respond_with duplicated_question
+      question.paper_trail.without_versioning do
+        duplicated_question =
+          if params[:section]
+            question.dup_section
+          else
+            question.dup_and_save
+          end
+        respond_with duplicated_question
+      end
     end
 
     private

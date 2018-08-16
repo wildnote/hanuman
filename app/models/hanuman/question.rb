@@ -153,7 +153,9 @@ module Hanuman
 
       # remap sort orders leaving space for new questions before saving new question
       section_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
-        q.update_attribute('sort_order', q.sort_order + increment_sort_by)
+        q.paper_trail.without_versioning do
+          q.update_attribute('sort_order', q.sort_order + increment_sort_by)
+        end
       end
 
       # this will duplicate the question, will need to create a new rule,
