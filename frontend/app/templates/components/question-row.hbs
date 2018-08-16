@@ -1,150 +1,143 @@
 {{!-- called from surveyTemplate and dislpays each answer type as readonly --}}
 <div data-test-question-row class="row">
-  {{#if question.isLoading}}
-    <div class="col-sm-4">
-      Loading...
-    </div>
-  {{else}}
-    <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
-    <div class="col-sm-4">
-      {{#if (or question.loading (gt pendingRecursive 0))}}
-        <span class="glyphicons gly-spin glyphicons-refresh"></span>
-      {{else}}
-        {{#if question.hasChild}}
-          <span data-test-collapse onclick={{action 'toggleCollapsed'}} class="glyphicon glyphicon-collapse-{{if question.collapsed 'up' 'down'}}">
-            {{#tooltip-on-element duration=1500 side='right'}}
-              {{if question.collapsed 'Uncollapse' 'Collapse'}}
-            {{/tooltip-on-element}}
-          </span>
-        {{/if}}
-        {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
-          <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
-            {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
-          </span>
-        {{else}}
-          <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
-        {{/if}}
-        {{#if (and (not ancestrable) (not isSelected))}}
-          <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
-            {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
-          </span>
-        {{/if}}
-        {{#if isPreviewable}}
-          <span class="glyphicons glyphicons-sunglasses" onclick={{action (toggle "isPreviewing" this)}}>
-            {{#tooltip-on-element duration=1500 side='right'}}Preview question info{{/tooltip-on-element}}
-          </span>
-        {{/if}}
-      {{/if}}
-      <span data-test="question.questionText">
-        {{question.questionText}}
-      </span>
-    </div>
-    <div class="col-sm-2" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
-    <div class="col-sm-2">{{typeInitial}}</div>
-    {{#if isSuperUser}}
-      <div class="col-sm-2">
-        {{question.sortOrder}} [{{question.railsId}}]
-        {{#if question.ancestry}}
-          [A {{question.ancestry}}]
-        {{/if}}
-        {{#if (and question.rule question.rule.conditions)}}
-          [CL show
-          {{#each question.rule.conditions as |condition|}}
-            if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
-            {{question.ruleMatchType}}
-          {{/each}}
-          ]
-        {{/if}}
-      </div>
+  <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
+  <div class="col-sm-4">
+    {{#if (or question.loading (gt pendingRecursive 0))}}
+      <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{else}}
-      {{#if question.ancestry}}
-        <div class="col-sm-1">
-          #{{question.railsId}}
-        </div>
-        <div class="col-sm-1">
-          <b>#{{question.ancestry}}</b>
-        </div>
+      {{#if question.hasChild}}
+        <span data-test-collapse onclick={{action 'toggleCollapsed'}} class="glyphicon glyphicon-collapse-{{if question.collapsed 'up' 'down'}}">
+          {{#tooltip-on-element duration=1500 side='right'}}
+            {{if question.collapsed 'Uncollapse' 'Collapse'}}
+          {{/tooltip-on-element}}
+        </span>
+      {{/if}}
+      {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
+        <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+          {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
+        </span>
       {{else}}
-        <div class="col-sm-1">
-          {{#if ancestrable}}
-            <b>#{{question.railsId}}</b>
-          {{else}}
-            #{{question.railsId}}
-          {{/if}}
-        </div>
-        <div class="col-sm-1">
-        </div>
+        <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
+      {{/if}}
+      {{#if (and (not ancestrable) (not isSelected))}}
+        <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+          {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
+        </span>
+      {{/if}}
+      {{#if isPreviewable}}
+        <span class="glyphicons glyphicons-sunglasses" onclick={{action (toggle "isPreviewing" this)}}>
+          {{#tooltip-on-element duration=1500 side='right'}}Preview question info{{/tooltip-on-element}}
+        </span>
       {{/if}}
     {{/if}}
+    <span data-test="question.questionText">
+      {{question.questionText}}
+    </span>
+  </div>
+  <div class="col-sm-2" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
+  <div class="col-sm-2">{{typeInitial}}</div>
+  {{#if isSuperUser}}
     <div class="col-sm-2">
-      {{#if question.surveyTemplate.lock}}
-        {{#link-to "survey_templates.record.questions.edit" question.id disabled="true" class="btn btn-sm btn-success"}}
-          <span class="glyphicons glyphicons-pencil"></span>
-          Edit
-        {{/link-to}}
-      {{else}}
-        {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
-          <span class="glyphicons glyphicons-pencil"></span>
-          Edit
-        {{/link-to}}
-        {{#if (not ancestrable)}}
-          <a class="btn btn-delete" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
-            <span class="glyphicons glyphicons-bin"></span>
-          </a>
-        {{else}}
-          <div style="margin-right: 50px;display: inline-block;"></div>
-        {{/if}}
+      {{question.sortOrder}} [{{question.railsId}}]
+      {{#if question.ancestry}}
+        [A {{question.ancestry}}]
       {{/if}}
-      <div class="delete-confirm">
-        {{#if (and (gt totalChildren 0) (not isFullyEditable)) }}
-          <small data-test-delete-confirm-message>Performing this delete will also destroy associated historical data and questions within this section/repeater.<br></small>
-        {{else if (gt totalChildren 0)}}
-          <small data-test-delete-confirm-message>Performing this delete will also destroy associated questions within this section/repeater.<br></small>
-        {{else if (not isFullyEditable)}}
-          <small data-test-delete-confirm-message>Performing this delete will also destroy associated historical data.<br></small>
-        {{/if}}
-        <small>Are you sure you want to delete this question?</small><br>
-        <button style="margin-top: 10px;" class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
-        <button style="margin-top: 10px;" class="btn" onclick={{action 'cancel'}}>No</button>
-      </div>
-      <span class="float-right">
-        {{#if question.surveyTemplate.lock}}
-          <input data-test-question-selector type="checkbox" disabled checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
-        {{else}}
-          <input data-test-question-selector type="checkbox" checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
-        {{/if}}
-      </span>
+      {{#if (and question.rule question.rule.conditions)}}
+        [CL show
+        {{#each question.rule.conditions as |condition|}}
+          if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
+          {{question.ruleMatchType}}
+        {{/each}}
+        ]
+      {{/if}}
     </div>
-    {{#if isPreviewing}}
-      <div class="clear"></div>
-      <div class="preview-section col-sm-12">
-        <div class="col-sm-4">&nbsp;</div>
-        <div class="col-sm-8">
-          {{#if question.isTaxonType}}
-            <span>
-              {{#if question.dataSource.isLoaded}}
-                {{question.dataSource.name}}
-              {{else}}
-                Loading...
-              {{/if}}
-            </span>
-          {{else}}
-            <ul>
-              {{#each question.answerChoices as |answerChoice|}}
-                <li>
-                  {{#if answerChoice.isLoaded}}
-                    {{answerChoice.optionText}}
-                  {{else}}
-                    Loading...
-                  {{/if}}
-                </li>
-              {{/each}}
-            </ul>
-          {{/if}}
-        </div>
+  {{else}}
+    {{#if question.ancestry}}
+      <div class="col-sm-1">
+        #{{question.railsId}}
+      </div>
+      <div class="col-sm-1">
+        <b>#{{question.ancestry}}</b>
+      </div>
+    {{else}}
+      <div class="col-sm-1">
+        {{#if ancestrable}}
+          <b>#{{question.railsId}}</b>
+        {{else}}
+          #{{question.railsId}}
+        {{/if}}
+      </div>
+      <div class="col-sm-1">
       </div>
     {{/if}}
   {{/if}}
+  <div class="col-sm-2">
+    {{#if question.surveyTemplate.lock}}
+      {{#link-to "survey_templates.record.questions.edit" question.id disabled="true" class="btn btn-sm btn-success"}}
+        <span class="glyphicons glyphicons-pencil"></span>
+        Edit
+      {{/link-to}}
+    {{else}}
+      {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
+        <span class="glyphicons glyphicons-pencil"></span>
+        Edit
+      {{/link-to}}
+      {{#if (not ancestrable)}}
+        <a class="btn btn-delete" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
+          <span class="glyphicons glyphicons-bin"></span>
+        </a>
+      {{else}}
+        <div style="margin-right: 50px;display: inline-block;"></div>
+      {{/if}}
+    {{/if}}
+    <div class="delete-confirm">
+      {{#if (and (gt totalChildren 0) (not isFullyEditable)) }}
+        <small data-test-delete-confirm-message>Performing this delete will also destroy associated historical data and questions within this section/repeater.<br></small>
+      {{else if (gt totalChildren 0)}}
+        <small data-test-delete-confirm-message>Performing this delete will also destroy associated questions within this section/repeater.<br></small>
+      {{else if (not isFullyEditable)}}
+        <small data-test-delete-confirm-message>Performing this delete will also destroy associated historical data.<br></small>
+      {{/if}}
+      <small>Are you sure you want to delete this question?</small><br>
+      <button style="margin-top: 10px;" class="btn btn-success" data-test="delete-question-link" onclick={{action 'delete'}}>Yes</button>
+      <button style="margin-top: 10px;" class="btn" onclick={{action 'cancel'}}>No</button>
+    </div>
+    <span class="float-right">
+      {{#if question.surveyTemplate.lock}}
+        <input data-test-question-selector type="checkbox" disabled checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
+      {{else}}
+        <input data-test-question-selector type="checkbox" checked={{isSelected}} onclick={{action 'toggleQuestion'}}>
+      {{/if}}
+    </span>
+  </div>
+  {{#if isPreviewing}}
+    <div class="clear"></div>
+    <div class="preview-section col-sm-12">
+      <div class="col-sm-4">&nbsp;</div>
+      <div class="col-sm-8">
+        {{#if question.isTaxonType}}
+          <span>
+            {{#if question.dataSource.isLoaded}}
+              {{question.dataSource.name}}
+            {{else}}
+              Loading...
+            {{/if}}
+          </span>
+        {{else}}
+          <ul>
+            {{#each question.answerChoices as |answerChoice|}}
+              <li>
+                {{#if answerChoice.isLoaded}}
+                  {{answerChoice.optionText}}
+                {{else}}
+                  Loading...
+                {{/if}}
+              </li>
+            {{/each}}
+          </ul>
+        {{/if}}
+      </div>
+    </div>
+  {{/if}}
 </div>
-
 {{yield}}

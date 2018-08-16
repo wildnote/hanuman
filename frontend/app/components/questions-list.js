@@ -15,6 +15,7 @@ export default Component.extend({
   isLoadingQuestions: true,
 
   questionsSorting: ['sortOrder'],
+  fullQuestions: sort('surveyTemplate.questionsNotDeleted', 'questionsSorting'),
   sortedQuestions: sort('surveyTemplate.filteredQuestions', 'questionsSorting'),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
 
@@ -27,8 +28,6 @@ export default Component.extend({
     let questions = this.get('surveyTemplate.questions');
     let total = questions.get('length');
     let loaded = questions.filterBy('isLoading', false).length;
-    console.log({ total, loaded });
-    console.log('Loaded %:', (loaded * 100.0) / total);
     if (total === loaded) {
       run.next(this, function() {
         this.set('isLoadingQuestions', false);
@@ -61,8 +60,8 @@ export default Component.extend({
     let deleteQuestionTask = this.get('deleteQuestionTask');
     try {
       yield all(toDeleteQuestions.map(question => deleteQuestionTask.perform(question)));
-      yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
       this.get('notify').success('Questions successfully deleted');
+      yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
     } catch (e) {
       console.log('Error:', e); // eslint-disable-line no-console
       this.get('notify').alert('There was an error trying to delete questions');
@@ -74,43 +73,23 @@ export default Component.extend({
     let selectedQuestions = this.get('selectedQuestions');
     let store = this.get('store');
     let surveyTemplate = this.get('surveyTemplate');
-    let duplicatingSection = false;
 
     // If there are entire sections / repeaters then dont copy them all
     let toDuplicateQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
 
     try {
       // make sure the list is clean in terms of sorting values
-      yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
-      let duplicatedResponse = yield all(
+      yield all(
         toDuplicateQuestions.map(question => {
           let params = { section: false };
           if (question.get('isContainer') || question.get('isARepeater')) {
             params.section = true;
-            duplicatingSection = true;
           }
           return question.duplicate(params);
         })
       );
-      if (duplicatingSection) {
-        yield surveyTemplate.reload();
-        yield all(
-          surveyTemplate.get('questions').map(question => {
-            if (question.get('currentState.stateName') !== 'root.loading') {
-              return question.reload();
-            }
-            return question;
-          })
-        );
-      } else {
-        duplicatedResponse.forEach(response => {
-          store.pushPayload(response);
-          // Refactor once `ds-pushpayload-return` is enabled on ember data
-          let duplicated = store.peekRecord('question', response.question.id);
-          surveyTemplate.get('questions').pushObject(duplicated);
-        });
-        yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
-      }
+      yield surveyTemplate.reload();
+      yield surveyTemplate.hasMany('questions').reload();
       this.get('notify').success('Questions successfully duplicated');
     } catch (e) {
       console.log('Error:', e); // eslint-disable-line no-console
@@ -188,7 +167,7 @@ export default Component.extend({
     deleteQuestion(question, elRow) {
       this.get('deleteQuestionTask').perform(question, elRow);
       this.set('selectedQuestions', A());
-      this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
+      this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
     },
 
     sortedDropped(viewableSortedQuestions, _draggedQuestion) {

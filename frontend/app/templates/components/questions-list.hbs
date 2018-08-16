@@ -95,32 +95,34 @@
           </div>
         </li>
         {{#each sortedQuestions as |question|}}
-          {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
-            {{#if question.supportAncestry}}
-              {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
-                {{question-row
-                  question=question
-                  otherQuetions=surveyTemplate.questions
-                  deleteQuestion='deleteQuestion'
-                  toggleQuestion=(action "toggleQuestion")
-                  isFullyEditable=isFullyEditable
-                  ancestrable=true
-                  selectedQuestions=selectedQuestions
-                }}
-              {{/draggable-object-target}}
-            {{else}}
-              {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded' dragHandle='.glyphicons-move-square'}}
-                {{question-row
-                  question=question
-                  otherQuetions=surveyTemplate.questions
-                  deleteQuestion='deleteQuestion'
-                  toggleQuestion=(action "toggleQuestion")
-                  isFullyEditable=isFullyEditable
-                  selectedQuestions=selectedQuestions
-                }}
-              {{/draggable-object}}
-            {{/if}}
-          {{/sortable-item}}
+          {{#if (not question.isLoading)}}
+            {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
+              {{#if question.supportAncestry}}
+                {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
+                  {{question-row
+                    question=question
+                    otherQuetions=surveyTemplate.questions
+                    deleteQuestion='deleteQuestion'
+                    toggleQuestion=(action "toggleQuestion")
+                    isFullyEditable=isFullyEditable
+                    ancestrable=true
+                    selectedQuestions=selectedQuestions
+                  }}
+                {{/draggable-object-target}}
+              {{else}}
+                {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded' dragHandle='.glyphicons-move-square'}}
+                  {{question-row
+                    question=question
+                    otherQuetions=surveyTemplate.questions
+                    deleteQuestion='deleteQuestion'
+                    toggleQuestion=(action "toggleQuestion")
+                    isFullyEditable=isFullyEditable
+                    selectedQuestions=selectedQuestions
+                  }}
+                {{/draggable-object}}
+              {{/if}}
+            {{/sortable-item}}
+          {{/if}}
         {{/each}}
       {{/sortable-group}}
 
