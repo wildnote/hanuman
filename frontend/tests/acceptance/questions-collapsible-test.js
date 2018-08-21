@@ -11,8 +11,9 @@ moduleForAcceptance('Acceptance | questions collapsible', {
 });
 
 test('collapsing and uncollapsing', async function(assert) {
-  assert.expect(5);
+  assert.expect(8);
   server.logging = true;
+  server.create('question', { question_text: 'top sibiling', surveyTemplate, answer_type_id: 15 }); // Answer Type id 15 = `text`
   let topAncestry = server.create('question', { question_text: 'top', surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
   server.createList('question', 2, { surveyTemplate, parent_id: topAncestry.id, ancestry: topAncestry.id });
   let firstAncestry = server.create('question', {
@@ -41,13 +42,22 @@ test('collapsing and uncollapsing', async function(assert) {
   });
 
   await visit(`/survey_templates/${surveyTemplate.id}`);
-  assert.equal(find('[data-question-id]').length, 9, 'all questions displayed');
-  await click(`[data-question-id="${secondAncestry.id}"] [data-test-collapse]`);
-  assert.equal(find('[data-question-id]').length, 7, '2 questions hidden');
+  // Showing
+  assert.equal(find('[data-question-id]').length, 2, 'all top questions displayed');
+  await click(`[data-question-id="${topAncestry.id}"] [data-test-collapse]`);
+  assert.equal(find('[data-question-id]').length, 5, 'only 4 questions showen');
   await click(`[data-question-id="${firstAncestry.id}"] [data-test-collapse]`);
-  assert.equal(find('[data-question-id]').length, 4, '3 questions hidden');
+  assert.equal(find('[data-question-id]').length, 8, '8 questions showen');
+  await click(`[data-question-id="${secondAncestry.id}"] [data-test-collapse]`);
+  assert.equal(find('[data-question-id]').length, 10, '10 questions showen');
+
+  // Hidding
+  await click(`[data-question-id="${secondAncestry.id}"] [data-test-collapse]`);
+  assert.equal(find('[data-question-id]').length, 8, '2 questions hidden');
+  await click(`[data-question-id="${firstAncestry.id}"] [data-test-collapse]`);
+  assert.equal(find('[data-question-id]').length, 5, '3 questions hidden');
   await click(`[data-question-id="${topAncestry.id}"] [data-test-collapse]`);
-  assert.equal(find('[data-question-id]').length, 1, '2 questions hidden');
+  assert.equal(find('[data-question-id]').length, 2, '2 questions hidden');
   await click(`[data-question-id="${topAncestry.id}"] [data-test-collapse]`);
-  assert.equal(find('[data-question-id]').length, 4, 'only 3 questions showen');
+  assert.equal(find('[data-question-id]').length, 5, 'only 3 questions showen');
 });
