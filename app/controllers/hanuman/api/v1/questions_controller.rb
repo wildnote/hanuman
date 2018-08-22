@@ -2,6 +2,10 @@ module Hanuman
   class Api::V1::QuestionsController < Api::V1::BaseController
     respond_to :json
 
+    def paper_trail_enabled_for_controller
+      request.params[:action] != 'duplicate'
+    end
+
     def index
       if params[:ids]
         respond_with Question.where(id: params[:ids])
@@ -33,15 +37,13 @@ module Hanuman
 
     def duplicate
       question = Question.find(params[:id])
-      question.paper_trail.without_versioning do
-        duplicated_question =
-          if params[:section]
-            question.dup_section
-          else
-            question.dup_and_save
-          end
-        respond_with duplicated_question
-      end
+      duplicated_question =
+        if params[:section]
+          question.dup_section
+        else
+          question.dup_and_save
+        end
+      respond_with duplicated_question
     end
 
     private
