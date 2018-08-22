@@ -140,7 +140,7 @@ test('editing a question', async function(assert) {
 test('deleting a question', async function(assert) {
   assert.expect(3);
   surveyTemplate = server.create('survey-template', { fully_editable: false });
-  let questions = server.createList('question', 2, { surveyTemplate });
+  let questions = server.createList('question', 2, { surveyTemplate, answer_type_id: 15 }); // Answer Type id 15 = `text`
   question = questions[0];
 
   await visit(`/survey_templates/${surveyTemplate.id}`);

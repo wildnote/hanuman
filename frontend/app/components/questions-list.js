@@ -91,9 +91,6 @@ export default Component.extend({
         })
       );
       yield surveyTemplate.reload();
-      surveyTemplate.get('questions').forEach(question => {
-        question.rollbackAttributes();
-      });
       yield surveyTemplate.hasMany('questions').reload();
       this.get('notify').success('Questions successfully duplicated');
     } catch (e) {
