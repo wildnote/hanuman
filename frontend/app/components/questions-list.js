@@ -78,7 +78,6 @@ export default Component.extend({
 
     // If there are entire sections / repeaters then dont copy them all
     let toDuplicateQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
-
     try {
       // make sure the list is clean in terms of sorting values
       yield all(
@@ -136,10 +135,12 @@ export default Component.extend({
           return true;
         }
       }
+      // Single question selected
       let ancestrires = toCheckQuestion.get('ancestry').split('/');
-      return selectedQuestions.some(function(question) {
-        ancestrires.includes(question.get('id'));
+      let some = selectedQuestions.some(function(question) {
+        return ancestrires.includes(`${question.get('id')}`);
       });
+      return !some;
     });
     return isBlank(filtered) ? selectedQuestions : filtered;
   },
