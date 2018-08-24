@@ -298,7 +298,7 @@
 
         <hr />
 
-        {{#if (and isSuperUser question.defaultAnswerEnabled)}}
+        {{#if question.defaultAnswerEnabled}}
           <div class="form-group">
             <div class="col-sm-12">
               {{#form-field for='defaultAnswer' label='Default Answer'}}
