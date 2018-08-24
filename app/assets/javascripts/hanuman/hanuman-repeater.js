@@ -209,9 +209,31 @@ $(document).ready(function(){
       directObservationChildren.each(function (_, observation) {
         $(observation).find(".parent-repeater-id").val(currentRepeaterId);
       });
+
+      
+      var nestedSections = $(repeater).find("> .panel-collapse > .panel-body > .panel:not(.form-container-repeater)");
+
+      console.log(nestedSections);
+
+      nestedSections.each(function (_, section) {
+        setSectionParentRepeaterId(currentRepeaterId, section);
+      });
     });
   };
 
+  function setSectionParentRepeaterId(repeaterId, section) {
+    var directObservationChildren = $(section).find("> .panel-collapse > .panel-body > .form-container-entry-item");
+    directObservationChildren.each(function (_, observation) {
+      $(observation).find(".parent-repeater-id").val(repeaterId);
+    });
+
+    var nestedSections = $(section).find("> .panel-collapse > .panel-body > .panel:not(.form-container-repeater)");
+
+
+    nestedSections.each(function (_, childSection) {
+      setSectionParentRepeaterId(repeaterId, childSection);
+    });
+  };
 
   function clearFileInputsValuesInEdit(files){
     while (files.length >= 1) {
