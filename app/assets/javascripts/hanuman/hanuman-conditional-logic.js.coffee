@@ -23,6 +23,7 @@ class @ConditionalLogic
           $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
 
         if $conditionContainer.length == 0 || $conditionContainer.length > 1
+          console.log "fail"
           problemWithCL = true
 
         # the condition element, which we need to check value for conditional logic
@@ -77,6 +78,7 @@ class @ConditionalLogic
   #bind conditions to question
   bindConditions: ($triggerElement) ->
     $triggerElement.on "change", ->
+      console.log "trigger"
       # pop out of condition into rules to handle all conditions defined in the rule
       # TODO it seems this is looping through ALL data-rule in the DOM instead of the data-rule associated with the element that triggered the onchange event-kdh
       $repeater = $($triggerElement).closest(".form-container-repeater")
@@ -331,9 +333,15 @@ class @ConditionalLogic
       else
         return
     if $conditionElement.is('select[multiple]')
+      console.log($conditionElement)
       if $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").size() > 0
         option_strings = []
         $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").each ->
+          option_strings.push this.innerHTML
+        return option_strings.join(", ")
+      else if $conditionElement.siblings(".selectize-control").find(".selectize-input div.item").size() > 0
+        option_strings = []
+        $conditionElement.siblings(".selectize-control").find(".selectize-input div.item").each ->
           option_strings.push this.innerHTML
         return option_strings.join(", ")
       else
