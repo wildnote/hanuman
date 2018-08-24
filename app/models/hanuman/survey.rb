@@ -22,7 +22,7 @@ module Hanuman
     validates :survey_extension, presence: true
 
     before_save :set_observations_unsorted, unless: :skip_sort?
-    after_save :schedule_observation_sorting, if: :should_schedule_sort?
+    after_commit :schedule_observation_sorting, if: :should_schedule_sort?
 
     after_save :set_entries
 
