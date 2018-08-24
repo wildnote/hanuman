@@ -38,6 +38,8 @@ $(document).ready(function(){
     // collect all container items inside cloned container for iteration later to update all attributes
     var containerItems = $($clonedContainer).find('.form-container-entry-item');
 
+    destroyDuplicateChildRepeaters($clonedContainer);
+
     // loop through collected container items and update attributes with timestamps
     // CONTAINER ITEMS ARE RELATIVE TO CLONED CONTAINER, THINK OF CLONED CONTAINER AS A SECONDARY DOM OF ITS OWN.
     updateDom(containerItems, $clonedContainer);
@@ -128,6 +130,39 @@ $(document).ready(function(){
      updateRepeaterControls()
   });
 
+  function destroyDuplicateChildRepeaters(container) {
+    var childRepeaters = $(container).find("> .panel-collapse > .panel-body > .form-container-repeater");
+
+    if (childRepeaters.length !== 0) {
+      var questionIds = [];
+
+      childRepeaters.each(function (_, repeater) {
+        var questionId = $(repeater).data('question-id');
+        if (questionIds.indexOf(questionId) === -1) {
+          questionIds.push(questionId);
+        }
+      });
+      
+      questionIds.forEach(function (questionId) {
+        var duplicateRepeaters = $(container).find("> .panel-collapse > .panel-body > .form-container-repeater[data-question-id=" + questionId + "]");
+  
+        duplicateRepeaters.each(function(index, duplicate) {
+          if (index === 0) {
+            return;
+          } else {
+            $(duplicate).remove();
+          }
+        });
+      });
+  
+      var newChildRepeaters = $(container).find("> .panel-collapse > .panel-body > .form-container-repeater");
+
+      newChildRepeaters.each(function (_, repeater) {
+        destroyDuplicateChildRepeaters(repeater);
+      });
+    }
+  }
+
   function updateRepeaterControls() {
     var topLevelRepeaterTypes = [];
     $(".form-container-repeater").each(function (_, repeater) {
@@ -212,8 +247,6 @@ $(document).ready(function(){
 
       
       var nestedSections = $(repeater).find("> .panel-collapse > .panel-body > .panel:not(.form-container-repeater)");
-
-      console.log(nestedSections);
 
       nestedSections.each(function (_, section) {
         setSectionParentRepeaterId(currentRepeaterId, section);
