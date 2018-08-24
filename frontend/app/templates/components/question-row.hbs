@@ -21,42 +21,42 @@
       {{question.questionText}}
     </span>
   </div>
-  <div class="col-sm-2" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
-  <div class="col-sm-2">{{typeInitial}}</div>
-  {{#if isSuperUser}}
+  <div class="col-sm-1" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
+  <div class="col-sm-1">{{typeInitial}}</div>
+  {{#if question.ancestry}}
+    <div class="col-sm-1">
+      #{{question.railsId}}
+    </div>
+    <div class="col-sm-1">
+      <b>#{{question.ancestry}}</b>
+    </div>
     <div class="col-sm-2">
-      {{question.sortOrder}} [{{question.railsId}}]
-      {{#if question.ancestry}}
-        [A {{question.ancestry}}]
-      {{/if}}
       {{#if (and question.rule question.rule.conditions)}}
-        [CL show
+        show
         {{#each question.rule.conditions as |condition|}}
           if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
           {{question.ruleMatchType}}
         {{/each}}
-        ]
       {{/if}}
     </div>
   {{else}}
-    {{#if question.ancestry}}
-      <div class="col-sm-1">
+    <div class="col-sm-1">
+      {{#if ancestrable}}
+        <b>#{{question.railsId}}</b>
+      {{else}}
         #{{question.railsId}}
-      </div>
-      <div class="col-sm-1">
-        <b>#{{question.ancestry}}</b>
-      </div>
-    {{else}}
-      <div class="col-sm-1">
-        {{#if ancestrable}}
-          <b>#{{question.railsId}}</b>
-        {{else}}
-          #{{question.railsId}}
-        {{/if}}
-      </div>
-      <div class="col-sm-1">
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
+    <div class="col-sm-1"></div>
+    <div class="col-sm-2">
+      {{#if (and question.rule question.rule.conditions)}}
+        show
+        {{#each question.rule.conditions as |condition|}}
+          if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
+          {{question.ruleMatchType}}
+        {{/each}}
+      {{/if}}
+    </div>
   {{/if}}
   <div class="col-sm-2">
     {{#if question.surveyTemplate.lock}}
@@ -69,7 +69,7 @@
         <span class="glyphicons glyphicons-pencil"></span>
         Edit
       {{/link-to}}
-      {{#if (not ancestrable)}}      
+      {{#if (not ancestrable)}}
         <a class="btn btn-delete" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
           <span class="glyphicons glyphicons-bin"></span>
         </a>
