@@ -9,9 +9,9 @@
         </div>
       </div>
     {{else}}
-      {{#if surveyTemplate.lock}} 
+      {{#if surveyTemplate.lock}}
         <div class="alert alert-info">
-          <p>          
+          <p>
             <span class="glyphicons glyphicons-lock" style="margin-right: 10px"></span>
             This survey has been locked because it is connected with a specific custom export.
         </p>
@@ -57,15 +57,12 @@
 
       <div class="row">
         <div class="col-sm-4"><strong>Label</strong></div>
-        <div class="col-sm-2"><strong>Question Type</strong></div>
-        <div class="col-sm-2"><strong>Info</strong></div>
-        {{#if isSuperUser}}
-          <div class="col-sm-2"><strong>Debug</strong></div>
-        {{else}}
-          <div class="col-sm-1"><strong>ID#</strong></div>
-          <div class="col-sm-1"><strong>Section ID#</strong></div>
-        {{/if}}
-        <div class="col-sm-4"></div>
+        <div class="col-sm-1"><strong>Question Type</strong></div>
+        <div class="col-sm-1"><strong>Info</strong></div>
+        <div class="col-sm-1"><strong>ID#</strong></div>
+        <div class="col-sm-1"><strong>Parent ID#</strong></div>
+        <div class="col-sm-2"><strong>Hide Show Logic</strong></div>
+        <div class="col-sm-2"></div>
       </div>
 
       <div class="row">
