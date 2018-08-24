@@ -346,8 +346,8 @@
                       <tr class="no-hover">
                         <td colspan="6">
                           <select data-test="rule-match-type-select" class="form-control" onchange={{action "setRuleMatchType" value="target.value"}}>
-                            <option value="any" selected={{eq question.rule.matchType 'any'}}>match on any question condition (or)</option>
-                            <option value="all" selected={{eq question.rule.matchType 'all'}}>match on all question conditions (and)</option>
+                            <option value="any" selected={{eq question.rule.matchType 'any'}}>match on any question condition (OR)</option>
+                            <option value="all" selected={{eq question.rule.matchType 'all'}}>match on all question conditions (AND)</option>
                           </select>
                         </td>
                       </tr>
