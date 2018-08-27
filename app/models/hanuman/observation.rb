@@ -47,7 +47,14 @@ module Hanuman
     delegate :survey_template, to: :question
 
     amoeba do
-      enable
+      exclude_associations :observation_photos
+      exclude_associations :photos
+      exclude_associations :observation_videos
+      exclude_associations :videos
+      exclude_associations :observation_documents
+      exclude_associations :documents
+      exclude_associations :observation_signature
+      exclude_associations :signature
     end
 
     def strip_and_squish_answer
