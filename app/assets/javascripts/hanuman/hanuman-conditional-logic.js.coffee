@@ -23,6 +23,7 @@ class @ConditionalLogic
           $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
 
         if $conditionContainer.length == 0 || $conditionContainer.length > 1
+          console.log "fail"
           problemWithCL = true
 
         # the condition element, which we need to check value for conditional logic
@@ -77,6 +78,7 @@ class @ConditionalLogic
   #bind conditions to question
   bindConditions: ($triggerElement) ->
     $triggerElement.on "change", ->
+      console.log "trigger"
       # pop out of condition into rules to handle all conditions defined in the rule
       # TODO it seems this is looping through ALL data-rule in the DOM instead of the data-rule associated with the element that triggered the onchange event-kdh
       $repeater = $($triggerElement).closest(".form-container-repeater")
@@ -201,26 +203,51 @@ class @ConditionalLogic
     # clear out text fields, selects and uncheck radio and checkboxes
     #TODO set these to default values once we implement default values - kdh
     # container.find("input[type!=hidden]").val("")
-    textFields = container.find(":text").val("")
-    textAreas = container.find("textarea").val("")
+    textFields = container.find(":text")
+    textFields.each -> 
+      if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null"
+        $(this).val($(this).data("default-answer"))
+      else 
+        $(this).val("")
+
+    textAreas = container.find("textarea")
+    textAreas.each -> 
+      if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null"
+        $(this).val($(this).data("default-answer"))
+      else 
+        $(this).val("")
+
     # un-select dropdown
     selects = container.find("select")
     selects.each ->
-      $(this).val("")
+      if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null"
+        $(this).val($(this).data("default-answer"))
+      else 
+        $(this).val("")
+
       $(this).trigger("chosen:updated") if $(this).hasClass('chosen')
+
+    # uncheck all checkboxes
+    checkboxes = container.find(":checkbox")
+    checkboxes.each ->
+      if $(this).attr("data-default-answer") && $(this).data("default-answer") == "true"
+        $(this).prop('checked', true)
+      else 
+        $(this).prop('checked', false)
+
+    # un-select radio buttons
+    radiobuttons = container.find(":radio")
+    radiobuttons.each ->
+      if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null" && $(this).data("label-value") == $(this).data("default-answer")
+        $(this).prop('checked', true)
+      else 
+        $(this).prop('checked', false)
+
     multiselects = container.find("select[multiple]")
     multiselects.each ->
       id = $(this).attr('id')
       $('#' + id + ' option:selected').removeAttr("selected")
       $(this).trigger("chosen:updated") if $(this).hasClass('chosen-multiselect')
-    # uncheck all checkboxes
-    checkboxes = container.find(":checkbox")
-    checkboxes.each ->
-      $(this).prop('checked', false)
-    # un-select radio buttons
-    radiobuttons = container.find(":radio")
-    radiobuttons.each ->
-      $(this).prop('checked', false)
 
     # kdh commenting out triggering change event because it is having an exponential effect and causing performance problems on conditional logic #157849774
     # trigger onchange event which is needed for embedded conditional logic
@@ -306,9 +333,15 @@ class @ConditionalLogic
       else
         return
     if $conditionElement.is('select[multiple]')
+      console.log($conditionElement)
       if $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").size() > 0
         option_strings = []
         $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").each ->
+          option_strings.push this.innerHTML
+        return option_strings.join(", ")
+      else if $conditionElement.siblings(".selectize-control").find(".selectize-input div.item").size() > 0
+        option_strings = []
+        $conditionElement.siblings(".selectize-control").find(".selectize-input div.item").each ->
           option_strings.push this.innerHTML
         return option_strings.join(", ")
       else
@@ -321,7 +354,10 @@ class @ConditionalLogic
       return $conditionElement.text().replace(/\↵/g,"").trim()
     # survey report preview
     if $conditionElement.is('td')
-      return $conditionElement.text().replace(/\↵/g, "").trim()
+      if $conditionElement.hasClass('checklist')
+        return $conditionElement.find('span.hidden-answer').text().replace(/\↵/g, '').trim()
+      else
+        return $conditionElement.text().replace(/\↵/g, '').trim()
     $conditionElement.val()
 
 $ ->
