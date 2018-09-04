@@ -172,8 +172,39 @@ class @ConditionalLogic
 
 
   setLookupValue: (value, $ruleElement) ->
-    if $ruleElement.data('element-type') == 'radio'
-      $ruleElement.find('input[type="radio"][value="' + value + '"]').prop("checked", true)
+    answerType = $ruleElement.data('element-type') 
+    
+    switch answerType
+      when 'radio'
+        $ruleElement.find('input[type="radio"][value="' + value + '"]').prop("checked", true)
+      
+      when 'checkbox'
+        $ruleElement.find('input[type="checkbox"]').prop("checked", true)
+      
+      when 'checkboxes'
+        selectedOptions = value.split(",")
+        $ruleElement.find('input[type="checkbox"]').each -> 
+          if selectedOptions.indexOf($(this).attr('value')) != -1
+            $(this).prop("checked", true)
+
+      when 'chosenmultiselect'
+        selectedOptions = value.split(",")
+        $ruleElement.find('input[type="select"]').val(selectedOptions).trigger('chosen:updated');
+      
+      when 'chosenselect'
+        $ruleElement.find('input[type="select"]').val(value).trigger('chosen:updated');
+
+      when 'counter'
+        $ruleElement.find('input[type="number"]').val(value)
+
+      when 'date', 'number', 'text', 'time'
+        $ruleElement.find('input[type="text"]').val(value)
+      
+      when 'textarea'
+        $ruleElement.find('textarea').val(value)
+      
+
+    
 
   #setHideQuestions variable
   setHideQuestions: (condition, $triggerElement) ->
