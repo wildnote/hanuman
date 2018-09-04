@@ -57,6 +57,18 @@ module Hanuman
       exclude_associations :signature
     end
 
+    def hide_tree!
+      child_observations = Hanuman::Observation.where(question_id: obs.question.child_ids, parent_repeater_id: self.parent_repeater_id, survey_id: self.survey_id)
+
+      child_observations.each do |child|
+        if child.question.has_children?
+          child.hide_tree!
+        end
+
+        child.update_column(:hidden, true)
+      end
+    end
+
     def strip_and_squish_answer
       answer.strip.squish unless answer.blank?
     end

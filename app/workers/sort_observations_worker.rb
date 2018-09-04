@@ -1,4 +1,4 @@
-class ProcessObservationsWorker
+class SortObservationsWorker
   include Sidekiq::Worker
 
   def perform(survey_id)
