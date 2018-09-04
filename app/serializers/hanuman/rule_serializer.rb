@@ -1,6 +1,6 @@
 module Hanuman
-  class VisbilityRuleSerializer < ActiveModel::Serializer
-    attributes :id, :match_type
-    has_many :conditions
+  class RuleSerializer < ActiveModel::Serializer
+    attributes :id, :match_type, :value, :type
+    has_many :conditions, embed: :ids
   end
 end

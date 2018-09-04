@@ -15,7 +15,7 @@ module Hanuman
       it { is_expected.to belong_to(:survey_template) }
       it { is_expected.to have_many(:answer_choices).dependent(:destroy) }
       it { is_expected.to have_many(:observations).dependent(:destroy) }
-      it { is_expected.to have_one(:rule).dependent(:destroy) }
+      it { is_expected.to have_many(:rules).dependent(:destroy) }
       it { is_expected.to have_many(:conditions).dependent(:destroy) }
     end
 

@@ -7,8 +7,8 @@ module Hanuman
                :layout_column, :layout_column_position, :default_answer, :child_ids,
                :export_continuation_characters
                
-    has_many :answer_choices
-    has_one :rule
+    has_many :answer_choices, embed: :ids
+    has_many :rules
 
     # this is a hack to be able to temporarily display question_id in admin to help with development
     def rails_id
