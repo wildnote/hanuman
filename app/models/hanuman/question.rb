@@ -11,8 +11,7 @@ module Hanuman
     has_many :answer_choices, -> { order :sort_order, :option_text }, dependent: :destroy, inverse_of: :question
     # if a user deletes a question from survey admin we need to delete related observations, giving warning in survey admin
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
-    has_one :visibility_rule, dependent: :destroy
-    has_many :lookup_rules, dependent: :destroy
+    has_many :rules, dependent: :destroy
     has_many :conditions, dependent: :destroy # The conditions this question is dependent of
     has_many :rule_conditions, through: :rule, source: :conditions
 
@@ -115,8 +114,8 @@ module Hanuman
       #           }
       #         ]
       #       }
-      unless self.visibility_rule.blank?
-        Hanuman::RuleHashSerializer.new(self.visibility_rule).to_json
+      unless self.rules.blank?
+        ActiveModel::ArraySerializer.new(self.rules, each_serializer: Hanuman::RuleHashSerializer).to_json
       end
     end
 

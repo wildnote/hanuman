@@ -78,11 +78,15 @@ module Hanuman
     end
 
     def schedule_observation_sorting
-      SortObservationsWorker.perform_async(self.id)
+      ProcessObservationsWorker.perform_async(self.id)
     end
 
     def sorted_observations
       observations_sorted ? observations.reorder('hanuman_observations.sort_order ASC') : sort_observations!
+    end
+
+    def processed_observations
+      observation_visibility_set ? sorted_observations.where(hidden: false) : set_observation_visibility!
     end
 
     def get_sorted_observations
@@ -150,6 +154,10 @@ module Hanuman
       self.update_column(:observations_sorted, true)
 
       self.observations.reorder('hanuman_observations.sort_order ASC')
+    end
+
+    def set_observation_visibility!
+      self.update_column(:observation_visibility_set, true)
     end
   end
 end
