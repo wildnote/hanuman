@@ -76,3 +76,7 @@
   box-shadow: none;
   opacity: 0.65;
 }
+
+.ember-tooltip {
+  z-index: 9999999;
+}

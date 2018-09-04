@@ -43,12 +43,17 @@
               {{/liquid-if}}
             </button>
             <button onclick={{perform duplicateQuestionsTask}} class="{{if duplicateQuestionsTask.isRunning "disabled"}}">
+              {{#tooltip-on-element duration=4500 side='bottom'}}
+                Conditional logic will be also cloned. Check the cloned questions in case you need to re-map.
+              {{/tooltip-on-element}}
               {{#liquid-if duplicateQuestionsTask.isRunning}}
                 <span class="glyphicons glyphicons-repeat gly-spin"></span>
                 <span style="margin-left: 4px;">Cloning...</span>
               {{else}}
                 <span class="glyphicons glyphicons-duplicate"></span>
-                <span style="margin-left: 4px;">Clone</span>
+                <span style="margin-left: 4px;">
+                  Clone
+                </span>
               {{/liquid-if}}
             </button>
           </div>
