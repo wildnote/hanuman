@@ -184,6 +184,13 @@ module Hanuman
         end
       end
 
+      # Associate the conditions from the rule
+      self.rule_conditions.each do |condition|
+        new_condition = condition.amoeba_dup
+        new_condition.rule = new_section_q.rule
+        new_condition.save
+      end
+
       new_section_q
     end
 
