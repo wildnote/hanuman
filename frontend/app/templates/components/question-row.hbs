@@ -22,7 +22,7 @@
     </span>
   </div>
   <div class="col-sm-1" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
-  <div class="col-sm-1">{{typeInitial}}</div>
+  <div class="col-sm-1">{{question.sortOrder}}</div>
   {{#if question.ancestry}}
     <div class="col-sm-1">
       #{{question.railsId}}
@@ -31,10 +31,12 @@
       <b>#{{question.ancestry}}</b>
     </div>
     <div class="col-sm-2">
+      {{typeInitial}}
       {{#if (and question.rule question.rule.conditions)}}
+        <br/>
         show
         {{#each question.rule.conditions as |condition|}}
-          if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
+          if #{{condition.questionId}} {{condition.operator}} {{condition.answer}}
           {{question.ruleMatchType}}
         {{/each}}
       {{/if}}
@@ -49,10 +51,12 @@
     </div>
     <div class="col-sm-1"></div>
     <div class="col-sm-2">
+      {{typeInitial}}
       {{#if (and question.rule question.rule.conditions)}}
+        <br/>
         show
         {{#each question.rule.conditions as |condition|}}
-          if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
+          if #{{condition.questionId}} {{condition.operator}} {{condition.answer}}
           {{question.ruleMatchType}}
         {{/each}}
       {{/if}}

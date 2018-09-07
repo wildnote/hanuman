@@ -25,6 +25,10 @@ module Hanuman
       })
     end
 
+    def name_plus_version
+      template_version.blank? ? name : name + " " + template_version
+    end
+
     def num_reports_submitted
       surveys.count
     end

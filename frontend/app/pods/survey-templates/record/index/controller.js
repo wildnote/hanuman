@@ -10,7 +10,7 @@ export default Controller.extend({
       let $btnSurveySpan = $(`#${type}-survey-link span.glyphicons`);
       let loadingConfig = {
         duplicate: {
-          text: 'Duplicate Survey',
+          text: 'Duplicate Survey Form',
           loadingText: 'Duplicating...',
           icon: 'glyphicons-duplicate'
         },

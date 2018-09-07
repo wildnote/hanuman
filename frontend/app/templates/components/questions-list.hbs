@@ -58,7 +58,7 @@
       <div class="row">
         <div class="col-sm-4"><strong>Label</strong></div>
         <div class="col-sm-1"><strong>Question Type</strong></div>
-        <div class="col-sm-1"><strong>Info</strong></div>
+        <div class="col-sm-1"><strong>Sort Order</strong></div>
         <div class="col-sm-1"><strong>ID#</strong></div>
         <div class="col-sm-1"><strong>Parent ID#</strong></div>
         <div class="col-sm-2"><strong>Hide Show Logic</strong></div>
@@ -81,15 +81,9 @@
               Survey Date
             </div>
             <div class="col-sm-2">Date</div>
-            {{#if isSuperUser}}
-              <div class="col-sm-6">
-                <span class="label label-default">Survey Date is automatically added and cannot be moved</span>
-              </div>
-            {{else}}
-              <div class="col-sm-4">
-                <span class="label label-default">Survey Date is automatically added and cannot be moved</span>
-              </div>
-            {{/if}}
+            <div class="col-sm-6">
+              <span class="label label-default">Survey Date is automatically added and cannot be moved</span>
+            </div>
           </div>
         </li>
         {{#each sortedQuestions as |question|}}
