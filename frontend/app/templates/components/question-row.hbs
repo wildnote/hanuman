@@ -43,15 +43,6 @@
     <div class="col-sm-1">
       <b>#{{question.ancestry}}</b>
     </div>
-    <div class="col-sm-2">
-      {{#if (and question.rule question.rule.conditions)}}
-        show
-        {{#each question.rule.conditions as |condition|}}
-          if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
-          {{question.ruleMatchType}}
-        {{/each}}
-      {{/if}}
-    </div>
   {{else}}
     <div class="col-sm-1">
       {{#if ancestrable}}
@@ -61,16 +52,21 @@
       {{/if}}
     </div>
     <div class="col-sm-1"></div>
-    <div class="col-sm-2">
-      {{#if (and question.rule question.rule.conditions)}}
-        show
-        {{#each question.rule.conditions as |condition|}}
-          if {{condition.questionId}} {{condition.operator}} {{condition.answer}}
-          {{question.ruleMatchType}}
-        {{/each}}
-      {{/if}}
-    </div>
   {{/if}}
+  <div class="col-sm-2">
+    {{#if (and question.rule question.rule.conditions)}}
+      show
+      {{#each question.rule.conditions as |condition|}}
+        if <strong
+              class="conditional-highlight"
+              onmouseover={{action 'highlightConditional' condition.questionId}}
+              onmouseleave={{action 'unHighlightConditional' condition.questionId}}
+            >
+              {{condition.questionId}}
+            </strong> {{condition.operator}} {{condition.answer}} {{question.ruleMatchType}}
+      {{/each}}
+    {{/if}}
+  </div>
   <div class="col-sm-2">
     {{#if question.surveyTemplate.lock}}
       {{#link-to "survey_templates.record.questions.edit" question.id disabled="true" class="btn btn-sm btn-success"}}

@@ -11,7 +11,8 @@ export default SortableItem.extend({
     'ancestryClassName',
     'modelIdClassName',
     'wasJustCreated:zoomInDown',
-    'ancestrySelected:disabled'
+    'ancestrySelected:disabled',
+    'model.highlighted:highlighted'
   ],
   ancestryClassName: '',
   modelIdClassName: '',

@@ -1,11 +1,13 @@
-import Component from '@ember/component';
-import { or } from '@ember/object/computed';
-import { htmlSafe } from '@ember/string';
-import { computed } from '@ember/object';
-import { run } from '@ember/runloop';
 import $ from 'jquery';
+import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { htmlSafe } from '@ember/string';
+import { or } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
+import { run } from '@ember/runloop';
 
 export default Component.extend({
+  store: service(),
   attributeBindings: ['question.id:data-question-id'],
 
   isPreviewing: false,
@@ -52,6 +54,16 @@ export default Component.extend({
   },
 
   actions: {
+    highlightConditional(questionId) {
+      let question = this.get('store').peekRecord('question', questionId);
+      question.set('highlighted', true);
+    },
+
+    unHighlightConditional(questionId) {
+      let question = this.get('store').peekRecord('question', questionId);
+      question.set('highlighted', false);
+    },
+
     confirm() {
       let el = this.get('element');
       let $confirm = $('.delete-confirm', el);

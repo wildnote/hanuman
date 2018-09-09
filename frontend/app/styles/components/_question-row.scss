@@ -1,4 +1,8 @@
 .li-question {
+  &.highlighted {
+    background-color: #fff2ac;
+    background-image: linear-gradient(to right, #ffe359 0%, #fff2ac 100%);
+  }
   &.disabled {
     pointer-events: none;
     opacity: 0.3;
@@ -28,7 +32,6 @@
       background-color: #b15959 !important;
     }
   }
-
   .bottom-tags {
     .glyphicons-bookmark {
       color: #6795c7;
@@ -96,5 +99,11 @@
   }
   .preview-section {
     padding: 10px 20px 10px 20px;
+  }
+  .conditional-highlight {
+    cursor: pointer;
+    &:hover {
+      background-color: yellow;
+    }
   }
 }

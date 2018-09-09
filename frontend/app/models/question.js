@@ -16,6 +16,7 @@ export default Model.extend(Validator, {
   ancestrySelected: false,
   ancestryCollapsed: false,
   collapsed: false,
+  highlighted: false,
 
   // Attributes
   questionText: attr('string'),
