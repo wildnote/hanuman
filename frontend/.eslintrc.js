@@ -20,6 +20,9 @@ module.exports = {
     md5: true
   },
   rules: {
+    'ember/avoid-leaking-state-in-ember-objects': 'off',
+    'ember/no-on-calls-in-components': 'off',
+    'ember/closure-actions': 'off',
     'generator-star-spacing': ['error', 'neither'],
     'no-constant-condition': ['error', { checkLoops: false }],
     'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }],

@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import $ from 'jquery';
 import { later } from '@ember/runloop';
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
