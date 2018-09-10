@@ -54,7 +54,7 @@
     "ember-resolver": "^5.0.1",
     "ember-route-action-helper": "2.0.6",
     "ember-sortable": "1.11.2",
-    "ember-source": "3.1.4",
+    "ember-source": "3.4.0",
     "ember-spin-spinner": "0.3.3",
     "ember-test-selectors": "1.0.0",
     "ember-tether": "1.0.0",
