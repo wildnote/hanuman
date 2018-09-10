@@ -13,7 +13,7 @@ module Hanuman
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
     has_many :rules, dependent: :destroy
     has_many :conditions, dependent: :destroy # The conditions this question is dependent of
-    has_many :rule_conditions, through: :rule, source: :conditions
+    has_many :rule_conditions, through: :rules, source: :conditions
 
     # Validations
     validates :answer_type_id, presence: true
@@ -25,7 +25,7 @@ module Hanuman
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
 
     amoeba do
-      include_association :rule
+      include_association :rules
       include_association :answer_choices
       include_association :conditions, if: :survey_cloning?
 
@@ -130,11 +130,13 @@ module Hanuman
       new_q.sort_order = self.sort_order.to_i
       new_q.save
       # Associate the conditions from the rule
-      self.rule_conditions.each do |condition|
-        new_condition = condition.amoeba_dup
-        new_condition.rule = new_q.rule
-        new_condition.save
-      end
+      self.rules.each do |rule| 
+        rules.conditions.each do |condition|
+          new_condition = condition.amoeba_dup
+          new_condition.rule = new_q.rule
+          new_condition.save
+        end
+      end 
       new_q
     end
 
@@ -185,11 +187,13 @@ module Hanuman
       end
 
       # Associate the conditions from the rule
-      self.rule_conditions.each do |condition|
-        new_condition = condition.amoeba_dup
-        new_condition.rule = new_section_q.rule
-        new_condition.save
-      end
+      self.rules.each do |rule| 
+        rules.conditions.each do |condition|
+          new_condition = condition.amoeba_dup
+          new_condition.rule = new_q.rule
+          new_condition.save
+        end
+      end 
 
       new_section_q
     end
