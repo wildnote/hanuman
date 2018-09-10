@@ -1,12 +1,10 @@
-/* jshint node: true */
-/* eslint-env node */
 'use strict';
 
 module.exports = function(environment) {
   let ENV = {
     modulePrefix: 'frontend',
     podModulePrefix: 'frontend/pods',
-    environment: environment,
+    environment,
     rootURL: '/',
     locationType: 'auto',
     EmberENV: {
@@ -32,10 +30,9 @@ module.exports = function(environment) {
     // ENV.APP.LOG_TRANSITIONS = true;
     // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
     ENV.APP.LOG_VIEW_LOOKUPS = true;
-
     ENV['ember-cli-mirage'] = {
       enabled: false
-    }
+    };
   }
 
   if (environment === 'test') {
@@ -52,7 +49,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    // here you can enable a production-specific feature
   }
 
   return ENV;
