@@ -28,7 +28,10 @@ module Hanuman
     private
 
     def rule_params
-      params.require(:rule).permit(:match_type, :question_id, :value)
+      # RTC Name rule example
+      # value: 135155,135156
+      # type: Hanuman::LookupRule
+      params.require(:rule).permit(:match_type, :question_id, :value, :type)
     end
   end
 end
