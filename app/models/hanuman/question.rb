@@ -130,13 +130,13 @@ module Hanuman
       new_q.sort_order = self.sort_order.to_i
       new_q.save
       # Associate the conditions from the rule
-      self.rules.each do |rule| 
-        rules.conditions.each do |condition|
+      self.rules.each do |rule|
+        rule.conditions.each do |condition|
           new_condition = condition.amoeba_dup
-          new_condition.rule = new_q.rule
+          new_condition.rule = new_q.rules.find_by(duped_rule_id: rule.id)
           new_condition.save
         end
-      end 
+      end
       new_q
     end
 
@@ -187,13 +187,13 @@ module Hanuman
       end
 
       # Associate the conditions from the rule
-      self.rules.each do |rule| 
-        rules.conditions.each do |condition|
+      self.rules.each do |rule|
+        rule.conditions.each do |condition|
           new_condition = condition.amoeba_dup
-          new_condition.rule = new_q.rule
+          new_condition.rule = new_q.rules.find_by(duped_rule_id: rule.id)
           new_condition.save
         end
-      end 
+      end
 
       new_section_q
     end

@@ -47,7 +47,7 @@ module Hanuman
           it 'duplicates and saves a single question with answer choices and conditions' do
             new_question = question_to_duplicate.dup_and_save
             expect(new_question.rules.first.conditions.count).to equal(2)
-            expect(new_question.rules.first.id).to_not equal(question_to_duplicate.rule.id)
+            expect(new_question.rules.first.id).to_not equal(question_to_duplicate.rules.first.id)
           end
         end
 
