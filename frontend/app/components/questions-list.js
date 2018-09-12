@@ -177,7 +177,7 @@ export default Component.extend({
     sortedDropped(viewableSortedQuestions, _draggedQuestion) {
       let allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
       let sortableQuestions = A();
-      // Handle collapsed question. When there are questions collapsed we completely removed them fomr the DOM
+      // Handle collapsed question. When there are questions collapsed we completely removed them from the DOM
       // so we have to re-add them so we can update the sort order attributes
       viewableSortedQuestions.forEach(viewableQuestion => {
         sortableQuestions.addObject(viewableQuestion);

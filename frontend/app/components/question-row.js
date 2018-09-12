@@ -4,15 +4,14 @@ import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 import { or } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
-import { run } from '@ember/runloop';
 
 export default Component.extend({
   store: service(),
+  collapsible: service(),
   attributeBindings: ['question.id:data-question-id'],
 
   isPreviewing: false,
   isPreviewable: or('question.isTaxonType', 'question.answerType.hasAnswerChoices'),
-  pendingRecursive: 0,
 
   isSelected: computed('selectedQuestions.[]', 'question.id', function() {
     let selectedQuestions = this.get('selectedQuestions');
@@ -39,19 +38,6 @@ export default Component.extend({
     let questionId = this.get('question.id');
     return this.get('otherQuetions').filter(question => question.get('ancestry') === questionId).length;
   }),
-
-  _collapseChild(questions, collapsedValue) {
-    questions.forEach(question => {
-      question.set('ancestryCollapsed', collapsedValue);
-      if (question.get('hasChild') && !question.get('collapsed')) {
-        this.incrementProperty('pendingRecursive');
-        run.next(this, function() {
-          this._collapseChild(question.get('child'), collapsedValue);
-        });
-      }
-    });
-    this.decrementProperty('pendingRecursive');
-  },
 
   actions: {
     highlightConditional(questionId) {
@@ -81,14 +67,7 @@ export default Component.extend({
     },
 
     toggleCollapsed() {
-      let question = this.get('question');
-      let collapsed = question.get('collapsed');
-      question.set('collapsed', !collapsed);
-      this.set('pendingRecursive', 1);
-      // Toggle children questions
-      run.next(this, function() {
-        this._collapseChild(question.get('child'), !collapsed);
-      });
+      this.get('collapsible').toggleCollapsed(this.get('question'));
     },
 
     toggleQuestion(e) {

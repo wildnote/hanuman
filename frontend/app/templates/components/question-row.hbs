@@ -2,7 +2,7 @@
 <div data-test-question-row class="row">
   <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
   <div class="col-sm-4">
-    {{#if (or question.loading (gt pendingRecursive 0))}}
+    {{#if (or question.loading (gt question.pendingRecursive 0))}}
       <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{else}}
       {{#if question.hasChild}}
