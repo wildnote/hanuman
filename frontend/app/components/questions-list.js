@@ -3,13 +3,14 @@ import { A } from '@ember/array';
 import { run } from '@ember/runloop';
 import { alias, sort } from '@ember/object/computed';
 import { computed } from '@ember/object';
-import { task, all } from 'ember-concurrency';
+import { task, all, waitForProperty } from 'ember-concurrency';
 import { inject as service } from '@ember/service';
 import { isBlank } from '@ember/utils';
 import $ from 'jquery';
 
 export default Component.extend({
   notify: service(),
+  collapsible: service(),
 
   isLoadingQuestions: true,
   isPerformingBulk: false,
@@ -102,6 +103,10 @@ export default Component.extend({
 
   setAncestryTask: task(function*(question, opts) {
     let ancestryQuestion = opts.target.acenstry;
+    if (ancestryQuestion.collapsed) {
+      this.get('collapsible').toggleCollapsed(ancestryQuestion);
+      yield waitForProperty(ancestryQuestion, 'pendingRecursive', v => v === 0);
+    }
     let parentId = ancestryQuestion.get('id');
     let parentChildren = this.get('surveyTemplate.questions')
       .filterBy('parentId', parentId)
