@@ -100,7 +100,7 @@
             {{#if (not question.isLoading)}}
               {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
                 {{#if question.supportAncestry}}
-                  {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction='dragOver' dragOutAction='dragOut'}}
+                  {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction=(action 'dragOver') dragOutAction=(action 'dragOut')}}
                     {{question-row
                       question=question
                       otherQuetions=surveyTemplate.questions
@@ -112,7 +112,7 @@
                     }}
                   {{/draggable-object-target}}
                 {{else}}
-                  {{#draggable-object content=question dragStartAction='dragStarted' dragEndAction='dragEnded' dragHandle='.glyphicons-move-square'}}
+                  {{#draggable-object content=question dragStartHook=(action 'dragStarted' question) dragEndHook=(action 'dragEnded') dragHandle='.glyphicons-move-square'}}
                     {{question-row
                       question=question
                       otherQuetions=surveyTemplate.questions
