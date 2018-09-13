@@ -163,7 +163,7 @@
             {{else}}
               {{question.answerType.displayName}}
               <div class="alert alert-info">
-                Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey template to change the Answer Type.
+                Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey form template to change the Answer Type.
               </div>
             {{/if}}
           </div>
@@ -490,6 +490,17 @@
                         name="captureLocationData"
                         checked={{question.captureLocationData}}
                         onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data (Superuser Only)
+                </div>
+              </div>
+            {{/if}}
+
+            {{#if (and isSuperUser hasAnAnswer)}}
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="searchable"
+                        checked={{question.searchable}}
+                        onchange={{action (mut question.searchable) value="target.checked"}} /> Searchable (Superuser Only)
                 </div>
               </div>
             {{/if}}
