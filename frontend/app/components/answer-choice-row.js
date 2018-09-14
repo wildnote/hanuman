@@ -1,16 +1,13 @@
+import Component from '@ember/component';
+import { run } from '@ember/runloop';
 import { isNone } from '@ember/utils';
-import DraggableObject from 'ember-drag-drop/components/draggable-object';
+import { task } from 'ember-concurrency';
 
-export default DraggableObject.extend({
+export default Component.extend({
   tagName: 'tr',
 
-  classNameBindings: [
-    ':js-draggableObject',
-    'isDraggingObject:is-dragging-object:',
-    'overrideClass',
-    'isNewAnswerChoice:no-hover'
-  ],
-  attributeBindings: ['dragReady:draggable', 'answerChoice.id:data-answer-choice-id'],
+  classNameBindings: ['isNewAnswerChoice:no-hover'],
+  attributeBindings: ['answerChoice.id:data-answer-choice-id'],
 
   isEditingAnswerChoice: false,
 
@@ -25,30 +22,33 @@ export default DraggableObject.extend({
     this.set('answerChoice', answerChoice);
   },
 
+  saveTask: task(function*() {
+    let answerChoice = this.get('answerChoice');
+    // Strip any trailing spaces off of an answer before saving it.
+    let optionText = answerChoice.get('optionText');
+    answerChoice.set('optionText', optionText.trim());
+
+    if (answerChoice.validate()) {
+      answerChoice.set('question', this.get('question'));
+      yield this.get('saveParentTask').perform(answerChoice);
+      answerChoice.set('hideFromList', false);
+      this.send('toggleForm');
+      if (this.get('isNewAnswerChoice')) {
+        this.set('answerChoice', null);
+        this.send('toggleForm');
+      }
+    }
+  }),
+
   actions: {
     toggleForm(_e, forceToSetNew = false) {
       this.toggleProperty('isEditingAnswerChoice');
       if (forceToSetNew || isNone(this.get('answerChoice'))) {
         this.setNewAnswerChoice();
       }
-    },
-
-    save() {
-      let answerChoice = this.get('answerChoice');
-
-      // Strip any trailing spaces off of an answer before saving it.
-      let optionText = answerChoice.get('optionText');
-      answerChoice.set('optionText', optionText.trim());
-
-      if (answerChoice.validate()) {
-        answerChoice.set('question', this.get('question'));
-        this.sendAction('save', answerChoice, () => {
-          this.send('toggleForm');
-          if (this.get('isNewAnswerChoice')) {
-            this.set('answerChoice', null);
-          }
-        });
-      }
+      run.next(this, function() {
+        this.$('input').focus();
+      });
     },
 
     delete() {
@@ -56,6 +56,12 @@ export default DraggableObject.extend({
       answerChoice.deleteRecord();
       if (!answerChoice.get('isNew')) {
         answerChoice.save();
+      }
+    },
+
+    inputKeyUp(event) {
+      if (event.keyCode == 13) {
+        this.get('saveTask').perform();
       }
     }
   }

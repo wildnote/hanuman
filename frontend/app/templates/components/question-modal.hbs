@@ -283,10 +283,16 @@
                     <tbody>
                       {{#each question.answerChoices as |answerChoice|}}
                         {{#unless answerChoice.hideFromList}}
-                          {{answer-choice-row content=answerChoice isSortable=false question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
+                          {{answer-choice-row
+                            content=answerChoice
+                            question=question
+                            saveParentTask=saveAnswerChoiceTask
+                            answerChoice=answerChoice
+                            isNewAnswerChoice=false
+                          }}
                         {{/unless}}
                       {{/each}}
-                      {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true isSortable=false}}
+                      {{answer-choice-row question=question saveParentTask=saveAnswerChoiceTask isNewAnswerChoice=true}}
                     </tbody>
                   </table>
                 </div>
