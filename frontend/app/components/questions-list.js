@@ -55,6 +55,7 @@ export default Component.extend({
   },
 
   deleteQuestionsTask: task(function*() {
+    this.set('showConfirmDeletion', false);
     this.set('isPerformingBulk', true);
 
     let selectedQuestions = this.get('selectedQuestions');

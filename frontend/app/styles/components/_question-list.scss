@@ -80,3 +80,10 @@
 .ember-tooltip {
   z-index: 9999999;
 }
+
+.delete-confirm {
+  &.top-level {
+    display: block;
+    top: 18px;
+  }
+}

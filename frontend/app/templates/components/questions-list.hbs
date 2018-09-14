@@ -33,7 +33,7 @@
           </div>
 
           <div class="selected-questions-actions">
-            <button onclick={{perform deleteQuestionsTask}} class="{{if deleteQuestionsTask.isRunning "disabled"}}" style="margin-right: 4px;">
+            <button onclick={{action (toggle "showConfirmDeletion" this)}} class="{{if deleteQuestionsTask.isRunning "disabled"}}" style="margin-right: 4px;">
               {{#liquid-if deleteQuestionsTask.isRunning}}
                 <span class="glyphicons glyphicons-repeat gly-spin"></span>
                 <span style="margin-left: 4px;">Deleting...</span>
@@ -57,6 +57,14 @@
               {{/liquid-if}}
             </button>
           </div>
+          {{#if showConfirmDeletion}}
+            <div class="delete-confirm top-level">
+              <small data-test-delete-confirm-message>Performing this delete will also destroy associated historical data.<br></small>
+              <small>Are you sure you want to delete this question?</small><br>
+              <button class="btn btn-success" data-test="delete-question-link" onclick={{perform deleteQuestionsTask}}>Yes</button>
+              <button class="btn" onclick={{action (toggle "showConfirmDeletion" this)}}>No</button>
+            </div>
+          {{/if}}
         </div>
       {{/if}}
 
