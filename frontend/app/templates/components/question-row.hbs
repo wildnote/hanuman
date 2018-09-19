@@ -24,17 +24,19 @@
           {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
         </span>
       {{/if}}
-      {{#if isPreviewable}}
-        <span class="glyphicons glyphicons-sunglasses" onclick={{action (toggle "isPreviewing" this)}}>
-          {{#tooltip-on-element duration=1500 side='right'}}Preview question info{{/tooltip-on-element}}
-        </span>
-      {{/if}}
     {{/if}}
     <span data-test="question.questionText">
       {{question.questionText}}
     </span>
   </div>
-  <div class="col-sm-1" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
+  <div class="col-sm-1" data-test="question.answerType.displayName">
+    {{question.answerType.displayName}}
+    {{#if isPreviewable}}
+      <span style="margin-left: 4px; font-size: 13px;" class="glyphicons glyphicons-eye-open" onclick={{action (toggle "isPreviewing" this)}}>
+        {{#tooltip-on-element duration=1500 side='right'}}Preview question info{{/tooltip-on-element}}
+      </span>
+    {{/if}}
+  </div>
   <div class="col-sm-1">{{question.sortOrder}}</div>
   {{#if question.ancestry}}
     <div class="col-sm-1">
@@ -69,7 +71,7 @@
                 {{condition.questionId}}
               </strong> {{condition.operator}} {{condition.answer}}
               {{#if (not-eq (add 1 index) question.rule.conditions.length)}}
-                {{question.ruleMatchType}}
+                <strong>{{question.ruleMatchType}}</strong>
               {{/if}}
         {{/each}}
       {{/if}}
