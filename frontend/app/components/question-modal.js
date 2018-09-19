@@ -156,6 +156,26 @@ export default Component.extend({
     }
   }),
 
+  saveConditionTask: task(function*(condition) {
+    if (this.get('question.isNew') || this.get('question.rule.isNew')) {
+      if (this.get('conditionsPendingSave').indexOf(condition) === -1) {
+        this.get('conditionsPendingSave').pushObject(condition);
+      }
+    } else {
+      yield condition.save();
+    }
+  }),
+
+  removeConditionTask: task(function*(condition) {
+    if (this.get('question.rule.isNew') || condition.get('isNew')) {
+      this.get('conditionsPendingSave').removeObject(condition);
+      condition.deleteRecord();
+    } else {
+      condition.deleteRecord();
+      yield condition.save();
+    }
+  }),
+
   willDestroyElement() {
     this._super(...arguments);
     $(document).off('keydown.close-modal');
@@ -316,26 +336,6 @@ export default Component.extend({
             surveyTemplate.get('questions').removeObject(question);
           }
         );
-      }
-    },
-
-    saveCondition(condition) {
-      if (this.get('question.isNew') || this.get('question.rule.isNew')) {
-        if (this.get('conditionsPendingSave').indexOf(condition) === -1) {
-          this.get('conditionsPendingSave').pushObject(condition);
-        }
-      } else {
-        condition.save();
-      }
-    },
-
-    removeCondition(condition) {
-      if (this.get('question.rule.isNew') || condition.get('isNew')) {
-        this.get('conditionsPendingSave').removeObject(condition);
-        condition.deleteRecord();
-      } else {
-        condition.deleteRecord();
-        condition.save();
       }
     },
 

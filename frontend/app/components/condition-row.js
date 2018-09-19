@@ -62,7 +62,7 @@ export default Component.extend({
 
       if (condition.validate()) {
         condition.set('rule', this.get('rule'));
-        this.sendAction('save', condition);
+        this.saveTask.perform(condition);
         if (this.get('isNewCondition')) {
           this.set('condition', null);
         }
@@ -72,7 +72,7 @@ export default Component.extend({
 
     delete() {
       let condition = this.get('condition');
-      this.sendAction('remove', condition);
+      this.removeTask.perform(condition);
     },
     setConditionOperator(operator) {
       this.set('condition.operator', operator);

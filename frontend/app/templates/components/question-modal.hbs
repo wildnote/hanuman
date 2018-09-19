@@ -366,9 +366,22 @@
                         <td width="10px"></td>
                       </tr>
                       {{#each question.rule.conditions as |condition|}}
-                        {{condition-row condition=condition rule=question.rule questions=conditionalQuestions save='saveCondition' remove='removeCondition' isNewCondition=false}}
+                        {{condition-row
+                            condition=condition
+                            rule=question.rule
+                            questions=conditionalQuestions
+                            saveTask=saveConditionTask
+                            removeTask=removeConditionTask
+                            isNewCondition=false
+                          }}
                       {{/each}}
-                      {{condition-row rule=question.rule questions=conditionalQuestions save='saveCondition' remove='removeCondition' isNewCondition=true}}
+                      {{condition-row
+                        rule=question.rule
+                        questions=conditionalQuestions
+                        saveTask=saveConditionTask
+                        removeTask=removeConditionTask
+                        isNewCondition=true
+                      }}
                     </tbody>
                   </table>
                 </div>
