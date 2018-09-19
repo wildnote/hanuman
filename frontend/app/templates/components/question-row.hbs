@@ -43,17 +43,6 @@
     <div class="col-sm-1">
       <b>#{{question.ancestry}}</b>
     </div>
-    <div class="col-sm-2">
-      {{typeInitial}}
-      {{#if (and question.rule question.rule.conditions)}}
-        <br/>
-        show
-        {{#each question.rule.conditions as |condition|}}
-          if #{{condition.questionId}} {{condition.operator}} {{condition.answer}}
-          {{question.ruleMatchType}}
-        {{/each}}
-      {{/if}}
-    </div>
   {{else}}
     <div class="col-sm-1">
       {{#if ancestrable}}
@@ -65,18 +54,26 @@
     <div class="col-sm-1"></div>
   {{/if}}
   <div class="col-sm-2">
-    {{#if (and question.rule question.rule.conditions)}}
-      show
-      {{#each question.rule.conditions as |condition|}}
-        if <strong
-              class="conditional-highlight"
-              onmouseover={{action 'highlightConditional' condition.questionId}}
-              onmouseleave={{action 'unHighlightConditional' condition.questionId}}
-            >
-              {{condition.questionId}}
-            </strong> {{condition.operator}} {{condition.answer}} {{question.ruleMatchType}}
-      {{/each}}
-    {{/if}}
+    <div class="row" style="margin-bottom: 2px;">
+      {{typeInitial}}
+    </div>
+    <div class="row">
+      {{#if (and question.rule question.rule.conditions)}}
+        show
+        {{#each question.rule.conditions as |condition index|}}
+          if <strong
+                class="conditional-highlight"
+                onmouseover={{action 'highlightConditional' condition.questionId}}
+                onmouseleave={{action 'unHighlightConditional' condition.questionId}}
+              >
+                {{condition.questionId}}
+              </strong> {{condition.operator}} {{condition.answer}}
+              {{#if (not-eq (add 1 index) question.rule.conditions.length)}}
+                {{question.ruleMatchType}}
+              {{/if}}
+        {{/each}}
+      {{/if}}
+    </div>
   </div>
   <div class="col-sm-2">
     {{#if question.surveyTemplate.lock}}
