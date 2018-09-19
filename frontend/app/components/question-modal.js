@@ -15,6 +15,8 @@ const { testing } = Ember;
 
 export default Component.extend({
   remodal: service(),
+  store: service(),
+
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   hasAnAnswer: alias('question.answerType.hasAnAnswer'),
@@ -167,12 +169,22 @@ export default Component.extend({
   }),
 
   removeConditionTask: task(function*(condition) {
-    if (this.get('question.rule.isNew') || condition.get('isNew')) {
+    let rule = this.get('question.rule');
+    if (rule.isNew || condition.get('isNew')) {
       this.get('conditionsPendingSave').removeObject(condition);
       condition.deleteRecord();
     } else {
-      condition.deleteRecord();
-      yield condition.save();
+      try {
+        condition.deleteRecord();
+        yield condition.save();
+        yield rule.reload();
+      } catch (e) {
+        // If this was the last condition the API deletes the rule
+        if (e.errors[0] === 'Record not found.') {
+          this.store.unloadRecord(rule);
+          this.set('question.rule', this.store.createRecord('rule'));
+        }
+      }
     }
   }),
 

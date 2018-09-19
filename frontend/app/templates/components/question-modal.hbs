@@ -368,7 +368,7 @@
                       {{#each question.rule.conditions as |condition|}}
                         {{condition-row
                             condition=condition
-                            rule=question.rule
+                            question=question
                             questions=conditionalQuestions
                             saveTask=saveConditionTask
                             removeTask=removeConditionTask
@@ -376,7 +376,7 @@
                           }}
                       {{/each}}
                       {{condition-row
-                        rule=question.rule
+                        question=question
                         questions=conditionalQuestions
                         saveTask=saveConditionTask
                         removeTask=removeConditionTask

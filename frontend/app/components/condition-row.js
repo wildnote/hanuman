@@ -39,7 +39,7 @@ export default Component.extend({
   }),
 
   setNewCondition() {
-    let condition = this.get('rule').store.createRecord('condition', {
+    let condition = this.get('question.rule').store.createRecord('condition', {
       questionId: this.get('questions.firstObject.id')
     });
     this.set('condition', condition);
@@ -61,7 +61,7 @@ export default Component.extend({
       condition.set('answer', answer.trim());
 
       if (condition.validate()) {
-        condition.set('rule', this.get('rule'));
+        condition.set('rule', this.get('question.rule'));
         this.saveTask.perform(condition);
         if (this.get('isNewCondition')) {
           this.set('condition', null);
