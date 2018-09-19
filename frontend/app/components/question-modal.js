@@ -11,6 +11,7 @@ import { task } from 'ember-concurrency';
 import { bind } from '@ember/runloop';
 import $ from 'jquery';
 import groupBy from 'ember-group-by';
+import window from 'ember-window-mock';
 const { testing } = Ember;
 
 export default Component.extend({
