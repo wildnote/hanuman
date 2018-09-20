@@ -185,12 +185,13 @@
         <div class="form-group">
           <div class="col-sm-12">
             {{#form-field for='questionText' label='Question Text'}}
-              <input type="text"
-                    class="form-control"
-                    name="questionText"
-                    data-test="question.questionText"
-                    value={{question.questionText}}
-                    oninput={{action (mut question.questionText) value="target.value"}} />
+            <textarea data-test="question.questionText"
+                      name="questionText"
+                      class="form-control"
+                      style="height: 33px;"
+                      onkeyup={{action (mut question.questionText) value="target.value"}}
+                      onchange={{action (mut question.questionText) value="target.value"}}
+                      maxlength=998>{{question.questionText}}</textarea>
             {{/form-field}}
           </div>
         </div>
@@ -274,7 +275,6 @@
               {{error.message}}
             </div>
           {{/each}}
-
           <div class="panel">
             <div class="row">
               <div class="col-md-12">
@@ -283,10 +283,16 @@
                     <tbody>
                       {{#each question.answerChoices as |answerChoice|}}
                         {{#unless answerChoice.hideFromList}}
-                          {{answer-choice-row content=answerChoice isSortable=false question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
+                          {{answer-choice-row
+                            content=answerChoice
+                            question=question
+                            saveParentTask=saveAnswerChoiceTask
+                            answerChoice=answerChoice
+                            isNewAnswerChoice=false
+                          }}
                         {{/unless}}
                       {{/each}}
-                      {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true isSortable=false}}
+                      {{answer-choice-row question=question saveParentTask=saveAnswerChoiceTask isNewAnswerChoice=true}}
                     </tbody>
                   </table>
                 </div>
@@ -360,9 +366,22 @@
                         <td width="10px"></td>
                       </tr>
                       {{#each question.rule.conditions as |condition|}}
-                        {{condition-row condition=condition rule=question.rule questions=conditionalQuestions save='saveCondition' remove='removeCondition' isNewCondition=false}}
+                        {{condition-row
+                            condition=condition
+                            question=question
+                            questions=conditionalQuestions
+                            saveTask=saveConditionTask
+                            removeTask=removeConditionTask
+                            isNewCondition=false
+                          }}
                       {{/each}}
-                      {{condition-row rule=question.rule questions=conditionalQuestions save='saveCondition' remove='removeCondition' isNewCondition=true}}
+                      {{condition-row
+                        question=question
+                        questions=conditionalQuestions
+                        saveTask=saveConditionTask
+                        removeTask=removeConditionTask
+                        isNewCondition=true
+                      }}
                     </tbody>
                   </table>
                 </div>

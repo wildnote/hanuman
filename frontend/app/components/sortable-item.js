@@ -12,14 +12,13 @@ export default SortableItem.extend({
     'modelIdClassName',
     'wasJustCreated:zoomInDown',
     'ancestrySelected:disabled',
-    'ancestryCollapsed:hide'
+    'model.highlighted:highlighted'
   ],
   ancestryClassName: '',
   modelIdClassName: '',
 
   wasJustCreated: alias('model.wasNew'),
   ancestrySelected: alias('model.ancestrySelected'),
-  ancestryCollapsed: alias('model.ancestryCollapsed'),
 
   numChildrenChanged: on(
     'init',

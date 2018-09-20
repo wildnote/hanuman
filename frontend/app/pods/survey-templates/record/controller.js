@@ -4,7 +4,6 @@ import { task } from 'ember-concurrency';
 import { isBlank, isPresent } from '@ember/utils';
 
 export default Controller.extend({
-  isLoadingQuestions: true,
   surveyTemplate: alias('model'),
   hasProjectId: window.location.href.indexOf('/projects/') !== -1,
   projectId: window.location.href.split('/')[6],

@@ -7,12 +7,17 @@ import { inject as service } from '@ember/service';
 import { observer, computed } from '@ember/object';
 import { on } from '@ember/object/evented';
 import { equal, sort, alias } from '@ember/object/computed';
+import { task } from 'ember-concurrency';
+import { bind } from '@ember/runloop';
 import $ from 'jquery';
 import groupBy from 'ember-group-by';
+import window from 'ember-window-mock';
 const { testing } = Ember;
 
 export default Component.extend({
   remodal: service(),
+  store: service(),
+
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   hasAnAnswer: alias('question.answerType.hasAnAnswer'),
@@ -20,6 +25,30 @@ export default Component.extend({
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
+
+  init() {
+    this._super(...arguments);
+    this.setProperties({
+      answerChoicesPendingSave: [],
+      conditionsPendingSave: []
+    });
+  },
+
+  didInsertElement() {
+    this._super(...arguments);
+    run.scheduleOnce('afterRender', this, function() {
+      this.get('remodal').open('question-modal');
+      $('[data-toggle="popover"]').popover({});
+    });
+    // Tabs
+    $('a[data-toggle="tab"]').on('click', function(e) {
+      e.preventDefault();
+      $(this).tab('show');
+    });
+
+    $(document).on('keydown.close-modal', bind(this, this._escapeHandler));
+  },
+
   filteredAnswerTypes: computed('answerTypes', function() {
     let answerTypes = this.get('answerTypes');
     if (this.get('isSuperUser')) {
@@ -114,33 +143,68 @@ export default Component.extend({
     })
   ),
 
-  init() {
+  saveAnswerChoiceTask: task(function*(answerChoice) {
+    let question = this.get('question');
+    if (question.get('isNew')) {
+      // Save the answer choice after the question is saved
+      if (this.get('answerChoicesPendingSave').indexOf(answerChoice) === -1) {
+        this.get('answerChoicesPendingSave').pushObject(answerChoice);
+      }
+    } else {
+      answerChoice = yield answerChoice.save();
+      if (!question.get('isNew') && question.get('isValid')) {
+        yield question.save();
+        yield question.reload();
+      }
+    }
+  }),
+
+  saveConditionTask: task(function*(condition) {
+    if (this.get('question.isNew') || this.get('question.rule.isNew')) {
+      if (this.get('conditionsPendingSave').indexOf(condition) === -1) {
+        this.get('conditionsPendingSave').pushObject(condition);
+      }
+    } else {
+      yield condition.save();
+    }
+  }),
+
+  removeConditionTask: task(function*(condition) {
+    let rule = this.get('question.rule');
+    if (rule.isNew || condition.get('isNew')) {
+      this.get('conditionsPendingSave').removeObject(condition);
+      condition.deleteRecord();
+    } else {
+      try {
+        condition.deleteRecord();
+        yield condition.save();
+        yield rule.reload();
+      } catch (e) {
+        // If this was the last condition the API deletes the rule
+        if (e.errors[0] === 'Record not found.') {
+          this.store.unloadRecord(rule);
+          this.set('question.rule', this.store.createRecord('rule'));
+        }
+      }
+    }
+  }),
+
+  willDestroyElement() {
     this._super(...arguments);
-    this.setProperties({
-      answerChoicesPendingSave: [],
-      conditionsPendingSave: []
-    });
+    $(document).off('keydown.close-modal');
   },
 
-  didInsertElement() {
-    this._super(...arguments);
-    run.scheduleOnce('afterRender', this, function() {
-      this.get('remodal').open('question-modal');
-      $('[data-toggle="popover"]').popover({});
-    });
-    // Tabs
-    $('a[data-toggle="tab"]').on('click', function(e) {
-      e.preventDefault();
-      $(this).tab('show');
-    });
+  _escapeHandler(e) {
+    if (e.keyCode == 27) {
+      this.send('closeModal');
+    }
   },
 
   _removeAnswerChoices() {
-    this.get('question.answerChoices').then(answerChoices => {
-      answerChoices.forEach(function(answerChoice) {
-        answerChoice.deleteRecord();
-        answerChoice.save();
-      });
+    let answerChoices = this.get('question.answerChoices');
+    answerChoices.forEach(function(answerChoice) {
+      answerChoice.deleteRecord();
+      answerChoice.save();
     });
   },
 
@@ -288,73 +352,37 @@ export default Component.extend({
       }
     },
 
-    saveCondition(condition) {
-      if (this.get('question.isNew') || this.get('question.rule.isNew')) {
-        if (this.get('conditionsPendingSave').indexOf(condition) === -1) {
-          this.get('conditionsPendingSave').pushObject(condition);
-        }
-      } else {
-        condition.save();
-      }
-    },
-
-    removeCondition(condition) {
-      if (this.get('question.rule.isNew') || condition.get('isNew')) {
-        this.get('conditionsPendingSave').removeObject(condition);
-        condition.deleteRecord();
-      } else {
-        condition.deleteRecord();
-        condition.save();
-      }
-    },
-
-    saveAnswerChoice(answerChoice, callback) {
-      let question = this.get('question');
-      if (question.get('isNew')) {
-        if (this.get('answerChoicesPendingSave').indexOf(answerChoice) === -1) {
-          answerChoice.set('hideFromList', false);
-          this.get('answerChoicesPendingSave').pushObject(answerChoice);
-          callback();
-        }
-      } else {
-        answerChoice.save().then(function(answerChoice) {
-          answerChoice.set('hideFromList', false);
-          if (question.get('isNew') || !question.get('isValid')) {
-            callback();
-          } else {
-            question.save().then(function(question) {
-              question.reload().then(function() {
-                callback();
-              });
-            });
-          }
-        });
-      }
-    },
-
     closeModal() {
       let question = this.get('question');
-      this.get('remodal').close('question-modal');
-      this.sendAction('transitionToSurveyStep');
-      if (question.get('wasNew')) {
-        if (testing) {
-          return question.set('wasNew', false);
+      if (
+        !question.get('hasDirtyAttributes') ||
+        window.confirm('You will lose any unsaved changes. Are you sure you want to continue?')
+      ) {
+        if (question.get('hasDirtyAttributes')) {
+          question.rollbackAttributes();
         }
-        run.later(
-          this,
-          () => {
-            $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500);
-          },
-          500
-        );
-        // Question is no longer new after shwoing the visual effect.
-        run.later(
-          this,
-          function() {
-            question.set('wasNew', false);
-          },
-          1500
-        );
+        this.get('remodal').close('question-modal');
+        this.sendAction('transitionToSurveyStep');
+        if (question.get('wasNew')) {
+          if (testing) {
+            return question.set('wasNew', false);
+          }
+          run.later(
+            this,
+            () => {
+              $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500);
+            },
+            500
+          );
+          // Question is no longer new after shwoing the visual effect.
+          run.later(
+            this,
+            function() {
+              question.set('wasNew', false);
+            },
+            1500
+          );
+        }
       }
     }
   }

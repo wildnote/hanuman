@@ -5,15 +5,16 @@
       {{#form-field for='optionText'}}
         <input type="text"
               data-test="answerChoice.optionText"
-              class="form-control"
+              class="form-control {{if saveTask.isRunning 'disabled'}}"
               value={{answerChoice.optionText}}
-              oninput={{action (mut answerChoice.optionText) value="target.value"}} />
+              oninput={{action (mut answerChoice.optionText) value="target.value"}}
+              onkeyup={{action 'inputKeyUp'}}/>
       {{/form-field}}
     {{/object-form}}
   </td>
   <td>
-    <a class="btn btn-success" data-test="save-answer-choice-link" onclick={{action 'save'}}>
-      {{ if answerChoice.isSaving 'Saving...' 'Save' }}
+    <a class="btn btn-success {{if saveTask.isRunning 'disabled'}}" data-test="save-answer-choice-link" onclick={{perform saveTask}}>
+      {{ if saveTask.isRunning 'Saving...' 'Save' }}
     </a>
     <a class="btn btn-default" onclick={{action 'toggleForm'}}>
       Cancel
@@ -31,13 +32,6 @@
     </td>
     <td></td>
   {{else}}
-    {{!-- show of existing answer choice --}}
-    <!-- <td>
-      {{answerChoice.id}}
-    </td>
-    <td>
-      {{answerChoice.sortOrder}}
-    </td> -->
     <td data-test="answerChoice.optionText">
       {{answerChoice.optionText}}
     </td>

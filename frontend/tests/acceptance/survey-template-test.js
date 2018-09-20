@@ -11,64 +11,58 @@ moduleForAcceptance('Acceptance | survey template', {
   }
 });
 
-test('visiting /survey_templates/:id', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
-
-  andThen(function() {
-    assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
-  });
+test('visiting /survey_templates/:id', async function(assert) {
+  assert.expect(1);
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
 });
 
-test('displaying survey template info', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
-  andThen(function() {
+test('displaying survey template info', async function(assert) {
+  assert.expect(2);
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  assert.equal(
+    surveyTemplate.name,
+    find('[data-test="surveyTemplate.name"]')
+      .text()
+      .trim()
+  );
+  assert.equal(
+    surveyTemplate.status,
+    find('[data-test="surveyTemplate.status"]')
+      .text()
+      .trim()
+  );
+});
+
+test('listing questions', async function(assert) {
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  for (let question of questions) {
     assert.equal(
-      surveyTemplate.name,
-      find('[data-test="surveyTemplate.name"]')
+      question.question_text,
+      find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`)
         .text()
         .trim()
     );
-    assert.equal(
-      surveyTemplate.status,
-      find('[data-test="surveyTemplate.status"]')
-        .text()
-        .trim()
-    );
-  });
+  }
 });
 
-test('listing questions', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
-  andThen(function() {
-    for (let question of questions) {
-      assert.equal(
-        question.question_text,
-        find(`[data-question-id="${question.id}"] [data-test="question.questionText"]`)
-          .text()
-          .trim()
-      );
-    }
-  });
+test('deleting a survey template', async function(assert) {
+  assert.expect(1);
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  await click('[data-test="delete-survey-link"]');
+  assert.equal(server.db.surveyTemplates.length, 0);
 });
 
-test('deleting a survey template', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
-  click('[data-test="delete-survey-link"]').then(() => {
-    assert.equal(server.db.surveyTemplates.length, 0);
-  });
-});
-
-test('editing a survey template', function(assert) {
-  visit(`/survey_templates/${surveyTemplate.id}`);
-  click('[data-test="edit-survey-link"]').then(() => {
-    assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/edit`);
-    fillIn('[data-test="surveyTemplate.name"]', 'Yo te vi salir campeón del continente');
-    click('[data-test="save-survey-template-link"]').then(() => {
-      surveyTemplate = server.db.surveyTemplates.find(surveyTemplate.id);
-      assert.equal(surveyTemplate.name, 'Yo te vi salir campeón del continente');
-      assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
-    });
-  });
+test('editing a survey template', async function(assert) {
+  assert.expect(3);
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  await click('[data-test="edit-survey-link"]');
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/edit`);
+  await fillIn('[data-test="surveyTemplate.name"]', 'Yo te vi salir campeón del continente');
+  await click('[data-test="save-survey-template-link"]');
+  surveyTemplate = server.db.surveyTemplates.find(surveyTemplate.id);
+  assert.equal(surveyTemplate.name, 'Yo te vi salir campeón del continente');
+  assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
 });
 
 test('creating a survey template', async function(assert) {

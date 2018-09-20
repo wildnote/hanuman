@@ -5,14 +5,19 @@ import { computed } from '@ember/object';
 import { match, equal, bool } from '@ember/object/computed';
 import { memberAction } from 'ember-api-actions';
 import { isPresent } from '@ember/utils';
+import { inject as service } from '@ember/service';
 import Validator from './../mixins/model-validator';
 
 export default Model.extend(Validator, {
+  storeService: service('store'),
+
   // Accessors
-  loading: attr('boolean', { defaultValue: false }),
-  ancestrySelected: attr('boolean', { defaultValue: false }),
-  ancestryCollapsed: attr('boolean', { defaultValue: false }),
-  collapsed: attr('boolean', { defaultValue: false }),
+  loading: false,
+  ancestrySelected: false,
+  ancestryCollapsed: false,
+  collapsed: false,
+  highlighted: false,
+  pendingRecursive: 0,
 
   // Attributes
   questionText: attr('string'),
@@ -42,7 +47,7 @@ export default Model.extend(Validator, {
   answerType: belongsTo('answer-type'),
   surveyTemplate: belongsTo('survey-template'),
   rule: belongsTo('rule', { async: false }),
-  answerChoices: hasMany('answer-choice'),
+  answerChoices: hasMany('answer-choice', { async: false }),
   childIds: attr('array'),
 
   // Computed Properties
@@ -56,6 +61,20 @@ export default Model.extend(Validator, {
     return isPresent(this.get('childIds'));
   }),
 
+  child: computed('childIds.[]', function() {
+    let store = this.get('storeService');
+    let childIds = this.get('childIds').map(id => `${id}`);
+    return store.peekAll('question').filter(function(q) {
+      return this.indexOf(q.get('id')) !== -1;
+    }, childIds);
+  }),
+
+  parent: computed('parentId', function() {
+    let store = this.get('storeService');
+    let parentId = this.get('parentId');
+    return store.peekAll('question').filterBy('id', parentId);
+  }),
+
   numChildren: computed('childQuestion', function() {
     if (this.get('childQuestion')) {
       return this.get('ancestry').split('/').length;
@@ -64,9 +83,11 @@ export default Model.extend(Validator, {
     }
   }),
 
-  ruleMatchType: computed('rule.matchType', function() {
+  ruleMatchType: computed('rule', 'rule.matchType', function() {
     let rule = this.get('rule');
-    return rule.get('matchType') === 'all' ? 'AND' : 'OR';
+    if (rule) {
+      return rule.get('matchType') === 'all' ? 'AND' : 'OR';
+    }
   }),
 
   answerChoicesCount: computed('answerChoices.[]', function() {

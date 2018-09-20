@@ -18,12 +18,7 @@
       </ul>
       <div class="tab-content">
         <div id="tab-survey-layout" class="tab-pane active">
-          {{questions-list
-            surveyTemplate=surveyTemplate
-            isLoadingQuestions=isLoadingQuestions
-            loadingProgress=loadingProgress
-            updateSortOrderTask=updateSortOrderTask
-          }}
+          {{questions-list surveyTemplate=surveyTemplate updateSortOrderTask=updateSortOrderTask}}
         </div>
         <div id="tab-survey-details" class="tab-pane">
           {{liquid-outlet}}
