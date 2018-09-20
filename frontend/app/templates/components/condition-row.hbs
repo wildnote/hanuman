@@ -5,7 +5,7 @@
     {{#form-field for='question'}}
       <select data-test="condition-question-id-select" class="form-control" onchange={{action "setConditionQuestion" value="target.value"}}>
         {{#each questions as |question|}}
-          <option value={{question.id}} selected={{eq question.id condition.questionId}}>{{question.questionText}}</option>
+          <option value={{question.id}} selected={{eq question.id condition.questionId}}>{{question.questionText}} - {{question.id}}</option>
         {{/each}}
       </select>
     {{/form-field}}
@@ -66,9 +66,9 @@
   {{else}}
     {{!-- show of existing condition --}}
     <td>if</td>
-    <td><span class="label label-default" title={{currentQuestion.questionText}}>{{currentQuestion.questionText}} - {{condition.questionId}}</span></td>
+    <td><span title={{currentQuestion.questionText}}>{{currentQuestion.questionText}} - {{condition.questionId}}</span></td>
     <td><span class="label label-default">{{condition.operator}}</span></td>
-    <td><span class="label label-default" data-test="condition.answer">{{condition.answer}}</span></td>
+    <td><span data-test="condition.answer">{{condition.answer}}</span></td>
     <td>
       <a class="btn btn-success btn-sm" data-test="edit-condition-link" onclick={{action 'toggleForm'}}>
         <span class="glyphicons glyphicons-pencil"></span>

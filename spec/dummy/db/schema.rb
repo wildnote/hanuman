@@ -243,6 +243,5 @@ ActiveRecord::Schema.define(version: 20180704051348) do
   end
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
-
-  add_foreign_key "hanuman_observation_signatures", "hanuman_observations", column: "observation_id"
 end
+

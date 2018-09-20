@@ -30,14 +30,38 @@ export default function() {
     return conditions.find(id).update(attrs);
   });
   // Rules
-  this.post('/rules');
+  // https://github.com/samselikoff/ember-cli-mirage/issues?utf8=%E2%9C%93&q=is%3Aissue+hasInverseFor
+  this.post('/rules', ({ rules, conditions }, request) => {
+    const attrs = JSON.parse(request.requestBody).rule;
+    let conditionAttrs = attrs.conditions;
+    delete attrs.conditions;
+    let rule = rules.create(attrs);
+    if (conditionAttrs) {
+      for (let condition of conditionAttrs) {
+        condition['rule_id'] = rule.id;
+        conditions.create(condition);
+      }
+    }
+    return rule;
+  });
   this.put('/rules/:id', ({ rules }, request) => {
     let attrs = JSON.parse(request.requestBody)['rule'],
       id = request.params.id;
     return rules.find(id).update(attrs);
   });
+  this.get('/rules/:id');
   // Questions
-  this.get('/questions');
+  this.get('/questions', ({ questions }) => {
+    let questionsResponse = questions.all();
+    questionsResponse.models.forEach(function(question) {
+      question.attrs.child_ids = questions
+        .all()
+        .models.filter(q => q.parent_id === question.id)
+        .map(q => q.id);
+    });
+    return questionsResponse;
+  });
+
   this.get('/questions/:id');
   this.post('/questions', (schema, request) => {
     const attrs = JSON.parse(request.requestBody).question;

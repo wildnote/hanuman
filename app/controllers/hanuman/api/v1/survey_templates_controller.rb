@@ -4,6 +4,10 @@ module Hanuman
 
     respond_to :json
 
+    def paper_trail_enabled_for_controller
+      request.params[:action] != 'resort_questions'
+    end
+
     def index
       respond_with SurveyTemplate.all
     end

@@ -1,49 +1,30 @@
 import Route from '@ember/routing/route';
 import { inject as service } from '@ember/service';
 import { run } from '@ember/runloop';
+
 import config from 'frontend/config/environment';
 
 export default Route.extend({
   notify: service(),
-  setupController(controller, model) {
-    this._super(controller, model);
-    // Progress bar indicators
-    let i = 0;
-    let p = 0;
-    let surveyTemplate = model;
-    let total = surveyTemplate.get('questions.length');
-    if (total === 0) {
-      controller.set('isLoadingQuestions', false);
-    } else {
-      surveyTemplate
-        .hasMany('questions')
-        .ids()
-        .forEach(questionId => {
-          if (!questionId) {
-            i += 1;
-            return;
-          }
-          this.store.findRecord('question', questionId).then(function() {
-            let pp = p;
-            i += 1;
-            p = (i * 10) / total - (((i * 10) / total) % 0.5);
-            if (pp !== p) {
-              controller.set('loadingProgress', p * 10 + 5);
-            }
-            if (i + 1 >= total) {
-              run.next(this, function() {
-                controller.set('isLoadingQuestions', false);
-              });
-            }
-          });
+
+  afterModel(model) {
+    let promises = [];
+    // load answer-types
+    promises.push(this.store.findAll('answer-Type'));
+    // load questions
+    promises.push(
+      model.get('questions').then(function(questions) {
+        // Collpase by default
+        questions.filterBy('hasChild', true).forEach(question => {
+          question.set('collapsed', true);
+          question.get('child').forEach(child => child.set('ancestryCollapsed', true));
         });
-    }
+      })
+    );
+    return promises;
   },
 
   actions: {
-    reorderQuestions(questions) {
-      this.controller.get('updateSortOrderTask').perform(questions);
-    },
     duplicate() {
       let indexController = this.controllerFor('survey-templates.record.index');
       let surveyTemplate = this.currentModel;

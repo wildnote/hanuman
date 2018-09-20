@@ -153,8 +153,9 @@ module Hanuman
 
       # remap sort orders leaving space for new questions before saving new question
       section_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
-        q.sort_order = q.sort_order + increment_sort_by
-        q.save
+        q.paper_trail.without_versioning do
+          q.update_attribute('sort_order', q.sort_order + increment_sort_by)
+        end
       end
 
       # this will duplicate the question, will need to create a new rule,
@@ -181,6 +182,13 @@ module Hanuman
           condition.question_id = new_section_q.descendants.find_by(duped_question_id: condition.question.id).id
           condition.save
         end
+      end
+
+      # Associate the conditions from the rule
+      self.rule_conditions.each do |condition|
+        new_condition = condition.amoeba_dup
+        new_condition.rule = new_section_q.rule
+        new_condition.save
       end
 
       new_section_q

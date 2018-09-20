@@ -1,9 +1,10 @@
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import { hasMany } from 'ember-data/relationships';
-import Validator from './../mixins/model-validator';
 import { memberAction } from 'ember-api-actions';
 import { filterBy } from '@ember/object/computed';
+
+import Validator from './../mixins/model-validator';
 
 // Constants
 const STATUSES = ['draft', 'active', 'inactive'];
@@ -27,7 +28,8 @@ const SurveyTemplate = Model.extend(Validator, {
   questions: hasMany('question'),
   // Computed
   questionsNotNew: filterBy('questions', 'isNew', false),
-  filteredQuestions: filterBy('questionsNotNew', 'isDeleted', false),
+  questionsNotDeleted: filterBy('questionsNotNew', 'isDeleted', false),
+  filteredQuestions: filterBy('questionsNotDeleted', 'ancestryCollapsed', false),
 
   // Custom actions
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),

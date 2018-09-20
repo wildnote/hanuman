@@ -2,8 +2,16 @@ module Hanuman
   class Api::V1::QuestionsController < Api::V1::BaseController
     respond_to :json
 
+    def paper_trail_enabled_for_controller
+      request.params[:action] != 'duplicate'
+    end
+
     def index
-      respond_with Question.all
+      if params[:ids]
+        respond_with Question.where(id: params[:ids])
+      else
+        respond_with []
+      end
     end
 
     def show
@@ -22,7 +30,9 @@ module Hanuman
 
     def destroy
       question = Question.find(params[:id])
-      respond_with question.destroy
+      question.paper_trail.without_versioning do
+        respond_with question.destroy
+      end
     end
 
     def duplicate
