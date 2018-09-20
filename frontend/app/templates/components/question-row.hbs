@@ -8,7 +8,7 @@
       {{#if question.hasChild}}
         <span data-test-collapse onclick={{action 'toggleCollapsed'}} class="glyphicon glyphicon-collapse-{{if question.collapsed 'up' 'down'}}">
           {{#tooltip-on-element duration=1500 side='right'}}
-            {{if question.collapsed 'Uncollapse' 'Collapse'}}
+            {{if question.collapsed 'Expand' 'Collapse'}}
           {{/tooltip-on-element}}
         </span>
       {{/if}}
