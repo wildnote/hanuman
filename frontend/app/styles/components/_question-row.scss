@@ -1,4 +1,9 @@
 .li-question {
+  &.highlighted {
+    background-color: #fff2ac;
+    background-image: linear-gradient(to right, #ffe359 0%, #fff2ac 100%);
+  }
+
   &.disabled {
     pointer-events: none;
     opacity: 0.3;
@@ -39,6 +44,17 @@
     color: #9c9c9c;
   }
 
+  .glyphicons-sunglasses,
+  .glyphicon.glyphicon-collapse-up,
+  .glyphicon.glyphicon-collapse-down {
+    color: rgb(143, 98, 71) !important;
+    cursor: pointer;
+    font-size: 15px;
+    margin-right: 5px;
+    &:hover {
+      color: rgba(143, 98, 71, 0.6) !important;
+    }
+  }
   .gly-spin.glyphicons-refresh {
     margin-right: 10px;
   }
@@ -55,12 +71,18 @@
   }
 
   &.has-ancestry-1 {
-    margin-left: 10px;
+    margin-left: -5px;
   }
   &.has-ancestry-2 {
-    margin-left: 25px;
+    margin-left: 5px;
   }
   &.has-ancestry-3 {
+    margin-left: 15px;
+  }
+  &.has-ancestry-4 {
+    margin-left: 25px;
+  }
+  &.has-ancestry-5 {
     margin-left: 35px;
   }
   .glyphicons-sorting,
@@ -74,6 +96,16 @@
     }
   }
   .delete-confirm {
+    display: none;
     top: -50px !important;
+  }
+  .preview-section {
+    padding: 10px 20px 10px 20px;
+  }
+  .conditional-highlight {
+    cursor: pointer;
+    &:hover {
+      background-color: yellow;
+    }
   }
 }

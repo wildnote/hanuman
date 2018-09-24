@@ -10,4 +10,4 @@
                     option_groups_from_collection_for_select(ff.object.question.answer_choices.roots.sorted, :children, :formatted_answer_choice, :id, :formatted_answer_choice,
                     ff.object.observation_answers.map{|oa| oa.answer_choice_id}),
                     {multiple: true, size: 10, class: 'chosen-multiselect form-control'}
-    = ff.hidden_field :entry
+    

@@ -14,15 +14,21 @@ module Hanuman
     has_one :survey_extension, dependent: :delete
     accepts_nested_attributes_for :survey_extension, allow_destroy: true
 
+    attr_accessor :should_schedule_sort, :skip_sort
+
     # Validations
     validates :survey_template_id, presence: true
     validates :survey_date, presence: true
     validates :survey_extension, presence: true
 
-    before_save :apply_group_sort
+    before_save :set_observations_unsorted, unless: :skip_sort?
+    after_commit :schedule_observation_sorting, if: :should_schedule_sort?
 
-    amoeba { 
-      enable 
+    after_save :set_entries
+
+
+    amoeba {
+      enable
       include_association :survey_extension
       include_association :observations
     }
@@ -34,223 +40,116 @@ module Hanuman
       versions.first.whodunnit unless versions.blank? rescue nil
     end
 
-    def apply_group_sort
+    def set_entries
+      first_of_type_repeater_ids = []
+      first_of_type_captured_question_ids = []
 
-      debug = false
-
-      form_container_type = []
-      form_container_label = []
-      form_container_nesting_level = -1
-      remaining_children = []
-      last_child_id = []
-      group = [0]
-      sort = [0]
-
-      # set group_sort for all entry = 1
-      self.observations.each do |o|
-        # have to check for existence of question because mobile device may be submitting a survey with a question that has since been deleted-kdh
-        unless o.question.blank?
-          if o.entry == 1
-            if debug
-              apply_group_sort_debug(o, 1, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
-            end
-
-            remaining_children[form_container_nesting_level] = remaining_children[form_container_nesting_level] - 1 unless remaining_children[form_container_nesting_level].blank?
-
-            if o.question.answer_type.element_type == "container"
-              form_container_type << o.question.answer_type.name
-              form_container_label << o.question.question_text
-              form_container_nesting_level += 1
-              if o.question.children.blank?
-                remaining_children << 0
-              else
-                remaining_children << o.question.children.length
-                last_child_id << o.question.children.order(:sort_order).last.id
-              end
-              group << 0
-              sort << 0
-            end
-
-            group_sort = ''
-            (1..(form_container_nesting_level + 2)).each_with_index do |n, index|
-              group_sort += (index == 0 ? "g" : "-g") + group[index].to_s.rjust(3, '0') + ":s" + sort[index].to_s.rjust(3, '0')
-            end
-
-            o.group_sort = group_sort
-
-            if debug
-              puts group_sort
-              puts o.inspect
-            end
-
-            if remaining_children[form_container_nesting_level] == 0 || o.question.id == last_child_id[form_container_nesting_level]
-              form_container_type.pop
-              form_container_label.pop
-              form_container_nesting_level -= 1
-              remaining_children.pop
-              last_child_id.pop
-              group.pop
-              sort.pop
-
-              if debug
-                apply_group_sort_debug(o, 2, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
-              end
-
-              remaining_children.reverse.each do |rc|
-                if rc == 0
-                  form_container_type.pop
-                  form_container_label.pop
-                  form_container_nesting_level -= 1
-                  remaining_children.pop
-                  last_child_id.pop
-                  group.pop
-                  sort.pop
-                else
-                  break
-                end
-
-                if debug
-                  apply_group_sort_debug(o, 2, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
-                end
-
-              end
-            end
-            sort[form_container_nesting_level + 1] += 1
-          end
-        else
-          # delete the observtion from the collection since the question got deleted
-          o.mark_for_destruction
-          # o.destroy
-        end
+      # iterate throught the repeaters in the survey and grab the first one of each type only
+      self.observations.reorder('repeater_id ASC').where.not(repeater_id: 0).each do |observation|
+        next if first_of_type_captured_question_ids.include?(observation.question_id)
+        first_of_type_repeater_ids << observation.repeater_id
+        first_of_type_captured_question_ids << observation.question_id
       end
 
-      # loop through remaining entries, will need to determine the max entry number to invoke a loop
+      # Set entry to 1 for all first-of-type repeaters and top-level observations
+      self.observations.joins(:question).where(repeater_id: first_of_type_repeater_ids).update_all(entry: 1)
+      self.observations.joins(:question).where(parent_repeater_id: first_of_type_repeater_ids).where('repeater_id IS NULL OR repeater_id = 0').update_all(entry: 1)
+      self.observations.joins(:question).where('(repeater_id IS NULL OR repeater_id = 0) AND (parent_repeater_id IS NULL OR parent_repeater_id = 0)').update_all(entry: 1)
 
-      depth = 0
-      group = []
-      sort = []
-      last_entry = 0
-
-      self.observations.each do |o|
-        if o.entry > last_entry
-          last_entry = o.entry
-        end
-      end
-
-      # set group_sort for all entry > 1
-      (2..(last_entry)).each do |n|
-        self.observations.each do |o|
-          # have to check for existence of question because mobile device may be submitting a survey with a question that has since been deleted-kdh
-          unless o.question.blank?
-            if o.entry == n
-              # find matching question id from entry 1 observations
-              self.observations.each do |sub_o|
-                if sub_o.entry == 1 && sub_o.question_id == o.question_id
-                  # we have a matching question id
-                  # grab group_sort from matching observation and parse
-                  parsed_group_sort = sub_o.group_sort.split("-")
-                  depth = parsed_group_sort.count
-                  parsed_group_sort.each_with_index do |a, index|
-                    parse_current = a.gsub("g", "").gsub("s", "").split(":")
-                    #check depth against index, if matching we are at the level that needs incremented group
-                    group << (depth == index + 1 ? parse_current[0].to_i + (n - 1) : parse_current[0].to_i)
-                    #keep sort the same
-                    sort << parse_current[1].to_i
-                  end
-
-                  group_sort = ""
-
-                  (1..(depth)).each_with_index do |n, index|
-                    group_sort += (index == 0 ? "g" : "-g") + group[index].to_s.rjust(3, '0') + ":s" + sort[index].to_s.rjust(3, '0')
-                  end
-
-                  o.group_sort = group_sort
-
-                  depth = 0
-                  group = []
-                  sort = []
-
-                  if debug
-                    puts sub_o.inspect
-                    puts group_sort
-                    puts o.inspect
-                  end
-                end
-              end
-            end
-          else
-            # delete the observtion from the collection since the question got deleted
-            o.mark_for_destruction
-            # o.destroy
-          end
-        end
-      end
-
-      # clean up entry level discrepancies with regard to grouping
-
-      master_entry = 0
-      master_group_sort = ""
-      master_prefix = ""
-
-      (2..(last_entry)).each do |n|
-        self.observations.each do |o|
-
-          # have to check for existence of question because mobile device may be submitting a survey with a question that has since been deleted-kdh
-          unless o.question.blank?
-            if o.entry == n
-              # find the current entry observation group sort and store it in master variables for continual evaluation
-              if master_group_sort.blank? || master_entry != n
-                master_entry = n
-                master_group_sort = o.group_sort
-                master_prefix = master_group_sort[0..14]
-              end
-
-              # parse and fix the current entry observation group sort based on master variables
-
-              current_group_sort = o.group_sort
-              current_prefix = current_group_sort[0..14]
-              current_suffix = current_group_sort.gsub(current_prefix, "")
-              o.group_sort = master_prefix + current_suffix
-
-              if debug
-                puts o.group_sort
-                puts o.inspect
-              end
-            end
-          end
-        end
+      # Iterate through the remaining repeaters and increment the entry for each one
+      self.observations.joins(:question).reorder('repeater_id ASC').where.not(repeater_id: first_of_type_repeater_ids).where('repeater_id IS NOT NULL AND repeater_id != 0').each_with_index do |observation, index|
+        # we need to be careful not to include repeater children that are themselves repeaters 
+        self.observations.joins(:question).where('repeater_id = ? OR (parent_repeater_id = ? AND (repeater_id IS NULL OR repeater_id = 0))', observation.repeater_id, observation.repeater_id).update_all(entry: index + 2)
       end
     end
+    
+    def set_observations_unsorted
+      self.observations_sorted = false
 
-    def apply_group_sort_debug(observation, code_level, form_container_type, form_container_label, form_container_nesting_level, remaining_children, last_child_id, group, sort)
-      indentation = ""
-      if code_level > 1
-        (1..(code_level - 1)).each do |i|
-          indentation += "      "
-        end
-      end
-      puts indentation + ""
-      puts indentation + ""
-      puts indentation + "^^^^^^"
-      puts indentation + "observation.entry: " + observation.entry.to_s
-      puts indentation + "question.id: " + observation.question.id.to_s
-      puts indentation + "question.sort_order: " + observation.question.sort_order.to_s
-      puts indentation + "element_type: " + observation.question.answer_type.element_type.to_s
-      puts indentation + "ancestry: " + observation.question.ancestry.to_s
-      puts indentation + "last ancestor.id: " + observation.question.ancestry.to_s.split("/").last.to_s
-      puts indentation + "......"
-      puts indentation + "form_container_type: " + form_container_type.to_s
-      puts indentation + "form_container_label: " + form_container_label.to_s
-      puts indentation + "form_container_nesting_level: " + form_container_nesting_level.to_s
-      puts indentation + "remaining_children: " + remaining_children.to_s
-      puts indentation + "last_child_id: " + last_child_id.to_s
-      puts indentation + "group: " + group.to_s
-      puts indentation + "sort: " + sort.to_s
-      puts indentation + "vvvvvv"
-      puts indentation + ""
-      puts indentation + ""
-      puts indentation + ""
+      true # need this so that a before_save callback doesn't return false
     end
 
+    def should_schedule_sort?
+      !skip_sort? && (@should_schedule_sort || false)
+    end
+
+    def skip_sort?
+      @skip_sort || false
+    end
+
+    def schedule_observation_sorting
+      SortObservationsWorker.perform_async(self.id)
+    end
+
+    def sorted_observations
+      observations_sorted ? observations.reorder('hanuman_observations.sort_order ASC') : sort_observations!
+    end
+
+    def get_sorted_observations
+      # This sort results in an array of observations where all repeaters of each type are grouped, and all child observations are grouped by question
+      sorted_observations = self.observations.reorder('hanuman_questions.sort_order ASC, repeater_id ASC, parent_repeater_id ASC').to_ary
+
+      # This loop iterates over the observations, finds each repeater, and reorders each child with the given parent_repeater_id to be next to its parent observation
+      sorted_observations.each_with_index do |possible_repeater, possible_repeater_index|
+        if possible_repeater.question.answer_type.name == "repeater" && possible_repeater.repeater_id.present?
+
+          # the number of children reordered so far for this repeater
+          current_repeater_child_index = 0
+
+          # we start at the end of the observations array and test each observation to see if it's a child of the current repeater
+          test_if_child_index = sorted_observations.count - 1
+
+          # == LHS ==
+          # the left side of this equation is the index of the observation most recently tested (to see if it's a child of the current repeater)
+          # we test the children in reverse order, so this value starts at the last index value and decreases
+          #
+          # == RHS ==
+          # the right hand side of this equation is the index of the current repeater we are working with, plus the number of this repeater's children that have been reordered so far
+          # this value represents the index of the last already-reordered child of the current repeater
+          #
+          # == END CONDITION ==
+          # hence, the loop will run as long as the index of the next child to test is greater than the index of the last child reordered
+          # i.e. until every child has been reordered
+          while test_if_child_index > (possible_repeater_index + current_repeater_child_index)
+
+            # grab the observation at test_if_child_index and check if it matches the current repeater
+            possible_child_of_current_repeater = sorted_observations[test_if_child_index]
+            if possible_child_of_current_repeater.parent_repeater_id == possible_repeater.repeater_id
+
+              # remove the child observation from the array
+              sorted_observations.delete(possible_child_of_current_repeater)
+
+              # add the child observation back into the array
+              # we start the loop at the end of the observation array, so each subsequent child has a lower question sort_order value than the last
+              # hence we get the correct order by inserting it at the index BEFORE the previous child that was reordered
+              sorted_observations.insert(possible_repeater_index + 1, possible_child_of_current_repeater)
+
+              # increment the tracking variable for the number of children that have been reordered for this repeater
+              current_repeater_child_index += 1
+            else
+              # if the observation was not a child of the repeater, test the next one
+              # note that this variable does not need to be decremented if the observation is found to be a child, as in that case the child is reordered
+              # the same index then points to a new observation
+              test_if_child_index -= 1
+            end
+          end
+
+        end
+      end
+
+      sorted_observations
+    end
+
+    def sort_observations!
+      sorted_obs = self.get_sorted_observations
+
+      sorted_obs.each_with_index do |sorted_observation, index|
+        Hanuman::Observation.find(sorted_observation.id).update_column(:sort_order, index)
+      end
+
+      self.update_column(:observations_sorted, true)
+
+      self.observations.reorder('hanuman_observations.sort_order ASC')
+    end
   end
 end

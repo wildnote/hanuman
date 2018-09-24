@@ -2,5 +2,5 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
     %p
-      = ff.check_box :answer, {class: 'form-control'}, "true", "false"
-    = ff.hidden_field :entry
+      = ff.check_box :answer, {class: 'form-control', "data-default-answer": o.question.default_answer }, "true", "false"
+    

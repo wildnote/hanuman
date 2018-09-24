@@ -18,7 +18,6 @@ export default Route.extend({
     if (!question.get('rule')) {
       question.set('rule', this.store.createRecord('rule'));
     }
-    return question.get('answerChoices');
   },
 
   setupController(controller, models) {

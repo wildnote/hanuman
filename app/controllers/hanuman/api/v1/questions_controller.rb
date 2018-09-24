@@ -2,8 +2,16 @@ module Hanuman
   class Api::V1::QuestionsController < Api::V1::BaseController
     respond_to :json
 
+    def paper_trail_enabled_for_controller
+      request.params[:action] != 'duplicate'
+    end
+
     def index
-      respond_with Question.all
+      if params[:ids]
+        respond_with Question.where(id: params[:ids])
+      else
+        respond_with []
+      end
     end
 
     def show
@@ -22,14 +30,16 @@ module Hanuman
 
     def destroy
       question = Question.find(params[:id])
-      respond_with question.destroy
+      question.paper_trail.without_versioning do
+        respond_with question.destroy
+      end
     end
 
     def duplicate
       question = Question.find(params[:id])
       duplicated_question =
         if params[:section]
-          question.dup_question_set_and_save
+          question.dup_section
         else
           question.dup_and_save
         end
@@ -40,10 +50,11 @@ module Hanuman
 
     def question_params
       params.require(:question).permit(
-        :question_text, :answer_type_id, :sort_order, :survey_template_id,
-        :required, :external_data_source, :hidden, :parent_id, :capture_location_data, :data_source_id,
-        :combine_latlong_as_polygon, :combine_latlong_as_line, :enable_survey_history, :new_project_location,
-        :tag_list
+        :question_text, :answer_type_id, :sort_order, :survey_template_id, :required, :external_data_source,
+        :hidden, :parent_id, :capture_location_data, :data_source_id, :enable_survey_history, :new_project_location,
+        :combine_latlong_as_polygon, :combine_latlong_as_line, :enable_survey_history,
+        :layout_section, :layout_row, :layout_column, :layout_column_position, :default_answer,
+        :export_continuation_characters, :searchable, :tag_list
       )
     end
 

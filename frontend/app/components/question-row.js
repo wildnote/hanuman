@@ -1,10 +1,17 @@
-import Component from '@ember/component';
-import { htmlSafe } from '@ember/string';
-import { computed } from '@ember/object';
 import $ from 'jquery';
+import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { htmlSafe } from '@ember/string';
+import { or } from '@ember/object/computed';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
+  store: service(),
+  collapsible: service(),
   attributeBindings: ['question.id:data-question-id'],
+
+  isPreviewing: false,
+  isPreviewable: or('question.isTaxonType', 'question.answerType.hasAnswerChoices'),
 
   isSelected: computed('selectedQuestions.[]', 'question.id', function() {
     let selectedQuestions = this.get('selectedQuestions');
@@ -33,6 +40,16 @@ export default Component.extend({
   }),
 
   actions: {
+    highlightConditional(questionId) {
+      let question = this.get('store').peekRecord('question', questionId);
+      question.set('highlighted', true);
+    },
+
+    unHighlightConditional(questionId) {
+      let question = this.get('store').peekRecord('question', questionId);
+      question.set('highlighted', false);
+    },
+
     confirm() {
       let el = this.get('element');
       let $confirm = $('.delete-confirm', el);
@@ -48,6 +65,11 @@ export default Component.extend({
       let el = this.get('element');
       this.sendAction('deleteQuestion', question, el);
     },
+
+    toggleCollapsed() {
+      this.get('collapsible').toggleCollapsed(this.get('question'));
+    },
+
     toggleQuestion(e) {
       let checked = e.target.checked;
       let question = this.get('question');
@@ -59,8 +81,7 @@ export default Component.extend({
         if (otherQuetion.get('ancestry')) {
           let ancestrires = otherQuetion.get('ancestry').split('/');
           if (ancestrires.includes(questionId)) {
-            let ancestrySelected = otherQuetion.get('ancestrySelected');
-            otherQuetion.set('ancestrySelected', !ancestrySelected);
+            otherQuetion.set('ancestrySelected', checked);
             this.get('toggleQuestion')(otherQuetion, checked);
           }
         }

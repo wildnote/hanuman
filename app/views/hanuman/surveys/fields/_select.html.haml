@@ -9,4 +9,4 @@
     - else
       = ff.collection_select :answer, ff.object.question.answer_choices.sorted, :formatted_answer_choice, :formatted_answer_choice,
                              {prompt: true}, {class: 'form-control'}
-    = ff.hidden_field :entry
+    

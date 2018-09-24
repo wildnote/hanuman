@@ -26,6 +26,7 @@ Hanuman::Engine.routes.draw do
         member do
           post :duplicate
           get  :available_tags
+          patch :resort_questions
         end
       end
     end
@@ -35,8 +36,6 @@ Hanuman::Engine.routes.draw do
 
   mount_ember_app :frontend, to: '/admin', controller: 'admin', action: 'index', as: 'admin'
   get 'admin/show'
-
-  get 'surveys/:id/edit/:step/:entry' => 'surveys#edit', as: :edit_survey
 
   resources :surveys do
     member do

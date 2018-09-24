@@ -1,5 +1,5 @@
 - content_for :title do
-  Edit Survey
+  Edit Survey Form
 - content_for :navbar_sub_data do
   active
 - content_for :navbar_hanuman do
@@ -9,6 +9,12 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Edit Survey
-
-  = render "form"
+    %h3.panel-title Edit Survey Form
+  .tab-base.tab-stacked-left
+    %ul.nav.nav-tabs
+      %li
+        %a{:href => "/hanuman/admin/survey_templates/#{@survey_template.id}/edit"} Survey Layout
+      %li.active
+        %a Survey Details
+    .tab-content
+      = render "form"

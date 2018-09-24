@@ -4,6 +4,10 @@ module Hanuman
 
     respond_to :json
 
+    def paper_trail_enabled_for_controller
+      request.params[:action] != 'resort_questions'
+    end
+
     def index
       respond_with SurveyTemplate.all
     end
@@ -34,6 +38,16 @@ module Hanuman
       else
         render json: { "errors" => [ { "detail": "associated-data-restriction" } ] }, status: :unprocessable_entity
       end
+    end
+
+    def resort_questions
+      survey_template = SurveyTemplate.find(params[:id])
+      single_update_statement = {}
+      params[:ids].each_with_index do |id, i|
+        single_update_statement[id] = { sort_order: i + 1 }
+      end
+      Question.update(single_update_statement.keys, single_update_statement.values)
+      respond_with survey_template
     end
 
     def available_tags

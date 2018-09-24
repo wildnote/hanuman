@@ -12,11 +12,13 @@ moduleForAcceptance('Acceptance | survey template', {
 });
 
 test('visiting /survey_templates/:id', async function(assert) {
+  assert.expect(1);
   await visit(`/survey_templates/${surveyTemplate.id}`);
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
 });
 
 test('displaying survey template info', async function(assert) {
+  assert.expect(2);
   await visit(`/survey_templates/${surveyTemplate.id}`);
   assert.equal(
     surveyTemplate.name,
@@ -45,16 +47,18 @@ test('listing questions', async function(assert) {
 });
 
 test('deleting a survey template', async function(assert) {
+  assert.expect(1);
   await visit(`/survey_templates/${surveyTemplate.id}`);
   await click('[data-test="delete-survey-link"]');
   assert.equal(server.db.surveyTemplates.length, 0);
 });
 
 test('editing a survey template', async function(assert) {
+  assert.expect(3);
   await visit(`/survey_templates/${surveyTemplate.id}`);
   await click('[data-test="edit-survey-link"]');
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/edit`);
-  fillIn('[data-test="surveyTemplate.name"]', 'Yo te vi salir campeón del continente');
+  await fillIn('[data-test="surveyTemplate.name"]', 'Yo te vi salir campeón del continente');
   await click('[data-test="save-survey-template-link"]');
   surveyTemplate = server.db.surveyTemplates.find(surveyTemplate.id);
   assert.equal(surveyTemplate.name, 'Yo te vi salir campeón del continente');

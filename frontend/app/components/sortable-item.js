@@ -1,6 +1,8 @@
-import { computed, observer } from '@ember/object';
+import { observer } from '@ember/object';
 import { run } from '@ember/runloop';
 import { on } from '@ember/object/evented';
+import { alias } from '@ember/object/computed';
+
 import SortableItem from 'ember-sortable/components/sortable-item';
 
 export default SortableItem.extend({
@@ -9,16 +11,15 @@ export default SortableItem.extend({
     'ancestryClassName',
     'modelIdClassName',
     'wasJustCreated:zoomInDown',
-    'ancestrySelected:disabled'
+    'ancestrySelected:disabled',
+    'model.highlighted:highlighted'
   ],
   ancestryClassName: '',
   modelIdClassName: '',
-  wasJustCreated: computed('model.wasNew', function() {
-    return this.get('model.wasNew');
-  }),
-  ancestrySelected: computed('model.ancestrySelected', function() {
-    return this.get('model.ancestrySelected');
-  }),
+
+  wasJustCreated: alias('model.wasNew'),
+  ancestrySelected: alias('model.ancestrySelected'),
+
   numChildrenChanged: on(
     'init',
     observer('model.{numChildren,childQuestion}', function() {

@@ -2,6 +2,10 @@
   margin-top: 35px;
 }
 
+.opacited {
+  opacity: 0.2;
+}
+
 .header-selected {
   text-rendering: optimizeLegibility;
   background-color: #5a87cf;
@@ -63,5 +67,23 @@
         background-color: #4977b9;
       }
     }
+  }
+}
+
+.icon-disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.65;
+}
+
+.ember-tooltip {
+  z-index: 9999999;
+}
+
+.delete-confirm {
+  &.top-level {
+    display: block;
+    top: 18px;
   }
 }

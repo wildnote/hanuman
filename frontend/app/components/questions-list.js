@@ -1,19 +1,24 @@
 import Component from '@ember/component';
 import { A } from '@ember/array';
-import { run, next } from '@ember/runloop';
+import { run } from '@ember/runloop';
 import { alias, sort } from '@ember/object/computed';
-import { task, all } from 'ember-concurrency';
+import { computed } from '@ember/object';
+import { task, all, waitForProperty } from 'ember-concurrency';
 import { inject as service } from '@ember/service';
 import { isBlank } from '@ember/utils';
 import $ from 'jquery';
 
 export default Component.extend({
   remodal: service(),
-  store: service(),
   notify: service(),
+  collapsible: service(),
+
+  isLoadingQuestions: true,
+  isPerformingBulk: false,
 
   questionsSorting: ['sortOrder'],
-  sortedQuestions: sort('surveyTemplate.filteredquestions', 'questionsSorting'),
+  fullQuestions: sort('surveyTemplate.questionsNotDeleted', 'questionsSorting'),
+  sortedQuestions: sort('surveyTemplate.filteredQuestions', 'questionsSorting'),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
 
   init() {
@@ -21,61 +26,145 @@ export default Component.extend({
     this.selectedQuestions = A();
   },
 
-  duplicateQuestionsTask: task(function*() {
+  loadingProgress: computed('surveyTemplate.questions.@each.isLoading', function() {
+    let questions = this.get('surveyTemplate.questions');
+    let total = questions.get('length');
+    let loaded = questions.filterBy('isLoading', false).length;
+    if (total === loaded) {
+      run.next(this, function() {
+        this.set('isLoadingQuestions', false);
+      });
+    }
+    return parseInt((loaded * 100) / total);
+  }),
+
+  deleteQuestionTask: task(function*(question, row) {
+    question.deleteRecord();
+    yield question.save();
+    this._recursivelyDelete(question.get('id'));
+    if (row) {
+      $('.delete-confirm', row).fadeOut();
+    }
+  }),
+
+  _recursivelyDelete(questionId) {
+    let childrenQuestions = this.get('surveyTemplate.questions').filterBy('parentId', questionId.toString());
+    for (let childQuestion of childrenQuestions) {
+      this._recursivelyDelete(childQuestion.get('id'));
+      childQuestion.deleteRecord();
+    }
+  },
+
+  deleteQuestionsTask: task(function*() {
+    this.set('showConfirmDeletion', false);
+    this.set('isPerformingBulk', true);
+
     let selectedQuestions = this.get('selectedQuestions');
-    let store = this.get('store');
+    let toDeleteQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
+    let deleteQuestionTask = this.get('deleteQuestionTask');
+    try {
+      yield all(toDeleteQuestions.map((question) => deleteQuestionTask.perform(question)));
+      yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
+      this.get('notify').success('Questions successfully deleted');
+    } catch (e) {
+      console.log('Error:', e); // eslint-disable-line no-console
+      this.get('notify').alert('There was an error trying to delete questions');
+    }
+    this.unSelectAll();
+    this.set('isPerformingBulk', false);
+  }),
+
+  duplicateQuestionsTask: task(function*() {
+    this.set('isPerformingBulk', true);
+    let selectedQuestions = this.get('selectedQuestions');
     let surveyTemplate = this.get('surveyTemplate');
-    let duplicatingSection = false;
 
     // If there are entire sections / repeaters then dont copy them all
-    let toDuplicateQuestions = selectedQuestions.filter(function(toDuplicateQuestion) {
-      if (isBlank(toDuplicateQuestion.get('ancestry'))) {
-        return true;
-      }
-      let ancestrires = toDuplicateQuestion.get('ancestry').split('/');
-      return selectedQuestions.some(function(question) {
-        ancestrires.includes(question.get('id'));
-      });
-    });
-
+    let toDuplicateQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
     try {
-      let duplicatedResponse = yield all(
+      // make sure the list is clean in terms of sorting values
+      yield all(
         toDuplicateQuestions.map((question) => {
           let params = { section: false };
           if (question.get('isContainer') || question.get('isARepeater')) {
             params.section = true;
-            duplicatingSection = true;
           }
           return question.duplicate(params);
         })
       );
-      if (duplicatingSection) {
-        yield surveyTemplate.reload();
-        yield surveyTemplate.get('questions');
-      } else {
-        duplicatedResponse.forEach((response) => {
-          store.pushPayload(response);
-          // Refactor once `ds-pushpayload-return` is enabled on ember data
-          let duplicated = store.peekRecord('question', response.question.id);
-          surveyTemplate.get('questions').pushObject(duplicated);
-        });
-      }
+      yield surveyTemplate.reload();
+      yield surveyTemplate.hasMany('questions').reload();
       this.get('notify').success('Questions successfully duplicated');
-      this.unSelectAll();
     } catch (e) {
+      console.log('Error:', e); // eslint-disable-line no-console
       this.get('notify').alert('There was an error trying to duplicate questions');
     }
+    this.unSelectAll();
+    this.set('isPerformingBulk', false);
   }).drop(),
 
+  setAncestryTask: task(function*(question, opts) {
+    let ancestryQuestion = opts.target.acenstry;
+    if (ancestryQuestion.collapsed) {
+      this.get('collapsible').toggleCollapsed(ancestryQuestion);
+      yield waitForProperty(ancestryQuestion, 'pendingRecursive', (v) => v === 0);
+    }
+    let parentId = ancestryQuestion.get('id');
+    let parentChildren = this.get('surveyTemplate.questions')
+      .filterBy('parentId', parentId)
+      .sortBy('sortOrder');
+    let lastChild = parentChildren.get('lastObject');
+    let sortOrder;
+    if (lastChild) {
+      sortOrder = lastChild.get('sortOrder');
+    } else {
+      sortOrder = ancestryQuestion.get('sortOrder') + 0.1;
+    }
+    question.setProperties({ loading: true, parentId, sortOrder });
+    yield question.save();
+    yield question.reload();
+    yield ancestryQuestion.reload();
+    yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
+    question.set('loading', false);
+  }),
+
+  _filterSectionsAndRepeaters(selectedQuestions) {
+    let filtered = selectedQuestions.filter(function(toCheckQuestion) {
+      if (isBlank(toCheckQuestion.get('ancestry'))) {
+        // top level question
+        return true;
+      } else if (toCheckQuestion.get('supportAncestry')) {
+        // no top level question but parent
+        let isMyParentSelectd = selectedQuestions.find(function(question) {
+          return question.get('id') === toCheckQuestion.get('parentId');
+        });
+        if (!isMyParentSelectd) {
+          return true;
+        }
+      }
+      // Single question selected
+      let ancestrires = toCheckQuestion.get('ancestry').split('/');
+      let some = selectedQuestions.some(function(question) {
+        return ancestrires.includes(`${question.get('id')}`);
+      });
+      return !some;
+    });
+    return isBlank(filtered) ? selectedQuestions : filtered;
+  },
+
   unSelectAll() {
-    this.get('selectedQuestions').forEach((question) => question.set('ancestrySelected', false));
+    this.get('selectedQuestions').forEach((question) => {
+      if (!question.get('isDeleted')) {
+        question.set('ancestrySelected', false);
+      }
+    });
     this.set('selectedQuestions', A());
   },
 
   actions: {
     openTaggingModal() {
       this.set('showingTaggingModal', true);
-      next(() => {
+      run.next(() => {
         this.get('remodal').open('tagging-modal');
       });
     },
@@ -93,41 +182,33 @@ export default Component.extend({
       }
     },
     deleteQuestion(question, elRow) {
-      let $confirm = $('.delete-confirm', elRow);
-      let questionId = question.get('id');
-      question.deleteRecord();
-      question.save().then(() => {
-        let childrenQuestions = this.get('surveyTemplate.questions').filterBy('ancestry', questionId.toString());
-        for (let childQuestion of childrenQuestions) {
-          childQuestion.deleteRecord();
-        }
-        $confirm.fadeOut();
-      });
+      this.get('deleteQuestionTask').perform(question, elRow);
+      this.set('selectedQuestions', A());
+      this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
     },
-    setAncestry(question, opts) {
-      let ancestryQuestion = opts.target.acenstry;
-      let parentId = ancestryQuestion.get('id');
-      let parentChildren = this.get('surveyTemplate.questions')
-        .filterBy('parentId', parentId)
-        .sortBy('sortOrder');
-      let lastChild = parentChildren.get('lastObject');
-      let sortOrder = lastChild ? lastChild.get('sortOrder') : ancestryQuestion.get('sortOrder');
 
-      question.set('loading', true);
-      question.set('parentId', parentId);
-      question.set('sortOrder', sortOrder);
-      question.save().then(() => {
-        question.reload();
-        run.later(
-          this,
-          () => {
-            this.sendAction('updateSortOrder', this.get('sortedQuestions'));
-            question.set('loading', false);
-          },
-          1000
-        );
+    sortedDropped(viewableSortedQuestions, _draggedQuestion) {
+      let allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
+      let sortableQuestions = A();
+      // Handle collapsed question. When there are questions collapsed we completely removed them from the DOM
+      // so we have to re-add them so we can update the sort order attributes
+      viewableSortedQuestions.forEach((viewableQuestion) => {
+        sortableQuestions.addObject(viewableQuestion);
+        if (viewableQuestion.get('collapsed')) {
+          let id = viewableQuestion.get('id');
+          let collapsedChild = allQuestions.filter((question) => {
+            if (isBlank(question.get('ancestry'))) {
+              return false;
+            }
+            let ancestrires = question.get('ancestry').split('/');
+            return ancestrires.includes(id);
+          });
+          sortableQuestions.addObjects(collapsedChild);
+        }
       });
+      this.get('updateSortOrderTask').perform(sortableQuestions);
     },
+
     dragStarted(question) {
       $('.draggable-object-target')
         .parent(`:not(.model-id-${question.get('parentId')})`)

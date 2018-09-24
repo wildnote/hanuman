@@ -1,18 +1,10 @@
 $(document).ready(function(){
 
-  // need to find the max data entry on the page and start incrementing from there
-  $dataEntry = 0;
-  $('.form-container-repeater').each(function() {
-    if ($dataEntry < $(this).attr('data-entry')) {
-      $dataEntry = parseInt($(this).attr('data-entry'));
-    }
-  });
   duplicatedRepeatersOnEdit = []
+  var selectizeElements = {};
 
-  updateParentRepeaterId()
-  incrementRepeaterHeader()
-  // run through repeater and hide delete buttons
-  hideDeleteButtons()
+  updateRepeaterControls()
+  updateRepeaterIds()
 
   // clicking on button to add repeater
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
@@ -22,15 +14,16 @@ $(document).ready(function(){
     $scrollPosition = $(this).offset().top - 50;
 
     // unbinding events on plugins
-    unbindChosenTypes();
+    
     $('.datepicker').datepicker('destroy');
     // cloudinary events
     $.cleanData( $('input.cloudinary-fileupload[type=file]') );
 
     // find and clone container
     var container = $(this).closest('.form-container-repeater');
+    unbindChosenTypes(container);
     $clonedContainer = container.clone(true);
-    var parentRepeater = $($clonedContainer).closest(".parent-repeater-container")
+    var parentRepeater = $clonedContainer.parent().closest(".form-container-repeater");
 
     // remove hidden field observation ids
     $($clonedContainer).find('.hidden-field-observation-id').remove();
@@ -38,28 +31,23 @@ $(document).ready(function(){
     $($clonedContainer).removeAttr('data-observation-id')
 
     //************** BEGIN repeater ids
-    repeaterInputs = $clonedContainer.find(".repeater-inputs")
+    repeaterInputs = $clonedContainer.find(".repeater-id")
     repeaterClosestPanel = $(this).parents(".panel-body")
     //************ END repeater ids
 
     // collect all container items inside cloned container for iteration later to update all attributes
     var containerItems = $($clonedContainer).find('.form-container-entry-item');
 
-    // increment data-entry by 1 on every click
-    $dataEntry = $dataEntry + 1;
+    destroyDuplicateChildRepeaters($clonedContainer);
 
     // loop through collected container items and update attributes with timestamps
     // CONTAINER ITEMS ARE RELATIVE TO CLONED CONTAINER, THINK OF CLONED CONTAINER AS A SECONDARY DOM OF ITS OWN.
-    updateDom(containerItems, $dataEntry, parentRepeater);
-
-    // fix repeater container data-entry numbers
-    $clonedContainer.attr("data-entry", $dataEntry);
-    $clonedContainer.find(".form-container-repeater").attr("data-entry", $dataEntry);
+    updateDom(containerItems, $clonedContainer);
 
     // set cloned container to display none for fading in
     $clonedContainer.attr("style", "display: none;").addClass("new-clone");
     // commenting out because we don't use fancy preview code for docs and videos, if we bring this back probably need this at this point
-    cleartFilePreviewContainers($clonedContainer);
+    clearFilePreviewContainers($clonedContainer);
 
     // clear values
     clearValues($clonedContainer);
@@ -80,7 +68,7 @@ $(document).ready(function(){
     }, 200);
 
     // TODO: figure out how to fix the way we are doing our bind
-    bindChosenTypes();
+    bindChosenTypes([container, $clonedContainer]);
 
     // remove parsley classes and error messages on clonedContainer
     $clonedContainer.find('div.form-container-entry-item[data-required=true]').find('ul.parsley-errors-list').remove();
@@ -118,6 +106,7 @@ $(document).ready(function(){
 
     bindPhotoUploads()
     bindVideoUploads()
+    bindSignatureUploads()
     bindDocumentUploads()
 
     // resetting parsley required field styling on clonedContainer
@@ -135,232 +124,149 @@ $(document).ready(function(){
           $(e).remove()
         }
       })
+    }
 
-     }
-     uniquefyEntryIds()
-     UpdateIdsInRepeaters()
-
-     if ($clonedContainer.hasClass("parent-repeater-container")) {
-       repeaterDataNumber = $clonedContainer.data('repeater-number')
-       duplicatedRepeaters = $("[data-repeater-number="+repeaterDataNumber+"]")
-       updateRepeaterCount(duplicatedRepeaters)
-     }else{
-       repeaterDataNumber = $clonedContainer.data('nested-repeater-number')
-       duplicatedRepeaters = $clonedContainer.closest(".parent-repeater-container").find("[data-nested-repeater-number="+repeaterDataNumber+"]")
-       updateRepeaterCount(duplicatedRepeaters)
-     };
-    //  must call this function after the updating the repeater number attribute in the code above ^^
-     incrementRepeaterHeader()
-
-
-     $($clonedContainer).find('.destroy-form-container-repeater:last').show()
-     $($clonedContainer).find(".form-container-repeater").first().find('.destroy-form-container-repeater').hide()
-     hideDeleteButtons()
+     updateRepeaterIds()
+     updateRepeaterControls()
   });
 
-  function incrementRepeaterHeader() {
-    repeaterCountIndex = 1
-    $(".parent-repeater-container").each(function(i, el){
-      // add attribute 'original-repeater' to repeaters on page load new/edit. This flag is needed so that we can skip/avoid updating the entry ID on those in uniquefyEntryIds function
-      $(el).attr("original-repeater","true")
-      // get the question-id from all the repeaters. All the added repeaters can be found with the question-id since the question-id remains unique through all the added repeaters.
-      qId = $(el).data("question-id")
-      // in every iteration we check for dupicated repeaters. If we find two repeaters with the same question-id, then that means that one of those were duplicated/added to dom.
-      if ($("[data-question-id="+qId+"]").length > 1) {
-        // if current repeater's question-id is in the duplicatedRepeatersOnEdit array, then it means that a repeater with that question-id has added.
-        if (duplicatedRepeatersOnEdit.includes(qId)) {
-          // then grab data-repeater-number and add it to the current repeater element.
-          rNumber = $("[data-question-id="+qId+"]").first().data('repeater-number')
-          $(el).attr('data-repeater-number', rNumber)
-        }else {
-          // if current repeater has duplicates/added, then add the question-id of the added repeater to array. This allows us to know which repaters were added
-          duplicatedRepeatersOnEdit.push(qId)
-          $(el).attr('data-repeater-number', repeaterCountIndex)
+  function destroyDuplicateChildRepeaters(container) {
+    var childRepeaters = $(container).find("> .panel-collapse > .panel-body > .form-container-repeater");
+
+    if (childRepeaters.length !== 0) {
+      var questionIds = [];
+
+      childRepeaters.each(function (_, repeater) {
+        var questionId = $(repeater).data('question-id');
+        if (questionIds.indexOf(questionId) === -1) {
+          questionIds.push(questionId);
         }
-      }else {
-        $(el).attr('data-repeater-number', repeaterCountIndex)
-      }
-      repeaterCountIndex ++
-      nested = $(el).find(".form-container-repeater")
-      nested.each(function(idx, nested){
-        $(nested).attr('data-nested-repeater-number', repeaterCountIndex)
-        repeaterCountIndex ++
       });
-    });
-
-    // after having grouped all repeaters with their corresponding repeater number attribute update the repeater header number
-    $(".parent-repeater-container[data-entry=1]").each(function(i, e){
-      rNumber = $(e).data('repeater-number')
-      updateRepeaterCount($("[data-repeater-number="+rNumber+"]"))
-    })
-  }
-
-  // this function takes the collection of repeaters with the same "data-repeater-number" and numbers them.
-  function updateRepeaterCount(duplicatedRepeaters){
-    duplicatedRepeaters.each(function(i, e){
-      if (i > 0) {
-        count = i+1
-        $(e).find(".repeater-count:first").text(" " +count)
-      }
-    });
-  }
-
-  function updateParentRepeaterId(){
-    // if there are no 2nd level repeaters present, then we increment the repeater ID's for all top level repeaters and questions within.
-    // this is necessary because the repeater_id logic in surveys/_form.html.haml does not work when there are no existing nested repeaters.
-    if (!$("[need-parent-repeater-id=true]").length > 0) {
-      $(".parent-repeater-container").each(function(i, el){
-        parentId = i+1
-        rId = $(el).find("[is-parent-repeater=true]").val(parentId)
-        questions = $(el).find(".form-container-entry-item")
-
-        questions.each(function(idx, element){
-          input = $(element).find("input.parent-repeater-id")
-          input.val(parentId)
-        });
-      });
-    };
-  };
-
-
-  function hideDeleteButtons(){
-    //  This removes the delete button from the first repeater.
-    $(".parent-repeater-container").each(function(i, el){
-      // for each top parent repeater check for added repeaters and hide buttons of added repeaters
-      hideDeleteButtonHelper(el, true);
-
-      // if parent repeater is original, then hide the delete button
-      if ($(el).attr('data-entry') == "1" ) {
-        $(el).find('.destroy-form-container-repeater:last').hide()
-        nested = $(el).find(".form-container-repeater")
-
-        // Go through all nested repeaters and hide delete buttons from original repeaters ( non-duplicates )
-        nested.each(function(i,nestedR){
-        hideDeleteButtonHelper(nestedR, false);
-          if ($(nestedR).attr('data-entry') == "1" ) {
-            $(nestedR).find('.destroy-form-container-repeater').hide()
-          };
-        });
-      }else {
-        nested = $(el).find(".form-container-repeater")
-        nested.each(function(i, childR){
-          hideDeleteButtonHelper(childR, false);
-          if ( nested.length == 1 ) {
-            $(childR).find('.destroy-form-container-repeater').hide()
-          }else if (i != nested.length-1 ) {
-            $(childR).find('.duplicate-form-container-repeater').hide()
+      
+      questionIds.forEach(function (questionId) {
+        var duplicateRepeaters = $(container).find("> .panel-collapse > .panel-body > .form-container-repeater[data-question-id=" + questionId + "]");
+  
+        duplicateRepeaters.each(function(index, duplicate) {
+          if (index === 0) {
+            return;
+          } else {
+            $(duplicate).remove();
           }
         });
-      };
-    });
+      });
+  
+      var newChildRepeaters = $(container).find("> .panel-collapse > .panel-body > .form-container-repeater");
 
-  };
-
-  function hideDeleteButtonHelper(repeater, isParent) {
-    // find all the unique parent repeaters by their question-id attr.
-    qId = $(repeater).data('question-id')
-    if (isParent) {
-      repeaterGroup = $(".parent-repeater-container[data-question-id="+qId+"]")
-    }else {
-      parent = repeater.closest(".parent-repeater-container")
-      repeaterGroup = $(parent).find(".form-container-repeater[data-question-id="+qId+"]")
-    }
-
-    // then queck for duplicated repeaters and hide all the "add buttons" from repeaper EXCEPT THE LAST ONE
-    if (repeaterGroup.length > 1) {
-      repeaterGroup.each(function(idx, element){
-        if (idx != repeaterGroup.length-1) {
-          $(element).find('.duplicate-form-container-repeater:last').hide()
-        }
+      newChildRepeaters.each(function (_, repeater) {
+        destroyDuplicateChildRepeaters(repeater);
       });
     }
   }
 
-  function uniquefyEntryIds() {
-    entryId = 1
-    nestedRepeaterCount = 0
-
-    // finding and iterating through all the new parent repeaters.
-    $(".parent-repeater-container").each(function(idx, el){
-      //  only update the entry values of the repeaters that are added to the dom via the "add repeater" button./ skip the original repeaters
-      if ($(el).attr("original-repeater") != "true") {
-        // select all the containers that have entry id hidden inputs
-        entryContainers = $(el).find('.form-container-entry-item')
-
-        // find the entry id hidden inputs
-        $entryInputs = entryContainers.find("input[name*='[entry]']")
-
-        // update all entry inputs found on parent container.
-        $entryInputs.val(entryId)
-
-        // in the parent repeater, find all the nested repeater container
-        nestedRepeater = $(el).find(".form-container-repeater")
-
-        // then iterate through nested repeaters to update the entry ids with unique ids.
-        nestedRepeaterIndex = entryId + 1
-        nestedRepeater.each(function(i,el){
-          if (i > 0) {
-            entryInputWithinRepeaters = $(el).find("input[name*='[entry]']")
-            entryInputWithinRepeaters.val(nestedRepeaterIndex)
-            nestedRepeaterIndex += 1
+  function updateRepeaterControls() {
+    var topLevelRepeaterTypes = [];
+    $(".form-container-repeater").each(function (_, repeater) {
+      var directChildRepeaterTypes = [];
+      var $directChildRepeaters = $(repeater).find("> .panel-collapse > .panel-body > .form-container-repeater");
+      if ($directChildRepeaters.length) { 
+        $directChildRepeaters.each(function (_, child) {
+          var childRepeaterQuestionId = $(child).data("question-id");
+          if(!directChildRepeaterTypes.includes(childRepeaterQuestionId)) {
+            directChildRepeaterTypes.push(childRepeaterQuestionId);
           }
-          // incrementing the count of nested repeaters for next loop to make use of
-          nestedRepeaterCount += 1
-        })
+        });
+      }
 
-        // updating the entry id based on the nested repeater count
-        // if we have a parent repeater with 0 nestedRepeaters then we have to move on to the next repeater and increment entryId by 1.
-        // otherwise we have to get the count of the nestedRepeaters and add 1
-        if (nestedRepeater.length == 0) {
-          entryId ++
-        }else {
-          entryId = nestedRepeaterCount + 1
-        };
-      };
-    });
+      if(!$(repeater).parent().parent().parent().first().hasClass("form-container-repeater")) {
+        var questionId = $(repeater).data("question-id");
+        if(!topLevelRepeaterTypes.includes(questionId)) {
+          topLevelRepeaterTypes.push(questionId);
+        }
+      }
 
-    // Keeping for future debbuging
-    // $("input[name*='[entry]']").each(function(idx, el){
-    //   $(el).after(" entry id: **** " + $(el).val())
-    // })
-  };;
+      directChildRepeaterTypes.forEach(function (typeId) {
+        var repeaterCount = $(repeater).find(".form-container-repeater[data-question-id=" + typeId + "]").length;
+        $(repeater).find(".form-container-repeater[data-question-id=" + typeId + "]").each(function(index, element) {
+          var $destroyButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .destroy-form-container-repeater');
+          var $duplicateButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .duplicate-form-container-repeater');
 
-  function UpdateIdsInRepeaters(){
-    //  Grabbing all the parent repeater containers
-    parentRepeaters = $("input[is-parent-repeater=true]")
-    parentRepeaterId = 1000
-
-    // update all parent repeaters with unique id
-    parentRepeaters.each(function(idx, el){
-      questions = $(el).closest(".parent-repeater-container").find(".form-container-entry-item")
-
-      questions.each(function(idx, element){
-        input = $(element).find("input.parent-repeater-id")
-        input.val(parentRepeaterId)
+          if (index > 0) {
+            $(element).find(".repeater-count:first").text(" " + (index + 1));
+            $destroyButton.show();
+          } else {
+            $destroyButton.hide();
+          }
+          
+          if ((index + 1) === repeaterCount) {
+            $duplicateButton.show();
+          } else {
+            $duplicateButton.hide();
+          }
+        });
       });
-      $(el).val(parentRepeaterId)
-      // $(el).after("updated parent repeater id: " + parentRepeaterId + "| ")
-      parentRepeaterId += 1
     });
 
-    // Grabbing all the children repeaters
-    childrenRepeaters = $("input[nested-child=true]")
-    childrenRepeaterId = 1
+    topLevelRepeaterTypes.forEach(function (typeId) {
+      var repeaterCount = $(".form-container-repeater[data-question-id=" + typeId + "]").length;
+      $(".form-container-repeater[data-question-id=" + typeId + "]").each(function(index, element) {
+        var $destroyButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .destroy-form-container-repeater');
+        var $duplicateButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .duplicate-form-container-repeater');
 
-    // update all childer repeaters with unique id
-    childrenRepeaters.each(function(idx, el){
-      if ($(el).attr('need-parent-repeater-id') == "true") {
-        parentRepeaterContainerId = $(el).closest(".parent-repeater-container").find("input[is-parent-repeater=true]").val()
-        $(el).val(parentRepeaterContainerId)
-        // $(el).after("updated parent repeater id: " + parentRepeaterContainerId + "| ")
-      }else if ($(el).attr('repeater-id') == "true") {
-        $(el).val(childrenRepeaterId)
-        // $(el).after("updated repeater id: " + childrenRepeaterId + "| ")
-        childrenRepeaterId += 1
-      };
+        if (index > 0) {
+          $(element).find(".repeater-count:first").text(" " + (index + 1));
+          $destroyButton.show();
+        } else {
+          $destroyButton.hide();
+        }
+
+        if (index + 1 === repeaterCount) {
+          $duplicateButton.show();
+        } else {
+          $duplicateButton.hide();
+        }
+      });
+    });
+  }
+
+  function updateRepeaterIds() {
+    $(".repeater-id").each(function (index, element) {
+      $(element).val(index + 1);
+    });
+
+    $(".form-container-repeater").each(function (_, repeater) {
+      if ($(repeater).parents(".form-container-repeater").length) {
+        var parentRepeaterId = $(repeater).parent().closest(".form-container-repeater").find('.repeater-id:first').val();
+        $(repeater).find(".parent-repeater-id:first").val(parentRepeaterId);
+      }
+
+      var currentRepeaterId = $(repeater).find('.repeater-id:first').val();
+      var directObservationChildren = $(repeater).find("> .panel-collapse > .panel-body > .form-container-entry-item[data-question-id]");
+      directObservationChildren.each(function (_, observation) {
+        $(observation).find(".parent-repeater-id").val(currentRepeaterId);
+      });
+
+      
+      var nestedSections = $(repeater).find("> .panel-collapse > .panel-body > .panel:not(.form-container-repeater)");
+
+      nestedSections.each(function (_, section) {
+        setSectionParentRepeaterId(currentRepeaterId, section);
+      });
     });
   };
 
+  function setSectionParentRepeaterId(repeaterId, section) {
+    var directObservationChildren = $(section).find("> .panel-collapse > .panel-body > .form-container-entry-item");
+    directObservationChildren.each(function (_, observation) {
+      $(observation).find(".parent-repeater-id").val(repeaterId);
+    });
+
+    var nestedSections = $(section).find("> .panel-collapse > .panel-body > .panel:not(.form-container-repeater)");
+
+
+    nestedSections.each(function (_, childSection) {
+      setSectionParentRepeaterId(repeaterId, childSection);
+    });
+  };
 
   function clearFileInputsValuesInEdit(files){
     while (files.length >= 1) {
@@ -369,20 +275,21 @@ $(document).ready(function(){
     };
   };
 
-  function cleartFilePreviewContainers(container){
+  function clearFilePreviewContainers(container){
     if ($('.survey-edit-mode').length > 0) {
       $($(container).find('.upload-view-mode')).empty();
       $(container).find(".photo-preview").empty()
       $(container).find(".video-preview").empty()
       $(container).find(".document-preview").empty()
-
-    }else {
+      $(container).find(".signature-preview").empty()
+    } else {
       $($(container).find('.photo-preview-container')).empty();
       $($(container).find('.video-preview-container')).empty();
       $($(container).find('.document-preview-container')).empty();
-
-
+      $($(container).find('.signature-preview-container')).empty();
     }
+
+    $($(container)).find('.signature-upload').show();
   };
 
   function removeErrorBackground(type, $clonedContainer){
@@ -392,7 +299,7 @@ $(document).ready(function(){
   $('.form-container-survey').on('click', ".destroy-form-container-repeater", function(){
     var response = window.confirm('Are you sure you want to delete this observation?')
     var that = this;
-    var entry = $($(this).closest('.form-container-repeater')).attr('data-entry');
+    var repeaterId = $(this).closest('.form-container-repeater').find('.repeater-id').val();
     var dataObservationId = $($(this).closest('.form-container-repeater')).attr('data-observation-id');
     // if we have a dataObservationId then the observation has been saved to the DB, thus we need to delete from the DB otherwise just remove from the DOM
     if (response === true) {
@@ -400,22 +307,21 @@ $(document).ready(function(){
         var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1];
         var surveyId = window.location.pathname.match(/\/surveys\/(\d+)/)[1];
         $.ajax({
-          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/entry/"+ entry,
+          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/repeater/"+ repeaterId,
           method: "Delete"
         }).done(function(response) {
-          removeObservationFromDom(that, entry);
+          removeObservationFromDom(that);
         });
       }else{
-        removeObservationFromDom(that, entry);
+        removeObservationFromDom(that);
       }
     }
-    $(".duplicate-form-container-repeater").show()
-    $(".destroy-form-container-repeater").show()
+
+    updateRepeaterControls();
     return false;
   });
 
-  function removeObservationFromDom(observationContainerToDelete, entry) {
-    $(".form-entry-item-container[data-entry=" + entry + "]").not('.form-entry-item-container[data-element-type=time]').remove();
+  function removeObservationFromDom(observationContainerToDelete) {
     $removeContainer = $(observationContainerToDelete).closest('.form-container-repeater');
 
     setTimeout(function() {
@@ -428,8 +334,7 @@ $(document).ready(function(){
       2000,
       function() {
           $removeContainer.remove();
-          hideDeleteButtons()
-          incrementRepeaterHeader()
+          updateRepeaterControls()
       }
     );
   };
@@ -458,36 +363,101 @@ $(document).ready(function(){
     }
   }
 
-  function unbindChosenTypes(){
-    $(".chosen-multiselect").chosen('destroy');
-    $(".chosen-select").chosen('destroy');
-    $(".bootstrap-checkbox-multiselect").multiselect('destroy');
+  function unbindChosenTypes(element){
+    $(element).find(".selectize-taxon-select").each(function () {
+      if ($(this)[0].selectize) {
+        var data = {};
+        data.inputValue = $(this)[0].selectize.getValue();
+        data.inputOptions = $(this)[0].selectize.options;
+
+        if (data.inputValue instanceof Array) {
+          data.inputText = [];
+          var self = this;
+          $.each(data.inputValue, function () {
+            data.inputText.push($(self)[0].selectize.getItem(this).text());
+          });
+        } else {
+          data.inputText = $(this)[0].selectize.getItem(data.inputValue).text();
+        }
+
+        selectizeElements[$(this).attr("id")] = data;
+
+        $(this)[0].selectize.destroy();
+      }
+    });
+
+    $(element).find(".chosen-multiselect").chosen('destroy');
+    $(element).find(".chosen-select").chosen('destroy');
+    $(element).find(".bootstrap-checkbox-multiselect").multiselect('destroy');
   }
 
-  function bindChosenTypes(){
-    $(".chosen-multiselect").chosen({
-      allow_single_deselect: true,
-      no_results_text: "No results matched",
-      size: "100%",
-      single_backstroke_delete: false,
-      search_contains: true
-    });
-    $(".chosen-select").chosen({
-      allow_single_deselect: true,
-      no_results_text: "No results matched",
-      size: "100%",
-      single_backstroke_delete: false,
-      search_contains: true
-    });
-    $(".bootstrap-checkbox-multiselect").multiselect();
+  function bindChosenTypes(elements){
+    $.each(elements, function () {
+      $(this).find('.selectize-taxon-select').selectize({
+        load: function(query, callback) {
+          var dataSourceId = this.$input.data("source");
+          var self = this;
+          $.ajax({
+            url: "/taxa/select_list/" + dataSourceId,
+            type: "GET",
+            dataType: "json",
+            data: {
+              query: query 
+            },
+            error: function() {
+              callback();
+            },
+            success: function(res) {
+              for (var option in self.options) {
+                if ($.inArray(option, self.items) === -1) {
+                  self.removeOption(option);
+                }
+              }
+              callback(res.taxa);
+            }
+          });
+        },
+        onInitialize: function () {
+          var selectId = this.$input.attr("id");
+          if (selectId in selectizeElements) {
+            var data = selectizeElements[selectId];
+            if (data.inputValue instanceof Array) {
+              for (var i = 0; i < data.inputValue.length; i++) {
+                this.addOption({value: data.inputValue[i], text: data.inputText[i]});
+                this.addItem(data.inputValue[i]);
+              }
+            } else {
+              this.addOption({value: data.inputValue, text: data.inputText});
+              this.addItem(data.inputValue);
+            }
+          }
+        },
+        preload: true,
+        create: false,
+      });
+  
+      $(this).find(".chosen-multiselect").chosen({
+        allow_single_deselect: true,
+        no_results_text: "No results matched",
+        size: "100%",
+        single_backstroke_delete: false,
+        search_contains: true
+      });
+      $(this).find(".chosen-select").chosen({
+        allow_single_deselect: true,
+        no_results_text: "No results matched",
+        size: "100%",
+        single_backstroke_delete: false,
+        search_contains: true
+      });
+      $(this).find(".bootstrap-checkbox-multiselect").multiselect();
+    }); 
   }
 
-  function updateClonedInputs($clonedRepeater, dataEntry, timeStamp){
-    $($clonedRepeater).attr('data-entry', dataEntry);
+  function updateClonedInputs($clonedRepeater, timeStamp){
     var inputs = $($clonedRepeater).find('input');
     var lastInputIndex = inputs.length - 1;
     var index = 0;
-    $(inputs[lastInputIndex]).attr("value", dataEntry);
     var parsleySubstrig = Math.random().toString(36).substring(13);
     inputs.each(function(){
 
@@ -570,22 +540,23 @@ $(document).ready(function(){
     });
   };
 
-  function updateDom(clonedRepeater, dataEntry, parentRepeater){
+  function updateDom(clonedRepeater, parentRepeater) {
 
     // setting the timeStamp for the inputs to be updated
     var timeStamp = new Date().getTime();
 
     // update the parent repeater id input
-    parentRepeaterInput = $(parentRepeater).find('.repeater-inputs')
-    if (parentRepeater.length > 0) {
-      var nameStamp = parentRepeaterInput.attr("name").match(/\d+/)[0];
-      var nameAttr = parentRepeaterInput.attr("name")
-      parentRepeaterInput.attr('name', nameAttr.replace(/(\d+)/, nameStamp.concat(timeStamp)))
-    }
+    // parentRepeaterInput = $(parentRepeater).find('.repeater-id')
+    // parentRepeaterInput.each(function(index, element) {
+    //   var nameStamp = $(element).attr("name").match(/\d+/)[0];
+    //   var nameAttr = $(element).attr("name")
+    //   $(element).attr('name', nameAttr.replace(/(\d+)/, nameStamp.concat(timeStamp)))
+    // });
+
     // begin updating all the inputs found in the cloned repeater
     for (var i = 0; i < clonedRepeater.length; i++) {
       $($(clonedRepeater[i]).find('.latlong')).attr('id', "map".concat(timeStamp));
-      updateClonedInputs(clonedRepeater[i], dataEntry, timeStamp);
+      updateClonedInputs(clonedRepeater[i], timeStamp);
       updateClonedLabels(clonedRepeater[i], timeStamp);
       updateClonedSelects(clonedRepeater[i], timeStamp);
       updateClonedTextareas(clonedRepeater[i], timeStamp);
@@ -606,15 +577,18 @@ $(document).ready(function(){
       // un-select dropdown
       selects = $(clonedRepeater[i]).find("select");
       $(selects).each(function() {
+        if ($(this).hasClass('selectized')) {
+          if ($(this)[0].selectize) {
+            console.log($(this)[0].selectize.items)
+          }
+        }
         $(this).val("");
 
         // if we don't add please select at this point the dropdown will show blank with no prompt
         if ($(this).find('option:contains("Please select")').length < 1) {
           $(this).prepend("<option value>Please select</option>");
         }
-        if ($(this).hasClass('chosen')) {
-          $(this).trigger("chosen:updated");
-        }
+
       });
       multiselects = $(clonedRepeater[i]).find("select[multiple]");
       $(multiselects).each(function() {

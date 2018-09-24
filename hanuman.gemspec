@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'responders', '~> 2.0'
   s.add_dependency 'paper_trail', '~> 6.0'
   s.add_dependency 'ancestry'
-  s.add_dependency 'amoeba', '~> 3.0.0'
+  s.add_dependency 'amoeba', '~> 3.1.0'
   s.add_dependency 'haml-rails', '~> 0.5.3'
   s.add_dependency 'coffee-rails', '~> 4.0.1'
   s.add_dependency 'sass-rails', '~> 4.0.3'
@@ -43,6 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'pg_search', '~> 2.0.1'
 
   s.add_development_dependency 'pg', '0.18.4'
+  s.add_development_dependency 'pry', '0.11.3'
   s.add_development_dependency 'foreigner'
   s.add_development_dependency "rspec-rails", "~> 3.4"
   s.add_development_dependency "database_cleaner"
@@ -53,5 +54,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency "faker", "~> 1.6.5"
   s.add_development_dependency "rubocop", "~> 0.40.0"
   s.add_development_dependency "codeclimate-test-reporter", "~> 0.5.1"
-  s.add_development_dependency "pry", "~> 0.11.3"
 end

@@ -1,5 +1,5 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    = ff.text_field :answer, {class: 'form-control', maxlength: 255}
-    = ff.hidden_field :entry
+    = ff.text_field :answer, {class: 'form-control', maxlength: 255, "data-default-answer": o.question.default_answer}
+    

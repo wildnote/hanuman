@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180510041213) do
+ActiveRecord::Schema.define(version: 20180826224439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,6 +96,15 @@ ActiveRecord::Schema.define(version: 20180510041213) do
 
   add_index "hanuman_observation_photos", ["observation_id"], name: "index_hanuman_observation_photos_on_observation_id", using: :btree
 
+  create_table "hanuman_observation_signatures", force: :cascade do |t|
+    t.integer  "observation_id"
+    t.string   "signature"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "hanuman_observation_signatures", ["observation_id"], name: "index_hanuman_observation_signatures_on_observation_id", using: :btree
+
   create_table "hanuman_observation_videos", force: :cascade do |t|
     t.integer  "observation_id"
     t.string   "video"
@@ -131,6 +140,7 @@ ActiveRecord::Schema.define(version: 20180510041213) do
     t.float    "speed"
     t.float    "direction"
     t.float    "altitude"
+    t.integer  "sort_order"
   end
 
   add_index "hanuman_observations", ["survey_id"], name: "index_hanuman_observations_on_survey_id", using: :btree
@@ -142,19 +152,26 @@ ActiveRecord::Schema.define(version: 20180510041213) do
     t.datetime "updated_at"
     t.integer  "survey_step_id"
     t.integer  "sort_order"
-    t.boolean  "required",                   default: false
+    t.boolean  "required",                       default: false
     t.string   "external_data_source"
     t.string   "ancestry"
-    t.boolean  "hidden",                     default: false
+    t.boolean  "hidden",                         default: false
     t.integer  "duped_question_id"
     t.integer  "survey_template_id"
-    t.text     "ancestry_children",          default: [],    array: true
-    t.boolean  "capture_location_data",      default: false
-    t.boolean  "combine_latlong_as_line",    default: false
-    t.boolean  "combine_latlong_as_polygon", default: false
-    t.boolean  "noncompliance",              default: false
+    t.text     "ancestry_children",              default: [],    array: true
+    t.boolean  "capture_location_data",          default: false
+    t.boolean  "combine_latlong_as_line",        default: false
+    t.boolean  "combine_latlong_as_polygon",     default: false
+    t.boolean  "noncompliance",                  default: false
     t.boolean  "enable_survey_history"
     t.boolean  "new_project_location"
+    t.text     "default_answer"
+    t.integer  "layout_section"
+    t.integer  "layout_row"
+    t.integer  "layout_column"
+    t.string   "layout_column_position"
+    t.integer  "export_continuation_characters"
+    t.boolean  "searchable"
   end
 
   add_index "hanuman_questions", ["ancestry"], name: "index_hanuman_questions_on_ancestry", using: :btree
@@ -200,6 +217,9 @@ ActiveRecord::Schema.define(version: 20180510041213) do
     t.string   "survey_type"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "version"
+    t.boolean  "lock"
+    t.string   "description"
   end
 
   create_table "hanuman_surveys", force: :cascade do |t|
@@ -209,6 +229,7 @@ ActiveRecord::Schema.define(version: 20180510041213) do
     t.date     "survey_date"
     t.string   "mobile_request_id"
     t.datetime "mobile_created_at"
+    t.boolean  "observations_sorted"
   end
 
   add_index "hanuman_surveys", ["survey_template_id"], name: "index_hanuman_surveys_on_survey_template_id", using: :btree

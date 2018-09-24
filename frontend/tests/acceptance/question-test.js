@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+import $ from 'jquery';
 import { later } from '@ember/runloop';
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
@@ -105,12 +106,11 @@ test('adding a question', async function(assert) {
 test('saving a question with answer_type with answers without adding any answers', async function(assert) {
   assert.expect(3);
   await visit(`/survey_templates/${surveyTemplate.id}`);
-
   await click('a:contains("Add")');
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
-  fillIn('[data-test="question.questionText"]', 'question with answers');
+  await fillIn('[data-test="question.questionText"]', 'question with answers');
   // Select
-  fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer type
+  await fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer types
   await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
   await click('[data-test="save-question-link"]');
   let el = find('[data-test="answer-choices-error"]');
@@ -142,7 +142,7 @@ test('editing a question', async function(assert) {
 test('deleting a question', async function(assert) {
   assert.expect(3);
   surveyTemplate = server.create('survey-template', { fully_editable: false });
-  let questions = server.createList('question', 2, { surveyTemplate });
+  let questions = server.createList('question', 2, { surveyTemplate, answer_type_id: 15 }); // Answer Type id 15 = `text`
   question = questions[0];
 
   await visit(`/survey_templates/${surveyTemplate.id}`);
@@ -171,6 +171,7 @@ test('deleting a question', async function(assert) {
   );
 });
 
+/* Action not doable any more directly
 test('wording when deleting a question', async function(assert) {
   assert.expect(1);
   let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
@@ -188,6 +189,7 @@ test('wording when deleting a question', async function(assert) {
     'has the correct wording'
   );
 });
+*/
 
 test('showing `Capture lat/long` checkboxes', async function(assert) {
   assert.expect(2);
