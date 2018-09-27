@@ -68,9 +68,13 @@
     "liquid-fire": "0.29.5",
     "loader.js": "^4.7.0",
     "prettier": "1.14.2",
-    "qunit-dom": "^0.7.1"
+    "qunit-dom": "^0.7.1",
+    "terser": "3.9.1"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
+  },
+  "resolutions": {
+    "terser": "3.9.1"
   }
 }
