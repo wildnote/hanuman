@@ -5,8 +5,8 @@ module Hanuman
                :capture_location_data, :combine_latlong_as_line, :combine_latlong_as_polygon,
                :enable_survey_history, :new_project_location, :layout_section, :layout_row,
                :layout_column, :layout_column_position, :default_answer, :child_ids,
-               :export_continuation_characters, :searchable
-               
+               :export_continuation_characters, :searchable, :max_photos
+
     has_many :answer_choices
     has_one :rule
 
