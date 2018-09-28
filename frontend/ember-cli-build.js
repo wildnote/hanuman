@@ -6,13 +6,16 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
-    "ember-cli-babel": {
+    'ember-cli-babel': {
       optional: ['es6.spec.symbols'],
       includePolyfill: true
     },
     eslint: {
       testGenerator: 'qunit',
       group: true
+    },
+    'ember-cli-uglify': {
+      enabled: false
     }
   });
 
