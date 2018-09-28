@@ -20,11 +20,12 @@
     "@ember/optional-features": "^0.6.3",
     "active-model-adapter": "2.2.0",
     "broccoli-asset-rev": "3.0.0",
+    "broccoli-uglify-sourcemap": "^2.2.0",
     "ember-ajax": "3.1.0",
     "ember-api-actions": "0.1.9",
     "ember-cli": "~3.4.1",
     "ember-cli-app-version": "^3.2.0",
-    "ember-cli-babel": "^6.16.0",
+    "ember-cli-babel": "^6.17.2",
     "ember-cli-dependency-checker": "^3.0.0",
     "ember-cli-eslint": "^4.2.3",
     "ember-cli-htmlbars": "^3.0.0",
@@ -55,7 +56,7 @@
     "ember-resolver": "^5.0.1",
     "ember-route-action-helper": "2.0.6",
     "ember-sortable": "1.11.2",
-    "ember-source": "3.4.0",
+    "ember-source": "3.4.4",
     "ember-spin-spinner": "0.3.3",
     "ember-test-selectors": "1.0.0",
     "ember-tether": "1.0.0",
@@ -68,9 +69,14 @@
     "liquid-fire": "0.29.5",
     "loader.js": "^4.7.0",
     "prettier": "1.14.2",
-    "qunit-dom": "^0.7.1"
+    "qunit-dom": "^0.7.1",
+    "terser": "3.9.1"
   },
   "engines": {
     "node": "6.* || 8.* || >= 10.*"
+  },
+  "resolutions": {
+    "broccoli-uglify-sourcemap": "2.2.0",
+    "terser": "3.9.1"
   }
 }
