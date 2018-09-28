@@ -15,7 +15,9 @@ module.exports = function(defaults) {
       group: true
     },
     'ember-cli-uglify': {
-      enabled: false
+      uglify: {
+        compress: false // added this to workaround the https://github.com/ember-cli/ember-cli-uglify/issues/35
+      }
     }
   });
 
