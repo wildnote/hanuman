@@ -20,6 +20,7 @@
     "@ember/optional-features": "^0.6.3",
     "active-model-adapter": "2.2.0",
     "broccoli-asset-rev": "3.0.0",
+    "broccoli-uglify-sourcemap": "^2.2.0",
     "ember-ajax": "3.1.0",
     "ember-api-actions": "0.1.9",
     "ember-cli": "~3.4.1",
@@ -75,6 +76,7 @@
     "node": "6.* || 8.* || >= 10.*"
   },
   "resolutions": {
+    "broccoli-uglify-sourcemap": "2.2.0",
     "terser": "3.9.1"
   }
 }
