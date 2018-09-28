@@ -1,0 +1,112 @@
+<div class="form-group">
+  <div class="col-sm-12">
+    {{#form-field for='parentId' label='Parent Relationship'}}
+      <select class="form-control" data-test="ancestry-select" onchange={{action ancestryChange value="target.value"}}>
+        <option></option>
+        {{#each ancestryQuestions as |opQuestion|}}
+          <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
+        {{/each}}
+      </select>
+    {{/form-field}}
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-sm-12">
+    {{#form-field for='externalDataSource' label='External Data Source'}}
+      <input type="text"
+            class="form-control"
+            data-test="question.externalDataSource"
+            value={{question.externalDataSource}}
+            oninput={{action (mut question.externalDataSource) value="target.value"}} />
+    {{/form-field}}
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-sm-12">
+    {{#form-field for='sortOrder' label='Sort Order'}}
+      <input data-test-order type="text"
+            class="form-control"
+            value={{question.sortOrder}}
+            oninput={{action (mut question.sortOrder) value="target.value"}} />
+    {{/form-field}}
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-sm-12">
+    {{#form-field for='sortOrder' label='Layout Section'}}
+      <input data-test-order type="number"
+            class="form-control"
+            value={{question.layoutSection}}
+            oninput={{action (mut question.layoutSection) value="target.value"}} />
+    {{/form-field}}
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-sm-12">
+    {{#form-field for='sortOrder' label='Layout Row'}}
+      <input data-test-order type="number"
+            class="form-control"
+            value={{question.layoutRow}}
+            oninput={{action (mut question.layoutRow) value="target.value"}} />
+    {{/form-field}}
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-sm-12">
+    {{#form-field for='sortOrder' label='Layout Column'}}
+      <input data-test-order type="number"
+            class="form-control"
+            value={{question.layoutColumn}}
+            oninput={{action (mut question.layoutColumn) value="target.value"}} />
+    {{/form-field}}
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-sm-12">
+    {{#form-field for='sortOrder' label='Layout Column Position'}}
+      <input data-test-order type="text"
+            class="form-control"
+            value={{question.layoutColumnPosition}}
+            oninput={{action (mut question.layoutColumnPosition) value="target.value"}} />
+    {{/form-field}}
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-sm-12">
+    {{#form-field for='sortOrder' label='Export Continuation Characters'}}
+      <input data-test-order type="number"
+            class="form-control"
+            value={{question.exportContinuationCharacters}}
+            oninput={{action (mut question.exportContinuationCharacters) value="target.value"}} />
+    {{/form-field}}
+  </div>
+</div>
+
+{{#if hasAnAnswer}}
+  <div class="form-group">
+    <div class="col-sm-12">
+      <input type="checkbox"
+            name="captureLocationData"
+            checked={{question.captureLocationData}}
+            onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data (Superuser Only)
+    </div>
+  </div>
+{{/if}}
+
+{{#if hasAnAnswer}}
+  <div class="form-group">
+    <div class="col-sm-12">
+      <input type="checkbox"
+            name="searchable"
+            checked={{question.searchable}}
+            onchange={{action (mut question.searchable) value="target.checked"}} /> Searchable (Superuser Only)
+    </div>
+  </div>
+{{/if}}
