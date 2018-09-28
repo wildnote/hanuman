@@ -4,7 +4,7 @@ import { isBlank } from '@ember/utils';
 import { all } from 'rsvp';
 import { run } from '@ember/runloop';
 import { inject as service } from '@ember/service';
-import { observer, computed } from '@ember/object';
+import { observer, computed, set } from '@ember/object';
 import { on } from '@ember/object/evented';
 import { equal, sort, alias } from '@ember/object/computed';
 import { task } from 'ember-concurrency';
@@ -256,6 +256,14 @@ export default Component.extend({
   },
 
   actions: {
+    setQuestionText(questionText) {
+      if (this.question.isARepeater || this.question.isContainer) {
+        questionText = questionText.replace(/[\/\*\[\]:\?\\]/g, ''); // eslint-disable-line no-useless-escape
+      }
+      set(this.question, 'questionText', questionText);
+      $('[name="questionText"]').val(questionText);
+    },
+
     sortAnswerChoices() {
       let question = this.get('question');
       let answerChoices = question.get('answerChoices');
