@@ -76,7 +76,7 @@
     "node": "6.* || 8.* || >= 10.*"
   },
   "resolutions": {
-    "broccoli-uglify-sourcemap": "^2.2.0",
+    "broccoli-uglify-sourcemap": "2.2.0",
     "terser": "3.9.1"
   }
 }
