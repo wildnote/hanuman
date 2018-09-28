@@ -22,6 +22,7 @@ export default Component.extend({
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   hasAnAnswer: alias('question.answerType.hasAnAnswer'),
   isALatLong: equal('question.answerType.name', 'latlong'),
+  isPhoto: equal('question.answerType.name', 'photo'),
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),

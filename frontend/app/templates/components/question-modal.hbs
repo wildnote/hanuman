@@ -195,7 +195,18 @@
             {{/form-field}}
           </div>
         </div>
-
+        {{#liquid-if isPhoto}}
+          <div class="form-group">
+            <div class="col-sm-3">
+              {{#form-field for='maxPhotos' label='Max Photos'}}
+                <input data-test-order type="number"
+                      class="form-control"
+                      value={{question.maxPhotos}}
+                      oninput={{action (mut question.maxPhotos) value="target.value"}} />
+              {{/form-field}}
+            </div>
+          </div>
+        {{/liquid-if}}
         <div class="row">
           {{#if isALatLongInsideARepeater}}
             <div style="padding-top: 25px;" data-test="capture-lat-long" class="col-md-9">

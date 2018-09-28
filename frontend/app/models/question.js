@@ -37,6 +37,7 @@ export default Model.extend(Validator, {
   layoutSection: attr('number'),
   layoutRow: attr('number'),
   layoutColumn: attr('number'),
+  maxPhotos: attr('number'),
   layoutColumnPosition: attr('string'),
   defaultAnswer: attr('string'),
   exportContinuationCharacters: attr('number'),
