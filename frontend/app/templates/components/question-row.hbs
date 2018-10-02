@@ -2,13 +2,13 @@
 <div data-test-question-row class="row">
   <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
   <div class="col-sm-4">
-    {{#if (or question.loading (gt pendingRecursive 0))}}
+    {{#if (or question.loading (gt question.pendingRecursive 0))}}
       <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{else}}
       {{#if question.hasChild}}
         <span data-test-collapse onclick={{action 'toggleCollapsed'}} class="glyphicon glyphicon-collapse-{{if question.collapsed 'up' 'down'}}">
           {{#tooltip-on-element duration=1500 side='right'}}
-            {{if question.collapsed 'Uncollapse' 'Collapse'}}
+            {{if question.collapsed 'Expand' 'Collapse'}}
           {{/tooltip-on-element}}
         </span>
       {{/if}}
@@ -24,17 +24,19 @@
           {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
         </span>
       {{/if}}
-      {{#if isPreviewable}}
-        <span class="glyphicons glyphicons-sunglasses" onclick={{action (toggle "isPreviewing" this)}}>
-          {{#tooltip-on-element duration=1500 side='right'}}Preview question info{{/tooltip-on-element}}
-        </span>
-      {{/if}}
     {{/if}}
     <span data-test="question.questionText">
       {{question.questionText}}
     </span>
   </div>
-  <div class="col-sm-1" data-test="question.answerType.displayName">{{question.answerType.displayName}}</div>
+  <div class="col-sm-1" data-test="question.answerType.displayName">
+    {{question.answerType.displayName}}
+    {{#if isPreviewable}}
+      <span style="margin-left: 4px; font-size: 13px;" class="glyphicons glyphicons-eye-open" onclick={{action (toggle "isPreviewing" this)}}>
+        {{#tooltip-on-element duration=1500 side='right'}}Preview question info{{/tooltip-on-element}}
+      </span>
+    {{/if}}
+  </div>
   <div class="col-sm-1">{{question.sortOrder}}</div>
   {{#if question.ancestry}}
     <div class="col-sm-1">
@@ -76,18 +78,26 @@
     </div>
   {{/if}}
   <div class="col-sm-2">
-    {{#if (and question.rule question.rule.conditions)}}
-      show
-      {{#each question.rule.conditions as |condition|}}
-        if <strong
-              class="conditional-highlight"
-              onmouseover={{action 'highlightConditional' condition.questionId}}
-              onmouseleave={{action 'unHighlightConditional' condition.questionId}}
-            >
-              {{condition.questionId}}
-            </strong> {{condition.operator}} {{condition.answer}} {{question.ruleMatchType}}
-      {{/each}}
-    {{/if}}
+    <div class="row" style="margin-bottom: 2px;">
+      {{typeInitial}}
+    </div>
+    <div class="row">
+      {{#if (and question.rule question.rule.conditions)}}
+        show
+        {{#each question.rule.conditions as |condition index|}}
+          if <strong
+                class="conditional-highlight"
+                onmouseover={{action 'highlightConditional' condition.questionId}}
+                onmouseleave={{action 'unHighlightConditional' condition.questionId}}
+              >
+                {{condition.questionId}}
+              </strong> {{condition.operator}} {{condition.answer}}
+              {{#if (not-eq (add 1 index) question.rule.conditions.length)}}
+                <strong>{{question.ruleMatchType}}</strong>
+              {{/if}}
+        {{/each}}
+      {{/if}}
+    </div>
   </div>
   <div class="col-sm-2">
     {{#if question.surveyTemplate.lock}}

@@ -49,6 +49,7 @@ export default function() {
       id = request.params.id;
     return rules.find(id).update(attrs);
   });
+  this.get('/rules/:id');
   // Questions
   this.get('/questions', ({ questions }) => {
     let questionsResponse = questions.all();

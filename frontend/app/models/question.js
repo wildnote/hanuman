@@ -17,6 +17,7 @@ export default Model.extend(Validator, {
   ancestryCollapsed: false,
   collapsed: false,
   highlighted: false,
+  pendingRecursive: 0,
 
   // Attributes
   questionText: attr('string'),
@@ -39,6 +40,7 @@ export default Model.extend(Validator, {
   layoutColumnPosition: attr('string'),
   defaultAnswer: attr('string'),
   exportContinuationCharacters: attr('number'),
+  searchable: attr('boolean'),
 
   // Associations
   dataSource: belongsTo('data-source'),

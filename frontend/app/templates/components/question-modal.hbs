@@ -283,10 +283,16 @@
                     <tbody>
                       {{#each question.answerChoices as |answerChoice|}}
                         {{#unless answerChoice.hideFromList}}
-                          {{answer-choice-row content=answerChoice isSortable=false question=question save='saveAnswerChoice' answerChoice=answerChoice isNewAnswerChoice=false}}
+                          {{answer-choice-row
+                            content=answerChoice
+                            question=question
+                            saveParentTask=saveAnswerChoiceTask
+                            answerChoice=answerChoice
+                            isNewAnswerChoice=false
+                          }}
                         {{/unless}}
                       {{/each}}
-                      {{answer-choice-row question=question save='saveAnswerChoice' isNewAnswerChoice=true isSortable=false}}
+                      {{answer-choice-row question=question saveParentTask=saveAnswerChoiceTask isNewAnswerChoice=true}}
                     </tbody>
                   </table>
                 </div>
@@ -360,9 +366,22 @@
                         <td width="10px"></td>
                       </tr>
                       {{#each question.rule.conditions as |condition|}}
-                        {{condition-row condition=condition rule=question.rule questions=conditionalQuestions save='saveCondition' remove='removeCondition' isNewCondition=false}}
+                        {{condition-row
+                            condition=condition
+                            question=question
+                            questions=conditionalQuestions
+                            saveTask=saveConditionTask
+                            removeTask=removeConditionTask
+                            isNewCondition=false
+                          }}
                       {{/each}}
-                      {{condition-row rule=question.rule questions=conditionalQuestions save='saveCondition' remove='removeCondition' isNewCondition=true}}
+                      {{condition-row
+                        question=question
+                        questions=conditionalQuestions
+                        saveTask=saveConditionTask
+                        removeTask=removeConditionTask
+                        isNewCondition=true
+                      }}
                     </tbody>
                   </table>
                 </div>
@@ -490,6 +509,17 @@
                         name="captureLocationData"
                         checked={{question.captureLocationData}}
                         onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data (Superuser Only)
+                </div>
+              </div>
+            {{/if}}
+
+            {{#if (and isSuperUser hasAnAnswer)}}
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="searchable"
+                        checked={{question.searchable}}
+                        onchange={{action (mut question.searchable) value="target.checked"}} /> Searchable (Superuser Only)
                 </div>
               </div>
             {{/if}}
