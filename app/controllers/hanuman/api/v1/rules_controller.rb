@@ -11,7 +11,8 @@ module Hanuman
     end
 
     def create
-      respond_with :api, :v1, Rule.create(rule_params)
+      rule = Rule.create(rule_params)
+      respond_with rule, location: -> { api_v1_rules_path(rule) }, root: :rule
     end
 
     def update
