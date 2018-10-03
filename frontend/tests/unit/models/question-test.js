@@ -18,7 +18,7 @@ test('ruleMatchType', function(assert) {
   let store = this.store();
   run(function() {
     let rule = store.createRecord('rule', { matchType: 'all' });
-    model.set('rule', rule);
+    model.get('rules').pushObject(rule);
     assert.equal(model.get('ruleMatchType'), 'AND');
     rule.set('matchType', null);
     assert.equal(model.get('ruleMatchType'), 'OR');

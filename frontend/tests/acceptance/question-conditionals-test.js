@@ -55,7 +55,7 @@ test('editing a conditional', async function(assert) {
   rule = server.create('rule');
   /* eslint-disable camelcase */
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
-  question = server.create('question', { surveyTemplate, rule });
+  question = server.create('question', { surveyTemplate, rules: [rule] });
   server.db.rules.update(rule.id, { question_id: question.id });
   /* eslint-enable camelcase */
   let firstCondition = conditions[0];
@@ -84,7 +84,7 @@ test('deleting a conditional', async function(assert) {
   /* eslint-disable camelcase */
   let firstCondition = server.create('condition', { rule, question_id: 3, answer: 'to be deleted...' });
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
-  question = server.create('question', { surveyTemplate, rule });
+  question = server.create('question', { surveyTemplate, rules: [rule] });
   rule = server.db.rules.update(rule.id, { question_id: question.id });
   /* eslint-enable camelcase */
 
@@ -115,7 +115,7 @@ test('selecting a conditional question with answer choices', async function(asse
   let answerChoices = server.createList('answer-choice', 3, { question: questionWithAnsweChoices });
   let rule = server.create('rule');
   let toTestCondition = server.create('condition', { rule, question_id: questionWithAnsweChoices.id });
-  let question = server.create('question', { surveyTemplate, rule });
+  let question = server.create('question', { surveyTemplate, rules: [rule] });
 
   rule = server.db.rules.update(rule.id, { question_id: question.id });
   /* eslint-enable camelcase */
