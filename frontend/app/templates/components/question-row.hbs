@@ -45,17 +45,6 @@
     <div class="col-sm-1">
       <b>#{{question.ancestry}}</b>
     </div>
-    <div class="col-sm-2">
-      {{typeInitial}}
-      {{#if (and question.rule question.rule.conditions)}}
-        <br/>
-        show
-        {{#each question.rule.conditions as |condition|}}
-          if #{{condition.questionId}} {{condition.operator}} {{condition.answer}}
-          {{question.ruleMatchType}}
-        {{/each}}
-      {{/if}}
-    </div>
   {{else}}
     <div class="col-sm-1">
       {{#if ancestrable}}
@@ -65,26 +54,15 @@
       {{/if}}
     </div>
     <div class="col-sm-1"></div>
-    <div class="col-sm-2">
-      {{typeInitial}}
-      {{#if (and question.rule question.rule.conditions)}}
-        <br/>
-        show
-        {{#each question.rule.conditions as |condition|}}
-          if #{{condition.questionId}} {{condition.operator}} {{condition.answer}}
-          {{question.ruleMatchType}}
-        {{/each}}
-      {{/if}}
-    </div>
   {{/if}}
   <div class="col-sm-2">
     <div class="row" style="margin-bottom: 2px;">
       {{typeInitial}}
     </div>
     <div class="row">
-      {{#if (and question.rule question.rule.conditions)}}
+      {{#if (and question.visibilityRule question.visibilityRule.conditions)}}
         show
-        {{#each question.rule.conditions as |condition index|}}
+        {{#each question.visibilityRule.conditions as |condition index|}}
           if <strong
                 class="conditional-highlight"
                 onmouseover={{action 'highlightConditional' condition.questionId}}
@@ -92,8 +70,8 @@
               >
                 {{condition.questionId}}
               </strong> {{condition.operator}} {{condition.answer}}
-              {{#if (not-eq (add 1 index) question.rule.conditions.length)}}
-                <strong>{{question.ruleMatchType}}</strong>
+              {{#if (not-eq (add 1 index) question.visibilityRule.conditions.length)}}
+                <strong>{{question.visibilityRuleMatchType}}</strong>
               {{/if}}
         {{/each}}
       {{/if}}
