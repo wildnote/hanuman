@@ -39,7 +39,7 @@ export default Component.extend({
   }),
 
   setNewCondition() {
-    let condition = this.get('question.rule').store.createRecord('condition', {
+    let condition = this.get('question').store.createRecord('condition', {
       questionId: this.get('questions.firstObject.id')
     });
     this.set('condition', condition);
@@ -55,14 +55,15 @@ export default Component.extend({
 
     save() {
       let condition = this.get('condition');
+      let rule = this.rule ? this.rule : this.get('question.visibilityRule');
 
       // Strip any trailing spaces off of a condition answer before saving it.
       let answer = condition.get('answer');
       condition.set('answer', answer.trim());
 
       if (condition.validate()) {
-        condition.set('rule', this.get('question.rule'));
-        this.saveTask.perform(condition);
+        condition.set('rule', rule);
+        this.saveTask.perform(condition, rule);
         if (this.get('isNewCondition')) {
           this.set('condition', null);
         }
@@ -72,7 +73,8 @@ export default Component.extend({
 
     delete() {
       let condition = this.get('condition');
-      this.removeTask.perform(condition);
+      let rule = this.rule ? this.rule : this.get('question.visibilityRule');
+      this.removeTask.perform(condition, rule);
     },
     setConditionOperator(operator) {
       this.set('condition.operator', operator);

@@ -91,26 +91,30 @@ export default Component.extend({
     }
   }),
 
-  isRequiredDisabled: computed('question.{rule.isNew,answerType.name}', 'conditionsPendingSave.[]', function() {
-    let question = this.get('question');
-    let newRule = question.get('rule.isNew');
-    let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow', 'static', 'line'];
-    let pendingConditions = this.get('conditionsPendingSave.length') > 0;
-    if (newRule === undefined) {
-      newRule = true;
+  isRequiredDisabled: computed(
+    'question.{visibilityRule.isNew,answerType.name}',
+    'conditionsPendingSave.[]',
+    function() {
+      let question = this.get('question');
+      let newRule = question.get('visibilityRule.isNew');
+      let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow', 'static', 'line'];
+      let pendingConditions = this.get('conditionsPendingSave.length') > 0;
+      if (newRule === undefined) {
+        newRule = true;
+      }
+      let isDisabled = !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
+      if (isDisabled) {
+        run.later(
+          this,
+          () => {
+            this.set('question.required', false);
+          },
+          0
+        );
+      }
+      return isDisabled;
     }
-    let isDisabled = !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
-    if (isDisabled) {
-      run.later(
-        this,
-        () => {
-          this.set('question.required', false);
-        },
-        0
-      );
-    }
-    return isDisabled;
-  }),
+  ),
 
   showQuestionTypePlaceholder: computed('question.{isNew,answerType.id}', function() {
     let question = this.get('question');
@@ -125,14 +129,14 @@ export default Component.extend({
   // If a question has a rule associated with it, it should automatically be set to Hidden
   hideQuestion: on(
     'afterRender',
-    observer('question.{rule.isNew,rule.conditions.[]}', 'conditionsPendingSave.[]', function() {
+    observer('question.{visibilityRule.isNew,visibilityRule.conditions.[]}', 'conditionsPendingSave.[]', function() {
       let question = this.get('question');
-      let newRule = question.get('rule.isNew');
+      let newRule = question.get('visibilityRule.isNew');
       let hasConditions =
         this.get('conditionsPendingSave.length') > 0 ||
-        (question.get('rule') &&
+        (question.get('visibilityRule') &&
           question
-            .get('rule')
+            .get('visibilityRule')
             .hasMany('conditions')
             .ids().length > 0);
       if (newRule === undefined) {
@@ -159,8 +163,8 @@ export default Component.extend({
     }
   }),
 
-  saveConditionTask: task(function*(condition) {
-    if (this.get('question.isNew') || this.get('question.rule.isNew')) {
+  saveConditionTask: task(function*(condition, rule) {
+    if (this.get('question.isNew') || rule.get('isNew')) {
       if (this.get('conditionsPendingSave').indexOf(condition) === -1) {
         this.get('conditionsPendingSave').pushObject(condition);
       }
@@ -169,8 +173,7 @@ export default Component.extend({
     }
   }),
 
-  removeConditionTask: task(function*(condition) {
-    let rule = this.get('question.rule');
+  removeConditionTask: task(function*(condition, rule) {
     if (rule.isNew || condition.get('isNew')) {
       this.get('conditionsPendingSave').removeObject(condition);
       condition.deleteRecord();
@@ -183,7 +186,8 @@ export default Component.extend({
         // If this was the last condition the API deletes the rule
         if (e.errors[0] === 'Record not found.') {
           this.store.unloadRecord(rule);
-          this.set('question.rule', this.store.createRecord('rule'));
+          let question = this.get('question');
+          this.store.createRecord('rule', { question });
         }
       }
     }
@@ -232,9 +236,8 @@ export default Component.extend({
           conditionsPendingSave.popObject();
         }
         if (keepOpen) {
-          if (!question.get('rule')) {
-            let store = question.get('store');
-            question.set('rule', store.createRecord('rule'));
+          if (!question.get('visibilityRule')) {
+            this.store.createRecord('rule', { question });
           }
         } else {
           this.send('closeModal');
@@ -301,7 +304,7 @@ export default Component.extend({
     },
 
     setRuleMatchType(matchType) {
-      this.set('question.rule.matchType', matchType);
+      this.set('question.visibilityRule.matchType', matchType);
     },
 
     save(_e, keepOpen = false) {
@@ -322,9 +325,12 @@ export default Component.extend({
             promises = promises.concat(answerChoicesPromises);
 
             // We can't save the rule until there is at least one condition associated with the rule
-            if (question.get('rule') && (!question.get('rule.isNew') || this.get('conditionsPendingSave.length') > 0)) {
+            if (
+              question.get('visibilityRule') &&
+              (!question.get('visibilityRule.isNew') || this.get('conditionsPendingSave.length') > 0)
+            ) {
               let conditionsPendingSave = this.get('conditionsPendingSave');
-              let rule = question.get('rule');
+              let rule = question.get('visibilityRule');
 
               rule.set('question', question);
               rule.save().then(
