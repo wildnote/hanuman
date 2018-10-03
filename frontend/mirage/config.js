@@ -71,7 +71,7 @@ export default function() {
   this.put('/questions/:id', ({ questions }, request) => {
     let attrs = JSON.parse(request.requestBody)['question'],
       id = request.params.id;
-    delete attrs.rule;
+    delete attrs.rules;
     return questions.find(id).update(attrs);
   });
   // Answer Choices
