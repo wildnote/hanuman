@@ -1,6 +1,6 @@
 module Hanuman
   class RuleSerializer < ActiveModel::Serializer
-    attributes :id, :match_type, :value, :type
-    has_many :conditions, embed: :ids
+    attributes :id, :question_id, :match_type, :type, :value
+    has_many :conditions
   end
 end

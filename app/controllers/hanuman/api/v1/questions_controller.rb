@@ -8,7 +8,7 @@ module Hanuman
 
     def index
       if params[:ids]
-        respond_with Question.where(id: params[:ids])
+        respond_with Question.includes(rules: [:conditions]).where(id: params[:ids])
       else
         respond_with []
       end
