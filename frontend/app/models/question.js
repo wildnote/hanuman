@@ -46,7 +46,7 @@ export default Model.extend(Validator, {
   dataSource: belongsTo('data-source'),
   answerType: belongsTo('answer-type'),
   surveyTemplate: belongsTo('survey-template'),
-  rule: belongsTo('rule', { async: false }),
+  rules: hasMany('rule', { async: false }),
   answerChoices: hasMany('answer-choice', { async: false }),
   childIds: attr('array'),
 
@@ -56,6 +56,10 @@ export default Model.extend(Validator, {
   isARepeater: equal('answerType.name', 'repeater'),
   isLocationSelect: equal('answerType.name', 'locationchosensingleselect'),
   isTextField: equal('answerType.name', 'text'),
+
+  visibilityRule: computed('rules.@each.type', function() {
+    return this.get('rules').find(rule => rule.type === 'Hanuman::VisibilityRule');
+  }),
 
   hasChild: computed('childIds.[]', function() {
     return isPresent(this.get('childIds'));
@@ -83,10 +87,9 @@ export default Model.extend(Validator, {
     }
   }),
 
-  ruleMatchType: computed('rule', 'rule.matchType', function() {
-    let rule = this.get('rule');
-    if (rule) {
-      return rule.get('matchType') === 'all' ? 'AND' : 'OR';
+  ruleMatchType: computed('visibilityRule', 'visibilityRule.matchType', function() {
+    if (this.visibilityRule) {
+      return this.visibilityRule.get('matchType') === 'all' ? 'AND' : 'OR';
     }
   }),
 

@@ -6,6 +6,7 @@ import Validator from './../mixins/model-validator';
 export default Model.extend(Validator, {
   // Attributes
   matchType: attr('string', { defaultValue: 'any' }),
+  type: attr('string', { defaultValue: 'Hanuman::VisibilityRule' }),
 
   // Relations
   conditions: hasMany('condition', { async: false }),
