@@ -3,6 +3,14 @@
     <div class="table-responsive">
       <table class="table table-hover">
         <tbody>
+          {{#if lookupRule}}
+            <tr class="no-hover">
+              <td colspan="6">
+               <input placeholder="Value to set on this question" type="text" class="form-control" value={{rule.value}}
+                      oninput={{action (mut rule.value) value="target.value"}} />
+              </td>
+            </tr>
+          {{/if}}
           <tr class="no-hover">
             <td colspan="6">
               <select data-test="rule-match-type-select" class="form-control" onchange={{action "setRuleMatchType" value="target.value"}}>
@@ -22,6 +30,7 @@
           {{#each rule.conditions as |condition|}}
             {{condition-row
               condition=condition
+              rule=lookupRule
               question=question
               questions=conditionalQuestions
               saveTask=saveConditionTask
@@ -30,6 +39,7 @@
             }}
           {{/each}}
           {{condition-row
+            rule=lookupRule
             question=question
             questions=conditionalQuestions
             saveTask=saveConditionTask

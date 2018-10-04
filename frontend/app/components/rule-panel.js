@@ -36,19 +36,22 @@ export default Component.extend({
         yield condition.save();
         yield rule.reload();
       } catch (e) {
+        this.store.unloadRecord(rule);
         console.log({ e }); // eslint-disable-line no-console
         // If this was the last condition the API deletes the rule
         if (e.errors && e.errors[0] === 'Record not found.') {
-          this.store.unloadRecord(rule);
-          let question = this.get('question');
-          this.store.createRecord('rule', { question });
+          // This was a visibilitry rule
+          if (!this.lookupRule) {
+            let question = this.get('question');
+            this.store.createRecord('rule', { question });
+          }
         }
       }
     }
   }),
   actions: {
     setRuleMatchType(matchType) {
-      this.set('rule', matchType);
+      this.set('rule.matchType', matchType);
     }
   }
 });
