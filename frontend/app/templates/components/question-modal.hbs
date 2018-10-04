@@ -248,32 +248,7 @@
           </div>
           <hr />
         {{/if}}
-
-        <div class="form-group">
-          <div class="col-sm-12">
-            <label>Hide and Show Rules</label>
-            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hide and Show Rules" data-content="Add a rule to hide this question by default. If the rule conditions are met the question will then be revealed in the survey." class="bootstrap-popover">
-              <span class="glyphicons glyphicons-info-sign"></span>
-            </a>
-          </div>
-        </div>
-
-        {{#if question.isNew}}
-          <div class="row">
-            <div class="col-sm-12">
-              <div class="form-group">
-                <a class="btn btn-success" onclick={{perform saveTask true}}>
-                  <span class="glyphicons glyphicons-plus"></span>
-                  Add rule
-                </a>
-              </div>
-            </div>
-          </div>
-        {{/if}}
-
-        {{#if question.visibilityRule}}
-          {{rule-panel question=question conditionalQuestions=conditionalQuestions }}
-        {{/if}}
+        {{!-- Visibility rules --}}
 
         <div class="form-group">
           <div class="col-sm-12">
@@ -281,14 +256,57 @@
                   name="isHidden"
                   checked={{question.hidden}}
                   onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
-                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hidden" data-content="A question will be automatically hidden if there is a rule associated with it." class="bootstrap-popover">
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hidden" data-content="A question will be automatically hidden if there is a visibility rule associated with it." class="bootstrap-popover">
                     <span class="glyphicons glyphicons-info-sign"></span>
                   </a>
           </div>
         </div>
 
+        <div class="form-group">
+          <div class="col-sm-10">
+            <label>Hide and Show Rule</label>
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hide and Show Rule" data-content="Add a rule to hide this question by default. If the rule conditions are met the question will then be revealed in the survey." class="bootstrap-popover">
+              <span class="glyphicons glyphicons-info-sign"></span>
+            </a>
+          </div>
+
+          {{#if question.isNew}}
+            <div class="col-sm-2">
+              <button class="btn btn-success btn-sm" onclick={{perform saveTask true}}>
+                <span class="glyphicons glyphicons-plus"></span>
+                Add rule
+              </button>
+            </div>
+          {{/if}}
+
+        </div>
+
+        {{#if question.visibilityRule}}
+          {{rule-panel question=question conditionalQuestions=conditionalQuestions }}
+        {{/if}}
+        <hr/>
+        {{!-- Lookup rules --}}
+
+        <div class="form-group" style="margin-top: 15px;">
+          <div class="col-sm-10">
+            <label>Lookup Rule</label>
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Lookup Rules" data-content="..." class="bootstrap-popover">
+              <span class="glyphicons glyphicons-info-sign"></span>
+            </a>
+          </div>
+          <div class="col-sm-2">
+            <button class="btn btn-success btn-sm" onclick={{perform addLookupRule}}><span class="glyphicons glyphicons-plus"></span>Add rule</button>
+          </div>
+        </div>
+
+
+        {{#each question.lookupRules as |rule|}}
+          {{rule-panel question=question conditionalQuestions=conditionalQuestions lookupRule=rule}}
+        {{/each}}
+
+
         {{#if isSuperUser}}
-          <hr/>
+          <hr style="margin-top:15px;" />
           <section class="super-user">
             <div class="form-group">
               <div class="col-sm-11">

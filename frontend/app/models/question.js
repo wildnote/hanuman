@@ -2,7 +2,7 @@ import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import { belongsTo, hasMany } from 'ember-data/relationships';
 import { computed } from '@ember/object';
-import { match, equal, bool } from '@ember/object/computed';
+import { bool, equal, filterBy, match } from '@ember/object/computed';
 import { memberAction } from 'ember-api-actions';
 import { isPresent } from '@ember/utils';
 import { inject as service } from '@ember/service';
@@ -50,6 +50,7 @@ export default Model.extend(Validator, {
   rules: hasMany('rule', { async: false }),
   answerChoices: hasMany('answer-choice', { async: false }),
   childIds: attr('array'),
+  lookupRules: filterBy('rules', 'type', 'Hanuman::LookupRule'),
 
   // Computed Properties
   childQuestion: bool('ancestry'),

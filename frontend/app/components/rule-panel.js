@@ -1,11 +1,20 @@
 import Component from '@ember/component';
 import { task } from 'ember-concurrency';
+import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
   store: service(),
 
   classNames: 'panel',
+
+  rule: computed('question.visibilityRule', 'lookupRule', function() {
+    let lookupRule = this.get('lookupRule');
+    if (lookupRule) {
+      return lookupRule;
+    }
+    return this.get('question.visibilityRule');
+  }),
 
   saveConditionTask: task(function*(condition, rule) {
     if (this.get('question.isNew') || rule.get('isNew')) {
@@ -39,7 +48,7 @@ export default Component.extend({
   }),
   actions: {
     setRuleMatchType(matchType) {
-      this.set('question.visibilityRule.matchType', matchType);
+      this.set('rule', matchType);
     }
   }
 });
