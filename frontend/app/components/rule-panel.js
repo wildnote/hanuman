@@ -1,0 +1,45 @@
+import Component from '@ember/component';
+import { task } from 'ember-concurrency';
+import { inject as service } from '@ember/service';
+
+export default Component.extend({
+  store: service(),
+
+  classNames: 'panel',
+
+  saveConditionTask: task(function*(condition, rule) {
+    if (this.get('question.isNew') || rule.get('isNew')) {
+      if (rule.get('conditionsPendingSave').indexOf(condition) === -1) {
+        rule.get('conditionsPendingSave').pushObject(condition);
+      }
+    } else {
+      yield condition.save();
+    }
+  }),
+
+  removeConditionTask: task(function*(condition, rule) {
+    if (rule.isNew || condition.get('isNew')) {
+      rule.get('conditionsPendingSave').removeObject(condition);
+      condition.deleteRecord();
+    } else {
+      try {
+        condition.deleteRecord();
+        yield condition.save();
+        yield rule.reload();
+      } catch (e) {
+        console.log({ e }); // eslint-disable-line no-console
+        // If this was the last condition the API deletes the rule
+        if (e.errors && e.errors[0] === 'Record not found.') {
+          this.store.unloadRecord(rule);
+          let question = this.get('question');
+          this.store.createRecord('rule', { question });
+        }
+      }
+    }
+  }),
+  actions: {
+    setRuleMatchType(matchType) {
+      this.set('question.visibilityRule.matchType', matchType);
+    }
+  }
+});

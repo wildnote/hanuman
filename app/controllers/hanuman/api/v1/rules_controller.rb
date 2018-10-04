@@ -7,7 +7,7 @@ module Hanuman
     end
 
     def show
-      respond_with Rule.find(params[:id])
+      respond_with Rule.find(params[:id]), root: :rule
     end
 
     def create
@@ -18,7 +18,7 @@ module Hanuman
     def update
       rule = Rule.find(params[:id])
       rule.update(rule_params)
-      respond_with rule
+      respond_with rule, root: :rule
     end
 
     def destroy

@@ -1,0 +1,43 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <tbody>
+          <tr class="no-hover">
+            <td colspan="6">
+              <select data-test="rule-match-type-select" class="form-control" onchange={{action "setRuleMatchType" value="target.value"}}>
+                <option value="any" selected={{eq question.visibilityRule.matchType 'any'}}>match on any question condition (OR)</option>
+                <option value="all" selected={{eq question.visibilityRule.matchType 'all'}}>match on all question conditions (AND)</option>
+              </select>
+            </td>
+          </tr>
+          <tr class="no-hover">
+            <td width="10px"></td>
+            <td>Question</td>
+            <td>Operator</td>
+            <td>Answer</td>
+            <td width="10px"></td>
+            <td width="10px"></td>
+          </tr>
+          {{#each question.visibilityRule.conditions as |condition|}}
+            {{condition-row
+              condition=condition
+              question=question
+              questions=conditionalQuestions
+              saveTask=saveConditionTask
+              removeTask=removeConditionTask
+              isNewCondition=false
+            }}
+          {{/each}}
+          {{condition-row
+            question=question
+            questions=conditionalQuestions
+            saveTask=saveConditionTask
+            removeTask=removeConditionTask
+            isNewCondition=true
+          }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

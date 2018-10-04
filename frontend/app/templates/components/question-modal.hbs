@@ -262,7 +262,7 @@
           <div class="row">
             <div class="col-sm-12">
               <div class="form-group">
-                <a class="btn btn-success" onclick={{action "save" true}}>
+                <a class="btn btn-success" onclick={{perform saveTask true}}>
                   <span class="glyphicons glyphicons-plus"></span>
                   Add rule
                 </a>
@@ -272,59 +272,7 @@
         {{/if}}
 
         {{#if question.visibilityRule}}
-
-          <div class="panel">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="table-responsive">
-                  <table class="table table-hover">
-                    <tbody>
-                      <tr class="no-hover">
-                        <td colspan="6">
-                          Value
-                          <input type="text" name="value" placeholder="value">
-                        </td>
-                      </tr>
-                      <tr class="no-hover">
-                        <td colspan="6">
-                          <select data-test="rule-match-type-select" class="form-control" onchange={{action "setRuleMatchType" value="target.value"}}>
-                            <option value="any" selected={{eq question.visibilityRule.matchType 'any'}}>match on any question condition (OR)</option>
-                            <option value="all" selected={{eq question.visibilityRule.matchType 'all'}}>match on all question conditions (AND)</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr class="no-hover">
-                        <td width="10px"></td>
-                        <td>Question</td>
-                        <td>Operator</td>
-                        <td>Answer</td>
-                        <td width="10px"></td>
-                        <td width="10px"></td>
-                      </tr>
-                      {{#each question.visibilityRule.conditions as |condition|}}
-                        {{condition-row
-                            condition=condition
-                            question=question
-                            questions=conditionalQuestions
-                            saveTask=saveConditionTask
-                            removeTask=removeConditionTask
-                            isNewCondition=false
-                          }}
-                      {{/each}}
-                      {{condition-row
-                        question=question
-                        questions=conditionalQuestions
-                        saveTask=saveConditionTask
-                        removeTask=removeConditionTask
-                        isNewCondition=true
-                      }}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
+          {{rule-panel question=question conditionalQuestions=conditionalQuestions }}
         {{/if}}
 
         <div class="form-group">
@@ -370,8 +318,8 @@
     <div class="row">
       <div class="form-group">
         <div class="col-sm-12">
-          <a class="btn btn-primary" data-test="save-question-link" onclick={{action "save"}}>
-            {{ if question.isSaving 'Saving...' 'Save' }}
+          <a class="btn btn-primary {{if saveTask.isRunning 'disabled'}}" data-test="save-question-link" onclick={{perform saveTask false}}>
+            {{ if (or saveTask.isRunning question.isSaving) 'Saving...' 'Save' }}
           </a>
           <a class="btn btn-default" data-test="cancel-question-link" onclick={{action "closeModal"}}>
             Cancel
