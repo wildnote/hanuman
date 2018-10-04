@@ -135,3 +135,22 @@ test('selecting a conditional question with answer choices', async function(asse
   toTestCondition = server.db.conditions.find(toTestCondition.id);
   assert.equal(toTestCondition.answer, firstAnswerChoice.option_text);
 });
+
+test('rule match types is properly shown', async function(assert) {
+  assert.expect(1);
+
+  server.createList('question', 3, { surveyTemplate });
+  rule = server.create('rule', { match_type: 'any' });
+  /* eslint-disable camelcase */
+  conditions = server.createList('condition', 3, { rule, question_id: 2 });
+  question = server.create('question', { surveyTemplate, rules: [rule] });
+  rule = server.db.rules.update(rule.id, { question_id: question.id });
+  /* eslint-enable camelcase */
+
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  assert.equal(
+    find(`[data-question-id="${question.id}"] [data-test-match-type]`).length,
+    2,
+    'match types number is right'
+  );
+});
