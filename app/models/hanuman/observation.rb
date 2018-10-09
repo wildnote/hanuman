@@ -20,11 +20,10 @@ module Hanuman
     has_one :observation_signature, dependent: :destroy
     accepts_nested_attributes_for :observation_signature, allow_destroy: true
 
-    has_many :photos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationPhoto'
-    has_many :documents, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationDocument'
-    has_many :videos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationVideo'
-    has_one :signature, class_name: 'Hanuman::ObservationSignature'
-
+    has_many :photos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationPhoto', dependent: :destroy
+    has_many :documents, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationDocument', dependent: :destroy
+    has_many :videos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationVideo', dependent: :destroy
+    has_one :signature, class_name: 'Hanuman::ObservationSignature', dependent: :destroy
 
     belongs_to :selectable, polymorphic: true
 
