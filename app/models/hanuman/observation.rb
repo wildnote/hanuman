@@ -20,11 +20,14 @@ module Hanuman
     has_one :observation_signature, dependent: :destroy
     accepts_nested_attributes_for :observation_signature, allow_destroy: true
 
+    # these references are in place due to legacy code referencing the photos, videos and documents as such
     has_many :photos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationPhoto'
     has_many :documents, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationDocument'
     has_many :videos, -> { order :sort_order, :id }, class_name: 'Hanuman::ObservationVideo'
-    has_one :signature, class_name: 'Hanuman::ObservationSignature'
-
+    # for some reason needed to add the dependent: :destroy to this has_one call even though don't need it for the photos, videos and documents has_many
+    # I would think the dependent destroy on the observation_signature would work but it does not and needed it on this reference as well.
+    # TODO delete the secondary has_many and has_one defintions since they are duplicate code and just rely on the above references to the real objects.
+    has_one :signature, class_name: 'Hanuman::ObservationSignature', dependent: :destroy
 
     belongs_to :selectable, polymorphic: true
 
