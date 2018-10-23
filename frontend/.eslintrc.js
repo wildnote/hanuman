@@ -8,7 +8,8 @@ module.exports = {
   extends: ['eslint:recommended', 'plugin:ember/recommended', 'prettier'],
   env: {
     browser: true,
-    es6: true
+    es6: true,
+    node: true
   },
   globals: {
     BoxSelect: true,
