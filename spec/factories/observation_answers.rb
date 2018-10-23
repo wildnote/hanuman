@@ -1,6 +1,6 @@
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :observation_answer, class: 'Hanuman::ObservationAnswer' do
     observation
     answer_choice

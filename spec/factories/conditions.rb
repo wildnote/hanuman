@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :condition, class: 'Hanuman::Condition' do
     question
     rule
