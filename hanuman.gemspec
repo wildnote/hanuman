@@ -17,10 +17,10 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency 'rails', '~> 4.2.7'
+  s.add_dependency 'rails', '~> 4.2.10'
   s.add_dependency 'responders', '~> 2.0'
   s.add_dependency 'paper_trail', '~> 6.0'
-  s.add_dependency 'ancestry'
+  s.add_dependency 'ancestry', '~> 3.0.2'
   s.add_dependency 'amoeba', '~> 3.1.0'
   s.add_dependency 'haml-rails', '~> 0.5.3'
   s.add_dependency 'coffee-rails', '~> 4.0.1'
