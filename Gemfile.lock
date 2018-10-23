@@ -4,7 +4,7 @@ PATH
     hanuman (1.7.2)
       active_model_serializers (~> 0.8.1)
       amoeba (~> 3.1.0)
-      ancestry (~> 3.0.2)
+      ancestry
       carrierwave (= 0.11.2)
       cloudinary (~> 1.8.1)
       cocaine (~> 0.5.8)
