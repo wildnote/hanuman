@@ -6,7 +6,7 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   store: service(),
 
-  classNames: 'panel',
+  classNames: 'panel rule-panel',
 
   rule: computed('question.visibilityRule', 'lookupRule', function() {
     let lookupRule = this.get('lookupRule');
