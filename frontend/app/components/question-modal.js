@@ -189,6 +189,7 @@ export default Component.extend({
 
     try {
       question = yield question.save();
+      yield all(question.get('lookupRules').map(lookupRule => lookupRule.save()));
       let promises = [];
       let visibilityRule = question.get('visibilityRule');
       let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
