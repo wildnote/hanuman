@@ -22,12 +22,22 @@
   <td>
     {{#if useDropDownAnswerSelect}}
       {{#form-field for='answer'}}
-        <select data-test="condition-answer-choice-dropdown" class="form-control" onchange={{action "setConditionAnswer" value="target.value"}}>
-          <option value="" selected={{eq condition.answer ""}}></option>
-          {{#each questionAnswerChoices as |answerChoice|}}
-            <option value={{answerChoice.optionText}} selected={{eq condition.answer answerChoice.optionText}}>{{answerChoice.optionText}}</option>
-          {{/each}}
-        </select>
+        {{#if loadLocations.isRunning}}
+          Loading...
+        {{else}}
+          <select data-test="condition-answer-choice-dropdown" class="form-control" onchange={{action "setConditionAnswer" value="target.value"}}>
+            <option value="" selected={{eq condition.answer ""}}></option>
+            {{#if currentQuestion.isLocationSelect}}
+              {{#each locations as |location|}}
+                <option value={{location.name}} selected={{eq condition.answer location.name}}>{{location.name}}</option>
+              {{/each}}
+            {{else}}
+              {{#each questionAnswerChoices as |answerChoice|}}
+                <option value={{answerChoice.optionText}} selected={{eq condition.answer answerChoice.optionText}}>{{answerChoice.optionText}}</option>
+              {{/each}}
+            {{/if}}
+          </select>
+        {{/if}}
       {{/form-field}}
     {{else}}
       {{#form-field for='answer'}}

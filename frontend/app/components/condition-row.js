@@ -1,15 +1,32 @@
 import Component from '@ember/component';
 import { alias } from '@ember/object/computed';
 import { computed } from '@ember/object';
-import { isNone } from '@ember/utils';
+import { isNone, isBlank } from '@ember/utils';
+import { inject as service } from '@ember/service';
+import { task } from 'ember-concurrency';
+
 import Condition from '../models/condition';
 
 export default Component.extend({
+  ajax: service(),
   for: alias('condition'),
   tagName: 'tr',
   attributeBindings: ['condition.id:data-condition-id'],
   classNameBindings: ['isNewCondition:no-hover'],
   isEditingCondition: false,
+
+  loadLocations: task(function*() {
+    let projectId;
+    if (window.location.href.indexOf('/projects/') !== -1) {
+      projectId = window.location.href.split('/')[6];
+    }
+    if (projectId) {
+      let response = yield this.get('ajax').request(`/locations?project_id=${projectId}`);
+      this.set('locations', response.locations);
+    } else {
+      this.set('locations', []);
+    }
+  }),
 
   operators: computed('currentQuestion', function() {
     let answerType = this.get('currentQuestion.answerType');
@@ -33,9 +50,14 @@ export default Component.extend({
   useDropDownAnswerSelect: computed('currentQuestion', 'condition.operator', function() {
     let currentQuestion = this.get('currentQuestion');
     let conditionOperator = this.get('condition.operator');
-    return (
-      conditionOperator !== 'contains' && currentQuestion && currentQuestion.hasMany('answerChoices').ids().length > 1
-    );
+    let value =
+      conditionOperator !== 'contains' &&
+      currentQuestion &&
+      (currentQuestion.hasMany('answerChoices').ids().length > 1 || currentQuestion.isLocationSelect);
+    if (currentQuestion.isLocationSelect && isBlank(this.locations)) {
+      this.loadLocations.perform();
+    }
+    return value;
   }),
 
   setNewCondition() {
