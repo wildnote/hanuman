@@ -6,7 +6,7 @@ require 'rspec/rails'
 require 'shoulda-matchers'
 require 'shoulda-callback-matchers'
 require 'database_cleaner'
-require 'factory_girl_rails'
+require 'factory_bot_rails'
 require 'codeclimate-test-reporter'
 require 'fakeweb'
 require 'pry'
@@ -31,7 +31,7 @@ end
 
 RSpec.configure do |config|
   config.include(Shoulda::Callback::Matchers::ActiveModel)
-  config.include FactoryGirl::Syntax::Methods
+  config.include FactoryBot::Syntax::Methods
   config.mock_with :rspec
   config.use_transactional_fixtures = true
   config.infer_base_class_for_anonymous_controllers = false

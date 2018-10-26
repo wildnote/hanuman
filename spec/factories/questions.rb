@@ -1,6 +1,6 @@
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :question, class: 'Hanuman::Question' do
     answer_type
     survey_template
@@ -9,7 +9,7 @@ FactoryGirl.define do
       rule { create(:rule) }
 
       transient do
-        number_of_conditions 2
+        number_of_conditions { 2 }
       end
 
       after :create do |question, evaluator|
