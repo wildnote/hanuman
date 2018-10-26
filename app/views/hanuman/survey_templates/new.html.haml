@@ -15,6 +15,11 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title New Survey
+    %h3.panel-title
+      = link_to surveys_project_path(params[:project_id]) do
+        Survey Forms
+      \/
+      = link_to new_hanuman_project_survey_template_path(params[:project_id]) do
+        New Survey
 
   = render "form"
