@@ -5,6 +5,10 @@ import { isNone, isBlank } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 
+import config from 'frontend/config/environment';
+
+const testing = config.environment === 'test';
+
 import Condition from '../models/condition';
 
 export default Component.extend({
@@ -20,7 +24,7 @@ export default Component.extend({
     if (window.location.href.indexOf('/projects/') !== -1) {
       projectId = window.location.href.split('/')[6];
     }
-    if (projectId) {
+    if (projectId || testing) {
       let response = yield this.get('ajax').request(`/locations?project_id=${projectId}`);
       this.set('locations', response.locations);
     } else {

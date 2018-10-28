@@ -154,3 +154,39 @@ test('rule match types is properly shown', async function(assert) {
     'match types number is right'
   );
 });
+
+test('selecting a location type question', async function(assert) {
+  assert.expect(3);
+
+  server.get('locations', function() {
+    return {
+      locations: [
+        { id: 9459, name: 'ERTC 1', status: 'active' },
+        { id: 11680, name: 'ERTC 2', status: 'active' },
+        { id: 11681, name: 'ERTC 3', status: 'active' }
+      ]
+    };
+  });
+
+  // Question with answer choices
+  /* eslint-disable camelcase */
+  server.createList('question', 3, { surveyTemplate });
+  let questionLocationType = server.create('question', { question_text: 'ERTC', surveyTemplate, answer_type_id: 47 });
+  let rule = server.create('rule');
+  let question = server.create('question', { surveyTemplate, rules: [rule] });
+
+  rule = server.db.rules.update(rule.id, { question_id: question.id });
+  /* eslint-enable camelcase */
+
+  await visit(`/projects/735/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await click('[data-test="add-condition-link"]');
+
+  // Select question
+  await fillIn('[data-test="condition-question-id-select"]', questionLocationType.id);
+  await triggerEvent('[data-test="condition-question-id-select"]', 'onchange');
+
+  let options = await find('[data-test="condition-answer-choice-dropdown"] option');
+  assert.equal(options[1].textContent, 'ERTC 1');
+  assert.equal(options[2].textContent, 'ERTC 2');
+  assert.equal(options[3].textContent, 'ERTC 3');
+});
