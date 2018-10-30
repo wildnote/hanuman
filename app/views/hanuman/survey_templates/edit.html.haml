@@ -9,7 +9,11 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Edit Survey Form
+    %h3.panel-title
+      Admin /
+      = link_to "Survey Forms", hanuman_project_survey_templates_path(@project)
+      \/
+      = link_to "Edit Survey Form", edit_hanuman_project_survey_template_path(@project, params[:id])
   .tab-base.tab-stacked-top
     %ul.nav.nav-tabs
       %li
