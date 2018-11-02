@@ -18,7 +18,10 @@
   .tab-base.tab-stacked-top
     %ul.nav.nav-tabs
       %li
-        %a{:href => "/hanuman/admin/survey_templates/#{@survey_template.id}/edit"} Survey Form Layout
+        - if params[:project_id]
+          %a{:href => "/hanuman/admin/projects/#{params[:project_id]}/survey_templates/#{@survey_template.id}/edit"} Survey Form Layout
+        - else
+          %a{:href => "/hanuman/admin/survey_templates/#{@survey_template.id}/edit"} Survey Form Layout
       %li.active
         %a Survey Form Details
     .tab-content
