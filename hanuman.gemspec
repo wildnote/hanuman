@@ -17,10 +17,10 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency 'rails', '~> 4.2.7'
+  s.add_dependency 'rails', '~> 4.2.10'
   s.add_dependency 'responders', '~> 2.0'
   s.add_dependency 'paper_trail', '~> 6.0'
-  s.add_dependency 'ancestry'
+  s.add_dependency 'ancestry' #, '~> 3.0.2'
   s.add_dependency 'amoeba', '~> 3.1.0'
   s.add_dependency 'haml-rails', '~> 0.5.3'
   s.add_dependency 'coffee-rails', '~> 4.0.1'
@@ -46,9 +46,9 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'foreigner'
   s.add_development_dependency "rspec-rails", "~> 3.4"
   s.add_development_dependency "database_cleaner"
-  s.add_development_dependency "shoulda-matchers"
-  s.add_development_dependency "shoulda-callback-matchers"
-  s.add_development_dependency 'factory_girl_rails', '~> 4.7'
+  s.add_development_dependency "shoulda-matchers", '~> 3.1.2'
+  s.add_development_dependency "shoulda-callback-matchers", '~>   1.1.4'
+  s.add_development_dependency 'factory_bot_rails', '~> 4.11.1'
   s.add_development_dependency "fakeweb", "~> 1.3"
   s.add_development_dependency "faker", "~> 1.6.5"
   s.add_development_dependency "rubocop", "~> 0.40.0"

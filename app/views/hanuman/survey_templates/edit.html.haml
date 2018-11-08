@@ -9,12 +9,20 @@
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title Edit Survey Form
-  .tab-base.tab-stacked-left
+    %h3.panel-title
+      - if params[:project_id]
+        Admin /
+        = link_to "Survey Forms", hanuman_project_survey_templates_path(params[:project_id])
+        \/
+        = link_to "Edit Survey Form", edit_hanuman_project_survey_template_path(params[:project_id], params[:id])
+  .tab-base.tab-stacked-top
     %ul.nav.nav-tabs
       %li
-        %a{:href => "/hanuman/admin/survey_templates/#{@survey_template.id}/edit"} Survey Layout
+        - if params[:project_id]
+          %a{:href => "/hanuman/admin/projects/#{params[:project_id]}/survey_templates/#{@survey_template.id}/edit"} Survey Form Layout
+        - else
+          %a{:href => "/hanuman/admin/survey_templates/#{@survey_template.id}/edit"} Survey Form Layout
       %li.active
-        %a Survey Details
+        %a Survey Form Details
     .tab-content
       = render "form"

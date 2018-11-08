@@ -172,7 +172,6 @@ ActiveRecord::Schema.define(version: 20180928194840) do
     t.string   "layout_column_position"
     t.integer  "export_continuation_characters"
     t.boolean  "searchable"
-    t.integer  "max_photos"
   end
 
   add_index "hanuman_questions", ["ancestry"], name: "index_hanuman_questions_on_ancestry", using: :btree
@@ -246,5 +245,4 @@ ActiveRecord::Schema.define(version: 20180928194840) do
 
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
 
-  add_foreign_key "hanuman_observation_signatures", "hanuman_observations", column: "observation_id"
 end

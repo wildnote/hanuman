@@ -1,6 +1,6 @@
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :observation, class: 'Hanuman::Observation' do
     question
     answer  { Faker::Lorem.word }

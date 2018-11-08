@@ -1,6 +1,6 @@
 require 'faker'
 
-FactoryGirl.define do
+FactoryBot.define do
   factory :answer_type, class: 'Hanuman::AnswerType' do
     name              { generate(:unique_name) }
     status            { Hanuman::AnswerType::ANSWER_CHOICE_STATUSES.sample }
