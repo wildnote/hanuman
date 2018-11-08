@@ -39,10 +39,30 @@
             isNewCondition=true
           }}
           {{#if lookupRule}}
-            <tr class="no-hover">
+            <tr class="no-hover defaul-rule-value">
               <td colspan="6">
-               <input placeholder="Value to set on this question" type="text" class="form-control" value={{rule.value}}
-                      oninput={{action (mut rule.value) value="target.value"}} />
+                {{#if question.answerType.hasAnswerChoices}}
+                  {{#power-select-multiple
+                    class="form-control"
+                    options=question.answerChoices
+                    selected=choicesValueSelected
+                    renderInPlace=true
+                    verticalPosition="below"
+                    placeholder="Answers to set select on this question"
+                    onchange=(action "setAnswerChoiceRuleValue")
+                    as |answerChoice|
+                  }}
+                    {{answerChoice.optionText}}
+                  {{/power-select-multiple}}
+                {{else}}
+                  <input
+                    placeholder="Value to set on this question"
+                    type="text"
+                    class="form-control"
+                    value={{rule.value}}
+                    oninput={{action (mut rule.value) value="target.value"}}
+                  />
+                {{/if}}
               </td>
             </tr>
           {{/if}}

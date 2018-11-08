@@ -5,8 +5,13 @@ import { inject as service } from '@ember/service';
 
 export default Component.extend({
   store: service(),
-
   classNames: 'panel rule-panel',
+
+  choicesValueSelected: computed('rule.value', 'question.answerChoices.[]', function() {
+    let choiceIds = (this.get('rule.value') || '').split(',');
+    let answerChoices = this.get('question.answerChoices');
+    return answerChoices.filter(answerChoice => choiceIds.includes(answerChoice.id));
+  }),
 
   rule: computed('question.visibilityRule', 'lookupRule', function() {
     let lookupRule = this.get('lookupRule');
@@ -52,6 +57,10 @@ export default Component.extend({
   actions: {
     setRuleMatchType(matchType) {
       this.set('rule.matchType', matchType);
+    },
+    setAnswerChoiceRuleValue(answerChoices) {
+      let value = answerChoices.map(answerChoice => answerChoice.id).join(',');
+      this.set('rule.value', value);
     }
   }
 });

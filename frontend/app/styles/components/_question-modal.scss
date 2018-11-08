@@ -36,5 +36,10 @@
   }
   .rule-panel {
     margin-bottom: 5px;
+    .defaul-rule-value {
+      .ember-basic-dropdown-content {
+        position: inherit;
+      }
+    }
   }
 }
