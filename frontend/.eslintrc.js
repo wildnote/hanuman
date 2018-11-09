@@ -23,6 +23,7 @@ module.exports = {
   rules: {
     'ember/avoid-leaking-state-in-ember-objects': 'off',
     'ember/no-on-calls-in-components': 'off',
+    'ember/no-side-effects': 'off',
     'ember/closure-actions': 'off',
     'generator-star-spacing': ['error', 'neither'],
     'no-constant-condition': ['error', { checkLoops: false }],

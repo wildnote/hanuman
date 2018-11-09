@@ -102,13 +102,14 @@ export default Component.extend({
       }
       let isDisabled = !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
       if (isDisabled) {
-        run.later(
-          this,
-          () => {
+        run.next(this, () => {
+          if (this.get('isDestroyed') || this.get('isDestroying')) {
+            return;
+          }
+          if (question.isDeleted !== undefined && !question.isDeleted) {
             this.set('question.required', false);
-          },
-          0
-        );
+          }
+        });
       }
       return isDisabled;
     }
