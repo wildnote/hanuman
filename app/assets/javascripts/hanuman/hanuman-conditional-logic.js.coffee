@@ -64,7 +64,7 @@ class @ConditionalLogic
           if $repeater.length > 0
               inRepeater = true
           if rule.conditions.length > 1
-            self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType)
+            self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule)
           else if rule.type == "Hanuman::VisibilityRule"
             self.hideShowQuestions(hideQuestions, ancestorId, $ruleContainer, $ruleContainer, inRepeater)
 
@@ -92,7 +92,7 @@ class @ConditionalLogic
           #$container = $(this).closest(".form-container-repeater")
           $container = $ruleElement
           rules = $.parseJSON($ruleElement.attr("data-rule"))
-          $(rules).each -> 
+          $(rules).each ->
             rule = this
             matchType = rule.match_type
             questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
@@ -101,7 +101,7 @@ class @ConditionalLogic
             matchingCondition = _.where(conditions, {question_id: Number(questionId)})
             if matchingCondition.length > 0
               if conditions.length > 1
-                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType)
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule)
               else
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
                 if rule.type == "Hanuman::VisibilityRule"
@@ -113,7 +113,7 @@ class @ConditionalLogic
           $ruleElement = $(this)
           $container = $ruleElement
           rules = $.parseJSON($ruleElement.attr("data-rule"))
-          $(rules).each -> 
+          $(rules).each ->
             rule = this
             matchType = rule.match_type
             questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
@@ -122,12 +122,12 @@ class @ConditionalLogic
             matchingCondition = _.where(conditions, {question_id: Number(questionId)})
             if matchingCondition.length > 0
               if conditions.length > 1
-                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule.type)
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule)
               else
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
                 if rule.type == "Hanuman::VisibilityRule"
                   self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
-                else if hideQuestions == false 
+                else if hideQuestions == false
                   self.setLookupValue(rule.value, $ruleElement)
     return
 
@@ -164,7 +164,7 @@ class @ConditionalLogic
       else
         # if one false then hide the conditioanl logic
         hideShow = true
-      
+
     if rule.type == "Hanuman::VisibilityRule"
       self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
     else if hideShow == false
@@ -172,25 +172,25 @@ class @ConditionalLogic
 
 
   setLookupValue: (value, $ruleElement) ->
-    answerType = $ruleElement.data('element-type') 
-    
+    answerType = $ruleElement.data('element-type')
+
     switch answerType
       when 'radio'
         $ruleElement.find('input[type="radio"][value="' + value + '"]').prop("checked", true)
-      
+
       when 'checkbox'
         $ruleElement.find('input[type="checkbox"]').prop("checked", true)
-      
+
       when 'checkboxes'
         selectedOptions = value.split(",")
-        $ruleElement.find('input[type="checkbox"]').each -> 
+        $ruleElement.find('input[type="checkbox"]').each ->
           if selectedOptions.indexOf($(this).attr('value')) != -1
             $(this).prop("checked", true)
 
       when 'chosenmultiselect'
         selectedOptions = value.split(",")
         $ruleElement.find('input[type="select"]').val(selectedOptions).trigger('chosen:updated');
-      
+
       when 'chosenselect'
         $ruleElement.find('input[type="select"]').val(value).trigger('chosen:updated');
 
@@ -199,12 +199,12 @@ class @ConditionalLogic
 
       when 'date', 'number', 'text', 'time'
         $ruleElement.find('input[type="text"]').val(value)
-      
+
       when 'textarea'
         $ruleElement.find('textarea').val(value)
-      
 
-    
+
+
 
   #setHideQuestions variable
   setHideQuestions: (condition, $triggerElement) ->
@@ -254,17 +254,17 @@ class @ConditionalLogic
     #TODO set these to default values once we implement default values - kdh
     # container.find("input[type!=hidden]").val("")
     textFields = container.find(":text")
-    textFields.each -> 
+    textFields.each ->
       if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null"
         $(this).val($(this).data("default-answer"))
-      else 
+      else
         $(this).val("")
 
     textAreas = container.find("textarea")
-    textAreas.each -> 
+    textAreas.each ->
       if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null"
         $(this).val($(this).data("default-answer"))
-      else 
+      else
         $(this).val("")
 
     # un-select dropdown
@@ -272,7 +272,7 @@ class @ConditionalLogic
     selects.each ->
       if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null"
         $(this).val($(this).data("default-answer"))
-      else 
+      else
         $(this).val("")
 
       $(this).trigger("chosen:updated") if $(this).hasClass('chosen')
@@ -282,7 +282,7 @@ class @ConditionalLogic
     checkboxes.each ->
       if $(this).attr("data-default-answer") && $(this).data("default-answer") == "true"
         $(this).prop('checked', true)
-      else 
+      else
         $(this).prop('checked', false)
 
     # un-select radio buttons
@@ -290,7 +290,7 @@ class @ConditionalLogic
     radiobuttons.each ->
       if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null" && $(this).data("label-value") == $(this).data("default-answer")
         $(this).prop('checked', true)
-      else 
+      else
         $(this).prop('checked', false)
 
     multiselects = container.find("select[multiple]")
