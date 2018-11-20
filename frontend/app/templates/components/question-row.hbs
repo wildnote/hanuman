@@ -61,7 +61,7 @@
     </div>
     <div class="row">
       {{#if (and question.visibilityRule question.visibilityRule.conditions)}}
-        show
+        <i>show</i>
         {{#each question.visibilityRule.conditions as |condition index|}}
           if <strong
                 class="conditional-highlight"
@@ -76,6 +76,26 @@
         {{/each}}
       {{/if}}
     </div>
+    <hr>
+    {{#each question.lookupRules as |rule|}}
+      <div class="row">
+        {{#if rule.conditions}}
+          <i>default</i> to <strong>{{rule.value}}</strong>
+          {{#each rule.conditions as |condition index|}}
+            if <strong
+                  class="conditional-highlight"
+                  onmouseover={{action 'highlightConditional' condition.questionId}}
+                  onmouseleave={{action 'unHighlightConditional' condition.questionId}}
+                >
+                  {{condition.questionId}}
+                </strong> {{condition.operator}} {{condition.answer}}
+                {{#if (not-eq (add 1 index) question.visibilityRule.conditions.length)}}
+                  <strong data-test-match-type>{{question.ruleMatchType}}</strong>
+                {{/if}}
+          {{/each}}
+        {{/if}}
+      </div>
+    {{/each}}
   </div>
   <div class="col-sm-2">
     {{#if question.surveyTemplate.lock}}
