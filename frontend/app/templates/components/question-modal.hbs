@@ -63,7 +63,12 @@
               </span>
             {{#if (or isFullyEditable question.isNew)}}
               {{#form-field for='answerType'}}
-                <select data-test="answer-type-id-select" class="form-control" onchange={{action (queue (action "setAnswerType") (action "checkToResetDataSource")) value="target.value"}}>
+                <select
+                  disabled={{question.surveyTemplate.lock}}
+                  data-test="answer-type-id-select"
+                  class="form-control"
+                  onchange={{action (queue (action "setAnswerType") (action "checkToResetDataSource")) value="target.value"}}
+                >
                   {{#if showQuestionTypePlaceholder}}
                     <option disabled selected>Please select</option>
                   {{/if}}
@@ -91,7 +96,12 @@
           <div class="form-group">
             <div class="col-sm-12">
               {{#form-field for='dataSource' label='Data Source'}}
-                <select class="form-control" data-test="data-source-select" onchange={{action "setDataSource" value="target.value"}}>
+                <select
+                  disabled={{question.surveyTemplate.lock}}
+                  class="form-control"
+                  data-test="data-source-select"
+                  onchange={{action "setDataSource" value="target.value"}}
+                >
                   <option></option>
                   {{#each dataSources as |opDataSource|}}
                     <option value={{opDataSource.id}} selected={{eq opDataSource.id question.dataSource.id}}>{{opDataSource.name}}</option>
@@ -105,6 +115,7 @@
           <div class="col-sm-12">
             {{#form-field for='questionText' label='Question Text'}}
               <textarea data-test="question.questionText"
+                      disabled={{question.surveyTemplate.lock}}
                       name="questionText"
                       class="form-control"
                       style="height: 33px;"
@@ -119,6 +130,7 @@
             <div class="col-sm-3">
               {{#form-field for='maxPhotos' label='Max Photos'}}
                 <input data-test-order type="number"
+                      disabled={{question.surveyTemplate.lock}}
                       class="form-control"
                       value={{question.maxPhotos}}
                       oninput={{action (mut question.maxPhotos) value="target.value"}} />
@@ -132,6 +144,7 @@
               <div class="form-group">
                 <div class="col-sm-12">
                   <input type="checkbox"
+                        disabled={{question.surveyTemplate.lock}}
                         name="captureLocationData"
                         checked={{question.combineLatlongAsLine}}
                         onchange={{action (mut question.combineLatlongAsLine) value="target.checked"}} /> Combine Lat/Long points inside the repeater as a Line
@@ -146,7 +159,7 @@
             <div class="form-group">
               <div class="col-sm-12">
                 <input type="checkbox"
-                      disabled={{isRequiredDisabled}}
+                      disabled={{or isRequiredDisabled question.surveyTemplate.lock}}
                       name="isRequired"
                       checked={{question.required}}
                       onchange={{action (mut question.required) value="target.checked"}} /> Required
@@ -165,6 +178,7 @@
               <div class="form-group">
                 <div class="col-sm-12">
                   <input type="checkbox"
+                        disabled={{question.surveyTemplate.lock}}
                         name="enableSurveyHistory"
                         checked={{question.enableSurveyHistory}}
                         onchange={{action (mut question.enableSurveyHistory) value="target.checked"}} /> Enable Survey History (Superuser Only)
@@ -180,6 +194,7 @@
               <div class="form-group">
                 <div class="col-sm-12">
                   <input type="checkbox"
+                        disabled={{question.surveyTemplate.lock}}
                         name="enableSurveyHistory"
                         checked={{question.newProjectLocation}}
                         onchange={{action (mut question.newProjectLocation) value="target.checked"}} /> Create Project Location (Superuser Only)
@@ -258,7 +273,13 @@
             </a>
           </div>
           <div class="col-sm-2">
-            <button class="btn btn-success btn-sm" onclick={{perform addLookupRule}}><span class="glyphicons glyphicons-plus"></span>Add rule</button>
+            <button
+              disabled={{question.surveyTemplate.lock}}
+              class="btn btn-success btn-sm"
+              onclick={{perform addLookupRule}}
+            >
+              <span class="glyphicons glyphicons-plus"></span>Add rule
+            </button>
           </div>
         </div>
 
@@ -274,6 +295,7 @@
         <div class="form-group">
           <div class="col-sm-12">
             <input type="checkbox"
+                  disabled={{question.surveyTemplate.lock}}
                   name="isHidden"
                   checked={{question.hidden}}
                   onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden

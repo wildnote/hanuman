@@ -4,6 +4,7 @@
     {{#object-form for=answerChoice}}
       {{#form-field for='optionText'}}
         <input type="text"
+              disabled={{question.surveyTemplate.lock}}
               data-test="answerChoice.optionText"
               class="form-control {{if saveTask.isRunning 'disabled'}}"
               value={{answerChoice.optionText}}
@@ -25,7 +26,12 @@
   {{#if isNewAnswerChoice}}
     <!-- + new answer choice button -->
     <td>
-      <a class="btn btn-success" data-test="add-answer-choice-link" onclick={{action 'toggleForm' true}}>
+      <a
+        disabled={{question.surveyTemplate.lock}}
+        class="btn btn-success"
+        data-test="add-answer-choice-link"
+        onclick={{action 'toggleForm' true}}
+      >
         <span class="glyphicons glyphicons-plus"></span>
         Add Answer Choice
       </a>
@@ -36,11 +42,21 @@
       {{answerChoice.optionText}}
     </td>
     <td>
-      <a class="btn btn-success" data-test="edit-answer-choice-link" onclick={{action 'toggleForm'}}>
+      <a
+        disabled={{question.surveyTemplate.lock}}
+        class="btn btn-success"
+        data-test="edit-answer-choice-link"
+        onclick={{action 'toggleForm'}}
+      >
         <span class="glyphicons glyphicons-pencil"></span>
         Edit
       </a>
-      <a class="btn" data-test="delete-answer-choice-link" onclick={{action 'delete'}}>
+      <a
+        disabled={{question.surveyTemplate.lock}}
+        class="btn"
+        data-test="delete-answer-choice-link"
+        onclick={{action 'delete'}}
+      >
         <span class="glyphicons glyphicons-bin"></span>
       </a>
     </td>

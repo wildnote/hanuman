@@ -5,7 +5,12 @@
         <tbody>
           <tr class="no-hover">
             <td colspan="6">
-              <select data-test="rule-match-type-select" class="form-control" onchange={{action "setRuleMatchType" value="target.value"}}>
+              <select
+                disabled={{question.surveyTemplate.lock}}
+                data-test="rule-match-type-select"
+                class="form-control"
+                onchange={{action "setRuleMatchType" value="target.value"}}
+              >
                 <option value="any" selected={{eq rule.matchType 'any'}}>match on any question condition (OR)</option>
                 <option value="all" selected={{eq rule.matchType 'all'}}>match on all question conditions (AND)</option>
               </select>
@@ -56,6 +61,7 @@
                   {{/power-select-multiple}}
                 {{else}}
                   <input
+                    disabled={{question.surveyTemplate.lock}}
                     placeholder="Value to set on this question"
                     type="text"
                     class="form-control"
