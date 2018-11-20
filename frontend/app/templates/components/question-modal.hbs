@@ -92,12 +92,11 @@
             {{/if}}
           </div>
         </div>
-        {{#if showDataSourceSelector}}
+        {{#if question.isTaxonType}}
           <div class="form-group">
             <div class="col-sm-12">
               {{#form-field for='dataSource' label='Data Source'}}
                 <select
-                  disabled={{question.surveyTemplate.lock}}
                   class="form-control"
                   data-test="data-source-select"
                   onchange={{action "setDataSource" value="target.value"}}

@@ -120,11 +120,6 @@ export default Component.extend({
     return question.get('isNew') && question.get('answerType.id') === undefined;
   }),
 
-  showDataSourceSelector: computed('question.answerType', function() {
-    let name = this.get('question.answerType.name');
-    return name && name.includes('taxon');
-  }),
-
   // If a question has a rule associated with it, it should automatically be set to Hidden
   hideQuestion: on(
     'afterRender',
