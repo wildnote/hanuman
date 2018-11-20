@@ -246,8 +246,29 @@
               {{/form-field}}
             </div>
           </div>
-          <hr />
         {{/if}}
+
+        {{!-- Lookup rules --}}
+
+        <div class="form-group" style="margin-top: 15px;">
+          <div class="col-sm-10">
+            <label>Lookup Rule</label>
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Lookup Rules" data-content="..." class="bootstrap-popover">
+              <span class="glyphicons glyphicons-info-sign"></span>
+            </a>
+          </div>
+          <div class="col-sm-2">
+            <button class="btn btn-success btn-sm" onclick={{perform addLookupRule}}><span class="glyphicons glyphicons-plus"></span>Add rule</button>
+          </div>
+        </div>
+
+
+        {{#each question.lookupRules as |rule|}}
+          {{rule-panel question=question conditionalQuestions=conditionalQuestions lookupRule=rule}}
+        {{/each}}
+
+        <hr />
+
         {{!-- Visibility rules --}}
 
         <div class="form-group">
@@ -285,25 +306,6 @@
           {{rule-panel question=question conditionalQuestions=conditionalQuestions }}
         {{/if}}
         <hr/>
-        {{!-- Lookup rules --}}
-
-        <div class="form-group" style="margin-top: 15px;">
-          <div class="col-sm-10">
-            <label>Lookup Rule</label>
-            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Lookup Rules" data-content="..." class="bootstrap-popover">
-              <span class="glyphicons glyphicons-info-sign"></span>
-            </a>
-          </div>
-          <div class="col-sm-2">
-            <button class="btn btn-success btn-sm" onclick={{perform addLookupRule}}><span class="glyphicons glyphicons-plus"></span>Add rule</button>
-          </div>
-        </div>
-
-
-        {{#each question.lookupRules as |rule|}}
-          {{rule-panel question=question conditionalQuestions=conditionalQuestions lookupRule=rule}}
-        {{/each}}
-
 
         {{#if isSuperUser}}
           <hr style="margin-top:15px;" />
