@@ -6,7 +6,7 @@ module Hanuman
                :enable_survey_history, :new_project_location, :layout_section, :layout_row,
                :layout_column, :layout_column_position, :default_answer, :child_ids,
                :export_continuation_characters
-
+               
     has_many :answer_choices
     has_one :rule
 
