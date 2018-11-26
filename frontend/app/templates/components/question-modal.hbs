@@ -513,16 +513,6 @@
               </div>
             {{/if}}
 
-            {{#if (and isSuperUser hasAnAnswer)}}
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input type="checkbox"
-                        name="searchable"
-                        checked={{question.searchable}}
-                        onchange={{action (mut question.searchable) value="target.checked"}} /> Searchable (Superuser Only)
-                </div>
-              </div>
-            {{/if}}
 
           </section>
         {{/if}}
