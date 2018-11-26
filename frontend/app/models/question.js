@@ -27,6 +27,7 @@ export default Model.extend(Validator, {
   hidden: attr('boolean'),
   ancestry: attr('string'),
   parentId: attr('string'),
+  helperText: attr('string'),
   railsId: attr('number'),
 
   captureLocationData: attr('boolean'),

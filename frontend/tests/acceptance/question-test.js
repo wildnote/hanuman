@@ -129,15 +129,17 @@ test('canceling question edition', async function(assert) {
 });
 
 test('editing a question', async function(assert) {
-  assert.expect(2);
+  assert.expect(3);
   question = server.create('question', { surveyTemplate, answer_type_id: 15 });
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   await click('[data-test-open-super-user]');
   await fillIn('[data-test="question.externalDataSource"]', 'chuchucu');
+  await fillIn('[data-test="question.helperText"]', 'this is a helper test');
   await click('[data-test="save-question-link"]');
   question = server.db.questions.find(question.id);
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
   assert.equal(question.external_data_source, 'chuchucu');
+  assert.equal(question.helper_text, 'this is a helper test');
 });
 
 test('deleting a question', async function(assert) {
