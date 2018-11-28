@@ -15,7 +15,7 @@ module Hanuman
       it { is_expected.to belong_to(:survey_template) }
       it { is_expected.to have_many(:answer_choices).dependent(:destroy) }
       it { is_expected.to have_many(:observations).dependent(:destroy) }
-      it { is_expected.to have_one(:rule).dependent(:destroy) }
+      it { is_expected.to have_many(:rules).dependent(:destroy) }
       it { is_expected.to have_many(:conditions).dependent(:destroy) }
     end
 
@@ -46,17 +46,17 @@ module Hanuman
           let(:question_to_duplicate) { create(:question, :with_rule_and_coditions, number_of_conditions: 2) }
           it 'duplicates and saves a single question with answer choices and conditions' do
             new_question = question_to_duplicate.dup_and_save
-            expect(new_question.rule.conditions.count).to equal(2)
-            expect(new_question.rule.id).to_not equal(question_to_duplicate.rule.id)
+            expect(new_question.rules.first.conditions.count).to equal(2)
+            expect(new_question.rules.first.id).to_not equal(question_to_duplicate.rules.first.id)
           end
         end
 
         context 'when a question dependent conditions' do
           let(:question_with_conditions) { create(:question, :with_rule_and_coditions, number_of_conditions: 2) }
           it 'doesn`t re-add conditions to an existing question' do
-            question_to_duplicate = question_with_conditions.rule.conditions.first.question
+            question_to_duplicate = question_with_conditions.rules.first.conditions.first.question
             question_to_duplicate.dup_and_save
-            expect(question_with_conditions.rule.conditions.count).to equal(2)
+            expect(question_with_conditions.rules.first.conditions.count).to equal(2)
           end
         end
       end

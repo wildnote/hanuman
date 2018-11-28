@@ -29,6 +29,11 @@ export default function() {
       id = request.params.id;
     return conditions.find(id).update(attrs);
   });
+  this.get('/locations', () => {
+    return {
+      locations: []
+    };
+  });
   // Rules
   // https://github.com/samselikoff/ember-cli-mirage/issues?utf8=%E2%9C%93&q=is%3Aissue+hasInverseFor
   this.post('/rules', ({ rules, conditions }, request) => {
@@ -71,7 +76,7 @@ export default function() {
   this.put('/questions/:id', ({ questions }, request) => {
     let attrs = JSON.parse(request.requestBody)['question'],
       id = request.params.id;
-    delete attrs.rule;
+    delete attrs.rules;
     return questions.find(id).update(attrs);
   });
   // Answer Choices

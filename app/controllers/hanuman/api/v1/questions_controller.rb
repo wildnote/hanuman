@@ -8,7 +8,7 @@ module Hanuman
 
     def index
       if params[:ids]
-        respond_with Question.where(id: params[:ids])
+        respond_with Question.includes(:answer_choices, rules: [:conditions]).where(id: params[:ids])
       else
         respond_with []
       end
@@ -54,7 +54,7 @@ module Hanuman
         :hidden, :parent_id, :capture_location_data, :data_source_id, :enable_survey_history, :new_project_location,
         :combine_latlong_as_polygon, :combine_latlong_as_line, :enable_survey_history,
         :layout_section, :layout_row, :layout_column, :layout_column_position, :default_answer,
-        :export_continuation_characters, :searchable
+        :export_continuation_characters, :helper_text
       )
     end
 

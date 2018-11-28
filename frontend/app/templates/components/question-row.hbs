@@ -60,9 +60,9 @@
       {{typeInitial}}
     </div>
     <div class="row">
-      {{#if (and question.rule question.rule.conditions)}}
-        show
-        {{#each question.rule.conditions as |condition index|}}
+      {{#if (and question.visibilityRule question.visibilityRule.conditions)}}
+        <i>show</i>
+        {{#each question.visibilityRule.conditions as |condition index|}}
           if <strong
                 class="conditional-highlight"
                 onmouseover={{action 'highlightConditional' condition.questionId}}
@@ -70,31 +70,44 @@
               >
                 {{condition.questionId}}
               </strong> {{condition.operator}} {{condition.answer}}
-              {{#if (not-eq (add 1 index) question.rule.conditions.length)}}
-                <strong>{{question.ruleMatchType}}</strong>
+              {{#if (not-eq (add 1 index) question.visibilityRule.conditions.length)}}
+                <strong data-test-match-type>{{question.ruleMatchType}}</strong>
               {{/if}}
         {{/each}}
       {{/if}}
     </div>
+    <hr>
+    {{#each question.lookupRules as |rule|}}
+      <div class="row">
+        {{#if rule.conditions}}
+          <i>default</i> to <strong>{{rule.value}}</strong>
+          {{#each rule.conditions as |condition index|}}
+            if <strong
+                  class="conditional-highlight"
+                  onmouseover={{action 'highlightConditional' condition.questionId}}
+                  onmouseleave={{action 'unHighlightConditional' condition.questionId}}
+                >
+                  {{condition.questionId}}
+                </strong> {{condition.operator}} {{condition.answer}}
+                {{#if (not-eq (add 1 index) question.visibilityRule.conditions.length)}}
+                  <strong data-test-match-type>{{question.ruleMatchType}}</strong>
+                {{/if}}
+          {{/each}}
+        {{/if}}
+      </div>
+    {{/each}}
   </div>
   <div class="col-sm-2">
-    {{#if question.surveyTemplate.lock}}
-      {{#link-to "survey_templates.record.questions.edit" question.id disabled="true" class="btn btn-sm btn-success"}}
-        <span class="glyphicons glyphicons-pencil"></span>
-        Edit
-      {{/link-to}}
+    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success" disabled=(and question.surveyTemplate.lock (and (not question.defaultAnswerEnabled) (not question.isTaxonType)))}}
+      <span class="glyphicons glyphicons-pencil"></span>
+      Edit
+    {{/link-to}}
+    {{#if (not ancestrable)}}
+      <a class="btn btn-delete" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
+        <span class="glyphicons glyphicons-bin"></span>
+      </a>
     {{else}}
-      {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success"}}
-        <span class="glyphicons glyphicons-pencil"></span>
-        Edit
-      {{/link-to}}
-      {{#if (not ancestrable)}}
-        <a class="btn btn-delete" data-test="confirm-delete-question-link"  onclick={{action 'confirm'}}>
-          <span class="glyphicons glyphicons-bin"></span>
-        </a>
-      {{else}}
-        <div style="margin-right: 50px;display: inline-block;"></div>
-      {{/if}}
+      <div style="margin-right: 50px;display: inline-block;"></div>
     {{/if}}
     <div class="delete-confirm">
       {{#if (and (gt totalChildren 0) (not isFullyEditable)) }}

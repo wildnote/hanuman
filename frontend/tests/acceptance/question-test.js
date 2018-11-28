@@ -62,6 +62,7 @@ test('selecting ancestry', async function(assert) {
   let notAncestryQuestions = server.createList('question', 2, { surveyTemplate, answer_type_id: 19 });
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await click('[data-test-open-super-user]');
   for (let ancestry of ancestryQuestions) {
     assert.equal(
       `${ancestry.question_text} - ${ancestry.id}`,
@@ -89,8 +90,8 @@ test('adding a question', async function(assert) {
   await click('a:contains("Add")');
 
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
-
-  fillIn('[data-test="question.questionText"]', 'this is DA question');
+  await click('[data-test-open-super-user]');
+  await fillIn('[data-test="question.questionText"]', 'this is DA question');
   // Select
   await fillIn('[data-test="answer-type-id-select"]', 15);
   await fillIn('[data-test-order]', 99);
@@ -128,14 +129,17 @@ test('canceling question edition', async function(assert) {
 });
 
 test('editing a question', async function(assert) {
-  assert.expect(2);
+  assert.expect(3);
   question = server.create('question', { surveyTemplate, answer_type_id: 15 });
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await click('[data-test-open-super-user]');
   await fillIn('[data-test="question.externalDataSource"]', 'chuchucu');
+  await fillIn('[data-test="question.helperText"]', 'this is a helper test');
   await click('[data-test="save-question-link"]');
   question = server.db.questions.find(question.id);
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
   assert.equal(question.external_data_source, 'chuchucu');
+  assert.equal(question.helper_text, 'this is a helper test');
 });
 
 test('deleting a question', async function(assert) {

@@ -11,9 +11,9 @@ module Hanuman
     has_many :answer_choices, -> { order :sort_order, :option_text }, dependent: :destroy, inverse_of: :question
     # if a user deletes a question from survey admin we need to delete related observations, giving warning in survey admin
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
-    has_one :rule, dependent: :destroy
+    has_many :rules, dependent: :destroy
     has_many :conditions, dependent: :destroy # The conditions this question is dependent of
-    has_many :rule_conditions, through: :rule, source: :conditions
+    has_many :rule_conditions, through: :rules, source: :conditions
 
     # Validations
     validates :answer_type_id, presence: true
@@ -25,7 +25,7 @@ module Hanuman
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
 
     amoeba do
-      include_association :rule
+      include_association :rules
       include_association :answer_choices
       include_association :conditions, if: :survey_cloning?
 
@@ -114,8 +114,8 @@ module Hanuman
       #           }
       #         ]
       #       }
-      unless self.rule.blank?
-        Hanuman::RuleHashSerializer.new(self.rule).to_json
+      unless self.rules.blank?
+        ActiveModel::ArraySerializer.new(self.rules, each_serializer: Hanuman::RuleHashSerializer).to_json
       end
     end
 
@@ -130,10 +130,12 @@ module Hanuman
       new_q.sort_order = self.sort_order.to_i
       new_q.save
       # Associate the conditions from the rule
-      self.rule_conditions.each do |condition|
-        new_condition = condition.amoeba_dup
-        new_condition.rule = new_q.rule
-        new_condition.save
+      self.rules.each do |rule|
+        rule.conditions.each do |condition|
+          new_condition = condition.amoeba_dup
+          new_condition.rule = new_q.rules.find_by(duped_rule_id: rule.id)
+          new_condition.save
+        end
       end
       new_q
     end
@@ -185,10 +187,12 @@ module Hanuman
       end
 
       # Associate the conditions from the rule
-      self.rule_conditions.each do |condition|
-        new_condition = condition.amoeba_dup
-        new_condition.rule = new_section_q.rule
-        new_condition.save
+      self.rules.each do |rule|
+        rule.conditions.each do |condition|
+          new_condition = condition.amoeba_dup
+          new_condition.rule = new_q.rules.find_by(duped_rule_id: rule.id)
+          new_condition.save
+        end
       end
 
       new_section_q

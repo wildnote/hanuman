@@ -55,7 +55,7 @@ test('editing a conditional', async function(assert) {
   rule = server.create('rule');
   /* eslint-disable camelcase */
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
-  question = server.create('question', { surveyTemplate, rule });
+  question = server.create('question', { surveyTemplate, rules: [rule] });
   server.db.rules.update(rule.id, { question_id: question.id });
   /* eslint-enable camelcase */
   let firstCondition = conditions[0];
@@ -84,7 +84,7 @@ test('deleting a conditional', async function(assert) {
   /* eslint-disable camelcase */
   let firstCondition = server.create('condition', { rule, question_id: 3, answer: 'to be deleted...' });
   conditions = server.createList('condition', 3, { rule, question_id: 3 });
-  question = server.create('question', { surveyTemplate, rule });
+  question = server.create('question', { surveyTemplate, rules: [rule] });
   rule = server.db.rules.update(rule.id, { question_id: question.id });
   /* eslint-enable camelcase */
 
@@ -115,7 +115,7 @@ test('selecting a conditional question with answer choices', async function(asse
   let answerChoices = server.createList('answer-choice', 3, { question: questionWithAnsweChoices });
   let rule = server.create('rule');
   let toTestCondition = server.create('condition', { rule, question_id: questionWithAnsweChoices.id });
-  let question = server.create('question', { surveyTemplate, rule });
+  let question = server.create('question', { surveyTemplate, rules: [rule] });
 
   rule = server.db.rules.update(rule.id, { question_id: question.id });
   /* eslint-enable camelcase */
@@ -134,4 +134,59 @@ test('selecting a conditional question with answer choices', async function(asse
   await click(`${selector} [data-test="save-condition-link"]`);
   toTestCondition = server.db.conditions.find(toTestCondition.id);
   assert.equal(toTestCondition.answer, firstAnswerChoice.option_text);
+});
+
+test('rule match types is properly shown', async function(assert) {
+  assert.expect(1);
+
+  server.createList('question', 3, { surveyTemplate });
+  rule = server.create('rule', { match_type: 'any' });
+  /* eslint-disable camelcase */
+  conditions = server.createList('condition', 3, { rule, question_id: 2 });
+  question = server.create('question', { surveyTemplate, rules: [rule] });
+  rule = server.db.rules.update(rule.id, { question_id: question.id });
+  /* eslint-enable camelcase */
+
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  assert.equal(
+    find(`[data-question-id="${question.id}"] [data-test-match-type]`).length,
+    2,
+    'match types number is right'
+  );
+});
+
+test('selecting a location type question', async function(assert) {
+  assert.expect(3);
+
+  server.get('locations', function() {
+    return {
+      locations: [
+        { id: 9459, name: 'ERTC 1', status: 'active' },
+        { id: 11680, name: 'ERTC 2', status: 'active' },
+        { id: 11681, name: 'ERTC 3', status: 'active' }
+      ]
+    };
+  });
+
+  // Question with answer choices
+  /* eslint-disable camelcase */
+  server.createList('question', 3, { surveyTemplate });
+  let questionLocationType = server.create('question', { question_text: 'ERTC', surveyTemplate, answer_type_id: 47 });
+  let rule = server.create('rule');
+  let question = server.create('question', { surveyTemplate, rules: [rule] });
+
+  rule = server.db.rules.update(rule.id, { question_id: question.id });
+  /* eslint-enable camelcase */
+
+  await visit(`/projects/735/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await click('[data-test="add-condition-link"]');
+
+  // Select question
+  await fillIn('[data-test="condition-question-id-select"]', questionLocationType.id);
+  await triggerEvent('[data-test="condition-question-id-select"]', 'onchange');
+
+  let options = await find('[data-test="condition-answer-choice-dropdown"] option');
+  assert.equal(options[1].textContent, 'ERTC 1');
+  assert.equal(options[2].textContent, 'ERTC 2');
+  assert.equal(options[3].textContent, 'ERTC 3');
 });

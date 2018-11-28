@@ -8,62 +8,65 @@ class @ConditionalLogic
     $("[data-rule!=''][data-rule]").each ->
       $ruleContainer = $(this)
       #if $ruleElement.attr('data-rule').length > 0
-      rule = $.parseJSON($ruleContainer.attr("data-rule")).rule_hash
-      matchType = rule.match_type
-      #console.log rule
-      $(rule.conditions).each ->
-        condition = this
-        conditionQuestionId = condition.question_id
-        # the container for the rule element(s), could be a single element contained in form-container-entry-item or multiple in form-container-repeater
-        $ruleContainer = $ruleContainer
-        # the condition container
-        $conditionContainer = $ruleContainer.siblings("[data-question-id=" + conditionQuestionId + "]")
-        # if condition is outside of $ruleContainer siblings context, let's looks for it globally
-        if $conditionContainer.length < 1
-          $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
+      rules = $.parseJSON($ruleContainer.attr("data-rule"))
+      $(rules).each ->
+        rule = this
+        console.log(rule)
+        matchType = rule.match_type
+        #console.log rule
+        $(rule.conditions).each ->
+          condition = this
+          conditionQuestionId = condition.question_id
+          # the container for the rule element(s), could be a single element contained in form-container-entry-item or multiple in form-container-repeater
+          $ruleContainer = $ruleContainer
+          # the condition container
+          $conditionContainer = $ruleContainer.siblings("[data-question-id=" + conditionQuestionId + "]")
+          # if condition is outside of $ruleContainer siblings context, let's looks for it globally
+          if $conditionContainer.length < 1
+            $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
 
-        if $conditionContainer.length == 0 || $conditionContainer.length > 1
-          console.log "fail"
-          problemWithCL = true
+          if $conditionContainer.length == 0 || $conditionContainer.length > 1
+            console.log "fail"
+            problemWithCL = true
 
-        # the condition element, which we need to check value for conditional logic
-        $conditionElement = $conditionContainer.find(".form-control")
-        # show
-        if $conditionElement.length < 1
-          $conditionElement = $conditionContainer.find(".form-control-static")
+          # the condition element, which we need to check value for conditional logic
+          $conditionElement = $conditionContainer.find(".form-control")
+          # show
+          if $conditionElement.length < 1
+            $conditionElement = $conditionContainer.find(".form-control-static")
 
-        if $conditionElement.length == 0
-          problemWithCL = true
+          if $conditionElement.length == 0
+            problemWithCL = true
 
-        # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
-        hideQuestions = self.setHideQuestions(condition, $conditionElement)
+          # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
+          hideQuestions = self.setHideQuestions(condition, $conditionElement)
 
-        ancestorId = rule.question_id
-        # bind conditions based on element type
-        # text, textarea, select
-        if $conditionElement.length < 2
-          self.bindConditions($conditionElement)
-        # radio buttons
-        else
-          if $conditionElement.is(":checkbox")
-            # limit binding of each checkbox if data-label-value and answer are the same-kdh
-            $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/") + "']")
+          ancestorId = rule.question_id
+          # bind conditions based on element type
+          # text, textarea, select
+          if $conditionElement.length < 2
             self.bindConditions($conditionElement)
+          # radio buttons
           else
-            for element in $conditionElement
-              do (element) ->
-                self.bindConditions($(element))
+            if $conditionElement.is(":checkbox")
+              # limit binding of each checkbox if data-label-value and answer are the same-kdh
+              $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/") + "']")
+              self.bindConditions($conditionElement)
+            else
+              for element in $conditionElement
+                do (element) ->
+                  self.bindConditions($(element))
 
-        #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
-        # determine if we are in a repeater-this needs to get deleted-kdh
-        inRepeater = false
-        $repeater = $conditionElement.closest(".form-container-repeater")
-        if $repeater.length > 0
-            inRepeater = true
-        if rule.conditions.length > 1
-          self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType)
-        else
-          self.hideShowQuestions(hideQuestions, ancestorId, $ruleContainer, $ruleContainer, inRepeater)
+          #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
+          # determine if we are in a repeater-this needs to get deleted-kdh
+          inRepeater = false
+          $repeater = $conditionElement.closest(".form-container-repeater")
+          if $repeater.length > 0
+              inRepeater = true
+          if rule.conditions.length > 1
+            self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule)
+          else if rule.type == "Hanuman::VisibilityRule"
+            self.hideShowQuestions(hideQuestions, ancestorId, $ruleContainer, $ruleContainer, inRepeater)
 
     if problemWithCL
       e = new Error("conditional Logic # findRules")
@@ -78,7 +81,6 @@ class @ConditionalLogic
   #bind conditions to question
   bindConditions: ($triggerElement) ->
     $triggerElement.on "change", ->
-      console.log "trigger"
       # pop out of condition into rules to handle all conditions defined in the rule
       # TODO it seems this is looping through ALL data-rule in the DOM instead of the data-rule associated with the element that triggered the onchange event-kdh
       $repeater = $($triggerElement).closest(".form-container-repeater")
@@ -89,39 +91,47 @@ class @ConditionalLogic
           $ruleElement = $(this)
           #$container = $(this).closest(".form-container-repeater")
           $container = $ruleElement
-          rule = $.parseJSON($ruleElement.attr("data-rule")).rule_hash
-          matchType = rule.match_type
-          questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
-          conditions = rule.conditions
-          ancestorId = rule.question_id
-          matchingCondition = _.where(conditions, {question_id: Number(questionId)})
-          if matchingCondition.length > 0
-            if conditions.length > 1
-              self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType)
-            else
-              hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
-              self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
+          rules = $.parseJSON($ruleElement.attr("data-rule"))
+          $(rules).each ->
+            rule = this
+            matchType = rule.match_type
+            questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
+            conditions = rule.conditions
+            ancestorId = rule.question_id
+            matchingCondition = _.where(conditions, {question_id: Number(questionId)})
+            if matchingCondition.length > 0
+              if conditions.length > 1
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule)
+              else
+                hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
+                if rule.type == "Hanuman::VisibilityRule"
+                  self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
       # if not then lets assume its at the top most level outside of a repeater
       else
         $($triggerElement).closest(".form-container-survey").find("[data-rule!=''][data-rule]").each ->
           inRepeater = false
           $ruleElement = $(this)
           $container = $ruleElement
-          rule = $.parseJSON($ruleElement.attr("data-rule")).rule_hash
-          matchType = rule.match_type
-          questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
-          conditions = rule.conditions
-          ancestorId = rule.question_id
-          matchingCondition = _.where(conditions, {question_id: Number(questionId)})
-          if matchingCondition.length > 0
-            if conditions.length > 1
-              self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType)
-            else
-              hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
-              self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
+          rules = $.parseJSON($ruleElement.attr("data-rule"))
+          $(rules).each ->
+            rule = this
+            matchType = rule.match_type
+            questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
+            conditions = rule.conditions
+            ancestorId = rule.question_id
+            matchingCondition = _.where(conditions, {question_id: Number(questionId)})
+            if matchingCondition.length > 0
+              if conditions.length > 1
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule)
+              else
+                hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
+                if rule.type == "Hanuman::VisibilityRule"
+                  self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
+                else if hideQuestions == false
+                  self.setLookupValue(rule.value, $ruleElement)
     return
 
-  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType) ->
+  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule) ->
     conditionMetTracker = []
     $.each conditions, (index, condition) ->
       if inRepeater
@@ -154,7 +164,47 @@ class @ConditionalLogic
       else
         # if one false then hide the conditioanl logic
         hideShow = true
-    self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
+
+    if rule.type == "Hanuman::VisibilityRule"
+      self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
+    else if hideShow == false
+      self.setLookupValue(rule.value, $ruleElement)
+
+
+  setLookupValue: (value, $ruleElement) ->
+    answerType = $ruleElement.data('element-type')
+
+    switch answerType
+      when 'radio'
+        $ruleElement.find('input[type="radio"][value="' + value + '"]').prop("checked", true)
+
+      when 'checkbox'
+        $ruleElement.find('input[type="checkbox"]').prop("checked", true)
+
+      when 'checkboxes'
+        selectedOptions = value.split(",")
+        $ruleElement.find('input[type="checkbox"]').each ->
+          if selectedOptions.indexOf($(this).attr('value')) != -1
+            $(this).prop("checked", true)
+
+      when 'chosenmultiselect'
+        selectedOptions = value.split(",")
+        $ruleElement.find('input[type="select"]').val(selectedOptions).trigger('chosen:updated');
+
+      when 'chosenselect'
+        $ruleElement.find('input[type="select"]').val(value).trigger('chosen:updated');
+
+      when 'counter'
+        $ruleElement.find('input[type="number"]').val(value)
+
+      when 'date', 'number', 'text', 'time'
+        $ruleElement.find('input[type="text"]').val(value)
+
+      when 'textarea'
+        $ruleElement.find('textarea').val(value)
+
+
+
 
   #setHideQuestions variable
   setHideQuestions: (condition, $triggerElement) ->
@@ -204,17 +254,17 @@ class @ConditionalLogic
     #TODO set these to default values once we implement default values - kdh
     # container.find("input[type!=hidden]").val("")
     textFields = container.find(":text")
-    textFields.each -> 
+    textFields.each ->
       if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null"
         $(this).val($(this).data("default-answer"))
-      else 
+      else
         $(this).val("")
 
     textAreas = container.find("textarea")
-    textAreas.each -> 
+    textAreas.each ->
       if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null"
         $(this).val($(this).data("default-answer"))
-      else 
+      else
         $(this).val("")
 
     # un-select dropdown
@@ -222,7 +272,7 @@ class @ConditionalLogic
     selects.each ->
       if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null"
         $(this).val($(this).data("default-answer"))
-      else 
+      else
         $(this).val("")
 
       $(this).trigger("chosen:updated") if $(this).hasClass('chosen')
@@ -232,7 +282,7 @@ class @ConditionalLogic
     checkboxes.each ->
       if $(this).attr("data-default-answer") && $(this).data("default-answer") == "true"
         $(this).prop('checked', true)
-      else 
+      else
         $(this).prop('checked', false)
 
     # un-select radio buttons
@@ -240,7 +290,7 @@ class @ConditionalLogic
     radiobuttons.each ->
       if $(this).attr("data-default-answer") && $(this).data("default-answer") != "null" && $(this).data("label-value") == $(this).data("default-answer")
         $(this).prop('checked', true)
-      else 
+      else
         $(this).prop('checked', false)
 
     multiselects = container.find("select[multiple]")
