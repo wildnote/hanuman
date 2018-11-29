@@ -6,6 +6,9 @@ node_js:
 rvm:
   - 2.2.8
 
+env:
+  - TRAVIS_NODE_VERSION="8.10.0"
+
 sudo: true
 dist: trusty
 
@@ -37,6 +40,7 @@ before_script:
   - "sudo chmod 4755 /opt/google/chrome/chrome-sandbox"
 
 install:
+  - rm -rf ~/.nvm && git clone https://github.com/creationix/nvm.git ~/.nvm && (cd ~/.nvm && git checkout `git describe --abbrev=0 --tags`) && source ~/.nvm/nvm.sh && nvm install $TRAVIS_NODE_VERSION
   - yarn install --non-interactive
   - bower install
   - ./node_modules/testem/testem.js launchers
