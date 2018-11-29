@@ -185,7 +185,7 @@ export default Component.extend({
 
     try {
       question = yield question.save();
-      yield all(question.get('lookupRules').map(lookupRule => lookupRule.save()));
+      yield all(question.get('lookupRules').map((lookupRule) => lookupRule.save()));
       let promises = [];
       let visibilityRule = question.get('visibilityRule');
       let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
@@ -274,7 +274,7 @@ export default Component.extend({
   }),
 
   _sortOrder(question) {
-    let surveyTemplate = thi s.get('surveyTemplate');
+    let surveyTemplate = this.get('surveyTemplate');
     let lastQuestion = surveyTemplate
       .get('questions')
       .sortBy('sortOrder')
