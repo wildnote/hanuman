@@ -8,7 +8,8 @@ module.exports = {
   extends: ['eslint:recommended', 'plugin:ember/recommended', 'prettier'],
   env: {
     browser: true,
-    es6: true
+    es6: true,
+    node: true
   },
   globals: {
     BoxSelect: true,
@@ -22,6 +23,7 @@ module.exports = {
   rules: {
     'ember/avoid-leaking-state-in-ember-objects': 'off',
     'ember/no-on-calls-in-components': 'off',
+    'ember/no-side-effects': 'off',
     'ember/closure-actions': 'off',
     'generator-star-spacing': ['error', 'neither'],
     'no-constant-condition': ['error', { checkLoops: false }],

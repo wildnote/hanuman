@@ -7,14 +7,14 @@ FactoryBot.define do
     question_text { Faker::Lorem.sentence(2) }
 
     trait :with_rule_and_coditions do
-      rule { create(:rule) }
-
       transient do
-        number_of_conditions 2
+        number_of_conditions { 2 }
       end
 
       after :create do |question, evaluator|
-        create_list :condition, evaluator.number_of_conditions, rule: question.rule
+        question.rules << create(:rule)
+        question.save
+        create_list :condition, evaluator.number_of_conditions, rule: question.rules.first
       end
     end
 

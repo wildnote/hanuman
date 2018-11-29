@@ -19,7 +19,7 @@ export default Component.extend({
     return selectedQuestions.some((question) => question.get('id') === questionId);
   }),
 
-  typeInitial: computed('question.{ancestry,hidden,required,rule.isNew}', function() {
+  typeInitial: computed('question.{ancestry,hidden,required,visibilityRule.isNew}', function() {
     let question = this.get('question');
     let intial = '';
     if (question.get('hidden')) {
@@ -28,7 +28,7 @@ export default Component.extend({
     if (question.get('required')) {
       intial += '<span class="label label-danger">Required</span>';
     }
-    if (question.get('rule') && !question.get('rule.isNew')) {
+    if (question.get('visibilityRule') && !question.get('visibilityRule.isNew')) {
       intial += `<span class="label label-info">Rules</span>`;
     }
     return htmlSafe(intial);

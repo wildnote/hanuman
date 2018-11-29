@@ -65,6 +65,7 @@ module Hanuman
     
     def set_observations_unsorted
       self.observations_sorted = false
+      self.observation_visibility_set = false
 
       true # need this so that a before_save callback doesn't return false
     end
@@ -83,6 +84,10 @@ module Hanuman
 
     def sorted_observations
       observations_sorted ? observations.reorder('hanuman_observations.sort_order ASC') : sort_observations!
+    end
+
+    def processed_observations
+      observation_visibility_set ? sorted_observations.where(hidden: false) : set_observation_visibility!
     end
 
     def get_sorted_observations
@@ -150,6 +155,57 @@ module Hanuman
       self.update_column(:observations_sorted, true)
 
       self.observations.reorder('hanuman_observations.sort_order ASC')
+    end
+
+    def set_observation_visibility!
+      self.sorted_observations.reverse.each do |obs| 
+        if obs.question.rules.present? && obs.question.rules.exists?(type: "Hanuman::VisibilityRule")
+          rule = obs.question.rules.find_by(type: "Hanuman::VisibilityRule")
+
+          condition_results = rule.conditions.map do |cond|  
+            trigger_observation = self.observations.find_by(question_id: cond.question_id, parent_repeater_id: obs.parent_repeater_id)
+
+            case cond.operator
+            when "is equal to"
+              trigger_observation.answer == cond.answer
+            when "is not equal to"
+              trigger_observation.answer != cond.answer
+            when "is empty"
+              trigger_observation.answer.blank? 
+            when "is not empty"
+              trigger_observation.answer.present?
+            when "is greater than"
+              trigger_observation.answer.to_f.to_s == trigger_observation && trigger_observation.answer.to_f > cond.answer.to_f
+            when "is less than"
+              trigger_observation.answer.to_f.to_s == trigger_observation && trigger_observation.answer.to_f < cond.answer.to_f
+            when "starts with"
+              trigger_observation.answer.starts_with?(cond.answer)
+            when "contains"
+              if trigger_observation.observation_answers.present?
+                trigger_observation.observation_answers.map(&:answer_choice_text).include?(cond.answer)
+              else
+                trigger_observation.answer.include?(cond.answer)
+              end
+            else 
+              false
+            end 
+          end
+
+          obs.hidden = !(rule.match_type == "any" ? condition_results.any? : condition_results.all?)
+
+          if obs.hidden && obs.question.has_children?
+            obs.hide_tree!
+          end
+        else 
+          obs.hidden = false 
+        end 
+
+        obs.save
+      end
+
+      self.update_column(:observation_visibility_set, true)
+
+      self.sorted_observations.where(hidden: false)
     end
   end
 end

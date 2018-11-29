@@ -2,5 +2,5 @@ import BaseSerializer from './application';
 
 export default BaseSerializer.extend({
   embed: true,
-  include: ['answerChoices', 'rule']
+  include: ['answerChoices', 'rules']
 });

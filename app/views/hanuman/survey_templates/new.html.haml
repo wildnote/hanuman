@@ -2,19 +2,39 @@
   New Survey
 -# = content_for :navbar_sub_data do
 -#   active
-- content_for :navbar_hanuman do
-  active
-- content_for :navbar_hanuman_survey_templates do
-  active
-- content_for :navbar_sub_projects do
-  active
-- content_for :navbar_sub_projects_sub_project_surveys do
-  active
+
+- if params[:project_id].present?
+
+  - content_for :navbar_sub_projects do
+    active
+  - content_for :navbar_sub_projects_sub_project_surveys do
+    active
+- else
+  - content_for :navbar_hanuman_survey_library do
+    active
+  - content_for :navbar_main_settings do
+    active
+
 - content_for :helper_list do
   = render "hanuman/survey_templates/helper_list"
 
 .panel.panel-info
   .panel-heading
-    %h3.panel-title New Survey
+    %h3.panel-title
+      - if params[:project_id].present?
+        Admin /
+        = link_to surveys_project_path(params[:project_id]) do
+          Survey Forms
+        \/
+        = link_to library_hanuman_project_survey_templates_path(params[:project_id]) do
+          Survey Form Library
+        = link_to new_hanuman_project_survey_template_path(params[:project_id]) do
+          New Survey
+      - else
+        = link_to hanuman_survey_templates_library_path do
+          Survey Form Library
+        \/
+        = link_to new_hanuman_survey_template_path() do
+          New Survey
 
   = render "form"

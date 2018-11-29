@@ -2,7 +2,7 @@ import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import { belongsTo, hasMany } from 'ember-data/relationships';
 import { computed } from '@ember/object';
-import { match, equal, bool } from '@ember/object/computed';
+import { bool, equal, filterBy, match } from '@ember/object/computed';
 import { memberAction } from 'ember-api-actions';
 import { isPresent } from '@ember/utils';
 import { inject as service } from '@ember/service';
@@ -27,6 +27,7 @@ export default Model.extend(Validator, {
   hidden: attr('boolean'),
   ancestry: attr('string'),
   parentId: attr('string'),
+  helperText: attr('string'),
   railsId: attr('number'),
 
   captureLocationData: attr('boolean'),
@@ -38,18 +39,19 @@ export default Model.extend(Validator, {
   layoutSection: attr('number'),
   layoutRow: attr('number'),
   layoutColumn: attr('number'),
+  maxPhotos: attr('number'),
   layoutColumnPosition: attr('string'),
   defaultAnswer: attr('string'),
   exportContinuationCharacters: attr('number'),
-  searchable: attr('boolean'),
 
   // Associations
   dataSource: belongsTo('data-source'),
   answerType: belongsTo('answer-type'),
   surveyTemplate: belongsTo('survey-template'),
-  rule: belongsTo('rule', { async: false }),
+  rules: hasMany('rule', { async: false }),
   answerChoices: hasMany('answer-choice', { async: false }),
   childIds: attr('array'),
+  lookupRules: filterBy('rules', 'type', 'Hanuman::LookupRule'),
 
   // Computed Properties
   childQuestion: bool('ancestry'),
@@ -61,6 +63,10 @@ export default Model.extend(Validator, {
   tags: computed('tagList', function() {
     let tagList = this.get('tagList') || '';
     return tagList.split(',').filter(Boolean);
+  }),
+
+  visibilityRule: computed('rules.@each.type', function() {
+    return this.get('rules').find((rule) => rule.type === 'Hanuman::VisibilityRule');
   }),
 
   hasChild: computed('childIds.[]', function() {
@@ -89,10 +95,9 @@ export default Model.extend(Validator, {
     }
   }),
 
-  ruleMatchType: computed('rule', 'rule.matchType', function() {
-    let rule = this.get('rule');
-    if (rule) {
-      return rule.get('matchType') === 'all' ? 'AND' : 'OR';
+  ruleMatchType: computed('visibilityRule', 'visibilityRule.matchType', function() {
+    if (this.visibilityRule) {
+      return this.visibilityRule.get('matchType') === 'all' ? 'AND' : 'OR';
     }
   }),
 

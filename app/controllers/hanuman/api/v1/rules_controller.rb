@@ -7,17 +7,18 @@ module Hanuman
     end
 
     def show
-      respond_with Rule.find(params[:id])
+      respond_with Rule.find(params[:id]), root: :rule
     end
 
     def create
-      respond_with :api, :v1, Rule.create(rule_params)
+      rule = Rule.create(rule_params)
+      respond_with rule, location: -> { api_v1_rules_path(rule) }, root: :rule
     end
 
     def update
       rule = Rule.find(params[:id])
       rule.update(rule_params)
-      respond_with rule
+      respond_with rule, root: :rule
     end
 
     def destroy
@@ -28,7 +29,10 @@ module Hanuman
     private
 
     def rule_params
-      params.require(:rule).permit(:match_type, :question_id)
+      # RTC Name rule example
+      # value: 135155,135156
+      # type: Hanuman::LookupRule
+      params.require(:rule).permit(:match_type, :question_id, :value, :type)
     end
   end
 end

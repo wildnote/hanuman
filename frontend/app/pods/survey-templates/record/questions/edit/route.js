@@ -15,8 +15,8 @@ export default Route.extend({
 
   afterModel(models) {
     let question = models.question;
-    if (!question.get('rule')) {
-      question.set('rule', this.store.createRecord('rule'));
+    if (!question.get('visibilityRule')) {
+      this.store.createRecord('rule', { question });
     }
   },
 

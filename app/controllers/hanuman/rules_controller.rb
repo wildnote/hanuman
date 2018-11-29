@@ -56,7 +56,7 @@ module Hanuman
 
       # Only allow a trusted parameter "white list" through.
       def rule_params
-        params.require(:rule).permit(:question_id, :match_type)
+        params.require(:rule).permit(:question_id, :match_type, :value)
       end
   end
 end

@@ -4,7 +4,7 @@ import { isBlank } from '@ember/utils';
 import { all } from 'rsvp';
 import { run } from '@ember/runloop';
 import { inject as service } from '@ember/service';
-import { observer, computed } from '@ember/object';
+import { observer, computed, set } from '@ember/object';
 import { on } from '@ember/object/evented';
 import { equal, sort, alias } from '@ember/object/computed';
 import { task } from 'ember-concurrency';
@@ -22,16 +22,14 @@ export default Component.extend({
   showAnswerChoices: alias('question.answerType.hasAnswerChoices'),
   hasAnAnswer: alias('question.answerType.hasAnAnswer'),
   isALatLong: equal('question.answerType.name', 'latlong'),
+  isPhoto: equal('question.answerType.name', 'photo'),
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
 
   init() {
     this._super(...arguments);
-    this.setProperties({
-      answerChoicesPendingSave: [],
-      conditionsPendingSave: []
-    });
+    this.setProperties({ answerChoicesPendingSave: [] });
   },
 
   didInsertElement() {
@@ -91,48 +89,48 @@ export default Component.extend({
     }
   }),
 
-  isRequiredDisabled: computed('question.{rule.isNew,answerType.name}', 'conditionsPendingSave.[]', function() {
-    let question = this.get('question');
-    let newRule = question.get('rule.isNew');
-    let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow', 'static', 'line'];
-    let pendingConditions = this.get('conditionsPendingSave.length') > 0;
-    if (newRule === undefined) {
-      newRule = true;
+  isRequiredDisabled: computed(
+    'question.answerType.name',
+    'question.visibilityRule.{isNew,conditionsPendingSave.[]}',
+    function() {
+      let question = this.get('question');
+      let newRule = this.get('question.visibilityRule.isNew');
+      let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow', 'static', 'line'];
+      let pendingConditions = this.get('question.visibilityRule.conditionsPendingSave.length') > 0;
+      if (newRule === undefined) {
+        newRule = true;
+      }
+      let isDisabled = !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
+      if (isDisabled) {
+        run.next(this, () => {
+          if (this.get('isDestroyed') || this.get('isDestroying')) {
+            return;
+          }
+          if (question.isDeleted !== undefined && !question.isDeleted) {
+            this.set('question.required', false);
+          }
+        });
+      }
+      return isDisabled;
     }
-    let isDisabled = !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
-    if (isDisabled) {
-      run.later(
-        this,
-        () => {
-          this.set('question.required', false);
-        },
-        0
-      );
-    }
-    return isDisabled;
-  }),
+  ),
 
   showQuestionTypePlaceholder: computed('question.{isNew,answerType.id}', function() {
     let question = this.get('question');
     return question.get('isNew') && question.get('answerType.id') === undefined;
   }),
 
-  showDataSourceSelector: computed('question.answerType', function() {
-    let name = this.get('question.answerType.name');
-    return name && name.includes('taxon');
-  }),
-
   // If a question has a rule associated with it, it should automatically be set to Hidden
   hideQuestion: on(
     'afterRender',
-    observer('question.{rule.isNew,rule.conditions.[]}', 'conditionsPendingSave.[]', function() {
+    observer('question.visibilityRule.{conditions.[],isNew,conditionsPendingSave.[]}', function() {
       let question = this.get('question');
-      let newRule = question.get('rule.isNew');
+      let newRule = this.get('question.visibilityRule.isNew');
       let hasConditions =
-        this.get('conditionsPendingSave.length') > 0 ||
-        (question.get('rule') &&
+        this.get('question.visibilityRule.conditionsPendingSave.length') > 0 ||
+        (question.get('visibilityRule') &&
           question
-            .get('rule')
+            .get('visibilityRule')
             .hasMany('conditions')
             .ids().length > 0);
       if (newRule === undefined) {
@@ -142,6 +140,20 @@ export default Component.extend({
       this.set('question.hidden', toHide);
     })
   ),
+
+  addLookupRule: task(function*() {
+    try {
+      // We need to save the question first
+      yield this.saveTask.perform(true);
+      let question = this.question;
+      if (!question.isNew) {
+        let rule = this.store.createRecord('rule', { question, type: 'Hanuman::LookupRule' });
+        yield rule.save();
+      }
+    } catch (e) {
+      console.log('Error saving lookup rule:', e); // eslint-disable-line no-console
+    }
+  }),
 
   saveAnswerChoiceTask: task(function*(answerChoice) {
     let question = this.get('question');
@@ -159,33 +171,60 @@ export default Component.extend({
     }
   }),
 
-  saveConditionTask: task(function*(condition) {
-    if (this.get('question.isNew') || this.get('question.rule.isNew')) {
-      if (this.get('conditionsPendingSave').indexOf(condition) === -1) {
-        this.get('conditionsPendingSave').pushObject(condition);
-      }
-    } else {
-      yield condition.save();
+  saveTask: task(function*(keepOpen = false) {
+    let question = this.get('question');
+    let surveyTemplate = this.get('surveyTemplate');
+    question.set('surveyTemplate', surveyTemplate);
+    if (!question.validate()) {
+      return;
     }
-  }),
+    if (question.get('isNew') && isBlank(question.get('sortOrder'))) {
+      question.set('wasNew', true);
+      this._sortOrder(question);
+    }
 
-  removeConditionTask: task(function*(condition) {
-    let rule = this.get('question.rule');
-    if (rule.isNew || condition.get('isNew')) {
-      this.get('conditionsPendingSave').removeObject(condition);
-      condition.deleteRecord();
-    } else {
-      try {
-        condition.deleteRecord();
-        yield condition.save();
-        yield rule.reload();
-      } catch (e) {
-        // If this was the last condition the API deletes the rule
-        if (e.errors[0] === 'Record not found.') {
-          this.store.unloadRecord(rule);
-          this.set('question.rule', this.store.createRecord('rule'));
+    try {
+      question = yield question.save();
+      yield all(question.get('lookupRules').map(lookupRule => lookupRule.save()));
+      let promises = [];
+      let visibilityRule = question.get('visibilityRule');
+      let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
+      let answerChoicesPromises = this._pendingObjectsPromises(answerChoicesPendingSave, 'question', question);
+
+      promises = promises.concat(answerChoicesPromises);
+
+      // We can't save the rule until there is at least one condition associated with the rule
+      if (visibilityRule && (!visibilityRule.get('isNew') || visibilityRule.get('conditionsPendingSave.length') > 0)) {
+        let conditionsPendingSave = visibilityRule.get('conditionsPendingSave');
+        let rule = question.get('visibilityRule');
+
+        rule.set('question', question);
+        try {
+          rule = yield rule.save();
+          let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
+          promises = promises.concat(conditionsPromises);
+          yield this._saveSuccess.perform(question, promises);
+        } catch (e) {
+          // Rule was deleted on the server
+          console.log('Error saving rule:', e); // eslint-disable-line no-console
+          question.get('store').unloadRecord(rule);
+          question = yield question.reload();
+          yield this._saveSuccess.perform(question, []);
         }
+      } else {
+        yield this._saveSuccess.perform(question, promises);
       }
+
+      if (keepOpen) {
+        if (!question.get('visibilityRule')) {
+          this.store.createRecord('rule', { question });
+        }
+      } else {
+        this.send('closeModal');
+      }
+    } catch (e) {
+      console.log('Error:', e); // eslint-disable-line no-console
+      surveyTemplate.get('questions').removeObject(question);
     }
   }),
 
@@ -215,36 +254,27 @@ export default Component.extend({
     return pendingObjects.invoke('save');
   },
 
-  _saveSuccess(question, promises, keepOpen) {
-    question.reload().then((question) => {
-      let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
-      let conditionsPendingSave = this.get('conditionsPendingSave');
+  _saveSuccess: task(function*(question, promises) {
+    question = yield question.reload();
+    let visibilityRule = question.get('visibilityRule');
+    let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
+    let conditionsPendingSave = visibilityRule ? visibilityRule.get('conditionsPendingSave') : [];
 
-      if (!question.get('answerType.hasAnswerChoices')) {
-        this._removeAnswerChoices();
-      }
-      promises = $.makeArray(promises);
-      all(promises).then(() => {
-        while (answerChoicesPendingSave.length > 0) {
-          answerChoicesPendingSave.popObject();
-        }
-        while (conditionsPendingSave.length > 0) {
-          conditionsPendingSave.popObject();
-        }
-        if (keepOpen) {
-          if (!question.get('rule')) {
-            let store = question.get('store');
-            question.set('rule', store.createRecord('rule'));
-          }
-        } else {
-          this.send('closeModal');
-        }
-      });
-    });
-  },
+    if (!question.get('answerType.hasAnswerChoices')) {
+      this._removeAnswerChoices();
+    }
+    promises = $.makeArray(promises);
+    yield all(promises);
+    while (answerChoicesPendingSave.length > 0) {
+      answerChoicesPendingSave.popObject();
+    }
+    while (conditionsPendingSave.length > 0) {
+      conditionsPendingSave.popObject();
+    }
+  }),
 
   _sortOrder(question) {
-    let surveyTemplate = this.get('surveyTemplate');
+    let surveyTemplate = thi s.get('surveyTemplate');
     let lastQuestion = surveyTemplate
       .get('questions')
       .sortBy('sortOrder')
@@ -256,6 +286,14 @@ export default Component.extend({
   },
 
   actions: {
+    setQuestionText(questionText) {
+      if (this.question.isARepeater || this.question.isContainer) {
+        questionText = questionText.replace(/[\/\*\[\]:\?\\]/g, ''); // eslint-disable-line no-useless-escape
+      }
+      set(this.question, 'questionText', questionText);
+      $('[name="questionText"]').val(questionText);
+    },
+
     sortAnswerChoices() {
       let question = this.get('question');
       let answerChoices = question.get('answerChoices');
@@ -298,58 +336,6 @@ export default Component.extend({
     setDataSource(dataSourceId) {
       let dataSource = this.get('dataSources').findBy('id', dataSourceId);
       this.set('question.dataSource', dataSource);
-    },
-
-    setRuleMatchType(matchType) {
-      this.set('question.rule.matchType', matchType);
-    },
-
-    save(_e, keepOpen = false) {
-      let question = this.get('question');
-      let surveyTemplate = this.get('surveyTemplate');
-      question.set('surveyTemplate', surveyTemplate);
-      if (question.validate()) {
-        if (question.get('isNew') && isBlank(question.get('sortOrder'))) {
-          question.set('wasNew', true);
-          this._sortOrder(question);
-        }
-        question.save().then(
-          (question) => {
-            let promises = [];
-            let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
-            let answerChoicesPromises = this._pendingObjectsPromises(answerChoicesPendingSave, 'question', question);
-
-            promises = promises.concat(answerChoicesPromises);
-
-            // We can't save the rule until there is at least one condition associated with the rule
-            if (question.get('rule') && (!question.get('rule.isNew') || this.get('conditionsPendingSave.length') > 0)) {
-              let conditionsPendingSave = this.get('conditionsPendingSave');
-              let rule = question.get('rule');
-
-              rule.set('question', question);
-              rule.save().then(
-                (rule) => {
-                  let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
-                  promises = promises.concat(conditionsPromises);
-                  this._saveSuccess(question, promises, keepOpen);
-                },
-                // Rule was deleted on the server
-                () => {
-                  question.get('store').unloadRecord(rule);
-                  question.reload().then((question) => {
-                    this._saveSuccess(question, [], keepOpen);
-                  });
-                }
-              );
-            } else {
-              this._saveSuccess(question, promises, keepOpen);
-            }
-          },
-          (_error) => {
-            surveyTemplate.get('questions').removeObject(question);
-          }
-        );
-      }
     },
 
     closeModal() {

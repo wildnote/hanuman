@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180826224439) do
+ActiveRecord::Schema.define(version: 20181126224258) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -172,6 +172,8 @@ ActiveRecord::Schema.define(version: 20180826224439) do
     t.string   "layout_column_position"
     t.integer  "export_continuation_characters"
     t.boolean  "searchable"
+    t.integer  "max_photos"
+    t.string   "helper_text"
   end
 
   add_index "hanuman_questions", ["ancestry"], name: "index_hanuman_questions_on_ancestry", using: :btree

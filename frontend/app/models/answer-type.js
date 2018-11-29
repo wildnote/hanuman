@@ -37,6 +37,10 @@ export default Model.extend({
     return this.get('types').includes(this.get('name'));
   }),
 
+  isChoseType: computed('name', function() {
+    return ['chosenselect', 'chosenmultiselect'].includes(this.get('name'));
+  }),
+
   displayName: computed('name', 'descriptiveName', function() {
     return this.get('descriptiveName') || this.get('name');
   })

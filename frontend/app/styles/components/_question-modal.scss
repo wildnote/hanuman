@@ -24,5 +24,22 @@
     padding: 10px;
     margin-bottom: -5px;
     margin-top: -20px;
+    .right.glyphicon {
+      margin-top: 10px;
+      font-size: 17px;
+      cursor: pointer;
+      color: #663213 !important;
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+  .rule-panel {
+    margin-bottom: 5px;
+    .defaul-rule-value {
+      .ember-basic-dropdown-content {
+        position: inherit;
+      }
+    }
   }
 }
