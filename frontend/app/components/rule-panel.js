@@ -10,7 +10,7 @@ export default Component.extend({
   choicesValueSelected: computed('rule.value', 'question.answerChoices.[]', function() {
     let choiceIds = (this.get('rule.value') || '').split(',');
     let answerChoices = this.get('question.answerChoices');
-    return answerChoices.filter(answerChoice => choiceIds.includes(answerChoice.id));
+    return answerChoices.filter((answerChoice) => choiceIds.includes(answerChoice.id));
   }),
 
   rule: computed('question.visibilityRule', 'lookupRule', function() {
@@ -59,7 +59,7 @@ export default Component.extend({
       this.set('rule.matchType', matchType);
     },
     setAnswerChoiceRuleValue(answerChoices) {
-      let value = answerChoices.map(answerChoice => answerChoice.id).join(',');
+      let value = answerChoices.map((answerChoice) => answerChoice.id).join(',');
       this.set('rule.value', value);
     }
   }

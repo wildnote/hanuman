@@ -32,6 +32,7 @@ export default Model.extend(Validator, {
 
   captureLocationData: attr('boolean'),
   enableSurveyHistory: attr('boolean'),
+  tagList: attr('string', { defaultValue: '' }),
   combineLatlongAsPolygon: attr('boolean'),
   combineLatlongAsLine: attr('boolean'),
   newProjectLocation: attr('boolean'),
@@ -59,8 +60,13 @@ export default Model.extend(Validator, {
   isLocationSelect: equal('answerType.name', 'locationchosensingleselect'),
   isTextField: equal('answerType.name', 'text'),
 
+  tags: computed('tagList', function() {
+    let tagList = this.get('tagList') || '';
+    return tagList.split(',').filter(Boolean);
+  }),
+
   visibilityRule: computed('rules.@each.type', function() {
-    return this.get('rules').find(rule => rule.type === 'Hanuman::VisibilityRule');
+    return this.get('rules').find((rule) => rule.type === 'Hanuman::VisibilityRule');
   }),
 
   hasChild: computed('childIds.[]', function() {
@@ -69,7 +75,7 @@ export default Model.extend(Validator, {
 
   child: computed('childIds.[]', function() {
     let store = this.get('storeService');
-    let childIds = this.get('childIds').map(id => `${id}`);
+    let childIds = this.get('childIds').map((id) => `${id}`);
     return store.peekAll('question').filter(function(q) {
       return this.indexOf(q.get('id')) !== -1;
     }, childIds);

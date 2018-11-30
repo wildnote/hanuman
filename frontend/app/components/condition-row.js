@@ -84,7 +84,7 @@ export default Component.extend({
       let rule = this.rule ? this.rule : this.get('question.visibilityRule');
 
       // Strip any trailing spaces off of a condition answer before saving it.
-      let answer = condition.get('answer');
+      let answer = condition.get('answer') || '';
       condition.set('answer', answer.trim());
 
       if (condition.validate()) {

@@ -59,7 +59,6 @@ test('editing a conditional', async function(assert) {
   server.db.rules.update(rule.id, { question_id: question.id });
   /* eslint-enable camelcase */
   let firstCondition = conditions[0];
-
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   for (let condition of conditions) {
     assert.equal(

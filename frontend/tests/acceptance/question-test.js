@@ -14,6 +14,7 @@ moduleForAcceptance('Acceptance | question', {
 });
 
 test('visiting survey_templates/:survey_step_id/questions/:id', async function(assert) {
+  assert.expect(1);
   question = server.create('question', { surveyTemplate });
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
@@ -110,7 +111,7 @@ test('saving a question with answer_type with answers without adding any answers
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
   await fillIn('[data-test="question.questionText"]', 'question with answers');
   // Select
-  await fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer type
+  await fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer types
   await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
   await click('[data-test="save-question-link"]');
   let el = find('[data-test="answer-choices-error"]');
@@ -174,8 +175,9 @@ test('deleting a question', async function(assert) {
   );
 });
 
-/* Action not duable any more directly
+/* Action not doable any more directly
 test('wording when deleting a question', async function(assert) {
+  assert.expect(1);
   let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
   let ancestryId = ancestryQuestion.id;
   server.create('question', { surveyTemplate, parent_id: ancestryId, ancestry: ancestryId, answer_type_id: 52 }); // Answer Type id 57 = `latlong`

@@ -52,14 +52,14 @@ export default Component.extend({
     if (this.get('isSuperUser')) {
       return answerTypes;
     } else {
-      return answerTypes.filter(answerType => {
+      return answerTypes.filter((answerType) => {
         return !answerType.get('name').includes('taxon');
       });
     }
   }),
 
   ancestryQuestions: computed('questions', function() {
-    return this.get('questions').filter(question => {
+    return this.get('questions').filter((question) => {
       let allowedTypes = ['section', 'repeater'];
       return allowedTypes.includes(question.get('answerType.name'));
     });
@@ -67,7 +67,7 @@ export default Component.extend({
 
   conditionalQuestions: computed('questions', 'question', function() {
     let question = this.get('question');
-    return this.get('questions').filter(condQuestion => {
+    return this.get('questions').filter((condQuestion) => {
       return condQuestion !== question && condQuestion.get('answerType.hasAnAnswer');
     });
   }),
@@ -185,7 +185,7 @@ export default Component.extend({
 
     try {
       question = yield question.save();
-      yield all(question.get('lookupRules').map(lookupRule => lookupRule.save()));
+      yield all(question.get('lookupRules').map((lookupRule) => lookupRule.save()));
       let promises = [];
       let visibilityRule = question.get('visibilityRule');
       let answerChoicesPendingSave = this.get('answerChoicesPendingSave');

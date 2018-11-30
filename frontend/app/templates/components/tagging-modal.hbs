@@ -1,0 +1,75 @@
+{{#ember-remodal
+  forService=true
+  name='tagging-modal'
+  onOpen=(perform fetchAvailableTags)
+  closeOnEscape=false
+  disableNativeClose=true
+}}
+<div data-test-tagging-modal class="panel panel-info">
+  <div class="panel-heading"><h3 class="panel-title">Add or remove tags</h3></div>
+  <div class="panel-body">
+    <div class="searcher-container">
+      <div class="row">
+        <div class="col-md-12"><h5 class="pull-left">This action will <strong>update the tags for {{selectedQuestions.length}}</strong> questions.</h5></div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+        <input data-test-tag-input-search
+          type="text"
+          class="form-control"
+          placeholder="Search tags"
+          disabled={{if fetchAvailableTags.isRunning 'disabled'}}
+          value={{searchTerm}}
+          oninput={{action (queue
+            (action (mut searchTerm) value="target.value")
+            (action 'searchTag')
+          )}}
+        />
+        </div>
+      </div>
+    </div>
+    {{#if fetchAvailableTags.isRunning}}
+      <div style="font-size: 14px;color: #cecece;">Loading tags...</div>
+      <br>
+    {{else}}
+      {{#if (gt filteredTags.length 0)}}
+        <div data-test-tag-list class="tags-list">
+          {{#each filteredTags as |tag|}}
+            {{tagging-list-row
+              tag=tag
+              selectedQuestions=selectedQuestions
+              addedTags=addedTags
+              removedTags=removedTags
+              data-test-tagging-row=tag
+            }}
+          {{/each}}
+        </div>
+      {{else if searchTerm}}
+        <div class="new-tag-container">
+          Add <span data-test-new-tag-label class="label label-info">{{searchTerm}}</span> as new tag
+        </div>
+      {{/if}}
+    {{/if}}
+    <br>
+    <div class="row">
+      <div class="form-group">
+        <div class="col-sm-12">
+          <a data-test-apply-tag-changes
+            class="btn btn-primary {{if (or saveQuestions.isRunning (not hasChanges)) 'disabled'}}"
+            onclick={{action "save"}}
+          >
+            {{#if saveQuestions.isRunning}}
+              Applying...
+            {{else}}
+              Apply
+            {{/if}}
+          </a>
+          <a class="btn btn-default" onclick={{action "closeModal"}}>
+            Cancel
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{/ember-remodal}}

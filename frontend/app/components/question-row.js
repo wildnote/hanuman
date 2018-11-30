@@ -16,7 +16,7 @@ export default Component.extend({
   isSelected: computed('selectedQuestions.[]', 'question.id', function() {
     let selectedQuestions = this.get('selectedQuestions');
     let questionId = this.get('question.id');
-    return selectedQuestions.some(question => question.get('id') === questionId);
+    return selectedQuestions.some((question) => question.get('id') === questionId);
   }),
 
   typeInitial: computed('question.{ancestry,hidden,required,visibilityRule.isNew}', function() {
@@ -36,7 +36,7 @@ export default Component.extend({
 
   totalChildren: computed('otherQuetions.@each.ancestry', 'question.id', function() {
     let questionId = this.get('question.id');
-    return this.get('otherQuetions').filter(question => question.get('ancestry') === questionId).length;
+    return this.get('otherQuetions').filter((question) => question.get('ancestry') === questionId).length;
   }),
 
   actions: {
@@ -77,7 +77,7 @@ export default Component.extend({
       let otherQuetions = this.get('otherQuetions');
       this.get('toggleQuestion')(question, checked);
       // Toggle children questions
-      otherQuetions.forEach(otherQuetion => {
+      otherQuetions.forEach((otherQuetion) => {
         if (otherQuetion.get('ancestry')) {
           let ancestrires = otherQuetion.get('ancestry').split('/');
           if (ancestrires.includes(questionId)) {
