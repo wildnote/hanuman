@@ -176,16 +176,16 @@ class @ConditionalLogic
 
     switch answerType
       when 'radio'
-        $ruleElement.find('input[type="radio"][value="' + value + '"]').prop("checked", true)
+        $ruleElement.find('input[type="radio"][value="' + value + '"]').prop("checked", true).trigger('change')
 
       when 'checkbox'
-        $ruleElement.find('input[type="checkbox"]').prop("checked", true)
+        $ruleElement.find('input[type="checkbox"]').prop("checked", true).trigger('change')
 
       when 'checkboxes'
         selectedOptions = value.split(",")
         $ruleElement.find('input[type="checkbox"]').each ->
           if selectedOptions.indexOf($(this).attr('value')) != -1
-            $(this).prop("checked", true)
+            $(this).prop("checked", true).trigger('change')
 
       when 'chosenmultiselect'
         selectedOptions = value.split(",")
