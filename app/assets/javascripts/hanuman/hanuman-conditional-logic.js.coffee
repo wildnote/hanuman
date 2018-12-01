@@ -176,7 +176,7 @@ class @ConditionalLogic
 
     switch answerType
       when 'radio'
-        $ruleElement.find('input[type="radio"][value="' + value + '"]').prop("checked", true).trigger('change')
+        $ruleElement.find('input[type="radio"][data-answer-choice-id=' + value + ']').prop("checked", true).trigger('change')
 
       when 'checkbox'
         $ruleElement.find('input[type="checkbox"]').prop("checked", true).trigger('change')
