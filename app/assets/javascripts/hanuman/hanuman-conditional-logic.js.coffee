@@ -186,6 +186,9 @@ class @ConditionalLogic
         $ruleElement.find('input[type="checkbox"]').each ->
           if selectedOptions.indexOf($(this).attr('value')) != -1
             $(this).prop("checked", true).trigger('change')
+          else
+            $(this).prop("checked", false).trigger('change')
+
 
       when 'chosenmultiselect'
         selectedOptions = value.split(",")
