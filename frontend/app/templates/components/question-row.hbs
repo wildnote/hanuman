@@ -94,7 +94,7 @@
                 >
                   {{condition.questionId}}
                 </strong> {{condition.operator}} {{condition.answer}}
-                {{#if (not-eq (add 1 index) question.visibilityRule.conditions.length)}}
+                {{#if (not-eq (add 1 index) rule.conditions.length)}}
                   <strong data-test-match-type>{{question.ruleMatchType}}</strong>
                 {{/if}}
           {{/each}}
