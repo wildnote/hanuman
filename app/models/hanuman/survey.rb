@@ -58,11 +58,11 @@ module Hanuman
 
       # Iterate through the remaining repeaters and increment the entry for each one
       self.observations.joins(:question).reorder('repeater_id ASC').where.not(repeater_id: first_of_type_repeater_ids).where('repeater_id IS NOT NULL AND repeater_id != 0').each_with_index do |observation, index|
-        # we need to be careful not to include repeater children that are themselves repeaters 
+        # we need to be careful not to include repeater children that are themselves repeaters
         self.observations.joins(:question).where('repeater_id = ? OR (parent_repeater_id = ? AND (repeater_id IS NULL OR repeater_id = 0))', observation.repeater_id, observation.repeater_id).update_all(entry: index + 2)
       end
     end
-    
+
     def set_observations_unsorted
       self.observations_sorted = false
       self.observation_visibility_set = false
@@ -158,11 +158,11 @@ module Hanuman
     end
 
     def set_observation_visibility!
-      self.sorted_observations.reverse.each do |obs| 
+      self.sorted_observations.reverse.each do |obs|
         if obs.question.rules.present? && obs.question.rules.exists?(type: "Hanuman::VisibilityRule")
           rule = obs.question.rules.find_by(type: "Hanuman::VisibilityRule")
 
-          condition_results = rule.conditions.map do |cond|  
+          condition_results = rule.conditions.map do |cond|
             trigger_observation = self.observations.find_by(question_id: cond.question_id, parent_repeater_id: obs.parent_repeater_id)
 
             case cond.operator
@@ -171,7 +171,7 @@ module Hanuman
             when "is not equal to"
               trigger_observation.answer != cond.answer
             when "is empty"
-              trigger_observation.answer.blank? 
+              trigger_observation.answer.blank?
             when "is not empty"
               trigger_observation.answer.present?
             when "is greater than"
@@ -184,11 +184,15 @@ module Hanuman
               if trigger_observation.observation_answers.present?
                 trigger_observation.observation_answers.map(&:answer_choice_text).include?(cond.answer)
               else
-                trigger_observation.answer.include?(cond.answer)
+                if trigger_observation.answer.nil?
+                  cond.answer.nil?
+                else
+                  trigger_observation.answer.include?(cond.answer)
+                end
               end
-            else 
+            else
               false
-            end 
+            end
           end
 
           obs.hidden = !(rule.match_type == "any" ? condition_results.any? : condition_results.all?)
@@ -196,9 +200,9 @@ module Hanuman
           if obs.hidden && obs.question.has_children?
             obs.hide_tree!
           end
-        else 
-          obs.hidden = false 
-        end 
+        else
+          obs.hidden = false
+        end
 
         obs.save
       end
