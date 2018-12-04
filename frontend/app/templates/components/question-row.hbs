@@ -73,7 +73,7 @@
                 onmouseover={{action 'highlightConditional' condition.questionId}}
                 onmouseleave={{action 'unHighlightConditional' condition.questionId}}
               >
-                {{condition.questionId}}
+                {{truncate condition.question.questionText 20 true}} ({{condition.questionId}})
               </strong> {{condition.operator}} {{condition.answer}}
               {{#if (not-eq (add 1 index) question.visibilityRule.conditions.length)}}
                 <strong data-test-match-type>{{question.ruleMatchType}}</strong>
@@ -92,7 +92,7 @@
                   onmouseover={{action 'highlightConditional' condition.questionId}}
                   onmouseleave={{action 'unHighlightConditional' condition.questionId}}
                 >
-                  {{condition.questionId}}
+                  {{truncate condition.question.questionText 15 true}} ({{condition.questionId}})
                 </strong> {{condition.operator}} {{condition.answer}}
                 {{#if (not-eq (add 1 index) rule.conditions.length)}}
                   <strong data-test-match-type>{{question.ruleMatchType}}</strong>
