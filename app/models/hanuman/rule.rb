@@ -20,7 +20,6 @@ module Hanuman
         # new_rule.conditions.each { |new_condition| new_condition.dup_copying = true}
         # set old_rule_id so I can remap the conditional logic relationships on a survey duplicate-kdh
         new_rule.duped_rule_id = original_rule.id
-        new_rule.type = original_rule.type
       })
     end
   end
