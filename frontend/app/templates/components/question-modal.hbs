@@ -128,11 +128,14 @@
         <div class="form-group">
           <div class="col-sm-12">
             {{#form-field for='questionHelperText' label='Helper Text'}}
-                <input data-test="question.helperText" type="text"
+              <textarea data-test="question.helperText"
                       disabled={{question.surveyTemplate.lock}}
+                      name="helperText"
                       class="form-control"
-                      value={{question.helperText}}
-                      oninput={{action (mut question.helperText) value="target.value"}} />
+                      style="height: 33px;"
+                      onkeyup={{action (mut question.helperText) value="target.value"}}
+                      onchange={{action (mut question.helperText) value="target.value"}}
+                      maxlength='998'>{{question.helperText}}</textarea>
             {{/form-field}}
           </div>
         </div>

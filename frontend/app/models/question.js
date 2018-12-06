@@ -5,12 +5,9 @@ import { computed } from '@ember/object';
 import { bool, equal, filterBy, match } from '@ember/object/computed';
 import { memberAction } from 'ember-api-actions';
 import { isPresent } from '@ember/utils';
-import { inject as service } from '@ember/service';
 import Validator from './../mixins/model-validator';
 
 export default Model.extend(Validator, {
-  storeService: service('store'),
-
   // Accessors
   loading: false,
   ancestrySelected: false,
@@ -74,17 +71,14 @@ export default Model.extend(Validator, {
   }),
 
   child: computed('childIds.[]', function() {
-    let store = this.get('storeService');
     let childIds = this.get('childIds').map((id) => `${id}`);
-    return store.peekAll('question').filter(function(q) {
+    return this.store.peekAll('question').filter(function(q) {
       return this.indexOf(q.get('id')) !== -1;
     }, childIds);
   }),
 
   parent: computed('parentId', function() {
-    let store = this.get('storeService');
-    let parentId = this.get('parentId');
-    return store.peekAll('question').filterBy('id', parentId);
+    return this.store.peekAll('question').filterBy('id', this.parentId);
   }),
 
   numChildren: computed('childQuestion', function() {
