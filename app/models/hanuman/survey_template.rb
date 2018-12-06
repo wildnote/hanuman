@@ -54,6 +54,31 @@ module Hanuman
           q.ancestry = new_ancestors_string
           q.save!
         end
+
+        if q.duped_question_id
+          from_duped_question = Hanuman::Question.find_by_id(q.duped_question_id)
+
+          q.rules.each do |rule|
+            duped_rule = from_duped_question.rules.find_by_duped_rule_id(rule.duped_rule_id)
+            if duped_rule
+              rule.duped_rule_id = duped_rule.id
+              rule.save
+            end
+          end
+
+          q.tag_list = from_duped_question.tag_list
+          # Associate the conditions from the rule
+          from_duped_question.rules.each do |rule|
+            rule.conditions.each do |condition|
+              new_condition = condition.amoeba_dup
+              new_condition.rule = q.rules.find_by(duped_rule_id: rule.id)
+
+              new_condition.save
+            end
+          end
+          q.save!
+        end
+
         # update conditioanl logic rules
         q.conditions.each do |c|
           old_rule_id = c.rule_id
