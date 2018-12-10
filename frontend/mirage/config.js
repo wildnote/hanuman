@@ -40,6 +40,11 @@ export default function() {
       locations: []
     };
   });
+  this.get('/data_sources/:id/data_source_taxon_mappings', () => {
+    return {
+      data_sources: []
+    };
+  });
   // Rules
   // https://github.com/samselikoff/ember-cli-mirage/issues?utf8=%E2%9C%93&q=is%3Aissue+hasInverseFor
   this.post('/rules', ({ rules, conditions }, request) => {
@@ -67,8 +72,8 @@ export default function() {
     questionsResponse.models.forEach(function(question) {
       question.attrs.child_ids = questions
         .all()
-        .models.filter(q => q.parent_id === question.id)
-        .map(q => q.id);
+        .models.filter((q) => q.parent_id === question.id)
+        .map((q) => q.id);
     });
     return questionsResponse;
   });

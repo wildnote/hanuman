@@ -25,10 +25,21 @@ export default Component.extend({
       projectId = window.location.href.split('/')[6];
     }
     if (projectId || testing) {
-      let response = yield this.get('ajax').request(`/locations?project_id=${projectId}`);
+      let response = yield this.ajax.request(`/locations?project_id=${projectId}`);
       this.set('locations', response.locations);
     } else {
       this.set('locations', []);
+    }
+  }),
+
+  loadDataSources: task(function*() {
+    let currentQuestion = this.get('currentQuestion');
+    let dataSourceId = currentQuestion.belongsTo('dataSource').id();
+    if (dataSourceId) {
+      let response = yield this.ajax.request(`/data_sources/${dataSourceId}/data_source_taxon_mappings`);
+      this.set('dataSources', response.data_sources);
+    } else {
+      this.set('dataSources', []);
     }
   }),
 
@@ -57,9 +68,14 @@ export default Component.extend({
     let value =
       conditionOperator !== 'contains' &&
       currentQuestion &&
-      (currentQuestion.hasMany('answerChoices').ids().length > 1 || currentQuestion.isLocationSelect);
+      (currentQuestion.hasMany('answerChoices').ids().length > 1 ||
+        currentQuestion.isLocationSelect ||
+        currentQuestion.isTaxonType);
     if (currentQuestion.isLocationSelect && isBlank(this.locations)) {
       this.loadLocations.perform();
+    }
+    if (currentQuestion.isTaxonType) {
+      this.loadDataSources.perform();
     }
     return value;
   }),

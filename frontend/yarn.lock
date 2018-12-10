@@ -2605,7 +2605,7 @@ broccoli-plugin@^1.0.0, broccoli-plugin@^1.1.0, broccoli-plugin@^1.2.0, broccoli
     rimraf "^2.3.4"
     symlink-or-copy "^1.1.8"
 
-broccoli-rollup@^2.1.1:
+broccoli-rollup@^2.0.0, broccoli-rollup@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/broccoli-rollup/-/broccoli-rollup-2.1.1.tgz#0b77dc4b7560a53e998ea85f3b56772612d4988d"
   integrity sha512-aky/Ovg5DbsrsJEx2QCXxHLA6ZR+9u1TNVTf85soP4gL8CjGGKQ/JU8R3BZ2ntkWzo6/83RCKzX6O+nlNKR5MQ==
@@ -4021,10 +4021,10 @@ ember-assign-polyfill@^2.5.0:
     ember-cli-babel "^6.16.0"
     ember-cli-version-checker "^2.0.0"
 
-ember-basic-dropdown@^1.0.0:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/ember-basic-dropdown/-/ember-basic-dropdown-1.0.4.tgz#9b9b6b56a049a53675db9fc9498f1380d39c9a17"
-  integrity sha512-GZW+fQOczqB3y/SxxuHH6tmVACtwARtLqr4dLtn4YN5NzdVwUN5y5IOaac0n/vCxdn+X20OgLAnWeaRkeF//lA==
+ember-basic-dropdown@^1.0.5:
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/ember-basic-dropdown/-/ember-basic-dropdown-1.0.6.tgz#b1c5fe81a3020b24de13c6bf7154a6cce23cf179"
+  integrity sha512-LnJPZGUxna1BpB/ba0kNtvz3x5obcZZRc3mQ+nE+8UMe/BbMdJ0UrYPgzbChDWrEPVD99/9rYuTQldx9rU8D1Q==
   dependencies:
     ember-cli-babel "^7.1.0"
     ember-cli-htmlbars "^3.0.0"
@@ -4111,6 +4111,13 @@ ember-cli-dependency-checker@^3.0.0:
     is-git-url "^1.0.0"
     resolve "^1.5.0"
     semver "^5.3.0"
+
+ember-cli-es6-transform@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/ember-cli-es6-transform/-/ember-cli-es6-transform-0.0.5.tgz#05bd0aa7e83e14a745e303bd331d912b62f712c6"
+  integrity sha512-Fw++3/keeaot6f/plu/0Fl3mN/SuiNFE8K9xASSCdPQkjKbkTqsm+H8rX30VPKdXwCTnV8adEX1C/Hcn6Nwc1g==
+  dependencies:
+    ember-cli-babel "^6.16.0"
 
 ember-cli-eslint@5.0.0:
   version "5.0.0"
@@ -4488,10 +4495,10 @@ ember-concurrency@^0.8.19:
     ember-cli-babel "^6.8.2"
     ember-maybe-import-regenerator "^0.1.5"
 
-ember-concurrency@^0.8.23:
-  version "0.8.23"
-  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.8.23.tgz#a291bc719890cd29fce61bab7c1ab73756edaede"
-  integrity sha512-dN190o1hYsiGNniW0E4s49kbWYkeak8B0v2LncXvuICkyhxkLz/ssGOUEFrmw4paChs/UFB5vYDbqYNKx6sC8Q==
+ember-concurrency@^0.8.25:
+  version "0.8.25"
+  resolved "https://registry.yarnpkg.com/ember-concurrency/-/ember-concurrency-0.8.25.tgz#f8550852fb8e0ea29d722d4e17b08b065e6caa68"
+  integrity sha512-sbQRJMcaMvJIx5eWtOAejMDt5w2htKu8xpEp+DvXsa77vqCs/mloH4we9f7gr5uUXYPOfFOYnYpnl+I639Bc0g==
   dependencies:
     babel-core "^6.24.1"
     ember-cli-babel "^6.8.2"
@@ -4683,12 +4690,12 @@ ember-notify@5.3.0:
     ember-cli-htmlbars "^2.0.1"
     object-assign "^4.1.0"
 
-ember-power-select@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/ember-power-select/-/ember-power-select-2.2.0.tgz#c52fc279ac58c1c97c74ab04bd5867c63b6e9c4a"
-  integrity sha512-CitYF6Nt82Y027KsShXKOi4wvOyZj0oR92vvSNrw2pOQTnihfJOZBpvL05R3IZLoZBD+zuRE9rsxEfakRs5A0g==
+ember-power-select@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/ember-power-select/-/ember-power-select-2.2.1.tgz#8adea6c5c5e9dea0cd64519171b7bf19857b1db6"
+  integrity sha512-v8aQZOlXYzBPpB0gpcpJS3VhQOUznmO8se3VrCp/rqOzGo56jfi5UX6GkE0VhFk224Wtzqq4S+YCmmqEb8A/KQ==
   dependencies:
-    ember-basic-dropdown "^1.0.0"
+    ember-basic-dropdown "^1.0.5"
     ember-cli-babel "^6.16.0"
     ember-cli-htmlbars "^3.0.0"
     ember-concurrency "^0.8.19"
@@ -4777,12 +4784,16 @@ ember-source@~3.5.0:
     jquery "^3.3.1"
     resolve "^1.6.0"
 
-ember-spin-spinner@0.3.3:
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/ember-spin-spinner/-/ember-spin-spinner-0.3.3.tgz#3ee20ab09e0f9740a1b80c4134c9a8bcf81a7961"
-  integrity sha1-PuIKsJ4Pl0ChuAxBNMmovPgaeWE=
+ember-spin-spinner@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/ember-spin-spinner/-/ember-spin-spinner-0.4.0.tgz#e756065320ddfdba262a5825e7b0859f732fc796"
+  integrity sha512-92eIdRaHNCxAPHqCENC5DQieZjemL2RvsKEwJwMe+faIyLzMg6VexnDx/Lkn1ygnVkWFjwno2HfvsPQOOj9w4w==
   dependencies:
-    ember-cli-babel "^6.3.0"
+    broccoli-merge-trees "^3.0.1"
+    broccoli-rollup "^2.0.0"
+    ember-cli-babel "^6.16.0"
+    ember-cli-es6-transform "^0.0.5"
+    spin.js "^4.0.0"
 
 ember-test-selectors@1.0.0:
   version "1.0.0"
@@ -10942,6 +10953,11 @@ spdx-license-ids@^3.0.0:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/spdx-license-ids/-/spdx-license-ids-3.0.2.tgz#a59efc09784c2a5bada13cfeaf5c75dd214044d2"
   integrity sha512-qky9CVt0lVIECkEsYbNILVnPvycuEBkXoMFLRWsREkomQLevYhtRKC+R91a5TOAQ3bCMjikRwhyaRqj1VYatYg==
+
+spin.js@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/spin.js/-/spin.js-4.0.0.tgz#d6643232cc20b8d2c1b3ab6f0661178145b4dde8"
+  integrity sha512-uJN9Q4/I4I7PRZAp1c5reoY89thAfvFB5thbJncAwkPjPhqCfUrCooJc8GMN8q8WKFGIMy+JMf477RW7deCInA==
 
 split-string@^3.0.1, split-string@^3.0.2:
   version "3.1.0"

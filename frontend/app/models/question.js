@@ -57,6 +57,9 @@ export default Model.extend(Validator, {
   isLocationSelect: equal('answerType.name', 'locationchosensingleselect'),
   isTextField: equal('answerType.name', 'text'),
 
+  supportAncestry: match('answerType.name', /section|repeater/),
+  isTaxonType: match('answerType.name', /taxon/),
+
   tags: computed('tagList', function() {
     let tagList = this.get('tagList') || '';
     return tagList.split(',').filter(Boolean);
@@ -107,9 +110,6 @@ export default Model.extend(Validator, {
     let allowableTypes = ['checkbox', 'counter', 'date', 'number', 'radio', 'text', 'textarea', 'time', 'chosenselect'];
     return allowableTypes.includes(this.get('answerType').get('name'));
   }),
-
-  supportAncestry: match('answerType.name', /section|repeater/),
-  isTaxonType: match('answerType.name', /taxon/),
 
   // Custom actions
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),
