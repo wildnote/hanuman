@@ -49,10 +49,10 @@
             {{else if currentQuestion.isTaxonType}}
               {{#each dataSources as |source|}}
                 <option
-                  value={{source.scientific_name}}
-                  selected={{eq condition.answer source.scientific_name}}
+                  value={{source.formatted_answer_choice_with_symbol}}
+                  selected={{eq condition.answer source.formatted_answer_choice_with_symbol}}
                 >
-                  {{source.scientific_name}}
+                  {{source.formatted_answer_choice_with_symbol}}
                 </option>
               {{/each}}
             {{else}}
