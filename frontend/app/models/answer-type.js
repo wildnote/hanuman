@@ -38,15 +38,23 @@ export default Model.extend({
   }),
 
   isNotLookupRule: computed('name', function() {
-    return ['chosenselect', 'chosenmultiselect', 'document', 'helperabove', 'photo', 'video', 'line', 'repeater', 'section', 'latlong', 'signature', 'static'].includes(this.get('name'));
+    return [
+      'chosenselect',
+      'chosenmultiselect',
+      'document',
+      'helperabove',
+      'photo',
+      'video',
+      'line',
+      'repeater',
+      'section',
+      'latlong',
+      'signature',
+      'static'
+    ].includes(this.get('name'));
   }),
-
-  // isNotLookupCondition: computed('name', function() {
-  //   return ['time'].includes(this.get('name'));
-  // }),
 
   displayName: computed('name', 'descriptiveName', function() {
     return this.get('descriptiveName') || this.get('name');
   })
-
 });
