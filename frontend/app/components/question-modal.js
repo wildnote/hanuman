@@ -214,7 +214,12 @@ export default Component.extend({
       } else {
         yield this._saveSuccess.perform(question, promises);
       }
-
+      // save unsafe conditions
+      let conditions = question
+        .get('rules')
+        .map((rule) => rule.get('conditions').toArray())
+        .flat();
+      yield all(conditions.map((condition) => condition.save()));
       if (keepOpen) {
         if (!question.get('visibilityRule')) {
           this.store.createRecord('rule', { question });
