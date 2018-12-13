@@ -1,4 +1,4 @@
 .col-sm-1
   - if o.question.helper_text.present?
-    %span.glyphicons.glyphicons-info-sign.white-tooltip{:title => "#{o.question.helper_text}", :data => {:toggle => "tooltip", :placement => "bottom"}}
+    %span.glyphicons.glyphicons-info-sign.question-helper-tooltip{:title => "#{o.question.helper_text}", :data => {:toggle => "tooltip", :placement => "bottom"}}
 = label_tag nil, o.question.question_text, class: "col-sm-4 control-label"
