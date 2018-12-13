@@ -8,6 +8,7 @@ module Hanuman
     # Relations
     belongs_to :question
     has_many :conditions, dependent: :destroy
+    after_commit :update_observation_visibility
 
     # Validations
     #validates :question_id, presence: true
@@ -21,6 +22,13 @@ module Hanuman
         # set old_rule_id so I can remap the conditional logic relationships on a survey duplicate-kdh
         new_rule.duped_rule_id = original_rule.id
       })
+    end
+
+    def update_observation_visibility
+      self.question.survey_template.surveys.where(observation_visibility_set: true).each do |s| 
+        s.set_observations_unsorted
+        SortObservationsWorker.perform_async(s.id) 
+      end
     end
   end
 end

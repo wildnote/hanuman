@@ -3,6 +3,7 @@ module Hanuman
     has_paper_trail
 
     attr_accessor :dup_copying
+    delegate :update_observation_visibility, to: :rule
 
     # Constants
     OPERATORS = [
@@ -22,6 +23,7 @@ module Hanuman
 
     # Callbacks
     after_destroy :cleanup_rule_if_single_condition
+    after_commit :update_observation_visibility
 
     amoeba do
       enable
