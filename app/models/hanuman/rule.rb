@@ -11,7 +11,7 @@ module Hanuman
     # Relations
     belongs_to :question
     has_many :conditions, dependent: :destroy
-    after_commit :update_observation_visibility
+    # after_commit :update_observation_visibility
 
     # Validations
     #validates :question_id, presence: true
