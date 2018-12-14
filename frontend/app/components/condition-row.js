@@ -43,6 +43,25 @@ export default Component.extend({
     }
   }),
 
+  availableQuestions: computed('rule', 'question.@each.answerType.name', function() {
+    if (!this.rule) {
+      return this.questions;
+    }
+    let supportedQuestionForLookup = [
+      'checkbox',
+      'checkboxlist',
+      'chosenmultiselect',
+      'chosenselect',
+      'locationchosensingleselect',
+      'radio',
+      'taxonchosenmultiselect',
+      'taxonmultisingleselect'
+    ];
+    return this.questions.filter((question) => {
+      return supportedQuestionForLookup.includes(question.get('answerType.name'));
+    });
+  }),
+
   operators: computed('currentQuestion', function() {
     let answerType = this.get('currentQuestion.answerType');
     if (['checkboxes', 'multiselect'].includes(answerType.get('elementType'))) {

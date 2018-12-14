@@ -9,7 +9,7 @@
         class="form-control"
         onchange={{action "setConditionQuestion" value="target.value"}}
       >
-        {{#each questions as |question|}}
+        {{#each availableQuestions as |question|}}
           <option value={{question.id}} selected={{eq question.id condition.questionId}}>{{question.questionText}} - {{question.id}}</option>
         {{/each}}
       </select>
