@@ -167,7 +167,17 @@ module Hanuman
 
             case cond.operator
             when "is equal to"
-              trigger_observation.answer == cond.answer
+              if trigger_observation.observation_answers.present?
+                match = false
+                trigger_observation.observation_answers.each do |obs_answer|
+                  if obs_answer.answer_choice.option_text == cond.answer
+                    match = true
+                  end
+                end
+                match
+              else
+                trigger_observation.answer == cond.answer
+              end
             when "is not equal to"
               trigger_observation.answer != cond.answer
             when "is empty"
