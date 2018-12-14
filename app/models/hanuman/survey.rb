@@ -168,25 +168,25 @@ module Hanuman
             case cond.operator
             when "is equal to"
               if trigger_observation.observation_answers.present?
-                match = false
+                cond_met = false
                 trigger_observation.observation_answers.each do |obs_answer|
                   if obs_answer.answer_choice.option_text == cond.answer
-                    match = true
+                    cond_met = true
                   end
                 end
-                match
+                cond_met
               else
                 trigger_observation.answer == cond.answer
               end
             when "is not equal to"
               if trigger_observation.observation_answers.present?
-                match = false
+                cond_met = true
                 trigger_observation.observation_answers.each do |obs_answer|
                   if obs_answer.answer_choice.option_text == cond.answer
-                    match = true
+                    cond_met = false
                   end
                 end
-                match
+                cond_met
               else
                 trigger_observation.answer != cond.answer
               end
