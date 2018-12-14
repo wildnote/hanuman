@@ -2,13 +2,16 @@ module Hanuman
   class Rule < ActiveRecord::Base
     has_paper_trail
 
+    # Delegations
+    delegate :update_observation_visibility, to: :condition
+
     # Constants
     MATCH_TYPES = %w(any all)
 
     # Relations
     belongs_to :question
     has_many :conditions, dependent: :destroy
-    # after_commit :update_observation_visibility
+    after_commit :update_observation_visibility
 
     # Validations
     #validates :question_id, presence: true
