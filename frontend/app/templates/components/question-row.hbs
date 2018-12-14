@@ -65,9 +65,9 @@
       {{typeInitial}}
     </div>
     <div class="row">
-      {{#if (and question.visibilityRule question.visibilityRule.conditions)}}
+      {{#if (and question.visibilityRule question.visibilityRule.savedConditions)}}
         <i>show</i>
-        {{#each question.visibilityRule.conditions as |condition index|}}
+        {{#each question.visibilityRule.savedConditions as |condition index|}}
           if <strong
                 class="conditional-highlight"
                 onmouseover={{action 'highlightConditional' condition.questionId}}
@@ -75,7 +75,7 @@
               >
                 {{truncate condition.question.questionText 20 true}} ({{condition.questionId}})
               </strong> {{condition.operator}} {{condition.answer}}
-              {{#if (not-eq (add 1 index) question.visibilityRule.conditions.length)}}
+              {{#if (not-eq (add 1 index) question.visibilityRule.savedConditions.length)}}
                 <strong data-test-match-type>{{question.ruleMatchType}}</strong>
               {{/if}}
         {{/each}}
@@ -84,9 +84,9 @@
     <hr>
     {{#each question.lookupRules as |rule|}}
       <div class="row">
-        {{#if rule.conditions}}
+        {{#if rule.savedConditions}}
           <i>default</i> to <strong>{{rule.value}}</strong>
-          {{#each rule.conditions as |condition index|}}
+          {{#each rule.savedConditions as |condition index|}}
             if <strong
                   class="conditional-highlight"
                   onmouseover={{action 'highlightConditional' condition.questionId}}
@@ -94,7 +94,7 @@
                 >
                   {{truncate condition.question.questionText 15 true}} ({{condition.questionId}})
                 </strong> {{condition.operator}} {{condition.answer}}
-                {{#if (not-eq (add 1 index) rule.conditions.length)}}
+                {{#if (not-eq (add 1 index) rule.savedConditions.length)}}
                   <strong data-test-match-type>{{question.ruleMatchType}}</strong>
                 {{/if}}
           {{/each}}
