@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
 
     # Delegations
-    delegate :update_observation_visibility, to: :condition
+    # delegate :update_observation_visibility, to: :condition
 
     # Constants
     MATCH_TYPES = %w(any all)
