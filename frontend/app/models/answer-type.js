@@ -37,21 +37,8 @@ export default Model.extend({
     return this.get('types').includes(this.get('name'));
   }),
 
-  isNotLookupRule: computed('name', function() {
-    return [
-      'chosenselect',
-      'chosenmultiselect',
-      'document',
-      'helperabove',
-      'photo',
-      'video',
-      'line',
-      'repeater',
-      'section',
-      'latlong',
-      'signature',
-      'static'
-    ].includes(this.get('name'));
+  isLookupRuleable: computed('name', function() {
+    return ['checkbox', 'checkboxlist', 'number', 'radio', 'text', 'textarea'].includes(this.name);
   }),
 
   displayName: computed('name', 'descriptiveName', function() {
