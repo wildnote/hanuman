@@ -55,7 +55,7 @@ export default Component.extend({
       'locationchosensingleselect',
       'radio',
       'taxonchosenmultiselect',
-      'taxonmultisingleselect'
+      'taxonchosensingleselect'
     ];
     return this.questions.filter((question) => {
       return supportedQuestionForLookup.includes(question.get('answerType.name'));
