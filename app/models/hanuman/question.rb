@@ -67,8 +67,8 @@ module Hanuman
     # survey for newly added question, then re-save survey so that group_sort gets reset
     def submit_blank_observation_data
       question = self
-      parent = self.parent
-      survey_template = self.survey_template
+      parent = question.parent
+      survey_template = question.survey_template
       surveys = survey_template.surveys
       surveys.each do |s|
         if parent.blank?
@@ -76,18 +76,19 @@ module Hanuman
             answer: ''
           ).find_or_create_by(
             survey_id: s.id,
-            question_id: self.id,
+            question_id: question.id,
             entry: 1
           )
         # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
         else
           s.observations.where(question_id: parent.id).each do |o|
-            Observation.create_with(
+            Hanuman::Observation.create_with(
               answer: ''
             ).find_or_create_by(
               survey_id: s.id,
-              question_id: self.id,
-              entry: o.entry
+              question_id: question.id,
+              entry: o.entry,
+              parent_repeater_id: o.repeater_id
             )
           end
         end
