@@ -100,10 +100,8 @@ export default Component.extend({
   }),
 
   setNewCondition() {
-    let rule = this.rule ? this.rule : this.get('question.visibilityRule');
     let condition = this.get('question').store.createRecord('condition', {
-      questionId: this.get('questions.firstObject.id'),
-      rule
+      questionId: this.get('questions.firstObject.id')
     });
     this.set('condition', condition);
   },

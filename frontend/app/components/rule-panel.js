@@ -7,7 +7,7 @@ import { filterBy } from '@ember/object/computed';
 export default Component.extend({
   store: service(),
   classNames: 'panel rule-panel',
-  conditions: filterBy('rule.conditions', 'isNew', false),
+
 
   choicesValueSelected: computed('rule.value', 'question.answerChoices.[]', function() {
     let choiceIds = (this.get('rule.value') || '').split(',');
