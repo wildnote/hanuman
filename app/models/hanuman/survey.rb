@@ -175,6 +175,8 @@ module Hanuman
                   end
                 end
                 cond_met
+              elsif trigger_observation.location.present? 
+                trigger_observation.location.name == cond.answer
               else
                 trigger_observation.answer == cond.answer
               end
@@ -187,6 +189,8 @@ module Hanuman
                   end
                 end
                 cond_met
+              elsif trigger_observation.location.present? 
+                trigger_observation.location.name != cond.answer
               else
                 trigger_observation.answer != cond.answer
               end
@@ -212,6 +216,9 @@ module Hanuman
             when "contains"
               if trigger_observation.observation_answers.present?
                 trigger_observation.observation_answers.map(&:answer_choice_text).include?(cond.answer)
+                cond_met
+              elsif trigger_observation.location.present? 
+                trigger_observation.location.name.include?(cond.answer)
               else
                 if trigger_observation.answer.nil?
                   cond.answer.nil?
