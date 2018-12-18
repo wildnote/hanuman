@@ -170,7 +170,7 @@ module Hanuman
               if trigger_observation.observation_answers.present?
                 cond_met = false
                 trigger_observation.observation_answers.each do |obs_answer|
-                  if obs_answer.answer_choice.option_text == cond.answer
+                  if obs_answer.answer_choice_text == cond.answer
                     cond_met = true
                   end
                 end
@@ -182,7 +182,7 @@ module Hanuman
               if trigger_observation.observation_answers.present?
                 cond_met = true
                 trigger_observation.observation_answers.each do |obs_answer|
-                  if obs_answer.answer_choice.option_text == cond.answer
+                  if obs_answer.answer_choice_text == cond.answer
                     cond_met = false
                   end
                 end
@@ -237,7 +237,6 @@ module Hanuman
       end
 
       self.update_column(:observation_visibility_set, true)
-
       self.sorted_observations.where(hidden: false)
     end
   end
