@@ -170,13 +170,16 @@ module Hanuman
               if trigger_observation.observation_answers.present?
                 cond_met = false
                 trigger_observation.observation_answers.each do |obs_answer|
-                  if obs_answer.answer_choice_text == cond.answer
-                    cond_met = true
-                  end
+                  cond_met = 
+                    (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) || 
+                    (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol == cond.answer)
+                  break if cond_met
                 end
                 cond_met
-              elsif trigger_observation.location.present? 
+              elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
                 trigger_observation.location.name == cond.answer
+              elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
+                trigger_observation.taxon.formatted_answer_choice_with_symbol == cond.answer
               else
                 trigger_observation.answer == cond.answer
               end
@@ -185,12 +188,21 @@ module Hanuman
                 cond_met = true
                 trigger_observation.observation_answers.each do |obs_answer|
                   if obs_answer.answer_choice_text == cond.answer
-                    cond_met = false
+                    is_equal_to = 
+                      (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) || 
+                      (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol == cond.answer)
+
+                    if is_equal_to
+                      cond_met = false 
+                      break  
+                    end
                   end
                 end
                 cond_met
-              elsif trigger_observation.location.present? 
+              elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
                 trigger_observation.location.name != cond.answer
+              elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
+                trigger_observation.taxon.formatted_answer_choice_with_symbol != cond.answer
               else
                 trigger_observation.answer != cond.answer
               end
@@ -215,10 +227,18 @@ module Hanuman
               trigger_observation.answer.starts_with?(cond.answer)
             when "contains"
               if trigger_observation.observation_answers.present?
-                trigger_observation.observation_answers.map(&:answer_choice_text).include?(cond.answer)
+                cond_met = false
+                trigger_observation.observation_answers.each do |obs_answer|
+                  cond_met = 
+                    (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text.include?(cond.answer)) || 
+                    (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol.include?(cond.answer))
+                  break if cond_met
+                end
                 cond_met
-              elsif trigger_observation.location.present? 
+              elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
                 trigger_observation.location.name.include?(cond.answer)
+              elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
+                trigger_observation.taxon.formatted_answer_choice_with_symbol.include?(cond.answer)
               else
                 if trigger_observation.answer.nil?
                   cond.answer.nil?
@@ -232,7 +252,7 @@ module Hanuman
           end
 
           obs.hidden = !(rule.match_type == "any" ? condition_results.any? : condition_results.all?)
-
+          
           if obs.hidden && obs.question.has_children?
             obs.hide_tree!
           end

@@ -414,6 +414,7 @@ class @ConditionalLogic
     $conditionElement.val()
 
 $ ->
-  #call findRules on document ready
-  cl = new ConditionalLogic
-  cl.findRules()
+  if $('input#survey_survey_template_id').length 
+    #call findRules on document ready
+    cl = new ConditionalLogic
+    cl.findRules()
