@@ -226,7 +226,7 @@ class @ConditionalLogic
     else if element_type == 'multiselect'
       selected_values = self.getValue($triggerElement)
       if selected_values
-        selected_array = selected_values.split(', ')
+        selected_array = selected_values.split('|&|')
         hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
       else
         return true
@@ -386,17 +386,16 @@ class @ConditionalLogic
       else
         return
     if $conditionElement.is('select[multiple]')
-      console.log($conditionElement)
       if $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").size() > 0
         option_strings = []
         $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").each ->
           option_strings.push this.innerHTML
-        return option_strings.join(", ")
-      else if $conditionElement.siblings(".selectize-control").find(".selectize-input div.item").size() > 0
+        return option_strings.join("|&|")
+      else if $conditionElement.is(".selectize-taxon-select") && $conditionElement.children().size() > 0
         option_strings = []
-        $conditionElement.siblings(".selectize-control").find(".selectize-input div.item").each ->
+        $conditionElement.children().each ->
           option_strings.push this.innerHTML
-        return option_strings.join(", ")
+        return option_strings.join("|&|")
       else
         return
     if $conditionElement.is('select')
