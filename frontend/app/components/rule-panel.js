@@ -2,12 +2,10 @@ import Component from '@ember/component';
 import { task } from 'ember-concurrency';
 import { computed } from '@ember/object';
 import { inject as service } from '@ember/service';
-import { filterBy } from '@ember/object/computed';
 
 export default Component.extend({
   store: service(),
   classNames: 'panel rule-panel',
-
 
   choicesValueSelected: computed('rule.value', 'question.answerChoices.[]', function() {
     let choiceIds = (this.get('rule.value') || '').split(',');
