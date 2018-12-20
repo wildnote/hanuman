@@ -9,7 +9,11 @@ module Hanuman
     belongs_to  :multiselectable, polymorphic: true
 
     def answer_choice_text
-      answer_choice.option_text
+      if answer_choice.present?
+        answer_choice.option_text
+      elsif multiselectable.present?
+        multiselectable.formatted_answer_choice
+      end
     end
   end
 end

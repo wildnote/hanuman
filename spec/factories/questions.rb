@@ -5,15 +5,28 @@ FactoryBot.define do
     answer_type
     survey_template
     question_text { Faker::Lorem.sentence(2) }
-    trait :with_rule_and_coditions do
-      rule { create(:rule) }
 
+    trait :with_rule_and_coditions do
       transient do
         number_of_conditions { 2 }
       end
 
       after :create do |question, evaluator|
-        create_list :condition, evaluator.number_of_conditions, rule: question.rule
+        question.rules << create(:rule)
+        question.save
+        create_list :condition, evaluator.number_of_conditions, rule: question.rules.first
+      end
+    end
+
+    trait :with_tags do
+      transient do
+        number_of_tags 2
+      end
+
+      after :create do |question, evaluator|
+        tags = Faker::Lorem.words(evaluator.number_of_tags)
+        question.tag_list.add(*tags)
+        question.save
       end
     end
   end

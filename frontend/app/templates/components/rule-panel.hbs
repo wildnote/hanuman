@@ -1,0 +1,79 @@
+<div class="row">
+  <div class="col-md-12">
+    <div class="table-responsive">
+      <table class="table table-hover">
+        <tbody>
+          <tr class="no-hover">
+            <td colspan="6">
+              <select
+                disabled={{question.surveyTemplate.lock}}
+                data-test="rule-match-type-select"
+                class="form-control"
+                onchange={{action "setRuleMatchType" value="target.value"}}
+              >
+                <option value="any" selected={{eq rule.matchType 'any'}}>match on any question condition (OR)</option>
+                <option value="all" selected={{eq rule.matchType 'all'}}>match on all question conditions (AND)</option>
+              </select>
+            </td>
+          </tr>
+          <tr class="no-hover">
+            <td width="10px"></td>
+            <td>Question</td>
+            <td>Operator</td>
+            <td>Answer</td>
+            <td width="10px"></td>
+            <td width="10px"></td>
+          </tr>
+          {{#each rule.conditions as |condition|}}
+            {{condition-row
+              condition=condition
+              rule=lookupRule
+              question=question
+              questions=conditionalQuestions
+              saveTask=saveConditionTask
+              removeTask=removeConditionTask
+              isNewCondition=false
+            }}
+          {{/each}}
+          {{condition-row
+            rule=lookupRule
+            question=question
+            questions=conditionalQuestions
+            saveTask=saveConditionTask
+            removeTask=removeConditionTask
+            isNewCondition=true
+          }}
+          {{#if lookupRule}}
+            <tr class="no-hover defaul-rule-value">
+              <td colspan="6">
+                {{#if question.answerType.hasAnswerChoices}}
+                  {{#power-select-multiple
+                    class="form-control"
+                    options=question.answerChoices
+                    selected=choicesValueSelected
+                    renderInPlace=true
+                    verticalPosition="below"
+                    placeholder="Answers to set select on this question"
+                    onchange=(action "setAnswerChoiceRuleValue")
+                    as |answerChoice|
+                  }}
+                    {{answerChoice.optionText}}
+                  {{/power-select-multiple}}
+                {{else}}
+                  <input
+                    disabled={{question.surveyTemplate.lock}}
+                    placeholder="Value to set on this question"
+                    type="text"
+                    class="form-control"
+                    value={{rule.value}}
+                    oninput={{action (mut rule.value) value="target.value"}}
+                  />
+                {{/if}}
+              </td>
+            </tr>
+          {{/if}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

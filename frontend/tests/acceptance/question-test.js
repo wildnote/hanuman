@@ -14,6 +14,7 @@ moduleForAcceptance('Acceptance | question', {
 });
 
 test('visiting survey_templates/:survey_step_id/questions/:id', async function(assert) {
+  assert.expect(1);
   question = server.create('question', { surveyTemplate });
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
@@ -62,6 +63,7 @@ test('selecting ancestry', async function(assert) {
   let notAncestryQuestions = server.createList('question', 2, { surveyTemplate, answer_type_id: 19 });
 
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await click('[data-test-open-super-user]');
   for (let ancestry of ancestryQuestions) {
     assert.equal(
       `${ancestry.question_text} - ${ancestry.id}`,
@@ -89,8 +91,8 @@ test('adding a question', async function(assert) {
   await click('a:contains("Add")');
 
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
-
-  fillIn('[data-test="question.questionText"]', 'this is DA question');
+  await click('[data-test-open-super-user]');
+  await fillIn('[data-test="question.questionText"]', 'this is DA question');
   // Select
   await fillIn('[data-test="answer-type-id-select"]', 15);
   await fillIn('[data-test-order]', 99);
@@ -109,7 +111,7 @@ test('saving a question with answer_type with answers without adding any answers
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/new`);
   await fillIn('[data-test="question.questionText"]', 'question with answers');
   // Select
-  await fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer type
+  await fillIn('[data-test="answer-type-id-select"]', 17); // Radio button answer types
   await triggerEvent('[data-test="answer-type-id-select"]', 'onchange');
   await click('[data-test="save-question-link"]');
   let el = find('[data-test="answer-choices-error"]');
@@ -128,14 +130,17 @@ test('canceling question edition', async function(assert) {
 });
 
 test('editing a question', async function(assert) {
-  assert.expect(2);
+  assert.expect(3);
   question = server.create('question', { surveyTemplate, answer_type_id: 15 });
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
+  await click('[data-test-open-super-user]');
   await fillIn('[data-test="question.externalDataSource"]', 'chuchucu');
+  await fillIn('[data-test="question.helperText"]', 'this is a helper test');
   await click('[data-test="save-question-link"]');
   question = server.db.questions.find(question.id);
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}`);
   assert.equal(question.external_data_source, 'chuchucu');
+  assert.equal(question.helper_text, 'this is a helper test');
 });
 
 test('deleting a question', async function(assert) {
@@ -170,8 +175,9 @@ test('deleting a question', async function(assert) {
   );
 });
 
-/* Action not duable any more directly
+/* Action not doable any more directly
 test('wording when deleting a question', async function(assert) {
+  assert.expect(1);
   let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
   let ancestryId = ancestryQuestion.id;
   server.create('question', { surveyTemplate, parent_id: ancestryId, ancestry: ancestryId, answer_type_id: 52 }); // Answer Type id 57 = `latlong`

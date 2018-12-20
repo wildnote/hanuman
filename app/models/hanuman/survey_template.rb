@@ -54,17 +54,25 @@ module Hanuman
           q.ancestry = new_ancestors_string
           q.save!
         end
-        # update conditioanl logic rules
-        q.conditions.each do |c|
-          old_rule_id = c.rule_id
-          new_rule =
-            Hanuman::Rule.includes(:question)
-                         .where('hanuman_rules.duped_rule_id = ? AND hanuman_questions.survey_template_id = ?', old_rule_id, id)
-                         .references(:question)
-                         .first
-          if new_rule
-            c.rule_id = new_rule.id
-            c.save!
+        clean_duplicated_question(q) if q.duped_question_id
+      end
+
+      old_question_ids = old_survey_template.questions.pluck(:id)
+      question_ids = questions.pluck(:id)
+
+      # Clean unneded conditions from the old survey
+      questions.each do |question|
+        question.rules.each do |rule|
+          rule.conditions.each do |condition|
+            condition.destroy! unless question_ids.include?(condition.question_id)
+          end
+        end
+      end
+
+      old_survey_template.questions.each do |question|
+        question.rules.each do |rule|
+          rule.conditions.each do |condition|
+            condition.destroy! unless old_question_ids.include?(condition.question_id)
           end
         end
       end
@@ -74,6 +82,30 @@ module Hanuman
     def resort_submitted_observations
       return if fully_editable
       surveys.each(&:save)
+    end
+
+    def clean_duplicated_question(question)
+      from_duped_question = Hanuman::Question.find_by_id(question.duped_question_id)
+      question.rules.each do |rule|
+        duped_rule = from_duped_question.rules.find_by_duped_rule_id(rule.duped_rule_id)
+        if duped_rule
+          # set the right duped one
+          rule.duped_rule_id = duped_rule.id
+          rule.save
+        end
+      end
+
+      question.tag_list = from_duped_question.tag_list
+      # Associate the conditions from the rule
+      from_duped_question.rules.each do |rule|
+        rule.conditions.each do |condition|
+          new_condition = condition.amoeba_dup
+          new_condition.rule = question.rules.find_by(duped_rule_id: rule.id)
+
+          new_condition.save
+        end
+      end
+      question.save!
     end
   end
 end

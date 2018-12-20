@@ -15,6 +15,7 @@
 
 :javascript
   window.superUser = #{current_user.superuser?};
+  window.jacobs = #{current_user.organization.id == 547};
 
 #ember-container
   %base{href: "/hanuman/admin/"}

@@ -7,5 +7,9 @@ class SortObservationsWorker
     unless survey.observations_sorted
       survey.sort_observations!
     end
+
+    unless survey.observation_visibility_set
+      survey.set_observation_visibility!
+    end
   end
 end

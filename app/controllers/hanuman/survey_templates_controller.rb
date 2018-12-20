@@ -72,7 +72,7 @@ module Hanuman
 
       respond_to do |format|
         if survey_template_copy.save!
-          remap_conditional_logic(@survey_template)
+          survey_template_copy.remap_conditional_logic(@survey_template)
           format.html { redirect_to admin_path + "/survey_templates/" + survey_template.id.to_s + "/edit", notice: 'Survey template was successfully duplicated, please rename.' }
           format.json { render :show, status: :created, location: @location }
         else

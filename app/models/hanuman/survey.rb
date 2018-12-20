@@ -58,13 +58,14 @@ module Hanuman
 
       # Iterate through the remaining repeaters and increment the entry for each one
       self.observations.joins(:question).reorder('repeater_id ASC').where.not(repeater_id: first_of_type_repeater_ids).where('repeater_id IS NOT NULL AND repeater_id != 0').each_with_index do |observation, index|
-        # we need to be careful not to include repeater children that are themselves repeaters 
+        # we need to be careful not to include repeater children that are themselves repeaters
         self.observations.joins(:question).where('repeater_id = ? OR (parent_repeater_id = ? AND (repeater_id IS NULL OR repeater_id = 0))', observation.repeater_id, observation.repeater_id).update_all(entry: index + 2)
       end
     end
-    
+
     def set_observations_unsorted
       self.observations_sorted = false
+      self.observation_visibility_set = false
 
       true # need this so that a before_save callback doesn't return false
     end
@@ -83,6 +84,10 @@ module Hanuman
 
     def sorted_observations
       observations_sorted ? observations.reorder('hanuman_observations.sort_order ASC') : sort_observations!
+    end
+
+    def processed_observations
+      observation_visibility_set ? sorted_observations.where(hidden: false) : set_observation_visibility!
     end
 
     def get_sorted_observations
@@ -150,6 +155,116 @@ module Hanuman
       self.update_column(:observations_sorted, true)
 
       self.observations.reorder('hanuman_observations.sort_order ASC')
+    end
+
+    def set_observation_visibility!
+      self.sorted_observations.reverse.each do |obs|
+        if obs.question.rules.present? && obs.question.rules.exists?(type: "Hanuman::VisibilityRule")
+          rule = obs.question.rules.find_by(type: "Hanuman::VisibilityRule")
+
+          condition_results = rule.conditions.map do |cond|
+            trigger_observation = self.observations.find_by(question_id: cond.question_id, parent_repeater_id: obs.parent_repeater_id)
+
+            case cond.operator
+            when "is equal to"
+              if trigger_observation.observation_answers.present?
+                cond_met = false
+                trigger_observation.observation_answers.each do |obs_answer|
+                  cond_met = 
+                    (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) || 
+                    (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol == cond.answer)
+                  break if cond_met
+                end
+                cond_met
+              elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
+                trigger_observation.location.name == cond.answer
+              elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
+                trigger_observation.taxon.formatted_answer_choice_with_symbol == cond.answer
+              else
+                trigger_observation.answer == cond.answer
+              end
+            when "is not equal to"
+              if trigger_observation.observation_answers.present?
+                cond_met = true
+                trigger_observation.observation_answers.each do |obs_answer|
+                  if obs_answer.answer_choice_text == cond.answer
+                    is_equal_to = 
+                      (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) || 
+                      (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol == cond.answer)
+
+                    if is_equal_to
+                      cond_met = false 
+                      break  
+                    end
+                  end
+                end
+                cond_met
+              elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
+                trigger_observation.location.name != cond.answer
+              elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
+                trigger_observation.taxon.formatted_answer_choice_with_symbol != cond.answer
+              else
+                trigger_observation.answer != cond.answer
+              end
+            when "is empty"
+              # if observation_answers aren't present the answer type either uses .answer or has no answer choices selected
+              if trigger_observation.observation_answers.present?
+                true
+              else
+                trigger_observation.answer.blank?
+              end
+            when "is not empty"
+              if trigger_observation.observation_answers.present?
+                true
+              else
+                trigger_observation.answer.present?
+              end
+            when "is greater than"
+              trigger_observation.answer.to_f.to_s == trigger_observation && trigger_observation.answer.to_f > cond.answer.to_f
+            when "is less than"
+              trigger_observation.answer.to_f.to_s == trigger_observation && trigger_observation.answer.to_f < cond.answer.to_f
+            when "starts with"
+              trigger_observation.answer.starts_with?(cond.answer)
+            when "contains"
+              if trigger_observation.observation_answers.present?
+                cond_met = false
+                trigger_observation.observation_answers.each do |obs_answer|
+                  cond_met = 
+                    (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text.include?(cond.answer)) || 
+                    (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol.include?(cond.answer))
+                  break if cond_met
+                end
+                cond_met
+              elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
+                trigger_observation.location.name.include?(cond.answer)
+              elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
+                trigger_observation.taxon.formatted_answer_choice_with_symbol.include?(cond.answer)
+              else
+                if trigger_observation.answer.nil?
+                  cond.answer.nil?
+                else
+                  trigger_observation.answer.include?(cond.answer)
+                end
+              end
+            else
+              false
+            end
+          end
+
+          obs.hidden = !(rule.match_type == "any" ? condition_results.any? : condition_results.all?)
+          
+          if obs.hidden && obs.question.has_children?
+            obs.hide_tree!
+          end
+        else
+          obs.hidden = false
+        end
+
+        obs.save
+      end
+
+      self.update_column(:observation_visibility_set, true)
+      self.sorted_observations.where(hidden: false)
     end
   end
 end

@@ -35,4 +35,13 @@ describe Hanuman::Api::V1::SurveyTemplatesController, type: :controller do
       end
     end
   end
+
+  describe 'PUT#available_tags' do
+    let!(:questions) { create_list(:question, 3, :with_tags, survey_template: survey_template) }
+    it 'returns all questions tags' do
+      get :available_tags, id: survey_template
+      expect(response).to be_success
+      expect(json['tags'].length).to eql 6
+    end
+  end
 end
