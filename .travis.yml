@@ -2,9 +2,9 @@ dist: trusty
 language: ruby
 cache: bundler
 node_js:
-  - "7.7.2"
+  - "8.10.0"
 rvm:
-  - 2.2.3
+  - 2.2.8
 
 sudo: true
 dist: trusty
@@ -21,6 +21,7 @@ cache:
     - bower_components
 
 before_install:
+  - nvm install 8.10.0
   - gem install bundler -v 1.12.5
   - cd frontend
   - curl -o- -L https://yarnpkg.com/install.sh | bash

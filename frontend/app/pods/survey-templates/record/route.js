@@ -15,9 +15,9 @@ export default Route.extend({
     promises.push(
       model.get('questions').then(function(questions) {
         // Collpase by default
-        questions.filterBy('hasChild', true).forEach(question => {
+        questions.filterBy('hasChild', true).forEach((question) => {
           question.set('collapsed', true);
-          question.get('child').forEach(child => child.set('ancestryCollapsed', true));
+          question.get('child').forEach((child) => child.set('ancestryCollapsed', true));
         });
       })
     );
@@ -31,7 +31,7 @@ export default Route.extend({
       indexController.send('toggleBtnLoading', 'duplicate');
       surveyTemplate
         .duplicate()
-        .then(duplicateReponse => {
+        .then((duplicateReponse) => {
           this.transitionTo('survey_templates.record', duplicateReponse.survey_template.id);
           run.later(
             this,
@@ -41,7 +41,7 @@ export default Route.extend({
             1000
           );
         })
-        .catch(_error => {
+        .catch((_error) => {
           this.get('notify').alert('There was an error trying to duplicate this Survey Template');
         })
         .finally(() => {
@@ -65,7 +65,7 @@ export default Route.extend({
             window.location.replace('/hanuman/survey_templates');
           }
         },
-        error => {
+        (error) => {
           console.log(error); // eslint-disable-line no-console
           if (error.errors[0].detail.detail == 'associated-data-restriction') {
             this.get('notify').alert(

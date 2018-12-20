@@ -2,6 +2,7 @@ import Model from 'ember-data/model';
 import { A } from '@ember/array';
 import attr from 'ember-data/attr';
 import { hasMany, belongsTo } from 'ember-data/relationships';
+import { filterBy } from '@ember/object/computed';
 import Validator from './../mixins/model-validator';
 
 export default Model.extend(Validator, {
@@ -17,6 +18,8 @@ export default Model.extend(Validator, {
   // Relations
   conditions: hasMany('condition', { async: false }),
   question: belongsTo('question'),
+
+  savedConditions: filterBy('conditions', 'isNew', false),
 
   // Validations
   validations: {

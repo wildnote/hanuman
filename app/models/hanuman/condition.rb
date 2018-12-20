@@ -3,6 +3,7 @@ module Hanuman
     has_paper_trail
 
     attr_accessor :dup_copying
+    # delegate :update_observation_visibility, to: :rule
 
     # Constants
     OPERATORS = [
@@ -22,6 +23,7 @@ module Hanuman
 
     # Callbacks
     after_destroy :cleanup_rule_if_single_condition
+    after_commit :update_observation_visibility
 
     amoeba do
       enable
@@ -37,5 +39,17 @@ module Hanuman
         end
       end
     end
+
+
+    def update_observation_visibility
+      self.question.survey_template.surveys.where(observation_visibility_set: true).each do |s|
+        s.set_observations_unsorted
+        s.save
+        SortObservationsWorker.perform_async(s.id)
+      end
+    end
+
+
+
   end
 end

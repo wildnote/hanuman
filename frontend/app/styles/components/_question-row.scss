@@ -3,6 +3,7 @@
     background-color: #fff2ac;
     background-image: linear-gradient(to right, #ffe359 0%, #fff2ac 100%);
   }
+
   &.disabled {
     pointer-events: none;
     opacity: 0.3;
@@ -32,6 +33,7 @@
       background-color: #b15959 !important;
     }
   }
+
   .bottom-tags {
     .glyphicons-bookmark {
       color: #6795c7;
@@ -53,7 +55,6 @@
       color: rgba(143, 98, 71, 0.6) !important;
     }
   }
-
   .gly-spin.glyphicons-refresh {
     margin-right: 10px;
   }
@@ -68,6 +69,7 @@
     z-index: 2;
     opacity: 0.9;
   }
+
   &.has-ancestry-1 {
     margin-left: -5px;
   }

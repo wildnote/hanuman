@@ -5,12 +5,9 @@ import { computed } from '@ember/object';
 import { bool, equal, filterBy, match } from '@ember/object/computed';
 import { memberAction } from 'ember-api-actions';
 import { isPresent } from '@ember/utils';
-import { inject as service } from '@ember/service';
 import Validator from './../mixins/model-validator';
 
 export default Model.extend(Validator, {
-  storeService: service('store'),
-
   // Accessors
   loading: false,
   ancestrySelected: false,
@@ -32,6 +29,7 @@ export default Model.extend(Validator, {
 
   captureLocationData: attr('boolean'),
   enableSurveyHistory: attr('boolean'),
+  tagList: attr('string', { defaultValue: '' }),
   combineLatlongAsPolygon: attr('boolean'),
   combineLatlongAsLine: attr('boolean'),
   newProjectLocation: attr('boolean'),
@@ -59,8 +57,16 @@ export default Model.extend(Validator, {
   isLocationSelect: equal('answerType.name', 'locationchosensingleselect'),
   isTextField: equal('answerType.name', 'text'),
 
+  supportAncestry: match('answerType.name', /section|repeater/),
+  isTaxonType: match('answerType.name', /taxon/),
+
+  tags: computed('tagList', function() {
+    let tagList = this.get('tagList') || '';
+    return tagList.split(',').filter(Boolean);
+  }),
+
   visibilityRule: computed('rules.@each.type', function() {
-    return this.get('rules').find(rule => rule.type === 'Hanuman::VisibilityRule');
+    return this.get('rules').find((rule) => rule.type === 'Hanuman::VisibilityRule');
   }),
 
   hasChild: computed('childIds.[]', function() {
@@ -68,17 +74,14 @@ export default Model.extend(Validator, {
   }),
 
   child: computed('childIds.[]', function() {
-    let store = this.get('storeService');
-    let childIds = this.get('childIds').map(id => `${id}`);
-    return store.peekAll('question').filter(function(q) {
+    let childIds = this.get('childIds').map((id) => `${id}`);
+    return this.store.peekAll('question').filter(function(q) {
       return this.indexOf(q.get('id')) !== -1;
     }, childIds);
   }),
 
   parent: computed('parentId', function() {
-    let store = this.get('storeService');
-    let parentId = this.get('parentId');
-    return store.peekAll('question').filterBy('id', parentId);
+    return this.store.peekAll('question').filterBy('id', this.parentId);
   }),
 
   numChildren: computed('childQuestion', function() {
@@ -107,9 +110,6 @@ export default Model.extend(Validator, {
     let allowableTypes = ['checkbox', 'counter', 'date', 'number', 'radio', 'text', 'textarea', 'time', 'chosenselect'];
     return allowableTypes.includes(this.get('answerType').get('name'));
   }),
-
-  supportAncestry: match('answerType.name', /section|repeater/),
-  isTaxonType: match('answerType.name', /taxon/),
 
   // Custom actions
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),

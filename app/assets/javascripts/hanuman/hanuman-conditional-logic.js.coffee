@@ -176,16 +176,19 @@ class @ConditionalLogic
 
     switch answerType
       when 'radio'
-        $ruleElement.find('input[type="radio"][value="' + value + '"]').prop("checked", true)
+        $ruleElement.find('input[type="radio"][data-answer-choice-id=' + value + ']').prop("checked", true).trigger('change')
 
       when 'checkbox'
-        $ruleElement.find('input[type="checkbox"]').prop("checked", true)
+        $ruleElement.find('input[type="checkbox"]').prop("checked", true).trigger('change')
 
       when 'checkboxes'
         selectedOptions = value.split(",")
         $ruleElement.find('input[type="checkbox"]').each ->
           if selectedOptions.indexOf($(this).attr('value')) != -1
-            $(this).prop("checked", true)
+            $(this).prop("checked", true).trigger('change')
+          else
+            $(this).prop("checked", false).trigger('change')
+
 
       when 'chosenmultiselect'
         selectedOptions = value.split(",")
@@ -223,7 +226,7 @@ class @ConditionalLogic
     else if element_type == 'multiselect'
       selected_values = self.getValue($triggerElement)
       if selected_values
-        selected_array = selected_values.split(', ')
+        selected_array = selected_values.split('|&|')
         hideQuestions = self.evaluateCheckboxConditions(operator, answer, selected_array)
       else
         return true
@@ -383,17 +386,16 @@ class @ConditionalLogic
       else
         return
     if $conditionElement.is('select[multiple]')
-      console.log($conditionElement)
       if $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").size() > 0
         option_strings = []
         $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").each ->
           option_strings.push this.innerHTML
-        return option_strings.join(", ")
-      else if $conditionElement.siblings(".selectize-control").find(".selectize-input div.item").size() > 0
+        return option_strings.join("|&|")
+      else if $conditionElement.is(".selectize-taxon-select") && $conditionElement.children().size() > 0
         option_strings = []
-        $conditionElement.siblings(".selectize-control").find(".selectize-input div.item").each ->
+        $conditionElement.children().each ->
           option_strings.push this.innerHTML
-        return option_strings.join(", ")
+        return option_strings.join("|&|")
       else
         return
     if $conditionElement.is('select')
@@ -411,6 +413,7 @@ class @ConditionalLogic
     $conditionElement.val()
 
 $ ->
-  #call findRules on document ready
-  cl = new ConditionalLogic
-  cl.findRules()
+  if $('input#survey_survey_template_id').length 
+    #call findRules on document ready
+    cl = new ConditionalLogic
+    cl.findRules()

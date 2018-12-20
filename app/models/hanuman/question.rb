@@ -1,5 +1,6 @@
 module Hanuman
   class Question < ActiveRecord::Base
+    acts_as_taggable
     has_paper_trail
     has_ancestry
 

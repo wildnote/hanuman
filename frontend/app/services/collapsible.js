@@ -13,7 +13,7 @@ export default Service.extend({
   },
 
   _collapseChild(topParent, questions, collapsedValue) {
-    questions.forEach(question => {
+    questions.forEach((question) => {
       question.set('ancestryCollapsed', collapsedValue);
       if (question.get('hasChild') && !question.get('collapsed')) {
         topParent.incrementProperty('pendingRecursive');

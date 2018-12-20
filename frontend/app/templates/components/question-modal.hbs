@@ -128,16 +128,19 @@
         <div class="form-group">
           <div class="col-sm-12">
             {{#form-field for='questionHelperText' label='Helper Text'}}
-                <input data-test="question.helperText" type="text"
+              <textarea data-test="question.helperText"
                       disabled={{question.surveyTemplate.lock}}
+                      name="helperText"
                       class="form-control"
-                      value={{question.helperText}}
-                      oninput={{action (mut question.helperText) value="target.value"}} />
+                      style="height: 33px;"
+                      onkeyup={{action (mut question.helperText) value="target.value"}}
+                      onchange={{action (mut question.helperText) value="target.value"}}
+                      maxlength='998'>{{question.helperText}}</textarea>
             {{/form-field}}
           </div>
         </div>
 
-        {{#liquid-if isPhoto}}
+        {{#liquid-if (and isPhoto isSuperUser)}}
           <div class="form-group">
             <div class="col-sm-3">
               {{#form-field for='maxPhotos' label='Max Photos'}}
@@ -276,7 +279,7 @@
         {{/if}}
 
         {{!-- Lookup rules --}}
-        {{#unless question.answerType.isChoseType}}
+        {{#if (and isSuperUser question.answerType.isLookupRuleable)}}
           <div class="form-group" style="margin-top: 15px;">
             <div class="col-sm-10">
               <label>Lookup Rule</label>
@@ -300,7 +303,7 @@
           {{/each}}
 
           <hr />
-        {{/unless}}
+        {{/if}}
         {{!-- Visibility rules --}}
 
         <div class="form-group">

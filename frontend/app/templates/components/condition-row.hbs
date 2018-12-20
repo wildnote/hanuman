@@ -9,7 +9,7 @@
         class="form-control"
         onchange={{action "setConditionQuestion" value="target.value"}}
       >
-        {{#each questions as |question|}}
+        {{#each availableQuestions as |question|}}
           <option value={{question.id}} selected={{eq question.id condition.questionId}}>{{question.questionText}} - {{question.id}}</option>
         {{/each}}
       </select>
@@ -32,7 +32,7 @@
   <td>
     {{#if useDropDownAnswerSelect}}
       {{#form-field for='answer'}}
-        {{#if loadLocations.isRunning}}
+        {{#if (or loadLocations.isRunning loadDataSources.isRunning)}}
           Loading...
         {{else}}
           <select
@@ -45,6 +45,15 @@
             {{#if currentQuestion.isLocationSelect}}
               {{#each locations as |location|}}
                 <option value={{location.name}} selected={{eq condition.answer location.name}}>{{location.name}}</option>
+              {{/each}}
+            {{else if currentQuestion.isTaxonType}}
+              {{#each dataSources as |source|}}
+                <option
+                  value={{source.formatted_answer_choice_with_symbol}}
+                  selected={{eq condition.answer source.formatted_answer_choice_with_symbol}}
+                >
+                  {{source.formatted_answer_choice_with_symbol}}
+                </option>
               {{/each}}
             {{else}}
               {{#each questionAnswerChoices as |answerChoice|}}

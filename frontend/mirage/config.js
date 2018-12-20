@@ -14,6 +14,12 @@ export default function() {
       id = request.params.id;
     return surveyTemplates.find(id).update(attrs);
   });
+  this.get('survey_templates/:id/available_tags', ({ questions }, request) => {
+    let tags = questions.all().models.map((question) => question.tag_list.split(','));
+    tags = tags.flatten().filter(Boolean);
+    tags = [...new Set(tags)];
+    return new Mirage.Response(200, {}, { tags });
+  });
 
   this.patch('/survey_templates/:id/resort_questions', ({ surveyTemplates }, request) => {
     let id = request.params.id;
@@ -32,6 +38,11 @@ export default function() {
   this.get('/locations', () => {
     return {
       locations: []
+    };
+  });
+  this.get('/data_sources/:id/data_source_taxon_mappings', () => {
+    return {
+      data_sources: []
     };
   });
   // Rules
@@ -61,8 +72,8 @@ export default function() {
     questionsResponse.models.forEach(function(question) {
       question.attrs.child_ids = questions
         .all()
-        .models.filter(q => q.parent_id === question.id)
-        .map(q => q.id);
+        .models.filter((q) => q.parent_id === question.id)
+        .map((q) => q.id);
     });
     return questionsResponse;
   });

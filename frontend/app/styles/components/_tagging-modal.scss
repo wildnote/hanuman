@@ -1,0 +1,50 @@
+.tagging-modal {
+  &.ember-remodal {
+    padding: 5px;
+  }
+  .panel {
+    margin-bottom: 0px;
+  }
+  .panel-body {
+    padding-left: 0px;
+    padding-right: 0px;
+
+    .searcher-container {
+      padding-left: 20px;
+      padding-right: 20px;
+      margin-bottom: 10px;
+    }
+  }
+  .tags-list {
+    max-height: 450 px;
+    .tag-row {
+      &:hover {
+        background-color: #e8e8e8;
+      }
+      .glyphicons-bookmark {
+        color: #6795c7;
+      }
+      cursor: pointer;
+      height: 50px;
+      cursor: pointer;
+      display: flex;
+      background-color: #ffffff;
+      flex-direction: row;
+      padding: 0 20px;
+      align-items: center;
+      border-bottom: 1px solid #d0d0d0;
+      .label-tag {
+        margin-left: 7px;
+        padding-top: 4px;
+      }
+    }
+  }
+  .new-tag-container {
+    padding-top: 16px;
+    padding-left: 22px;
+    padding-right: 22px;
+    text-align: left;
+    height: 50px;
+    background-color: #eaeaea;
+  }
+}

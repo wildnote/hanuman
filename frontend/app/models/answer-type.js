@@ -37,8 +37,8 @@ export default Model.extend({
     return this.get('types').includes(this.get('name'));
   }),
 
-  isChoseType: computed('name', function() {
-    return ['chosenselect', 'chosenmultiselect'].includes(this.get('name'));
+  isLookupRuleable: computed('name', function() {
+    return ['checkbox', 'checkboxlist', 'number', 'radio', 'text', 'textarea'].includes(this.name);
   }),
 
   displayName: computed('name', 'descriptiveName', function() {

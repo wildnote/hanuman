@@ -9,6 +9,7 @@ import { isBlank } from '@ember/utils';
 import $ from 'jquery';
 
 export default Component.extend({
+  remodal: service(),
   notify: service(),
   collapsible: service(),
 
@@ -62,7 +63,7 @@ export default Component.extend({
     let toDeleteQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
     let deleteQuestionTask = this.get('deleteQuestionTask');
     try {
-      yield all(toDeleteQuestions.map(question => deleteQuestionTask.perform(question)));
+      yield all(toDeleteQuestions.map((question) => deleteQuestionTask.perform(question)));
       yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
       this.get('notify').success('Questions successfully deleted');
     } catch (e) {
@@ -83,7 +84,7 @@ export default Component.extend({
     try {
       // make sure the list is clean in terms of sorting values
       yield all(
-        toDuplicateQuestions.map(question => {
+        toDuplicateQuestions.map((question) => {
           let params = { section: false };
           if (question.get('isContainer') || question.get('isARepeater')) {
             params.section = true;
@@ -106,7 +107,7 @@ export default Component.extend({
     let ancestryQuestion = opts.target.acenstry;
     if (ancestryQuestion.collapsed) {
       this.get('collapsible').toggleCollapsed(ancestryQuestion);
-      yield waitForProperty(ancestryQuestion, 'pendingRecursive', v => v === 0);
+      yield waitForProperty(ancestryQuestion, 'pendingRecursive', (v) => v === 0);
     }
     let parentId = ancestryQuestion.get('id');
     let parentChildren = this.get('surveyTemplate.questions')
@@ -152,7 +153,7 @@ export default Component.extend({
   },
 
   unSelectAll() {
-    this.get('selectedQuestions').forEach(question => {
+    this.get('selectedQuestions').forEach((question) => {
       if (!question.get('isDeleted')) {
         question.set('ancestrySelected', false);
       }
@@ -161,6 +162,12 @@ export default Component.extend({
   },
 
   actions: {
+    openTaggingModal() {
+      this.set('showingTaggingModal', true);
+      run.next(() => {
+        this.get('remodal').open('tagging-modal');
+      });
+    },
     clearAll() {
       // Clean state
       this.unSelectAll();
@@ -185,11 +192,11 @@ export default Component.extend({
       let sortableQuestions = A();
       // Handle collapsed question. When there are questions collapsed we completely removed them from the DOM
       // so we have to re-add them so we can update the sort order attributes
-      viewableSortedQuestions.forEach(viewableQuestion => {
+      viewableSortedQuestions.forEach((viewableQuestion) => {
         sortableQuestions.addObject(viewableQuestion);
         if (viewableQuestion.get('collapsed')) {
           let id = viewableQuestion.get('id');
-          let collapsedChild = allQuestions.filter(question => {
+          let collapsedChild = allQuestions.filter((question) => {
             if (isBlank(question.get('ancestry'))) {
               return false;
             }

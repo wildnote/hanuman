@@ -1,6 +1,7 @@
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import { belongsTo } from 'ember-data/relationships';
+import { computed } from '@ember/object';
 import Validator from './../mixins/model-validator';
 
 // Constants
@@ -23,6 +24,10 @@ const Condition = Model.extend(Validator, {
 
   // Associations
   rule: belongsTo('rule'),
+
+  question: computed('questionId', function() {
+    return this.store.peekRecord('question', this.questionId);
+  }),
 
   // Validations
   validations: {

@@ -33,6 +33,12 @@
           </div>
 
           <div class="selected-questions-actions">
+            {{#if isSuperUser}}
+              <button data-test-open-tagging-modal onclick={{action 'openTaggingModal'}} style="margin-right: 4px;">
+                <span class="glyphicons glyphicons-bookmark"></span>
+                <span style="margin-left: 4px;">Tag </span>
+              </button>
+            {{/if}}
             <button onclick={{action (toggle "showConfirmDeletion" this)}} class="{{if deleteQuestionsTask.isRunning "disabled"}}" style="margin-right: 4px;">
               {{#liquid-if deleteQuestionsTask.isRunning}}
                 <span class="glyphicons glyphicons-repeat gly-spin"></span>
@@ -149,3 +155,11 @@
     {{/if}}
   </div>
 </div>
+{{#if showingTaggingModal}}
+  {{tagging-modal
+    selectedQuestions=selectedQuestions
+    surveyTemplate=surveyTemplate
+    unSelectAll=(action unSelectAll)
+    showingModal=showingTaggingModal
+  }}
+{{/if}}
