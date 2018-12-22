@@ -61,7 +61,7 @@ module Hanuman
     end
 
     def hide_tree!
-      child_observations = Hanuman::Observation.where(question_id: self.question.child_ids, parent_repeater_id: self.parent_repeater_id, survey_id: self.survey_id)
+      child_observations = Hanuman::Observation.where(question_id: self.question.child_ids, parent_repeater_id: self.repeater_id, survey_id: self.survey_id)
 
       child_observations.each do |child|
         if child.question.has_children?
