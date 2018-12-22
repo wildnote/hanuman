@@ -94,10 +94,8 @@ module Hanuman
           end
         end
 
-        # we are already in a job so we can sort the observations inline
-        s.sort_observations!
-        s.skip_sort = true
-        s.save
+        s.update_column(:observations_sorted, false)
+        s.update_column(:observation_visibility_set, false)
       end
     end
 
