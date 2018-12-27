@@ -35,14 +35,16 @@
               isNewCondition=false
             }}
           {{/each}}
-          {{condition-row
-            rule=lookupRule
-            question=question
-            questions=conditionalQuestions
-            saveTask=saveConditionTask
-            removeTask=removeConditionTask
-            isNewCondition=true
-          }}
+          {{#if (or (not lookupRule) (not rule.conditions.length)) }}
+            {{condition-row
+              rule=lookupRule
+              question=question
+              questions=conditionalQuestions
+              saveTask=saveConditionTask
+              removeTask=removeConditionTask
+              isNewCondition=true
+            }}
+          {{/if}}
           {{#if lookupRule}}
             <tr class="no-hover defaul-rule-value">
               <td colspan="6">
