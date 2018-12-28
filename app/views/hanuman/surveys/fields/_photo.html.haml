@@ -1,8 +1,10 @@
 .form-group.file-upload
   = render "hanuman/surveys/fields/shared/label", ff: ff
+
+  #max-photos{"data-max-photos" => "#{o.question.max_photos}"}
+
   .col-sm-7.photo-column.file-upload-input-button
     - if !@survey.id.nil?
-
       - o.observation_photos.order(sort_order: :asc).each do |p|
         = ff.fields_for :observation_photos, p do |fff|
           .upload-view-mode

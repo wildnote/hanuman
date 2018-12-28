@@ -39,7 +39,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     $previewContainer.find("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
     $previewContainer.find("."+file+"-preview").last().append "<br>"
 
-  else 
+  else
     $previewContainer.find("."+file+"-preview").last().append "<p class='upload-file-name'>"+file_id+"</p>"
     $previewContainer.find("."+file+"-preview").last().append "<label>Description</label><br>"
     $previewContainer.find("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:0px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea><br>"
@@ -222,7 +222,17 @@ removeFileHiddenInput = ->
     if !$(e).next().is(":visible")
       $(e).next().remove()
 
+
+checkMaxPhotos = (maxPhotos, addedPhotos) ->
+  if addedPhotos >= maxPhotos
+    $('.photo-upload').hide()
+
 $ ->
+  maxPhotos = $('#max-photos').attr("data-max-photos")
+  addedPhotos = $('.file-upload-input-button').find("img").length
+  $('.file-upload-input-button').click ->
+    addedPhotos += 1
+    checkMaxPhotos(maxPhotos, addedPhotos)
   # when a user removes an upload in edit, we are resetting the sortorder
   $('.delete-saved-file').on 'click', (e) ->
     e.preventDefault()
@@ -250,7 +260,7 @@ $ ->
     $(@).closest(containerClass).remove()
     $(fileToDelete).find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
       $(element).find('.upload-sort-order').val(idx+1)
-    
+
     if $(fileToDelete).hasClass('signature-column')
       $(fileToDelete).find('.signature-upload').show()
 
