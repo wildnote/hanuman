@@ -226,10 +226,16 @@ removeFileHiddenInput = ->
 checkMaxPhotos = (maxPhotos, addedPhotos) ->
   if addedPhotos >= maxPhotos
     $('.photo-upload').hide()
+  else
+    $('.photo-upload').show()
 
 $ ->
   maxPhotos = $('#max-photos').attr("data-max-photos")
   addedPhotos = $('.file-upload-input-button').find("img").length
+  checkMaxPhotos(maxPhotos, addedPhotos)
+  $('.delete-box').click ->
+    addedPhotos -= 1
+    # checkMaxPhotos(maxPhotos, addedPhotos)
   $('.file-upload-input-button').click ->
     addedPhotos += 1
     checkMaxPhotos(maxPhotos, addedPhotos)
