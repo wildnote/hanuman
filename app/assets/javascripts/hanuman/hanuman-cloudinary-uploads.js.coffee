@@ -233,10 +233,10 @@ $ ->
   maxPhotos = $('#max-photos').attr("data-max-photos")
   addedPhotos = $('.file-upload-input-button').find("img").length
   checkMaxPhotos(maxPhotos, addedPhotos)
-  $('.delete-box').click ->
+  $('.delete-box').on 'click', () ->
     addedPhotos -= 1
-    # checkMaxPhotos(maxPhotos, addedPhotos)
-  $('.file-upload-input-button').click ->
+    checkMaxPhotos(maxPhotos, addedPhotos)
+  $('.file-upload-input-button').on 'click', () ->
     addedPhotos += 1
     checkMaxPhotos(maxPhotos, addedPhotos)
   # when a user removes an upload in edit, we are resetting the sortorder
