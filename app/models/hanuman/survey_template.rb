@@ -88,6 +88,7 @@ module Hanuman
         q.rules.each do |rule|
           next unless rule.question.answer_type.has_answer_choices
           next unless rule.question.duped_question_id
+          next unless rule.value
           answer_choice_ids = rule.value.split(',')
           next if answer_choice_ids.empty?
 
