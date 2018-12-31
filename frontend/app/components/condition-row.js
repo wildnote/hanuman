@@ -3,6 +3,7 @@ import { alias } from '@ember/object/computed';
 import { computed } from '@ember/object';
 import { isNone, isBlank } from '@ember/utils';
 import { inject as service } from '@ember/service';
+import { run } from '@ember/runloop';
 import { task } from 'ember-concurrency';
 
 import config from 'frontend/config/environment';
@@ -18,6 +19,15 @@ export default Component.extend({
   attributeBindings: ['condition.id:data-condition-id'],
   classNameBindings: ['isNewCondition:no-hover'],
   isEditingCondition: false,
+
+  didInsertElement() {
+    this._super(...arguments);
+    run.scheduleOnce('afterRender', this, function() {
+      if (this.condition) {
+        this.set('condition.questionId', this.availableQuestions[0].id);
+      }
+    });
+  },
 
   loadLocations: task(function*() {
     let projectId;
