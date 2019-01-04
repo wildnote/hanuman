@@ -55,8 +55,8 @@
                     <p><b>Radio button</b> Single select with radio buttons.</p>
                     <hr>
                     <p><b>Taxonomy</b></p>
-                    <p><b>Taxon multiple select</b> Plant or wildlife taxon list, multiple choice, auto-filters as you type. Select the data source to pick a particular list. </p>
-                    <p><b>Taxon single select</b> Plant or wildlife taxon list, single choice, auto-filters as you type. Select the data source to pick a particular list.
+                    <p><b>Taxon multiple select</b> Plant or wildlife taxon list, multiple choice, auto-filters as you type. Select a taxon list below to populate. </p>
+                    <p><b>Taxon single select</b> Plant or wildlife taxon list, single choice, auto-filters as you type. Select a taxon list below to populate.
                     </p>" class="bootstrap-popover">
                   <span class="glyphicons glyphicons-info-sign"></span>
                 </a>
@@ -95,7 +95,7 @@
         {{#if question.isTaxonType}}
           <div class="form-group">
             <div class="col-sm-12">
-              {{#form-field for='dataSource' label='Data Source'}}
+              {{#form-field for='dataSource' label='Taxon List'}}
                 <select
                   class="form-control"
                   data-test="data-source-select"
@@ -113,6 +113,9 @@
         <div class="form-group">
           <div class="col-sm-12">
             {{#form-field for='questionText' label='Question Text'}}
+              <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="The question label." class="bootstrap-popover">
+                <span class="glyphicons glyphicons-info-sign"></span>
+              </a>
               <textarea data-test="question.questionText"
                       disabled={{question.surveyTemplate.lock}}
                       name="questionText"
@@ -127,7 +130,10 @@
 
         <div class="form-group">
           <div class="col-sm-12">
-            {{#form-field for='questionHelperText' label='Helper Text'}}
+            {{#form-field for='questionHelperText' label='Question Helper Text'}}
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="By entering helper text here a i icon will be displayed near the question. Clicking on the i icon will pop up the helper text. Useful for large amounts of helper text including project measures." class="bootstrap-popover">
+              <span class="glyphicons glyphicons-info-sign"></span>
+            </a>
               <textarea data-test="question.helperText"
                       disabled={{question.surveyTemplate.lock}}
                       name="helperText"
@@ -144,6 +150,9 @@
           <div class="form-group">
             <div class="col-sm-3">
               {{#form-field for='maxPhotos' label='Max Photos'}}
+              <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="Set the maximum number of photos that can be captured for this photo question." class="bootstrap-popover">
+                <span class="glyphicons glyphicons-info-sign"></span>
+              </a>
                 <input data-test-order type="number"
                       disabled={{question.surveyTemplate.lock}}
                       class="form-control"
