@@ -282,8 +282,8 @@
         {{#if (and (or isSuperUser isJacobs) question.answerType.isLookupRuleable)}}
           <div class="form-group" style="margin-top: 15px;">
             <div class="col-sm-10">
-              <label>Default Answer Rule</label>
-              <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Default Answer Rules" data-content="Define rules to set the default answer(s) of this question." class="bootstrap-popover">
+              <label>Default Answer Rules</label>
+              <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Default Answer Rules" data-content="Add a rule to set the default answer for this question based another question's answer. If the rule conditions are met the default answer will be selected." class="bootstrap-popover">
                 <span class="glyphicons glyphicons-info-sign"></span>
               </a>
             </div>
@@ -307,22 +307,9 @@
         {{!-- Visibility rules --}}
 
         <div class="form-group">
-          <div class="col-sm-12">
-            <input type="checkbox"
-                  disabled={{question.surveyTemplate.lock}}
-                  name="isHidden"
-                  checked={{question.hidden}}
-                  onchange={{action (mut question.hidden) value="target.checked"}} /> Hidden
-                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hidden" data-content="A question will be automatically hidden if there is a visibility rule associated with it." class="bootstrap-popover">
-                    <span class="glyphicons glyphicons-info-sign"></span>
-                  </a>
-          </div>
-        </div>
-
-        <div class="form-group">
           <div class="col-sm-10">
-            <label>Hide and Show Rule</label>
-            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hide and Show Rule" data-content="Add a rule to hide this question by default. If the rule conditions are met the question will then be revealed in the survey." class="bootstrap-popover">
+            <label>Hide and Show Rules</label>
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hide and Show Rules" data-content="Add a rule to hide this question based on another question's answer. If the rule conditions are met the question will then be revealed in the survey." class="bootstrap-popover">
               <span class="glyphicons glyphicons-info-sign"></span>
             </a>
           </div>
