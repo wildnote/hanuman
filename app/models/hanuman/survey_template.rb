@@ -76,6 +76,32 @@ module Hanuman
           end
         end
       end
+
+      reassign_answer_choices_on_lookup_rules
+
+    end
+
+    # Duplicating a Survey Template with lookup values that have rules associated with answer_choice_ids
+    def reassign_answer_choices_on_lookup_rules
+      questions.each do |q|
+        next if q.rules.where(type: "Hanuman::LookupRule").count < 1
+        q.rules.each do |rule|
+          next unless rule.question.answer_type.has_answer_choices
+          next unless rule.question.duped_question_id
+          next unless rule.value
+          answer_choice_ids = rule.value.split(',')
+          next if answer_choice_ids.empty?
+
+          from_duped_question = Hanuman::Question.find_by_id(rule.question.duped_question_id)
+          next unless from_duped_question
+
+          answer_choice_texts = from_duped_question.answer_choices.where(id: answer_choice_ids).map(&:option_text)
+          new_answer_choice_ids = rule.question.answer_choices.select{|ac| answer_choice_texts.include?(ac.option_text)}.map(&:id)
+
+          rule.value = new_answer_choice_ids.join(",")
+          rule.save
+        end
+      end
     end
 
     # doing this at the survey template level so we only call survey save once and not all at once when a resort happens

@@ -14,6 +14,9 @@ module Hanuman
       '', 'Basic', 'Multiple Choice', 'Single Choice', 'Media', 'Design', 'Taxon',
       'Geographic'
     ].freeze
+    WITH_ANSWER_CHOICES = ['checkboxlist', 'hiddencheckboxlist', 'chosenmultiselect',
+      'hiddenchosenmultiselect', 'chosenmultiselectgrouped', 'hiddenchosenmultiselectgrouped',
+      'radio', 'hiddenradio', 'select', 'hiddenselect', 'chosenselect'].freeze
 
     # Scopes
     scope :active_sorted, -> { where(status: 'active').order('name') }
@@ -35,6 +38,10 @@ module Hanuman
               .gsub('desc desc', 'desc')
               .gsub('desc asc', 'desc')
       )
+    end
+
+    def has_answer_choices
+      WITH_ANSWER_CHOICES.include? name
     end
   end
 end

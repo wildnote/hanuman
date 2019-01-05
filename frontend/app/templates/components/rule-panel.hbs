@@ -3,6 +3,15 @@
     <div class="table-responsive">
       <table class="table table-hover">
         <tbody>
+          {{#if lookupRule}}
+            <tr class="no-hover">
+              <td colspan="6" style="border-top: none;">
+                <a class="btn btn-delete" style="float: right;" onclick={{action "deleteRule"}}>
+                  <span class="glyphicons glyphicons-bin"></span>
+                </a>
+              </td>
+            </tr>
+          {{/if}}
           <tr class="no-hover">
             <td colspan="6">
               <select
@@ -35,14 +44,16 @@
               isNewCondition=false
             }}
           {{/each}}
-          {{condition-row
-            rule=lookupRule
-            question=question
-            questions=conditionalQuestions
-            saveTask=saveConditionTask
-            removeTask=removeConditionTask
-            isNewCondition=true
-          }}
+          {{#if (or (not lookupRule) (not rule.conditions.length)) }}
+            {{condition-row
+              rule=lookupRule
+              question=question
+              questions=conditionalQuestions
+              saveTask=saveConditionTask
+              removeTask=removeConditionTask
+              isNewCondition=true
+            }}
+          {{/if}}
           {{#if lookupRule}}
             <tr class="no-hover defaul-rule-value">
               <td colspan="6">
