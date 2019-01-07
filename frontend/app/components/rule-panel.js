@@ -46,10 +46,6 @@ export default Component.extend({
         // If this was the last condition the API deletes the rule
         if (e.errors && e.errors[0] === 'Record not found.') {
           // This was a visibilitry rule
-          if (!this.lookupRule) {
-            let question = this.get('question');
-            this.store.createRecord('rule', { question });
-          }
         }
       }
     }
