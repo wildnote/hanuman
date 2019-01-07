@@ -141,13 +141,13 @@ export default Component.extend({
     })
   ),
 
-  addLookupRule: task(function*() {
+  addRule: task(function*(type = 'Hanuman::VisibilityRule') {
     try {
       // We need to save the question first
       yield this.saveTask.perform(true);
       let question = this.question;
       if (!question.isNew) {
-        let rule = this.store.createRecord('rule', { question, type: 'Hanuman::LookupRule' });
+        let rule = this.store.createRecord('rule', { question, type });
         yield rule.save();
       }
     } catch (e) {
@@ -215,11 +215,7 @@ export default Component.extend({
         yield this._saveSuccess.perform(question, promises);
       }
 
-      if (keepOpen) {
-        if (!question.get('visibilityRule')) {
-          this.store.createRecord('rule', { question });
-        }
-      } else {
+      if (!keepOpen) {
         this.send('closeModal');
       }
     } catch (e) {
