@@ -13,14 +13,14 @@
         </span>
       {{/if}}
       {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
-        <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+        <span class="glyphicons glyphicons-sorting {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'icon-disabled'}} {{if question.loading 'hide'}}">
           {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
         </span>
       {{else}}
         <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
       {{/if}}
       {{#if (and (not ancestrable) (not isSelected))}}
-        <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+        <span class="glyphicons glyphicons-move-square {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'icon-disabled'}} {{if question.loading 'hide'}}">
           {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
         </span>
       {{/if}}
