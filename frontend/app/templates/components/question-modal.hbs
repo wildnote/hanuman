@@ -300,7 +300,7 @@
               <button
                 disabled={{question.surveyTemplate.lock}}
                 class="btn btn-success btn-sm"
-                onclick={{perform addLookupRule}}
+                onclick={{perform addRule "Hanuman::LookupRule"}}
               >
                 <span class="glyphicons glyphicons-plus"></span>Add rule
               </button>
@@ -313,8 +313,8 @@
 
           <hr />
         {{/if}}
-        {{!-- Visibility rules --}}
 
+        {{!-- Visibility rules --}}
         <div class="form-group">
           <div class="col-sm-10">
             <label>Hide and Show Rules</label>
@@ -322,16 +322,14 @@
               <span class="glyphicons glyphicons-info-sign"></span>
             </a>
           </div>
-
-          {{#if question.isNew}}
+          {{#if (not question.visibilityRule)}}
             <div class="col-sm-2">
-              <button class="btn btn-success btn-sm" onclick={{perform saveTask true}}>
+              <button data-test-add-a-visi-rule class="btn btn-success btn-sm" onclick={{perform addRule "Hanuman::VisibilityRule"}}>
                 <span class="glyphicons glyphicons-plus"></span>
                 Add rule
               </button>
             </div>
           {{/if}}
-
         </div>
 
         {{#if question.visibilityRule}}

@@ -33,6 +33,8 @@ test('adding a conditional with a question without rule previously created', asy
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
   assert.equal(0, server.schema.rules.all().models.length);
+
+  await click('[data-test-add-a-visi-rule]');
   await click('[data-test="add-condition-link"]');
   // Select question
   await fillIn('[data-test="condition-question-id-select"]', 3);
