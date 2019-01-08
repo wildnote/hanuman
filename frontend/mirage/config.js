@@ -1,4 +1,5 @@
 import Mirage from 'ember-cli-mirage';
+import { isPresent } from '@ember/utils';
 
 export default function() {
   this.namespace = '/hanuman/api/v1';
@@ -63,6 +64,12 @@ export default function() {
   this.put('/rules/:id', ({ rules }, request) => {
     let attrs = JSON.parse(request.requestBody)['rule'],
       id = request.params.id;
+    let conditionAttrs = attrs.conditions;
+    delete attrs.conditions;
+    if (conditionAttrs) {
+      attrs['conditionIds'] = conditionAttrs.map((cond) => parseInt(cond.id));
+    }
+
     return rules.find(id).update(attrs);
   });
   this.get('/rules/:id');
@@ -87,7 +94,11 @@ export default function() {
   this.put('/questions/:id', ({ questions }, request) => {
     let attrs = JSON.parse(request.requestBody)['question'],
       id = request.params.id;
+    if (isPresent(attrs.rules)) {
+      attrs['ruleIds'] = attrs.rules.map((rule) => parseInt(rule.id));
+    }
     delete attrs.rules;
+
     return questions.find(id).update(attrs);
   });
   // Answer Choices
