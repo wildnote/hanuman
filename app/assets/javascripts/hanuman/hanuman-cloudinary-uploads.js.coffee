@@ -225,20 +225,27 @@ removeFileHiddenInput = ->
 
 checkMaxPhotos = (maxPhotos, addedPhotos) ->
   if addedPhotos >= maxPhotos
-    $('.photo-upload').hide()
+    $('.photo-upload').attr('style','display:none;')
   else
-    $('.photo-upload').show()
+    $('.photo-upload').attr('style','display:block;')
 
 $ ->
   maxPhotos = $('#max-photos').attr("data-max-photos")
-  addedPhotos = $('.file-upload-input-button').find("img").length
+  addedPhotos = $('.photo-preview').find("img").length
   checkMaxPhotos(maxPhotos, addedPhotos)
-  $('.delete-box').on 'click', () ->
-    addedPhotos -= 1
+  $('.file-upload').on 'click', '.remove-upload', (e) ->
+    e.preventDefault()
+    $('.photo-upload').attr('style','display:block;')
+    addedPhotos = $('.photo-preview').find("img").length
+    # checkMaxPhotos(maxPhotos, addedPhotos)
+  # $('.file-upload-input-button').on 'click', () ->
+  #   addedPhotos += 1
+  #   checkMaxPhotos(maxPhotos, addedPhotos)
+
+  $('body').bind 'cloudinarydone', (e) ->
+    addedPhotos = $('.photo-preview').find("img").length
     checkMaxPhotos(maxPhotos, addedPhotos)
-  $('.file-upload-input-button').on 'click', () ->
-    addedPhotos += 1
-    checkMaxPhotos(maxPhotos, addedPhotos)
+
   # when a user removes an upload in edit, we are resetting the sortorder
   $('.delete-saved-file').on 'click', (e) ->
     e.preventDefault()
