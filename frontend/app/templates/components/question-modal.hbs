@@ -250,7 +250,7 @@
                 <div class="table-responsive">
                   <table class="table table-hover">
                     <tbody>
-                      {{#each question.answerChoices as |answerChoice|}}
+                      {{#each (filter-by "isNew" false question.answerChoices) as |answerChoice|}}
                         {{#unless answerChoice.hideFromList}}
                           {{answer-choice-row
                             content=answerChoice

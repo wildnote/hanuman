@@ -67,7 +67,7 @@ export default function() {
     let conditionAttrs = attrs.conditions;
     delete attrs.conditions;
     if (conditionAttrs) {
-      attrs['conditionIds'] = conditionAttrs.map((cond) => parseInt(cond.id));
+      attrs['conditionIds'] = conditionAttrs.filter((cond) => !!cond.id).map((cond) => parseInt(cond.id));
     }
 
     return rules.find(id).update(attrs);

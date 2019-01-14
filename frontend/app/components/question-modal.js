@@ -215,6 +215,23 @@ export default Component.extend({
         yield this._saveSuccess.perform(question, promises);
       }
 
+      // Save unsaved related records
+      yield all(
+        question
+          .get('store')
+          .peekAll('condition')
+          .filter((condition) => condition.isNew)
+          .map((condition) => condition.save())
+      );
+
+      yield all(
+        question
+          .get('store')
+          .peekAll('answer-choice')
+          .filter((answerChoice) => answerChoice.isNew)
+          .map((answerChoice) => answerChoice.save())
+      );
+
       if (!keepOpen) {
         this.send('closeModal');
       }

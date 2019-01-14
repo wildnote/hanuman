@@ -33,7 +33,7 @@
             <td width="10px"></td>
             <td width="10px"></td>
           </tr>
-          {{#each rule.conditions as |condition|}}
+          {{#each conditions as |condition|}}
             {{condition-row
               condition=condition
               rule=lookupRule
@@ -44,7 +44,7 @@
               isNewCondition=false
             }}
           {{/each}}
-          {{#if (or (not lookupRule) (not rule.conditions.length)) }}
+          {{#if (or (not lookupRule) (not conditions.length)) }}
             {{condition-row
               rule=lookupRule
               question=question
