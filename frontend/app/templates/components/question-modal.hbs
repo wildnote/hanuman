@@ -251,15 +251,13 @@
                   <table class="table table-hover">
                     <tbody>
                       {{#each (filter-by "isNew" false question.answerChoices) as |answerChoice|}}
-                        {{#unless answerChoice.hideFromList}}
-                          {{answer-choice-row
-                            content=answerChoice
-                            question=question
-                            saveParentTask=saveAnswerChoiceTask
-                            answerChoice=answerChoice
-                            isNewAnswerChoice=false
-                          }}
-                        {{/unless}}
+                        {{answer-choice-row
+                          content=answerChoice
+                          question=question
+                          saveParentTask=saveAnswerChoiceTask
+                          answerChoice=answerChoice
+                          isNewAnswerChoice=false
+                        }}
                       {{/each}}
                       {{answer-choice-row question=question saveParentTask=saveAnswerChoiceTask isNewAnswerChoice=true}}
                     </tbody>

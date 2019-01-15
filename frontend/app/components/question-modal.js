@@ -229,7 +229,11 @@ export default Component.extend({
           .get('store')
           .peekAll('answer-choice')
           .filter((answerChoice) => answerChoice.isNew)
-          .map((answerChoice) => answerChoice.save())
+          .map((answerChoice) => {
+            answerChoice.set('question', question);
+            question.get('answerChoices').pushObject(answerChoice);
+            return answerChoice.save();
+          })
       );
 
       if (!keepOpen) {
