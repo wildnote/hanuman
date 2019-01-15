@@ -276,13 +276,19 @@ module Hanuman
     def sorted_photos
 
       if self.observations_sorted
-        photos = self.observations.order(:sort_order).map{|o| o.observation_photos.order(:sort_order)}
+        photos = self.observations.order(:sort_order).map{|o| o.observation_photos.order(:sort_order)}.flatten
       else
-        photos_repeater = self.observations.includes(:question).where('hanuman_observations.parent_repeater_id IS NOT NULL OR hanuman_observations.parent_repeater_id != 0').order('hanuman_observations.parent_repeater_id ASC, hanuman_questions.sort_order ASC').references(:question).map{|o| o.observation_photos.order(:sort_order)}
-        photos_top_level = self.observations.includes(:question).where('hanuman_observations.parent_repeater_id = 0 OR hanuman_observations.parent_repeater_id IS NULL').order('hanuman_questions.sort_order ASC').references(:question).map{|o| o.observation_photos.order(:sort_order)}
-        photos = photos_top_level + photos_not_null
+
+        obs = self.observations.includes(:question).order('hanuman_observations.parent_repeater_id ASC, hanuman_questions.sort_order ASC').references(:question).to_a
+
+        obs = obs.each{ |o| (o.parent_repeater_id == nil ? o.parent_repeater_id = 0 : o = o) }
+        obs = obs.sort{|a,b| a <=> b}
+
+        photos = obs.map{|o| o.observation_photos.order(:sort_order)}.flatten
+
       end
-      photos = photos.flatten
+
+      photos
     end
 
   end
