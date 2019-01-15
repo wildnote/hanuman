@@ -2,19 +2,20 @@ class SetMediaAccessModeWorker
   include Sidekiq::Worker
 
   def perform(media_id, media_type)
-    case media_type == "photo"
+    case media_id
+    when "photo"
       media = Hanuman::ObservationPhoto.find media_id
       data = media.try(:photo)
-    case media_type == "video"
+    when "video"
       media = Hanuman::ObservationVideo.find media_id
       data = media.try(:video)
-    case media_type == "document"
+    when "document"
       media = Hanuman::ObservationDocument.find media_id
       data = media.try(:document)
-    case media_type == "signature"
+    when "signature"
       media = Hanuman::ObservationSignature.find media_id
       data = media.try(:signature)
-    case media_type == "project_document"
+    when "project_document"
       media = ProjectDocument.find media_id
       data = media.try(:document)
     else

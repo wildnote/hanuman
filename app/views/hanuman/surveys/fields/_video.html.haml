@@ -12,7 +12,7 @@
       - o.observation_videos.order(sort_order: :asc).each do |v|
         = ff.fields_for :observation_videos, v do |fff|
           .upload-view-mode
-            = cl_video_tag(v.video.my_public_id, options = { controls: true, preload: 'none', width: 350 })
+            = cl_video_tag(v.video.my_public_id, options = { controls: true, preload: 'none', width: 350, :sign_url => true })
             %p
               = fff.object.video.file.public_id + "." + fff.object.video.file.format
 
@@ -36,4 +36,3 @@
         .progress.hidden
           .progress-bar.progress-bar-success.video-progress-bar
         .video-preview-container.preview-container
-    
