@@ -171,8 +171,8 @@ module Hanuman
                 if trigger_observation.observation_answers.present?
                   cond_met = false
                   trigger_observation.observation_answers.each do |obs_answer|
-                    cond_met = 
-                      (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) || 
+                    cond_met =
+                      (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) ||
                       (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol == cond.answer)
                     break if cond_met
                   end
@@ -189,13 +189,13 @@ module Hanuman
                   cond_met = true
                   trigger_observation.observation_answers.each do |obs_answer|
                     if obs_answer.answer_choice_text == cond.answer
-                      is_equal_to = 
-                        (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) || 
+                      is_equal_to =
+                        (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) ||
                         (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol == cond.answer)
 
                       if is_equal_to
-                        cond_met = false 
-                        break  
+                        cond_met = false
+                        break
                       end
                     end
                   end
@@ -230,8 +230,8 @@ module Hanuman
                 if trigger_observation.observation_answers.present?
                   cond_met = false
                   trigger_observation.observation_answers.each do |obs_answer|
-                    cond_met = 
-                      (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text.include?(cond.answer)) || 
+                    cond_met =
+                      (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text.include?(cond.answer)) ||
                       (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol.include?(cond.answer))
                     break if cond_met
                   end
@@ -250,13 +250,13 @@ module Hanuman
               else
                 false
               end
-            else 
-              false 
+            else
+              false
             end
           end
 
           obs.hidden = !(rule.match_type == "any" ? condition_results.any? : condition_results.all?)
-          
+
           if obs.hidden && obs.question.has_children?
             obs.hide_tree!
           end
@@ -270,5 +270,20 @@ module Hanuman
       self.update_column(:observation_visibility_set, true)
       self.sorted_observations.where(hidden: false)
     end
+
+
+
+    def sorted_photos
+
+      if self.observations_sorted
+        photos = self.observations.order(:sort_order).map{|o| o.observation_photos.order(:sort_order)}
+      else
+        photos_repeater = self.observations.includes(:question).where('hanuman_observations.parent_repeater_id IS NOT NULL OR hanuman_observations.parent_repeater_id != 0').order('hanuman_observations.parent_repeater_id ASC, hanuman_questions.sort_order ASC').references(:question).map{|o| o.observation_photos.order(:sort_order)}
+        photos_top_level = self.observations.includes(:question).where('hanuman_observations.parent_repeater_id = 0 OR hanuman_observations.parent_repeater_id IS NULL').order('hanuman_questions.sort_order ASC').references(:question).map{|o| o.observation_photos.order(:sort_order)}
+        photos = photos_top_level + photos_not_null
+      end
+      photos = photos.flatten
+    end
+
   end
 end
