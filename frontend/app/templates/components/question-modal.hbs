@@ -150,14 +150,17 @@
           <div class="form-group">
             <div class="col-sm-3">
               {{#form-field for='maxPhotos' label='Max Photos'}}
-              <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="Set the maximum number of photos that can be captured for this photo question." class="bootstrap-popover">
-                <span class="glyphicons glyphicons-info-sign"></span>
-              </a>
+                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="Set the maximum number of photos that can be captured for this photo question." class="bootstrap-popover">
+                  <span class="glyphicons glyphicons-info-sign"></span>
+                </a>
                 <input data-test-order type="number"
+                      name="maxPhotos"
+                      min="0"
                       disabled={{question.surveyTemplate.lock}}
                       class="form-control"
                       value={{question.maxPhotos}}
-                      oninput={{action (mut question.maxPhotos) value="target.value"}} />
+                      onkeyup={{action "setMaxPhotoValue" value="target.value"}}
+                      oninput={{action "setMaxPhotoValue" value="target.value"}} />
               {{/form-field}}
             </div>
           </div>

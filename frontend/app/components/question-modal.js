@@ -303,6 +303,12 @@ export default Component.extend({
   },
 
   actions: {
+    setMaxPhotoValue(value) {
+      value = value.replace(/\D+/g, '');
+      set(this.question, 'maxPhotos', value);
+      $('[name="maxPhotos"]').val(value);
+    },
+
     setQuestionText(questionText) {
       if (this.question.isARepeater || this.question.isContainer) {
         questionText = questionText.replace(/[\/\*\[\]:\?\\]/g, ''); // eslint-disable-line no-useless-escape
