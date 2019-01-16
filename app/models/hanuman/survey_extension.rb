@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
 
     # Relations
-    belongs_to :survey#, dependent: :destroy
+    belongs_to :survey
 
   end
 end
