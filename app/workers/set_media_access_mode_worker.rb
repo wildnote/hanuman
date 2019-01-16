@@ -2,27 +2,35 @@ class SetMediaAccessModeWorker
   include Sidekiq::Worker
 
   def perform(media_id, media_type)
-    case media_id
+    case media_type
     when "photo"
       media = Hanuman::ObservationPhoto.find media_id
-      data = media.try(:photo)
+      unless media.photo.blank?
+        Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.photo.my_public_id)
+      end
     when "video"
       media = Hanuman::ObservationVideo.find media_id
-      data = media.try(:video)
+      unless media.video.blank?
+        Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.video.my_public_id)
+      end
     when "document"
       media = Hanuman::ObservationDocument.find media_id
-      data = media.try(:document)
+      unless media.document.blank?
+        Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.document.my_public_id)
+      end
     when "signature"
       media = Hanuman::ObservationSignature.find media_id
-      data = media.try(:signature)
+      unless media.signature.blank?
+        Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.signature.my_public_id)
+      end
     when "project_document"
       media = ProjectDocument.find media_id
-      data = media.try(:document)
+      unless media.document.blank?
+        Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.document.my_public_id)
+      end
     else
       media = nil
     end
-    unless media.blank?
-      Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', data.my_public_id)
-    end
+
   end
 end
