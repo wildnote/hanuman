@@ -10,9 +10,6 @@ export default Model.extend(Validator, {
   groupText: attr('string'),
   sortOrder: attr('number'),
 
-  // On fly attribute
-  hideFromList: attr('boolean', { defaultValue: false }),
-
   // Associations
   question: belongsTo('question'),
 

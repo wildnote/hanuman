@@ -33,7 +33,7 @@
             <td width="10px"></td>
             <td width="10px"></td>
           </tr>
-          {{#each rule.conditions as |condition|}}
+          {{#each conditions as |condition|}}
             {{condition-row
               condition=condition
               rule=lookupRule
@@ -44,19 +44,17 @@
               isNewCondition=false
             }}
           {{/each}}
-          {{#if (or (not lookupRule) (not rule.conditions.length)) }}
-            {{condition-row
-              rule=lookupRule
-              question=question
-              questions=conditionalQuestions
-              saveTask=saveConditionTask
-              removeTask=removeConditionTask
-              isNewCondition=true
-            }}
-          {{/if}}
+          {{condition-row
+            rule=lookupRule
+            question=question
+            questions=conditionalQuestions
+            saveTask=saveConditionTask
+            removeTask=removeConditionTask
+            isNewCondition=true
+          }}
           {{#if lookupRule}}
             <tr class="no-hover defaul-rule-value">
-              <td colspan="6">
+              <td data-test-multiple-answers-select colspan="6">
                 {{#if question.answerType.hasAnswerChoices}}
                   {{#power-select-multiple
                     class="form-control"

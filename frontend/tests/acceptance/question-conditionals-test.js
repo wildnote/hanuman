@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
+import { selectChoose } from 'ember-power-select/test-support';
 
 let surveyTemplate, question, rule, conditions;
 moduleForAcceptance('Acceptance | question conditionals', {
@@ -33,6 +34,8 @@ test('adding a conditional with a question without rule previously created', asy
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
 
   assert.equal(0, server.schema.rules.all().models.length);
+
+  await click('[data-test-add-a-visi-rule]');
   await click('[data-test="add-condition-link"]');
   // Select question
   await fillIn('[data-test="condition-question-id-select"]', 3);
@@ -188,4 +191,48 @@ test('selecting a location type question', async function(assert) {
   assert.equal(options[1].textContent, 'ERTC 1');
   assert.equal(options[2].textContent, 'ERTC 2');
   assert.equal(options[3].textContent, 'ERTC 3');
+});
+
+test('lookup value for checkbox list question', async function(assert) {
+  assert.expect(1);
+
+  // Question with answer choices
+  /* eslint-disable camelcase */
+  let questionCheckbox = server.create('question', {
+    question_text: 'checkbox list one',
+    surveyTemplate,
+    answer_type_id: 19
+  });
+  server.create('answer-choice', { option_text: 'la 1', question: questionCheckbox });
+  server.create('answer-choice', { option_text: 'la 2', question: questionCheckbox });
+
+  let questionRadio = server.create('question', {
+    question_text: 'single number',
+    surveyTemplate,
+    answer_type_id: 17
+  });
+  server.createList('answer-choice', 3, { question: questionRadio });
+  /* eslint-enable camelcase */
+
+  await visit(`/projects/735/survey_templates/${surveyTemplate.id}/questions/${questionCheckbox.id}`);
+
+  await click('[data-test-add-a-look-rule]');
+
+  await click('[data-test="add-condition-link"]');
+
+  // Select question
+  await fillIn('[data-test="condition-question-id-select"]', questionRadio.id);
+
+  await selectChoose('[data-test-multiple-answers-select]', 'la 2');
+  await selectChoose('[data-test-multiple-answers-select]', 'la 1');
+
+  await click('[data-test="save-condition-link"]');
+  await click('[data-test="save-question-link"]');
+
+  assert.equal(
+    find('[data-test-default-to]')
+      .text()
+      .trim(),
+    'la 1,la 2'
+  );
 });

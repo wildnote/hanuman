@@ -141,13 +141,13 @@ export default Component.extend({
     })
   ),
 
-  addLookupRule: task(function*() {
+  addRule: task(function*(type = 'Hanuman::VisibilityRule') {
     try {
       // We need to save the question first
       yield this.saveTask.perform(true);
       let question = this.question;
       if (!question.isNew) {
-        let rule = this.store.createRecord('rule', { question, type: 'Hanuman::LookupRule' });
+        let rule = this.store.createRecord('rule', { question, type });
         yield rule.save();
       }
     } catch (e) {
@@ -215,11 +215,28 @@ export default Component.extend({
         yield this._saveSuccess.perform(question, promises);
       }
 
-      if (keepOpen) {
-        if (!question.get('visibilityRule')) {
-          this.store.createRecord('rule', { question });
-        }
-      } else {
+      // Save unsaved related records
+      yield all(
+        question
+          .get('store')
+          .peekAll('condition')
+          .filter((condition) => condition.isNew)
+          .map((condition) => condition.save())
+      );
+
+      yield all(
+        question
+          .get('store')
+          .peekAll('answer-choice')
+          .filter((answerChoice) => answerChoice.isNew)
+          .map((answerChoice) => {
+            answerChoice.set('question', question);
+            question.get('answerChoices').pushObject(answerChoice);
+            return answerChoice.save();
+          })
+      );
+
+      if (!keepOpen) {
         this.send('closeModal');
       }
     } catch (e) {
@@ -286,6 +303,12 @@ export default Component.extend({
   },
 
   actions: {
+    setMaxPhotoValue(value) {
+      value = value.replace(/\D+/g, '');
+      set(this.question, 'maxPhotos', value);
+      $('[name="maxPhotos"]').val(value);
+    },
+
     setQuestionText(questionText) {
       if (this.question.isARepeater || this.question.isContainer) {
         questionText = questionText.replace(/[\/\*\[\]:\?\\]/g, ''); // eslint-disable-line no-useless-escape

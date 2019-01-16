@@ -1,11 +1,13 @@
 import Component from '@ember/component';
 import { task } from 'ember-concurrency';
 import { computed } from '@ember/object';
+import { filterBy } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
 
 export default Component.extend({
   store: service(),
   classNames: 'panel rule-panel',
+  conditions: filterBy('rule.conditions', 'isNew', false),
 
   choicesValueSelected: computed('rule.value', 'question.answerChoices.[]', function() {
     let choiceIds = (this.get('rule.value') || '').split(',');
@@ -46,10 +48,6 @@ export default Component.extend({
         // If this was the last condition the API deletes the rule
         if (e.errors && e.errors[0] === 'Record not found.') {
           // This was a visibilitry rule
-          if (!this.lookupRule) {
-            let question = this.get('question');
-            this.store.createRecord('rule', { question });
-          }
         }
       }
     }

@@ -4119,7 +4119,7 @@ ember-cli-babel@^7.0.0, ember-cli-babel@^7.1.0:
     ensure-posix-path "^1.0.2"
     semver "^5.5.0"
 
-ember-cli-babel@^7.1.4, ember-cli-babel@^7.2.0:
+ember-cli-babel@^7.1.2, ember-cli-babel@^7.1.4, ember-cli-babel@^7.2.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/ember-cli-babel/-/ember-cli-babel-7.2.0.tgz#5c5bd877fb73f6fb198c878d3127ba9e18e9b8a0"
   integrity sha512-vwx/AgPD7P4ebgTFJMqFovbrSNCA02UMuItlR/Il16njYjgN9ZzjUqgYxaylN7k8RF88wdJq3jrtqyMS/oOq8A==
@@ -4688,13 +4688,13 @@ ember-lodash@^4.17.3:
     ember-cli-babel "^7.0.0"
     lodash-es "^4.17.4"
 
-ember-math-helpers@^2.8.1:
-  version "2.8.1"
-  resolved "https://registry.yarnpkg.com/ember-math-helpers/-/ember-math-helpers-2.8.1.tgz#6c01de988ad2623e8f5890f22c2d7427ea72a7a2"
-  integrity sha512-j3UAX94kNaP8bFDQxmp7SBgS82e6XtvCMI/QQaX7n729YBygEsddD8soCNqCytw07iEdLsXO+SRDdrP7RfiGLg==
+ember-math-helpers@^2.10.0:
+  version "2.10.0"
+  resolved "https://registry.yarnpkg.com/ember-math-helpers/-/ember-math-helpers-2.10.0.tgz#a2646f9b6d4d09fed3cbb820a4845f7af18dfd14"
+  integrity sha512-4zK4KammW8x1VU1u+mVHSKRIinK9hFol9I8pH4yI7DNAFKjCj/aewwiqBtYfMSdcxHH2oT0aj47lIdzEh9ts8g==
   dependencies:
     broccoli-funnel "^2.0.0"
-    ember-cli-babel "^6.16.0"
+    ember-cli-babel "^7.1.2"
     ember-cli-htmlbars "^3.0.0"
 
 ember-maybe-import-regenerator@^0.1.5, ember-maybe-import-regenerator@^0.1.6:

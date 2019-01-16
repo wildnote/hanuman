@@ -85,7 +85,7 @@
     {{#each question.lookupRules as |rule|}}
       <div class="row">
         {{#if rule.savedConditions}}
-          <i>default</i> to <strong>{{rule.textValue}}</strong>
+          <i>default</i> to <strong data-test-default-to>{{rule.textValue}}</strong>
           {{#each rule.savedConditions as |condition index|}}
             if <strong
                   class="conditional-highlight"
