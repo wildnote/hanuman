@@ -43,9 +43,8 @@ module Hanuman
 
     def update_observation_visibility
       self.question.survey_template.surveys.where(observation_visibility_set: true).each do |s|
-        s.set_observations_unsorted
-        s.save
-        SortObservationsWorker.perform_async(s.id)
+        s.update_column(:observations_sorted, false)
+        s.update_column(:observation_visibility_set, false)
       end
     end
 
