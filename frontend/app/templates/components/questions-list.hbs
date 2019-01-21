@@ -76,6 +76,18 @@
           {{/if}}
         </div>
       {{/if}}
+      <div class="row">
+        <div style="float: right;">
+          <button class="btn" onclick={{action "toggleAllCollapsed"}} disabled={{or isLoadingQuestions togglingAn}}>
+            {{#if (or isLoadingQuestions togglingAny)}}
+              <span class="glyphicons gly-spin glyphicons-refresh"></span>
+            {{else}}
+              <span style="color: #8f6247 !important" class="glyphicon glyphicon-collapse-{{if allCollapsed 'down' 'up' }}"></span>
+            {{/if}}
+            {{if allCollapsed 'Collapse' 'Expand'}} Questions
+          </button>
+        </div>
+      </div>
 
       <div class="row">
         <div class="col-sm-4"><strong>Label</strong></div>

@@ -15,6 +15,7 @@ export default Component.extend({
 
   isLoadingQuestions: true,
   isPerformingBulk: false,
+  allCollapsed: false,
 
   questionsSorting: ['sortOrder'],
   fullQuestions: sort('surveyTemplate.questionsNotDeleted', 'questionsSorting'),
@@ -25,6 +26,10 @@ export default Component.extend({
     this._super(...arguments);
     this.selectedQuestions = A();
   },
+
+  togglingAny: computed('surveyTemplate.questions.@each.pendingRecursive', function() {
+    return this.get('surveyTemplate.questions').any((question) => question.pendingRecursive > 0);
+  }),
 
   loadingProgress: computed('surveyTemplate.questions.@each.isLoading', function() {
     let questions = this.get('surveyTemplate.questions');
@@ -162,6 +167,17 @@ export default Component.extend({
   },
 
   actions: {
+    toggleAllCollapsed() {
+      this.toggleProperty('allCollapsed');
+
+      let topLevel = this.get('surveyTemplate.questions').filter((question) => {
+        return question.hasChild && isBlank(question.parentId);
+      });
+      topLevel.forEach((question) => {
+        this.get('collapsible').toggleCollapsed(question);
+      });
+    },
+
     openTaggingModal() {
       this.set('showingTaggingModal', true);
       run.next(() => {
