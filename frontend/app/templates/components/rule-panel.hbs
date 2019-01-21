@@ -15,7 +15,6 @@
           <tr class="no-hover">
             <td colspan="6">
               <select
-                disabled={{question.surveyTemplate.lock}}
                 data-test="rule-match-type-select"
                 class="form-control"
                 onchange={{action "setRuleMatchType" value="target.value"}}
@@ -70,7 +69,6 @@
                   {{/power-select-multiple}}
                 {{else}}
                   <input
-                    disabled={{question.surveyTemplate.lock}}
                     placeholder="Value to set on this question"
                     type="text"
                     class="form-control"

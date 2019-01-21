@@ -4,7 +4,6 @@
   <td>
     {{#form-field for='question'}}
       <select
-        disabled={{question.surveyTemplate.lock}}
         data-test="condition-question-id-select"
         class="form-control"
         onchange={{action "setConditionQuestion" value="target.value"}}
@@ -18,7 +17,6 @@
   <td>
     {{#form-field for='operator'}}
       <select
-        disabled={{question.surveyTemplate.lock}}
         data-test="condition-operator-select"
         class="form-control"
         onchange={{action "setConditionOperator" value="target.value"}}
@@ -36,7 +34,6 @@
           Loading...
         {{else}}
           <select
-            disabled={{question.surveyTemplate.lock}}
             data-test="condition-answer-choice-dropdown"
             class="form-control"
             onchange={{action "setConditionAnswer" value="target.value"}}
@@ -66,7 +63,6 @@
     {{else}}
       {{#form-field for='answer'}}
         <input type="text"
-              disabled={{question.surveyTemplate.lock}}
               data-test="condition.answer"
               class="form-control"
               value={{condition.answer}}
@@ -75,7 +71,7 @@
     {{/if}}
   </td>
   <td>
-    <a disabled={{question.surveyTemplate.lock}} class="btn btn-success btn-sm" data-test="save-condition-link" onclick={{action 'save'}}>
+    <a class="btn btn-success btn-sm" data-test="save-condition-link" onclick={{action 'save'}}>
       Save
     </a>
   </td>
@@ -90,7 +86,6 @@
     <!-- + new answer choice button -->
     <td colspan="2">
       <a
-        disabled={{question.surveyTemplate.lock}}
         class="btn btn-success"
         data-test="add-condition-link"
         onclick={{action 'toggleForm'}}
