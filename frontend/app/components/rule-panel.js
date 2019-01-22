@@ -61,6 +61,10 @@ export default Component.extend({
     setAnswerChoiceRuleValue(answerChoices) {
       let value = answerChoices.map((answerChoice) => answerChoice.id).join(',');
       this.set('rule.value', value);
+    },
+    deleteRule() {
+      let rule = this.get('lookupRule');
+      rule.destroyRecord();
     }
   }
 });

@@ -124,7 +124,7 @@ export default Component.extend({
     yield question.save();
     yield question.reload();
     yield ancestryQuestion.reload();
-    yield this.get('updateSortOrderTask').perform(this.get('sortedQuestions'), true);
+    yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
     question.set('loading', false);
   }),
 

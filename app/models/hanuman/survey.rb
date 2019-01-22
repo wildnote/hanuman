@@ -165,89 +165,93 @@ module Hanuman
           condition_results = rule.conditions.map do |cond|
             trigger_observation = self.observations.find_by(question_id: cond.question_id, parent_repeater_id: obs.parent_repeater_id)
 
-            case cond.operator
-            when "is equal to"
-              if trigger_observation.observation_answers.present?
-                cond_met = false
-                trigger_observation.observation_answers.each do |obs_answer|
-                  cond_met =
-                    (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) ||
-                    (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol == cond.answer)
-                  break if cond_met
-                end
-                cond_met
-              elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
-                trigger_observation.location.name == cond.answer
-              elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
-                trigger_observation.taxon.formatted_answer_choice_with_symbol == cond.answer
-              else
-                trigger_observation.answer == cond.answer
-              end
-            when "is not equal to"
-              if trigger_observation.observation_answers.present?
-                cond_met = true
-                trigger_observation.observation_answers.each do |obs_answer|
-                  if obs_answer.answer_choice_text == cond.answer
-                    is_equal_to =
-                      (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) ||
+            unless trigger_observation.blank?
+              case cond.operator
+              when "is equal to"
+                if trigger_observation.observation_answers.present?
+                  cond_met = false
+                  trigger_observation.observation_answers.each do |obs_answer|
+                    cond_met = 
+                      (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) || 
                       (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol == cond.answer)
+                    break if cond_met
+                  end
+                  cond_met
+                elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
+                  trigger_observation.location.name == cond.answer
+                elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
+                  trigger_observation.taxon.formatted_answer_choice_with_symbol == cond.answer
+                else
+                  trigger_observation.answer == cond.answer
+                end
+              when "is not equal to"
+                if trigger_observation.observation_answers.present?
+                  cond_met = true
+                  trigger_observation.observation_answers.each do |obs_answer|
+                    if obs_answer.answer_choice_text == cond.answer
+                      is_equal_to = 
+                        (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text == cond.answer) || 
+                        (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol == cond.answer)
 
-                    if is_equal_to
-                      cond_met = false
-                      break
+                      if is_equal_to
+                        cond_met = false 
+                        break  
+                      end
                     end
                   end
-                end
-                cond_met
-              elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
-                trigger_observation.location.name != cond.answer
-              elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
-                trigger_observation.taxon.formatted_answer_choice_with_symbol != cond.answer
-              else
-                trigger_observation.answer != cond.answer
-              end
-            when "is empty"
-              # if observation_answers aren't present the answer type either uses .answer or has no answer choices selected
-              if trigger_observation.observation_answers.present?
-                true
-              else
-                trigger_observation.answer.blank?
-              end
-            when "is not empty"
-              if trigger_observation.observation_answers.present?
-                true
-              else
-                trigger_observation.answer.present?
-              end
-            when "is greater than"
-              trigger_observation.answer.to_f.to_s == trigger_observation && trigger_observation.answer.to_f > cond.answer.to_f
-            when "is less than"
-              trigger_observation.answer.to_f.to_s == trigger_observation && trigger_observation.answer.to_f < cond.answer.to_f
-            when "starts with"
-              trigger_observation.answer.starts_with?(cond.answer)
-            when "contains"
-              if trigger_observation.observation_answers.present?
-                cond_met = false
-                trigger_observation.observation_answers.each do |obs_answer|
-                  cond_met =
-                    (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text.include?(cond.answer)) ||
-                    (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol.include?(cond.answer))
-                  break if cond_met
-                end
-                cond_met
-              elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
-                trigger_observation.location.name.include?(cond.answer)
-              elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
-                trigger_observation.taxon.formatted_answer_choice_with_symbol.include?(cond.answer)
-              else
-                if trigger_observation.answer.nil?
-                  cond.answer.nil?
+                  cond_met
+                elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
+                  trigger_observation.location.name != cond.answer
+                elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
+                  trigger_observation.taxon.formatted_answer_choice_with_symbol != cond.answer
                 else
-                  trigger_observation.answer.include?(cond.answer)
+                  trigger_observation.answer != cond.answer
                 end
+              when "is empty"
+                # if observation_answers aren't present the answer type either uses .answer or has no answer choices selected
+                if trigger_observation.observation_answers.present?
+                  true
+                else
+                  trigger_observation.answer.blank?
+                end
+              when "is not empty"
+                if trigger_observation.observation_answers.present?
+                  true
+                else
+                  trigger_observation.answer.present?
+                end
+              when "is greater than"
+                trigger_observation.answer.to_f.to_s == trigger_observation && trigger_observation.answer.to_f > cond.answer.to_f
+              when "is less than"
+                trigger_observation.answer.to_f.to_s == trigger_observation && trigger_observation.answer.to_f < cond.answer.to_f
+              when "starts with"
+                trigger_observation.answer.starts_with?(cond.answer)
+              when "contains"
+                if trigger_observation.observation_answers.present?
+                  cond_met = false
+                  trigger_observation.observation_answers.each do |obs_answer|
+                    cond_met = 
+                      (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text.include?(cond.answer)) || 
+                      (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol.include?(cond.answer))
+                    break if cond_met
+                  end
+                  cond_met
+                elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.include?("location")
+                  trigger_observation.location.name.include?(cond.answer)
+                elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
+                  trigger_observation.taxon.formatted_answer_choice_with_symbol.include?(cond.answer)
+                else
+                  if trigger_observation.answer.nil?
+                    cond.answer.nil?
+                  else
+                    trigger_observation.answer.include?(cond.answer)
+                  end
+                end
+              else
+                false
               end
-            else
-              false
+            else 
+              false 
             end
           end
 
