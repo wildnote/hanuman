@@ -78,7 +78,7 @@
       {{/if}}
       <div class="row">
         <div style="float: right;">
-          <button class="btn" onclick={{action "toggleAllCollapsed"}} disabled={{or isLoadingQuestions togglingAn}}>
+          <button data-test-bulk-collapse class="btn" onclick={{action "toggleAllCollapsed"}} disabled={{or isLoadingQuestions togglingAn}}>
             {{#if (or isLoadingQuestions togglingAny)}}
               <span class="glyphicons gly-spin glyphicons-refresh"></span>
             {{else}}
