@@ -16,7 +16,7 @@ class SetMediaAccessModeWorker
     when "document"
       media = Hanuman::ObservationDocument.find media_id
       unless media.document.blank?
-        Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.document.my_public_id, :resource_type => :raw)
+        Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.document.my_public_id)
       end
     when "signature"
       media = Hanuman::ObservationSignature.find media_id
