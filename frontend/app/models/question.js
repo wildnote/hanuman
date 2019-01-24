@@ -107,7 +107,18 @@ export default Model.extend(Validator, {
   }),
 
   defaultAnswerEnabled: computed('defaultAnswerEnabled', 'answerType.name', function() {
-    let allowableTypes = ['checkbox', 'counter', 'date', 'number', 'radio', 'text', 'textarea', 'time', 'chosenselect'];
+    let allowableTypes = [
+      'checkbox',
+      'checkboxlist',
+      'counter',
+      'date',
+      'number',
+      'radio',
+      'text',
+      'textarea',
+      'time',
+      'chosenselect'
+    ];
     return allowableTypes.includes(this.get('answerType').get('name'));
   }),
 
