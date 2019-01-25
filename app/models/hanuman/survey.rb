@@ -11,7 +11,7 @@ module Hanuman
     has_many :observation_documents, through: :unscope_observations
     has_many :observation_photos, through: :unscope_observations
     has_many :observation_videos, through: :unscope_observations
-    has_one :survey_extension, dependent: :delete
+    has_one :survey_extension, dependent: :destroy
     accepts_nested_attributes_for :survey_extension, allow_destroy: true
 
     attr_accessor :should_schedule_sort, :skip_sort
@@ -256,7 +256,7 @@ module Hanuman
           end
 
           obs.hidden = !(rule.match_type == "any" ? condition_results.any? : condition_results.all?)
-          
+
           if obs.hidden && obs.question.has_children?
             obs.hide_tree!
           end
