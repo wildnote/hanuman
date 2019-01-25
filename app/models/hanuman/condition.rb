@@ -42,9 +42,10 @@ module Hanuman
 
 
     def update_observation_visibility
-      self.question.survey_template.surveys.where(observation_visibility_set: true).each do |s|
-        s.update_column(:observations_sorted, false)
-        s.update_column(:observation_visibility_set, false)
+      unless self.question.blank? || self.question.survey_template.blank?
+        self.question.survey_template.surveys.where(observation_visibility_set: true).each do |s|
+          s.update_column(:observation_visibility_set, false)
+        end
       end
     end
 
