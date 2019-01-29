@@ -11,7 +11,7 @@ module Hanuman
     has_many :observation_documents, through: :unscope_observations
     has_many :observation_photos, through: :unscope_observations
     has_many :observation_videos, through: :unscope_observations
-    has_one :survey_extension, dependent: :destroy
+    has_one  :survey_extension, dependent: :destroy
     accepts_nested_attributes_for :survey_extension, allow_destroy: true
 
     attr_accessor :should_schedule_sort, :skip_sort
