@@ -145,7 +145,7 @@
           </div>
         </div>
 
-        {{#liquid-if (and isPhoto isSuperUser)}}
+        {{#liquid-if isPhoto}}
           <div class="form-group">
             <div class="col-sm-3">
               {{#form-field for='maxPhotos' label='Max Photos'}}
