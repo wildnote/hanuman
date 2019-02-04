@@ -16,7 +16,7 @@ class SetMediaAccessModeWorker
     when "document"
       media = Hanuman::ObservationDocument.find media_id
       unless media.document.blank?
-        if media.file_name.split('.')[1] == "pdf"
+        if media.document.filename.split('.')[1] == "pdf"
           Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.document.my_public_id)
         else
           Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.document.filename.split('/')[1], :resource_type => :raw)
@@ -30,7 +30,7 @@ class SetMediaAccessModeWorker
     when "project_document"
       media = ProjectDocument.find media_id
       unless media.document.blank?
-        if media.file_name.split('.')[1] == "pdf"
+        if media.document.filename.split('.')[1] == "pdf"
           Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.document.my_public_id)
         else
           Cloudinary::Api.update_resources_access_mode_by_ids('authenticated', media.document.filename.split('/')[1], :resource_type => :raw)
