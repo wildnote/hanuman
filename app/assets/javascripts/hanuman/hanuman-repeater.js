@@ -667,6 +667,15 @@ $(document).ready(function(){
         $(this).prop('checked', false);
       }
     });
+
+    multiselects = container.find("select[multiple]")
+    multiselects.each(function() {
+      id = $(this).attr('id');
+      $('#' + id + ' option:selected').removeAttr("selected");
+      if($(this).hasClass('chosen-multiselect')) {
+        $(this).trigger("chosen:updated");
+      }
+    });
   }
 
 });
