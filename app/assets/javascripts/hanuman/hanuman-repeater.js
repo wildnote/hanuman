@@ -14,7 +14,7 @@ $(document).ready(function(){
     $scrollPosition = $(this).offset().top - 50;
 
     // unbinding events on plugins
-    
+
     $('.datepicker').datepicker('destroy');
     // cloudinary events
     $.cleanData( $('input.cloudinary-fileupload[type=file]') );
@@ -108,6 +108,7 @@ $(document).ready(function(){
     bindVideoUploads()
     bindSignatureUploads()
     bindDocumentUploads()
+    fillDefaultValues($clonedContainer);
 
     // resetting parsley required field styling on clonedContainer
     $clonedContainer.find('.parsley-error').removeClass('parsley-error')
@@ -142,10 +143,10 @@ $(document).ready(function(){
           questionIds.push(questionId);
         }
       });
-      
+
       questionIds.forEach(function (questionId) {
         var duplicateRepeaters = $(container).find("> .panel-collapse > .panel-body > .form-container-repeater[data-question-id=" + questionId + "]");
-  
+
         duplicateRepeaters.each(function(index, duplicate) {
           if (index === 0) {
             return;
@@ -154,7 +155,7 @@ $(document).ready(function(){
           }
         });
       });
-  
+
       var newChildRepeaters = $(container).find("> .panel-collapse > .panel-body > .form-container-repeater");
 
       newChildRepeaters.each(function (_, repeater) {
@@ -168,7 +169,7 @@ $(document).ready(function(){
     $(".form-container-repeater").each(function (_, repeater) {
       var directChildRepeaterTypes = [];
       var $directChildRepeaters = $(repeater).find("> .panel-collapse > .panel-body > .form-container-repeater");
-      if ($directChildRepeaters.length) { 
+      if ($directChildRepeaters.length) {
         $directChildRepeaters.each(function (_, child) {
           var childRepeaterQuestionId = $(child).data("question-id");
           if(!directChildRepeaterTypes.includes(childRepeaterQuestionId)) {
@@ -196,7 +197,7 @@ $(document).ready(function(){
           } else {
             $destroyButton.hide();
           }
-          
+
           if ((index + 1) === repeaterCount) {
             $duplicateButton.show();
           } else {
@@ -245,7 +246,7 @@ $(document).ready(function(){
         $(observation).find(".parent-repeater-id").val(currentRepeaterId);
       });
 
-      
+
       var nestedSections = $(repeater).find("> .panel-collapse > .panel-body > .panel:not(.form-container-repeater)");
 
       nestedSections.each(function (_, section) {
@@ -402,7 +403,7 @@ $(document).ready(function(){
             type: "GET",
             dataType: "json",
             data: {
-              query: query 
+              query: query
             },
             error: function() {
               callback();
@@ -435,7 +436,7 @@ $(document).ready(function(){
         preload: true,
         create: false,
       });
-  
+
       $(this).find(".chosen-multiselect").chosen({
         allow_single_deselect: true,
         no_results_text: "No results matched",
@@ -451,7 +452,7 @@ $(document).ready(function(){
         search_contains: true
       });
       $(this).find(".bootstrap-checkbox-multiselect").multiselect();
-    }); 
+    });
   }
 
   function updateClonedInputs($clonedRepeater, timeStamp){
@@ -613,4 +614,59 @@ $(document).ready(function(){
       // $(clonedRepeater[i]).find('.form-control').trigger('change');
     };
   };
+
+  // the same code that runs in hanuman-conditional-logic.js to populate the default values
+  function fillDefaultValues(container) {
+    textFields = container.find(":text");
+    textFields.each(function() {
+      if($(this).attr("data-default-answer") && $(this).data("default-answer") != "null") {
+        $(this).val($(this).data("default-answer"));
+      } else {
+        $(this).val("");
+      }
+    });
+
+    textAreas = container.find("textarea");
+    textAreas.each(function() {
+      if($(this).attr("data-default-answer") && $(this).data("default-answer") != "null") {
+        $(this).val($(this).data("default-answer"));
+      } else {
+        $(this).val("");
+      }
+    });
+
+    // un-select dropdown
+    selects = container.find("select");
+    selects.each(function() {
+      if($(this).attr("data-default-answer") && $(this).data("default-answer") != "null") {
+        $(this).val($(this).data("default-answer"));
+      } else {
+        $(this).val("");
+      }
+      if($(this).hasClass('chosen')) {
+        $(this).trigger("chosen:updated");
+      }
+    });
+
+    // uncheck all checkboxes
+    checkboxes = container.find(":checkbox");
+    checkboxes.each(function() {
+      if($(this).attr("data-default-answer") && $(this).data("default-answer") == "true") {
+        $(this).prop('checked', true);
+      } else {
+        $(this).prop('checked', false);
+      }
+    });
+
+    // un-select radio buttons
+    radiobuttons = container.find(":radio");
+    radiobuttons.each(function() {
+      if($(this).attr("data-default-answer") && $(this).data("default-answer") != "null" && $(this).data("label-value") == $(this).data("default-answer")) {
+        $(this).prop('checked', true);
+      } else {
+        $(this).prop('checked', false);
+      }
+    });
+  }
+
 });
