@@ -58,11 +58,12 @@ export default Component.extend({
     }
   }),
 
-  answerChoicesToShow: computed('question.{answerChoies.@each.isNew,isNew}', function() {
+  answerChoicesToShow: computed('question.answerChoices.@each.{isNew,isDeleted}', 'question.{isNew}', function() {
+    let answerChoices = this.question.get('answerChoices').filter((answerChoice) => !answerChoice.isDeleted);
     if (this.question.isNew) {
-      return this.question.get('answerChoices');
+      return answerChoices;
     } else {
-      return this.question.get('answerChoices').filter((answerChoice) => !answerChoice.isNew);
+      return answerChoices.filter((answerChoice) => !answerChoice.isNew);
     }
   }),
 
