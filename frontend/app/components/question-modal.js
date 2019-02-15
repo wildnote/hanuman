@@ -236,14 +236,14 @@ export default Component.extend({
         question
           .get('store')
           .peekAll('answer-choice')
-          .filter((answerChoice) => answerChoice.isNew)
+          .filter((answerChoice) => answerChoice.isNew && answerChoice.validate(false))
           .map((answerChoice) => {
             answerChoice.set('question', question);
             question.get('answerChoices').pushObject(answerChoice);
             return answerChoice.save();
           })
       );
-
+      console.log({ keepOpen });
       if (!keepOpen) {
         this.send('closeModal');
       }
