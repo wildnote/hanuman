@@ -243,7 +243,7 @@ export default Component.extend({
             return answerChoice.save();
           })
       );
-      console.log({ keepOpen });
+
       if (!keepOpen) {
         this.send('closeModal');
       }
