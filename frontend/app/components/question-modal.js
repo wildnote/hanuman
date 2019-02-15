@@ -58,6 +58,14 @@ export default Component.extend({
     }
   }),
 
+  answerChoicesToShow: computed('question.{answerChoies.@each.isNew,isNew}', function() {
+    if (this.question.isNew) {
+      return this.question.get('answerChoices');
+    } else {
+      return this.question.get('answerChoices').filter((answerChoice) => !answerChoice.isNew);
+    }
+  }),
+
   ancestryQuestions: computed('questions', function() {
     return this.get('questions').filter((question) => {
       let allowedTypes = ['section', 'repeater'];
