@@ -44,7 +44,7 @@
                 <option value={{location.name}} selected={{eq condition.answer location.name}}>{{location.name}}</option>
               {{/each}}
             {{else if currentQuestion.isTaxonType}}
-              {{#each dataSources as |source|}}
+              {{#each (sort-by "formatted_answer_choice_with_symbol" dataSources) as |source|}}
                 <option
                   value={{source.formatted_answer_choice_with_symbol}}
                   selected={{eq condition.answer source.formatted_answer_choice_with_symbol}}
