@@ -307,7 +307,7 @@
             </div>
           </div>
 
-          {{#each question.lookupRules as |rule|}}
+          {{#each (sort-by "id:desc" question.lookupRules) as |rule|}}
             {{rule-panel question=question conditionalQuestions=conditionalQuestions lookupRule=rule}}
           {{/each}}
 
