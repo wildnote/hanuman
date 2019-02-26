@@ -2,7 +2,10 @@ import Service from '@ember/service';
 import { run } from '@ember/runloop';
 
 export default Service.extend({
-  toggleCollapsed(question) {
+  toggleCollapsed(question, collapsedValue) {
+    if (collapsedValue !== undefined && question.get('collapsed') === collapsedValue) {
+      return;
+    }
     let collapsed = question.get('collapsed');
     question.set('collapsed', !collapsed);
     question.set('pendingRecursive', 1);

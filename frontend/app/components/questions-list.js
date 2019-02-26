@@ -1,12 +1,13 @@
-import Component from '@ember/component';
-import { A } from '@ember/array';
-import { run } from '@ember/runloop';
 import { alias, sort } from '@ember/object/computed';
-import { computed } from '@ember/object';
-import { task, all, waitForProperty } from 'ember-concurrency';
-import { inject as service } from '@ember/service';
-import { isBlank } from '@ember/utils';
+import { all, task, waitForProperty } from 'ember-concurrency';
+
 import $ from 'jquery';
+import { A } from '@ember/array';
+import Component from '@ember/component';
+import { computed } from '@ember/object';
+import { isBlank } from '@ember/utils';
+import { run } from '@ember/runloop';
+import { inject as service } from '@ember/service';
 
 export default Component.extend({
   remodal: service(),
@@ -174,7 +175,7 @@ export default Component.extend({
         return question.hasChild && isBlank(question.parentId);
       });
       topLevel.forEach((question) => {
-        this.get('collapsible').toggleCollapsed(question);
+        this.get('collapsible').toggleCollapsed(question, !this.allCollapsed);
       });
     },
 

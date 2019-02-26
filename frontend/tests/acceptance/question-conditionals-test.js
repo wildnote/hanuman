@@ -1,7 +1,7 @@
-/* eslint-disable camelcase */
-import { test } from 'qunit';
 import moduleForAcceptance from 'frontend/tests/helpers/module-for-acceptance';
 import { selectChoose } from 'ember-power-select/test-support';
+/* eslint-disable camelcase */
+import { test } from 'qunit';
 
 let surveyTemplate, question, rule, conditions;
 moduleForAcceptance('Acceptance | question conditionals', {
@@ -73,7 +73,7 @@ test('editing a conditional', async function(assert) {
   }
   let selector = `[data-condition-id="${firstCondition.id}"]`;
   await click(`${selector} [data-test="edit-condition-link"]`);
-  fillIn(`${selector} [data-test="condition.answer"]`, 'eh eh epa colombia');
+  await fillIn(`${selector} [data-test="condition.answer"]`, 'eh eh epa colombia');
   await click(`${selector} [data-test="save-condition-link"]`);
   firstCondition = server.db.conditions.find(firstCondition.id);
   assert.equal(firstCondition.answer, 'eh eh epa colombia');
