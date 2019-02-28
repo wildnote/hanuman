@@ -224,10 +224,24 @@ removeFileHiddenInput = ->
 
 
 checkMaxPhotos = (self, maxPhotos, addedPhotos) ->
+  if addedPhotos > maxPhotos
+    $('#too-many-photos-alert').attr('style','display:block;color:#ff0000;')
+    $('#max-photos-alert').attr('style','display:none;')
+    $(self).find('.photo-preview').each( (i) ->
+      if i+1 <= maxPhotos
+        return true
+      else
+        $(this).remove()
+    )
   if addedPhotos >= maxPhotos
+    $('#too-many-photos-alert').attr('style','display:block;color:#ff0000;')
+    $('#max-photos-alert').attr('style','display:none;')
     $(self).find('.photo-upload').attr('style','display:none;')
   else
+    $('#too-many-photos-alert').attr('style','display:none;')
+    $('#max-photos-alert').attr('style','display:block;')
     $(self).find('.photo-upload').attr('style','display:block;')
+
 
 $ ->
 
@@ -251,7 +265,11 @@ $ ->
     if maxPhotos
       e.preventDefault()
       self = $(this).parents('.file-upload')
-      $(self).find('.photo-upload').attr('style','display:block;')
+      setTimeout ->
+        addedPhotos = $(self).find('.photo-preview').find("img").length
+        checkMaxPhotos(self, maxPhotos, addedPhotos)
+      , 100
+
 
 
   # when a user removes an upload in edit, we are resetting the sortorder
