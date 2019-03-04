@@ -379,6 +379,12 @@ export default Component.extend({
         if (question.get('hasDirtyAttributes')) {
           question.rollbackAttributes();
         }
+        this.set('answerChoicesPendingSave', []);
+        question
+          .get('store')
+          .peekAll('answer-choice')
+          .filter((answerChoice) => answerChoice.isNew)
+          .forEach((answerChoice) => answerChoice.destroyRecord());
         this.get('remodal').close('question-modal');
         this.sendAction('transitionToSurveyStep');
         if (question.get('wasNew')) {
