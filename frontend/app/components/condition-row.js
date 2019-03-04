@@ -22,7 +22,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     run.scheduleOnce('afterRender', this, function() {
-      if (this.condition && isBlank(this.condition.questionId)) {
+      if (this.condition && isBlank(this.condition.questionId) && this.availableQuestions[0]) {
         this.set('condition.questionId', this.availableQuestions[0].id);
       }
     });
