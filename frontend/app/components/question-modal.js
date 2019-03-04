@@ -34,12 +34,12 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
-    run.scheduleOnce('afterRender', this, function () {
+    run.scheduleOnce('afterRender', this, function() {
       this.get('remodal').open('question-modal');
       $('[data-toggle="popover"]').popover({});
     });
     // Tabs
-    $('a[data-toggle="tab"]').on('click', function (e) {
+    $('a[data-toggle="tab"]').on('click', function(e) {
       e.preventDefault();
       $(this).tab('show');
     });
@@ -47,7 +47,7 @@ export default Component.extend({
     $(document).on('keydown.close-modal', bind(this, this._escapeHandler));
   },
 
-  filteredAnswerTypes: computed('answerTypes', function () {
+  filteredAnswerTypes: computed('answerTypes', function() {
     let answerTypes = this.get('answerTypes');
     if (this.get('isSuperUser')) {
       return answerTypes;
@@ -58,7 +58,7 @@ export default Component.extend({
     }
   }),
 
-  answerChoicesToShow: computed('question.answerChoices.@each.{isNew,isDeleted}', 'question.{isNew}', function () {
+  answerChoicesToShow: computed('question.answerChoices.@each.{isNew,isDeleted}', 'question.{isNew}', function() {
     let answerChoices = this.question.get('answerChoices').filter((answerChoice) => !answerChoice.isDeleted);
     if (this.question.isNew) {
       return answerChoices;
@@ -67,25 +67,25 @@ export default Component.extend({
     }
   }),
 
-  ancestryQuestions: computed('questions', function () {
+  ancestryQuestions: computed('questions', function() {
     return this.get('questions').filter((question) => {
       let allowedTypes = ['section', 'repeater'];
       return allowedTypes.includes(question.get('answerType.name'));
     });
   }),
 
-  conditionalQuestions: computed('questions', 'question', function () {
+  conditionalQuestions: computed('questions', 'question', function() {
     let question = this.get('question');
     return this.get('questions').filter((condQuestion) => {
       return condQuestion !== question && condQuestion.get('answerType.hasAnAnswer');
     });
   }),
 
-  ancestryQuestion: computed('question.parentId', function () {
+  ancestryQuestion: computed('question.parentId', function() {
     return this.get('questions').findBy('id', this.get('question.parentId'));
   }),
 
-  isALatLongInsideARepeater: computed('question', function () {
+  isALatLongInsideARepeater: computed('question', function() {
     if (this.get('isALatLong')) {
       let ancestryQuestion = this.get('ancestryQuestion');
       if (ancestryQuestion === undefined) {
@@ -101,7 +101,7 @@ export default Component.extend({
   isRequiredDisabled: computed(
     'question.answerType.name',
     'question.visibilityRule.{isNew,conditionsPendingSave.[]}',
-    function () {
+    function() {
       let question = this.get('question');
       let newRule = this.get('question.visibilityRule.isNew');
       let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow', 'static', 'line'];
@@ -124,7 +124,7 @@ export default Component.extend({
     }
   ),
 
-  showQuestionTypePlaceholder: computed('question.{isNew,answerType.id}', function () {
+  showQuestionTypePlaceholder: computed('question.{isNew,answerType.id}', function() {
     let question = this.get('question');
     return question.get('isNew') && question.get('answerType.id') === undefined;
   }),
@@ -132,7 +132,7 @@ export default Component.extend({
   // If a question has a rule associated with it, it should automatically be set to Hidden
   hideQuestion: on(
     'afterRender',
-    observer('question.visibilityRule.{conditions.[],isNew,conditionsPendingSave.[]}', function () {
+    observer('question.visibilityRule.{conditions.[],isNew,conditionsPendingSave.[]}', function() {
       let question = this.get('question');
       let newRule = this.get('question.visibilityRule.isNew');
       let hasConditions =
@@ -150,7 +150,7 @@ export default Component.extend({
     })
   ),
 
-  addRule: task(function* (type = 'Hanuman::VisibilityRule') {
+  addRule: task(function*(type = 'Hanuman::VisibilityRule') {
     try {
       // We need to save the question first
       yield this.saveTask.perform(true);
@@ -164,7 +164,7 @@ export default Component.extend({
     }
   }),
 
-  saveAnswerChoiceTask: task(function* (answerChoice) {
+  saveAnswerChoiceTask: task(function*(answerChoice) {
     let question = this.get('question');
     if (question.get('isNew')) {
       // Save the answer choice after the question is saved
@@ -180,7 +180,7 @@ export default Component.extend({
     }
   }),
 
-  saveTask: task(function* (keepOpen = false) {
+  saveTask: task(function*(keepOpen = false) {
     let question = this.get('question');
     let surveyTemplate = this.get('surveyTemplate');
     question.set('surveyTemplate', surveyTemplate);
@@ -267,7 +267,7 @@ export default Component.extend({
 
   _removeAnswerChoices() {
     let answerChoices = this.get('question.answerChoices');
-    answerChoices.forEach(function (answerChoice) {
+    answerChoices.forEach(function(answerChoice) {
       answerChoice.deleteRecord();
       answerChoice.save();
     });
@@ -280,7 +280,7 @@ export default Component.extend({
     return pendingObjects.invoke('save');
   },
 
-  _saveSuccess: task(function* (question, promises) {
+  _saveSuccess: task(function*(question, promises) {
     question = yield question.reload();
     let visibilityRule = question.get('visibilityRule');
     let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
@@ -395,7 +395,7 @@ export default Component.extend({
           // Question is no longer new after shwoing the visual effect.
           run.later(
             this,
-            function () {
+            function() {
               question.set('wasNew', false);
             },
             1500
