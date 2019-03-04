@@ -7,7 +7,7 @@ import { inject as service } from '@ember/service';
 import { observer, computed, set } from '@ember/object';
 import { on } from '@ember/object/evented';
 import { equal, sort, alias } from '@ember/object/computed';
-import { task } from 'ember-concurrency';
+import { task, allSettled } from 'ember-concurrency';
 import { bind } from '@ember/runloop';
 import $ from 'jquery';
 import groupBy from 'ember-group-by';
@@ -225,7 +225,7 @@ export default Component.extend({
       }
 
       // Save unsaved related records
-      yield all(
+      yield allSettled(
         question
           .get('store')
           .peekAll('condition')
@@ -233,7 +233,7 @@ export default Component.extend({
           .map((condition) => condition.save())
       );
 
-      yield all(
+      yield allSettled(
         question
           .get('store')
           .peekAll('answer-choice')
