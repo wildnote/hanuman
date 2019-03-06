@@ -68,10 +68,12 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     $(e.target).siblings('.progress').removeClass('hidden')
     # progress bar
     $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadprogress', (e, data) ->
+      $('.survey-save-button').attr("disabled", "disabled")
       # implement progress indicator
       $(e.target).siblings('.progress').find(".photo-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
   $('.cloudinary-fileupload.survey-photo-upload').bind 'cloudinarydone', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     # Im setting the upload's index based on the count of existing attachements
     imgCount = $(e.target).closest('.file-upload-input-button').find("img").length
     if imgCount == 0
@@ -89,6 +91,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
   # handle errors
   $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadfail', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     # append error message
     $(e.target).siblings('.photo-upload-error').append "<p> Failed to upload photo, please try again</p>"
     $(".survey-photo-upload").on 'click', (e, data) ->
@@ -97,13 +100,16 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 # ***** VIDEOS *****
 @bindVideoUploads = ->
   $('.survey-video-upload').on 'click', (e, data) ->
+    
     $(e.target).siblings('.progress').removeClass('hidden')
     # progress bar
     $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadprogress', (e, data) ->
+      $('.survey-save-button').attr("disabled", "disabled")
       # implement progress indicator
       $(e.target).siblings('.progress').find(".video-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
   $('.cloudinary-fileupload.survey-video-upload').bind 'cloudinarydone', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     #  Im setting the upload's index based on the count of existing attachements
     vidCount = $(e.target).closest('.file-upload-input-button').find(".video-preview, .upload-view-mode").length
     if vidCount == 0
@@ -127,6 +133,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
   # handle errors
   $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadfail', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     $(e.target).siblings('.video-upload-error').append "<p> Failed to upload video, please try again</p>"
     $(".survey-video-upload").on 'click', ->
       $(e.target).siblings('.video-upload-error').find('p').remove()
@@ -134,13 +141,16 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 # ***** DOCUMENTS *****
 @bindDocumentUploads = ->
   $('.survey-document-upload').on 'click', (e, data) ->
+    
     $(e.target).siblings('.progress').removeClass('hidden')
      # progress bar
     $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadprogress', (e, data) ->
+      $('.survey-save-button').attr("disabled", "disabled")
       # implement progress indicator
       $(e.target).siblings('.progress').find('.document-progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
   $('.cloudinary-fileupload.survey-document-upload').bind 'cloudinarydone', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     # Im setting the upload's index based on the count of existing attachements
     docCount = $(e.target).closest('.file-upload-input-button').find(".document-preview, .upload-view-mode").length
     if docCount == 0
@@ -180,6 +190,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
   # handles errors
   $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadfail', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     $(e.target).siblings('.document-upload-error').append "<p> Failed to upload document, please try again</p>"
     $(".survey-document-upload").on 'click', ->
       $(e.target).siblings('.document-upload-error').find('p').remove()
