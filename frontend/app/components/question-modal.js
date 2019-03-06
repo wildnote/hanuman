@@ -27,6 +27,7 @@ export default Component.extend({
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
 
+
   init() {
     this._super(...arguments);
     this.setProperties({ answerChoicesPendingSave: [] });

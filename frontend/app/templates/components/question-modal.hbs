@@ -244,10 +244,10 @@
             </div>
             <div class="col-sm-1">
               <span data-test-open-answer-choices onclick={{action (toggle "answerChoicesCollapsed" this)}}
-                class="right glyphicon glyphicon-collapse-{{if answerChoicesCollapsed 'down' 'up'}}"></span>
+                class="right glyphicon glyphicon-collapse-{{if answerChoicesCollapsed 'up' 'down'}}"></span>
             </div>
           </div>
-          {{#liquid-if answerChoicesCollapsed}}
+          {{#liquid-unless answerChoicesCollapsed }}
 
             {{#each question.errors.answerChoices as |error|}}
               <div  class="alert alert-danger" role="alert" data-test="answer-choices-error">
@@ -277,7 +277,7 @@
               </div>
             </div>
 
-          {{/liquid-if}}
+          {{/liquid-unless}}
 
         {{/liquid-if}}
 
@@ -300,7 +300,7 @@
         {{!-- Lookup rules --}}
         {{#if question.answerType.isLookupRuleable}}
           <div class="form-group" style="margin-top: 15px;">
-            <div class="col-sm-10">
+            <div class="col-sm-9">
               <label>Default Answer Rules</label>
               <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Default Answer Rules" data-content="Add a rule to set the default answer for this question based another question's answer. If the rule conditions are met the default answer will be selected." class="bootstrap-popover">
                 <span class="glyphicons glyphicons-info-sign"></span>
@@ -315,11 +315,18 @@
                 <span class="glyphicons glyphicons-plus"></span>Add rule
               </button>
             </div>
+            <div class="col-sm-1">
+              <span data-test-open-lookup-rules onclick={{action (toggle "lookupRulesCollapsed" this)}}
+                class="right glyphicon glyphicon-collapse-{{if lookupRulesCollapsed 'up' 'down'}}"></span>
+            </div>
           </div>
-
-          {{#each (sort-by "id:desc" question.lookupRules) as |rule|}}
-            {{rule-panel question=question conditionalQuestions=conditionalQuestions lookupRule=rule}}
-          {{/each}}
+          
+          
+          {{#liquid-unless lookupRulesCollapsed }}
+            {{#each (sort-by "id:desc" question.lookupRules) as |rule|}}
+              {{rule-panel question=question conditionalQuestions=conditionalQuestions lookupRule=rule}}
+            {{/each}}
+          {{/liquid-unless}}
 
           <hr style="margin-top: 20px;" />
         {{/if}}
