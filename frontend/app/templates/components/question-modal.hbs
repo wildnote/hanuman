@@ -239,38 +239,45 @@
           <hr/>
 
           <div class="form-group">
-            <div class="col-sm-12">
+            <div class="col-sm-11">
               <label data-test="answer-choices-label">Answer Choices</label>
             </div>
-          </div>
-
-          {{#each question.errors.answerChoices as |error|}}
-            <div  class="alert alert-danger" role="alert" data-test="answer-choices-error">
-              {{error.message}}
+            <div class="col-sm-1">
+              <span data-test-open-answer-choices onclick={{action (toggle "answerChoicesCollapsed" this)}}
+                class="right glyphicon glyphicon-collapse-{{if answerChoicesCollapsed 'down' 'up'}}"></span>
             </div>
-          {{/each}}
-          <div class="panel">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="table-responsive">
-                  <table class="table table-hover">
-                    <tbody>
-                      {{#each answerChoicesToShow as |answerChoice|}}
-                        {{answer-choice-row
-                          content=answerChoice
-                          question=question
-                          saveParentTask=saveAnswerChoiceTask
-                          answerChoice=answerChoice
-                          isNewAnswerChoice=false
-                        }}
-                      {{/each}}
-                      {{answer-choice-row question=question saveParentTask=saveAnswerChoiceTask isNewAnswerChoice=true}}
-                    </tbody>
-                  </table>
+          </div>
+          {{#liquid-if answerChoicesCollapsed}}
+
+            {{#each question.errors.answerChoices as |error|}}
+              <div  class="alert alert-danger" role="alert" data-test="answer-choices-error">
+                {{error.message}}
+              </div>
+            {{/each}}
+            <div class="panel">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <tbody>
+                        {{#each answerChoicesToShow as |answerChoice|}}
+                          {{answer-choice-row
+                            content=answerChoice
+                            question=question
+                            saveParentTask=saveAnswerChoiceTask
+                            answerChoice=answerChoice
+                            isNewAnswerChoice=false
+                          }}
+                        {{/each}}
+                        {{answer-choice-row question=question saveParentTask=saveAnswerChoiceTask isNewAnswerChoice=true}}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+
+          {{/liquid-if}}
 
         {{/liquid-if}}
 
@@ -350,7 +357,7 @@
               <div class="col-sm-1">
                 <span data-test-open-super-user
                   onclick={{action (toggle "superUserCollapsed" this)}}
-                  class="right glyphicon glyphicon-collapse-{{if superUserCollapsed 'up' 'down'}}"
+                  class="right glyphicon glyphicon-collapse-{{if superUserCollapsed 'down' 'up'}}"
                 ></span>
               </div>
             </div>
