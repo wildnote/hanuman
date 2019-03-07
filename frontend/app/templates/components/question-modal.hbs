@@ -333,7 +333,7 @@
 
         {{!-- Visibility rules --}}
         <div class="form-group">
-          <div class="col-sm-10">
+          <div class="col-sm-{{if (not question.visibilityRule) '9' '11'}}">
             <label>Hide and Show Rules</label>
             <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hide and Show Rules" data-content="Add a rule to hide this question based on another question's answer. If the rule conditions are met the question will then be revealed in the survey." class="bootstrap-popover">
               <span class="glyphicons glyphicons-info-sign"></span>
@@ -346,11 +346,18 @@
                 Add rule
               </button>
             </div>
+            
           {{/if}}
+          <div class="col-sm-1">
+            <span data-test-open-visibility-rules onclick={{action (toggle "visibilityRulesCollapsed" this)}}
+              class="right glyphicon glyphicon-collapse-{{if visibilityRulesCollapsed 'up' 'down'}}"></span>
+          </div>
         </div>
 
         {{#if question.visibilityRule}}
-          {{rule-panel question=question conditionalQuestions=conditionalQuestions }}
+          {{#liquid-unless visibilityRulesCollapsed }}
+            {{rule-panel question=question conditionalQuestions=conditionalQuestions }}
+          {{/liquid-unless}}
         {{/if}}
         <hr/>
 
