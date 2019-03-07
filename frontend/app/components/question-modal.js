@@ -315,6 +315,7 @@ export default Component.extend({
   actions: {
     setMaxPhotoValue(value) {
       value = value.replace(/\D+/g, '');
+      value = value.replace(/\b0\b/g, ''); // replace standalone 0 with 1
       set(this.question, 'maxPhotos', value);
       $('[name="maxPhotos"]').val(value);
     },
