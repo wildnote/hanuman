@@ -44,6 +44,7 @@ module Hanuman
 
     # Callbackas
     before_save :strip_and_squish_answer
+    before_save :set_zero_attributes_to_nil
 
     # Delegations
     delegate :question_text, to: :question
@@ -94,5 +95,18 @@ module Hanuman
       a = answer.split(' ( ')[1]
       a.blank? ? '' : a.gsub(' )', '')
     end
+
+    def set_zero_attributes_to_nil
+      if repeater_id == 0
+        repeater_id = nil
+      end
+      if parent_repeater_id == 0
+        repeater_id = nil
+      end
+      if selectable_id == 0
+        selectable_id = nil
+      end
+    end
+
   end
 end

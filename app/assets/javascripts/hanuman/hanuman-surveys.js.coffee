@@ -54,7 +54,7 @@ $ ->
 
 
   # CHOSEN SINGLE SELECT
-  $(".chosen-select").prepend("<option value=''>&nbsp;</option>");
+  # $(".chosen-select").prepend("<option value=''>&nbsp;</option>");
   $(".chosen-select").chosen
     allow_single_deselect: true
     no_results_text: "No results matched"
