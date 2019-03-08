@@ -97,14 +97,14 @@ module Hanuman
     end
 
     def set_zero_attributes_to_nil
-      if repeater_id == 0
-        repeater_id = nil
+      if self.repeater_id == 0
+        self.repeater_id = nil
       end
-      if parent_repeater_id == 0
-        repeater_id = nil
+      if self.parent_repeater_id == 0
+        self.repeater_id = nil
       end
-      if selectable_id == 0
-        selectable_id = nil
+      if self.selectable_id == 0
+        self.selectable_id = nil
       end
     end
 
