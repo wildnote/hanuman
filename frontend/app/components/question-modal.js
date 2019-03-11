@@ -7,7 +7,7 @@ import { inject as service } from '@ember/service';
 import { observer, computed, set } from '@ember/object';
 import { on } from '@ember/object/evented';
 import { equal, sort, alias } from '@ember/object/computed';
-import { task } from 'ember-concurrency';
+import { task, allSettled } from 'ember-concurrency';
 import { bind } from '@ember/runloop';
 import $ from 'jquery';
 import groupBy from 'ember-group-by';
@@ -26,6 +26,7 @@ export default Component.extend({
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
+
 
   init() {
     this._super(...arguments);
@@ -55,6 +56,15 @@ export default Component.extend({
       return answerTypes.filter((answerType) => {
         return !answerType.get('name').includes('taxon');
       });
+    }
+  }),
+
+  answerChoicesToShow: computed('question.answerChoices.@each.{isNew,isDeleted}', 'question.{isNew}', function() {
+    let answerChoices = this.question.get('answerChoices').filter((answerChoice) => !answerChoice.isDeleted);
+    if (this.question.isNew) {
+      return answerChoices;
+    } else {
+      return answerChoices.filter((answerChoice) => !answerChoice.isNew);
     }
   }),
 
@@ -141,13 +151,13 @@ export default Component.extend({
     })
   ),
 
-  addLookupRule: task(function*() {
+  addRule: task(function*(type = 'Hanuman::VisibilityRule') {
     try {
       // We need to save the question first
       yield this.saveTask.perform(true);
       let question = this.question;
       if (!question.isNew) {
-        let rule = this.store.createRecord('rule', { question, type: 'Hanuman::LookupRule' });
+        let rule = this.store.createRecord('rule', { question, type });
         yield rule.save();
       }
     } catch (e) {
@@ -215,11 +225,28 @@ export default Component.extend({
         yield this._saveSuccess.perform(question, promises);
       }
 
-      if (keepOpen) {
-        if (!question.get('visibilityRule')) {
-          this.store.createRecord('rule', { question });
-        }
-      } else {
+      // Save unsaved related records
+      yield allSettled(
+        question
+          .get('store')
+          .peekAll('condition')
+          .filter((condition) => condition.isNew)
+          .map((condition) => condition.save())
+      );
+
+      yield allSettled(
+        question
+          .get('store')
+          .peekAll('answer-choice')
+          .filter((answerChoice) => answerChoice.isNew && answerChoice.validate({ addErrors: false }))
+          .map((answerChoice) => {
+            answerChoice.set('question', question);
+            question.get('answerChoices').pushObject(answerChoice);
+            return answerChoice.save();
+          })
+      );
+
+      if (!keepOpen) {
         this.send('closeModal');
       }
     } catch (e) {
@@ -286,6 +313,30 @@ export default Component.extend({
   },
 
   actions: {
+    checkDefaultAnswer(value) {
+
+      if (equal('question.answerType.name', 'number')) {
+        value = value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, ''); // only allow positive and negative numbers and decimals
+        set(this.question, 'defaultAnswer', value);
+        $('[name="defaultAnswer"]').val(value);
+      }
+
+      // for some reason both number and counter are getting into the first condition block whether it's the above or the below
+
+      // if (equal('question.answerType.name', 'counter')) {
+      //   value = value.replace(/[^0-9-]/g, '').replace(/(?!^)-/g, ''); // only allow positive and negative integers
+      //   set(this.question, 'defaultAnswer', value);
+      //   $('[name="defaultAnswer"]').val(value);
+      // } 
+    },
+
+    setMaxPhotoValue(value) {
+      value = value.replace(/\D+/g, '');
+      value = value.replace(/\b0\b/g, ''); // replace standalone 0 with 1
+      set(this.question, 'maxPhotos', value);
+      $('[name="maxPhotos"]').val(value);
+    },
+
     setQuestionText(questionText) {
       if (this.question.isARepeater || this.question.isContainer) {
         questionText = questionText.replace(/[\/\*\[\]:\?\\]/g, ''); // eslint-disable-line no-useless-escape
@@ -347,6 +398,12 @@ export default Component.extend({
         if (question.get('hasDirtyAttributes')) {
           question.rollbackAttributes();
         }
+        this.set('answerChoicesPendingSave', []);
+        question
+          .get('store')
+          .peekAll('answer-choice')
+          .filter((answerChoice) => answerChoice.isNew)
+          .forEach((answerChoice) => answerChoice.destroyRecord());
         this.get('remodal').close('question-modal');
         this.sendAction('transitionToSurveyStep');
         if (question.get('wasNew')) {

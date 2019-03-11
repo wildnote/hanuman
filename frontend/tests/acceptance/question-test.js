@@ -122,7 +122,7 @@ test('saving a question with answer_type with answers without adding any answers
 
 test('canceling question edition', async function(assert) {
   assert.expect(2);
-  question = server.create('question', { surveyTemplate });
+  question = server.create('question', { surveyTemplate, answer_type_id: 17 });
   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   assert.equal(currentURL(), `/survey_templates/${surveyTemplate.id}/questions/${question.id}`);
   await click('[data-test="cancel-question-link"]');

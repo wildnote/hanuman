@@ -39,7 +39,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     $previewContainer.find("."+file+"-preview").last().append "<input class='"+file+"-hidden-input' value="+fileValue+" type='hidden'  name="+hiddenNameAttr+">"
     $previewContainer.find("."+file+"-preview").last().append "<br>"
 
-  else 
+  else
     $previewContainer.find("."+file+"-preview").last().append "<p class='upload-file-name'>"+file_id+"</p>"
     $previewContainer.find("."+file+"-preview").last().append "<label>Description</label><br>"
     $previewContainer.find("."+file+"-preview").last().append "<textarea rows=2 cols=55 style='margin:0px 0 20px 0;' placeholder='Add "+file+" description here...' name="+nameAttr+"></textarea><br>"
@@ -68,10 +68,12 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     $(e.target).siblings('.progress').removeClass('hidden')
     # progress bar
     $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadprogress', (e, data) ->
+      $('.survey-save-button').attr("disabled", "disabled")
       # implement progress indicator
       $(e.target).siblings('.progress').find(".photo-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
   $('.cloudinary-fileupload.survey-photo-upload').bind 'cloudinarydone', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     # Im setting the upload's index based on the count of existing attachements
     imgCount = $(e.target).closest('.file-upload-input-button').find("img").length
     if imgCount == 0
@@ -89,6 +91,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
   # handle errors
   $('.cloudinary-fileupload.survey-photo-upload').bind 'fileuploadfail', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     # append error message
     $(e.target).siblings('.photo-upload-error').append "<p> Failed to upload photo, please try again</p>"
     $(".survey-photo-upload").on 'click', (e, data) ->
@@ -97,13 +100,16 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 # ***** VIDEOS *****
 @bindVideoUploads = ->
   $('.survey-video-upload').on 'click', (e, data) ->
+    
     $(e.target).siblings('.progress').removeClass('hidden')
     # progress bar
     $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadprogress', (e, data) ->
+      $('.survey-save-button').attr("disabled", "disabled")
       # implement progress indicator
       $(e.target).siblings('.progress').find(".video-progress-bar").css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
   $('.cloudinary-fileupload.survey-video-upload').bind 'cloudinarydone', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     #  Im setting the upload's index based on the count of existing attachements
     vidCount = $(e.target).closest('.file-upload-input-button').find(".video-preview, .upload-view-mode").length
     if vidCount == 0
@@ -127,6 +133,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
   # handle errors
   $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadfail', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     $(e.target).siblings('.video-upload-error').append "<p> Failed to upload video, please try again</p>"
     $(".survey-video-upload").on 'click', ->
       $(e.target).siblings('.video-upload-error').find('p').remove()
@@ -134,13 +141,16 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 # ***** DOCUMENTS *****
 @bindDocumentUploads = ->
   $('.survey-document-upload').on 'click', (e, data) ->
+    
     $(e.target).siblings('.progress').removeClass('hidden')
      # progress bar
     $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadprogress', (e, data) ->
+      $('.survey-save-button').attr("disabled", "disabled")
       # implement progress indicator
       $(e.target).siblings('.progress').find('.document-progress-bar').css('width', Math.round((data.loaded * 100.0) / data.total) + '%')
 
   $('.cloudinary-fileupload.survey-document-upload').bind 'cloudinarydone', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     # Im setting the upload's index based on the count of existing attachements
     docCount = $(e.target).closest('.file-upload-input-button').find(".document-preview, .upload-view-mode").length
     if docCount == 0
@@ -180,6 +190,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 
   # handles errors
   $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadfail', (e, data) ->
+    $('.survey-save-button').removeAttr("disabled")
     $(e.target).siblings('.document-upload-error').append "<p> Failed to upload document, please try again</p>"
     $(".survey-document-upload").on 'click', ->
       $(e.target).siblings('.document-upload-error').find('p').remove()
@@ -222,7 +233,56 @@ removeFileHiddenInput = ->
     if !$(e).next().is(":visible")
       $(e).next().remove()
 
+
+checkMaxPhotos = (self, maxPhotos, addedPhotos) ->
+  if addedPhotos > maxPhotos
+    $('#too-many-photos-alert').attr('style','display:block;color:#ff0000;')
+    $('#max-photos-alert').attr('style','display:none;')
+    $(self).find('.photo-preview').each( (i) ->
+      if i+1 <= maxPhotos
+        return true
+      else
+        $(this).remove()
+    )
+  if addedPhotos >= maxPhotos
+    $('#too-many-photos-alert').attr('style','display:block;color:#ff0000;')
+    $('#max-photos-alert').attr('style','display:none;')
+    $(self).find('.photo-upload').attr('style','display:none;')
+  else
+    $('#too-many-photos-alert').attr('style','display:none;')
+    $('#max-photos-alert').attr('style','display:block;')
+    $(self).find('.photo-upload').attr('style','display:block;')
+
+
 $ ->
+
+  $('.file-upload').each( () ->
+    maxPhotos = $(this).find('#max-photos').attr("data-max-photos")
+    if maxPhotos
+      addedPhotos = $(this).find('.gallery-item').find("img").length
+      console.log(maxPhotos + ' ' + addedPhotos)
+      checkMaxPhotos(this, maxPhotos, addedPhotos)
+  )
+
+  $('.file-upload').on 'click', (e) ->
+    maxPhotos = $(this).find('#max-photos').attr("data-max-photos")
+    if maxPhotos
+      $(this).bind 'cloudinarydone', (e) ->
+        addedPhotos = $(this).find('.photo-preview').find("img").length
+        checkMaxPhotos(this, maxPhotos, addedPhotos)
+
+  $('.file-upload').on 'click', '.remove-upload, .delete-saved-file', (e) ->
+    maxPhotos = $(this).parents('.file-upload').find('#max-photos').attr("data-max-photos")
+    if maxPhotos
+      e.preventDefault()
+      self = $(this).parents('.file-upload')
+      setTimeout ->
+        addedPhotos = $(self).find('.photo-preview').find("img").length
+        checkMaxPhotos(self, maxPhotos, addedPhotos)
+      , 100
+
+
+
   # when a user removes an upload in edit, we are resetting the sortorder
   $('.delete-saved-file').on 'click', (e) ->
     e.preventDefault()
@@ -250,7 +310,7 @@ $ ->
     $(@).closest(containerClass).remove()
     $(fileToDelete).find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
       $(element).find('.upload-sort-order').val(idx+1)
-    
+
     if $(fileToDelete).hasClass('signature-column')
       $(fileToDelete).find('.signature-upload').show()
 

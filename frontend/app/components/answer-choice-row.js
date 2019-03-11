@@ -16,8 +16,7 @@ export default Component.extend({
     let sortOrder = lastAnswer && lastAnswer.get('sortOrder') ? lastAnswer.get('sortOrder') + 1 : null;
     let answerChoice = this.get('question').store.createRecord('answerChoice', {
       optionText: '',
-      sortOrder,
-      hideFromList: true
+      sortOrder
     });
     this.set('answerChoice', answerChoice);
   },

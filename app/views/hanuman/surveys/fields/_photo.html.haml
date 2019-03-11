@@ -1,8 +1,11 @@
 .form-group.file-upload
   = render "hanuman/surveys/fields/shared/label", ff: ff
+
+
+  #max-photos{"data-max-photos" => "#{o.question.max_photos}"}
+
   .col-sm-7.photo-column.file-upload-input-button
     - if !@survey.id.nil?
-
       - o.observation_photos.order(sort_order: :asc).each do |p|
         = ff.fields_for :observation_photos, p do |fff|
           .upload-view-mode
@@ -48,8 +51,12 @@
         .progress.hidden
           .progress-bar.progress-bar-success.photo-progress-bar
 
+  - if o.question.max_photos.present?
+    #max-photos-alert.form-control-static.col-sm-12.col-sm-offset-5= "Maximum of #{o.question.max_photos} photo(s) allowed."
+    #too-many-photos-alert.form-control-static.col-sm-12.col-sm-offset-5= "You cannot upload more than #{o.question.max_photos} photo(s)."
 
 
-    
+
+
     -# = text_field_tag "survey[observations_attributes][#{index}][observation_photos][#{index}][photo]"
     -# = text_field_tag "survey[observations_attributes][#{index}][observation_photos][#{index}][description]"

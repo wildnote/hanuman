@@ -13,14 +13,14 @@
         </span>
       {{/if}}
       {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
-        <span class="glyphicons glyphicons-sorting {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+        <span class="glyphicons glyphicons-sorting {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'icon-disabled'}} {{if question.loading 'hide'}}">
           {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
         </span>
       {{else}}
         <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
       {{/if}}
       {{#if (and (not ancestrable) (not isSelected))}}
-        <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+        <span class="glyphicons glyphicons-move-square {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'icon-disabled'}} {{if question.loading 'hide'}}">
           {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
         </span>
       {{/if}}
@@ -85,7 +85,7 @@
     {{#each question.lookupRules as |rule|}}
       <div class="row">
         {{#if rule.savedConditions}}
-          <i>default</i> to <strong>{{rule.textValue}}</strong>
+          <i>default</i> to <strong data-test-default-to>{{rule.textValue}}</strong>
           {{#each rule.savedConditions as |condition index|}}
             if <strong
                   class="conditional-highlight"
@@ -108,7 +108,7 @@
       Edit
     {{/link-to}}
     {{#if (not ancestrable)}}
-      <a class="btn btn-delete" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
+      <a class="btn btn-delete {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'disabled'}}" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
         <span class="glyphicons glyphicons-bin"></span>
       </a>
     {{else}}

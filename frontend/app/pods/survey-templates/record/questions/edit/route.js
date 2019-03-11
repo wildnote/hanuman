@@ -13,13 +13,6 @@ export default Route.extend({
     });
   },
 
-  afterModel(models) {
-    let question = models.question;
-    if (!question.get('visibilityRule')) {
-      this.store.createRecord('rule', { question });
-    }
-  },
-
   setupController(controller, models) {
     controller.setProperties(models);
   }
