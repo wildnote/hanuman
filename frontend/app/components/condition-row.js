@@ -1,16 +1,15 @@
+import { isBlank, isNone } from '@ember/utils';
+
 import Component from '@ember/component';
+import Condition from '../models/condition';
 import { alias } from '@ember/object/computed';
 import { computed } from '@ember/object';
-import { isNone, isBlank } from '@ember/utils';
-import { inject as service } from '@ember/service';
+import config from 'frontend/config/environment';
 import { run } from '@ember/runloop';
+import { inject as service } from '@ember/service';
 import { task } from 'ember-concurrency';
 
-import config from 'frontend/config/environment';
-
 const testing = config.environment === 'test';
-
-import Condition from '../models/condition';
 
 export default Component.extend({
   ajax: service(),
@@ -23,7 +22,7 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     run.scheduleOnce('afterRender', this, function() {
-      if (this.condition && isBlank(this.condition.questionId)) {
+      if (this.condition && isBlank(this.condition.questionId) && this.availableQuestions[0]) {
         this.set('condition.questionId', this.availableQuestions[0].id);
       }
     });
@@ -119,9 +118,9 @@ export default Component.extend({
   },
 
   actions: {
-    toggleForm() {
+    toggleForm(addNew) {
       this.toggleProperty('isEditingCondition');
-      if (isNone(this.get('condition'))) {
+      if (isNone(this.get('condition')) && addNew) {
         this.setNewCondition();
       }
     },

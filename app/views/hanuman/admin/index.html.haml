@@ -72,3 +72,8 @@
     document.getElementById('ember-container').style.display = 'none';
     document.getElementById('old-ie-version').style.display = '';
   }
+
+:javascript
+  $(window).on('load', function() {
+      $('html').removeClass('hidden');
+  });

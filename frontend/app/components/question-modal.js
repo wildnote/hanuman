@@ -7,7 +7,7 @@ import { inject as service } from '@ember/service';
 import { observer, computed, set } from '@ember/object';
 import { on } from '@ember/object/evented';
 import { equal, sort, alias } from '@ember/object/computed';
-import { task } from 'ember-concurrency';
+import { task, allSettled } from 'ember-concurrency';
 import { bind } from '@ember/runloop';
 import $ from 'jquery';
 import groupBy from 'ember-group-by';
@@ -26,6 +26,7 @@ export default Component.extend({
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
+
 
   init() {
     this._super(...arguments);
@@ -55,6 +56,15 @@ export default Component.extend({
       return answerTypes.filter((answerType) => {
         return !answerType.get('name').includes('taxon');
       });
+    }
+  }),
+
+  answerChoicesToShow: computed('question.answerChoices.@each.{isNew,isDeleted}', 'question.{isNew}', function() {
+    let answerChoices = this.question.get('answerChoices').filter((answerChoice) => !answerChoice.isDeleted);
+    if (this.question.isNew) {
+      return answerChoices;
+    } else {
+      return answerChoices.filter((answerChoice) => !answerChoice.isNew);
     }
   }),
 
@@ -216,7 +226,7 @@ export default Component.extend({
       }
 
       // Save unsaved related records
-      yield all(
+      yield allSettled(
         question
           .get('store')
           .peekAll('condition')
@@ -224,11 +234,11 @@ export default Component.extend({
           .map((condition) => condition.save())
       );
 
-      yield all(
+      yield allSettled(
         question
           .get('store')
           .peekAll('answer-choice')
-          .filter((answerChoice) => answerChoice.isNew)
+          .filter((answerChoice) => answerChoice.isNew && answerChoice.validate({ addErrors: false }))
           .map((answerChoice) => {
             answerChoice.set('question', question);
             question.get('answerChoices').pushObject(answerChoice);
@@ -303,8 +313,26 @@ export default Component.extend({
   },
 
   actions: {
+    checkDefaultAnswer(value) {
+
+      if (equal('question.answerType.name', 'number')) {
+        value = value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, ''); // only allow positive and negative numbers and decimals
+        set(this.question, 'defaultAnswer', value);
+        $('[name="defaultAnswer"]').val(value);
+      }
+
+      // for some reason both number and counter are getting into the first condition block whether it's the above or the below
+
+      // if (equal('question.answerType.name', 'counter')) {
+      //   value = value.replace(/[^0-9-]/g, '').replace(/(?!^)-/g, ''); // only allow positive and negative integers
+      //   set(this.question, 'defaultAnswer', value);
+      //   $('[name="defaultAnswer"]').val(value);
+      // } 
+    },
+
     setMaxPhotoValue(value) {
       value = value.replace(/\D+/g, '');
+      value = value.replace(/\b0\b/g, ''); // replace standalone 0 with 1
       set(this.question, 'maxPhotos', value);
       $('[name="maxPhotos"]').val(value);
     },
@@ -370,6 +398,12 @@ export default Component.extend({
         if (question.get('hasDirtyAttributes')) {
           question.rollbackAttributes();
         }
+        this.set('answerChoicesPendingSave', []);
+        question
+          .get('store')
+          .peekAll('answer-choice')
+          .filter((answerChoice) => answerChoice.isNew)
+          .forEach((answerChoice) => answerChoice.destroyRecord());
         this.get('remodal').close('question-modal');
         this.sendAction('transitionToSurveyStep');
         if (question.get('wasNew')) {

@@ -87,7 +87,10 @@
             {{else}}
               {{question.answerType.displayName}}
               <div class="alert alert-info">
-                Answer Type cannot be changed on a survey template with survey data submitted. Duplicate survey form template to change the Answer Type.
+                Answer Type cannot be changed on a survey template with survey data submitted.
+                Duplicate survey form template to change the Answer Type.
+                <br>
+                <small>Helper Text question type can be changed here.</small>
               </div>
             {{/if}}
           </div>
@@ -135,7 +138,6 @@
               <span class="glyphicons glyphicons-info-sign"></span>
             </a>
               <textarea data-test="question.helperText"
-                      disabled={{question.surveyTemplate.lock}}
                       name="helperText"
                       class="form-control"
                       style="height: 33px;"
@@ -146,16 +148,16 @@
           </div>
         </div>
 
-        {{#liquid-if (and isPhoto isSuperUser)}}
+        {{#liquid-if isPhoto}}
           <div class="form-group">
             <div class="col-sm-3">
               {{#form-field for='maxPhotos' label='Max Photos'}}
-                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="Set the maximum number of photos that can be captured for this photo question." class="bootstrap-popover">
+                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" data-container=".panel-info" title="Required" data-content="Set the maximum number of photos that can be captured for this photo question." class="bootstrap-popover">
                   <span class="glyphicons glyphicons-info-sign"></span>
                 </a>
                 <input data-test-order type="number"
                       name="maxPhotos"
-                      min="0"
+                      min="1"
                       disabled={{question.surveyTemplate.lock}}
                       class="form-control"
                       value={{question.maxPhotos}}
@@ -237,38 +239,45 @@
           <hr/>
 
           <div class="form-group">
-            <div class="col-sm-12">
+            <div class="col-sm-11">
               <label data-test="answer-choices-label">Answer Choices</label>
             </div>
-          </div>
-
-          {{#each question.errors.answerChoices as |error|}}
-            <div  class="alert alert-danger" role="alert" data-test="answer-choices-error">
-              {{error.message}}
+            <div class="col-sm-1">
+              <span data-test-open-answer-choices onclick={{action (toggle "answerChoicesCollapsed" this)}}
+                class="right glyphicon glyphicon-collapse-{{if answerChoicesCollapsed 'up' 'down'}}"></span>
             </div>
-          {{/each}}
-          <div class="panel">
-            <div class="row">
-              <div class="col-md-12">
-                <div class="table-responsive">
-                  <table class="table table-hover">
-                    <tbody>
-                      {{#each (filter-by "isNew" false question.answerChoices) as |answerChoice|}}
-                        {{answer-choice-row
-                          content=answerChoice
-                          question=question
-                          saveParentTask=saveAnswerChoiceTask
-                          answerChoice=answerChoice
-                          isNewAnswerChoice=false
-                        }}
-                      {{/each}}
-                      {{answer-choice-row question=question saveParentTask=saveAnswerChoiceTask isNewAnswerChoice=true}}
-                    </tbody>
-                  </table>
+          </div>
+          {{#liquid-unless answerChoicesCollapsed }}
+
+            {{#each question.errors.answerChoices as |error|}}
+              <div  class="alert alert-danger" role="alert" data-test="answer-choices-error">
+                {{error.message}}
+              </div>
+            {{/each}}
+            <div class="panel">
+              <div class="row">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <tbody>
+                        {{#each answerChoicesToShow as |answerChoice|}}
+                          {{answer-choice-row
+                            content=answerChoice
+                            question=question
+                            saveParentTask=saveAnswerChoiceTask
+                            answerChoice=answerChoice
+                            isNewAnswerChoice=false
+                          }}
+                        {{/each}}
+                        {{answer-choice-row question=question saveParentTask=saveAnswerChoiceTask isNewAnswerChoice=true}}
+                      </tbody>
+                    </table>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+
+          {{/liquid-unless}}
 
         {{/liquid-if}}
 
@@ -279,19 +288,22 @@
             <div class="col-sm-12">
               {{#form-field for='defaultAnswer' label='Default Answer'}}
                 <input type="text"
+                      name="defaultAnswer"
                       class="form-control"
                       data-test="question.defaultAnswer"
                       value={{question.defaultAnswer}}
-                      oninput={{action (mut question.defaultAnswer) value="target.value"}} />
+                      oninput={{action (mut question.defaultAnswer) value="target.value"}}
+                      onkeyup={{action "checkDefaultAnswer" value="target.value"}}
+                      oninput={{action "checkDefaultAnswer" value="target.value"}} />
               {{/form-field}}
             </div>
           </div>
         {{/if}}
 
         {{!-- Lookup rules --}}
-        {{#if (and (or isSuperUser isJacobs) question.answerType.isLookupRuleable)}}
+        {{#if question.answerType.isLookupRuleable}}
           <div class="form-group" style="margin-top: 15px;">
-            <div class="col-sm-10">
+            <div class="col-sm-9">
               <label>Default Answer Rules</label>
               <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Default Answer Rules" data-content="Add a rule to set the default answer for this question based another question's answer. If the rule conditions are met the default answer will be selected." class="bootstrap-popover">
                 <span class="glyphicons glyphicons-info-sign"></span>
@@ -300,25 +312,31 @@
             <div class="col-sm-2">
               <button
                 data-test-add-a-look-rule
-                disabled={{question.surveyTemplate.lock}}
                 class="btn btn-success btn-sm"
                 onclick={{perform addRule "Hanuman::LookupRule"}}
               >
                 <span class="glyphicons glyphicons-plus"></span>Add rule
               </button>
             </div>
+            <div class="col-sm-1">
+              <span data-test-open-lookup-rules onclick={{action (toggle "lookupRulesCollapsed" this)}}
+                class="right glyphicon glyphicon-collapse-{{if lookupRulesCollapsed 'up' 'down'}}"></span>
+            </div>
           </div>
+          
+          
+          {{#liquid-unless lookupRulesCollapsed }}
+            {{#each (sort-by "id:desc" question.lookupRules) as |rule|}}
+              {{rule-panel question=question conditionalQuestions=conditionalQuestions lookupRule=rule}}
+            {{/each}}
+          {{/liquid-unless}}
 
-          {{#each question.lookupRules as |rule|}}
-            {{rule-panel question=question conditionalQuestions=conditionalQuestions lookupRule=rule}}
-          {{/each}}
-
-          <hr />
+          <hr style="margin-top: 20px;" />
         {{/if}}
 
         {{!-- Visibility rules --}}
         <div class="form-group">
-          <div class="col-sm-10">
+          <div class="col-sm-{{if (not question.visibilityRule) '9' '11'}}">
             <label>Hide and Show Rules</label>
             <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hide and Show Rules" data-content="Add a rule to hide this question based on another question's answer. If the rule conditions are met the question will then be revealed in the survey." class="bootstrap-popover">
               <span class="glyphicons glyphicons-info-sign"></span>
@@ -331,11 +349,18 @@
                 Add rule
               </button>
             </div>
+            
           {{/if}}
+          <div class="col-sm-1">
+            <span data-test-open-visibility-rules onclick={{action (toggle "visibilityRulesCollapsed" this)}}
+              class="right glyphicon glyphicon-collapse-{{if visibilityRulesCollapsed 'up' 'down'}}"></span>
+          </div>
         </div>
 
         {{#if question.visibilityRule}}
-          {{rule-panel question=question conditionalQuestions=conditionalQuestions }}
+          {{#liquid-unless visibilityRulesCollapsed }}
+            {{rule-panel question=question conditionalQuestions=conditionalQuestions }}
+          {{/liquid-unless}}
         {{/if}}
         <hr/>
 
@@ -349,7 +374,7 @@
               <div class="col-sm-1">
                 <span data-test-open-super-user
                   onclick={{action (toggle "superUserCollapsed" this)}}
-                  class="right glyphicon glyphicon-collapse-{{if superUserCollapsed 'up' 'down'}}"
+                  class="right glyphicon glyphicon-collapse-{{if superUserCollapsed 'down' 'up'}}"
                 ></span>
               </div>
             </div>
