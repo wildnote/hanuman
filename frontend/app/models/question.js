@@ -109,7 +109,6 @@ export default Model.extend(Validator, {
   defaultAnswerEnabled: computed('defaultAnswerEnabled', 'answerType.name', function() {
     let allowableTypes = [
       'checkbox',
-      'counter',
       'number',
       'radio',
       'text',

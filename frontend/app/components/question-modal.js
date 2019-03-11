@@ -314,15 +314,20 @@ export default Component.extend({
 
   actions: {
     checkDefaultAnswer(value) {
+
       if (equal('question.answerType.name', 'number')) {
         value = value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, ''); // only allow positive and negative numbers and decimals
         set(this.question, 'defaultAnswer', value);
         $('[name="defaultAnswer"]').val(value);
-      } else if (equal('question.answerType.name', 'counter')) {
-        value = value.replace(/^-?\d+$/g, ''); // only allow positive and negative integers
-        set(this.question, 'defaultAnswer', value);
-        $('[name="defaultAnswer"]').val(value);
       }
+
+      // for some reason both number and counter are getting into the first condition block whether it's the above or the below
+
+      // if (equal('question.answerType.name', 'counter')) {
+      //   value = value.replace(/[^0-9-]/g, '').replace(/(?!^)-/g, ''); // only allow positive and negative integers
+      //   set(this.question, 'defaultAnswer', value);
+      //   $('[name="defaultAnswer"]').val(value);
+      // } 
     },
 
     setMaxPhotoValue(value) {
