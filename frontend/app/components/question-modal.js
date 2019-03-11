@@ -315,7 +315,7 @@ export default Component.extend({
   actions: {
     checkDefaultAnswer(value) {
       if (equal('question.answerType.name', 'number')) {
-        value = value.replace(/^-?\d*\.?\d+$/g, ''); // only allow positive and negative numbers and decimals
+        value = value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, ''); // only allow positive and negative numbers and decimals
         set(this.question, 'defaultAnswer', value);
         $('[name="defaultAnswer"]').val(value);
       } else if (equal('question.answerType.name', 'counter')) {
