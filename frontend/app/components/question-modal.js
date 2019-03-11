@@ -313,6 +313,18 @@ export default Component.extend({
   },
 
   actions: {
+    checkDefaultAnswer(value) {
+      if (equal('question.answerType.name', 'number')) {
+        value = value.replace(/^-?\d*\.?\d+$/g, ''); // only allow positive and negative numbers and decimals
+        set(this.question, 'defaultAnswer', value);
+        $('[name="defaultAnswer"]').val(value);
+      } else if (equal('question.answerType.name', 'counter')) {
+        value = value.replace(/^-?\d+$/g, ''); // only allow positive and negative integers
+        set(this.question, 'defaultAnswer', value);
+        $('[name="defaultAnswer"]').val(value);
+      }
+    },
+
     setMaxPhotoValue(value) {
       value = value.replace(/\D+/g, '');
       value = value.replace(/\b0\b/g, ''); // replace standalone 0 with 1

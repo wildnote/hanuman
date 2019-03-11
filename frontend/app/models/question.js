@@ -110,12 +110,10 @@ export default Model.extend(Validator, {
     let allowableTypes = [
       'checkbox',
       'counter',
-      'date',
       'number',
       'radio',
       'text',
       'textarea',
-      'time'
     ];
     return allowableTypes.includes(this.get('answerType').get('name'));
   }),
