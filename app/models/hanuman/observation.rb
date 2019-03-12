@@ -101,7 +101,7 @@ module Hanuman
         self.repeater_id = nil
       end
       if self.parent_repeater_id == 0
-        self.repeater_id = nil
+        self.parent_repeater_id = nil
       end
       if self.selectable_id == 0
         self.selectable_id = nil
