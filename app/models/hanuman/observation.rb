@@ -44,7 +44,7 @@ module Hanuman
 
     # Callbackas
     before_save :strip_and_squish_answer
-    # before_save :set_zero_attributes_to_nil
+    before_save :set_zero_attributes_to_nil
 
     # Delegations
     delegate :question_text, to: :question
