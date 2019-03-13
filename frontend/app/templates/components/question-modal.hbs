@@ -292,9 +292,7 @@
                       class="form-control"
                       data-test="question.defaultAnswer"
                       value={{question.defaultAnswer}}
-                      oninput={{action (mut question.defaultAnswer) value="target.value"}}
-                      onkeyup={{action "checkDefaultAnswer" value="target.value"}}
-                      oninput={{action "checkDefaultAnswer" value="target.value"}} />
+                      oninput={{action (mut question.defaultAnswer) value="target.value"}} />
               {{/form-field}}
             </div>
           </div>
