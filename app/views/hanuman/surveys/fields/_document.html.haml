@@ -12,18 +12,18 @@
       - o.observation_documents.order(sort_order: :asc).each do |d|
         = ff.fields_for :observation_documents, d do |fff|
           .upload-view-mode
-            - document_url = cloudinary_url(d.document.url)
+            - document_url = cloudinary_url(d.document.url, :sign_url => true)
             - if document_url.blank?
               %p.form-control-static.bg-danger PHOTO NOT FOUND
               %p
                 = d.document.my_public_id + "." + d.document.format + " | this document failed to upload successfully, please retry upload or remove"
             - else
               - if ['pdf','jpg','png','gif'].include? d.document.url.last(3)
-                = link_to cl_image_tag(d.document.my_public_id, size: '350x350', crop: :thumb, class: 'img-responsive', format: 'jpg'), cloudinary_url(d.document), html_options = {target: "_blank", id: "document_" + d.id.to_s}
+                = link_to cl_image_tag(d.document.my_public_id, size: '350x350', crop: :thumb, class: 'img-responsive', format: 'jpg', :sign_url => true), cloudinary_url(d.document, :sign_url => true), html_options = {target: "_blank", id: "document_" + d.id.to_s}
               - else
                 = image_tag("file-icon.png", class: 'img-responsive')
               %p
-                = link_to d.document.my_public_id + "." + d.document.format + " | download file", cloudinary_url(d.document.url, attachment: true, resource_type: :raw), html_options = { download: true }
+                = link_to d.document.my_public_id + "." + d.document.format + " | download file", cloudinary_url(d.document.url, attachment: true, resource_type: :raw, :sign_url => true), html_options = { download: true }
             = fff.label :"Document Description"
             .form-group
               .col-sm-7
@@ -45,4 +45,3 @@
         .progress.hidden
           .progress-bar.progress-bar-success.document-progress-bar
         .document-preview-container.preview-container
-    

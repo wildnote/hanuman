@@ -2,7 +2,7 @@
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
   .col-sm-7.doc-preview
     - o.observation_documents.order(sort_order: :asc).each do |d|
-      - document_url = cloudinary_url(d.document.url)
+      - document_url = cloudinary_url(d.document.url, :sign_url => true)
       - if document_url.blank?
         %p.form-control-static.bg-danger PHOTO NOT FOUND
         = d.document.my_public_id + "." + d.document.format + " | this document failed to upload successfully, please retry upload or remove"
@@ -12,11 +12,11 @@
         -# - doc_name = d.path
         -# - doc_name = doc_name.sub ".pdf", ".png" if doc_name.include? ".pdf"
         - if ['pdf','jpg','png','gif'].include? d.document.url.last(3)
-          = cl_image_tag(d.document.my_public_id, size: '50x50', crop: :fill, format: 'jpg', class: 'doc-preview')
+          = cl_image_tag(d.document.my_public_id, size: '50x50', crop: :fill, format: 'jpg', class: 'doc-preview', :sign_url => true)
         - else
           = image_tag("file-icon.png")
         %br
-        = link_to d.document.my_public_id + "." + d.document.format + " | download file", cloudinary_url(d.document.url, attachment: true, resource_type: :raw), html_options = { download: true }
+        = link_to d.document.my_public_id + "." + d.document.format + " | download file", cloudinary_url(d.document.url, attachment: true, resource_type: :raw, :sign_url => true), html_options = { download: true }
         %br
         %br
       %label
