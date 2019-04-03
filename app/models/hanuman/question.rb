@@ -238,7 +238,7 @@ module Hanuman
 
 
     def set_db_column_name
-      shorthand = self.question_text.snakecase
+      shorthand = self.question_text.truncate(16).snakecase + "_"
       counter = 0
 
       taken = true
