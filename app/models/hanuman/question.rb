@@ -24,6 +24,7 @@ module Hanuman
     # Callbacks
     after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
+    after_create :set_db_column_name
 
     amoeba do
       include_association :rules
@@ -238,20 +239,22 @@ module Hanuman
 
 
     def set_db_column_name
-      shorthand = self.question_text.truncate(16).parameterize.underscore.gsub(/\s|:|\//, '-') + "_"
-      counter = 0
+      if self.db_column_name.blank?
+        shorthand = self.question_text.truncate(16).parameterize.underscore.gsub(/\s|:|\//, '-') + "_"
+        counter = 0
 
-      taken = true
-      while taken do
-        self.survey_template.questions.each do |q|
-          if q.db_column_name == shorthand + counter.to_s
-            counter += 1
-            break
+        taken = true
+        while taken do
+          self.survey_template.questions.each do |q|
+            if q.db_column_name == shorthand + counter.to_s
+              counter += 1
+              break
+            end
           end
+          taken = false
         end
-        taken = false
+        self.update_column(:db_column_name, shorthand + counter.to_s)
       end
-      self.update_column(:db_column_name, shorthand + counter.to_s)
     end
   end
 
