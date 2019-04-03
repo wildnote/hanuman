@@ -238,7 +238,7 @@ module Hanuman
 
 
     def set_db_column_name
-      shorthand = self.question_text.truncate(16).snakecase + "_"
+      shorthand = self.question_text.truncate(16).parameterize.underscore.gsub(/\s|:|\//, '-') + "_"
       counter = 0
 
       taken = true
@@ -251,11 +251,8 @@ module Hanuman
         end
         taken = false
       end
-
-      self.update_column(:db_column_name, shorthand)
-
+      self.update_column(:db_column_name, shorthand + counter.to_s)
     end
-
-
   end
+
 end
