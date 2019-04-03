@@ -246,9 +246,11 @@ module Hanuman
         taken = true
         while taken do
           self.survey_template.questions.each do |q|
-            if q.db_column_name == shorthand + counter.to_s
+            begin
+              raise if q.db_column_name == shorthand + counter.to_s
+            rescue
               counter += 1
-              break
+              retry
             end
           end
           taken = false
