@@ -235,5 +235,27 @@ module Hanuman
       end
       message
     end
+
+
+    def set_db_column_name
+      shorthand = self.question_text.snakecase
+      counter = 0
+
+      taken = true
+      while taken do
+        self.survey_template.questions.each do |q|
+          if q.db_column_name == shorthand + counter.to_s
+            counter += 1
+            break
+          end
+        end
+        taken = false
+      end
+
+      self.update_column(:db_column_name, shorthand)
+
+    end
+
+
   end
 end
