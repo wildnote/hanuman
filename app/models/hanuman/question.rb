@@ -24,7 +24,6 @@ module Hanuman
     # Callbacks
     after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
-    after_create :set_db_column_name
 
     amoeba do
       include_association :rules
