@@ -235,5 +235,28 @@ module Hanuman
       end
       message
     end
+
+
+    def set_db_column_name
+      if self.db_column_name.blank?
+        shorthand = self.question_text.truncate(16).parameterize.underscore.gsub(/\s|:|\//, '-') + "_"
+        counter = 0
+
+        taken = true
+        while taken do
+          self.survey_template.questions.each do |q|
+            begin
+              raise if q.db_column_name == shorthand + counter.to_s
+            rescue
+              counter += 1
+              retry
+            end
+          end
+          taken = false
+        end
+        self.update_column(:db_column_name, shorthand + counter.to_s)
+      end
+    end
   end
+
 end

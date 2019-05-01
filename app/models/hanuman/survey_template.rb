@@ -133,5 +133,13 @@ module Hanuman
       end
       question.save!
     end
+
+
+    def set_question_db_column_names
+      self.questions.each do |q|
+        q.set_db_column_name
+      end
+    end
+
   end
 end
