@@ -26,6 +26,18 @@
 
 <div class="form-group">
   <div class="col-sm-12">
+    {{#form-field for='dbColumnName' label='DB Column Name'}}
+      <input type="text"
+            class="form-control"
+            data-test="question.dbColumnName"
+            value={{question.dbColumnName}}
+            oninput={{action (mut question.dbColumnName) value="target.value"}} />
+    {{/form-field}}
+  </div>
+</div>
+
+<div class="form-group">
+  <div class="col-sm-12">
     {{#form-field for='externalDataSource' label='External Data Source'}}
       <input type="text"
             class="form-control"
