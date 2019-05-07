@@ -239,7 +239,7 @@ module Hanuman
 
     def set_db_column_name
       if self.db_column_name.blank?
-        shorthand = self.question_text.truncate(16).parameterize.underscore.gsub(/\s|:|\//, '-') + "_"
+        shorthand = self.question_text.strip.parameterize.underscore.gsub(/\s|:|\//, '-').truncate(16, omission: "") + "_"
         counter = 0
 
         taken = true
