@@ -50,7 +50,7 @@ class @ConditionalLogic
           else
             if $conditionElement.is(":checkbox")
               # limit binding of each checkbox if data-label-value and answer are the same-kdh
-              $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/") + "']")
+              $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
               self.bindConditions($conditionElement)
             else
               for element in $conditionElement
@@ -145,7 +145,7 @@ class @ConditionalLogic
 
       if $conditionElement.is(":checkbox")# || $triggerElement.is(":radio"))
         # limit binding of each checkbox if data-label-value and answer are the same-kdh
-        $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value='" + condition.answer.replace("/","\\/") + "']")
+        $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
 
       hideQuestions = self.setHideQuestions(condition, $conditionElement)
       conditionMet = !hideQuestions
@@ -413,7 +413,7 @@ class @ConditionalLogic
     $conditionElement.val()
 
 $ ->
-  if $('input#survey_survey_template_id').length 
+  if $('input#survey_survey_template_id').length
     #call findRules on document ready
     cl = new ConditionalLogic
     cl.findRules()
