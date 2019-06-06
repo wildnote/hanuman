@@ -2,7 +2,7 @@
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
   .col-sm-7.videotesting
     - o.observation_videos.order(sort_order: :asc).each do |v|
-      = cl_video_tag(v.video.my_public_id, options = { controls: true, preload: 'none', width: 350 })
+      = cl_video_tag(v.video.my_public_id, options = { controls: true, preload: 'none', width: 350, :sign_url => true })
       %br
       %br
       - unless v.video.format.blank?

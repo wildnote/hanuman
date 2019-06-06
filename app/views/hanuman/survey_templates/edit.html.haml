@@ -14,7 +14,9 @@
         Admin /
         = link_to "Survey Forms", hanuman_project_survey_templates_path(params[:project_id])
         \/
-        = link_to "Edit Survey Form", edit_hanuman_project_survey_template_path(params[:project_id], params[:id])
+        = link_to "Edit Survey Form + #{@survey_template.name_plus_version}", edit_hanuman_project_survey_template_path(params[:project_id], params[:id])
+      - else
+        Admin / Survey Forms / Edit Survey Form - #{@survey_template.name_plus_version}
   .tab-base.tab-stacked-top
     %ul.nav.nav-tabs
       %li

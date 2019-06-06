@@ -1,5 +1,6 @@
 module Hanuman
   class Setting < ActiveRecord::Base
+    has_paper_trail
     validates_uniqueness_of :key
 
     def self.sort(sort_column, sort_direction)
