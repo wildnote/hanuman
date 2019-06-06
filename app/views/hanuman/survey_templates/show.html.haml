@@ -50,7 +50,7 @@
           .pull-right.edit-delete
             = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-success" do
               %span.glyphicons.glyphicons-pencil
-              Edit Survey Form
+              Edit Survey Form Details + @survey_template.name_plus_version
           .clearfix
           = render ("hanuman/survey_templates/formextensionreadonly")
           - @survey_template.questions.each do |q|

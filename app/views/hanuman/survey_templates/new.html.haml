@@ -23,7 +23,7 @@
     %h3.panel-title
       - if params[:project_id].present?
         Admin /
-        = link_to surveys_project_path(params[:project_id]) do
+        = link_to hanuman_project_survey_templates_path(params[:project_id]) do
           Survey Forms
         \/
         = link_to library_hanuman_project_survey_templates_path(params[:project_id]) do
