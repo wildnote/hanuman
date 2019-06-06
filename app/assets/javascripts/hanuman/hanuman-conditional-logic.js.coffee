@@ -246,7 +246,7 @@ class @ConditionalLogic
     # deal with container
     if hide_questions
       $container.addClass("conditional-logic-hidden")
-      self.clearQuestions($container)
+      # self.clearQuestions($container)
     else
       $container.removeClass("conditional-logic-hidden")
 
