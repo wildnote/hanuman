@@ -177,6 +177,7 @@ $(document).ready(function(){
           }
         });
       }
+      
 
       if(!$(repeater).parent().parent().parent().first().hasClass("form-container-repeater")) {
         var questionId = $(repeater).data("question-id");
@@ -216,6 +217,17 @@ $(document).ready(function(){
         if (index > 0) {
           $(element).find(".repeater-count:first").text(" " + (index + 1));
           $destroyButton.show();
+
+
+          // make unique target for collapse
+          var question_id = $(element).attr('data-question-id')
+          $(element).find('.panel-heading.chevron').attr("data-target", "#collapse" + question_id + "_" + (index + 1))
+          $(element).find('.panel-collapse.in').attr("id", "collapse" + question_id + "_" + (index + 1))
+
+
+          console.log($(element).find('.panel-heading.chevron')[0])
+
+
         } else {
           $destroyButton.hide();
         }
