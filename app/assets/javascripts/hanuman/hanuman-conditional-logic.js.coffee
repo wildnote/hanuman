@@ -376,7 +376,7 @@ class @ConditionalLogic
         else
           return selected.val()
       else
-        return
+        ""
     if $conditionElement.is(":checkbox")
       if $conditionElement.is(":checked")
         if $conditionElement.attr('data-label-value')
