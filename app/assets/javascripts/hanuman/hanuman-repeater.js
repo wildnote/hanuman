@@ -220,15 +220,18 @@ $(document).ready(function(){
 
 
           // make unique target for collapse
-          var question_id = $(element).attr('data-question-id')
-          $(element).find('.panel-heading.chevron').attr("data-target", "#collapse" + question_id + "_" + (index + 1))
-          $(element).find('.panel-collapse.in').attr("id", "collapse" + question_id + "_" + (index + 1))
+          var question_id = $(element).attr('data-question-id');
+          $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_" + (index + 1));
+          $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_" + (index + 1));
 
 
-          console.log($(element).find('.panel-heading.chevron')[0])
+          console.log($(element).find('.panel-heading.chevron')[0]);
 
 
         } else {
+          var question_id = $(element).attr('data-question-id');
+          $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_0");
+          $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_0");
           $destroyButton.hide();
         }
 
