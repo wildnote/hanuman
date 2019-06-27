@@ -315,9 +315,9 @@ class @ConditionalLogic
       when "is not equal to"
         if value != answer then hide_questions = false
       when "is empty"
-        if value.length < 1 then hide_questions = false
+        if value && value.length < 1 then hide_questions = false
       when "is not empty"
-        if value.length > 0 then hide_questions = false
+        if value && value.length > 0 then hide_questions = false
       when "is greater than"
         if $.isNumeric(value)
           if parseFloat(value) > parseFloat(answer) then hide_questions = false
@@ -342,10 +342,10 @@ class @ConditionalLogic
           if value != answer
             hide_questions = false
         when "is empty"
-          if value.length < 1
+          if value && value.length < 1
             hide_questions = false
         when "is not empty"
-          if value.length > 0
+          if value && value.length > 0
             hide_questions = false
         when "is greater than"
           if $.isNumeric(value)
@@ -376,7 +376,7 @@ class @ConditionalLogic
         else
           return selected.val()
       else
-        ""
+        return
     if $conditionElement.is(":checkbox")
       if $conditionElement.is(":checked")
         if $conditionElement.attr('data-label-value')
