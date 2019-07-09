@@ -13,7 +13,7 @@
         </span>
       {{/if}}
       {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
-        <span class="glyphicons glyphicons-sorting {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'icon-disabled'}} {{if question.loading 'hide'}}">
+        <span class="glyphicons glyphicons-sorting {{if (and (or question.surveyTemplate.lock (not isFullyEditable)) (not isSuperUser)) 'icon-disabled'}} {{if question.loading 'hide'}}">
           {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
         </span>
       {{else}}
