@@ -17,6 +17,7 @@ Hanuman::Engine.routes.draw do
       resources :questions do
         member do
           post :duplicate
+          post :process_question_changes
         end
       end
       resources :survey_steps
