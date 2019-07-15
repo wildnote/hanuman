@@ -141,5 +141,98 @@ module Hanuman
       end
     end
 
+
+    def check_structure_and_rules
+      errors = {}
+      errors["condition"] = []
+      errors["rule"] = []
+      errors["ancestry"] = []
+
+      last_parent = 0
+      nested_parent = 0
+      current_children = []
+      nested_children = []
+
+      question_ids = self.questions.map(&:id)
+      qs = self.questions.order(sort_order: :asc)
+      qs.each_with_index do |question, i|
+        # loop through rules linked to questions in the template to check that the conditions do as well
+        question.rules.each do |rule|
+          rule.conditions.each do |condition|
+            if !question_ids.include?(condition.question.id)
+              errors["condition"] << condition.question.id
+              puts "Condition references bad question_id: #{condition.question.id}"
+            end
+          end
+        end
+        # doing it both ways gives more opportunity to find bad references
+        # loop through conditions linked to questions in the template to check that the rules do as well
+        question.conditions.each do |condition|
+          if condition.rule.present?
+            if !question_ids.include?(condition.rule.question.id)
+              errors["rule"] << condition.rule.question.id
+              puts "Rule references bad question_id: #{condition.rule.question.id}"
+            end
+          end
+        end
+
+        if last_parent != 0 && nested_parent == 0
+          puts current_children.inspect
+          # we are now inside a section or repeater
+          if current_children.present? ? (question.ancestry == Hanuman::Question.find(current_children.last).ancestry) : (question.ancestry == last_parent.to_s)
+            # correct children in order
+            current_children << question.id
+          else
+            if qs.where(ancestry: last_parent.to_s).where.not(id: current_children).length > 0
+              # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
+              errors["ancestry"] << question.id
+              puts "Ancestry isse with question_id: #{question.id}"
+              last_parent = 0
+              current_children = []
+            else
+              # successfully made it out of section
+              last_parent = 0
+              current_children = []
+            end
+          end
+        elsif nested_parent != 0
+          puts nested_children.inspect
+          # we are now inside a nested section or repeater
+          if nested_children.present? ? (question.ancestry == Hanuman::Question.find(nested_children.last).ancestry) : (question.ancestry == Hanuman::Question.find(nested_parent).ancestry + "/" + nested_parent.to_s)
+            # correct children in order
+            nested_children << question.id
+          else
+            if qs.where(ancestry: nested_parent.to_s).where.not(id: nested_children).length > 0
+              # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
+              errors["ancestry"] << question.id
+              puts "Ancestry isse with question_id: #{question.id}"
+              nested_parent = 0
+              nested_children = []
+            else
+              # successfully made it out of section
+              nested_parent = 0
+              nested_children = []
+            end
+          end
+        end
+
+              
+
+        # somehow make sure ancestry, sort order, and repeater stuff are all correct and congruent
+        if question.descendants.present?
+          if last_parent == 0
+            last_parent = question.id 
+          else
+            nested_parent = question.id
+          end
+        end
+
+
+
+      end
+
+      puts errors.map{|e| "#{e[0]}: #{e[1]} "}
+    end
+
   end
 end
