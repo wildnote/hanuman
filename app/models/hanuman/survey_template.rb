@@ -181,11 +181,11 @@ module Hanuman
           else
             curr_ancestry = parents.last.to_s
           end
-          if children[parents.last].present? ? (question.ancestry == Hanuman::Question.find(children[parents.last].last).ancestry) : (question.ancestry == curr_ancestry)
+          if question.ancestry == curr_ancestry
             # correct children in order
             children[parents.last] << question.id
           else
-            if qs.where(ancestry: parents.last.to_s).where.not(id: children[parents.last]).length > 0
+            if qs.where(ancestry: curr_ancestry).where.not(id: children[parents.last]).length > 0
               # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
               errors["ancestry"] << question.id
               puts "Ancestry isse with question_id: #{question.id}"
