@@ -184,7 +184,7 @@ module Hanuman
           if question.ancestry == curr_ancestry
             # correct children in order
             children[parents.last] << question.id
-          else
+          elsif !question.descendants.present?
             if qs.where(ancestry: curr_ancestry).where.not(id: children[parents.last]).length > 0
               # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
               errors["ancestry"] << question.id
