@@ -148,10 +148,8 @@ module Hanuman
       errors["rule"] = []
       errors["ancestry"] = []
 
-      last_parent = 0
-      nested_parent = 0
-      current_children = []
-      nested_children = []
+      parents = []
+      children = {}
 
       question_ids = self.questions.map(&:id)
       qs = self.questions.order(sort_order: :asc)
@@ -176,42 +174,27 @@ module Hanuman
           end
         end
 
-        if last_parent != 0 && nested_parent == 0
-          puts current_children.inspect
+        if parents.length > 0
           # we are now inside a section or repeater
-          if current_children.present? ? (question.ancestry == Hanuman::Question.find(current_children.last).ancestry) : (question.ancestry == last_parent.to_s)
-            # correct children in order
-            current_children << question.id
+          if Hanuman::Question.find(parents.last).ancestry.present?
+            curr_ancestry = Hanuman::Question.find(parents.last).ancestry + "/" + parents.last.to_s
           else
-            if qs.where(ancestry: last_parent.to_s).where.not(id: current_children).length > 0
-              # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
-              errors["ancestry"] << question.id
-              puts "Ancestry isse with question_id: #{question.id}"
-              last_parent = 0
-              current_children = []
-            else
-              # successfully made it out of section
-              last_parent = 0
-              current_children = []
-            end
+            curr_ancestry = parents.last.to_s
           end
-        elsif nested_parent != 0
-          puts nested_children.inspect
-          # we are now inside a nested section or repeater
-          if nested_children.present? ? (question.ancestry == Hanuman::Question.find(nested_children.last).ancestry) : (question.ancestry == Hanuman::Question.find(nested_parent).ancestry + "/" + nested_parent.to_s)
+          if children[parents.last].present? ? (question.ancestry == Hanuman::Question.find(children[parents.last].last).ancestry) : (question.ancestry == curr_ancestry)
             # correct children in order
-            nested_children << question.id
+            children[parents.last] << question.id
           else
-            if qs.where(ancestry: nested_parent.to_s).where.not(id: nested_children).length > 0
+            if qs.where(ancestry: parents.last.to_s).where.not(id: children[parents.last]).length > 0
               # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
               errors["ancestry"] << question.id
               puts "Ancestry isse with question_id: #{question.id}"
-              nested_parent = 0
-              nested_children = []
+              parent = parents.pop
+              children[parent] = nil
             else
               # successfully made it out of section
-              nested_parent = 0
-              nested_children = []
+              parent = parents.pop
+              children[parent] = nil
             end
           end
         end
@@ -220,10 +203,9 @@ module Hanuman
 
         # somehow make sure ancestry, sort order, and repeater stuff are all correct and congruent
         if question.descendants.present?
-          if last_parent == 0
-            last_parent = question.id 
-          else
-            nested_parent = question.id
+          if !parents.include?(question.id)
+            parents << question.id
+            children[question.id] = []
           end
         end
 
