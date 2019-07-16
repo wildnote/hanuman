@@ -141,12 +141,41 @@ module Hanuman
       end
     end
 
+    
+    def check_structure_helper(errors, parents, children, question, i)
+      question_ids = self.questions.map(&:id)
+      qs = self.questions.order(sort_order: :asc)
+      if Hanuman::Question.find(parents.last).ancestry.present?
+        curr_ancestry = Hanuman::Question.find(parents.last).ancestry + "/" + parents.last.to_s
+      else
+        curr_ancestry = parents.last.to_s
+      end
+      if question.ancestry == curr_ancestry
+        # correct children in order
+        children[parents.last] << question.id
+      elsif !question.descendants.present?
+        if qs.where(ancestry: curr_ancestry).where.not(id: children[parents.last] + parents).length > 0
+          # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
+          errors["ancestry"] << question.id
+          puts "Ancestry isse with question_id: #{question.id}"
+          errors["debug"] << qs.where(ancestry: curr_ancestry).where.not(id: children[parents.last] + parents).map(&:id)
+          parent = parents.pop
+          children[parent] = nil
+        else
+          # successfully made it out of section
+          parent = parents.pop
+          children[parent] = nil
+        end
+      end
+    end
+
 
     def check_structure_and_rules
       errors = {}
       errors["condition"] = []
       errors["rule"] = []
       errors["ancestry"] = []
+      errors["debug"] = []
 
       parents = []
       children = {}
@@ -154,49 +183,28 @@ module Hanuman
       question_ids = self.questions.map(&:id)
       qs = self.questions.order(sort_order: :asc)
       qs.each_with_index do |question, i|
-        # loop through rules linked to questions in the template to check that the conditions do as well
-        question.rules.each do |rule|
-          rule.conditions.each do |condition|
-            if !question_ids.include?(condition.question.id)
-              errors["condition"] << condition.question.id
-              puts "Condition references bad question_id: #{condition.question.id}"
-            end
-          end
-        end
-        # doing it both ways gives more opportunity to find bad references
-        # loop through conditions linked to questions in the template to check that the rules do as well
-        question.conditions.each do |condition|
-          if condition.rule.present?
-            if !question_ids.include?(condition.rule.question.id)
-              errors["rule"] << condition.rule.question.id
-              puts "Rule references bad question_id: #{condition.rule.question.id}"
-            end
-          end
-        end
+        # # loop through rules linked to questions in the template to check that the conditions do as well
+        # question.rules.each do |rule|
+        #   rule.conditions.each do |condition|
+        #     if !question_ids.include?(condition.question.id)
+        #       errors["condition"] << condition.question.id
+        #       puts "Condition references bad question_id: #{condition.question.id}"
+        #     end
+        #   end
+        # end
+        # # doing it both ways gives more opportunity to find bad references
+        # # loop through conditions linked to questions in the template to check that the rules do as well
+        # question.conditions.each do |condition|
+        #   if condition.rule.present?
+        #     if !question_ids.include?(condition.rule.question.id)
+        #       errors["rule"] << condition.rule.question.id
+        #       puts "Rule references bad question_id: #{condition.rule.question.id}"
+        #     end
+        #   end
+        # end
 
         if parents.length > 0
-          # we are now inside a section or repeater
-          if Hanuman::Question.find(parents.last).ancestry.present?
-            curr_ancestry = Hanuman::Question.find(parents.last).ancestry + "/" + parents.last.to_s
-          else
-            curr_ancestry = parents.last.to_s
-          end
-          if question.ancestry == curr_ancestry
-            # correct children in order
-            children[parents.last] << question.id
-          elsif !question.descendants.present?
-            if qs.where(ancestry: curr_ancestry).where.not(id: children[parents.last]).length > 0
-              # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
-              errors["ancestry"] << question.id
-              puts "Ancestry isse with question_id: #{question.id}"
-              parent = parents.pop
-              children[parent] = nil
-            else
-              # successfully made it out of section
-              parent = parents.pop
-              children[parent] = nil
-            end
-          end
+          check_structure_helper(errors, parents, children, question, i)
         end
 
               
