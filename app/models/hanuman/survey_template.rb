@@ -142,30 +142,35 @@ module Hanuman
     end
 
     
-    def check_structure_helper(errors, parents, children, question, i)
-      question_ids = self.questions.map(&:id)
+    def check_structure_helper(checked, errors, parent, i)
+      children = []
       qs = self.questions.order(sort_order: :asc)
-      if Hanuman::Question.find(parents.last).ancestry.present?
-        curr_ancestry = Hanuman::Question.find(parents.last).ancestry + "/" + parents.last.to_s
+      if Hanuman::Question.find(parent.id).ancestry.present?
+        curr_ancestry = Hanuman::Question.find(parent.id).ancestry + "/" + parent.id.to_s
       else
-        curr_ancestry = parents.last.to_s
+        curr_ancestry = parent.id.to_s
       end
-      if question.ancestry == curr_ancestry
-        # correct children in order
-        children[parents.last] << question.id
-      elsif !question.descendants.present?
-        if qs.where(ancestry: curr_ancestry).where.not(id: children[parents.last] + parents).length > 0
+      qs[i..-1].each_with_index do |question, j|
+        next if checked.include?(question.id)
+        checked << question.id
+        if question.descendants.present?
+          checked += check_structure_helper(checked, errors, question, i+j+1)
+        elsif question.ancestry == curr_ancestry
+          # correct children in order
+          children << question.id
+          # remember and do nothing
+          next
+        elsif qs.where(ancestry: curr_ancestry).where.not(id: children).length > 0
           # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
           errors["ancestry"] << question.id
           puts "Ancestry isse with question_id: #{question.id}"
-          errors["debug"] << qs.where(ancestry: curr_ancestry).where.not(id: children[parents.last] + parents).map(&:id)
-          parent = parents.pop
-          children[parent] = nil
         else
           # successfully made it out of section
-          parent = parents.pop
-          children[parent] = nil
+          # do nothing
+          next
         end
+        
+
       end
     end
 
@@ -177,12 +182,16 @@ module Hanuman
       errors["ancestry"] = []
       errors["debug"] = []
 
+      checked = []
+
       parents = []
       children = {}
 
       question_ids = self.questions.map(&:id)
       qs = self.questions.order(sort_order: :asc)
       qs.each_with_index do |question, i|
+        next if checked.include?(question.id)
+        checked << question.id
         # # loop through rules linked to questions in the template to check that the conditions do as well
         # question.rules.each do |rule|
         #   rule.conditions.each do |condition|
@@ -203,18 +212,22 @@ module Hanuman
         #   end
         # end
 
-        if parents.length > 0
-          check_structure_helper(errors, parents, children, question, i)
-        end
+
+        
+
+        # if parents.length > 0
+        #   check_structure_helper(errors, parents, children, question, i)
+        # end
 
               
 
         # somehow make sure ancestry, sort order, and repeater stuff are all correct and congruent
         if question.descendants.present?
-          if !parents.include?(question.id)
-            parents << question.id
-            children[question.id] = []
-          end
+          checked += check_structure_helper(checked, errors, question, i+1)
+          # if !parents.include?(question.id)
+          #   parents << question.id
+          #   children[question.id] = []
+          # end
         end
 
 
