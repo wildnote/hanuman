@@ -114,11 +114,11 @@ module Hanuman
       from_duped_question = Hanuman::Question.find_by_id(question.duped_question_id)
       question.rules.each do |rule|
         duped_rule = from_duped_question.rules.find_by_duped_rule_id(rule.duped_rule_id)
-        if duped_rule
-          # set the right duped one
-          rule.duped_rule_id = duped_rule.id
-          rule.save
-        end
+        # if duped_rule
+        #   # set the right duped one
+        #   rule.duped_rule_id = duped_rule.id
+        #   rule.save
+        # end
       end
 
       question.tag_list = from_duped_question.tag_list
