@@ -236,8 +236,8 @@ removeFileHiddenInput = ->
 
 checkMaxPhotos = (self, maxPhotos, addedPhotos) ->
   if addedPhotos > maxPhotos
-    $('#too-many-photos-alert').attr('style','display:block;color:#ff0000;')
-    $('#max-photos-alert').attr('style','display:none;')
+    $(self).find('#too-many-photos-alert').attr('style','display:block;color:#ff0000;')
+    $(self).find('#max-photos-alert').attr('style','display:none;')
     $(self).find('.photo-preview').each( (i) ->
       if i+1 <= maxPhotos
         return true
@@ -245,12 +245,12 @@ checkMaxPhotos = (self, maxPhotos, addedPhotos) ->
         $(this).remove()
     )
   if addedPhotos >= maxPhotos
-    $('#too-many-photos-alert').attr('style','display:block;color:#ff0000;')
-    $('#max-photos-alert').attr('style','display:none;')
+    $(self).find('#too-many-photos-alert').attr('style','display:block;color:#ff0000;')
+    $(self).find('#max-photos-alert').attr('style','display:none;')
     $(self).find('.photo-upload').attr('style','display:none;')
   else
-    $('#too-many-photos-alert').attr('style','display:none;')
-    $('#max-photos-alert').attr('style','display:block;')
+    $(self).find('#too-many-photos-alert').attr('style','display:none;')
+    $(self).find('#max-photos-alert').attr('style','display:block;')
     $(self).find('.photo-upload').attr('style','display:block;')
 
 
@@ -264,14 +264,14 @@ $ ->
       checkMaxPhotos(this, maxPhotos, addedPhotos)
   )
 
-  $('.file-upload').on 'click', (e) ->
+  $('.panel-body').on 'click', '.file-upload', (e) ->
     maxPhotos = $(this).find('#max-photos').attr("data-max-photos")
     if maxPhotos
       $(this).bind 'cloudinarydone', (e) ->
         addedPhotos = $(this).find('.photo-preview').find("img").length
         checkMaxPhotos(this, maxPhotos, addedPhotos)
 
-  $('.file-upload').on 'click', '.remove-upload, .delete-saved-file', (e) ->
+  $('.panel-body').on 'click', '.remove-upload, .delete-saved-file', (e) ->
     maxPhotos = $(this).parents('.file-upload').find('#max-photos').attr("data-max-photos")
     if maxPhotos
       e.preventDefault()
