@@ -17,8 +17,18 @@
   .col-sm-12
     &nbsp;
   = render "hanuman/surveys/fields/shared/label", ff: ff
+
   .col-sm-4
-    = ff.text_field :answer, class: "form-control latlong-entry", maxlength: 230, :"data-parsley-latlong" => true
+    - if ff.object.answer.present? && ff.object.latitude.blank? && ff.object.longitude.blank? && ff.object.answer.include?(",")
+      - ff.object.latitude = ff.object.answer.split(",")[0].strip
+      - ff.object.longitude = ff.object.answer.split(",")[1].strip
+
+    = ff.text_field :latitude, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Latitude"
+    = ff.text_field :longitude, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Longitude"
+    = ff.text_field :speed, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Speed"
+    = ff.text_field :direction, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Direction"
+    = ff.text_field :altitude, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Altitude"
+    = ff.text_field :accuracy, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Accruacy"
     
   .col-sm-3
     %a.btn.btn-success.map-toggle-button  Plot Map Location
