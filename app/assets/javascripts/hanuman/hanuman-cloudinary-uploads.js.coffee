@@ -271,7 +271,7 @@ $ ->
         addedPhotos = $(this).find('.photo-preview').find("img").length
         checkMaxPhotos(this, maxPhotos, addedPhotos)
 
-  $('.panel-body').on 'click', '.remove-upload, .delete-saved-file', (e) ->
+  $('.panel-body').on 'click', '.remove-upload', (e) ->
     maxPhotos = $(this).parents('.file-upload').find('#max-photos').attr("data-max-photos")
     if maxPhotos
       e.preventDefault()
@@ -301,8 +301,17 @@ $ ->
     $(@).closest('.file-upload-input-button').find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
       $(element).find('.upload-sort-order').val(idx+1)
 
+    maxPhotos = $(this).parents('.file-upload').find('#max-photos').attr("data-max-photos")
+    if maxPhotos
+      e.preventDefault()
+      self = $(this).parents('.file-upload')
+      setTimeout ->
+        addedPhotos = $(self).find('.photo-preview').find("img").length
+        checkMaxPhotos(self, maxPhotos, addedPhotos)
+      , 100
+
   # on click removes uploaded files on survey new.
-  $('.file-upload').on 'click', '.remove-upload', (e) ->
+  $('.panel-body').on 'click', '.remove-upload', (e) ->
     e.preventDefault()
     file = $(@).attr('id')
     containerClass = "."+file+"-preview"
