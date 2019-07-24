@@ -260,7 +260,7 @@ $ ->
     maxPhotos = $(this).find('#max-photos').attr("data-max-photos")
     if maxPhotos
       addedPhotos = $(this).find('.gallery-item').find("img").length
-      console.log(maxPhotos + ' ' + addedPhotos)
+      # console.log(maxPhotos + ' ' + addedPhotos)
       checkMaxPhotos(this, maxPhotos, addedPhotos)
   )
 
@@ -268,7 +268,8 @@ $ ->
     maxPhotos = $(this).find('#max-photos').attr("data-max-photos")
     if maxPhotos
       $(this).bind 'cloudinarydone', (e) ->
-        addedPhotos = $(this).find('.photo-preview').find("img").length
+        addedPhotos = $(this).find('.gallery-item').find("img").length
+        addedPhotos += $(this).find('.photo-preview').find("img").length
         checkMaxPhotos(this, maxPhotos, addedPhotos)
 
   $('.panel-body').on 'click', '.remove-upload', (e) ->
