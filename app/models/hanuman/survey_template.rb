@@ -232,7 +232,8 @@ module Hanuman
 
       end
 
-      puts errors.map{|e| "#{e[0]}: #{e[1]} "}
+      # puts errors.map{|e| "#{e[0]}: #{e[1]} "}
+      errors
     end
 
   end

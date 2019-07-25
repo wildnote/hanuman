@@ -134,6 +134,22 @@ export default Component.extend({
     question.set('loading', false);
   }),
 
+  checkTemplate: task(function* () {
+    try {
+      
+      let surveyTemplate = this.surveyTemplate;
+      surveyTemplate.set('checkingTemplate', true);
+      let errors = yield surveyTemplate.checkTemplate();
+      if(errors) {
+        surveyTemplate.set('checkingTemplate', false);
+      }
+      console.log("errors");
+      console.log(errors);
+    } catch (e) {
+      console.log('Error checking template:', e); // eslint-disable-line no-console
+    }
+  }),
+
   _filterSectionsAndRepeaters(selectedQuestions) {
     let filtered = selectedQuestions.filter(function(toCheckQuestion) {
       if (isBlank(toCheckQuestion.get('ancestry'))) {

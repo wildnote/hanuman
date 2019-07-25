@@ -28,6 +28,7 @@ Hanuman::Engine.routes.draw do
           post :duplicate
           get  :available_tags
           patch :resort_questions
+          get :check_template
         end
       end
     end
