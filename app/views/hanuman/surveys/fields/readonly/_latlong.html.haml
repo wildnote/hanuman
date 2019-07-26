@@ -7,10 +7,10 @@
   .col-sm-7.latlong-in-survey-show
     %p.form-control-static= "#{o.latitude}, #{o.longitude}"
     - unless o.speed.blank?
-      %p.form-control-static= "#{o.speed} m/s" 
+      %p.form-control-static= "Speed: #{o.speed} m/s" 
     - unless o.direction.blank?
-      %p.form-control-static= "#{o.direction} degrees"
+      %p.form-control-static= "Heading: #{o.direction} degrees"
     - unless o.altitude.blank?
-      %p.form-control-static= "#{o.altitude} meters"
+      %p.form-control-static= "Altitude: #{o.altitude} meters"
     - unless o.accuracy.blank?
-      %p.form-control-static= "#{o.accuracy} meters"
+      %p.form-control-static= "Accuracy: #{o.accuracy} meters"
