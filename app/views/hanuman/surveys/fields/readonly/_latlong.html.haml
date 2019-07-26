@@ -5,9 +5,12 @@
   .clearfix
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
   .col-sm-7.latlong-in-survey-show
-    %p.form-control-static= o.latitude
-    %p.form-control-static= o.longitude
-    %p.form-control-static= "#{o.speed} m/s"
-    %p.form-control-static= "#{o.direction} degrees"
-    %p.form-control-static= "#{o.altitude} meters"
-    %p.form-control-static= "#{o.accuracy} meters"
+    %p.form-control-static= "#{o.latitude}, #{o.longitude}"
+    - unless o.speed.blank?
+      %p.form-control-static= "#{o.speed} m/s" 
+    - unless o.direction.blank?
+      %p.form-control-static= "#{o.direction} degrees"
+    - unless o.altitude.blank?
+      %p.form-control-static= "#{o.altitude} meters"
+    - unless o.accuracy.blank?
+      %p.form-control-static= "#{o.accuracy} meters"
