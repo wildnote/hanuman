@@ -25,11 +25,34 @@
             .form-group
               .col-sm-7
                 = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add photo description here..."
-            = label_tag "Photo lat-long"
+            = label_tag "Photo Geolocation Data"
             .form-group
               .col-sm-7
+                Coordinates:
                 =p.latitude.to_s + ","
                 =p.longitude
+              - unless p.speed.blank?
+                .col-sm-7
+                  Speed:
+                  =p.speed
+                  m/s
+              - unless p.direction.blank?
+                .col-sm-7
+                  Heading:
+                  =p.direction
+                  degrees
+              - unless p.altitude.blank?
+                .col-sm-7
+                  Altitude:
+                  =p.altitude
+                  m
+              - unless p.accuracy.blank?
+                .col-sm-7
+                  Accuracy:
+                  =p.accuracy
+                  m
+
+            - 
             = fff.label :"Photo sort order"
             .form-group
               .col-sm-7
