@@ -350,13 +350,10 @@ export default Component.extend({
       let question = this.get('question');
       let answerChoices = question.get('answerChoices');
       answerChoices.forEach((answerChoice, index) => {
-        let oldSortOrder = answerChoice.get('sortOrder');
         let newSortOrder = index + 1;
-        if (oldSortOrder !== newSortOrder) {
-          answerChoice.set('sortOrder', newSortOrder);
-          if (!answerChoice.get('isNew')) {
-            answerChoice.save();
-          }
+        answerChoice.set('sortOrder', newSortOrder);
+        if (!answerChoice.get('isNew')) {
+          answerChoice.save();
         }
       });
       if (!question.get('isNew')) {

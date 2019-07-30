@@ -1,15 +1,17 @@
-import Component from '@ember/component';
+import Ember from 'ember';
+import DraggableObject from 'ember-drag-drop/components/draggable-object';
 import { run } from '@ember/runloop';
 import { isNone } from '@ember/utils';
 import { task } from 'ember-concurrency';
 
-export default Component.extend({
+export default DraggableObject.extend({
   tagName: 'tr',
 
-  classNameBindings: ['isNewAnswerChoice:no-hover'],
-  attributeBindings: ['answerChoice.id:data-answer-choice-id'],
+  classNameBindings: [':js-draggableObject','isDraggingObject:is-dragging-object:', 'overrideClass','isNewAnswerChoice:no-hover'],
+  attributeBindings: ['dragReady:draggable','answerChoice.id:data-answer-choice-id'],
 
   isEditingAnswerChoice: false,
+  isSortable: true,
 
   setNewAnswerChoice() {
     let lastAnswer = this.get('question.answerChoices.lastObject');
