@@ -165,7 +165,7 @@ module Hanuman
           next
         elsif qs.where(ancestry: curr_ancestry).where.not(id: children).length > 0
           # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
-          errors["ancestry"] << question.id
+          errors["ancestry"] << "question: #{question.id} - issue with ancestry"
           puts "Ancestry isse with question_id: #{question.id}"
         else
           # successfully made it out of section

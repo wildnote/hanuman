@@ -145,6 +145,7 @@ export default Component.extend({
       }
       console.log("errors");
       console.log(errors);
+      alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition );
     } catch (e) {
       console.log('Error checking template:', e); // eslint-disable-line no-console
     }
