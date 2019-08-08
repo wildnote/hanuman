@@ -58,10 +58,7 @@ export default Component.extend({
       }
     },
 
-    inputKeyUp(value) {
-      value = value.slice(0, 255);
-      this.answerChoice.set('optionText', value);
-      this.$().val(value);
+    inputKeyUp(event) {
       if (event.keyCode == 13) {
         this.get('saveTask').perform();
       }
