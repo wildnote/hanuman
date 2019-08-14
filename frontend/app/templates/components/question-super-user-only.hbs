@@ -1,5 +1,5 @@
 <div class="form-group">
-  <div class="col-sm-12">
+  <div class="col-sm-6">
     <input type="checkbox"
           disabled={{question.surveyTemplate.lock}}
           name="isHidden"
@@ -8,6 +8,11 @@
           <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hidden" data-content="A question will be automatically hidden if there is a visibility rule associated with it." class="bootstrap-popover">
             <span class="glyphicons glyphicons-info-sign"></span>
           </a>
+  </div>
+  <div class="col-sm-6">
+    <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform processQuestionChanges}}>
+      <span class="glyphicons glyphicons-refresh"></span>Process Question Changes
+    </button>
   </div>
 </div>
 

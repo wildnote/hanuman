@@ -129,7 +129,67 @@ $(document).ready(function(){
 
      updateRepeaterIds()
      updateRepeaterControls()
+
+    $clonedContainer.find('.file-upload').each(function() {
+      self = this;
+      maxPhotos = $(self).find('#max-photos').attr("data-max-photos");
+      if (maxPhotos) {
+        addedPhotos = $(self).find('.gallery-item').find("img").length;
+      }
+      console.log(maxPhotos + ' ' + addedPhotos);
+      checkMaxPhotos(this, maxPhotos, addedPhotos);
+    });
+
+    // $('.file-upload').on('click', function (e) {
+    //   console.log("clicked");
+    //   maxPhotos = $(this).find('#max-photos').attr("data-max-photos");
+    //   if (maxPhotos) {
+    //     $(this).bind('cloudinarydone', function (e) {
+    //       addedPhotos = $(this).find('.photo-preview').find("img").length;
+    //       checkMaxPhotos(this, maxPhotos, addedPhotos);
+    //     });
+    //   }
+    // });
+
+    // $('.file-upload').on('click', '.remove-upload, .delete-saved-file', function(e) {
+    //   maxPhotos = $(this).parents('.file-upload').find('#max-photos').attr("data-max-photos");
+    //   if(maxPhotos) {
+    //     e.preventDefault();
+    //     self = $(this).parents('.file-upload');
+    //     setTimeout(function() {
+    //       addedPhotos = $(self).find('.photo-preview').find("img").length;
+    //       checkMaxPhotos(self, maxPhotos, addedPhotos)
+    //     }, 100);
+    //   }
+    // });
+
+
   });
+
+  
+
+  function checkMaxPhotos(self, maxPhotos, addedPhotos) {
+    if (addedPhotos > maxPhotos) {
+      $(self).find('#too-many-photos-alert').attr('style', 'display:block;color:#ff0000;');
+      $(self).find('#max-photos-alert').attr('style', 'display:none;');
+      $(self).find('.photo-preview').each(function (i) {
+        if (i + 1 <= maxPhotos) {
+          return true;
+        } else {
+          $(this).remove();
+        }
+      });
+    }
+    if (addedPhotos >= maxPhotos) {
+      $(self).find('#too-many-photos-alert').attr('style', 'display:block;color:#ff0000;');
+      $(self).find('#max-photos-alert').attr('style', 'display:none;');
+      $(self).find('.photo-upload').attr('style', 'display:none;');
+    } else {
+      $(self).find('#too-many-photos-alert').attr('style', 'display:none;');
+      $(self).find('#max-photos-alert').attr('style', 'display:block;');
+      $(self).find('.photo-upload').attr('style', 'display:block;');
+    }
+  }
 
   function destroyDuplicateChildRepeaters(container) {
     var childRepeaters = $(container).find("> .panel-collapse > .panel-body > .form-container-repeater");

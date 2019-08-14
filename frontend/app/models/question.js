@@ -120,6 +120,7 @@ export default Model.extend(Validator, {
 
   // Custom actions
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),
+  processQuestionChanges: memberAction({ path: 'process_question_changes', type: 'post' }),
 
   // Validations
   validations: {
