@@ -19,12 +19,34 @@
       = p.description
       %br
       %br
+      
       %label
-        Photo lat-long
+        Photo geolocation data
       %br
+      Coordinates:
       =p.latitude.to_s + ","
       =p.longitude
       %br
+      - unless p.speed.blank?
+        Speed: 
+        =p.speed
+        m/s
+        %br
+      - unless p.direction.blank?
+        Heading: 
+        =p.direction
+        degrees
+        %br
+      - unless p.altitude.blank?
+        Altitude: 
+        =p.altitude
+        m
+        %br
+      - unless p.accuracy.blank?
+        Accuracy: 
+        =p.accuracy
+        m
+        %br
       %br
       %label
         Photo sort order

@@ -31,6 +31,12 @@ module Hanuman
       respond_with survey_template_copy
     end
 
+    def check_template
+      survey_template = SurveyTemplate.find(params[:id])
+      errors = survey_template.check_structure_and_rules
+      render json: errors.to_json
+    end
+
     def destroy
       survey_template = SurveyTemplate.find(params[:id])
       if survey_template.fully_editable

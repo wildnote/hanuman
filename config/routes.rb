@@ -17,6 +17,7 @@ Hanuman::Engine.routes.draw do
       resources :questions do
         member do
           post :duplicate
+          post :process_question_changes
         end
       end
       resources :survey_steps
@@ -27,6 +28,7 @@ Hanuman::Engine.routes.draw do
           post :duplicate
           get  :available_tags
           patch :resort_questions
+          get :check_template
         end
       end
     end
