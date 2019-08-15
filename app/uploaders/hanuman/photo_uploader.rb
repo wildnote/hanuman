@@ -5,7 +5,7 @@ module Hanuman
     include Cloudinary::CarrierWave
 
     def extension_white_list
-      %w(jpg png gif jpeg)
+      %w(jpg png gif jpeg heic)
     end
 
     # overriding method so that we don't delete files on cloudinary when they are deleted on rails app

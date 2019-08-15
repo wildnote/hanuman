@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hanuman (1.8.6)
+    hanuman (1.9.1)
       active_model_serializers (~> 0.8.1)
       acts-as-taggable-on (~> 4.0.0)
       amoeba (~> 3.1.0)
@@ -229,9 +229,9 @@ GEM
       redis (>= 3.0.4)
     request_store (1.4.1)
       rack (>= 1.4)
-    responders (2.4.1)
-      actionpack (>= 4.2.0, < 6.0)
-      railties (>= 4.2.0, < 6.0)
+    responders (2.4.0)
+      actionpack (>= 4.2.0, < 5.3)
+      railties (>= 4.2.0, < 5.3)
     rest-client (2.0.2)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
@@ -297,7 +297,7 @@ GEM
     thor (0.20.3)
     thread_safe (0.3.6)
     tilt (1.4.1)
-    timers (4.3.0)
+    timers (4.2.0)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uglifier (2.5.3)
@@ -327,4 +327,4 @@ DEPENDENCIES
   shoulda-matchers (~> 3.1.2)
 
 BUNDLED WITH
-   1.16.2
+   1.16.5
