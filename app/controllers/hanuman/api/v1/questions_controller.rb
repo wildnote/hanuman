@@ -46,6 +46,12 @@ module Hanuman
       respond_with duplicated_question
     end
 
+    def process_question_changes
+      question = Question.find(params[:id])
+      question.process_question_changes_on_observations
+      respond_with question
+    end
+
     private
 
     def question_params

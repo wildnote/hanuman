@@ -114,11 +114,11 @@ module Hanuman
       from_duped_question = Hanuman::Question.find_by_id(question.duped_question_id)
       question.rules.each do |rule|
         duped_rule = from_duped_question.rules.find_by_duped_rule_id(rule.duped_rule_id)
-        if duped_rule
-          # set the right duped one
-          rule.duped_rule_id = duped_rule.id
-          rule.save
-        end
+        # if duped_rule
+        #   # set the right duped one
+        #   rule.duped_rule_id = duped_rule.id
+        #   rule.save
+        # end
       end
 
       question.tag_list = from_duped_question.tag_list
@@ -139,6 +139,101 @@ module Hanuman
       self.questions.each do |q|
         q.set_db_column_name
       end
+    end
+
+    
+    def check_structure_helper(checked, errors, parent, i)
+      children = []
+      qs = self.questions.order(sort_order: :asc)
+      if Hanuman::Question.find(parent.id).ancestry.present?
+        curr_ancestry = Hanuman::Question.find(parent.id).ancestry + "/" + parent.id.to_s
+      else
+        curr_ancestry = parent.id.to_s
+      end
+      qs[i..-1].each_with_index do |question, j|
+        next if checked.include?(question.id)
+        checked << question.id
+        if question.descendants.present?
+          if question.answer_type_id == 57 && question.descendants.any?{|q| q.answer_type_id == 57 }
+            errors["ancestry"] << "question: #{question.id} - repeater in repeater"
+          end
+          checked += check_structure_helper(checked, errors, question, i+j+1)
+        elsif question.ancestry == curr_ancestry
+          # correct children in order
+          children << question.id
+          # remember and do nothing
+          next
+        elsif qs.where(ancestry: curr_ancestry).where.not(id: children).length > 0
+          # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
+          errors["ancestry"] << "question: #{question.id} - issue with ancestry"
+          puts "Ancestry isse with question_id: #{question.id}"
+        else
+          # successfully made it out of section
+          # do nothing
+          next
+        end
+        
+
+      end
+    end
+
+
+    def check_structure_and_rules
+      errors = {}
+      errors["condition"] = []
+      errors["rule"] = []
+      errors["ancestry"] = []
+      errors["debug"] = []
+
+      checked = []
+
+      parents = []
+      children = {}
+
+      question_ids = self.questions.map(&:id)
+      qs = self.questions.order(sort_order: :asc)
+      qs.each_with_index do |question, i|
+        next if checked.include?(question.id)
+        checked << question.id
+        # loop through rules linked to questions in the template to check that the conditions do as well
+        question.rules.each do |rule|
+          errors["rule"] << "question: #{question.id} - rule value is blank" if rule.value.blank?
+          errors["rule"] << "question: #{question.id} - rule has no conditions" if rule.conditions.length == 0
+          rule.conditions.each do |condition|
+            if !question_ids.include?(condition.question.id)
+              errors["condition"] << "question: #{condition.question.id} - condition references missing question"
+              puts "Condition references bad question_id: #{condition.question.id}"
+            end
+          end
+        end
+        # doing it both ways gives more opportunity to find bad references
+        # loop through conditions linked to questions in the template to check that the rules do as well
+        question.conditions.each do |condition|
+          errors["condition"] << "question: #{question.id} - condition answer is blank" if condition.answer.blank?
+          errors["condition"] << "question: #{question.id} - condition has no rule" if condition.rule_id.blank? # this shouldnt happen because of a validation
+          if condition.rule.present?
+            if !question_ids.include?(condition.rule.question.id)
+              errors["rule"] << "question: #{condition.question.id} - rule references missing question"
+              puts "Rule references bad question_id: #{condition.rule.question.id}"
+            end
+          end
+        end
+
+
+        # recursively check nesting for out of place ancestries
+        if question.descendants.present?
+          if question.answer_type_id == 57 && question.descendants.any?{|q| q.answer_type_id == 57 }
+            errors["ancestry"] << "question: #{question.id} - repeater in repeater"
+          end
+          checked += check_structure_helper(checked, errors, question, i+1)\
+        end
+
+
+
+      end
+
+      # puts errors.map{|e| "#{e[0]}: #{e[1]} "}
+      errors
     end
 
   end

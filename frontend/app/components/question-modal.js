@@ -165,6 +165,19 @@ export default Component.extend({
     }
   }),
 
+  processQuestionChanges: task(function* () {
+    try {
+      // We need to save the question first
+      yield this.saveTask.perform(true);
+      let question = this.question;
+      if (!question.isNew) {
+        yield question.processQuestionChanges();
+      }
+    } catch (e) {
+      console.log('Error processing question changes:', e); // eslint-disable-line no-console
+    }
+  }),
+
   saveAnswerChoiceTask: task(function*(answerChoice) {
     let question = this.get('question');
     if (question.get('isNew')) {

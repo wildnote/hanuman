@@ -143,7 +143,7 @@
                       style="height: 33px;"
                       onkeyup={{action (mut question.helperText) value="target.value"}}
                       onchange={{action (mut question.helperText) value="target.value"}}
-                      maxlength='998'>{{question.helperText}}</textarea>
+                      maxlength='255'>{{question.helperText}}</textarea>
             {{/form-field}}
           </div>
         </div>
@@ -383,6 +383,7 @@
                 ancestryQuestions=ancestryQuestions
                 hasAnAnswer=hasAnAnswer
                 ancestryChange=(action "ancestryChange")
+                processQuestionChanges=processQuestionChanges
               }}
             {{/liquid-if}}
           </section>
