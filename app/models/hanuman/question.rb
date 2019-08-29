@@ -20,8 +20,12 @@ module Hanuman
     validates :answer_type_id, presence: true
     # wait until after migration for these validations
     validates :question_text, presence: true, unless: :question_text_not_required
+    
     validates_uniqueness_of :db_column_name, scope: :survey_template_id, allow_blank: true
+    validates_format_of :db_column_name, with: /\A\w+\Z/i
     validates_uniqueness_of :api_column_name, scope: :survey_template_id, allow_blank: true
+    validates_format_of :api_column_name, with: /\A\w+\Z/i
+    
 
     # Callbacks
     after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?

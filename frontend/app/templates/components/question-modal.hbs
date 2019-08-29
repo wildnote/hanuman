@@ -148,6 +148,23 @@
           </div>
         </div>
 
+        {{#unless question.isNew}}
+          <div class="form-group">
+            <div class="col-sm-12">
+              {{#form-field for='apiColumnName' label='API Column Name'}}
+                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="API Column Name" data-content="This value will be used as the JSON key for this question by the Wildnote Developer API. Must be unique within the survey form and contain only letters, numbers, and underscores." class="bootstrap-popover">
+                  <span class="glyphicons glyphicons-info-sign"></span>
+                </a>
+                <input type="text"
+                      class="form-control"
+                      data-test="question.apiColumnName"
+                      value={{question.apiColumnName}}
+                      oninput={{action (mut question.apiColumnName) value="target.value"}} />
+              {{/form-field}}
+            </div>
+          </div>
+        {{/unless}}
+
         {{#liquid-if isPhoto}}
           <div class="form-group">
             <div class="col-sm-3">

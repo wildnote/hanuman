@@ -137,7 +137,7 @@ module Hanuman
 
     def set_question_db_column_names
       self.questions.each do |q|
-        q.set_db_column_name
+        q.set_column_names!
       end
     end
 
