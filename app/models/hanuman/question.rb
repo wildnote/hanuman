@@ -20,9 +20,12 @@ module Hanuman
     validates :answer_type_id, presence: true
     # wait until after migration for these validations
     validates :question_text, presence: true, unless: :question_text_not_required
+    validates_uniqueness_of :db_column_name, scope: :survey_template_id, allow_blank: true
+    validates_uniqueness_of :api_column_name, scope: :survey_template_id, allow_blank: true
 
     # Callbacks
     after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
+    after_create :set_column_names!
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
 
     amoeba do
@@ -236,27 +239,36 @@ module Hanuman
       message
     end
 
-
-    def set_db_column_name
-      if self.db_column_name.blank?
-        shorthand = self.question_text.strip.parameterize.underscore.gsub(/\s|:|\//, '-').truncate(16, omission: "") + "_"
-        counter = 0
-
-        taken = true
-        while taken do
-          self.survey_template.questions.each do |q|
-            begin
-              raise if q.db_column_name == shorthand + counter.to_s
-            rescue
-              counter += 1
-              retry
-            end
-          end
-          taken = false
-        end
-        self.update_column(:db_column_name, shorthand + counter.to_s)
-      end
+    def parameterized_text
+      self.question_text.strip.parameterize.underscore.gsub(/\s|:|\//, '-')
     end
-  end
 
+    def column_name
+      base_string = parameterized_text
+
+      if self.ancestry?
+        base_string.prepend(self.ancestors.map(&:parameterized_text).join("_") + "_")
+      end
+
+      if Hanuman::Question.exists?(db_column_name: base_string, survey_template_id: self.survey_template_id)
+        index = 1
+        
+        loop do
+          if Hanuman::Question.exists?(db_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
+            index += 1
+          else
+            base_string + "_#{index}"
+          end 
+        end 
+      else
+        base_string
+      end 
+    end
+
+    def set_column_names!
+      self.db_column_name = column_name 
+      self.api_column_name = column_name
+      save
+    end 
+  end
 end
