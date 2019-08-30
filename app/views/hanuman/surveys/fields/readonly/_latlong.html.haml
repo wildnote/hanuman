@@ -1,16 +1,24 @@
+- if o.answer.present? && o.latitude.blank? && o.longitude.blank? && o.answer.include?(",")
+  - latitude = o.answer.split(",")[0].strip.to_f.round(6)
+  - longitude = o.answer.split(",")[1].strip.to_f.round(6)
+- else
+  - latitude = o.latitude.to_f.round(6) if o.latitude.present?
+  - longitude = o.longitude.to_f.round(6) if o.longitude.present?
+
+
 .form-group
   .col-sm-7.col-sm-offset-5.map-container
     .hidden
-    .col-sm-12.latlong{id: "map#{o.id}", style: "width:100%; height:320px;", :"data-latlong" => o.answer, :"data-infowindow" => o.question.question_text}
+    .col-sm-12.latlong{id: "map#{o.id}", style: "width:100%; height:320px;", :"data-latlong" => "#{latitude}, #{longitude}", :"data-infowindow" => o.question.question_text}
   .clearfix
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
   .col-sm-7.latlong-in-survey-show
-    %p.form-control-static= "#{o.latitude}, #{o.longitude}"
+    %p.form-control-static= "#{latitude}, #{longitude}"
     - unless o.speed.blank?
-      %p.form-control-static= "Speed: #{o.speed} m/s" 
+      %p.form-control-static= "Speed: #{o.speed} m/s"
     - unless o.direction.blank?
-      %p.form-control-static= "Heading: #{o.direction} degrees"
+      %p.form-control-static= "Heading: #{o.direction.to_f.round(6) unless o.direction.blank?} degrees"
     - unless o.altitude.blank?
-      %p.form-control-static= "Altitude: #{o.altitude} meters"
+      %p.form-control-static= "Altitude: #{o.altitude.to_f.round(6) unless o.altitude.blank?} meters"
     - unless o.accuracy.blank?
       %p.form-control-static= "Accuracy: #{o.accuracy} meters"
