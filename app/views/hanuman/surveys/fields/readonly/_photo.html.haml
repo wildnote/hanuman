@@ -19,31 +19,30 @@
       = p.description
       %br
       %br
-      
+
       %label
         Photo geolocation data
       %br
       Coordinates:
-      =p.latitude.to_s + ","
-      =p.longitude
+      =p.latitude.to_f.round(6).to_s + ", " + p.longitude.to_f.round(6).to_s
       %br
       - unless p.speed.blank?
-        Speed: 
+        Speed:
         =p.speed
         m/s
         %br
       - unless p.direction.blank?
-        Heading: 
-        =p.direction
+        Heading:
+        =p.direction.to_f.round(6)
         degrees
         %br
       - unless p.altitude.blank?
-        Altitude: 
-        =p.altitude
+        Altitude:
+        =p.altitude.to_f.round(6)
         m
         %br
       - unless p.accuracy.blank?
-        Accuracy: 
+        Accuracy:
         =p.accuracy
         m
         %br
