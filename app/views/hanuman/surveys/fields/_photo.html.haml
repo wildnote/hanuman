@@ -29,8 +29,7 @@
             .form-group
               .col-sm-7
                 Coordinates:
-                =p.latitude.to_s + ","
-                =p.longitude
+                =p.latitude.to_f.round(6).to_s + ", " + p.longitude.to_f.round(6).to_s
               - unless p.speed.blank?
                 .col-sm-7
                   Speed:
@@ -39,12 +38,12 @@
               - unless p.direction.blank?
                 .col-sm-7
                   Heading:
-                  =p.direction
+                  =p.direction.to_f.round(6)
                   degrees
               - unless p.altitude.blank?
                 .col-sm-7
                   Altitude:
-                  =p.altitude
+                  =p.altitude.to_f.round(6)
                   m
               - unless p.accuracy.blank?
                 .col-sm-7
@@ -52,7 +51,7 @@
                   =p.accuracy
                   m
 
-            - 
+            -
             = fff.label :"Photo sort order"
             .form-group
               .col-sm-7
