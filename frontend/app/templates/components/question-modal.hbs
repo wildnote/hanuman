@@ -259,7 +259,7 @@
                 <div class="col-md-12">
                   <div class="table-responsive">
                     <table class="table table-hover">
-                      <tbody>
+                      {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction=(action 'sortAnswerChoices') enableSort=true useSwap=true}}
                         {{#each answerChoicesToShow as |answerChoice|}}
                           {{answer-choice-row
                             content=answerChoice
@@ -267,10 +267,11 @@
                             saveParentTask=saveAnswerChoiceTask
                             answerChoice=answerChoice
                             isNewAnswerChoice=false
+                            isSortable=true
                           }}
                         {{/each}}
                         {{answer-choice-row question=question saveParentTask=saveAnswerChoiceTask isNewAnswerChoice=true}}
-                      </tbody>
+                      {{/sortable-objects-tbody}}
                     </table>
                   </div>
                 </div>
