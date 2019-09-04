@@ -108,5 +108,21 @@ module Hanuman
       end
     end
 
+    def children
+      if question.answer_type.element_type == "container"
+        o_ids = []
+        question.children.joins(:observations).where("hanuman_observations.survey_id = #{survey_id}").each do |q|
+          if repeater_id.present?
+            o_ids << q.observations.where("hanuman_observations.survey_id = #{survey_id} AND hanuman_observations.parent_repeater_id = #{repeater_id}").first.id
+          else
+            o_ids << q.observations.where("hanuman_observations.survey_id = #{survey_id}").first.id
+          end
+        end
+        return Hanuman::Observation.where(id: o_ids)
+      else
+        nil
+      end
+    end
+
   end
 end
