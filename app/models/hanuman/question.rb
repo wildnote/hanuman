@@ -258,7 +258,6 @@ module Hanuman
       end
     end
 
-
     def update_css_style(style_string)
       ### method to update css style to avoid accidentally losing styling, and to make upating the style easier
 
@@ -322,6 +321,13 @@ module Hanuman
       else
         puts "does not appear to be valid css, check syntax and try again"
       end
+    end
+
+    def display_css_style
+      ### better display of style to help when coding/styling
+
+      # split at semicolon but keep delimeter
+      css_style.split(/(?<=[;])/)
     end
   end
 
