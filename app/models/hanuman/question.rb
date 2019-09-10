@@ -24,6 +24,7 @@ module Hanuman
     # Callbacks
     after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
+    after_save :format_css_style, if: :css_style_changed?
 
     amoeba do
       include_association :rules
@@ -57,6 +58,12 @@ module Hanuman
     # adding this method so I can check it before calling the job to process question changes on observations to try and decrease the number of 404 errors coming through
     def survey_template_not_fully_editable_or_sort_order_changed?
       survey_template_not_fully_editable? && sort_order_changed?
+    end
+
+    def format_css_style
+      if self.css_style.present?
+        self.update_column(:css_style, self.css_style.gsub("\n", ""))
+      end
     end
 
       # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
