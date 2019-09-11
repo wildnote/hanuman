@@ -64,7 +64,7 @@ export default Model.extend(Validator, {
 
   cssStyleDisplay: computed('cssStyle', function () {
     let styleString = this.get('cssStyle') || '';
-    return styleString.split(/(?<=\;)/).join("\n");
+    return styleString.split(';').join(";\n");
   }),
 
   tags: computed('tagList', function() {
