@@ -269,7 +269,7 @@ module Hanuman
       ### method to update css style to avoid accidentally losing styling, and to make upating the style easier
 
       # regex to match the basic formatting of css attribute lines
-      regex = %r([A-Za-z\- ]+[:][\s]*[\w .\/()\-!%]+;)
+      regex = %r([A-Za-z\- ]+[:][\s#]*[\w .\/()\-!%]+;)
       valid_string = style_string.scan(regex).join
 
       new_matches = style_string.scan(regex)
