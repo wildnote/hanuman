@@ -261,7 +261,7 @@ module Hanuman
           if Hanuman::Question.exists?(db_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
             index += 1
           else
-            base_string + "_#{index}"
+            return base_string + "_#{index}"
           end 
         end 
       else
