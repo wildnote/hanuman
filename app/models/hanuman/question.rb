@@ -197,7 +197,7 @@ module Hanuman
       self.rules.each do |rule|
         rule.conditions.each do |condition|
           new_condition = condition.amoeba_dup
-          new_condition.rule = new_q.rules.find_by(duped_rule_id: rule.id)
+          new_condition.rule = new_section_q.rules.find_by(duped_rule_id: rule.id)
           new_condition.save
         end
       end
