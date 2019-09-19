@@ -41,6 +41,7 @@ export default Model.extend(Validator, {
   defaultAnswer: attr('string'),
   exportContinuationCharacters: attr('number'),
   dbColumnName: attr('string'),
+  cssStyle: attr('string'),
 
   // Associations
   dataSource: belongsTo('data-source'),
@@ -60,6 +61,11 @@ export default Model.extend(Validator, {
 
   supportAncestry: match('answerType.name', /section|repeater/),
   isTaxonType: match('answerType.name', /taxon/),
+
+  cssStyleDisplay: computed('cssStyle', function () {
+    let styleString = this.get('cssStyle') || '';
+    return styleString.split(';').join(";\n");
+  }),
 
   tags: computed('tagList', function() {
     let tagList = this.get('tagList') || '';
