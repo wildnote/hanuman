@@ -119,6 +119,15 @@
   </div>
 </div>
 
+<div class="form-group">
+  <div class="col-sm-12">
+    {{#form-field for='cssStyle' label='CSS Style'}}
+      <textarea style="height: 200px;" class="form-control" data-test="question.cssStyle"
+        oninput={{action (mut question.cssStyle) value="target.value"}}>{{question.cssStyleDisplay}}</textarea>
+    {{/form-field}}
+  </div>
+</div>
+
 {{#if hasAnAnswer}}
   <div class="form-group">
     <div class="col-sm-12">
