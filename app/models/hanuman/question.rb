@@ -24,6 +24,7 @@ module Hanuman
     # Callbacks
     after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
+    after_save :format_css_style, if: :css_style_changed?
 
     amoeba do
       include_association :rules
@@ -57,6 +58,12 @@ module Hanuman
     # adding this method so I can check it before calling the job to process question changes on observations to try and decrease the number of 404 errors coming through
     def survey_template_not_fully_editable_or_sort_order_changed?
       survey_template_not_fully_editable? && sort_order_changed?
+    end
+
+    def format_css_style
+      if self.css_style.present?
+        self.update_column(:css_style, self.css_style.gsub("\n", ""))
+      end
     end
 
       # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
@@ -256,6 +263,78 @@ module Hanuman
         end
         self.update_column(:db_column_name, shorthand + counter.to_s)
       end
+    end
+
+    def update_css_style(style_string)
+      ### method to update css style to avoid accidentally losing styling, and to make upating the style easier
+
+      # regex to match the basic formatting of css attribute lines
+      regex = %r([A-Za-z\- ]+[:][\s#]*[\w .\/()\-!%]+;)
+      valid_string = style_string.scan(regex).join
+
+      new_matches = style_string.scan(regex)
+      if valid_string == style_string
+        if css_style.present?
+          old_matches = css_style.scan(regex)
+          old_hash = {}
+          new_hash = {}
+
+          # build hashes of existing style attributes and proposed additions to avoid having dup entries
+          old_matches.each do |m|
+            m = m.to_s
+            old_hash[m.split(':')[0]] = m.split(':')[1]
+          end
+
+          new_matches.each do |m|
+            m = m.to_s
+            new_hash[m.split(':')[0]] = m.split(':')[1]
+          end
+
+          # concatonate all changes to update column value
+          new_style_string = ""
+
+          # keep track of newly updated attributes
+          updated = []
+
+          new_hash.each do |k,v|
+            if old_hash[k].present?
+              # update attribute case
+              new_style_string += "#{k.to_s}:#{new_hash[k].to_s}"
+              updated << k
+              puts "updating attribute #{k}:#{old_hash[k]} to #{k}:#{new_hash[k]}"
+            else
+              # new attribute case
+              new_style_string += "#{k.to_s}:#{new_hash[k].to_s}"
+              puts "new attribute #{k}:#{new_hash[k]}"
+            end
+          end
+
+          old_hash.each do |k,v|
+            if !updated.include?(k)
+              # if not updated include old value in new style
+              new_style_string += "#{k.to_s}:#{old_hash[k].to_s}"
+              puts "unchanged attribute #{k}:#{old_hash[k]}"
+            end
+          end
+          
+
+          self.css_style = new_style_string
+          self.save
+        else
+          self.css_style = valid_string
+          self.save
+          puts "newly added style"
+        end
+      else
+        puts "does not appear to be valid css, check syntax and try again"
+      end
+    end
+
+    def display_css_style
+      ### better display of style to help when coding/styling
+
+      # split at semicolon but keep delimeter
+      css_style.split(/(?<=[;])/)
     end
   end
 
