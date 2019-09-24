@@ -236,5 +236,11 @@ module Hanuman
       errors
     end
 
+    def set_question_css_styles(style)
+      questions.each do |q|
+        q.update(css_style: style)
+      end
+    end
+
   end
 end
