@@ -16,7 +16,7 @@
         - else
           = image_tag("file-icon.png")
         %br
-        = link_to d.document.my_public_id + "." + d.document.format + " | download file", cloudinary_url(d.document.url, attachment: true, resource_type: :raw, :sign_url => true), html_options = { download: true }
+        = link_to d.document.my_public_id + "." + d.document.format + " | download file", cloudinary_url(d.document, attachment: true, :sign_url => true), html_options = { download: true }
         %br
         %br
       %label

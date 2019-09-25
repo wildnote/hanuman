@@ -175,8 +175,11 @@ module Hanuman
       descendants_qs.each do |q|
         new_child_q = q.dup_and_save
 
+        new_child_parent = new_section_q.descendants.find_by(duped_question_id: q.parent.id) || new_section_q
+        new_child_parent.save
+
         # Update ancestry relationship dynamically
-        new_child_q.parent = new_section_q.descendants.find_by(duped_question_id: q.parent.id) || new_section_q
+        new_child_q.parent = new_child_parent
 
         # set sort_order
         new_child_q.sort_order = new_child_q.sort_order + increment_sort_by
@@ -197,7 +200,7 @@ module Hanuman
       self.rules.each do |rule|
         rule.conditions.each do |condition|
           new_condition = condition.amoeba_dup
-          new_condition.rule = new_q.rules.find_by(duped_rule_id: rule.id)
+          new_condition.rule = new_section_q.rules.find_by(duped_rule_id: rule.id)
           new_condition.save
         end
       end

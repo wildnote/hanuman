@@ -1,4 +1,10 @@
 $ ->
+  if $(".panel-observation").length > 0
+    $(".panel-observation").each( (index, element) ->
+        question_id = $(element).attr('data-question-id');
+        $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_" + (index + 1))
+        $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_" + (index + 1))
+      )
 
   # TYPEAHEAD
   if $(".typeahead").length > 0
