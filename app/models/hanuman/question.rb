@@ -285,6 +285,11 @@ module Hanuman
       save
     end 
 
+    def set_api_column_name!
+      self.api_column_name = column_name
+      save
+    end
+
     def update_css_style(style_string)
       ### method to update css style to avoid accidentally losing styling, and to make upating the style easier
 

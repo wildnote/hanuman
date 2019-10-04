@@ -141,6 +141,11 @@ module Hanuman
       end
     end
 
+    def set_question_api_column_names
+      self.questions.each do |q|
+        q.set_api_column_name!
+      end
+    end
     
     def check_structure_helper(checked, errors, parent, i)
       children = []
