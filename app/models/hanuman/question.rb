@@ -21,7 +21,7 @@ module Hanuman
     # wait until after migration for these validations
     validates :question_text, presence: true, unless: :question_text_not_required
 
-    validates_uniqueness_of :db_column_name, scope: :survey_template_id, allow_blank: true
+    # validates_uniqueness_of :db_column_name, scope: :survey_template_id, allow_blank: true
     validates_format_of :db_column_name, with: /\A\w+\Z/i, allow_blank: true
     validates_uniqueness_of :api_column_name, scope: :survey_template_id, allow_blank: true
     validates_format_of :api_column_name, with: /\A\w+\Z/i, allow_blank: true
@@ -264,11 +264,11 @@ module Hanuman
         base_string.prepend(self.ancestors.map(&:parameterized_text).join("_") + "_")
       end
 
-      if Hanuman::Question.exists?(db_column_name: base_string, survey_template_id: self.survey_template_id)
+      if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
         
         loop do
-          if Hanuman::Question.exists?(db_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
+          if Hanuman::Question.exists?(api_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
             index += 1
           else
             return base_string + "_#{index}"
