@@ -41,6 +41,7 @@ export default Model.extend(Validator, {
   defaultAnswer: attr('string'),
   exportContinuationCharacters: attr('number'),
   dbColumnName: attr('string'),
+  apiColumnName: attr('string'),
   cssStyle: attr('string'),
 
   // Associations
