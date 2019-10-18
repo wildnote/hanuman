@@ -33,35 +33,35 @@
           </div>
 
           <div class="selected-questions-actions">
-            {{#if isSuperUser}}
-              <button data-test-open-tagging-modal onclick={{action 'openTaggingModal'}} style="margin-right: 4px;">
-                <span class="glyphicons glyphicons-bookmark"></span>
-                <span style="margin-left: 4px;">Tag </span>
+            <button data-test-open-tagging-modal onclick={{action 'openTaggingModal'}} style="margin-right: 4px;">
+              <span class="glyphicons glyphicons-bookmark"></span>
+              <span style="margin-left: 4px;">Tag </span>
+            </button>
+            {{#liquid-unless surveyTemplate.lock}}
+              <button onclick={{action (toggle "showConfirmDeletion" this)}} class="{{if deleteQuestionsTask.isRunning "disabled"}}" style="margin-right: 4px;">
+                {{#liquid-if deleteQuestionsTask.isRunning}}
+                  <span class="glyphicons glyphicons-repeat gly-spin"></span>
+                  <span style="margin-left: 4px;">Deleting...</span>
+                {{else}}
+                  <span class="glyphicons glyphicons-bin"></span>
+                  <span style="margin-left: 4px;">Delete</span>
+                {{/liquid-if}}
               </button>
-            {{/if}}
-            <button onclick={{action (toggle "showConfirmDeletion" this)}} class="{{if deleteQuestionsTask.isRunning "disabled"}}" style="margin-right: 4px;">
-              {{#liquid-if deleteQuestionsTask.isRunning}}
-                <span class="glyphicons glyphicons-repeat gly-spin"></span>
-                <span style="margin-left: 4px;">Deleting...</span>
-              {{else}}
-                <span class="glyphicons glyphicons-bin"></span>
-                <span style="margin-left: 4px;">Delete</span>
-              {{/liquid-if}}
-            </button>
-            <button onclick={{perform duplicateQuestionsTask}} class="{{if duplicateQuestionsTask.isRunning "disabled"}}">
-              {{#tooltip-on-element duration=4500 side='bottom'}}
-                Conditional logic will be also cloned. Check the cloned questions in case you need to re-map.
-              {{/tooltip-on-element}}
-              {{#liquid-if duplicateQuestionsTask.isRunning}}
-                <span class="glyphicons glyphicons-repeat gly-spin"></span>
-                <span style="margin-left: 4px;">Cloning...</span>
-              {{else}}
-                <span class="glyphicons glyphicons-duplicate"></span>
-                <span style="margin-left: 4px;">
-                  Clone
-                </span>
-              {{/liquid-if}}
-            </button>
+              <button onclick={{perform duplicateQuestionsTask}} class="{{if duplicateQuestionsTask.isRunning "disabled"}}">
+                {{#tooltip-on-element duration=4500 side='bottom'}}
+                  Conditional logic will be also cloned. Check the cloned questions in case you need to re-map.
+                {{/tooltip-on-element}}
+                {{#liquid-if duplicateQuestionsTask.isRunning}}
+                  <span class="glyphicons glyphicons-repeat gly-spin"></span>
+                  <span style="margin-left: 4px;">Cloning...</span>
+                {{else}}
+                  <span class="glyphicons glyphicons-duplicate"></span>
+                  <span style="margin-left: 4px;">
+                    Clone
+                  </span>
+                {{/liquid-if}}
+              </button>
+            {{/liquid-unless}}
           </div>
           {{#if showConfirmDeletion}}
             <div class="delete-confirm top-level">

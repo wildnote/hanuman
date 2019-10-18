@@ -137,10 +137,15 @@ module Hanuman
 
     def set_question_db_column_names
       self.questions.each do |q|
-        q.set_db_column_name
+        q.set_column_names!
       end
     end
 
+    def set_question_api_column_names
+      self.questions.each do |q|
+        q.set_api_column_name!
+      end
+    end
     
     def check_structure_helper(checked, errors, parent, i)
       children = []
