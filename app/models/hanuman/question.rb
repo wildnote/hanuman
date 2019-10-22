@@ -23,7 +23,7 @@ module Hanuman
 
     # validates_uniqueness_of :db_column_name, scope: :survey_template_id, allow_blank: true
     validates_format_of :db_column_name, with: /\A\w+\Z/i, allow_blank: true
-    validates_uniqueness_of :api_column_name, scope: :survey_template_id, allow_blank: true
+    # validates_uniqueness_of :api_column_name, scope: :survey_template_id, allow_blank: true
     validates_format_of :api_column_name, with: /\A\w+\Z/i, allow_blank: true
     
 
