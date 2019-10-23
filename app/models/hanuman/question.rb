@@ -280,13 +280,13 @@ module Hanuman
     end
 
     def set_column_names!
-      self.db_column_name = column_name 
-      self.api_column_name = column_name
+      self.db_column_name = column_name if self.db_column_name.blank?
+      self.api_column_name = column_name if self.api_column_name.blank?
       save
     end 
 
     def set_api_column_name!
-      self.api_column_name = column_name
+      self.api_column_name = column_name if self.api_column_name.blank?
       save
     end
 
