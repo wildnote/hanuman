@@ -75,7 +75,7 @@
     "terser": "3.10.12"
   },
   "engines": {
-    "node": "8.* || >= 10.*"
+    "node": "8.* || 10.*"
   },
   "resolutions": {
     "broccoli-uglify-sourcemap": "2.2.0",
