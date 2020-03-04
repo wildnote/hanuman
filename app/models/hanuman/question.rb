@@ -282,11 +282,23 @@ module Hanuman
 
     def column_name
       base_string = parameterized_text
-
+      if base_string.length > 60
+        base_string = base_string[0..59]
+      end
       if self.ancestry?
-        base_string.prepend(self.ancestors.map(&:parameterized_text).join("_") + "_")
+        base_plus_parent = base_string
+        self.ancestors.order(sort_order: :desc).each do |a|
+          base_plus_parent = (a.parameterized_text + "_") + base_plus_parent
+          if base_plus_parent.length > 60
+            break
+          else 
+            base_string = base_plus_parent
+          end
+        end
       end
 
+      puts "good string" + base_string
+      
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
         
