@@ -296,8 +296,6 @@ module Hanuman
           end
         end
       end
-
-      puts "good string" + base_string
       
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
