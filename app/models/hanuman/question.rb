@@ -297,6 +297,7 @@ module Hanuman
         end
       end
       
+      # checking for duplicate api_column_names and incrementing index by 1
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
         
