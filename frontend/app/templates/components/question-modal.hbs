@@ -234,7 +234,7 @@
           </div>
         {{/if}}
 
-        {{#if (and isSuperUser question.isTextField) }}
+        {{#if (and isSuperUser (or question.isTextField question.isLocationSelect)) }}
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
