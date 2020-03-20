@@ -6,7 +6,11 @@
   .col-sm-7.col-sm-offset-5.map-container.hidden
     .hidden
     -# the id of the map div must be unique for the mapping js to work, using index to get uniqueness
-    .col-sm-12.latlong{id: "map_#{index}", style: "width:100%; height:320px;", :"data-latlong" => [ff.object.latitude, ff.object.longitude].join(","), :"data-infowindow" => ff.object.question.question_text, :"data-answer" => "#{o.answer}"}
+    - if "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" != o.answer
+      .col-sm-12.latlong{id: "map_#{index}", style: "width:100%; height:320px;", :"data-latlong" => [ff.object.latitude, ff.object.longitude].join(","), :"data-infowindow" => ff.object.question.question_text, :"data-answer" => "#{o.answer}"}
+    - else
+      .col-sm-12.latlong{id: "map_#{index}", style: "width:100%; height:320px;", :"data-latlong" => [ff.object.latitude, ff.object.longitude].join(","), :"data-infowindow" => ff.object.question.question_text}
+
     .helper-text.helperbelow
       %p
     .map-buttons
@@ -23,8 +27,8 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
 
   .col-sm-4.lat-long-input
-    - if "#{o.latitude.to_f.round(6)}, #{o.longitude.to_f.round(6)}" != o.answer
-      %p.form-control-static= "#{o.latitude.to_f.round(6)}, #{o.longitude.to_f.round(6)} - YELLOW POINT (o.latitude and o.longitude)"
+    - if "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" != o.answer
+      %p.form-control-static= "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)} - YELLOW POINT (o.latitude and o.longitude)"
       %p.form-control-static= "#{o.answer} - BLUE POINT (o.answer)"
     = ff.text_field :latitude, class: "form-control lat-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Latitude"
     = ff.text_field :longitude, class: "form-control long-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Longitude"
