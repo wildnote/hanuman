@@ -9,11 +9,13 @@
 .form-group
   .col-sm-7.col-sm-offset-5.map-container
     .hidden
-    .col-sm-12.latlong{id: "map#{o.id}", style: "width:100%; height:320px;", :"data-latlong" => "#{latitude}, #{longitude}", :"data-infowindow" => o.question.question_text}
+    .col-sm-12.latlong{id: "map#{o.id}", style: "width:100%; height:320px;", :"data-latlong" => "#{latitude}, #{longitude}", :"data-infowindow" => o.question.question_text, :"data-answer" => "#{o.answer}"}
   .clearfix
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
   .col-sm-7.latlong-in-survey-show
-    %p.form-control-static= "#{latitude}, #{longitude}"
+    %p.form-control-static= "#{latitude}, #{longitude}-variable"
+    %p.form-control-static= "#{o.latitude}, #{o.longitude}-lat and long yellow"
+    %p.form-control-static= "#{o.answer}-answer blue"
     - unless o.speed.blank?
       %p.form-control-static= "Speed: #{o.speed} m/s"
     - unless o.direction.blank?
