@@ -23,8 +23,9 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
 
   .col-sm-4.lat-long-input
-    %p.form-control-static= "#{o.latitude}, #{o.longitude}-lat and long yellow"
-    %p.form-control-static= "#{o.answer}-answer blue"
+    - if "#{o.latitude.to_f.round(6)}, #{o.longitude.to_f.round(6)}" != o.answer
+      %p.form-control-static= "#{o.latitude.to_f.round(6)}, #{o.longitude.to_f.round(6)} - YELLOW POINT (o.latitude and o.longitude)"
+      %p.form-control-static= "#{o.answer} - BLUE POINT (o.answer)"
     = ff.text_field :latitude, class: "form-control lat-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Latitude"
     = ff.text_field :longitude, class: "form-control long-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Longitude"
     = ff.text_field :speed, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Speed (m/s)"

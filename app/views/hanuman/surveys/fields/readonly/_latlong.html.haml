@@ -13,9 +13,11 @@
   .clearfix
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
   .col-sm-7.latlong-in-survey-show
-    %p.form-control-static= "#{latitude}, #{longitude}-variable"
-    %p.form-control-static= "#{o.latitude}, #{o.longitude}-lat and long yellow"
-    %p.form-control-static= "#{o.answer}-answer blue"
+    - if "#{o.latitude.to_f.round(6)}, #{o.longitude.to_f.round(6)}" != o.answer
+      %p.form-control-static= "#{o.latitude.to_f.round(6)}, #{o.longitude.to_f.round(6)} - YELLOW POINT (o.latitude and o.longitude)"
+      %p.form-control-static= "#{o.answer} - BLUE POINT (o.answer)"
+
+    %p.form-control-static= "#{latitude}, #{longitude}"
     - unless o.speed.blank?
       %p.form-control-static= "Speed: #{o.speed} m/s"
     - unless o.direction.blank?
