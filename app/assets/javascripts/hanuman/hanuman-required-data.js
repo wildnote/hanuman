@@ -1,11 +1,9 @@
 $(document).ready(function(){
-
   //  validates all survey forms for date inputs and forms with required fields.
   $('form').parsley({ excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], input[type=number]' } )
 
   // this event listener waits one second after user clicks on submit button so that parsley has enough time to add error elements if needed
   if ($('form.parsley-survey').length > 0 && $('[data-required=true]').length > 0) {
-
     $('input[type="submit"]').on('click', function(){
       //  this code runs through all the file inputs on survey edit and removes the parsley attrs if the inputs  already have an upload.
       //  if we dont have this code, then the survey will not save because parsley will think the input file is empty.
@@ -23,7 +21,7 @@ $(document).ready(function(){
       setTimeout(function(){
         multiSelectParsleyStyle();
         singleSelectParsleyStyle();
-        validateLatLongAndPickers()
+        validateLatLongAndPickers();
       }, 200);
     });
 
