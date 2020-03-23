@@ -27,8 +27,8 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
 
   .col-sm-4.lat-long-input
-    - if "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" != o.answer
-      
+    - if o.answer? && "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" != o.answer
+      -# - puts o.latitude.to_f.round(6) o.longitude.to_f.round(6)
       %p.form-control-static= "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)} - YELLOW POINT (o.latitude and o.longitude)"
       .btn.btn-primary.updateLatLong{:"data-lat-long" => "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" } Yellow
       %p.form-control-static= "#{o.answer} - BLUE POINT (o.answer)"

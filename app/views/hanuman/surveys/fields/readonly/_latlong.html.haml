@@ -17,7 +17,7 @@
   .clearfix
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
   .col-sm-7.latlong-in-survey-show
-    - if "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" != o.answer
+    - if o.answer? && "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" != o.answer
       %p.form-control-static= "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)} - YELLOW POINT (o.latitude and o.longitude)"
       %p.form-control-static= "#{o.answer} - BLUE POINT (o.answer)"
 
