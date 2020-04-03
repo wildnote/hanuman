@@ -27,12 +27,13 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
 
   .col-sm-4.lat-long-input
-    - if o.answer? && "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" != o.answer
-      -# - puts o.latitude.to_f.round(6) o.longitude.to_f.round(6)
-      %p.form-control-static= "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)} - YELLOW POINT (o.latitude and o.longitude)"
-      .btn.btn-primary.updateLatLong{:"data-lat-long" => "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" } Yellow
-      %p.form-control-static= "#{o.answer} - BLUE POINT (o.answer)"
-      .btn.btn-primary.updateLatLong{:"data-lat-long" => "#{o.answer}"} Blue
+    - if current_user.superuser
+      - if o.answer? && "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" != o.answer
+        -# - puts o.latitude.to_f.round(6) o.longitude.to_f.round(6)
+        %p.form-control-static= "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)} - YELLOW POINT (o.latitude and o.longitude)"
+        .btn.btn-primary.updateLatLong{:"data-lat-long" => "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" } Yellow
+        %p.form-control-static= "#{o.answer} - BLUE POINT (o.answer)"
+        .btn.btn-primary.updateLatLong{:"data-lat-long" => "#{o.answer}"} Blue
     = ff.text_field :latitude, class: "form-control lat-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Latitude"
     = ff.text_field :longitude, class: "form-control long-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Longitude"
     = ff.text_field :speed, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Speed (m/s)"
