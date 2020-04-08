@@ -28,9 +28,9 @@ module Hanuman
     
 
     # Callbacks
-    after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
+    after_commit :process_question_changes_on_observations, only: [:create, :update] #, if: :survey_template_not_fully_editable?
     after_create :set_column_names!
-    after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
+    # after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
     after_save :format_css_style, if: :css_style_changed?
 
     amoeba do
@@ -87,25 +87,21 @@ module Hanuman
       surveys = survey_template.surveys
       surveys.each do |s|
         if parent.blank?
-          Observation.create_with(
-            answer: ''
-          ).find_or_create_by(
+          o = Hanuman::Observation.find_or_create_by(
             survey_id: s.id,
             question_id: question.id,
-            entry: 1
+            parent_repeater_id: nil
           )
         # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
         else
           s.observations.where(question_id: parent.id).each do |o|
-            Hanuman::Observation.create_with(
-              answer: ''
-            ).find_or_create_by(
+            o = Hanuman::Observation.find_or_create_by(
               survey_id: s.id,
               question_id: question.id,
-              entry: o.entry,
               parent_repeater_id: o.repeater_id
             )
           end
+          self.observations.where(parent_repeater_id: nil).destroy_all
         end
 
         s.update_column(:observations_sorted, false)
