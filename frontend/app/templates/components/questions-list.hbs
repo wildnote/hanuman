@@ -17,12 +17,12 @@
         </p>
         </div>
       {{else}}
-        {{#unless surveyTemplate.fullyEditable}}
+        {{!-- {{#unless surveyTemplate.fullyEditable}}
           <div class="panel-success helper-text">
             <p><b>This survey form has existing data.</b></p>
             <p>You cannot add or delete questions to survey forms with previously submitted data. To add or delete a question duplicate this survey form from the Survey Form Details tab and make your changes to the new version of the form.</p>
           </div>
-        {{/unless}}
+        {{/unless}} --}}
       {{/if}}
 
       {{#if (gt selectedQuestions.length 0)}}
@@ -160,7 +160,7 @@
         {{/sortable-group}}
 
         {{!-- Add new question --}}
-        <ul class="sortable ui-sortable ember-view add-new-question {{if (and (or surveyTemplate.lock (not surveyTemplate.fullyEditable)) (not isSuperUser)) 'icon-disabled'}}">
+        <ul class="sortable ui-sortable ember-view add-new-question {{if (and (or surveyTemplate.lock) (not isSuperUser)) 'icon-disabled'}}">
           {{#link-to "survey_templates.record.questions.new"}}
             <li class="li-question row question-border question-border-add-row item">
               <span class="glyphicons glyphicons-plus-sign"></span>

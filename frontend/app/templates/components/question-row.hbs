@@ -13,14 +13,14 @@
         </span>
       {{/if}}
       {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
-        <span class="glyphicons glyphicons-sorting {{if (and (or question.surveyTemplate.lock (not isFullyEditable)) (not isSuperUser)) 'icon-disabled'}} {{if question.loading 'hide'}}">
+        <span class="glyphicons glyphicons-sorting {{if (and question.surveyTemplate.lock (not isSuperUser)) 'icon-disabled'}} {{if question.loading 'hide'}}">
           {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
         </span>
       {{else}}
         <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
       {{/if}}
       {{#if (and (not ancestrable) (not isSelected))}}
-        <span class="glyphicons glyphicons-move-square {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'icon-disabled'}} {{if question.loading 'hide'}}">
+        <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
           {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
         </span>
       {{/if}}
@@ -108,7 +108,7 @@
       Edit
     {{/link-to}}
     {{#if (not ancestrable)}}
-      <a class="btn btn-delete {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'disabled'}}" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
+      <a class="btn btn-delete {{if question.surveyTemplate.lock 'disabled'}}" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
         <span class="glyphicons glyphicons-bin"></span>
       </a>
     {{else}}

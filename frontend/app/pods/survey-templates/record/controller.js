@@ -10,7 +10,7 @@ export default Controller.extend({
 
   updateSortOrderTask: task(function*(questions, reSort = false) {
 
-    if (!this._checkDragOutRepeater(questions)) {
+    if (!this.get('surveyTemplate').isFullyEditable && !this._checkDragOutRepeater(questions)) {
       alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
       return;
     }

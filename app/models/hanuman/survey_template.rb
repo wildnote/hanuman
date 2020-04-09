@@ -36,7 +36,6 @@ module Hanuman
     # a survey template
     def fully_editable
       num_reports_submitted < 1 ? true : false
-      true
     end
 
     # after duplicating the survey template remap ancestry and rule information
