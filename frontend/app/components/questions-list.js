@@ -111,6 +111,12 @@ export default Component.extend({
 
   setAncestryTask: task(function*(question, opts) {
     let ancestryQuestion = opts.target.acenstry;
+
+    if (!this.get('surveyTemplate').isfullyEditable && question.get("parentId") > 0) {
+      alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
+      return;
+    }
+
     if (ancestryQuestion.collapsed) {
       this.get('collapsible').toggleCollapsed(ancestryQuestion);
       yield waitForProperty(ancestryQuestion, 'pendingRecursive', (v) => v === 0);
