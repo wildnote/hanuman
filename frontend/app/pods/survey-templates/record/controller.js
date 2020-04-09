@@ -9,6 +9,12 @@ export default Controller.extend({
   projectId: window.location.href.split('/')[6],
 
   updateSortOrderTask: task(function*(questions, reSort = false) {
+
+    if (!this._checkDragOutRepeater(questions)) {
+      alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
+      return;
+    }
+
     let lastSortOrder = 0;
     let surveyTemplate = this.get('surveyTemplate');
     let ids = [];
@@ -39,9 +45,67 @@ export default Controller.extend({
       lastSortOrder = newSortOrder;
       ids.push(question.get('id'));
     }
+
     yield surveyTemplate.resortQuestions({ ids });
     this._checkAncestryConsistency(questions);
   }),
+
+  _checkDragOutRepeater(questions) {
+    let fakeQuestions = [];
+    questions.forEach(function(question) {
+      let fakeQuestion = {
+        'id': question.get('id'),
+        'sortOrder': question.get('sortOrder'),
+        'parentId': question.get('parentId'),
+      };
+      fakeQuestions.push(fakeQuestion);
+    });
+
+    let lastSortOrder = 0;
+    // Re-sort
+    // fakeQuestions.sort(function (q1, q2) {
+    //   let q1Sort = q1['sortOrder'];
+    //   let q2Sort = q2['sortOrder'];
+    //   if (q1Sort === q2Sort) {
+    //     return q1['parentId'] === q2['id'] ? 1 : -1;
+    //   } else {
+    //     return q1Sort - q2Sort;
+    //   }
+    // });
+    for (let index = 0; index < fakeQuestions.length; index++) {
+      let question = fakeQuestions.objectAt(index);
+      let oldSortOrder = question['sortOrder'];
+      let newSortOrder = index + 1;
+
+      if (lastSortOrder === newSortOrder) {
+        newSortOrder++;
+      }
+      if (oldSortOrder !== newSortOrder) {
+        question['sortOrder'] = newSortOrder;
+      }
+      lastSortOrder = newSortOrder;
+      console.log(question);
+    }
+
+
+    let pass = true;
+    fakeQuestions.forEach(function (question) {
+      if (isPresent(question['parentId'])) {
+        let parentId = question['parentId'];
+        let parent = fakeQuestions.findBy('id', parentId);
+        let sortOrder = question['sortOrder'];
+
+        // if (isBlank(parent)) {
+        //   pass = true;
+        // }
+
+        if (parent['sortOrder'] > sortOrder) {
+          pass = false;
+        }
+      }
+    });
+    return pass;
+  },
 
   _checkAncestryConsistency(questions) {
     questions.forEach(function(question) {
