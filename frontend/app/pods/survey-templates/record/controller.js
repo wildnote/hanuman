@@ -8,9 +8,18 @@ export default Controller.extend({
   hasProjectId: window.location.href.indexOf('/projects/') !== -1,
   projectId: window.location.href.split('/')[6],
 
-  updateSortOrderTask: task(function*(questions, reSort = false) {
+  updateSortOrderTask: task(function*(questions, reSort = false, ancestryQuestion = null) {
+    let section;
+    if (ancestryQuestion) {
+      console.log("############");
+      console.log(ancestryQuestion.get('answerType'));
+      section = ancestryQuestion.get('answerType').get('name') === 'section';
+    } else {
+      section = false;
+    }
 
-    if (!this.get('surveyTemplate').isFullyEditable && !this._checkDragOutRepeater(questions)) {
+    // dragging out of repeater to top level by ordering it ahead of repeater
+    if (!this.get('surveyTemplate').isFullyEditable && !this._checkDragOutRepeater(questions) && !section) {
       alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
       return;
     }
