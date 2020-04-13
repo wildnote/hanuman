@@ -11,8 +11,6 @@ export default Controller.extend({
   updateSortOrderTask: task(function*(questions, reSort = false, ancestryQuestion = null) {
     let section;
     if (ancestryQuestion) {
-      console.log("############");
-      console.log(ancestryQuestion.get('answerType'));
       section = ancestryQuestion.get('answerType').get('name') === 'section';
     } else {
       section = false;
@@ -20,6 +18,7 @@ export default Controller.extend({
 
     // dragging out of repeater to top level by ordering it ahead of repeater
     if (!this.get('surveyTemplate').isFullyEditable && !this._checkDragOutRepeater(questions) && !section) {
+      console.log('UPDATE SORT ORDER TASK');
       alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
       return;
     }

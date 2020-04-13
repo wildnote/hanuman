@@ -112,8 +112,22 @@ export default Component.extend({
   setAncestryTask: task(function*(question, opts) {
     let ancestryQuestion = opts.target.acenstry;
 
+    let fromQuestion;
+    if (question.get('parentId')) {
+      let parentId = question.get('parentId');
+      fromQuestion = this.get('sortedQuestions').findBy('id', parentId);
+    }
+
+    let section;
+    if (fromQuestion) {
+      section = fromQuestion.get('answerType').get('name') === 'section';
+    } else {
+      section = false;
+    }
+
     // dragging from one repeater into another
-    if (!this.get('surveyTemplate').isfullyEditable && question.get("parentId") > 0) {
+    if (!this.get('surveyTemplate').isfullyEditable && question.get("parentId") > 0 && !section) {
+      console.log('SET ANCESTRY TASK');
       alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
       return;
     }
