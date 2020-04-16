@@ -86,7 +86,7 @@ module Hanuman
       survey_template = question.survey_template
       surveys = survey_template.surveys
       surveys.each do |s|
-        if parent.blank?
+        if parent.blank? || parent.answer_type.name == "section"
           o = Hanuman::Observation.find_or_create_by(
             survey_id: s.id,
             question_id: question.id,

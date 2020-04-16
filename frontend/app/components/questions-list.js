@@ -262,7 +262,7 @@ export default Component.extend({
       });
 
       let ancestryQuestion;
-      if (draggedQuestion.get('parentId').length) {
+      if (draggedQuestion.get('parentId')) {
         let parentId = draggedQuestion.get('parentId');
         ancestryQuestion = sortableQuestions.findBy('id', parentId);
       }
