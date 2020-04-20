@@ -29,6 +29,8 @@ module Hanuman
 
     # Callbacks
     after_commit :process_question_changes_on_observations, only: [:create, :update] #, if: :survey_template_not_fully_editable?
+    after_commit :update_survey_flags, only: [:create, :update]
+
     after_create :set_column_names!
     # after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
     after_save :format_css_style, if: :css_style_changed?
@@ -73,9 +75,19 @@ module Hanuman
       end
     end
 
-      # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
+    # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
     def process_question_changes_on_observations
-      ProcessQuestionChangesWorker.perform_async(id)
+      if transaction_include_any_action?([:create]) || (transaction_include_any_action?([:update]) && previous_changes[:ancestry].present?)
+        ProcessQuestionChangesWorker.perform_async(id)
+      end
+    end
+
+    def update_survey_flags
+      surveys = survey_template.surveys
+      surveys.each do |s|
+        s.update_column(:observations_sorted, false)
+        s.update_column(:observation_visibility_set, false)
+      end
     end
 
     # if survey has data submitted against it, then submit blank data for each
@@ -87,25 +99,34 @@ module Hanuman
       surveys = survey_template.surveys
       surveys.each do |s|
         if parent.blank? || parent.answer_type.name == "section"
-          o = Hanuman::Observation.find_or_create_by(
+          Hanuman::Observation.find_or_create_by(
             survey_id: s.id,
             question_id: question.id,
             parent_repeater_id: nil
           )
         # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
         else
-          s.observations.where(question_id: parent.id).each do |o|
-            o = Hanuman::Observation.find_or_create_by(
+          top_level_o = Hanuman::Observation.find_by(
               survey_id: s.id,
               question_id: question.id,
-              parent_repeater_id: o.repeater_id
+              parent_repeater_id: nil
             )
+          s.observations.where(question_id: parent.id).each_with_index do |o, i|
+            if i == 0
+              top_level_o.update(parent_repeater_id: o.repeater_id) if top_level_o.present?
+            else
+              Hanuman::Observation.find_or_create_by(
+                survey_id: s.id,
+                question_id: question.id,
+                parent_repeater_id: o.repeater_id
+              )
+            end
           end
-          self.observations.where(parent_repeater_id: nil).destroy_all
+          # self.observations.where(parent_repeater_id: nil).destroy_all
         end
 
-        s.update_column(:observations_sorted, false)
-        s.update_column(:observation_visibility_set, false)
+        # s.update_column(:observations_sorted, false)
+        # s.update_column(:observation_visibility_set, false)
       end
     end
 
