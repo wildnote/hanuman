@@ -23,6 +23,7 @@ export default Component.extend({
   sortedQuestions: sort('surveyTemplate.filteredQuestions', 'questionsSorting'),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
 
+
   init() {
     this._super(...arguments);
     this.selectedQuestions = A();
@@ -127,7 +128,8 @@ export default Component.extend({
 
     // dragging from one repeater into another
     if (!this.get('surveyTemplate').isfullyEditable && question.get("parentId") > 0 && !section) {
-      alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
+      // alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
+      this.get('surveyTemplate').toggleEditableWarning();
       return;
     }
 
@@ -205,6 +207,11 @@ export default Component.extend({
   },
 
   actions: {
+    toggleEditableWarning() {
+      this.get('surveyTemplate').toggleEditableWarning();
+    },
+
+    
     toggleAllCollapsed() {
       this.toggleProperty('allCollapsed');
 
@@ -290,6 +297,6 @@ export default Component.extend({
       $('.draggable-object-target')
         .parent()
         .removeClass('dragging-over');
-    }
+    },
   }
 });

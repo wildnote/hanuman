@@ -25,6 +25,18 @@
         {{/unless}}
       {{/if}}
 
+      {{#if true }}
+        <div class="editable-warning top-level">
+          <span>Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
+          <span>Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!</span><br>
+          <button class="btn btn-danger" onclick={{action "toggleEditableWarning"}}>
+            OK
+          </button>
+        </div>
+      {{/if}}
+
+      
+
       {{#if (gt selectedQuestions.length 0)}}
         <div data-test-selected-questions class="header-selected">
           <div class="selected-questions-controls-status">

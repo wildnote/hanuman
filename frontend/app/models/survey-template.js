@@ -37,6 +37,7 @@ const SurveyTemplate = Model.extend(Validator, {
   resortQuestions: memberAction({ path: 'resort_questions', type: 'patch' }),
   checkTemplate: memberAction({ path: 'check_template', type: 'get' }),
 
+
   // Validations
   validations: {
     name: {
@@ -47,7 +48,14 @@ const SurveyTemplate = Model.extend(Validator, {
         in: STATUSES
       }
     }
+  },
+
+  toggleEditableWarning() {
+    let $warning = $('.editable-warning');
+    $warning.toggle();
   }
+
+
 });
 
 SurveyTemplate.reopenClass({
