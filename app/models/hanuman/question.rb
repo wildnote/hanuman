@@ -412,5 +412,10 @@ module Hanuman
       # split at semicolon but keep delimeter
       css_style.split(/(?<=[;])/)
     end
+
+
+    def unscoped_observations
+      Hanuman::Observation.where(question_id: id)
+    end
   end
 end

@@ -230,7 +230,7 @@ module Hanuman
           if question.answer_type_id == 57 && question.descendants.any?{|q| q.answer_type_id == 57 }
             errors["ancestry"] << "question: #{question.id} - repeater in repeater"
           end
-          checked += check_structure_helper(checked, errors, question, i+1)\
+          checked += check_structure_helper(checked, errors, question, i+1)
         end
 
 
@@ -240,6 +240,41 @@ module Hanuman
       # puts errors.map{|e| "#{e[0]}: #{e[1]} "}
       errors
     end
+
+
+
+    def surveys_integrity_check
+      ancestry_issues_os = []
+      dup_in_repeater_os = []
+
+      questions.each do |q|
+        if q.ancestry.present? && q.parent.answer_type.name == 'repeater'
+          q.observations.where("hanuman_observations.parent_repeater_id < 1 OR hanuman_observations.parent_repeater_id IS NULL").each do |o|
+            ancestry_issues_os << o
+          end
+
+          q.unscoped_observations.group_by{|obs| [obs.survey_id, obs.parent_repeater_id]}.select{|_k,v| v.length > 1}.each do |k, v|
+            v.each do |problem_o|
+              dup_in_repeater_os << problem_o
+            end
+          end
+
+        else
+          q.observations.where("hanuman_observations.parent_repeater_id > 0").each do |o|
+            ancestry_issues_os << o
+          end
+        end
+      end
+
+
+      puts "#################       ancestry in repeater issues        #################"
+      ap ancestry_issues_os
+      puts "################# duplicate observation in repeater issues #################"
+      ap dup_in_repeater_os
+
+    end
+
+
 
     def set_question_css_styles(style)
       questions.each do |q|
