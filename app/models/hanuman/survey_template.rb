@@ -253,7 +253,7 @@ module Hanuman
             ancestry_issues_os << o
           end
 
-          q.unscoped_observations.group_by{|obs| [obs.survey_id, obs.parent_repeater_id]}.select{|_k,v| v.length > 1}.each do |k, v|
+          q.observations.group_by{|obs| [obs.survey_id, obs.parent_repeater_id]}.select{|_k,v| v.length > 1}.each do |k, v|
             v.each do |problem_o|
               dup_in_repeater_os << problem_o
             end

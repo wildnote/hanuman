@@ -413,9 +413,4 @@ module Hanuman
       css_style.split(/(?<=[;])/)
     end
 
-
-    def unscoped_observations
-      Hanuman::Observation.where(question_id: id)
-    end
-  end
 end
