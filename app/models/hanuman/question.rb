@@ -98,13 +98,23 @@ module Hanuman
       survey_template = question.survey_template
       surveys = survey_template.surveys
       surveys.each do |s|
-        if parent.blank? || parent.answer_type.name == "section"
+        # need repeater id if added question is repeater
+        if answer_type.name == "repeater"
+          max_repeater_id = s.observations.where.not(repeater_id: nil).map(&:repeater_id).max
+          new_repeater_id = max_repeater_id.present? ? max_repeater_id + 1 : 1
+          Hanuman::Observation.find_or_create_by(
+            survey_id: s.id,
+            question_id: question.id,
+            repeater_id: new_repeater_id
+          )
+          # basic top level
+        elsif parent.blank? || parent.answer_type.name == "section"
           Hanuman::Observation.find_or_create_by(
             survey_id: s.id,
             question_id: question.id,
             parent_repeater_id: nil
           )
-        # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
+          # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
         else
           top_level_o = Hanuman::Observation.find_by(
               survey_id: s.id,
@@ -412,5 +422,6 @@ module Hanuman
       # split at semicolon but keep delimeter
       css_style.split(/(?<=[;])/)
     end
+  end
 
 end
