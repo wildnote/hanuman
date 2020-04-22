@@ -100,13 +100,16 @@ module Hanuman
       surveys.each do |s|
         # need repeater id if added question is repeater
         if answer_type.name == "repeater"
-          max_repeater_id = s.observations.where.not(repeater_id: nil).map(&:repeater_id).max
-          new_repeater_id = max_repeater_id.present? ? max_repeater_id + 1 : 1
-          Hanuman::Observation.find_or_create_by(
-            survey_id: s.id,
-            question_id: question.id,
-            repeater_id: new_repeater_id
-          )
+          # moving a repeater into a section triggers this method, no need for any new observations
+          if parent.blank?
+            max_repeater_id = s.observations.where.not(repeater_id: nil).map(&:repeater_id).max
+            new_repeater_id = max_repeater_id.present? ? max_repeater_id + 1 : 1
+            Hanuman::Observation.find_or_create_by(
+              survey_id: s.id,
+              question_id: question.id,
+              repeater_id: new_repeater_id
+            )
+          end
           # basic top level
         elsif parent.blank? || parent.answer_type.name == "section"
           Hanuman::Observation.find_or_create_by(
