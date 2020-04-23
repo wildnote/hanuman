@@ -50,8 +50,9 @@ const SurveyTemplate = Model.extend(Validator, {
     }
   },
 
-  toggleEditableWarning() {
-    let $warning = $('.editable-warning');
+  toggleWarning(html) {
+    let $warning = $('.modal-warning');
+    $warning.find('.text').html(html)
     $warning.toggle();
   }
 

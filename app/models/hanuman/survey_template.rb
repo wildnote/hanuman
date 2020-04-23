@@ -160,7 +160,7 @@ module Hanuman
         checked << question.id
         if question.descendants.present?
           if question.answer_type_id == 57 && question.descendants.any?{|q| q.answer_type_id == 57 }
-            errors["ancestry"] << "question: #{question.id} - repeater in repeater"
+            errors["ancestry"] << "Question: #{question.id} - repeater in repeater"
           end
           checked += check_structure_helper(checked, errors, question, i+j+1)
         elsif question.ancestry == curr_ancestry
@@ -170,7 +170,7 @@ module Hanuman
           next
         elsif qs.where(ancestry: curr_ancestry).where.not(id: children).length > 0
           # we've hit a question with unexpected ancestry, if there are other children elsewhere in the template something is wrong
-          errors["ancestry"] << "question: #{question.id} - issue with ancestry"
+          errors["ancestry"] << "Question: #{question.id} - issue with ancestry"
           puts "Ancestry isse with question_id: #{question.id}"
         else
           # successfully made it out of section
@@ -202,11 +202,11 @@ module Hanuman
         checked << question.id
         # loop through rules linked to questions in the template to check that the conditions do as well
         question.rules.each do |rule|
-          errors["rule"] << "question: #{question.id} - rule value is blank" if rule.value.blank?
-          errors["rule"] << "question: #{question.id} - rule has no conditions" if rule.conditions.length == 0
+          errors["rule"] << "Question: #{question.id} - rule value is blank" if rule.value.blank?
+          errors["rule"] << "Question: #{question.id} - rule has no conditions" if rule.conditions.length == 0
           rule.conditions.each do |condition|
             if !question_ids.include?(condition.question.id)
-              errors["condition"] << "question: #{condition.question.id} - condition references missing question"
+              errors["condition"] << "Question: #{condition.question.id} - condition references missing question"
               puts "Condition references bad question_id: #{condition.question.id}"
             end
           end
@@ -214,11 +214,11 @@ module Hanuman
         # doing it both ways gives more opportunity to find bad references
         # loop through conditions linked to questions in the template to check that the rules do as well
         question.conditions.each do |condition|
-          errors["condition"] << "question: #{question.id} - condition answer is blank" if condition.answer.blank?
-          errors["condition"] << "question: #{question.id} - condition has no rule" if condition.rule_id.blank? # this shouldnt happen because of a validation
+          errors["condition"] << "Question: #{question.id} - condition answer is blank" if condition.answer.blank?
+          errors["condition"] << "Question: #{question.id} - condition has no rule" if condition.rule_id.blank? # this shouldnt happen because of a validation
           if condition.rule.present?
             if !question_ids.include?(condition.rule.question.id)
-              errors["rule"] << "question: #{condition.question.id} - rule references missing question"
+              errors["rule"] << "Question: #{condition.question.id} - rule references missing question"
               puts "Rule references bad question_id: #{condition.rule.question.id}"
             end
           end
@@ -228,7 +228,7 @@ module Hanuman
         # recursively check nesting for out of place ancestries
         if question.descendants.present?
           if question.answer_type_id == 57 && question.descendants.any?{|q| q.answer_type_id == 57 }
-            errors["ancestry"] << "question: #{question.id} - repeater in repeater"
+            errors["ancestry"] << "Question: #{question.id} - repeater in repeater"
           end
           checked += check_structure_helper(checked, errors, question, i+1)
         end

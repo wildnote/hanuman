@@ -17,6 +17,7 @@ export default Component.extend({
   isLoadingQuestions: true,
   isPerformingBulk: false,
   allCollapsed: false,
+  checkingTemplate: false,
 
   questionsSorting: ['sortOrder'],
   fullQuestions: sort('surveyTemplate.questionsNotDeleted', 'questionsSorting'),
@@ -129,7 +130,10 @@ export default Component.extend({
     // dragging from one repeater into another
     if (!this.get('surveyTemplate').isfullyEditable && question.get("parentId") > 0 && !section) {
       // alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
-      this.get('surveyTemplate').toggleEditableWarning();
+      this.get('surveyTemplate').toggleWarning(
+        `<span>Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
+        <span>Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!</span><br>`
+      );
       return;
     }
 
@@ -157,6 +161,7 @@ export default Component.extend({
   }),
 
   checkTemplate: task(function* () {
+    this.set('checkingTemplate', true);
     try {
       
       let surveyTemplate = this.surveyTemplate;
@@ -167,10 +172,27 @@ export default Component.extend({
       }
       console.log("errors");
       console.log(errors);
-      alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition );
+      // alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition );
+
+      if (errors.ancestry.length == 0 && errors.rule.length == 0 && errors.condition.length == 0) {
+        this.get('surveyTemplate').toggleWarning(
+          `<span>No survey form errors.<span><br>`
+        );
+      } else {
+        this.get('surveyTemplate').toggleWarning(
+          `<span>Errors by question:<span>
+          <span>${errors.ancestry}</span><br>
+          <span>${errors.rule}</span><br>
+          <span>${errors.condition}</span><br>`
+        );
+      }
     } catch (e) {
+      this.get('surveyTemplate').toggleWarning(
+        `<span>Something went wrong while checking your survey form.<span>`
+      );
       console.log('Error checking template:', e); // eslint-disable-line no-console
     }
+    this.set('checkingTemplate', false);
   }),
 
   _filterSectionsAndRepeaters(selectedQuestions) {
@@ -207,8 +229,8 @@ export default Component.extend({
   },
 
   actions: {
-    toggleEditableWarning() {
-      this.get('surveyTemplate').toggleEditableWarning();
+    toggleWarning(html) {
+      this.get('surveyTemplate').toggleWarning(html);
     },
 
     

@@ -26,10 +26,11 @@
       {{/if}}
 
       {{#if true }}
-        <div class="editable-warning top-level">
-          <span>Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
-          <span>Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!</span><br>
-          <button class="btn btn-danger" onclick={{action "toggleEditableWarning"}}>
+        <div class="modal-warning top-level">
+          <div class="text">
+            
+          </div>
+          <button class="btn btn-danger" onclick={{action "toggleWarning"}}>
             OK
           </button>
         </div>
@@ -97,7 +98,12 @@
           </button>
           {{#if isSuperUser}}
             <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform checkTemplate}}>
-              <span class="glyphicons glyphicons-check"></span>Check Survey Form
+              {{#if (not checkingTemplate) }}
+                <span class="glyphicons glyphicons-check"></span>
+              {{else }}
+                <span class="glyphicons gly-spin glyphicons-refresh"></span>
+              {{/if}}
+              Check Survey Form
             </button>
           {{/if}}
         </div>
