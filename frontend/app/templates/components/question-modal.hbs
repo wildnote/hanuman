@@ -234,7 +234,7 @@
           </div>
         {{/if}}
 
-        {{#if (and isSuperUser question.isTextField) }}
+        {{#if (or (and isSuperUser question.isTextField) question.isLocationSelect) }}
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
@@ -243,7 +243,7 @@
                         disabled={{question.surveyTemplate.lock}}
                         name="enableSurveyHistory"
                         checked={{question.newProjectLocation}}
-                        onchange={{action (mut question.newProjectLocation) value="target.checked"}} /> Create Project Location (Superuser Only)
+                        onchange={{action (mut question.newProjectLocation) value="target.checked"}} /> Create Project Location
                 </div>
               </div>
             </div>
