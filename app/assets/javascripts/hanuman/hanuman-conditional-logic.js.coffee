@@ -315,7 +315,7 @@ class @ConditionalLogic
       when "is not equal to"
         if value != answer then hide_questions = false
       when "is empty"
-        if value && value.length < 1 then hide_questions = false
+        if !value || (value && value.length < 1) then hide_questions = false
       when "is not empty"
         if value && value.length > 0 then hide_questions = false
       when "is greater than"
