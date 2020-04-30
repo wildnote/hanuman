@@ -110,14 +110,14 @@ module Hanuman
     end
 
     def fill_answer
-      if question.answer_type.name == 'chosenselect'
+      if question.answer_type.name == 'chosenselect' && answer_choice_id_changed?
         update_column(:answer, answer_choice.option_text) if answer_choice.present?
-      elsif question.answer_type.name == 'radio'
+      elsif question.answer_type.name == 'radio' && answer_choice_id_changed?
         update_column(:answer, answer_choice.option_text) if answer_choice.present?
-      elsif question.answer_type.name == 'locationchosensingleselect'
-        update_column(:answer, selectable.name) if selectable.present?
-      elsif question.answer_type.name == 'taxonchosensingleselect'
-        update_column(:answer, selectable.formatted_answer_choice_with_symbol) if selectable.present?
+      # elsif question.answer_type.name == 'locationchosensingleselect' && selectable_id_changed?
+      #   update_column(:answer, selectable.name) if selectable.present?
+      # elsif question.answer_type.name == 'taxonchosensingleselect' && selectable_id_changed?
+      #   update_column(:answer, selectable.formatted_answer_choice_with_symbol) if selectable.present?
       end
     end
 
