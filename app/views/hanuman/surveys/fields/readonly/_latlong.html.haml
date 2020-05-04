@@ -9,10 +9,19 @@
 .form-group
   .col-sm-7.col-sm-offset-5.map-container
     .hidden
-    .col-sm-12.latlong{id: "map#{o.id}", style: "width:100%; height:320px;", :"data-latlong" => "#{latitude}, #{longitude}", :"data-infowindow" => o.question.question_text}
+    - if "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" != o.answer
+      .col-sm-12.latlong{id: "map#{o.id}", style: "width:100%; height:320px;", :"data-latlong" => "#{latitude}, #{longitude}", :"data-infowindow" => o.question.question_text, :"data-answer" => "#{o.answer}"}
+    - else
+      .col-sm-12.latlong{id: "map#{o.id}", style: "width:100%; height:320px;", :"data-latlong" => "#{latitude}, #{longitude}", :"data-infowindow" => o.question.question_text}
+
   .clearfix
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
   .col-sm-7.latlong-in-survey-show
+    - if current_user.superuser
+      - if o.answer? && "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" != o.answer
+        %p.form-control-static= "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)} - YELLOW POINT (o.latitude and o.longitude)"
+        %p.form-control-static= "#{o.answer} - BLUE POINT (o.answer)"
+
     %p.form-control-static= "#{latitude}, #{longitude}"
     - unless o.speed.blank?
       %p.form-control-static= "Speed: #{o.speed} m/s"
