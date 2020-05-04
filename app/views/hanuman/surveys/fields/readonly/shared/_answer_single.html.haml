@@ -1,1 +1,4 @@
-%p.form-control-static= o.answer
+-if o.answer_choice.present?
+  %p.form-control-static= o.answer_choice.option_text
+-else
+  %p.form-control-static= o.answer
