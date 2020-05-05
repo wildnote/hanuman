@@ -20,7 +20,7 @@
         <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
       {{/if}}
       {{#if (and (not ancestrable) (not isSelected))}}
-        <span class="glyphicons glyphicons-move-square {{if question.surveyTemplate.lock 'icon-disabled'}} {{if question.loading 'hide'}}">
+        <span class="glyphicons glyphicons-move-square {{if (or question.surveyTemplate.lock repeaterDragBlocked) 'icon-disabled'}} {{if question.loading 'hide'}}">
           {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
         </span>
       {{/if}}

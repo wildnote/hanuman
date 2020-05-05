@@ -39,6 +39,17 @@ export default Component.extend({
     return this.get('otherQuetions').filter((question) => question.get('ancestry') === questionId).length;
   }),
 
+  repeaterDragBlocked: computed('question.{parentId}', function () {
+    let result = false;
+    let question = this.get('question');
+    if (question.get('parentId')) {
+      let parentId = question.get('parentId');
+      let parent = question.get('surveyTemplate.questions').findBy('id', parentId);
+      if (parent.get('answerType.name') === 'repeater' && !question.get('surveyTemplate').isfullyEditable) result = true;
+    }
+    return result;
+  }),
+
   actions: {
     highlightConditional(questionId) {
       let question = this.get('store').peekRecord('question', questionId);
