@@ -25,7 +25,7 @@ module Hanuman
     validates_format_of :db_column_name, with: /\A\w+\Z/i, allow_blank: true
     # validates_uniqueness_of :api_column_name, scope: :survey_template_id, allow_blank: true
     validates_format_of :api_column_name, with: /\A\w+\Z/i, allow_blank: true
-    
+
 
     # Callbacks
     after_commit :process_question_changes_on_observations, only: [:create, :update] #, if: :survey_template_not_fully_editable?
@@ -82,6 +82,8 @@ module Hanuman
       end
     end
 
+    # called on ancestry changes
+    # called on sort order changes
     def update_survey_flags
       surveys = survey_template.surveys
       surveys.each do |s|
@@ -90,6 +92,7 @@ module Hanuman
       end
     end
 
+    # called on ancestry change or question create
     # if survey has data submitted against it, then submit blank data for each
     # survey for newly added question, then re-save survey so that group_sort gets reset
     def submit_blank_observation_data
@@ -118,6 +121,7 @@ module Hanuman
             parent_repeater_id: nil
           )
           # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
+          # move top level observation to first repeater and then create blank observations for subsequent repeater instances
         else
           top_level_o = Hanuman::Observation.find_by(
               survey_id: s.id,
@@ -321,33 +325,33 @@ module Hanuman
           base_plus_parent = (a.parameterized_text + "_") + base_plus_parent
           if base_plus_parent.length > 60
             break
-          else 
+          else
             base_string = base_plus_parent
           end
         end
       end
-      
+
       # checking for duplicate api_column_names and incrementing index by 1
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
-        
+
         loop do
           if Hanuman::Question.exists?(api_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
             index += 1
           else
             return base_string + "_#{index}"
-          end 
-        end 
+          end
+        end
       else
         base_string
-      end 
+      end
     end
 
     def set_column_names!
       self.db_column_name = column_name if self.db_column_name.blank?
       self.api_column_name = column_name if self.api_column_name.blank?
       save
-    end 
+    end
 
     def set_api_column_name!
       self.api_column_name = column_name if self.api_column_name.blank?
@@ -405,7 +409,7 @@ module Hanuman
               puts "unchanged attribute #{k}:#{old_hash[k]}"
             end
           end
-          
+
 
           self.css_style = new_style_string
           self.save
