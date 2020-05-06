@@ -142,6 +142,7 @@ module Hanuman
           # self.observations.where(parent_repeater_id: nil).destroy_all
         end
 
+        s.set_entries
         # s.update_column(:observations_sorted, false)
         # s.update_column(:observation_visibility_set, false)
       end
