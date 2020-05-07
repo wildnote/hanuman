@@ -9,6 +9,8 @@ module Hanuman
     has_many :questions, -> { order :sort_order }, dependent: :destroy
     has_many :surveys, dependent: :restrict_with_exception
 
+    has_many :question_changes
+
     # Validations
     validates :name, presence: true
     validates :status, inclusion: { in: STATUSES }

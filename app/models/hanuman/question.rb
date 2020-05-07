@@ -16,6 +16,8 @@ module Hanuman
     has_many :conditions, dependent: :destroy # The conditions this question is dependent of
     has_many :rule_conditions, through: :rules, source: :conditions
 
+    has_many :question_changes, dependent: :destroy
+
     # Validations
     validates :answer_type_id, presence: true
     # wait until after migration for these validations
@@ -78,6 +80,7 @@ module Hanuman
     # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
     def process_question_changes_on_observations
       if transaction_include_any_action?([:create]) || (transaction_include_any_action?([:update]) && previous_changes[:ancestry].present?)
+        Hanuman::QuestionChange.find_or_create_by(question_id: id, survey_template_id: survey_template.id)
         ProcessQuestionChangesWorker.perform_async(id)
       end
     end
@@ -97,55 +100,60 @@ module Hanuman
     # survey for newly added question, then re-save survey so that group_sort gets reset
     def submit_blank_observation_data
       question = self
-      parent = question.parent
       survey_template = question.survey_template
       surveys = survey_template.surveys
       surveys.each do |s|
-        # need repeater id if added question is repeater
-        if answer_type.name == "repeater"
-          # moving a repeater into a section triggers this method, no need for any new observations
-          if parent.blank?
-            max_repeater_id = s.observations.where.not(repeater_id: nil).map(&:repeater_id).max
-            new_repeater_id = max_repeater_id.present? ? max_repeater_id + 1 : 1
-            Hanuman::Observation.find_or_create_by(
-              survey_id: s.id,
-              question_id: question.id,
-              repeater_id: new_repeater_id
-            )
-          end
-          # basic top level
-        elsif parent.blank? || parent.answer_type.name == "section"
+        single_survey_submit_blank_observation_data(s)
+      end
+    end
+
+    def single_survey_submit_blank_observation_data(s)
+      question = self
+      parent = question.parent
+      # need repeater id if added question is repeater
+      if answer_type.name == "repeater"
+        # moving a repeater into a section triggers this method, no need for any new observations
+        if parent.blank?
+          max_repeater_id = s.observations.where.not(repeater_id: nil).map(&:repeater_id).max
+          new_repeater_id = max_repeater_id.present? ? max_repeater_id + 1 : 1
           Hanuman::Observation.find_or_create_by(
+            survey_id: s.id,
+            question_id: question.id,
+            repeater_id: new_repeater_id
+          )
+        end
+        # basic top level
+      elsif parent.blank? || parent.answer_type.name == "section"
+        Hanuman::Observation.find_or_create_by(
+          survey_id: s.id,
+          question_id: question.id,
+          parent_repeater_id: nil
+        )
+        # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
+        # move top level observation to first repeater and then create blank observations for subsequent repeater instances
+      else
+        top_level_o = Hanuman::Observation.find_by(
             survey_id: s.id,
             question_id: question.id,
             parent_repeater_id: nil
           )
-          # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
-          # move top level observation to first repeater and then create blank observations for subsequent repeater instances
-        else
-          top_level_o = Hanuman::Observation.find_by(
+        s.observations.where(question_id: parent.id).each_with_index do |o, i|
+          if i == 0
+            top_level_o.update(parent_repeater_id: o.repeater_id) if top_level_o.present?
+          else
+            Hanuman::Observation.find_or_create_by(
               survey_id: s.id,
               question_id: question.id,
-              parent_repeater_id: nil
+              parent_repeater_id: o.repeater_id
             )
-          s.observations.where(question_id: parent.id).each_with_index do |o, i|
-            if i == 0
-              top_level_o.update(parent_repeater_id: o.repeater_id) if top_level_o.present?
-            else
-              Hanuman::Observation.find_or_create_by(
-                survey_id: s.id,
-                question_id: question.id,
-                parent_repeater_id: o.repeater_id
-              )
-            end
           end
-          # self.observations.where(parent_repeater_id: nil).destroy_all
         end
-
-        s.set_entries
-        # s.update_column(:observations_sorted, false)
-        # s.update_column(:observation_visibility_set, false)
+        # self.observations.where(parent_repeater_id: nil).destroy_all
       end
+
+      s.set_entries
+      # s.update_column(:observations_sorted, false)
+      # s.update_column(:observation_visibility_set, false)
     end
 
     # build the rule_hash to pass into rails to then be used by javascript for hide/show functions
