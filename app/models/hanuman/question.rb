@@ -103,13 +103,14 @@ module Hanuman
       survey_template = question.survey_template
       surveys = survey_template.surveys
       surveys.each do |s|
-        single_survey_submit_blank_observation_data(s)
+        single_survey_submit_blank_observation_data(s.id)
       end
     end
 
-    def single_survey_submit_blank_observation_data(s)
+    def single_survey_submit_blank_observation_data(s_id)
       question = self
       parent = question.parent
+      s = Hanuman::Survey.find(s_id)
       # need repeater id if added question is repeater
       if answer_type.name == "repeater"
         # moving a repeater into a section triggers this method, no need for any new observations
