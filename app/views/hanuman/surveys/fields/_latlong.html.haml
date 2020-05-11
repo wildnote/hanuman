@@ -34,6 +34,8 @@
         .btn.btn-primary.updateLatLong{:"data-lat-long" => "#{o.latitude.to_f.round(6)},#{o.longitude.to_f.round(6)}" } Yellow
         %p.form-control-static= "#{o.answer} - BLUE POINT (o.answer)"
         .btn.btn-primary.updateLatLong{:"data-lat-long" => "#{o.answer}"} Blue
+    - if o.location_metadata.present?
+      %p.form-control-static= "* GNSS location metadata present. Editing location data will remove GNSS location metadata."
     = ff.text_field :latitude, class: "form-control lat-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Latitude"
     = ff.text_field :longitude, class: "form-control long-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Longitude"
     = ff.text_field :speed, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Speed (m/s)"
