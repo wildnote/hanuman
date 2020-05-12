@@ -24,7 +24,7 @@
 
     %p.form-control-static= "#{latitude}, #{longitude}"
     - unless o.speed.blank?
-      %p.form-control-static= "Speed: #{o.speed} m/s"
+      %p.form-control-static= "Speed: #{o.speed.to_f.round(6)} m/s"
     - unless o.direction.blank?
       %p.form-control-static= "Heading: #{o.direction.to_f.round(6) unless o.direction.blank?} degrees"
     - unless o.altitude.blank?

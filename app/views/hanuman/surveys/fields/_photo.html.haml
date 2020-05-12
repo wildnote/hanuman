@@ -29,11 +29,11 @@
             .form-group
               .col-sm-7
                 Coordinates:
-                =p.latitude.to_f.round(6).to_s + ", " + p.longitude.to_f.round(6).to_s
+                =p.latitude.to_f.round(8).to_s + ", " + p.longitude.to_f.round(8).to_s
               - unless p.speed.blank?
                 .col-sm-7
                   Speed:
-                  =p.speed
+                  =p.speed.round(6).to_s
                   m/s
               - unless p.direction.blank?
                 .col-sm-7

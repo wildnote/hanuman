@@ -28,7 +28,7 @@
       %br
       - unless p.speed.blank?
         Speed:
-        =p.speed
+        =p.speed.to_f.round(6)
         m/s
         %br
       - unless p.direction.blank?
