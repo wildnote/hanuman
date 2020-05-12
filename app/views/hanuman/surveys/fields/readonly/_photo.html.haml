@@ -24,7 +24,7 @@
         Photo geolocation data
       %br
       Coordinates:
-      =p.latitude.to_f.round(6).to_s + ", " + p.longitude.to_f.round(6).to_s
+      =p.latitude.to_f.round(8).to_s + ", " + p.longitude.to_f.round(8).to_s
       %br
       - unless p.speed.blank?
         Speed:
