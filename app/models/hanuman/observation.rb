@@ -123,7 +123,9 @@ module Hanuman
     end
 
     def edit_gnss
-      if !self.new_record? && location_metadata.present? && (latitude_changed? || longitude_changed? || speed_changed? || altitude_changed? || accuracy_changed? || direction_changed?)
+      if new_record?
+        return
+      elsif location_metadata.present? && (latitude_changed? || longitude_changed? || speed_changed? || altitude_changed? || accuracy_changed? || direction_changed?)
         update_column(:location_metadata, nil)
       end
     end
