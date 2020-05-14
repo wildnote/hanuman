@@ -48,7 +48,7 @@
               - unless p.accuracy.blank?
                 .col-sm-7
                   Accuracy:
-                  =p.accuracy.round(2)
+                  =p.accuracy.to_f.round(2)
                   m
 
             -

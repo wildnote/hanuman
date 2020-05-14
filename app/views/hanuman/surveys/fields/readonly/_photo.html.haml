@@ -43,7 +43,7 @@
         %br
       - unless p.accuracy.blank?
         Accuracy:
-        =p.accuracy.round(2)
+        =p.accuracy.to_f.round(2)
         m
         %br
       %br
