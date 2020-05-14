@@ -30,4 +30,4 @@
     - unless o.altitude.blank?
       %p.form-control-static= "Altitude: #{o.altitude.to_f.round(6) unless o.altitude.blank?} meters"
     - unless o.accuracy.blank?
-      %p.form-control-static= "Accuracy: #{o.accuracy.to_f.round(6) unless o.accuracy.blank?} meters"
+      %p.form-control-static= "Accuracy: #{o.accuracy.to_f.round(2) unless o.accuracy.blank?} meters"
