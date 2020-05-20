@@ -208,35 +208,12 @@ export default Component.extend({
 
     try {
       question = yield question.save();
-      yield all(question.get('lookupRules').map((lookupRule) => lookupRule.save()));
-      let promises = [];
-      let visibilityRule = question.get('visibilityRule');
+      yield all(question.get('rules').map((rules) => rules.save()));
+      
       let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
       let answerChoicesPromises = this._pendingObjectsPromises(answerChoicesPendingSave, 'question', question);
 
-      promises = promises.concat(answerChoicesPromises);
-
-      // We can't save the rule until there is at least one condition associated with the rule
-      if (visibilityRule && (!visibilityRule.get('isNew') || visibilityRule.get('conditionsPendingSave.length') > 0)) {
-        let conditionsPendingSave = visibilityRule.get('conditionsPendingSave');
-        let rule = question.get('visibilityRule');
-
-        rule.set('question', question);
-        try {
-          rule = yield rule.save();
-          let conditionsPromises = this._pendingObjectsPromises(conditionsPendingSave, 'rule', rule);
-          promises = promises.concat(conditionsPromises);
-          yield this._saveSuccess.perform(question, promises);
-        } catch (e) {
-          // Rule was deleted on the server
-          console.log('Error saving rule:', e); // eslint-disable-line no-console
-          question.get('store').unloadRecord(rule);
-          question = yield question.reload();
-          yield this._saveSuccess.perform(question, []);
-        }
-      } else {
-        yield this._saveSuccess.perform(question, promises);
-      }
+      yield this._saveSuccess.perform(question, answerChoicesPromises);
 
       // Save unsaved related records
       yield allSettled(
@@ -297,8 +274,13 @@ export default Component.extend({
   _saveSuccess: task(function*(question, promises) {
     question = yield question.reload();
     let visibilityRule = question.get('visibilityRule');
+    let calculationRule = question.get('calculationRule');
     let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
     let conditionsPendingSave = visibilityRule ? visibilityRule.get('conditionsPendingSave') : [];
+
+    if (calculationRule) {
+      conditionsPendingSave = conditionsPendingSave.concat(calculationRule.get('conditionsPendingSave'));
+    }
 
     if (!question.get('answerType.hasAnswerChoices')) {
       this._removeAnswerChoices();
@@ -341,7 +323,7 @@ export default Component.extend({
       //   value = value.replace(/[^0-9-]/g, '').replace(/(?!^)-/g, ''); // only allow positive and negative integers
       //   set(this.question, 'defaultAnswer', value);
       //   $('[name="defaultAnswer"]').val(value);
-      // } 
+      // }
     },
 
     setMaxPhotoValue(value) {

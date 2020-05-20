@@ -33,9 +33,10 @@
             <td width="10px"></td>
           </tr>
           {{#each conditions as |condition|}}
+            <p> cond </p>
             {{condition-row
               condition=condition
-              rule=lookupRule
+              rule=rule
               question=question
               questions=conditionalQuestions
               saveTask=saveConditionTask
@@ -44,7 +45,7 @@
             }}
           {{/each}}
           {{condition-row
-            rule=lookupRule
+            rule=rule
             question=question
             questions=conditionalQuestions
             saveTask=saveConditionTask

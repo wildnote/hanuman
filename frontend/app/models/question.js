@@ -77,6 +77,10 @@ export default Model.extend(Validator, {
     return this.get('rules').find((rule) => rule.type === 'Hanuman::VisibilityRule');
   }),
 
+  calculationRule: computed('rules.@each.type', function() {
+    return this.get('rules').find((rule) => rule.type === 'Hanuman::CalculationRule');
+  }),
+
   hasChild: computed('childIds.[]', function() {
     return isPresent(this.get('childIds'));
   }),
