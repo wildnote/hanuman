@@ -3,7 +3,7 @@
     <div class="table-responsive">
       <table class="table table-hover">
         <tbody>
-          {{#if lookupRule}}
+          {{#if isLookupRule}}
             <tr class="no-hover">
               <td colspan="6" style="border-top: none;">
                 <a class="btn btn-delete" style="float: right;" onclick={{action "deleteRule"}}>
@@ -33,7 +33,6 @@
             <td width="10px"></td>
           </tr>
           {{#each conditions as |condition|}}
-            <p> cond </p>
             {{condition-row
               condition=condition
               rule=rule
@@ -52,7 +51,7 @@
             removeTask=removeConditionTask
             isNewCondition=true
           }}
-          {{#if lookupRule}}
+          {{#if isLookupRule}}
             <tr class="no-hover defaul-rule-value">
               <td data-test-multiple-answers-select colspan="6">
                 {{#if question.answerType.hasAnswerChoices}}
@@ -77,6 +76,18 @@
                     oninput={{action (mut rule.value) value="target.value"}}
                   />
                 {{/if}}
+              </td>
+            </tr>
+          {{else if isCalculationRule}}
+            <tr class="no-hover defaul-rule-value">
+              <td data-test-multiple-answers-select colspan="6">
+                <textarea
+                  placeholder="JS expression for this calculation"
+                  type="text"
+                  class="form-control"
+                  value={{rule.script}}
+                  oninput={{action (mut rule.script) value="target.value"}}
+                />
               </td>
             </tr>
           {{/if}}

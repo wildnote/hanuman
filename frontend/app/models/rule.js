@@ -27,6 +27,7 @@ export default Model.extend(Validator, {
   matchType: attr('string', { defaultValue: 'any' }),
   type: attr('string', { defaultValue: 'Hanuman::VisibilityRule' }),
   value: attr('string'),
+  script: attr('string'),
 
   // Relations
   conditions: hasMany('condition', { async: false }),
