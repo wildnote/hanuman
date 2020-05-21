@@ -81,13 +81,15 @@
           {{else if isCalculationRule}}
             <tr class="no-hover defaul-rule-value">
               <td data-test-multiple-answers-select colspan="6">
-                <textarea
-                  placeholder="JS expression for this calculation"
-                  type="text"
-                  class="form-control"
-                  value={{rule.script}}
-                  oninput={{action (mut rule.script) value="target.value"}}
-                />
+                {{ember-ace
+                  lines=15
+                  mode='ace/mode/javascript'
+                  theme='ace/theme/github'
+                  highlightActiveLine=true
+                  value=rule.script
+                  ready=(action 'editorReady')
+                  update=(action (mut rule.script))
+                }}
               </td>
             </tr>
           {{/if}}

@@ -62,6 +62,9 @@ export default Component.extend({
     },
     deleteRule() {
       this.rule.destroyRecord();
+    },
+    editorReady(editor) {
+      editor.getSession().setUseWorker(false);
     }
   }
 });
