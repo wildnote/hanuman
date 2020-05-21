@@ -53,22 +53,23 @@ export default Component.extend({
   }),
 
   availableQuestions: computed('rule', 'question.@each.answerType.name', function() {
-    if (!this.rule) {
+    if (this.rule.get('type') === 'Hanuman::LookupRule') {
+      let supportedQuestionForLookup = [
+        'checkbox',
+        'checkboxlist',
+        'chosenmultiselect',
+        'chosenselect',
+        'locationchosensingleselect',
+        'radio',
+        'taxonchosenmultiselect',
+        'taxonchosensingleselect'
+      ];
+      return this.questions.filter((question) => {
+        return supportedQuestionForLookup.includes(question.get('answerType.name'));
+      });
+    } else {
       return this.questions;
     }
-    let supportedQuestionForLookup = [
-      'checkbox',
-      'checkboxlist',
-      'chosenmultiselect',
-      'chosenselect',
-      'locationchosensingleselect',
-      'radio',
-      'taxonchosenmultiselect',
-      'taxonchosensingleselect'
-    ];
-    return this.questions.filter((question) => {
-      return supportedQuestionForLookup.includes(question.get('answerType.name'));
-    });
   }),
 
   operators: computed('currentQuestion', function() {

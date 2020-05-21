@@ -11,9 +11,7 @@ class @ConditionalLogic
       rules = $.parseJSON($ruleContainer.attr("data-rule"))
       $(rules).each ->
         rule = this
-        console.log(rule)
         matchType = rule.match_type
-        #console.log rule
         $(rule.conditions).each ->
           condition = this
           conditionQuestionId = condition.question_id
@@ -26,7 +24,6 @@ class @ConditionalLogic
             $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
 
           if $conditionContainer.length == 0 || $conditionContainer.length > 1
-            console.log "fail"
             problemWithCL = true
 
           # the condition element, which we need to check value for conditional logic
@@ -71,7 +68,6 @@ class @ConditionalLogic
     if problemWithCL
       e = new Error("conditional Logic # findRules")
       e.name = 'FAILED: conditional logic'
-      console.log e.name
       Honeybadger.notify e, context:
         type: "FAILED: conditional logic => condition container or element not found or found more than once"
         details: window.location.href
@@ -168,7 +164,33 @@ class @ConditionalLogic
     if rule.type == "Hanuman::VisibilityRule"
       self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
     else if hideShow == false
-      self.setLookupValue(rule.value, $ruleElement)
+      if rule.type == "Hanuman::LookupRule"
+        self.setLookupValue(rule.value, $ruleElement)
+      else if rule.type == "Hanuman::CalculationRule"
+        self.getCalculationParameters(conditions)
+
+
+  getCalculationParameters: (conditions) ->
+    parameters = {}
+    questionFields = $("[data-question-id][data-element-type]")
+    $.each questionFields, (index, qf) ->
+
+      columnName = $(qf).data('api-column-name')
+      $conditionElement = $(qf).find('.form-control')
+
+      value = self.getValue($conditionElement)
+
+      if value == undefined || value.trim() == ''
+        parameters[columnName] = null
+      else
+        parameters[columnName] = value
+
+#      columnName = $("[data-question-id=" + condition.question_id + "]").data('api-column-name')
+#      $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
+#      $repeater = $conditionElement.closest(".form-container-repeater")
+#      if $repeater.length > 0
+#        inRepeater = true
+    console.log(parameters)
 
 
   setLookupValue: (value, $ruleElement) ->
@@ -252,7 +274,6 @@ class @ConditionalLogic
 
   #clear questions
   clearQuestions: (container) ->
-    #console.log container
     # clear out text fields, selects and uncheck radio and checkboxes
     #TODO set these to default values once we implement default values - kdh
     # container.find("input[type!=hidden]").val("")
@@ -368,6 +389,17 @@ class @ConditionalLogic
 
   # get value of triggering question
   getValue: ($conditionElement) ->
+    if ($conditionElement[0] && $conditionElement[0].selectize)
+      value = $conditionElement[0].selectize.getValue()
+      if value.constructor == Array
+        option_strings = []
+        $.each value, (index, optionId) ->
+          option_strings.push $($conditionElement[0].selectize.getItem(optionId)[0]).text()
+
+        return option_strings.join("|&|")
+      else
+        return $($conditionElement[0].selectize.getItem(value)[0]).text()
+
     if $conditionElement.is(":radio")
       selected = $("input[type='radio'][name='" + $conditionElement.attr('name') + "']:checked")
       if selected.length > 0
@@ -399,7 +431,12 @@ class @ConditionalLogic
       else
         return
     if $conditionElement.is('select')
-      return $('#' + $conditionElement.attr('id') + ' option:selected').text()
+      text = $('#' + $conditionElement.attr('id') + ' option:selected').text()
+      if text == 'Please select'
+        return undefined
+      else
+        return text
+
     if $conditionElement.is("p")
       #remove carriage returns and trim leading and trailing whitespace
       #need to refactor to look for value in element data- attribute instead of from html rendered output
@@ -410,6 +447,7 @@ class @ConditionalLogic
         return $conditionElement.find('span.hidden-answer').text().replace(/\↵/g, '').trim()
       else
         return $conditionElement.text().replace(/\↵/g, '').trim()
+
     $conditionElement.val()
 
 $ ->
