@@ -28,6 +28,7 @@ class @ConditionalLogic
 
           # the condition element, which we need to check value for conditional logic
           $conditionElement = $conditionContainer.find(".form-control")
+
           # show
           if $conditionElement.length < 1
             $conditionElement = $conditionContainer.find(".form-control-static")
@@ -38,21 +39,22 @@ class @ConditionalLogic
           # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
           hideQuestions = self.setHideQuestions(condition, $conditionElement)
 
+
           ancestorId = rule.question_id
           # bind conditions based on element type
           # text, textarea, select
           if $conditionElement.length < 2
-            self.bindConditions($conditionElement)
+            self.bindConditions($conditionElement, rule)
           # radio buttons
           else
             if $conditionElement.is(":checkbox")
               # limit binding of each checkbox if data-label-value and answer are the same-kdh
               $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
-              self.bindConditions($conditionElement)
+              self.bindConditions($conditionElement, rule)
             else
               for element in $conditionElement
                 do (element) ->
-                  self.bindConditions($(element))
+                  self.bindConditions($(element), rule)
 
           #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
           # determine if we are in a repeater-this needs to get deleted-kdh
@@ -75,14 +77,22 @@ class @ConditionalLogic
     return
 
   #bind conditions to question
-  bindConditions: ($triggerElement) ->
+  bindConditions: ($triggerElement, rule) ->
     $triggerElement.on "change", ->
+
+      ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
+      if rule.type == "Hanuman::CalculationRule"
+        self.updateCalculation(rule)
+        return
+
       # pop out of condition into rules to handle all conditions defined in the rule
       # TODO it seems this is looping through ALL data-rule in the DOM instead of the data-rule associated with the element that triggered the onchange event-kdh
       $repeater = $($triggerElement).closest(".form-container-repeater")
       # check first to see if this bind is in a repeater
       if $repeater.length > 0
+        console.log('trigger in repeater')
         $repeater.find("[data-rule!=''][data-rule]").each ->
+          console.log('found rule')
           inRepeater = true
           $ruleElement = $(this)
           #$container = $(this).closest(".form-container-repeater")
@@ -163,20 +173,18 @@ class @ConditionalLogic
 
     if rule.type == "Hanuman::VisibilityRule"
       self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
-    else if hideShow == false
-      if rule.type == "Hanuman::LookupRule"
+    else if hideShow == false && rule.type == "Hanuman::LookupRule"
         self.setLookupValue(rule.value, $ruleElement)
-      else if rule.type == "Hanuman::CalculationRule"
-        self.getCalculationParameters(conditions)
 
 
-  getCalculationParameters: (conditions) ->
+  updateCalculation: (rule) ->
     parameters = {}
-    questionFields = $("[data-question-id][data-element-type]")
-    $.each questionFields, (index, qf) ->
+    inputContainers = $("[data-question-id][data-element-type]")
+    console.log('calculated field update triggered for: ' + rule.question_id)
 
-      columnName = $(qf).data('api-column-name')
-      $conditionElement = $(qf).find('.form-control')
+    $.each inputContainers, (index, inputContainer) ->
+      columnName = $(inputContainer).data('api-column-name')
+      $conditionElement = $(inputContainer).find('.form-control')
 
       value = self.getValue($conditionElement)
 
@@ -185,12 +193,16 @@ class @ConditionalLogic
       else
         parameters[columnName] = value
 
+#        $repeater = $conditionElement.closest(".form-container-repeater")
+#        if $repeater.length > 0
+#          console.log(columnName)
+
 #      columnName = $("[data-question-id=" + condition.question_id + "]").data('api-column-name')
 #      $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
 #      $repeater = $conditionElement.closest(".form-container-repeater")
 #      if $repeater.length > 0
 #        inRepeater = true
-    console.log(parameters)
+#    console.log(parameters)
 
 
   setLookupValue: (value, $ruleElement) ->
