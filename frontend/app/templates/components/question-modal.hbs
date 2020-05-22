@@ -380,37 +380,6 @@
         {{/if}}
         <hr/>
 
-        {{!-- Calculation rules --}}
-
-        <div class="form-group">
-          <div class="col-sm-{{if (not question.calculationRule) '9' '11'}}">
-            <label>Calculation Rules</label>
-            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Calculation Rules" data-content="Add a JavaScript expression to dynamically calculate the value of this question. If the rule conditions are met the expression will be run." class="bootstrap-popover">
-              <span class="glyphicons glyphicons-info-sign"></span>
-            </a>
-          </div>
-          {{#if (not question.calculationRule)}}
-            <div class="col-sm-2">
-              <button data-test-add-a-calc-rule class="btn btn-success btn-sm" onclick={{perform addRule "Hanuman::CalculationRule"}}>
-                <span class="glyphicons glyphicons-plus"></span>
-                Add rule
-              </button>
-            </div>
-
-          {{/if}}
-          <div class="col-sm-1">
-            <span data-test-open-calculation-rules onclick={{action (toggle "calculationRulesCollapsed" this)}}
-              class="right glyphicon glyphicon-collapse-{{if calculationRulesCollapsed 'up' 'down'}}"></span>
-          </div>
-        </div>
-
-        {{#if question.calculationRule}}
-          {{#liquid-unless calculationRulesCollapsed }}
-            {{rule-panel question=question conditionalQuestions=conditionalQuestions rule=question.calculationRule }}
-          {{/liquid-unless}}
-        {{/if}}
-        <hr/>
-
         {{#if isSuperUser}}
           <hr style="margin-top:15px;" />
           <section class="super-user">
@@ -425,7 +394,38 @@
                 ></span>
               </div>
             </div>
+
+
             {{#liquid-if superUserCollapsed}}
+            {{!-- Calculation rules --}}
+
+              <div class="form-group">
+                <div class="col-sm-{{if (not question.calculationRule) '9' '11'}}">
+                  <label>Calculation Rules</label>
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Calculation Rules" data-content="Add a JavaScript expression to dynamically calculate the value of this question. If the rule conditions are met the expression will be run." class="bootstrap-popover">
+                    <span class="glyphicons glyphicons-info-sign"></span>
+                  </a>
+                </div>
+                {{#if (not question.calculationRule)}}
+                  <div class="col-sm-2">
+                    <button data-test-add-a-calc-rule class="btn btn-success btn-sm" onclick={{perform addRule "Hanuman::CalculationRule"}}>
+                      <span class="glyphicons glyphicons-plus"></span>
+                      Add rule
+                    </button>
+                  </div>
+
+                {{/if}}
+                <div class="col-sm-1">
+                  <span data-test-open-calculation-rules onclick={{action (toggle "calculationRulesCollapsed" this)}} class="right glyphicon glyphicon-collapse-{{if calculationRulesCollapsed 'up' 'down'}}"></span>
+                </div>
+              </div>
+
+              {{#if question.calculationRule}}
+                {{#liquid-unless calculationRulesCollapsed }}
+                  {{rule-panel question=question conditionalQuestions=conditionalQuestions rule=question.calculationRule }}
+                {{/liquid-unless}}
+              {{/if}}
+
               {{question-super-user-only
                 question=question
                 ancestryQuestions=ancestryQuestions
