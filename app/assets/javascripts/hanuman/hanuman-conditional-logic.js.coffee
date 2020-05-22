@@ -444,24 +444,19 @@ class @ConditionalLogic
 
   updateCalculation: (rule) ->
     parameters = {}
-    console.log('calculated field update triggered for: ' + rule.question_id)
+    $target = $('[data-question-id="' + rule.question_id + '"]').find('.form-control')
 
     $.each rule.conditions, (index, condition) ->
-
       $question = $('[data-question-id="' + condition.question_id + '"]')
-
       elementType = $question.data('element-type')
       columnName = $question.data('api-column-name')
-
       $repeater = $question.closest(".form-container-repeater")
 
       if $repeater.length > 0
         entries = []
-
         $.each $question, (index, entry) ->
           value = self.getNativeValue($(entry).find('.form-control'), elementType)
           entries.push value
-
         parameters[columnName] = entries
 
       else
@@ -469,7 +464,17 @@ class @ConditionalLogic
         value = self.getNativeValue($conditionElement, elementType)
         parameters[columnName] = value
 
-    console.log(parameters)
+    interpreter = new Interpreter(rule.script, (interpreter, globalObject) ->
+      outputWrapper = (result) -> self.setCalculationResult($target, result)
+      interpreter.setProperty(globalObject, 'setResult', interpreter.createNativeFunction(outputWrapper))
+      $.each parameters, (key, value) ->
+        interpreter.setProperty(globalObject, '$' + key, interpreter.nativeToPseudo(value))
+    )
+
+    interpreter.run()
+
+  setCalculationResult: ($target, result) ->
+    $target.val(result)
 
   getNativeValue: ($input, elementType) ->
     stringValue = self.getValue($input)
