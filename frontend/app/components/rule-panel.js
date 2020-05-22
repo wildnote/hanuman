@@ -15,14 +15,6 @@ export default Component.extend({
     return answerChoices.filter((answerChoice) => choiceIds.includes(answerChoice.id));
   }),
 
-  isLookupRule: computed('rule.type', function () {
-    return this.rule.get('type') === 'Hanuman::LookupRule';
-  }),
-
-  isCalculationRule: computed('rule.type', function () {
-    return this.rule.get('type') === 'Hanuman::CalculationRule';
-  }),
-
   saveConditionTask: task(function*(condition, rule) {
     if (this.get('question.isNew') || rule.get('isNew')) {
       if (rule.get('conditionsPendingSave').indexOf(condition) === -1) {

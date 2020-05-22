@@ -3,7 +3,7 @@
     <div class="table-responsive">
       <table class="table table-hover">
         <tbody>
-          {{#if isLookupRule}}
+          {{#if rule.isLookupRule}}
             <tr class="no-hover">
               <td colspan="6" style="border-top: none;">
                 <a class="btn btn-delete" style="float: right;" onclick={{action "deleteRule"}}>
@@ -12,6 +12,8 @@
               </td>
             </tr>
           {{/if}}
+
+          {{#unless rule.isCalculationRule}}
           <tr class="no-hover">
             <td colspan="6">
               <select
@@ -24,11 +26,17 @@
               </select>
             </td>
           </tr>
+          {{/unless}}
+
           <tr class="no-hover">
             <td width="10px"></td>
             <td>Question</td>
-            <td>Operator</td>
-            <td>Answer</td>
+
+            {{#unless rule.isCalculationRule}}
+              <td>Operator</td>
+              <td>Answer</td>
+            {{/unless}}
+
             <td width="10px"></td>
             <td width="10px"></td>
           </tr>
@@ -51,7 +59,7 @@
             removeTask=removeConditionTask
             isNewCondition=true
           }}
-          {{#if isLookupRule}}
+          {{#if rule.isLookupRule}}
             <tr class="no-hover defaul-rule-value">
               <td data-test-multiple-answers-select colspan="6">
                 {{#if question.answerType.hasAnswerChoices}}
@@ -78,7 +86,7 @@
                 {{/if}}
               </td>
             </tr>
-          {{else if isCalculationRule}}
+          {{else if rule.isCalculationRule}}
             <tr class="no-hover defaul-rule-value">
               <td data-test-multiple-answers-select colspan="6">
                 {{ember-ace

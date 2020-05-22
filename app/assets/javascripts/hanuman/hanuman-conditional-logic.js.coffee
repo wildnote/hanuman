@@ -176,35 +176,6 @@ class @ConditionalLogic
     else if hideShow == false && rule.type == "Hanuman::LookupRule"
         self.setLookupValue(rule.value, $ruleElement)
 
-
-  updateCalculation: (rule) ->
-    parameters = {}
-    inputContainers = $("[data-question-id][data-element-type]")
-    console.log('calculated field update triggered for: ' + rule.question_id)
-
-    $.each inputContainers, (index, inputContainer) ->
-      columnName = $(inputContainer).data('api-column-name')
-      $conditionElement = $(inputContainer).find('.form-control')
-
-      value = self.getValue($conditionElement)
-
-      if value == undefined || value.trim() == ''
-        parameters[columnName] = null
-      else
-        parameters[columnName] = value
-
-#        $repeater = $conditionElement.closest(".form-container-repeater")
-#        if $repeater.length > 0
-#          console.log(columnName)
-
-#      columnName = $("[data-question-id=" + condition.question_id + "]").data('api-column-name')
-#      $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
-#      $repeater = $conditionElement.closest(".form-container-repeater")
-#      if $repeater.length > 0
-#        inRepeater = true
-#    console.log(parameters)
-
-
   setLookupValue: (value, $ruleElement) ->
     answerType = $ruleElement.data('element-type')
 
@@ -461,6 +432,33 @@ class @ConditionalLogic
         return $conditionElement.text().replace(/\↵/g, '').trim()
 
     $conditionElement.val()
+
+  updateCalculation: (rule) ->
+    parameters = {}
+    inputContainers = $("[data-question-id][data-element-type]")
+    console.log('calculated field update triggered for: ' + rule.question_id)
+
+    $.each inputContainers, (index, inputContainer) ->
+      columnName = $(inputContainer).data('api-column-name')
+      $conditionElement = $(inputContainer).find('.form-control')
+
+      value = self.getValue($conditionElement)
+
+      if value == undefined || value.trim() == ''
+        parameters[columnName] = null
+      else
+        parameters[columnName] = value
+
+#        $repeater = $conditionElement.closest(".form-container-repeater")
+#        if $repeater.length > 0
+#          console.log(columnName)
+
+#      columnName = $("[data-question-id=" + condition.question_id + "]").data('api-column-name')
+#      $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
+#      $repeater = $conditionElement.closest(".form-container-repeater")
+#      if $repeater.length > 0
+#        inRepeater = true
+#    console.log(parameters)
 
 $ ->
   if $('input#survey_survey_template_id').length
