@@ -49,7 +49,7 @@ class @ConditionalLogic
           else
             if $conditionElement.is(":checkbox")
               # limit binding of each checkbox if data-label-value and answer are the same-kdh
-              $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
+#              $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
               self.bindConditions($conditionElement, rule)
             else
               for element in $conditionElement
@@ -392,6 +392,14 @@ class @ConditionalLogic
           return selected.val()
       else
         return
+
+    if $conditionElement.is(":checkbox") && $conditionElement.parents('.form-container-entry-item').data('element-type') == 'checkboxes'
+      option_strings = []
+      $.each $conditionElement, (index, checkbox) ->
+        if $(checkbox).is(":checked")
+          option_strings.push $(checkbox).attr('data-label-value')
+      return option_strings.join("|&|")
+
     if $conditionElement.is(":checkbox")
       if $conditionElement.is(":checked")
         if $conditionElement.attr('data-label-value')
@@ -400,10 +408,11 @@ class @ConditionalLogic
           return $conditionElement.val()
       else
         return
+
     if $conditionElement.is('select[multiple]')
-      if $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").size() > 0
+      if $conditionElement.chosen().find("option:selected").length > 0
         option_strings = []
-        $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").each ->
+        $conditionElement.chosen().find("option:selected").each ->
           option_strings.push this.innerHTML
         return option_strings.join("|&|")
       else if $conditionElement.is(".selectize-taxon-select") && $conditionElement.children().size() > 0
@@ -435,30 +444,58 @@ class @ConditionalLogic
 
   updateCalculation: (rule) ->
     parameters = {}
-    inputContainers = $("[data-question-id][data-element-type]")
     console.log('calculated field update triggered for: ' + rule.question_id)
 
-    $.each inputContainers, (index, inputContainer) ->
-      columnName = $(inputContainer).data('api-column-name')
-      $conditionElement = $(inputContainer).find('.form-control')
+    $.each rule.conditions, (index, condition) ->
 
-      value = self.getValue($conditionElement)
+      $question = $('[data-question-id="' + condition.question_id + '"]')
 
-      if value == undefined || value.trim() == ''
-        parameters[columnName] = null
+      elementType = $question.data('element-type')
+      columnName = $question.data('api-column-name')
+
+      $repeater = $question.closest(".form-container-repeater")
+
+      if $repeater.length > 0
+        entries = []
+
+        $.each $question, (index, entry) ->
+          value = self.getNativeValue($(entry).find('.form-control'), elementType)
+          entries.push value
+
+        parameters[columnName] = entries
+
       else
+        $conditionElement = $question.find('.form-control')
+        value = self.getNativeValue($conditionElement, elementType)
         parameters[columnName] = value
 
-#        $repeater = $conditionElement.closest(".form-container-repeater")
-#        if $repeater.length > 0
-#          console.log(columnName)
+    console.log(parameters)
 
-#      columnName = $("[data-question-id=" + condition.question_id + "]").data('api-column-name')
-#      $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control')
-#      $repeater = $conditionElement.closest(".form-container-repeater")
-#      if $repeater.length > 0
-#        inRepeater = true
-#    console.log(parameters)
+  getNativeValue: ($input, elementType) ->
+    stringValue = self.getValue($input)
+
+    if elementType == 'checkbox'
+      return stringValue == 'true'
+
+    if elementType == 'number' || elementType == 'counter'
+      if $.isNumeric(stringValue)
+        return parseFloat(stringValue)
+      else
+        return 0
+
+    if elementType == 'multiselect' || elementType == 'checkboxes'
+      if stringValue == undefined || stringValue == null || stringValue.trim() == ''
+        return []
+      else
+        return stringValue.split('|&|')
+
+    if elementType == 'date'
+      return $input.datepicker('getDate')
+
+    if stringValue == undefined || stringValue == null || stringValue.trim() == ''
+      return null
+
+    return stringValue
 
 $ ->
   if $('input#survey_survey_template_id').length
