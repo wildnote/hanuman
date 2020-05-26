@@ -1,6 +1,10 @@
 {{#if isEditingCondition}}
   {{!-- new and edit --}}
-  <td>if</td>
+  <td>
+    {{#unless rule.isCalculationRule}}
+      if
+    {{/unless}}
+  </td>
   <td>
     {{#form-field for='question'}}
       <select

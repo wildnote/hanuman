@@ -49,7 +49,9 @@ class @ConditionalLogic
           else
             if $conditionElement.is(":checkbox")
               # limit binding of each checkbox if data-label-value and answer are the same-kdh
-#              $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
+              if rule.type != 'Hanuman::CalculationRule'
+                $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
+
               self.bindConditions($conditionElement, rule)
             else
               for element in $conditionElement
@@ -79,7 +81,6 @@ class @ConditionalLogic
   #bind conditions to question
   bindConditions: ($triggerElement, rule) ->
     $triggerElement.on "change", ->
-
       ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
       if rule.type == "Hanuman::CalculationRule"
         self.updateCalculation(rule)
@@ -90,9 +91,7 @@ class @ConditionalLogic
       $repeater = $($triggerElement).closest(".form-container-repeater")
       # check first to see if this bind is in a repeater
       if $repeater.length > 0
-        console.log('trigger in repeater')
         $repeater.find("[data-rule!=''][data-rule]").each ->
-          console.log('found rule')
           inRepeater = true
           $ruleElement = $(this)
           #$container = $(this).closest(".form-container-repeater")
@@ -505,7 +504,7 @@ class @ConditionalLogic
           if result.indexOf(option.text) != -1
             $target[0].selectize.addItem(option.value, false)
 
-        $target[0].trigger('change')
+        $($target[0]).trigger('change')
 
     else if elementType == 'select' && typeof result == 'string'
       if $target.hasClass('chosen-select')
@@ -520,7 +519,7 @@ class @ConditionalLogic
             $target[0].selectize.addItem(option.value, false)
             return
 
-        $target[0].trigger('change')
+        $($target[0]).trigger('change')
 
     else if elementType == 'radio' && typeof result == 'string'
       $.each $target, (index, radio) ->
@@ -541,6 +540,7 @@ class @ConditionalLogic
 
         else if $target.hasClass('selectized')
           $target[0].selectize.clear(true)
+          $($target[0]).trigger('change')
 
       else
         $target.val('').trigger('change')
