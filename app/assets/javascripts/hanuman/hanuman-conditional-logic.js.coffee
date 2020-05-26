@@ -444,15 +444,23 @@ class @ConditionalLogic
   updateCalculation: (rule) ->
     parameters = {}
     $target = $('[data-question-id="' + rule.question_id + '"]').find('.form-control')
+    $targetRepeater = $target.closest(".form-container-repeater")
+
     targetType = $('[data-question-id="' + rule.question_id + '"]').data('element-type')
 
+
     $.each rule.conditions, (index, condition) ->
-      $question = $('[data-question-id="' + condition.question_id + '"]')
+
+      if $targetRepeater.length > 0 && $('[data-question-id="' + condition.question_id + '"]').closest(".form-container-repeater").length > 0
+        $question = $targetRepeater.find('[data-question-id="' + condition.question_id + '"]')
+      else
+        $question = $('[data-question-id="' + condition.question_id + '"]')
+
       elementType = $question.data('element-type')
       columnName = $question.data('api-column-name')
       $repeater = $question.closest(".form-container-repeater")
 
-      if $repeater.length > 0
+      if $repeater.length > 0 && $targetRepeater.length == 0
         entries = []
         $.each $question, (index, entry) ->
           value = self.getNativeValue($(entry).find('.form-control'), elementType)
