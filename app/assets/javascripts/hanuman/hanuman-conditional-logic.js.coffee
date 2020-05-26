@@ -81,6 +81,9 @@ class @ConditionalLogic
   #bind conditions to question
   bindConditions: ($triggerElement, rule) ->
     $triggerElement.on "change", ->
+      console.log(this)
+      console.log(rule.type)
+#     console.log(rule)
       ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
       if rule.type == "Hanuman::CalculationRule"
         self.updateCalculation(rule)
@@ -98,18 +101,17 @@ class @ConditionalLogic
           $container = $ruleElement
           rules = $.parseJSON($ruleElement.attr("data-rule"))
           $(rules).each ->
-            rule = this
-            matchType = rule.match_type
+            matchType = this.match_type
             questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
-            conditions = rule.conditions
-            ancestorId = rule.question_id
+            conditions = this.conditions
+            ancestorId = this.question_id
             matchingCondition = _.where(conditions, {question_id: Number(questionId)})
             if matchingCondition.length > 0
               if conditions.length > 1
-                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule)
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this)
               else
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
-                if rule.type == "Hanuman::VisibilityRule"
+                if this.type == "Hanuman::VisibilityRule"
                   self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
       # if not then lets assume its at the top most level outside of a repeater
       else
@@ -119,21 +121,20 @@ class @ConditionalLogic
           $container = $ruleElement
           rules = $.parseJSON($ruleElement.attr("data-rule"))
           $(rules).each ->
-            rule = this
-            matchType = rule.match_type
+            matchType = this.match_type
             questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
-            conditions = rule.conditions
-            ancestorId = rule.question_id
+            conditions = this.conditions
+            ancestorId = this.question_id
             matchingCondition = _.where(conditions, {question_id: Number(questionId)})
             if matchingCondition.length > 0
               if conditions.length > 1
-                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule)
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this)
               else
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
-                if rule.type == "Hanuman::VisibilityRule"
+                if this.type == "Hanuman::VisibilityRule"
                   self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
                 else if hideQuestions == false
-                  self.setLookupValue(rule.value, $ruleElement)
+                  self.setLookupValue(this.value, $ruleElement)
     return
 
   checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule) ->
