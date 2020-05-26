@@ -445,6 +445,7 @@ class @ConditionalLogic
   updateCalculation: (rule) ->
     parameters = {}
     $target = $('[data-question-id="' + rule.question_id + '"]').find('.form-control')
+    targetType = $('[data-question-id="' + rule.question_id + '"]').data('element-type')
 
     $.each rule.conditions, (index, condition) ->
       $question = $('[data-question-id="' + condition.question_id + '"]')
@@ -464,17 +465,61 @@ class @ConditionalLogic
         value = self.getNativeValue($conditionElement, elementType)
         parameters[columnName] = value
 
-    interpreter = new Interpreter(rule.script, (interpreter, globalObject) ->
-      outputWrapper = (result) -> self.setCalculationResult($target, result)
+    self.interpreter = new Interpreter(rule.script, (interpreter, globalObject) ->
+      outputWrapper = (result) -> self.setCalculationResult($target, result, targetType)
       interpreter.setProperty(globalObject, 'setResult', interpreter.createNativeFunction(outputWrapper))
-      $.each parameters, (key, value) ->
-        interpreter.setProperty(globalObject, '$' + key, interpreter.nativeToPseudo(value))
+      $.each parameters, (key, value) -> interpreter.setProperty(globalObject, '$' + key, interpreter.nativeToPseudo(value))
     )
 
-    interpreter.run()
+    self.interpreter.run()
 
-  setCalculationResult: ($target, result) ->
-    $target.val(result)
+  setCalculationResult: ($target, pseudoResult, elementType) ->
+    result = self.interpreter.pseudoToNative(pseudoResult)
+
+    if elementType == 'checkbox' && typeof result == 'boolean'
+      $target.prop("checked", result).trigger('change')
+
+    else if (elementType == 'number' || elementType == 'counter') && typeof result == 'number'
+      $target.val(result).trigger('change')
+
+    else if (elementType == 'text' || elementType ==  'textarea' || elementType == 'time') && typeof result == 'string'
+      $target.val(result).trigger('change')
+
+    else if elementType == 'date' && typeof result == 'number'
+      $target.datepicker("setDate", new Date(result))
+
+    else if elementType == 'checkboxes' && Array.isArray(result)
+      $.each $target, (index, checkbox) ->
+        $(checkbox).prop("checked", result.indexOf($(checkbox).attr('data-label-value')) != -1).trigger('change')
+
+    else if elementType == 'multiselect' && Array.isArray(result)
+      if $target.hasClass('chosen-multiselect')
+        $target.find('option').prop('selected', false)
+        $.each result, (index, optionText) -> $target.find('option:contains(' + optionText + ')').prop('selected', true);
+        $target.trigger("chosen:updated")
+
+      else if $target.hasClass('selectized')
+        $target[0].selectize.clear(true)
+        $.each $target[0].selectize.options, (index, option) ->
+          if result.indexOf(option.text) != -1
+            $target[0].selectize.addItem(option.value, false)
+
+    else if elementType == 'select' && typeof result == 'string'
+      if $target.hasClass('chosen-select')
+        $target.find('option').prop('selected', false)
+        $target.find('option:contains(' + result + ')').prop('selected', true);
+        $target.trigger("chosen:updated")
+
+      else if $target.hasClass('selectized')
+        $target[0].selectize.clear(true)
+        $.each $target[0].selectize.options, (index, option) ->
+          if option.text == result
+            $target[0].selectize.addItem(option.value, false)
+            return
+
+    else if elementType == 'radio' && typeof result == 'string'
+      $.each $target, (index, radio) ->
+        $(radio).prop("checked", $(radio).attr('data-label-value') == result).trigger('change')
 
   getNativeValue: ($input, elementType) ->
     stringValue = self.getValue($input)
