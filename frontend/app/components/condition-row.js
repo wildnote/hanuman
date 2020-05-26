@@ -53,6 +53,7 @@ export default Component.extend({
   }),
 
   availableQuestions: computed('rule', 'question.@each.answerType.name', function() {
+    let ruleQuestion = this.get('rule.question');
     if (this.rule.get('type') === 'Hanuman::LookupRule') {
       let supportedQuestionForLookup = [
         'checkbox',
@@ -65,10 +66,24 @@ export default Component.extend({
         'taxonchosensingleselect'
       ];
       return this.questions.filter((question) => {
-        return supportedQuestionForLookup.includes(question.get('answerType.name'));
+        if (supportedQuestionForLookup.includes(question.get('answerType.name'))) {
+          if (question.get('parent') && question.get('parent').get('isARepeater')) {
+            return question.get('ancestry') === ruleQuestion.get('ancestry');
+          } else {
+            return true;
+          }
+        } else {
+          return false;
+        }
       });
     } else {
-      return this.questions;
+      return this.questions.filter((question) => {
+        if (question.get('parent') && question.get('parent').get('isARepeater')) {
+          return question.get('ancestry') === ruleQuestion.get('ancestry');
+        } else {
+          return true;
+        }
+      });
     }
   }),
 

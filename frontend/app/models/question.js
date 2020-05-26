@@ -93,8 +93,12 @@ export default Model.extend(Validator, {
   }),
 
   parent: computed('parentId', function() {
-    return this.store.peekAll('question').filterBy('id', this.parentId);
+    return this.store.peekAll('question').filterBy('id', this.parentId).get(0);
   }),
+
+  // inRepeater: computed('parentId', function () {
+  //
+  // }),
 
   numChildren: computed('childQuestion', function() {
     if (this.get('childQuestion')) {

@@ -445,9 +445,7 @@ class @ConditionalLogic
     parameters = {}
     $target = $('[data-question-id="' + rule.question_id + '"]').find('.form-control')
     $targetRepeater = $target.closest(".form-container-repeater")
-
     targetType = $('[data-question-id="' + rule.question_id + '"]').data('element-type')
-
 
     $.each rule.conditions, (index, condition) ->
 
