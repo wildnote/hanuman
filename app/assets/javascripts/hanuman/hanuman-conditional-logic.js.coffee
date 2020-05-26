@@ -487,6 +487,7 @@ class @ConditionalLogic
 
     else if elementType == 'date' && typeof result == 'number'
       $target.datepicker("setDate", new Date(result))
+      $target.trigger('change')
 
     else if elementType == 'checkboxes' && Array.isArray(result)
       $.each $target, (index, checkbox) ->
@@ -504,6 +505,8 @@ class @ConditionalLogic
           if result.indexOf(option.text) != -1
             $target[0].selectize.addItem(option.value, false)
 
+        $target[0].trigger('change')
+
     else if elementType == 'select' && typeof result == 'string'
       if $target.hasClass('chosen-select')
         $target.find('option').prop('selected', false)
@@ -517,9 +520,31 @@ class @ConditionalLogic
             $target[0].selectize.addItem(option.value, false)
             return
 
+        $target[0].trigger('change')
+
     else if elementType == 'radio' && typeof result == 'string'
       $.each $target, (index, radio) ->
         $(radio).prop("checked", $(radio).attr('data-label-value') == result).trigger('change')
+
+    else
+      if elementType == 'checkbox'
+        $target.prop("checked", false).trigger('change')
+
+      else if elementType == 'checkboxes' || elementType == 'radio'
+        $.each $target, (index, option) ->
+          $(option).prop("checked", false).trigger('change')
+
+      else if elementType == 'multiselect' || elementType == 'select'
+        if $target.hasClass('chosen-select') || $target.hasClass('chosen-multiselect')
+          $target.find('option').prop('selected', false)
+          $target.trigger("chosen:updated")
+
+        else if $target.hasClass('selectized')
+          $target[0].selectize.clear(true)
+
+      else
+        $target.val('').trigger('change')
+
 
   getNativeValue: ($input, elementType) ->
     stringValue = self.getValue($input)
