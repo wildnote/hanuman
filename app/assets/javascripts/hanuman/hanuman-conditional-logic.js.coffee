@@ -441,45 +441,60 @@ class @ConditionalLogic
 
     $conditionElement.val()
 
+  ## AN May 2020 - Start calculated fields code
+  # This method triggers an update of the calculations for the given rule's target question
   updateCalculation: (rule) ->
-    parameters = {}
-    $target = $('[data-question-id="' + rule.question_id + '"]').find('.form-control')
-    $targetRepeater = $target.closest(".form-container-repeater")
-    targetType = $('[data-question-id="' + rule.question_id + '"]').data('element-type')
+    parameters = {} # used to store the survey data object passed to the calculated fields expresssion
+    $target = $('[data-question-id="' + rule.question_id + '"]').find('.form-control') # the question we are calculating a value for
+    $targetRepeater = $target.closest(".form-container-repeater") # the parent repeater of the target, if it exists
+    targetType = $('[data-question-id="' + rule.question_id + '"]').data('element-type') # the form control type of the target
 
     $.each rule.conditions, (index, condition) ->
 
+      # If the target question (the one we are calculating a value for) is inside a repeater AND the parameter question is inside a repeater,
+      # we only want the parameter if it's in the same repeater instance as the target
       if $targetRepeater.length > 0 && $('[data-question-id="' + condition.question_id + '"]').closest(".form-container-repeater").length > 0
         $question = $targetRepeater.find('[data-question-id="' + condition.question_id + '"]')
       else
         $question = $('[data-question-id="' + condition.question_id + '"]')
 
-      elementType = $question.data('element-type')
-      columnName = $question.data('api-column-name')
-      $repeater = $question.closest(".form-container-repeater")
+      elementType = $question.data('element-type') # the form control type of the parameter question
+      columnName = $question.data('api-column-name') # the api column name of the parameter, used to generate the variable name
+      $repeater = $question.closest(".form-container-repeater") # the parent parameter of the target, if it exists
 
+      # If the parameter question is inside a repeater, but the target is top-level, we want to make an array out of the parameter question across all repeater instances
       if $repeater.length > 0 && $targetRepeater.length == 0
         entries = []
         $.each $question, (index, entry) ->
           value = self.getNativeValue($(entry).find('.form-control'), elementType)
-          entries.push value
+          entries.push(value)
         parameters[columnName] = entries
 
+      # Otherwise, we only want the parameter question (either it is top level, or in the same repeater instance as the target)
       else
         $conditionElement = $question.find('.form-control')
         value = self.getNativeValue($conditionElement, elementType)
         parameters[columnName] = value
 
     self.interpreter = new Interpreter(rule.script, (interpreter, globalObject) ->
+      # creates a function that can be called from the interpreter context,
+      # which allows us to extract the calculation result and update the UI
       outputWrapper = (result) -> self.setCalculationResult($target, result, targetType)
       interpreter.setProperty(globalObject, 'setResult', interpreter.createNativeFunction(outputWrapper))
-      $.each parameters, (key, value) -> interpreter.setProperty(globalObject, '$' + key, interpreter.nativeToPseudo(value))
+
+      # get all of the parameter questions, inject them into the interpreter as $api_column_name variables
+      $.each parameters, (key, value) ->
+        interpreter.setProperty(globalObject, '$' + key, interpreter.nativeToPseudo(value))
     )
 
     self.interpreter.run()
 
+  # This method takes a value from the interpreter and updates the UI
+  # $target: jQuery object for the target question
+  # pseudoResult: interpreter object containing the calculation result
+  # elementType: the form control type of the target
   setCalculationResult: ($target, pseudoResult, elementType) ->
-    result = self.interpreter.pseudoToNative(pseudoResult)
+    result = self.interpreter.pseudoToNative(pseudoResult) # converts from an interpreter object to a native JS object
 
     if elementType == 'checkbox' && typeof result == 'boolean'
       $target.prop("checked", result).trigger('change')
@@ -531,6 +546,7 @@ class @ConditionalLogic
       $.each $target, (index, radio) ->
         $(radio).prop("checked", $(radio).attr('data-label-value') == result).trigger('change')
 
+    # If the type of the calculation result doesn't match the element type, or is null/undefined, clear the target
     else
       if elementType == 'checkbox'
         $target.prop("checked", false).trigger('change')
@@ -551,7 +567,7 @@ class @ConditionalLogic
       else
         $target.val('').trigger('change')
 
-
+  # converts the string value taken from a given input to a native JS value that we can pass to the interpreter
   getNativeValue: ($input, elementType) ->
     stringValue = self.getValue($input)
 
