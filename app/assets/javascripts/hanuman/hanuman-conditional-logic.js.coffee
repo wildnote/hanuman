@@ -64,10 +64,11 @@ class @ConditionalLogic
           $repeater = $conditionElement.closest(".form-container-repeater")
           if $repeater.length > 0
               inRepeater = true
-          if rule.conditions.length > 1
+
+          if rule.type == "Hanuman::CalculationRule"
+            self.updateCalculation(rule)
+          else
             self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule)
-          else if rule.type == "Hanuman::VisibilityRule"
-            self.hideShowQuestions(hideQuestions, ancestorId, $ruleContainer, $ruleContainer, inRepeater)
 
     if problemWithCL
       e = new Error("conditional Logic # findRules")
@@ -81,8 +82,6 @@ class @ConditionalLogic
   #bind conditions to question
   bindConditions: ($triggerElement, rule) ->
     $triggerElement.on "change", ->
-      console.log(this)
-      console.log(rule.type)
 #     console.log(rule)
       ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
       if rule.type == "Hanuman::CalculationRule"
