@@ -56,7 +56,6 @@ export default Component.extend({
       this.rule.destroyRecord();
     },
     editorReady(editor) {
-      console.log("loading editor");
       editor.getSession().setUseWorker(false);
     }
   }

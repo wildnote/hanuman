@@ -78,6 +78,22 @@ export default Component.extend({
       });
     } else {
       return this.questions.filter((question) => {
+
+        // Disallow calculation rules that would end up creating a state of infinite recursion
+        if (question.get('calculationRule')) {
+          let conditions = question.get('calculationRule').get('conditions');
+          let recursive = false;
+          conditions.forEach(function (condition) {
+            if (condition.get('questionId') === ruleQuestion.get('railsId').toString()) {
+              recursive = true;
+            }
+          });
+
+          if (recursive) {
+            return false;
+          }
+        }
+
         if (question.get('parent') && question.get('parent').get('isARepeater')) {
           return question.get('ancestry') === ruleQuestion.get('ancestry');
         } else {
