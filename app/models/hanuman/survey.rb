@@ -221,9 +221,11 @@ module Hanuman
                   trigger_observation.answer.present?
                 end
               when "is greater than"
-                trigger_observation.answer.to_f.to_s == trigger_observation && trigger_observation.answer.to_f > cond.answer.to_f
+                is_numerical = trigger_observation.answer.to_i.to_s == trigger_observation.answer || trigger_observation.answer.to_f.to_s == trigger_observation.answer
+                is_numerical && trigger_observation.answer.to_f > cond.answer.to_f
               when "is less than"
-                trigger_observation.answer.to_f.to_s == trigger_observation && trigger_observation.answer.to_f < cond.answer.to_f
+                is_numerical = trigger_observation.answer.to_i.to_s == trigger_observation.answer || trigger_observation.answer.to_f.to_s == trigger_observation.answer
+                is_numerical && trigger_observation.answer.to_f < cond.answer.to_f
               when "starts with"
                 trigger_observation.answer.starts_with?(cond.answer)
               when "contains"
