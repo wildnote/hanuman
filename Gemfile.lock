@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hanuman (2.0.7)
+    hanuman (2.0.9)
       active_model_serializers (~> 0.8.1)
       acts-as-taggable-on (~> 4.0.0)
       amoeba (~> 3.1.0)
@@ -327,4 +327,4 @@ DEPENDENCIES
   shoulda-matchers (~> 3.1.2)
 
 BUNDLED WITH
-   1.16.5
+   1.17.3
