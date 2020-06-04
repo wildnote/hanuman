@@ -380,6 +380,16 @@
         {{/if}}
         <hr/>
 
+
+        <div class="form-group">
+          <div class="col-sm-12">
+            {{#form-field for='reportChildrenWidth' label='Report Children Width'}}
+              <input type="number" name="reportChildrenWidth" class="form-control" data-test="question.reportChildrenWidth"
+                value={{question.reportChildrenWidth}} oninput={{action (mut question.reportChildrenWidth) value="target.value"}} />
+            {{/form-field}}
+          </div>
+        </div>
+
         {{#if isSuperUser}}
           <hr style="margin-top:15px;" />
           <section class="super-user">
