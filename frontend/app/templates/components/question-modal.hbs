@@ -380,15 +380,16 @@
         {{/if}}
         <hr/>
 
-
-        <div class="form-group">
-          <div class="col-sm-12">
-            {{#form-field for='reportChildrenWidth' label='Report Children Width'}}
-              <input type="number" name="reportChildrenWidth" class="form-control" data-test="question.reportChildrenWidth"
-                value={{question.reportChildrenWidth}} oninput={{action (mut question.reportChildrenWidth) value="target.value"}} />
-            {{/form-field}}
+        {{#if (or question.isContainer question.isARepeater) }}
+          <div class="form-group">
+            <div class="col-sm-12">
+              {{#form-field for='reportChildrenWidth' label='Report Children Width'}}
+                <input type="number" name="reportChildrenWidth" class="form-control" data-test="question.reportChildrenWidth"
+                  value={{question.reportChildrenWidth}} oninput={{action (mut question.reportChildrenWidth) value="target.value"}} />
+              {{/form-field}}
+            </div>
           </div>
-        </div>
+        {{/if}}
 
         {{#if isSuperUser}}
           <hr style="margin-top:15px;" />
