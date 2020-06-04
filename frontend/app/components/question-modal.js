@@ -344,6 +344,14 @@ export default Component.extend({
       // } 
     },
 
+    setReportChildrenWidth(value) {
+      value = value.replace(/\D+/g, '');
+      value = value.replace(/\b0\b/g, '');
+      if (value > 100 || value < 0) value = '';
+      set(this.question, 'reportChildrenWidth', value);
+      $('[name="reportChildrenWidth"]').val(value);
+    },
+
     setMaxPhotoValue(value) {
       value = value.replace(/\D+/g, '');
       value = value.replace(/\b0\b/g, ''); // replace standalone 0 with 1
