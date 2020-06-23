@@ -68,7 +68,8 @@ export default Controller.extend({
         'id': question.get('id'),
         'sortOrder': question.get('sortOrder'),
         'parentId': question.get('parentId'),
-        'ancestry': question.get('ancestry')
+        'ancestry': question.get('ancestry'),
+        'answerTypeName': question.get('answerType').get('name')
       };
       fakeQuestions.push(fakeQuestion);
     });
@@ -101,17 +102,16 @@ export default Controller.extend({
 
     let pass = true;
     fakeQuestions.forEach(function (question) {
-      if (isPresent(question.parentId)) {
-        let parentId = question.parentId;
-        let parent = fakeQuestions.findBy('id', parentId);
-        let sortOrder = question.sortOrder;
-        let prevQ = fakeQuestions.findBy('sortOrder', sortOrder - 1);
-
+      let prevQ = fakeQuestions.findBy('sortOrder', question.sortOrder - 1);
+      let nextQ = fakeQuestions.findBy('sortOrder', question.sortOrder + 1);
+      if (question.parentId) {
+        let parent = fakeQuestions.findBy('id', question.parentId);
+        
         // if (isBlank(parent)) {
         //   pass = true;
         // }
 
-        if (parent.sortOrder > sortOrder) {
+        if (parent.sortOrder > question.sortOrder) {
           pass = false;
         } else if (prevQ && prevQ !== parent && prevQ.ancestry && prevQ.ancestry !== question.ancestry) {
           console.log(question.id);
@@ -119,6 +119,8 @@ export default Controller.extend({
             pass = false;
           }
         }
+      } else if (nextQ && nextQ.ancestry && !['section', 'repeater'].includes(question.answerTypeName)) {
+        pass = false;
       }
     });
     return pass;
