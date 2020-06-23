@@ -20,7 +20,7 @@ export default Controller.extend({
     if (!this.get('surveyTemplate').isFullyEditable && !this._checkDragOutRepeater(questions) && !section) {
       // alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
       this.get('surveyTemplate').toggleWarning(
-        `<span>Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
+        `<span>CONTROLLER Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
         <span>Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!</span><br>`
       );
       return;
@@ -113,7 +113,8 @@ export default Controller.extend({
 
         if (parent.sortOrder > sortOrder) {
           pass = false;
-        } else if (prevQ && prevQ.ancestry && prevQ.ancestry !== question.ancestry) {
+        } else if (prevQ && prevQ !== parent && prevQ.ancestry && prevQ.ancestry !== question.ancestry) {
+          console.log(question.id);
           if (!prevQ.ancestry.includes(question.parentId)) {
             pass = false;
           }

@@ -120,15 +120,29 @@ export default Component.extend({
       fromQuestion = this.get('sortedQuestions').findBy('id', parentId);
     }
 
+    let fromParent;
+    if (fromQuestion && fromQuestion.get('parentId')) {
+      fromParent = this.get('sortedQuestions').findBy('id', fromQuestion.get('parentId'));
+    }
+
     let section;
     if (fromQuestion) {
-      section = fromQuestion.get('answerType').get('name') === 'section';
+      if (fromQuestion.get('answerType').get('name') === 'section' && fromParent && !fromParent.get('answerType').get('name') === 'repeater') {
+        section = true;
+      }
     } else {
       section = false;
     }
 
+    let withinNested;
+    if (fromQuestion && ancestryQuestion.get('ancestry')) {
+      withinNested = ancestryQuestion.get('ancestry').includes(fromQuestion.get('id'));
+    } else {
+      withinNested = false;
+    }
+
     // dragging from one repeater into another
-    if (!this.get('surveyTemplate').isfullyEditable && question.get("parentId") > 0 && !section) {
+    if (!this.get('surveyTemplate').isfullyEditable && question.get("parentId") > 0 && !(section || withinNested)) {
       // alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
       this.get('surveyTemplate').toggleWarning(
         `<span>Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
