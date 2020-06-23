@@ -68,6 +68,7 @@ export default Controller.extend({
         'id': question.get('id'),
         'sortOrder': question.get('sortOrder'),
         'parentId': question.get('parentId'),
+        'ancestry': question.get('ancestry')
       };
       fakeQuestions.push(fakeQuestion);
     });
@@ -75,24 +76,24 @@ export default Controller.extend({
     let lastSortOrder = 0;
     // Re-sort
     // fakeQuestions.sort(function (q1, q2) {
-    //   let q1Sort = q1['sortOrder'];
-    //   let q2Sort = q2['sortOrder'];
+    //   let q1Sort = q1.sortOrder;
+    //   let q2Sort = q2.sortOrder;
     //   if (q1Sort === q2Sort) {
-    //     return q1['parentId'] === q2['id'] ? 1 : -1;
+    //     return q1.parentId === q2['id'] ? 1 : -1;
     //   } else {
     //     return q1Sort - q2Sort;
     //   }
     // });
     for (let index = 0; index < fakeQuestions.length; index++) {
       let question = fakeQuestions.objectAt(index);
-      let oldSortOrder = question['sortOrder'];
+      let oldSortOrder = question.sortOrder;
       let newSortOrder = index + 1;
 
       if (lastSortOrder === newSortOrder) {
         newSortOrder++;
       }
       if (oldSortOrder !== newSortOrder) {
-        question['sortOrder'] = newSortOrder;
+        question.sortOrder = newSortOrder;
       }
       lastSortOrder = newSortOrder;
     }
@@ -100,17 +101,22 @@ export default Controller.extend({
 
     let pass = true;
     fakeQuestions.forEach(function (question) {
-      if (isPresent(question['parentId'])) {
-        let parentId = question['parentId'];
+      if (isPresent(question.parentId)) {
+        let parentId = question.parentId;
         let parent = fakeQuestions.findBy('id', parentId);
-        let sortOrder = question['sortOrder'];
+        let sortOrder = question.sortOrder;
+        let prevQ = fakeQuestions.findBy('sortOrder', sortOrder - 1);
 
         // if (isBlank(parent)) {
         //   pass = true;
         // }
 
-        if (parent['sortOrder'] > sortOrder) {
+        if (parent.sortOrder > sortOrder) {
           pass = false;
+        } else if (prevQ && prevQ.ancestry && prevQ.ancestry !== question.ancestry) {
+          if (!prevQ.ancestry.includes(question.parentId)) {
+            pass = false;
+          }
         }
       }
     });
