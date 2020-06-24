@@ -9,20 +9,20 @@ export default Controller.extend({
   projectId: window.location.href.split('/')[6],
 
   updateSortOrderTask: task(function*(questions, reSort = false, ancestryQuestion = null) {
-    let section;
-    if (ancestryQuestion) {
-      section = ancestryQuestion.get('answerType').get('name') === 'section';
+    let topLevelSection;
+    if (ancestryQuestion && ancestryQuestion.get('answerType').get('name') === 'section') {
+      if (!(ancestryQuestion.get('parentId') && questions.findBy('id', ancestryQuestion.get('parentId')).get('answerType').get('name') === 'repeater')) {
+        topLevelSection = true;
+      }
     } else {
-      section = false;
+      topLevelSection = false;
     }
 
     // dragging out of repeater to top level by ordering it ahead of repeater
-    if (!this.get('surveyTemplate').isFullyEditable && !this._checkDragOutRepeater(questions) && !section) {
+    if (!this.get('surveyTemplate').isFullyEditable && !this._checkDragOutRepeater(questions) && !topLevelSection) {
       // alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
-      this.get('surveyTemplate').toggleWarning(
-        `<span>CONTROLLER Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
-        <span>Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!</span><br>`
-      );
+      this.get('surveyTemplate').toggleWarning(`<span>CONTROLLER Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
+        <span>Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!</span><br>`);
       return;
     }
 
