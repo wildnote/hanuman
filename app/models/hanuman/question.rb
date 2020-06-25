@@ -124,7 +124,7 @@ module Hanuman
           )
         end
         # basic top level
-      elsif parent.blank? || parent.answer_type.name == "section"
+      elsif parent.blank? || (parent.answer_type.name == "section" && !(parent.parent.present? && parent.parent.answer_type.name == 'repeater'))
         Hanuman::Observation.find_or_create_by(
           survey_id: s.id,
           question_id: question.id,
@@ -133,6 +133,10 @@ module Hanuman
         # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
         # move top level observation to first repeater and then create blank observations for subsequent repeater instances
       else
+        if parent.parent.present? && parent.parent.answer_type.name == 'repeater'
+          parent = parent.parent
+        end
+        
         top_level_o = Hanuman::Observation.find_by(
             survey_id: s.id,
             question_id: question.id,
