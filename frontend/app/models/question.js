@@ -125,6 +125,16 @@ export default Model.extend(Validator, {
     return allowableTypes.includes(this.get('answerType').get('name'));
   }),
 
+
+  insideRepeater: computed('parentId', function () {
+    let parent = this.store.peekAll('question').findBy('id', this.parentId);
+    let result = false;
+    if (parent && parent.get('answerType').get('name') === 'repeater') {
+      result = true;
+    }
+    return result;
+  }),
+
   // Custom actions
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),
   processQuestionChanges: memberAction({ path: 'process_question_changes', type: 'post' }),
