@@ -65,7 +65,7 @@ export default Controller.extend({
 
   _allowedDrag(questions, ancestryQuestion) {
 
-    // top level section case
+    // top level section or section in section case
     if (ancestryQuestion && ancestryQuestion.get('answerType').get('name') === 'section') {
       if (!(ancestryQuestion.get('parentId') && questions.findBy('id', ancestryQuestion.get('parentId')).get('answerType').get('name') === 'repeater')) {
         return true;
@@ -85,7 +85,7 @@ export default Controller.extend({
     });
 
     let lastSortOrder = 0;
-    
+
     for (let index = 0; index < fakeQuestions.length; index++) {
       let question = fakeQuestions.objectAt(index);
       let oldSortOrder = question.sortOrder;
@@ -105,17 +105,13 @@ export default Controller.extend({
     fakeQuestions.forEach(function (question) {
       let prevQ = fakeQuestions.findBy('sortOrder', question.sortOrder - 1);
       let nextQ = fakeQuestions.findBy('sortOrder', question.sortOrder + 1);
+
       if (question.parentId) {
         let parent = fakeQuestions.findBy('id', question.parentId);
         
-        // if (isBlank(parent)) {
-        //   pass = true;
-        // }
-
         if (parent.sortOrder > question.sortOrder) {
           pass = false;
         } else if (prevQ && prevQ !== parent && prevQ.ancestry && prevQ.ancestry !== question.ancestry) {
-          console.log(question.id);
           if (!prevQ.ancestry.includes(question.parentId)) {
             pass = false;
           }
