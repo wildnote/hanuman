@@ -19,7 +19,7 @@ export default Controller.extend({
     }
 
     // dragging out of repeater to top level by ordering it ahead of repeater
-    if (!this.get('surveyTemplate').isFullyEditable && !this._checkDragOutRepeater(questions) && !topLevelSection) {
+    if (!this.get('surveyTemplate').isFullyEditable && !this._allowedDrag(questions, ancestryQuestion)) {
       // alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
       this.get('surveyTemplate').toggleWarning(
         `<span>Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
@@ -63,7 +63,15 @@ export default Controller.extend({
     this._checkAncestryConsistency(questions);
   }),
 
-  _checkDragOutRepeater(questions) {
+  _allowedDrag(questions, ancestryQuestion) {
+
+    // top level section case
+    if (ancestryQuestion && ancestryQuestion.get('answerType').get('name') === 'section') {
+      if (!(ancestryQuestion.get('parentId') && questions.findBy('id', ancestryQuestion.get('parentId')).get('answerType').get('name') === 'repeater')) {
+        return true;
+      }
+    }
+
     let fakeQuestions = [];
     questions.forEach(function(question) {
       let fakeQuestion = {
@@ -77,16 +85,7 @@ export default Controller.extend({
     });
 
     let lastSortOrder = 0;
-    // Re-sort
-    // fakeQuestions.sort(function (q1, q2) {
-    //   let q1Sort = q1.sortOrder;
-    //   let q2Sort = q2.sortOrder;
-    //   if (q1Sort === q2Sort) {
-    //     return q1.parentId === q2['id'] ? 1 : -1;
-    //   } else {
-    //     return q1Sort - q2Sort;
-    //   }
-    // });
+    
     for (let index = 0; index < fakeQuestions.length; index++) {
       let question = fakeQuestions.objectAt(index);
       let oldSortOrder = question.sortOrder;
