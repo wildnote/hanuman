@@ -12,8 +12,10 @@ module Hanuman
     # doing this to handle situation where the we have a duplicate survey because initial sync didn't return back to native app successful create of a survey,
     # so then the user creates another copy of the survey by syncing. the photos are shared across both surveys and we don't want to delete those photos when
     # the duplicated on is deleted.-kdh
+    # adding back delete photo on cloudinary when deleted on Wildnote now that we don't see issues with photos as much. Need this to decrease our storage and our
+    # data integrity after a user cancels all data should be deleted
     def delete_remote?
-      false
+      true
     end
 
     # Choose what kind of storage to use for this uploader:
