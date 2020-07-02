@@ -135,6 +135,38 @@ export default Model.extend(Validator, {
     return result;
   }),
 
+  compatibleAnswerTypes: computed('answerType.name', function () {
+    let typeStorage = {
+      'date': 'answer',
+      'checkbox': 'answer',
+      'counter': 'answer',
+      'number': 'answer',
+      'text': 'answer',
+      'textarea': 'answer',
+      'time': 'answer',
+      'checkboxlist': 'observation_answers',
+      'chosenmultiselect': 'observation_answers',
+      'chosenselect': 'answer_choice',
+      'radio': 'answer_choice'
+    }
+
+    let typeMap = {
+      'date': ['date', 'text', 'textarea'],
+      'checkbox': ['checkbox', 'text', 'textarea'],
+      'counter': ['counter', 'text', 'textarea', 'number'],
+      'number': ['number', 'text', 'textarea', 'counter'],
+      'text': ['text', 'textarea'],
+      'textarea': ['textarea', 'text'],
+      'time': ['time', 'text', 'textarea'],
+      'checkboxlist': ['checkboxlist', 'chosenmultiselect'],
+      'chosenmultiselect': ['chosenmultiselect', 'checkboxlist'],
+      'chosenselect': ['chosenselect', 'radio'],
+      'radio': ['radio', 'chosenselect']
+    }
+
+    return typeMap[this.get('answerType.name')];
+  }),
+
   // Custom actions
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),
   processQuestionChanges: memberAction({ path: 'process_question_changes', type: 'post' }),

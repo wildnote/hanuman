@@ -26,6 +26,7 @@ export default Component.extend({
   sortTypesBy: ['displayName'],
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
+  filteredGroupedAnswerTypes: groupBy('changeToAnswerTypes', 'groupType'),
 
 
   init() {
@@ -130,6 +131,16 @@ export default Component.extend({
     return question.get('isNew') && question.get('answerType.id') === undefined;
   }),
 
+
+  changeToAnswerTypes: computed('answerTypes', 'question', function () {
+    let question = this.get('question');
+    let answerTypes = this.get('answerTypes');
+    let filtered = answerTypes.filter((answerType) => {
+      return question.compatibleAnswerTypes.includes(answerType.get('name'));
+    });
+    return filtered;
+  }),
+  
   // If a question has a rule associated with it, it should automatically be set to Hidden
   hideQuestion: on(
     'afterRender',

@@ -61,17 +61,18 @@
                   <span class="glyphicons glyphicons-info-sign"></span>
                 </a>
               </span>
-            {{#if (or isFullyEditable question.isNew)}}
-              {{#form-field for='answerType'}}
-                <select
-                  disabled={{question.surveyTemplate.lock}}
-                  data-test="answer-type-id-select"
-                  class="form-control"
-                  onchange={{action (queue (action "setAnswerType") (action "checkToResetDataSource")) value="target.value"}}
-                >
-                  {{#if showQuestionTypePlaceholder}}
-                    <option disabled selected>Please select</option>
-                  {{/if}}
+            {{#form-field for='answerType'}}
+              <select
+                disabled={{question.surveyTemplate.lock}}
+                data-test="answer-type-id-select"
+                class="form-control"
+                onchange={{action (queue (action "setAnswerType") (action "checkToResetDataSource")) value="target.value"}}
+              >
+                {{#if showQuestionTypePlaceholder}}
+                  <option disabled selected>Please select</option>
+                {{/if}}
+
+                {{#if (or surveyTemplate.fullyEditable question.isNew) }}
                   {{#each groupedAnswerTypes as |group|}}
                     <optgroup label={{group.value}}>
                       {{#each group.items as |answerType|}}
@@ -82,20 +83,25 @@
                       {{/each}}
                     </optgroup>
                   {{/each}}
-                </select>
-              {{/form-field}}
-              {{#unless showQuestionTypePlaceholder}}
-                <p class="help-block">{{question.answerType.description}}</p>
-              {{/unless}}
-            {{else}}
-              {{question.answerType.displayName}}
-              <div class="alert alert-info">
-                Answer Type cannot be changed on a survey template with survey data submitted.
-                Duplicate survey form template to change the Answer Type.
-                <br>
-                <small>Helper Text question type can be changed here.</small>
-              </div>
-            {{/if}}
+                {{else}}
+                  {{#each filteredGroupedAnswerTypes as |group|}}
+                    <optgroup label={{group.value}}>
+                      {{#each group.items as |answerType|}}
+                      {{#if (not (and question.insideRepeater (eq answerType.name 'repeater'))) }}
+                      <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>
+                        {{answerType.displayName}}</option>
+                      {{/if}}
+                      {{/each}}
+                    </optgroup>
+                  {{/each}}
+                {{/if}}
+
+              </select>
+            {{/form-field}}
+            {{#unless showQuestionTypePlaceholder}}
+              <p class="help-block">{{question.answerType.description}}</p>
+            {{/unless}}
+            
           </div>
         </div>
         {{#if question.isTaxonType}}
