@@ -95,7 +95,7 @@ export default Component.extend({
         }
 
         if (question.get('parent') && question.get('parent').get('isARepeater')) {
-          return question.get('ancestry') === ruleQuestion.get('ancestry');
+          return question.get('ancestry') === ruleQuestion.get('ancestry') || ruleQuestion.get('ancestry') === null;
         } else {
           return true;
         }
