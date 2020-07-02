@@ -65,13 +65,6 @@ export default Controller.extend({
 
   _allowedDrag(questions, ancestryQuestion) {
 
-    // top level section or section in section case
-    if (ancestryQuestion && ancestryQuestion.get('answerType').get('name') === 'section') {
-      if (!(ancestryQuestion.get('parentId') && questions.findBy('id', ancestryQuestion.get('parentId')).get('answerType').get('name') === 'repeater')) {
-        return true;
-      }
-    }
-
     let fakeQuestions = [];
     questions.forEach(function(question) {
       let fakeQuestion = {
@@ -100,8 +93,35 @@ export default Controller.extend({
       lastSortOrder = newSortOrder;
     }
 
-
     let pass = true;
+
+
+    // top level section or section in section case
+    if (ancestryQuestion && ancestryQuestion.get('answerType').get('name') === 'section') {
+      if (!(ancestryQuestion.get('parentId') && questions.findBy('id', ancestryQuestion.get('parentId')).get('answerType').get('name') === 'repeater')) {
+        fakeQuestions.forEach(function (question) {
+          let prevQ = fakeQuestions.findBy('sortOrder', question.sortOrder - 1);
+          let nextQ = fakeQuestions.findBy('sortOrder', question.sortOrder + 1);
+
+          if (question.parentId) {
+            let parent = fakeQuestions.findBy('id', question.parentId);
+
+            if (parent.sortOrder > question.sortOrder) {
+              pass = true;
+            } else if (prevQ === parent) {
+              pass = true;
+            } else if (prevQ.ancestry && prevQ.ancestry === question.ancestry) {
+              pass = true;
+            } else {
+              pass = false;
+            }
+          }
+        });
+        return pass;
+      }
+    }
+
+    
     fakeQuestions.forEach(function (question) {
       let prevQ = fakeQuestions.findBy('sortOrder', question.sortOrder - 1);
       let nextQ = fakeQuestions.findBy('sortOrder', question.sortOrder + 1);
