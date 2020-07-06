@@ -163,6 +163,9 @@ export default Controller.extend({
           question.save().then(() => {
             question.reload();
           });
+          parent.save().then(() => {
+            parent.reload();
+          });
         }
       }
     });
