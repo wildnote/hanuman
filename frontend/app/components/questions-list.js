@@ -166,12 +166,13 @@ export default Component.extend({
     } else {
       sortOrder = ancestryQuestion.get('sortOrder') + 0.1;
     }
-    question.setProperties({ loading: true, parentId, sortOrder });
+    question.set('loading', true);
+    question.setProperties({ parentId, sortOrder });
+    question.set('loading', false);
     yield question.save();
     yield question.reload();
     yield ancestryQuestion.reload();
     yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true, ancestryQuestion);
-    question.set('loading', false);
   }),
 
   checkTemplate: task(function* () {
