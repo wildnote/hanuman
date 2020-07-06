@@ -19,7 +19,7 @@ export default Controller.extend({
     }
 
     // dragging out of repeater to top level by ordering it ahead of repeater
-    if (!this.get('surveyTemplate').fullyEditable && !this._allowedDrag(questions, ancestryQuestion)) {
+    if (!this._allowedDrag(questions, ancestryQuestion)) {
       // alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
       this.get('surveyTemplate').toggleWarning(
         `<span>Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
@@ -64,6 +64,7 @@ export default Controller.extend({
   }),
 
   _allowedDrag(questions, ancestryQuestion) {
+    let fullyEditable = this.get('surveyTemplate').fullyEditable;
 
     let fakeQuestions = [];
     questions.forEach(function(question) {
@@ -97,8 +98,8 @@ export default Controller.extend({
 
 
     // top level section or section in section case
-    if (ancestryQuestion && ancestryQuestion.get('answerType').get('name') === 'section') {
-      if (!(ancestryQuestion.get('parentId') && questions.findBy('id', ancestryQuestion.get('parentId')).get('answerType').get('name') === 'repeater')) {
+    if (fullyEditable || (ancestryQuestion && ancestryQuestion.get('answerType').get('name') === 'section')) {
+      if (fullyEditable || !(ancestryQuestion.get('parentId') && questions.findBy('id', ancestryQuestion.get('parentId')).get('answerType').get('name') === 'repeater')) {
         fakeQuestions.forEach(function (question) {
           let prevQ = fakeQuestions.findBy('sortOrder', question.sortOrder - 1);
           let nextQ = fakeQuestions.findBy('sortOrder', question.sortOrder + 1);
@@ -121,7 +122,6 @@ export default Controller.extend({
       }
     }
 
-    
     fakeQuestions.forEach(function (question) {
       let prevQ = fakeQuestions.findBy('sortOrder', question.sortOrder - 1);
       let nextQ = fakeQuestions.findBy('sortOrder', question.sortOrder + 1);
