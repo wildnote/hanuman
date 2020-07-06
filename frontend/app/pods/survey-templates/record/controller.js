@@ -19,7 +19,7 @@ export default Controller.extend({
     }
 
     // dragging out of repeater to top level by ordering it ahead of repeater
-    if (!this.get('surveyTemplate').isFullyEditable && !this._allowedDrag(questions, ancestryQuestion)) {
+    if (!this.get('surveyTemplate').fullyEditable && !this._allowedDrag(questions, ancestryQuestion)) {
       // alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
       this.get('surveyTemplate').toggleWarning(
         `<span>Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
