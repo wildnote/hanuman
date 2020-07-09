@@ -15,6 +15,7 @@ module Hanuman
 
     # Callbacks
     before_save :protect_split
+    before_destroy :clear_observation_dot_answers
 
     def self.filtered_by_question_id_and_sort(question_id, sort_column, sort_direction)
       question_id.blank? ? true : conditions = "hanuman_answer_choices.question_id = " + question_id.to_s
@@ -28,6 +29,10 @@ module Hanuman
       #back into option_text and scientific_text respectively
       option_text = option_text.strip.gsub(' / ', '/') unless option_text.blank?
       scientific_text = scientific_text.strip.gsub(' / ', '/') unless scientific_text.blank?
+    end
+
+    def clear_observation_dot_answers
+      Hanuman::Observation.unscoped.where(answer_choice_id: id).update_all(answer: nil)
     end
 
     def self.all_sorted
