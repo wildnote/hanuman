@@ -56,11 +56,20 @@
         disabled={{question.surveyTemplate.lock}}
         class="btn"
         data-test="delete-answer-choice-link"
-        onclick={{action 'delete'}}
+        onclick={{action 'confirm'}}
       >
         <span class="glyphicons glyphicons-bin"></span>
       </a>
       <span class="glyphicons glyphicons-sorting answer-draggable-handle"></span>
     </td>
+    <div class="delete-confirm">
+      {{#if (not isFullyEditable)}}
+        <small data-test-delete-confirm-message>Performing this delete will also remove this answer in any submitted surveys.<br></small>
+      {{/if}}
+      <small>Are you sure you want to delete this answer choice?</small><br>
+      <button style="margin-top: 10px;" class="btn btn-success" data-test="delete-question-link"
+        onclick={{action 'delete'}}>Yes</button>
+      <button style="margin-top: 10px;" class="btn" onclick={{action 'cancel'}}>No</button>
+    </div>
   {{/if}}
 {{/if}}
