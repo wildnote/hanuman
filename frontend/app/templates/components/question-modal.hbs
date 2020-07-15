@@ -87,10 +87,8 @@
                   {{#each filteredGroupedAnswerTypes as |group|}}
                     <optgroup label={{group.value}}>
                       {{#each group.items as |answerType|}}
-                      {{#if (not (and question.insideRepeater (eq answerType.name 'repeater'))) }}
-                      <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>
+                        <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>
                         {{answerType.displayName}}</option>
-                      {{/if}}
                       {{/each}}
                     </optgroup>
                   {{/each}}

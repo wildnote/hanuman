@@ -164,7 +164,7 @@ export default Model.extend(Validator, {
       'radio': ['radio', 'chosenselect']
     }
 
-    return typeMap[this.get('answerType.name')];
+    return typeMap[this.get('answerType.name')] || [this.get('answerType.name')];
   }),
 
   // Custom actions
