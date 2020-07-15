@@ -110,6 +110,7 @@
                   class="form-control"
                   data-test="data-source-select"
                   onchange={{action "setDataSource" value="target.value"}}
+                  disabled={{not surveyTemplate.fullyEditable}}
                 >
                   <option></option>
                   {{#each dataSources as |opDataSource|}}
