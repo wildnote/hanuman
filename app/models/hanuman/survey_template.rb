@@ -248,26 +248,42 @@ module Hanuman
     def surveys_integrity_check
       ancestry_issues_os = []
       dup_in_repeater_os = []
+      dup_top_level_os = []
       issue_surveys = []
 
       questions.each do |q|
         if q.ancestry.present? && (q.parent.answer_type.name == 'repeater' || (q.parent.parent.present? && q.parent.parent.answer_type.name == 'repeater'))
+          # if in repeater (either directly or within section in repeater)
+
+          # if parent repeater is not present and greater than 0 we have a problem
           q.observations.where("hanuman_observations.parent_repeater_id < 1 OR hanuman_observations.parent_repeater_id IS NULL").each do |o|
-            ancestry_issues_os << o
-            issue_surveys << o.survey_id if !issue_surveys.include?(o.survey_id)
+            ancestry_issues_os << o.id
+            issue_surveys << o.id.survey_id if !issue_surveys.include?(o.survey_id)
           end
 
+          # if more than one observation for a given question per repeater per survey we have a problem
           q.observations.group_by{|obs| [obs.survey_id, obs.parent_repeater_id]}.select{|_k,v| v.length > 1}.each do |k, v|
             v.each do |problem_o|
-              dup_in_repeater_os << problem_o
+              dup_in_repeater_os << problem_o.id
               issue_surveys << problem_o.survey_id if !issue_surveys.include?(problem_o.survey_id)
             end
           end
 
         else
+          # if not somehwere within repeater and repeater id is greater than 0 we have a problem
           q.observations.where("hanuman_observations.parent_repeater_id > 0").each do |o|
-            ancestry_issues_os << o
-            issue_surveys << o.survey_id if !issue_surveys.include?(o.survey_id)
+            ancestry_issues_os << o.id
+            issue_surveys << o.id.survey_id if !issue_surveys.include?(o.survey_id)
+          end
+
+          # if more than one top level observation (except repeaters) for a given question per survey we have a problem
+          if q.answer_type.name != 'repeater'
+            q.observations.group_by{|obs| [obs.survey_id]}.select{|_k,v| v.length > 1}.each do |k, v|
+              v.each do |problem_o|
+                dup_top_level_os << problem_o.id
+                issue_surveys << problem_o.survey_id if !issue_surveys.include?(problem_o.survey_id)
+              end
+            end
           end
         end
       end
@@ -277,6 +293,8 @@ module Hanuman
       puts ancestry_issues_os
       puts "################# duplicate observation in repeater issues #################"
       puts dup_in_repeater_os
+      puts "#################  duplicate observation top level issues  #################"
+      puts dup_top_level_os
       puts "#################          potentially bad surveys         #################"
       puts issue_surveys
 
