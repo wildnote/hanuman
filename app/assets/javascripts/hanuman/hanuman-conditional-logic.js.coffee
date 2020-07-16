@@ -44,7 +44,7 @@ class @ConditionalLogic
           # bind conditions based on element type
           # text, textarea, select
           if $conditionElement.length < 2
-            self.bindConditions($conditionElement, rule)
+            self.bindConditions($conditionElement, rule, $ruleContainer)
           # radio buttons
           else
             if $conditionElement.is(":checkbox")
@@ -52,11 +52,11 @@ class @ConditionalLogic
               if rule.type != 'Hanuman::CalculationRule'
                 $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
 
-              self.bindConditions($conditionElement, rule)
+              self.bindConditions($conditionElement, rule, $ruleContainer)
             else
               for element in $conditionElement
                 do (element) ->
-                  self.bindConditions($(element), rule)
+                  self.bindConditions($(element), rule, $ruleContainer)
 
           #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
           # determine if we are in a repeater-this needs to get deleted-kdh
@@ -66,7 +66,7 @@ class @ConditionalLogic
               inRepeater = true
 
           if rule.type == "Hanuman::CalculationRule"
-            self.updateCalculation(rule)
+            self.updateCalculation(rule, $ruleContainer)
           else
             self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule)
 
@@ -80,12 +80,11 @@ class @ConditionalLogic
     return
 
   #bind conditions to question
-  bindConditions: ($triggerElement, rule) ->
+  bindConditions: ($triggerElement, rule, $ruleContainer) ->
     $triggerElement.on "change", ->
-#     console.log(rule)
       ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
       if rule.type == "Hanuman::CalculationRule"
-        self.updateCalculation(rule)
+        self.updateCalculation(rule, $ruleContainer)
         return
 
       # pop out of condition into rules to handle all conditions defined in the rule
@@ -443,11 +442,11 @@ class @ConditionalLogic
 
   ## AN May 2020 - Start calculated fields code
   # This method triggers an update of the calculations for the given rule's target question
-  updateCalculation: (rule) ->
+  updateCalculation: (rule, $ruleContainer) ->
     parameters = {} # used to store the survey data object passed to the calculated fields expresssion
-    $target = $('[data-question-id="' + rule.question_id + '"]').find('.form-control') # the question we are calculating a value for
-    $targetRepeater = $target.closest(".form-container-repeater") # the parent repeater of the target, if it exists
-    targetType = $('[data-question-id="' + rule.question_id + '"]').data('element-type') # the form control type of the target
+    $target = $ruleContainer.find('.form-control') # the question we are calculating a value for
+    $targetRepeater = $ruleContainer.closest(".form-container-repeater") # the parent repeater of the target, if it exists
+    targetType = $ruleContainer.data('element-type') # the form control type of the target
 
     $.each rule.conditions, (index, condition) ->
 
