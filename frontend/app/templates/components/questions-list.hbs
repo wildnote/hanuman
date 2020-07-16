@@ -105,6 +105,14 @@
               {{/if}}
               Check Survey Form
             </button>
+            <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform checkSurveys}}>
+              {{#if (not checkingSurveys) }}
+              <span class="glyphicons glyphicons-check"></span>
+              {{else }}
+              <span class="glyphicons gly-spin glyphicons-refresh"></span>
+              {{/if}}
+              Check Surveys
+            </button>
           {{/if}}
         </div>
       </div>

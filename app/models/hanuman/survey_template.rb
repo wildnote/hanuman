@@ -248,32 +248,39 @@ module Hanuman
     def surveys_integrity_check
       ancestry_issues_os = []
       dup_in_repeater_os = []
+      issue_surveys = []
 
       questions.each do |q|
-        if q.ancestry.present? && q.parent.answer_type.name == 'repeater'
+        if q.ancestry.present? && (q.parent.answer_type.name == 'repeater' || (q.parent.parent.present? && q.parent.parent.answer_type.name == 'repeater'))
           q.observations.where("hanuman_observations.parent_repeater_id < 1 OR hanuman_observations.parent_repeater_id IS NULL").each do |o|
             ancestry_issues_os << o
+            issue_surveys << o.survey_id if !issue_surveys.include?(o.survey_id)
           end
 
           q.observations.group_by{|obs| [obs.survey_id, obs.parent_repeater_id]}.select{|_k,v| v.length > 1}.each do |k, v|
             v.each do |problem_o|
               dup_in_repeater_os << problem_o
+              issue_surveys << problem_o.survey_id if !issue_surveys.include?(problem_o.survey_id)
             end
           end
 
         else
           q.observations.where("hanuman_observations.parent_repeater_id > 0").each do |o|
             ancestry_issues_os << o
+            issue_surveys << o.survey_id if !issue_surveys.include?(o.survey_id)
           end
         end
       end
 
 
       puts "#################       ancestry in repeater issues        #################"
-      ap ancestry_issues_os
+      puts ancestry_issues_os
       puts "################# duplicate observation in repeater issues #################"
-      ap dup_in_repeater_os
+      puts dup_in_repeater_os
+      puts "#################          potentially bad surveys         #################"
+      puts issue_surveys
 
+      { "surveys": issue_surveys }
     end
 
 

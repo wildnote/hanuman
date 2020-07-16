@@ -18,6 +18,7 @@ export default Component.extend({
   isPerformingBulk: false,
   allCollapsed: false,
   checkingTemplate: false,
+  checkingSurveys: false,
 
   questionsSorting: ['sortOrder'],
   fullQuestions: sort('surveyTemplate.questionsNotDeleted', 'questionsSorting'),
@@ -208,6 +209,39 @@ export default Component.extend({
       console.log('Error checking template:', e); // eslint-disable-line no-console
     }
     this.set('checkingTemplate', false);
+  }),
+
+  checkSurveys: task(function* () {
+    this.set('checkingSurveys', true);
+    try {
+
+      let surveyTemplate = this.surveyTemplate;
+      surveyTemplate.set('checkingSurveys', true);
+      let errors = yield surveyTemplate.checkSurveys();
+      if (errors) {
+        surveyTemplate.set('checkingSurveys', false);
+      }
+      console.log("errors");
+      console.log(errors);
+      // alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition );
+
+      if (errors.surveys.length == 0) {
+        this.get('surveyTemplate').toggleWarning(
+          `<span>No survey errors.<span><br>`
+        );
+      } else {
+        this.get('surveyTemplate').toggleWarning(
+          `<span>Check these surveys for issues:<span>
+          <span>${errors.surveys}</span><br>`
+        );
+      }
+    } catch (e) {
+      this.get('surveyTemplate').toggleWarning(
+        `<span>Something went wrong while checking your surveys.<span>`
+      );
+      console.log('Error checking surveys:', e); // eslint-disable-line no-console
+    }
+    this.set('checkingSurveys', false);
   }),
 
   _filterSectionsAndRepeaters(selectedQuestions) {
