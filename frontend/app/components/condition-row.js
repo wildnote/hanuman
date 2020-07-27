@@ -53,22 +53,54 @@ export default Component.extend({
   }),
 
   availableQuestions: computed('rule', 'question.@each.answerType.name', function() {
-    if (!this.rule) {
-      return this.questions;
+    let ruleQuestion = this.get('rule.question');
+    if (this.rule.get('type') === 'Hanuman::LookupRule') {
+      let supportedQuestionForLookup = [
+        'checkbox',
+        'checkboxlist',
+        'chosenmultiselect',
+        'chosenselect',
+        'locationchosensingleselect',
+        'radio',
+        'taxonchosenmultiselect',
+        'taxonchosensingleselect'
+      ];
+      return this.questions.filter((question) => {
+        if (supportedQuestionForLookup.includes(question.get('answerType.name'))) {
+          if (question.get('parent') && question.get('parent').get('isARepeater')) {
+            return question.get('ancestry') === ruleQuestion.get('ancestry');
+          } else {
+            return true;
+          }
+        } else {
+          return false;
+        }
+      });
+    } else {
+      return this.questions.filter((question) => {
+
+        // Disallow calculation rules that would end up creating a state of infinite recursion
+        if (question.get('calculationRule')) {
+          let conditions = question.get('calculationRule').get('conditions');
+          let recursive = false;
+          conditions.forEach(function (condition) {
+            if (condition.get('questionId') === ruleQuestion.get('railsId').toString()) {
+              recursive = true;
+            }
+          });
+
+          if (recursive) {
+            return false;
+          }
+        }
+
+        if (question.get('parent') && question.get('parent').get('isARepeater')) {
+          return question.get('ancestry') === ruleQuestion.get('ancestry') || ruleQuestion.get('ancestry') === null;
+        } else {
+          return true;
+        }
+      });
     }
-    let supportedQuestionForLookup = [
-      'checkbox',
-      'checkboxlist',
-      'chosenmultiselect',
-      'chosenselect',
-      'locationchosensingleselect',
-      'radio',
-      'taxonchosenmultiselect',
-      'taxonchosensingleselect'
-    ];
-    return this.questions.filter((question) => {
-      return supportedQuestionForLookup.includes(question.get('answerType.name'));
-    });
   }),
 
   operators: computed('currentQuestion', function() {
@@ -109,10 +141,9 @@ export default Component.extend({
   }),
 
   setNewCondition() {
-    let rule = this.rule ? this.rule : this.get('question.visibilityRule');
     let condition = this.get('question').store.createRecord('condition', {
       questionId: this.get('questions.firstObject.id'),
-      rule
+      rule: this.rule
     });
     this.set('condition', condition);
   },
@@ -127,15 +158,14 @@ export default Component.extend({
 
     save() {
       let condition = this.get('condition');
-      let rule = this.rule ? this.rule : this.get('question.visibilityRule');
 
       // Strip any trailing spaces off of a condition answer before saving it.
       let answer = condition.get('answer') || '';
       condition.set('answer', answer.trim());
 
       if (condition.validate()) {
-        condition.set('rule', rule);
-        this.saveTask.perform(condition, rule);
+        condition.set('rule', this.rule);
+        this.saveTask.perform(condition, this.rule);
         if (this.get('isNewCondition')) {
           this.set('condition', null);
         }
@@ -145,9 +175,9 @@ export default Component.extend({
 
     delete() {
       let condition = this.get('condition');
-      let rule = this.rule ? this.rule : this.get('question.visibilityRule');
-      this.removeTask.perform(condition, rule);
+      this.removeTask.perform(condition, this.rule);
     },
+
     setConditionOperator(operator) {
       this.set('condition.operator', operator);
     },

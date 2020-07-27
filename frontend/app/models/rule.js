@@ -23,10 +23,19 @@ export default Model.extend(Validator, {
     return this.value;
   }),
 
+  isLookupRule: computed('type', function () {
+    return this.get('type') === 'Hanuman::LookupRule';
+  }),
+
+  isCalculationRule: computed('type', function () {
+    return this.get('type') === 'Hanuman::CalculationRule';
+  }),
+
   // Attributes
   matchType: attr('string', { defaultValue: 'any' }),
   type: attr('string', { defaultValue: 'Hanuman::VisibilityRule' }),
   value: attr('string'),
+  script: attr('string', { defaultValue: '' }), // Script has to be blank, rather than null, otherwise Ace Editor will fail on init
 
   // Relations
   conditions: hasMany('condition', { async: false }),
