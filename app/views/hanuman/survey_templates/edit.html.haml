@@ -1,10 +1,8 @@
 - content_for :title do
   Edit Survey Form
-- content_for :navbar_sub_data do
+- content_for :navbar_sub_projects do
   active
-- content_for :navbar_hanuman do
-  active
-- content_for :navbar_hanuman_survey_templates do
+- content_for :navbar_sub_projects_sub_project_surveys do
   active
 
 .panel.panel-info
@@ -12,9 +10,9 @@
     %h3.panel-title
       - if params[:project_id]
         Admin /
-        = link_to "Survey Forms", hanuman_project_survey_templates_path(params[:project_id])
+        = link_to "Survey Forms", surveys_project_path(params[:project_id])
         \/
-        = link_to "Edit Survey Form + #{@survey_template.name_plus_version}", edit_hanuman_project_survey_template_path(params[:project_id], params[:id])
+        = link_to "Edit Survey Form", edit_hanuman_project_survey_template_path(params[:project_id], params[:id])
       - else
         Admin / Survey Forms / Edit Survey Form - #{@survey_template.name_plus_version}
   .tab-base.tab-stacked-top
