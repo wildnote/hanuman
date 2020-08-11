@@ -504,7 +504,7 @@ class @ConditionalLogic
     else if (elementType == 'text' || elementType ==  'textarea' || elementType == 'time') && typeof result == 'string'
       $target.val(result).trigger('change')
 
-    else if elementType == 'date' && typeof result == 'number'
+    else if elementType == 'date' && typeof result == 'string'
       $target.datepicker("setDate", new Date(result))
       $target.trigger('change')
 
