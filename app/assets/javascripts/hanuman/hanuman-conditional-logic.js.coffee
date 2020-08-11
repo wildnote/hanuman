@@ -408,9 +408,9 @@ class @ConditionalLogic
         return
 
     if $conditionElement.is('select[multiple]')
-      if $conditionElement.chosen().find("option:selected").length > 0
+      if $conditionElement.find("option:selected").length > 0
         option_strings = []
-        $conditionElement.chosen().find("option:selected").each ->
+        $conditionElement.find("option:selected").each ->
           option_strings.push this.innerHTML
         return option_strings.join("|&|")
       else if $conditionElement.is(".selectize-taxon-select") && $conditionElement.children().size() > 0
