@@ -8,7 +8,7 @@ module Hanuman
 
     def index
       if params[:ids]
-        respond_with Question.includes(:taggings, :answer_choices, rules: [:conditions]).where(id: params[:ids])
+        respond_with Question.includes(:taggings, :answer_choices, rules: [:conditions]).where(id: params[:ids], marked_for_deletion: false)
       else
         respond_with []
       end
@@ -30,9 +30,17 @@ module Hanuman
 
     def destroy
       question = Question.find(params[:id])
-      question.paper_trail.without_versioning do
-        respond_with question.destroy
+      question.marked_for_deletion = true
+      if question.children.present?
+        question.children.each do |child|
+          child.marked_for_deletion = true
+          child.save
+        end
       end
+      question.save
+      DestroyQuestionWorker.perform_async(question.id, true_user.id)
+
+      respond_with question
     end
 
     def duplicate
