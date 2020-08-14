@@ -68,7 +68,7 @@ class @ConditionalLogic
           if rule.type == "Hanuman::CalculationRule"
             self.updateCalculation(rule, $ruleContainer)
           else
-            self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule)
+            self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true)
 
           # need the direct returns so that the nested loops don't get broken when they're compiled to JS
           return
@@ -110,7 +110,7 @@ class @ConditionalLogic
             matchingCondition = _.where(conditions, {question_id: Number(questionId)})
             if matchingCondition.length > 0
               if conditions.length > 1
-                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this)
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this, false)
               else
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
                 if this.type == "Hanuman::VisibilityRule"
@@ -130,7 +130,7 @@ class @ConditionalLogic
             matchingCondition = _.where(conditions, {question_id: Number(questionId)})
             if matchingCondition.length > 0
               if conditions.length > 1
-                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this)
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this, false)
               else
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
                 if this.type == "Hanuman::VisibilityRule"
@@ -139,7 +139,7 @@ class @ConditionalLogic
                   self.setLookupValue(this.value, $ruleElement)
     return
 
-  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule) ->
+  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule, onLoad) ->
     conditionMetTracker = []
     $.each conditions, (index, condition) ->
       if inRepeater
@@ -175,7 +175,7 @@ class @ConditionalLogic
 
     if rule.type == "Hanuman::VisibilityRule"
       self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
-    else if hideShow == false && rule.type == "Hanuman::LookupRule"
+    else if !onLoad && hideShow == false && rule.type == "Hanuman::LookupRule"
         self.setLookupValue(rule.value, $ruleElement)
 
   setLookupValue: (value, $ruleElement) ->
