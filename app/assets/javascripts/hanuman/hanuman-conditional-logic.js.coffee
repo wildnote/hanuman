@@ -12,9 +12,9 @@ class @ConditionalLogic
       $(rules).each ->
         rule = this
         matchType = rule.match_type
+
         $(rule.conditions).each ->
-          condition = this
-          conditionQuestionId = condition.question_id
+          conditionQuestionId = this.question_id
           # the container for the rule element(s), could be a single element contained in form-container-entry-item or multiple in form-container-repeater
           $ruleContainer = $ruleContainer
           # the condition container
@@ -37,7 +37,7 @@ class @ConditionalLogic
             problemWithCL = true
 
           # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
-          hideQuestions = self.setHideQuestions(condition, $conditionElement)
+          hideQuestions = self.setHideQuestions(this, $conditionElement)
 
 
           ancestorId = rule.question_id
@@ -50,7 +50,7 @@ class @ConditionalLogic
             if $conditionElement.is(":checkbox")
               # limit binding of each checkbox if data-label-value and answer are the same-kdh
               if rule.type != 'Hanuman::CalculationRule'
-                $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
+                $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + this.answer.replace("/","\\/").replace("'","\\'") + "']")
 
               self.bindConditions($conditionElement, rule, $ruleContainer)
             else
@@ -69,6 +69,10 @@ class @ConditionalLogic
             self.updateCalculation(rule, $ruleContainer)
           else
             self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule)
+
+          # need the direct returns so that the nested loops don't get broken when they're compiled to JS
+          return
+        return
 
     if problemWithCL
       e = new Error("conditional Logic # findRules")
