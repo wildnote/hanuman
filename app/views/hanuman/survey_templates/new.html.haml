@@ -38,16 +38,16 @@
       %ul.nav.nav-tabs.projects-tabs
         %li
           = link_to main_app.surveys_project_path(params[:project_id]) do
-            Project Survey Forms
+            Project Library
         %li
           = link_to main_app.company_surveys_project_path(params[:project_id]) do
-            Company Survey Forms
+            Company Library
         %li
           = link_to main_app.library_surveys_project_path(params[:project_id]) do
-            Wildnote Library Survey Forms
+            Wildnote Library
         %li.active
           %a
             %span.glyphicons.glyphicons-file-plus{style: "color: #5ba625; padding-right: 5px;"}
-            New Survey Form from Scratch
+            New
 
   = render "form"
