@@ -31,12 +31,6 @@ module Hanuman
     def destroy
       question = Question.find(params[:id])
       question.marked_for_deletion = true
-      if question.children.present?
-        question.children.each do |child|
-          child.marked_for_deletion = true
-          child.save
-        end
-      end
       question.save
       DestroyQuestionWorker.perform_async(question.id, true_user.id)
 
