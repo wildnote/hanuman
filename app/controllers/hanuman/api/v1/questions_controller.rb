@@ -30,11 +30,10 @@ module Hanuman
 
     def destroy
       question = Question.find(params[:id])
-      question.marked_for_deletion = true
-      question.save
+      question.mark_all_descendants_for_deletion
       DestroyQuestionWorker.perform_async(question.id, true_user.id)
 
-      respond_with question
+      respond_with nil
     end
 
     def duplicate

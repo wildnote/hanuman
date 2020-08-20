@@ -395,5 +395,18 @@ module Hanuman
       # split at semicolon but keep delimeter
       css_style.split(/(?<=[;])/)
     end
+
+    def mark_all_descendants_for_deletion
+      if self.children.present?
+        self.marked_for_deletion = true
+        self.save
+        self.children.each do |child|
+          child.mark_all_descendants_for_deletion
+        end
+      else
+        self.marked_for_deletion = true
+        self.save
+      end
+    end
   end
 end
