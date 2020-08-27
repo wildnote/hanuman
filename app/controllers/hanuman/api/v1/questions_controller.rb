@@ -46,7 +46,7 @@ module Hanuman
         question.mark_all_descendants_for_deletion
         DestroyQuestionWorker.perform_async(question.id, true_user.id)
 
-        respond_with nil
+        respond_with {}
       end
     end
 
