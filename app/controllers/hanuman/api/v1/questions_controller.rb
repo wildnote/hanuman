@@ -29,11 +29,25 @@ module Hanuman
     end
 
     def destroy
-      question = Question.find(params[:id])
-      question.mark_all_descendants_for_deletion
-      DestroyQuestionWorker.perform_async(question.id, true_user.id)
+      
+      begin
+        question = Question.find(params[:id])
+        question.paper_trail.without_versioning do
+          respond_with question.destroy
+        end
+      rescue Rack::Timeout::RequestTimeoutException => e
+        Honeybadger.notify(e, context: {
+          name: "Question Deletion Sent To Worker",
+          current_user_id: current_user.id,
+          true_user_id: true_user.id,
+          user_name: (current_user.present? ? current_user.name : "")
+        })
+        question = Question.find(params[:id])
+        question.mark_all_descendants_for_deletion
+        DestroyQuestionWorker.perform_async(question.id, true_user.id)
 
-      respond_with nil
+        respond_with nil
+      end
     end
 
     def duplicate
