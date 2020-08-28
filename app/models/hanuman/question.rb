@@ -33,6 +33,11 @@ module Hanuman
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
     after_save :format_css_style, if: :css_style_changed?
 
+    # Scopes
+    # scope :not_marked_for_deletion, -> { where(marked_for_deletion: false) }
+    default_scope { where(marked_for_deletion: false) }
+
+
     amoeba do
       include_association :rules
       include_association :answer_choices
@@ -394,6 +399,19 @@ module Hanuman
 
       # split at semicolon but keep delimeter
       css_style.split(/(?<=[;])/)
+    end
+
+    def mark_all_descendants_for_deletion
+      if self.children.present?
+        self.marked_for_deletion = true
+        self.save
+        self.children.each do |child|
+          child.mark_all_descendants_for_deletion
+        end
+      else
+        self.marked_for_deletion = true
+        self.save
+      end
     end
   end
 end
