@@ -8,7 +8,7 @@ module Hanuman
 
     def index
       if params[:ids]
-        respond_with Question.includes(:taggings, :answer_choices, rules: [:conditions]).where(id: params[:ids])
+        respond_with Question.includes(:taggings, :answer_choices, rules: [:conditions]).where(id: params[:ids], marked_for_deletion: false)
       else
         respond_with []
       end
@@ -29,9 +29,24 @@ module Hanuman
     end
 
     def destroy
-      question = Question.find(params[:id])
-      question.paper_trail.without_versioning do
-        respond_with question.destroy
+      
+      begin
+        question = Question.find(params[:id])
+        question.paper_trail.without_versioning do
+          respond_with question.destroy
+        end
+      rescue Rack::Timeout::RequestTimeoutException => e
+        Honeybadger.notify(e, context: {
+          name: "Question Deletion Sent To Worker",
+          current_user_id: current_user.id,
+          true_user_id: true_user.id,
+          user_name: (current_user.present? ? current_user.name : "")
+        })
+        question = Question.find(params[:id])
+        question.mark_all_descendants_for_deletion
+        DestroyQuestionWorker.perform_async(question.id, true_user.id)
+
+        respond_with {}
       end
     end
 
@@ -60,7 +75,7 @@ module Hanuman
         :hidden, :parent_id, :capture_location_data, :data_source_id, :enable_survey_history, :new_project_location,
         :combine_latlong_as_polygon, :combine_latlong_as_line, :enable_survey_history,
         :layout_section, :layout_row, :layout_column, :layout_column_position, :default_answer,
-        :export_continuation_characters, :helper_text, :tag_list, :max_photos, :db_column_name, :api_column_name, :css_style, :report_children_width
+        :export_continuation_characters, :helper_text, :tag_list, :max_photos, :db_column_name, :api_column_name, :css_style, :report_children_width, :marked_for_deletion
       )
     end
 
