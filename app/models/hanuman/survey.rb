@@ -22,7 +22,8 @@ module Hanuman
     validates :survey_extension, presence: true
 
     before_save :set_observations_unsorted, unless: :skip_sort?
-    after_commit :schedule_observation_sorting #, if: :should_schedule_sort?
+    # all survey post processing is in schedule_observation_worker except set_topock_photo_names
+    after_commit :schedule_observation_sorting
 
     after_save :set_entries
 
