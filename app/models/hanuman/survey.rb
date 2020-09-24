@@ -22,8 +22,8 @@ module Hanuman
     validates :survey_extension, presence: true
 
     before_save :set_observations_unsorted, unless: :skip_sort?
-    # all survey post processing is in schedule_observation_worker except set_topock_photo_names
-    after_commit :schedule_observation_sorting
+    
+    after_commit :wetland_calcs_and_sorting_operations, on: [:create, :update]
 
     after_save :set_entries
 
@@ -77,10 +77,6 @@ module Hanuman
 
     def skip_sort?
       @skip_sort || false
-    end
-
-    def schedule_observation_sorting
-      SortObservationsWorker.perform_async(self.id)
     end
 
     def sorted_observations
@@ -274,6 +270,24 @@ module Hanuman
       self.sorted_observations.where(hidden: false)
     end
 
+    def wetland_calcs_and_sorting_operations
+      if self.wetland_v2_web_v3? 
+        self.set_wetland_dominant_species
+      end
+  
+      if self.web_wetland_v3_v4?
+        self.set_dominance_test
+        self.set_rapid_test_hydrophytic
+      end
+  
+      if self.mobile_v3_or_higher?
+        self.sort_veg_repeaters
+      end
+
+      if self.should_schedule_sort?
+        SortObservationsWorker.perform_async(self.id)
+      end
+    end
 
 
     def sorted_photos
