@@ -161,6 +161,7 @@ module Hanuman
 
           condition_results = rule.conditions.map do |cond|
             trigger_observation = self.observations.find_by(question_id: cond.question_id, parent_repeater_id: obs.parent_repeater_id)
+            trigger_observation = self.observations.find_by(question_id: cond.question_id, parent_repeater_id: nil) if trigger_observation.blank?
 
             unless trigger_observation.blank?
               case cond.operator
