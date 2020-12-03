@@ -53,14 +53,25 @@ module Hanuman
       end
 
       # Set entry to 1 for all first-of-type repeaters and top-level observations
-      self.observations.joins(:question).where(repeater_id: first_of_type_repeater_ids).update_all(entry: 1)
-      self.observations.joins(:question).where(parent_repeater_id: first_of_type_repeater_ids).where('repeater_id IS NULL OR repeater_id = 0').update_all(entry: 1)
-      self.observations.joins(:question).where('(repeater_id IS NULL OR repeater_id = 0) AND (parent_repeater_id IS NULL OR parent_repeater_id = 0)').update_all(entry: 1)
+      first_of_type_repeaters = self.observations.joins(:question).where(repeater_id: first_of_type_repeater_ids)
+      first_of_type_children = self.observations.joins(:question).where(parent_repeater_id: first_of_type_repeater_ids).where('repeater_id IS NULL OR repeater_id = 0')
+      top_level_observations = self.observations.joins(:question).where('(repeater_id IS NULL OR repeater_id = 0) AND (parent_repeater_id IS NULL OR parent_repeater_id = 0)')
+
+      first_entry_observations = first_of_type_repeaters + first_of_type_children + top_level_observations
+
+      first_entry_observations.each do |o|
+        o.entry = 1
+        o.save
+      end
 
       # Iterate through the remaining repeaters and increment the entry for each one
       self.observations.joins(:question).reorder('repeater_id ASC').where.not(repeater_id: first_of_type_repeater_ids).where('repeater_id IS NOT NULL AND repeater_id != 0').each_with_index do |observation, index|
         # we need to be careful not to include repeater children that are themselves repeaters
-        self.observations.joins(:question).where('repeater_id = ? OR (parent_repeater_id = ? AND (repeater_id IS NULL OR repeater_id = 0))', observation.repeater_id, observation.repeater_id).update_all(entry: index + 2)
+        repeater_observations = self.observations.joins(:question).where('repeater_id = ? OR (parent_repeater_id = ? AND (repeater_id IS NULL OR repeater_id = 0))', observation.repeater_id, observation.repeater_id)
+        repeater_observations.each do |o|
+          o.entry = index + 2
+          o.save
+        end
       end
     end
 
