@@ -32,6 +32,7 @@ module Hanuman
       enable
       include_association :survey_extension
       include_association :observations
+      nullify :uuid
     }
 
     # Delegations

@@ -62,6 +62,8 @@ module Hanuman
       exclude_associations :observation_signature
       exclude_associations :signature
       exclude_associations :deltas
+      nullify :uuid
+      nullify :survey_uuid
     end
 
     def hide_tree!
