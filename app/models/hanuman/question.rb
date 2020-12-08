@@ -31,6 +31,7 @@ module Hanuman
     after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
     after_create :set_column_names!
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
+    before_update :answer_type_change, if: :answer_type_id_changed?
     after_save :format_css_style, if: :css_style_changed?
 
     # Scopes
@@ -411,6 +412,18 @@ module Hanuman
       else
         self.marked_for_deletion = true
         self.save
+      end
+    end
+
+    def answer_type_change
+      default_answer = false
+      ['checkbox', 'number', 'radio', 'text', 'textarea'].each do |at|
+        if self.answer_type.name == at
+          default_answer = true
+        end
+      end
+      unless default_answer
+        self.default_answer = nil
       end
     end
   end
