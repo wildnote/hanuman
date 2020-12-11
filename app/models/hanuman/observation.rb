@@ -149,6 +149,8 @@ module Hanuman
       end
     end
 
+    # triggered on before_remove
+    # Needed to generate ObservationAnswer deletion deltas when multiselectable answer choices and taxonomy are unselected
     def generate_observation_answer_delta(option)
       if self.observation_answers.present?
         self.observation_answers.each do |oa|
