@@ -46,7 +46,6 @@ module Hanuman
     before_save :strip_and_squish_answer
     before_save :set_zero_attributes_to_nil
     before_save :check_location_metadata
-    after_save :fill_answer
 
     # Delegations
     delegate :question_text, to: :question
@@ -110,18 +109,6 @@ module Hanuman
       end
       if self.selectable_id == 0
         self.selectable_id = nil
-      end
-    end
-
-    def fill_answer
-      if question.answer_type.name == 'chosenselect' && answer_choice_id_changed?
-        update_column(:answer, answer_choice.option_text) if answer_choice.present?
-      elsif question.answer_type.name == 'radio' && answer_choice_id_changed?
-        update_column(:answer, answer_choice.option_text) if answer_choice.present?
-      # elsif question.answer_type.name == 'locationchosensingleselect' && selectable_id_changed?
-      #   update_column(:answer, selectable.name) if selectable.present?
-      # elsif question.answer_type.name == 'taxonchosensingleselect' && selectable_id_changed?
-      #   update_column(:answer, selectable.formatted_answer_choice_with_symbol) if selectable.present?
       end
     end
 

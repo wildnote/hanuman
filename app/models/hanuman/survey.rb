@@ -23,7 +23,7 @@ module Hanuman
 
     before_save :set_observations_unsorted, unless: :skip_sort?
     
-    after_commit :wetland_calcs_and_sorting_operations, on: [:create, :update]
+    after_commit :wetland_calcs_and_sorting_operations, on: [:create, :update], unless: :has_missing_questions
 
     after_save :set_entries
 
