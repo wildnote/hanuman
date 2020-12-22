@@ -431,7 +431,7 @@ module Hanuman
       if value.nil? or !value.is_a?(String)
         self[:flagged_answers] = []
       else
-        self[:flagged_answers] = value.split(',')
+        self[:flagged_answers] = value.split(',').map(&:strip)
       end
     end
   end
