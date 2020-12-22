@@ -426,5 +426,13 @@ module Hanuman
         self.default_answer = nil
       end
     end
+
+    def flagged_answers=(value)
+      if value.nil? or !value.is_a?(String)
+        self[:flagged_answers] = []
+      else
+        self[:flagged_answers] = value.split(',')
+      end
+    end
   end
 end
