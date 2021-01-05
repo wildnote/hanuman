@@ -33,6 +33,7 @@ module Hanuman
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
     before_update :answer_type_change, if: :answer_type_id_changed?
     after_save :format_css_style, if: :css_style_changed?
+    after_save :schedule_flagged_answers_update_worker, if: :flagged_answers_changed?
 
     # Scopes
     # scope :not_marked_for_deletion, -> { where(marked_for_deletion: false) }
@@ -433,6 +434,10 @@ module Hanuman
       else
         self[:flagged_answers] = value.split(',').map(&:strip)
       end
+    end
+
+    def schedule_flagged_answers_update_worker
+      UpdateFlaggedAnswersWorker.perform_async(id)
     end
   end
 end

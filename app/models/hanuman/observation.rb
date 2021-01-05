@@ -46,6 +46,7 @@ module Hanuman
     before_save :strip_and_squish_answer
     before_save :set_zero_attributes_to_nil
     before_save :check_location_metadata
+    before_save :set_flagged_status
     after_save :fill_answer
 
     # Delegations
@@ -146,6 +147,36 @@ module Hanuman
       end
     end
 
+    def get_flagged_status
+      flagged_status = false
 
+      unless hidden
+        case self.question.answer_type.name
+        when 'checkboxlist', 'chosenmultiselect'
+          self.observation_answers.any? do |oa|
+            flagged_status = self.question.flagged_answers.any? { |fa| fa == oa.answer_choice.option_text.strip }
+          end
+
+        when 'chosenselect', 'radio'
+          flagged_status = self.answer_choice.present? && question.flagged_answers.any? { |fa| fa == self.answer_choice.option_text.strip }
+
+        when 'checkbox', 'date', 'email', 'text', 'textarea', 'time', 'number', 'counter'
+          flagged_status = self.answer.present? && self.question.flagged_answers.any? { |fa| fa == self.answer.strip }
+
+        when 'taxonchosensingleselect', 'locationchosensingleselect'
+          flagged_status = self.selectable.present? && question.flagged_answers.any? { |fa| fa == self.selectable.name.strip }
+
+        else
+          flagged_status = false
+        end
+      end
+
+      flagged_status
+    end
+
+    def set_flagged_status
+      self[:flagged] = get_flagged_status
+      true
+    end
   end
 end
