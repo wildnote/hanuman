@@ -33,7 +33,7 @@ module Hanuman
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
     before_update :answer_type_change, if: :answer_type_id_changed?
     after_save :format_css_style, if: :css_style_changed?
-    
+
     # Need to cache the change state of flagged answers in an attribute so that we can access it after_commit
     # Need to start this worker after_commit to avoid it firing before the transaction has completed
     after_save -> { self.flagged_answers_change_was_saved = true }, if: :flagged_answers_changed?
