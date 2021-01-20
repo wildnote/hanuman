@@ -169,6 +169,7 @@ module Hanuman
     def set_observation_visibility!
       self.sorted_observations.reverse.each do |obs|
         if obs.question.rules.present? && obs.question.rules.exists?(type: "Hanuman::VisibilityRule")
+
           rule = obs.question.rules.find_by(type: "Hanuman::VisibilityRule")
 
           condition_results = rule.conditions.map do |cond|
@@ -191,6 +192,8 @@ module Hanuman
                   trigger_observation.location.name == cond.answer
                 elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
                   trigger_observation.taxon.formatted_answer_choice_with_symbol == cond.answer
+                elsif trigger_observation.answer_choice.present?
+                  trigger_observation.answer_choice.option_text == cond.answer
                 else
                   trigger_observation.answer == cond.answer
                 end
@@ -214,6 +217,8 @@ module Hanuman
                   trigger_observation.location.name != cond.answer
                 elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
                   trigger_observation.taxon.formatted_answer_choice_with_symbol != cond.answer
+                elsif trigger_observation.answer_choice.present?
+                  trigger_observation.answer_choice.option_text != cond.answer
                 else
                   trigger_observation.answer != cond.answer
                 end
@@ -222,13 +227,13 @@ module Hanuman
                 if trigger_observation.observation_answers.present?
                   true
                 else
-                  trigger_observation.answer.blank?
+                  trigger_observation.answer.blank? || trigger_observation.location.nil? || trigger_observation.taxon.nil? || trigger_observation.answer_choice.nil?
                 end
               when "is not empty"
                 if trigger_observation.observation_answers.present?
                   true
                 else
-                  trigger_observation.answer.present?
+                  trigger_observation.answer.present? || trigger_observation.location.present? || trigger_observation.taxon.present? || trigger_observation.answer_choice.present?
                 end
               when "is greater than"
                 is_numerical = trigger_observation.answer.to_i.to_s == trigger_observation.answer || trigger_observation.answer.to_f.to_s == trigger_observation.answer
