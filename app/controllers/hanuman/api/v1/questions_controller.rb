@@ -75,7 +75,8 @@ module Hanuman
         :hidden, :parent_id, :capture_location_data, :data_source_id, :enable_survey_history, :new_project_location,
         :combine_latlong_as_polygon, :combine_latlong_as_line, :enable_survey_history,
         :layout_section, :layout_row, :layout_column, :layout_column_position, :default_answer,
-        :export_continuation_characters, :helper_text, :tag_list, :max_photos, :db_column_name, :api_column_name, :css_style, :report_children_width, :marked_for_deletion
+        :export_continuation_characters, :helper_text, :tag_list, :max_photos, :db_column_name, :api_column_name, :css_style, :report_children_width,
+        :marked_for_deletion, :flagged_answers
       )
     end
 

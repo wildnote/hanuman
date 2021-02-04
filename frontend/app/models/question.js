@@ -44,6 +44,7 @@ export default Model.extend(Validator, {
   apiColumnName: attr('string'),
   cssStyle: attr('string'),
   reportChildrenWidth: attr('number'),
+  flaggedAnswers: attr('string'),
 
   // Associations
   dataSource: belongsTo('data-source'),
