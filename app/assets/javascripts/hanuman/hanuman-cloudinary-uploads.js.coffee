@@ -373,9 +373,35 @@ $ ->
   # unbind
   $.cleanData( $('input.cloudinary-fileupload[type=file]') )
 
+
+  $('.rotate-button').click ->
+    rotationString = $(this).closest('div').find('input.rotation-input').val()
+    if rotationString == ""
+      currentRotation = 0
+    else
+      currentRotation = parseInt(rotationString)
+
+    if $(this).text() == "Left"
+      currentRotation += 90
+      currentRotation = 0 if currentRotation >= 360
+    else
+      currentRotation -= 90
+      currentRotation += 360 if currentRotation < 0
+
+    $(this).closest('div').find('input.rotation-input').val(currentRotation)
+    $img = $(this).closest("div").find('img')
+    heightVal = $img.height()
+    widthVal = $img.width()
+    $img.css('transform', 'rotate(' + currentRotation + 'deg)')
+    $img.css('width': heightVal)
+    $img.css('height': widthVal)
+
+
+
   # rebind cloudinary
   if $.fn.cloudinary_fileupload != undefined
     $('input.cloudinary-fileupload[type=file]').cloudinary_fileupload()
+
 
   # rebind our custom code
   bindPhotoUploads()
