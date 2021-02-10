@@ -373,28 +373,48 @@ $ ->
   # unbind
   $.cleanData( $('input.cloudinary-fileupload[type=file]') )
 
-
   $('.rotate-button').click ->
-    rotationString = $(this).closest('div').find('input.rotation-input').val()
-    if rotationString == ""
-      currentRotation = 0
-    else
-      currentRotation = parseInt(rotationString)
+    $imgContainer = $(this).closest('div').find('.img-rotate-container')
+    $img = $(this).closest("div").find('img')
 
-    if $(this).text() == "Left"
+    # If the image is wider than it is high, grow the image container so that it doesn't get cut off vertically when rotated
+    heightVal = $img.height()
+    widthVal = $img.width()
+    if widthVal > heightVal
+      $imgContainer.css('height': widthVal)
+
+    # Get the current rotation and update it based on the button click
+    # Reset rotation value if it goes over 360 or below zero
+    currentRotation = $img.data('current-rotation')
+
+    if currentRotation == undefined || currentRotation == null
+      currentRotation = 0
+
+    if $(this).text() == "Rotate Right"
       currentRotation += 90
       currentRotation = 0 if currentRotation >= 360
     else
       currentRotation -= 90
       currentRotation += 360 if currentRotation < 0
 
-    $(this).closest('div').find('input.rotation-input').val(currentRotation)
-    $img = $(this).closest("div").find('img')
-    heightVal = $img.height()
-    widthVal = $img.width()
-    $img.css('transform', 'rotate(' + currentRotation + 'deg)')
-    $img.css('width': heightVal)
-    $img.css('height': widthVal)
+    $img.data('current-rotation', currentRotation)
+
+    # Transform the image based on the rotation value
+    $imgContainer.removeClass('rotate90 rotate180 rotate270')
+    if currentRotation == 90 || currentRotation == 180 || currentRotation == 270
+      $imgContainer.addClass("rotate" + currentRotation)
+
+    # Update the form with the underlying rotation from the original image
+    absoluteRotation = $(this).closest('div').find('input.rotation-input').data('original-rotation')
+
+    if absoluteRotation == undefined || absoluteRotation == null
+      absoluteRotation = 0
+
+    absoluteRotation = absoluteRotation + currentRotation
+    absoluteRotation = absoluteRotation - 360 if absoluteRotation >= 360
+
+    $(this).closest('div').find('input.rotation-input').val(absoluteRotation)
+
 
 
 
