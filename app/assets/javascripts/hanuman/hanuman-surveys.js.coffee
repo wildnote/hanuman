@@ -6,6 +6,14 @@ $ ->
         $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_" + (index + 1))
       )
 
+  # Radio button deselection
+  $('.form-container-entry-item input[type="radio"]').click ->
+    if $(this).data("radio-checked")
+      $(this).attr('checked', false)
+
+    $(this).siblings('input[type="radio"]').data('radio-checked', false)
+    $(this).data("radio-checked", $(this).is(":checked"))
+
   # TYPEAHEAD
   if $(".typeahead").length > 0
     $(".typeahead").each ->
