@@ -10,5 +10,5 @@
                              {prompt: true, selected: nil}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer }
     - else
       = ff.collection_select :answer_choice_id, ff.object.question.answer_choices.sorted, :id, :formatted_answer_choice,
-                             {prompt: true}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer }
+                             {include_blank: true}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer }
     
