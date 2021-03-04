@@ -276,7 +276,7 @@ module Hanuman
         self.set_wetland_dominant_species
       end
   
-      if self.web_wetland_v3_v4?
+      if self.web_wetland_v3_v4_v5?
         self.set_dominance_test
         self.set_rapid_test_hydrophytic
       end
