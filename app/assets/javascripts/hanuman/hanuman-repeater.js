@@ -281,9 +281,9 @@ $(document).ready(function(){
           $destroyButton.hide();
         }
 
+        $(element).find(".repeater-count:first").text(" " + (index + 1));
+        
         if (index > 0) {
-          $(element).find(".repeater-count:first").text(" " + (index + 1));
-
           // make unique target for collapse
           var question_id = $(element).attr('data-question-id');
           $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_" + (index + 1));
