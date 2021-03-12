@@ -88,7 +88,7 @@ class @ConditionalLogic
 
   #bind conditions to question
   bindConditions: ($triggerElement, rule, $ruleContainer) ->
-    $triggerElement.on "change", ->
+    $triggerElement.unbind('change.cl').on "change.cl", ->
       ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
       if rule.type == "Hanuman::CalculationRule"
         self.updateCalculation(rule, $ruleContainer, true)
