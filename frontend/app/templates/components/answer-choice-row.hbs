@@ -8,7 +8,7 @@
             class="form-control {{if saveTask.isRunning 'disabled'}}"
             value={{answerChoice.optionText}}
             oninput={{action (mut answerChoice.optionText) value="target.value"}}
-            onkeyup={{action 'inputKeyUp'}}
+            onkeydown={{action 'inputKeyDown'}}
             placeholder="Option Text"
             maxlength='255'/>
     {{/form-field}}
@@ -23,7 +23,7 @@
               class="form-control {{if saveTask.isRunning 'disabled'}}"
               value={{answerChoice.definition}}
               oninput={{action (mut answerChoice.definition) value="target.value"}}
-              onkeyup={{action 'inputKeyUp'}}
+              onkeydown={{action 'inputKeyDown'}}
               placeholder="Definition"
               maxlength='255'/>
       {{/form-field}}
