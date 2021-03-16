@@ -7,8 +7,8 @@
         = ff.hidden_field :answer
     - elsif ff.object.answer_choice.blank?
       = ff.collection_select :answer_choice_id, ff.object.question.answer_choices.sorted, :id, :formatted_answer_choice,
-                             {prompt: true, selected: nil}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer }
+                             {prompt: true, selected: nil}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer, disabled: o.question.calculated? }
     - else
       = ff.collection_select :answer_choice_id, ff.object.question.answer_choices.sorted, :id, :formatted_answer_choice,
-                             {prompt: true}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer }
+                             {prompt: true}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer, disabled: o.question.calculated? }
     

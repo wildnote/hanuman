@@ -444,5 +444,9 @@ module Hanuman
       UpdateFlaggedAnswersWorker.perform_async(id)
       self.flagged_answers_change_was_saved = false
     end
+
+    def calculated?
+      self.rules.any? { |r| r.is_a?(Hanuman::CalculationRule) }
+    end
   end
 end
