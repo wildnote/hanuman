@@ -16,7 +16,6 @@ class @ConditionalLogic
         matchType = rule.match_type
 
         $(rule.conditions).each ->
-          console.log(this.id)
           conditionQuestionId = this.question_id
           # the container for the rule element(s), could be a single element contained in form-container-entry-item or multiple in form-container-repeater
           $ruleContainer = $ruleContainer
