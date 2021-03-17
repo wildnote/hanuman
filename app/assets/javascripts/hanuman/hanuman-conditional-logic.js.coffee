@@ -16,6 +16,7 @@ class @ConditionalLogic
         matchType = rule.match_type
 
         $(rule.conditions).each ->
+          console.log(this.id)
           conditionQuestionId = this.question_id
           # the container for the rule element(s), could be a single element contained in form-container-entry-item or multiple in form-container-repeater
           $ruleContainer = $ruleContainer
@@ -91,12 +92,12 @@ class @ConditionalLogic
   bindConditions: ($triggerElement, rule, $ruleContainer, conditionId) ->
 
     ## Don't double-bind calculations
-    ## We need to store both the element and the condition ID in order to for this to work for multiple parameters on a single radiobutton
+    ## We need to store the element, condition, and rule in order to not to exclude any necessary bindings
     if rule.type == "Hanuman::CalculationRule"
       idx = self.boundElements.findIndex (el) ->
-        return $triggerElement[0] == el[0] && conditionId == el[1]
+        return $triggerElement[0] == el[0] && conditionId == el[1] && rule.id == el[2]
       return if idx != -1
-      self.boundElements.push([$triggerElement[0], conditionId])
+      self.boundElements.push([$triggerElement[0], conditionId, rule.id])
 
     $triggerElement.on "change", ->
       ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
