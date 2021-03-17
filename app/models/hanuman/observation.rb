@@ -150,6 +150,7 @@ module Hanuman
     end
 
     def get_flagged_status
+      return false if question.nil?
       flagged_status = false
 
       unless hidden
