@@ -7,4 +7,3 @@
     - else
       = ff.collection_select :answer_choice_id, ff.object.question.answer_choices.sorted, :id, :formatted_answer_choice,
                              {include_blank: true}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer }
-    
