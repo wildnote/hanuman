@@ -1,6 +1,7 @@
 class @ConditionalLogic
 
   self = ConditionalLogic.prototype
+  self.boundElements = []
 
   #scan page and find all objects with conditional logic rules
   findRules: ->
@@ -45,7 +46,7 @@ class @ConditionalLogic
           # bind conditions based on element type
           # text, textarea, select
           if $conditionElement.length < 2
-            self.bindConditions($conditionElement, rule, $ruleContainer)
+            self.bindConditions($conditionElement, rule, $ruleContainer, this.id)
           # radio buttons
           else
             if $conditionElement.is(":checkbox")
@@ -53,11 +54,11 @@ class @ConditionalLogic
               if rule.type != 'Hanuman::CalculationRule'
                 $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + this.answer.replace("/","\\/").replace("'","\\'") + "']")
 
-              self.bindConditions($conditionElement, rule, $ruleContainer)
+              self.bindConditions($conditionElement, rule, $ruleContainer, this.id)
             else
               for element in $conditionElement
                 do (element) ->
-                  self.bindConditions($(element), rule, $ruleContainer)
+                  self.bindConditions($(element), rule, $ruleContainer, this.id)
 
           #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
           # determine if we are in a repeater-this needs to get deleted-kdh
@@ -87,7 +88,16 @@ class @ConditionalLogic
     return
 
   #bind conditions to question
-  bindConditions: ($triggerElement, rule, $ruleContainer) ->
+  bindConditions: ($triggerElement, rule, $ruleContainer, conditionId) ->
+
+    ## Don't double-bind calculations
+    ## We need to store the element, condition, and rule in order to not to exclude any necessary bindings
+    if rule.type == "Hanuman::CalculationRule"
+      idx = self.boundElements.findIndex (el) ->
+        return $triggerElement[0] == el[0] && conditionId == el[1] && rule.id == el[2]
+      return if idx != -1
+      self.boundElements.push([$triggerElement[0], conditionId, rule.id])
+
     $triggerElement.on "change", ->
       ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
       if rule.type == "Hanuman::CalculationRule"
