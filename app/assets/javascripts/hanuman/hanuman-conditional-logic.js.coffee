@@ -4,7 +4,7 @@ class @ConditionalLogic
   self.boundElements = []
 
   #scan page and find all objects with conditional logic rules
-  findRules: ->
+  findRules: (runCalcs) ->
     self.allowCascade = false
     problemWithCL = false
     $("[data-rule!=''][data-rule]").each ->
@@ -70,7 +70,7 @@ class @ConditionalLogic
           if rule.type != "Hanuman::CalculationRule"
             self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true)
 
-        if rule.type == "Hanuman::CalculationRule"
+        if runCalcs && rule.type == "Hanuman::CalculationRule"
           self.updateCalculation(rule, $ruleContainer)
 
           # need the direct returns so that the nested loops don't get broken when they're compiled to JS
@@ -622,4 +622,4 @@ $ ->
   if $('input#survey_survey_template_id').length
     #call findRules on document ready
     cl = new ConditionalLogic
-    cl.findRules()
+    cl.findRules(false)
