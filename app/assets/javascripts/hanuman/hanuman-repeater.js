@@ -88,7 +88,7 @@ $(document).ready(function(){
 
     // bind ConditionalLogic and re-run the logic to hide and show
     cl = new ConditionalLogic;
-    cl.findRules();
+    cl.findRules(false);
 
     // unbind and rebind the pickers
     $(".datepicker").unbind().datepicker();
