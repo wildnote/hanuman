@@ -2,5 +2,8 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
     %p
-      = ff.check_box :answer, {class: 'form-control', "data-default-answer": o.question.default_answer, disabled: o.question.calculated? }, "true", "false"
+      - if o.question.calculated?
+        = ff.check_box :answer, {class: 'form-control calculated-readonly', "data-default-answer": o.question.default_answer, onclick: "return false;", style: "cursor: not-allowed" }, "true", "false"
+      - else
+        = ff.check_box :answer, {class: 'form-control', "data-default-answer": o.question.default_answer}, "true", "false"
     
