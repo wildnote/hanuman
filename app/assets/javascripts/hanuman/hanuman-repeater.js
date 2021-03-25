@@ -526,6 +526,10 @@ $(document).ready(function(){
         single_backstroke_delete: false,
         search_contains: true
       });
+
+      // Disable calculated fields
+      $('.chosen-multiselect[readonly], .chosen-select[readonly]').parent().find('.chosen-container').css({'pointer-events': 'none','opacity': 0.5});
+
       $(this).find(".bootstrap-checkbox-multiselect").multiselect();
     });
   }
