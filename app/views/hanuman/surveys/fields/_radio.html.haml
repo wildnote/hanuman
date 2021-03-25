@@ -11,7 +11,7 @@
           - ff.object.question.answer_choices.sorted.each do |a|
             - if o.question.calculated?
               = radio_button_tag "survey[observations_attributes][#{index}][answer_choice_id]",
-                                a.id, ff.object.answer.eql?(a.formatted_answer_choice), class: 'form-control', onclick: "return false;", style: "cursor: not-allowed",  data: { "label-value" => a.formatted_answer_choice, "default-answer" => o.question.default_answer, "answer-choice-id" =>  a.id}
+                                a.id, ff.object.answer.eql?(a.formatted_answer_choice), class: 'form-control', onclick: "return false;", style: "cursor: not-allowed; opacity: 0.5",  data: { "label-value" => a.formatted_answer_choice, "default-answer" => o.question.default_answer, "answer-choice-id" =>  a.id}
             - else
               = radio_button_tag "survey[observations_attributes][#{index}][answer_choice_id]",
                                 a.id, ff.object.answer.eql?(a.formatted_answer_choice), class: 'form-control', data: { "label-value" => a.formatted_answer_choice, "default-answer" => o.question.default_answer, "answer-choice-id" =>  a.id}
@@ -21,7 +21,7 @@
           - ff.object.question.answer_choices.sorted.each do |a|
             - if o.question.calculated?
               = radio_button_tag "survey[observations_attributes][#{index}][answer_choice_id]",
-                              a.id, ff.object.answer_choice_id.eql?(a.id), class: 'form-control', onclick: "return false;", style: "cursor: not-allowed", data: { "label-value" => a.formatted_answer_choice, "default-answer" => o.question.default_answer, "answer-choice-id" =>  a.id}
+                              a.id, ff.object.answer_choice_id.eql?(a.id), class: 'form-control', onclick: "return false;", style: "cursor: not-allowed; opacity: 0.5", data: { "label-value" => a.formatted_answer_choice, "default-answer" => o.question.default_answer, "answer-choice-id" =>  a.id}
             - else
               = radio_button_tag "survey[observations_attributes][#{index}][answer_choice_id]",
                               a.id, ff.object.answer_choice_id.eql?(a.id), class: 'form-control', data: { "label-value" => a.formatted_answer_choice, "default-answer" => o.question.default_answer, "answer-choice-id" =>  a.id}
