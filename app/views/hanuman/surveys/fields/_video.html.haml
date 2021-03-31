@@ -2,13 +2,14 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7.video-column.file-upload-input-button
     - if !@survey.id.nil?
-      .edit-mode-file
-      = ff.fields_for :observation_videos, o do |fff|
-        = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "video-upload survey-video-upload"})
-      .video-upload-error
-      .progress.hidden
-        .progress-bar.progress-bar-success.video-progress-bar
-      .video-preview-container
+      - unless @survey_readonly
+        .edit-mode-file
+        = ff.fields_for :observation_videos, o do |fff|
+          = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "video-upload survey-video-upload"})
+        .video-upload-error
+        .progress.hidden
+          .progress-bar.progress-bar-success.video-progress-bar
+        .video-preview-container
       - o.observation_videos.order(sort_order: :asc).each do |v|
         = ff.fields_for :observation_videos, v do |fff|
           .upload-view-mode
@@ -19,17 +20,18 @@
             = fff.label :"Video Description"
             .form-group
               .col-sm-7
-                = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add video description here..."
+                = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add video description here...", readonly: @survey_readonly
 
             = fff.label :"Video Sort Order"
             .form-group
               .col-sm-7
-                = fff.text_field :sort_order, class:"upload-sort-order"
-            %p.delete-box
-              = fff.check_box :_destroy, class:"hidden delete-checkbox"
-              %a{class:"delete-saved-file", href:"#"}Remove Video
+                = fff.text_field :sort_order, class:"upload-sort-order", readonly: @survey_readonly
+            - unless @survey_readonly
+              %p.delete-box
+                = fff.check_box :_destroy, class:"hidden delete-checkbox"
+                %a{class:"delete-saved-file", href:"#"}Remove Video
             %hr
-    - else
+    - elsif !@survey_readonly
       = ff.fields_for :observation_videos do |fff|
         = fff.cl_upload(:video, :chunk_size => 6_000_000, :html => { :multiple => true , :class => "video-upload survey-video-upload"})
         .video-upload-error
