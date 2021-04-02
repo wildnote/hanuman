@@ -45,5 +45,8 @@
     = ff.text_field :altitude, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Altitude (m)"
     = ff.text_field :accuracy, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Accuracy (m)"
 
+    - if o.utm_string.present?
+      %p.form-control-static.utm-container= "UTM: #{o.utm_string}"
+
   .col-sm-3
     %a.btn.btn-success.map-toggle-button  Plot Map Location
