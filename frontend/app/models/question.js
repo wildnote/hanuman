@@ -46,6 +46,8 @@ export default Model.extend(Validator, {
   reportChildrenWidth: attr('number'),
   flaggedAnswers: attr('string'),
   convertToUtm: attr('boolean'),
+  reportLabel: attr('string'),
+  excludeFromReport: attr('boolean'),
 
   // Associations
   dataSource: belongsTo('data-source'),

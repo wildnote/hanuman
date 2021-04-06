@@ -13,9 +13,13 @@
           = hidden_field_tag "survey[observations_attributes][#{index}][answer_choice_ids][]", ""
           - if a.option_text == ff.object.question.default_answer && ff.object.answer == a.option_text
             = check_box_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
-                               a.id, true, class: 'form-control', disabled: o.question.calculated?, data: { "label-value" => a.formatted_answer_choice }
+                               a.id, true, class: 'form-control', data: { "label-value" => a.formatted_answer_choice }
+
+          - elsif o.question.calculated?
+            = check_box_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
+                               a.id, cbl_answers.include?(a.id), class: 'form-control', onclick: "return false;", style: "cursor: not-allowed; opacity: 0.5", data: { "label-value" => a.formatted_answer_choice }
           - else
             = check_box_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
-                               a.id, cbl_answers.include?(a.id), class: 'form-control', disabled: o.question.calculated?, data: { "label-value" => a.formatted_answer_choice }
+                               a.id, cbl_answers.include?(a.id), class: 'form-control', data: { "label-value" => a.formatted_answer_choice }
           = label_tag nil, a.formatted_answer_choice
           %br/
