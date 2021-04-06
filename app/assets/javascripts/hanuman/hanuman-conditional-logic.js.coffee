@@ -25,7 +25,7 @@ class @ConditionalLogic
           if $conditionContainer.length < 1
             $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
 
-          if $conditionContainer.length == 0 || $conditionContainer.length > 1
+          if ($conditionContainer.length == 0 || $conditionContainer.length > 1) && rule.type != 'Hanuman::CalculationRule'
             problemWithCL = true
 
           # the condition element, which we need to check value for conditional logic
@@ -35,7 +35,7 @@ class @ConditionalLogic
           if $conditionElement.length < 1
             $conditionElement = $conditionContainer.find(".form-control-static")
 
-          if $conditionElement.length == 0
+          if $conditionElement.length == 0 && rule.type != 'Hanuman::CalculationRule'
             problemWithCL = true
 
           # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
