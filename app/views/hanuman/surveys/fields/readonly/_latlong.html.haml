@@ -23,6 +23,8 @@
     -#     %p.form-control-static= "#{o.answer} - BLUE POINT (o.answer)"
 
     %p.form-control-static= "#{latitude}, #{longitude}"
+    - if o.datum.present?
+      %p.form-control-static= "Datum: #{o.datum}"
     - if o.utm_string.present?
       %p.form-control-static= "UTM: #{o.utm_string}"
     - unless o.speed.blank?
