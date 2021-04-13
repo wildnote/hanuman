@@ -26,13 +26,13 @@
       Coordinates:
       =p.latitude.to_f.round(8).to_s + ", " + p.longitude.to_f.round(8).to_s
       %br
-      - if o.datum.present?
+      - if p.datum.present?
         Datum:
-        = o.datum
+        = p.datum
         %br
-      - if o.utm_string.present?
+      - if p.utm_string.present?
         UTM:
-        = o.utm_string
+        = p.utm_string
         %br
       - unless p.speed.blank?
         Speed:
