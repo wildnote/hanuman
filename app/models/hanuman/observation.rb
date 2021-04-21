@@ -45,7 +45,6 @@ module Hanuman
     # Callbackas
     before_save :strip_and_squish_answer
     before_save :set_zero_attributes_to_nil
-    before_save :check_location_metadata
     before_save :set_flagged_status
     after_save :fill_answer
 
@@ -120,14 +119,6 @@ module Hanuman
       #   update_column(:answer, selectable.name) if selectable.present?
       # elsif question.answer_type.name == 'taxonchosensingleselect' && selectable_id_changed?
       #   update_column(:answer, selectable.formatted_answer_choice_with_symbol) if selectable.present?
-      end
-    end
-
-    def check_location_metadata
-      if new_record?
-        return
-      elsif location_metadata.present? && (latitude_changed? || longitude_changed? || speed_changed? || altitude_changed? || accuracy_changed? || direction_changed?)
-        self.location_metadata = nil
       end
     end
 
