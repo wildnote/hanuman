@@ -3,7 +3,7 @@
   .col-sm-7
     - if ff.object.answer_choice.blank?
       = ff.collection_select :answer_choice_id, ff.object.question.answer_choices.sorted, :id, :formatted_answer_choice,
-                             {prompt: true, selected: nil}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer, disabled: o.question.calculated? }
+                             {prompt: true, selected: nil}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer, readonly: o.question.calculated? }
     - else
       = ff.collection_select :answer_choice_id, ff.object.question.answer_choices.sorted, :id, :formatted_answer_choice,
-                             {include_blank: true}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer, disabled: o.question.calculated? }
+                             {include_blank: true}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer, readonly: o.question.calculated?}
