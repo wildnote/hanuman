@@ -10,5 +10,5 @@
       = select_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
                     options_from_collection_for_select(ff.object.question.answer_choices.sorted, :id, :formatted_answer_choice,
                     ff.object.observation_answers.map{|oa| oa.answer_choice_id}),
-                    {multiple: true, size: 10, class: 'chosen-multiselect form-control'}
+                    {multiple: true, size: 10, class: 'chosen-multiselect form-control', readonly: o.question.calculated?}
     

@@ -1,9 +1,10 @@
 class @ConditionalLogic
 
   self = ConditionalLogic.prototype
+  self.boundElements = []
 
   #scan page and find all objects with conditional logic rules
-  findRules: ->
+  findRules: (runCalcs) ->
     self.allowCascade = false
     problemWithCL = false
     $("[data-rule!=''][data-rule]").each ->
@@ -24,7 +25,7 @@ class @ConditionalLogic
           if $conditionContainer.length < 1
             $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
 
-          if $conditionContainer.length == 0 || $conditionContainer.length > 1
+          if ($conditionContainer.length == 0 || $conditionContainer.length > 1) && rule.type != 'Hanuman::CalculationRule'
             problemWithCL = true
 
           # the condition element, which we need to check value for conditional logic
@@ -34,7 +35,7 @@ class @ConditionalLogic
           if $conditionElement.length < 1
             $conditionElement = $conditionContainer.find(".form-control-static")
 
-          if $conditionElement.length == 0
+          if $conditionElement.length == 0 && rule.type != 'Hanuman::CalculationRule'
             problemWithCL = true
 
           # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
@@ -45,7 +46,7 @@ class @ConditionalLogic
           # bind conditions based on element type
           # text, textarea, select
           if $conditionElement.length < 2
-            self.bindConditions($conditionElement, rule, $ruleContainer)
+            self.bindConditions($conditionElement, rule, $ruleContainer, this.id)
           # radio buttons
           else
             if $conditionElement.is(":checkbox")
@@ -53,11 +54,11 @@ class @ConditionalLogic
               if rule.type != 'Hanuman::CalculationRule'
                 $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + this.answer.replace("/","\\/").replace("'","\\'") + "']")
 
-              self.bindConditions($conditionElement, rule, $ruleContainer)
+              self.bindConditions($conditionElement, rule, $ruleContainer, this.id)
             else
               for element in $conditionElement
                 do (element) ->
-                  self.bindConditions($(element), rule, $ruleContainer)
+                  self.bindConditions($(element), rule, $ruleContainer, this.id)
 
           #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
           # determine if we are in a repeater-this needs to get deleted-kdh
@@ -69,7 +70,7 @@ class @ConditionalLogic
           if rule.type != "Hanuman::CalculationRule"
             self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true)
 
-        if rule.type == "Hanuman::CalculationRule"
+        if runCalcs && rule.type == "Hanuman::CalculationRule"
           self.updateCalculation(rule, $ruleContainer)
 
           # need the direct returns so that the nested loops don't get broken when they're compiled to JS
@@ -87,8 +88,17 @@ class @ConditionalLogic
     return
 
   #bind conditions to question
-  bindConditions: ($triggerElement, rule, $ruleContainer) ->
-    $triggerElement.unbind('change.cl').on "change.cl", ->
+  bindConditions: ($triggerElement, rule, $ruleContainer, conditionId) ->
+
+    ## Don't double-bind calculations
+    ## We need to store the element, condition, and rule in order to not to exclude any necessary bindings
+    if rule.type == "Hanuman::CalculationRule"
+      idx = self.boundElements.findIndex (el) ->
+        return $triggerElement[0] == el[0] && conditionId == el[1] && rule.id == el[2]
+      return if idx != -1
+      self.boundElements.push([$triggerElement[0], conditionId, rule.id])
+
+    $triggerElement.on "change", ->
       ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
       if rule.type == "Hanuman::CalculationRule"
         self.updateCalculation(rule, $ruleContainer, true)
@@ -612,4 +622,4 @@ $ ->
   if $('input#survey_survey_template_id').length
     #call findRules on document ready
     cl = new ConditionalLogic
-    cl.findRules()
+    cl.findRules(false)

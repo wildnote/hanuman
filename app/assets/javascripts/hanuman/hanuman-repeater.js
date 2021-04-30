@@ -88,7 +88,7 @@ $(document).ready(function(){
 
     // bind ConditionalLogic and re-run the logic to hide and show
     cl = new ConditionalLogic;
-    cl.findRules();
+    cl.findRules(false);
 
     // unbind and rebind the pickers
     $(".datepicker").unbind().datepicker();
@@ -227,6 +227,7 @@ $(document).ready(function(){
   function updateRepeaterControls() {
     var topLevelRepeaterTypes = [];
     $(".form-container-repeater").each(function (_, repeater) {
+
       var directChildRepeaterTypes = [];
       var $directChildRepeaters = $(repeater).find("> .panel-collapse > .panel-body > .form-container-repeater");
       if ($directChildRepeaters.length) {
@@ -252,7 +253,7 @@ $(document).ready(function(){
           var $destroyButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .destroy-form-container-repeater');
           var $duplicateButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .duplicate-form-container-repeater');
 
-          if (index > 0) {
+          if (index > 0 || repeaterCount > 1) {
             $(element).find(".repeater-count:first").text(" " + (index + 1));
             $destroyButton.show();
           } else {
@@ -274,25 +275,24 @@ $(document).ready(function(){
         var $destroyButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .destroy-form-container-repeater');
         var $duplicateButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .duplicate-form-container-repeater');
 
-        if (index > 0) {
-          $(element).find(".repeater-count:first").text(" " + (index + 1));
+        if (index > 0 || repeaterCount > 1) {
           $destroyButton.show();
+        } else {
+          $destroyButton.hide();
+        }
 
-
+        $(element).find(".repeater-count:first").text(" " + (index + 1));
+        
+        if (index > 0) {
           // make unique target for collapse
           var question_id = $(element).attr('data-question-id');
           $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_" + (index + 1));
           $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_" + (index + 1));
-
-
           console.log($(element).find('.panel-heading.chevron')[0]);
-
-
         } else {
           var question_id = $(element).attr('data-question-id');
           $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_0");
           $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_0");
-          $destroyButton.hide();
         }
 
         if (index + 1 === repeaterCount) {
@@ -526,6 +526,10 @@ $(document).ready(function(){
         single_backstroke_delete: false,
         search_contains: true
       });
+
+      // Disable calculated fields
+      $('.chosen-multiselect[readonly], .chosen-select[readonly]').parent().find('.chosen-container').css({'pointer-events': 'none','opacity': 0.5});
+
       $(this).find(".bootstrap-checkbox-multiselect").multiselect();
     });
   }

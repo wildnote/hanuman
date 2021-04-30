@@ -45,8 +45,8 @@ module Hanuman
     # Callbackas
     before_save :strip_and_squish_answer
     before_save :set_zero_attributes_to_nil
-    before_save :check_location_metadata
     before_save :set_flagged_status
+    before_update -> { self.answer = nil }, if: :answer_choice_id_changed?
 
     # Delegations
     delegate :question_text, to: :question

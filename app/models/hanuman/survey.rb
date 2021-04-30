@@ -169,7 +169,6 @@ module Hanuman
     def set_observation_visibility!
       self.sorted_observations.reverse.each do |obs|
         if obs.question.rules.present? && obs.question.rules.exists?(type: "Hanuman::VisibilityRule")
-
           rule = obs.question.rules.find_by(type: "Hanuman::VisibilityRule")
 
           condition_results = rule.conditions.map do |cond|
@@ -242,7 +241,11 @@ module Hanuman
                 is_numerical = trigger_observation.answer.to_i.to_s == trigger_observation.answer || trigger_observation.answer.to_f.to_s == trigger_observation.answer
                 is_numerical && trigger_observation.answer.to_f < cond.answer.to_f
               when "starts with"
-                trigger_observation.answer.starts_with?(cond.answer)
+                if trigger_observation.answer_choice.present?
+                  trigger_observation.answer_choice.option_text.starts_with?(cond.answer)
+                else
+                  trigger_observation.answer.starts_with?(cond.answer)
+                end
               when "contains"
                 if trigger_observation.observation_answers.present?
                   cond_met = false
@@ -257,6 +260,8 @@ module Hanuman
                   trigger_observation.location.name.include?(cond.answer)
                 elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.include?("taxon")
                   trigger_observation.taxon.formatted_answer_choice_with_symbol.include?(cond.answer)
+                elsif trigger_observation.answer_choice.present?
+                  trigger_observation.answer_choice.option_text.include?(cond.answer)
                 else
                   if trigger_observation.answer.nil?
                     cond.answer.nil?
@@ -293,7 +298,7 @@ module Hanuman
         self.set_wetland_dominant_species
       end
   
-      if self.web_wetland_v3_v4?
+      if self.web_wetland_v3_v4_v5?
         self.set_dominance_test
         self.set_rapid_test_hydrophytic
       end

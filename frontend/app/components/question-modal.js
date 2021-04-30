@@ -209,7 +209,7 @@ export default Component.extend({
     try {
       question = yield question.save();
       yield all(question.get('rules').map((rules) => rules.save()));
-      
+
       let answerChoicesPendingSave = this.get('answerChoicesPendingSave');
       let answerChoicesPromises = this._pendingObjectsPromises(answerChoicesPendingSave, 'question', question);
 

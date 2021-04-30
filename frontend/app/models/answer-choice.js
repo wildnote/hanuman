@@ -9,6 +9,7 @@ export default Model.extend(Validator, {
   scientificText: attr('string'),
   groupText: attr('string'),
   sortOrder: attr('number'),
+  definition: attr('string'),
 
   // Associations
   question: belongsTo('question'),

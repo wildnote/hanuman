@@ -49,3 +49,15 @@ li > .ember-view > .nested-edit-row-header {
     color: #BAD3EB;
   }
 }
+
+.answer-choice-form-container {
+  display: flex;
+
+  .form-field:first-child {
+    flex-grow: 1;
+  }
+
+  .form-field:last-child  {
+    flex-grow: 2;
+  }
+}

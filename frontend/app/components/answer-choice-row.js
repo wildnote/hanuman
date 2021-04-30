@@ -75,9 +75,10 @@ export default DraggableObject.extend({
       }
     },
 
-    inputKeyUp(event) {
-      if (event.keyCode == 13) {
+    inputKeyDown(event) {
+      if (event.keyCode === 13) {
         this.get('saveTask').perform();
+        event.preventDefault();
       }
     },
   }
