@@ -45,8 +45,8 @@ module Hanuman
     # Callbackas
     before_save :strip_and_squish_answer
     before_save :set_zero_attributes_to_nil
-    before_save :check_location_metadata
-    after_save :fill_answer
+    before_save :set_flagged_status
+    before_update -> { self.answer = nil }, if: :answer_choice_id_changed?
 
     # Delegations
     delegate :question_text, to: :question
@@ -110,18 +110,6 @@ module Hanuman
       end
     end
 
-    def fill_answer
-      if question.answer_type.name == 'chosenselect' && answer_choice_id_changed?
-        update_column(:answer, answer_choice.option_text) if answer_choice.present?
-      elsif question.answer_type.name == 'radio' && answer_choice_id_changed?
-        update_column(:answer, answer_choice.option_text) if answer_choice.present?
-      # elsif question.answer_type.name == 'locationchosensingleselect' && selectable_id_changed?
-      #   update_column(:answer, selectable.name) if selectable.present?
-      # elsif question.answer_type.name == 'taxonchosensingleselect' && selectable_id_changed?
-      #   update_column(:answer, selectable.formatted_answer_choice_with_symbol) if selectable.present?
-      end
-    end
-
     def check_location_metadata
       if new_record?
         return
@@ -146,5 +134,37 @@ module Hanuman
       end
     end
 
+    def get_flagged_status
+      return false if question.nil?
+      flagged_status = false
+
+      unless hidden
+        case self.question.answer_type.name
+        when 'checkboxlist', 'chosenmultiselect'
+          self.observation_answers.any? do |oa|
+            flagged_status = self.question.flagged_answers.any? { |fa| fa == oa.answer_choice.option_text.strip }
+          end
+
+        when 'chosenselect', 'radio'
+          flagged_status = self.answer_choice.present? && question.flagged_answers.any? { |fa| fa == self.answer_choice.option_text.strip }
+
+        when 'checkbox', 'date', 'email', 'text', 'textarea', 'time', 'number', 'counter'
+          flagged_status = self.answer.present? && self.question.flagged_answers.any? { |fa| fa == self.answer.strip }
+
+        when 'taxonchosensingleselect', 'locationchosensingleselect'
+          flagged_status = self.selectable.present? && question.flagged_answers.any? { |fa| fa == self.selectable.name.strip }
+
+        else
+          flagged_status = false
+        end
+      end
+
+      flagged_status
+    end
+
+    def set_flagged_status
+      self[:flagged] = get_flagged_status
+      true
+    end
   end
 end

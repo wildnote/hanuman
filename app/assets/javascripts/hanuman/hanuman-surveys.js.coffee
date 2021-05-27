@@ -80,6 +80,8 @@ $ ->
 
   # END CHOSEN
 
+  # Disable calculated fields
+  $('.chosen-multiselect[readonly], .chosen-select[readonly]').parent().find('.chosen-container').css({'pointer-events': 'none','opacity': 0.5});
 
   # AJAX UPDATE FROM STEP_2
   $('.ajax-submit').on 'click', (e) ->

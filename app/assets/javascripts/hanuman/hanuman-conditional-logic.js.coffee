@@ -1,9 +1,11 @@
 class @ConditionalLogic
 
   self = ConditionalLogic.prototype
+  self.boundElements = []
 
   #scan page and find all objects with conditional logic rules
-  findRules: ->
+  findRules: (runCalcs) ->
+    self.allowCascade = false
     problemWithCL = false
     $("[data-rule!=''][data-rule]").each ->
       $ruleContainer = $(this)
@@ -23,7 +25,7 @@ class @ConditionalLogic
           if $conditionContainer.length < 1
             $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
 
-          if $conditionContainer.length == 0 || $conditionContainer.length > 1
+          if ($conditionContainer.length == 0 || $conditionContainer.length > 1) && rule.type != 'Hanuman::CalculationRule'
             problemWithCL = true
 
           # the condition element, which we need to check value for conditional logic
@@ -33,7 +35,7 @@ class @ConditionalLogic
           if $conditionElement.length < 1
             $conditionElement = $conditionContainer.find(".form-control-static")
 
-          if $conditionElement.length == 0
+          if $conditionElement.length == 0 && rule.type != 'Hanuman::CalculationRule'
             problemWithCL = true
 
           # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
@@ -44,7 +46,7 @@ class @ConditionalLogic
           # bind conditions based on element type
           # text, textarea, select
           if $conditionElement.length < 2
-            self.bindConditions($conditionElement, rule, $ruleContainer)
+            self.bindConditions($conditionElement, rule, $ruleContainer, this.id)
           # radio buttons
           else
             if $conditionElement.is(":checkbox")
@@ -52,11 +54,11 @@ class @ConditionalLogic
               if rule.type != 'Hanuman::CalculationRule'
                 $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + this.answer.replace("/","\\/").replace("'","\\'") + "']")
 
-              self.bindConditions($conditionElement, rule, $ruleContainer)
+              self.bindConditions($conditionElement, rule, $ruleContainer, this.id)
             else
               for element in $conditionElement
                 do (element) ->
-                  self.bindConditions($(element), rule, $ruleContainer)
+                  self.bindConditions($(element), rule, $ruleContainer, this.id)
 
           #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
           # determine if we are in a repeater-this needs to get deleted-kdh
@@ -65,10 +67,11 @@ class @ConditionalLogic
           if $repeater.length > 0
               inRepeater = true
 
-          if rule.type == "Hanuman::CalculationRule"
-            self.updateCalculation(rule, $ruleContainer)
-          else
+          if rule.type != "Hanuman::CalculationRule"
             self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true)
+
+        if runCalcs && rule.type == "Hanuman::CalculationRule"
+          self.updateCalculation(rule, $ruleContainer)
 
           # need the direct returns so that the nested loops don't get broken when they're compiled to JS
           return
@@ -81,14 +84,24 @@ class @ConditionalLogic
         type: "FAILED: conditional logic => condition container or element not found or found more than once"
         details: window.location.href
 
+    self.allowCascade = true
     return
 
   #bind conditions to question
-  bindConditions: ($triggerElement, rule, $ruleContainer) ->
+  bindConditions: ($triggerElement, rule, $ruleContainer, conditionId) ->
+
+    ## Don't double-bind calculations
+    ## We need to store the element, condition, and rule in order to not to exclude any necessary bindings
+    if rule.type == "Hanuman::CalculationRule"
+      idx = self.boundElements.findIndex (el) ->
+        return $triggerElement[0] == el[0] && conditionId == el[1] && rule.id == el[2]
+      return if idx != -1
+      self.boundElements.push([$triggerElement[0], conditionId, rule.id])
+
     $triggerElement.on "change", ->
       ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
       if rule.type == "Hanuman::CalculationRule"
-        self.updateCalculation(rule, $ruleContainer)
+        self.updateCalculation(rule, $ruleContainer, true)
         return
 
       # pop out of condition into rules to handle all conditions defined in the rule
@@ -500,27 +513,25 @@ class @ConditionalLogic
     result = self.interpreter.pseudoToNative(pseudoResult) # converts from an interpreter object to a native JS object
 
     if elementType == 'checkbox' && typeof result == 'boolean'
-      $target.prop("checked", result).trigger('change')
+      $target.prop("checked", result)
 
     else if (elementType == 'number' || elementType == 'counter') && typeof result == 'number'
-      $target.val(result).trigger('change')
+      $target.val(result)
 
     else if (elementType == 'text' || elementType ==  'textarea' || elementType == 'time') && typeof result == 'string'
-      $target.val(result).trigger('change')
+      $target.val(result)
 
     else if elementType == 'date' && typeof result == 'string'
       $target.datepicker("setDate", new Date(result))
-      $target.trigger('change')
 
     else if elementType == 'checkboxes' && Array.isArray(result)
       $.each $target, (index, checkbox) ->
-        $(checkbox).prop("checked", result.indexOf($(checkbox).attr('data-label-value')) != -1).trigger('change')
+        $(checkbox).prop("checked", result.indexOf($(checkbox).attr('data-label-value')) != -1)
 
     else if elementType == 'multiselect' && Array.isArray(result)
       if $target.hasClass('chosen-multiselect')
         $target.find('option').prop('selected', false)
         $.each result, (index, optionText) -> $target.find('option:contains(' + optionText + ')').prop('selected', true);
-        $target.trigger("chosen:updated")
 
       else if $target.hasClass('selectized')
         $target[0].selectize.clear(true)
@@ -528,13 +539,10 @@ class @ConditionalLogic
           if result.indexOf(option.text) != -1
             $target[0].selectize.addItem(option.value, false)
 
-        $($target[0]).trigger('change')
-
     else if elementType == 'select' && typeof result == 'string'
       if $target.hasClass('chosen-select')
         $target.find('option').prop('selected', false)
         $target.find('option:contains(' + result + ')').prop('selected', true);
-        $target.trigger("chosen:updated")
 
       else if $target.hasClass('selectized')
         $target[0].selectize.clear(true)
@@ -543,32 +551,45 @@ class @ConditionalLogic
             $target[0].selectize.addItem(option.value, false)
             return
 
-        $($target[0]).trigger('change')
-
     else if elementType == 'radio' && typeof result == 'string'
       $.each $target, (index, radio) ->
-        $(radio).prop("checked", $(radio).attr('data-label-value') == result).trigger('change')
+        $(radio).prop("checked", $(radio).attr('data-label-value') == result)
 
     # If the type of the calculation result doesn't match the element type, or is null/undefined, clear the target
     else
       if elementType == 'checkbox'
-        $target.prop("checked", false).trigger('change')
+        $target.prop("checked", false)
 
       else if elementType == 'checkboxes' || elementType == 'radio'
         $.each $target, (index, option) ->
-          $(option).prop("checked", false).trigger('change')
+          $(option).prop("checked", false)
 
       else if elementType == 'multiselect' || elementType == 'select'
         if $target.hasClass('chosen-select') || $target.hasClass('chosen-multiselect')
           $target.find('option').prop('selected', false)
-          $target.trigger("chosen:updated")
 
         else if $target.hasClass('selectized')
           $target[0].selectize.clear(true)
+
+      else
+        $target.val('')
+
+    # for performance reasons, only cascade CL and other calcs if permitted
+    if self.allowCascade
+      if elementType == 'checkboxes' || elementType == 'radio'
+        $.each $target, (index, checkbox) ->
+          $(checkbox).trigger('change')
+
+      else if elementType == 'multiselect' || elementType == 'select'
+        if $target.hasClass('chosen-select') || $target.hasClass('chosen-multiselect')
+          $target.trigger("chosen:updated")
+
+        else if $target.hasClass('selectized')
           $($target[0]).trigger('change')
 
       else
-        $target.val('').trigger('change')
+        $target.trigger('change')
+
 
   # converts the string value taken from a given input to a native JS value that we can pass to the interpreter
   getNativeValue: ($input, elementType) ->
@@ -601,4 +622,4 @@ $ ->
   if $('input#survey_survey_template_id').length
     #call findRules on document ready
     cl = new ConditionalLogic
-    cl.findRules()
+    cl.findRules(false)

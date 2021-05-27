@@ -1,14 +1,9 @@
 .form-group
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    - if ff.object.question.answer_choices.blank?
-      .helperbelow
-        There are no available answer options. You can add answer options to a question in the survey admin (Design a Survey) page.
-        = ff.hidden_field :answer
-    - elsif ff.object.answer_choice.blank?
+    - if ff.object.answer_choice.blank?
       = ff.collection_select :answer_choice_id, ff.object.question.answer_choices.sorted, :id, :formatted_answer_choice,
-                             {prompt: true, selected: nil}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer }
+                             {prompt: true, selected: nil}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer, readonly: o.question.calculated? || @survey_readonly }
     - else
       = ff.collection_select :answer_choice_id, ff.object.question.answer_choices.sorted, :id, :formatted_answer_choice,
-                             {prompt: true}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer }
-    
+                             {include_blank: true}, {class: 'chosen-select form-control', "data-default-answer": o.question.default_answer, readonly: o.question.calculated? || @survey_readonly}

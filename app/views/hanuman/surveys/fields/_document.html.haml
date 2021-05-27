@@ -2,13 +2,14 @@
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7.document-column.file-upload-input-button
     - if !@survey.id.nil?
-      .edit-mode-file
-      = ff.fields_for :observation_documents,o do |fff|
-        = fff.cl_upload(:document, :html => { :multiple => true , :class => "document-upload survey-document-upload"})
-      .document-upload-error
-      .progress.hidden
-        .progress-bar.progress-bar-success.document-progress-bar
-      .document-preview-container
+      - unless @survey_readonly
+        .edit-mode-file
+        = ff.fields_for :observation_documents,o do |fff|
+          = fff.cl_upload(:document, :html => { :multiple => true , :class => "document-upload survey-document-upload"})
+        .document-upload-error
+        .progress.hidden
+          .progress-bar.progress-bar-success.document-progress-bar
+        .document-preview-container
       - o.observation_documents.order(sort_order: :asc).each do |d|
         = ff.fields_for :observation_documents, d do |fff|
           .upload-view-mode
@@ -27,18 +28,19 @@
             = fff.label :"Document Description"
             .form-group
               .col-sm-7
-                = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add document description here..."
+                = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add document description here...", readonly: @survey_readonly
             = fff.label "Document Sort Order"
             .form-group
               .col-sm-7
-                = fff.text_field :sort_order, class:"upload-sort-order"
+                = fff.text_field :sort_order, class:"upload-sort-order", readonly: @survey_readonly
             %br
             %br
-            %p.delete-box
-              = fff.check_box :_destroy, class:"hidden delete-checkbox"
-              %a{class:"delete-saved-file", href:"#"}Remove Document
+            - unless @survey_readonly
+              %p.delete-box
+                = fff.check_box :_destroy, class:"hidden delete-checkbox"
+                %a{class:"delete-saved-file", href:"#"}Remove Document
             %hr
-    - else
+    - elsif @survey_readonly
       = ff.fields_for :observation_documents do |fff|
         = fff.cl_upload(:document, :resource_type => "auto", :html => { :multiple => true , :class => "document-upload survey-document-upload" })
         .document-upload-error
