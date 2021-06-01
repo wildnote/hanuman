@@ -40,7 +40,7 @@
                 = fff.check_box :_destroy, class:"hidden delete-checkbox"
                 %a{class:"delete-saved-file", href:"#"}Remove Document
             %hr
-    - elsif @survey_readonly
+    - elsif !@survey_readonly
       = ff.fields_for :observation_documents do |fff|
         = fff.cl_upload(:document, :resource_type => "auto", :html => { :multiple => true , :class => "document-upload survey-document-upload" })
         .document-upload-error
