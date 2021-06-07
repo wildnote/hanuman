@@ -358,17 +358,16 @@ $(document).ready(function(){
         var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1];
         var surveyId = window.location.pathname.match(/\/surveys\/(\d+)/)[1];
         $.ajax({
-          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/repeater/"+ repeaterId,
+          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/repeater/" + repeaterId,
           method: "Delete"
-        }).done(function(response) {
+        }).done(function (response) {
           removeObservationFromDom(that);
         });
-      }else{
+      } else {
         removeObservationFromDom(that);
       }
     }
 
-    updateRepeaterControls();
     return false;
   });
 
@@ -385,7 +384,9 @@ $(document).ready(function(){
       2000,
       function() {
           $removeContainer.remove();
-          updateRepeaterControls()
+          updateRepeaterControls();
+          cl = new ConditionalLogic;
+          cl.findRules(null);
       }
     );
   };
