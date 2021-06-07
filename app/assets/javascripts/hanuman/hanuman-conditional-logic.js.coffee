@@ -91,12 +91,12 @@ class @ConditionalLogic
   bindConditions: ($triggerElement, rule, $ruleContainer, conditionId) ->
 
     ## Don't double-bind calculations
-    ## We need to store the element, condition, and rule in order to not to exclude any necessary bindings
+    ## We need to store the parameter element, calculated element, condition, and rule in order to not to exclude any necessary bindings
     if rule.type == "Hanuman::CalculationRule"
       idx = self.boundElements.findIndex (el) ->
-        return $triggerElement[0] == el[0] && conditionId == el[1] && rule.id == el[2]
+        return $triggerElement[0] == el[0] && conditionId == el[1] && rule.id == el[2] && $ruleContainer[0] == el[3]
       return if idx != -1
-      self.boundElements.push([$triggerElement[0], conditionId, rule.id])
+      self.boundElements.push([$triggerElement[0], conditionId, rule.id, $ruleContainer[0]])
 
     $triggerElement.on "change", ->
       ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
