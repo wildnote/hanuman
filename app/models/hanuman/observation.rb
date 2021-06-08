@@ -167,23 +167,31 @@ module Hanuman
       true
     end
 
+    # Recursively evaluate all calculated fields that would need to be updated as a result of a change to the value of this observation
     def update_triggered_calculations!
+
+      # Get list of all calculations which have this observation as a parameter
       triggered_rules = Hanuman::CalculationRule.where(hanuman_conditions: { question_id: question_id })
       return if triggered_rules.empty?
 
+      # Case where the modified observation is inside a repeater
       if question.ancestors.any? { |q| q.answer_type_id == 57 }
         triggered_observations = survey.observations.where(question_id: triggered_rules.map(&:question_id))
+        # run calcs for any rule at the top level
+        # only run calcs for rules inside a repeater if this parameter observation is in the same repeater
         triggered_observations.each do |triggered_observation|
           if triggered_observation.question.ancestors.all? { |q| q.answer_type_id != 57 } || triggered_observation.parent_repeater_id == self.parent_repeater_id
             triggered_observations.update_calculation!
           end
         end
-      else
+      else # this parameter observation is at the top level, so we need to run calcs for every triggered rule
         triggered_observations = survey.observations.where(question_id: triggered_rules.map(&:question_id))
         triggered_observations.each(&:update_calculation!)
       end
     end
 
+    # update the value of this observation based on its calculation rule
+    # this method will recurisvely update any calculation rules that use this observation as a parameter
     def update_calculation!
       return unless question.calculated?
 
@@ -192,27 +200,33 @@ module Hanuman
 
       parameters = {}
 
+      # get the list of parameters for this calculation (i.e. conditions for this calculation rule)
       calculation_rule.conditions.map(&:question).each do |param_question|
+        # Case where parameter is inside a repeater
         if param_question.ancestors.any? { |q| q.answer_type_id == 57 }
+          # if the observation being calculated is inside the repeater, we only want to fetch non-top-level parameters that are inside the same repeater
           if question.ancestors.any? { |q| q.answer_type_id == 57 }
             param_observation = survey.observations.find_by(question_id: param_question.id, parent_repeater_id: parent_repeater_id)
             parameters[param_question.api_column_name] = param_observation.native_answer
-          else
+          else # if the observation being calculated is at the top level, any parameters inside repeaters should be turned into an array of all answers for that question
             param_observations = survey.observations.where(question_id: param_question.id)
             parameters[param_question.api_column_name] = param_observations.map(&:native_answer)
           end
-        else
+        else # if the parameter is top level data, we can just put it straight into the parameters hash
           param_observation = survey.observations.find_by(question_id: param_question.id)
           parameters[param_question.api_column_name] = param_observation.native_answer
         end
       end
 
+      # our JS evaluator, see: https://github.com/judofyr/duktape.rb
       context = Duktape::Context.new
 
+      # this sets up the ruby 'outlet' for the JS evaluator - all calcs end in setResult
       context.define_function("setResult") do |result|
         set_calculation_result(result)
       end
 
+      # duktape doesn't have a method to inject a variable into the JS context, so we just build JS strings that assign the variable values, and then execute them
       parameters.each do |param_name, param_value|
         if param_value.is_a?(Integer) || param_value.is_a?(Float) || param_value.is_a?(TrueClass) || param_value.is_a?(FalseClass)
           param_eval_string = "$#{param_name} = #{param_value};"
@@ -227,9 +241,14 @@ module Hanuman
         context.exec_string(param_eval_string)
       end
 
+      # once all the parameters have been injected into the context, we can evaluate the script
       context.exec_string(calculation_rule.script)
+
+      # recursively update any calculations that have this observation as a parameter
+      update_triggered_calculations!
     end
 
+    # This method returns the value of this observation as a ruby primitive so that we can inject it to duktape
     def native_answer
       case question.answer_type.element_type
       when 'checkbox'
@@ -256,11 +275,12 @@ module Hanuman
         end
       when 'date'
         Date.parse(answer) rescue nil
-      else
+      else # default to the pivot_answer implementation for all other answer types
         pivot_answer == '' ? nil : pivot_answer
       end
     end
 
+    # This method takes the output from a calculation executed in duktape and updates the observation with the correct value
     def set_calculation_result(result)
       if question.answer_type.element_type == "checkbox" && (result.is_a?(TrueClass) || result.is_a?(FalseClass))
         self.answer = result ? "true" : ""
@@ -272,6 +292,7 @@ module Hanuman
         self.answer = result.to_s
       elsif (question.answer_type.element_type == "checkbox" || question.answer_type.element_type == "multiselect") && result.is_a?(Array)
         self.observation_answers.destroy_all
+        # transform arrays of strings into observation answers
         if question.answer_type.name == "taxonchosenmultiselect"
           result.each do |taxon_text|
             scientific_name = taxon_text.split("/")[0].strip
@@ -285,6 +306,7 @@ module Hanuman
           end
         end
       elsif (question.answer_type.element_type == "select" || question.answer_type.element_type == "radio") && result.is_a?(String)
+        # transform string into Taxon, Location, or Answer Choice
         if question.answer_type.name == "taxonchosensingleselect"
           scientific_name = result.split("/")[0].strip
           taxon = question.data_source.taxa.find_by(scientific_name: scientific_name)
@@ -297,6 +319,7 @@ module Hanuman
           self.answer_choice = ac
         end
       else
+        # if the result is invalid, clear the observation out
         self.answer = nil
         self.answer_choice = nil
         self.selectable = nil
@@ -304,8 +327,6 @@ module Hanuman
       end
 
       save
-
-      update_triggered_calculations!
     end
   end
 end
