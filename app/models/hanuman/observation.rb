@@ -168,11 +168,14 @@ module Hanuman
     end
 
     # Recursively evaluate all calculated fields that would need to be updated as a result of a change to the value of this observation
+    # Returns a list of all observations that were updated
     def update_triggered_calculations!
 
       # Get list of all calculations which have this observation as a parameter
-      triggered_rules = Hanuman::CalculationRule.where(hanuman_conditions: { question_id: question_id })
+      triggered_rules = Hanuman::CalculationRule.joins(:conditions).where(hanuman_conditions: { question_id: question_id })
       return if triggered_rules.empty?
+
+      updated_observations = []
 
       # Case where the modified observation is inside a repeater
       if question.ancestors.any? { |q| q.answer_type_id == 57 }
@@ -181,17 +184,20 @@ module Hanuman
         # only run calcs for rules inside a repeater if this parameter observation is in the same repeater
         triggered_observations.each do |triggered_observation|
           if triggered_observation.question.ancestors.all? { |q| q.answer_type_id != 57 } || triggered_observation.parent_repeater_id == self.parent_repeater_id
-            triggered_observations.update_calculation!
+            updated_observations.push(triggered_observations.update_calculation!)
           end
         end
       else # this parameter observation is at the top level, so we need to run calcs for every triggered rule
         triggered_observations = survey.observations.where(question_id: triggered_rules.map(&:question_id))
-        triggered_observations.each(&:update_calculation!)
+        updated_observations.push(triggered_observations.each(&:update_calculation!))
       end
+
+      updated_observations.flatten
     end
 
     # update the value of this observation based on its calculation rule
     # this method will recurisvely update any calculation rules that use this observation as a parameter
+    # calls update_triggered_calculations! at the end and returns the result
     def update_calculation!
       return unless question.calculated?
 
