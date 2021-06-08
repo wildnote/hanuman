@@ -166,5 +166,127 @@ module Hanuman
       self[:flagged] = get_flagged_status
       true
     end
+
+    def update_calculation!
+      return unless question.calculated?
+
+      calculation_rule = Hanuman::CalculationRule.find_by(question_id: question_id)
+      return unless calculation_rule.script.present?
+
+      parameters = {}
+
+      calculation_rule.conditions.map(&:question).each do |param_question|
+        if param_question.ancestors.any? { |q| q.answer_type_id == 57 }
+          if question.ancestors.any? { |q| q.answer_type_id == 57 }
+            param_observation = survey.observations.find_by(question_id: param_question.id, parent_repeater_id: parent_repeater_id)
+            parameters[param_question.api_column_name] = param_observation.native_answer
+          else
+            param_observations = survey.observations.where(question_id: param_question.id)
+            parameters[param_question.api_column_name] = param_observations.map(&:native_answer)
+          end
+        else
+          param_observation = survey.observations.find_by(question_id: param_question.id)
+          parameters[param_question.api_column_name] = param_observation.native_answer
+        end
+      end
+
+      context = Duktape::Context.new
+
+      context.define_function("setResult") do |result|
+        set_calculation_result(result)
+      end
+
+      parameters.each do |param_name, param_value|
+        if param_value.is_a?(Integer) || param_value.is_a?(Float) || param_value.is_a?(TrueClass) || param_value.is_a?(FalseClass)
+          param_eval_string = "$#{param_name} = #{param_value};"
+        elsif param_value.is_a?(Array)
+          param_eval_string = "$#{param_name} = [#{param_value.map { |v| "#{v.dump}" }.join(',')}];"
+        elsif param_value.is_a?(Date)
+          param_eval_string = "$#{param_name} = Date.parse('#{param_value}');"
+        else
+          param_eval_string = "$#{param_name} = #{param_value.dump};"
+        end
+
+        context.exec_string(param_eval_string)
+      end
+
+      context.exec_string(calculation_rule.script)
+    end
+
+    def native_answer
+      case question.answer_type.element_type
+      when 'checkbox'
+        answer == 'true'
+      when 'number', 'counter'
+        if answer.nil
+          0
+        else
+          if answer.include?('.')
+            Float(answer) rescue 0
+          else
+            Integer(answer) rescue 0
+          end
+        end
+      when 'multiselect', 'checkboxes'
+        if observation_answers.present?
+          if observation_answers.first.answer_choice_id.present?
+            observation_answers.map { |oa| oa.answer_choice.option_text }
+          elsif observation_answers.first.multiselectable_id.present?
+            observation_answers.map { |oa| oa.multiselectable.name }
+          end
+        else
+          []
+        end
+      when 'date'
+        Date.parse(answer) rescue nil
+      else
+        pivot_answer == '' ? nil : pivot_answer
+      end
+    end
+
+    def set_calculation_result(result)
+      if question.answer_type.element_type == "checkbox" && (result.is_a?(TrueClass) || result.is_a?(FalseClass))
+        self.answer = result ? "true" : ""
+      elsif (question.answer_type.element_type == "number" || question.answer_type.element_type == "number") && result.is_a?(Float)
+        self.answer = result.to_s
+      elsif (question.answer_type.element_type == 'text' || question.answer_type.element_type ==  'textarea' || question.answer_type.element_type == 'time' || question.answer_type.element_type == 'date') && result.is_a?(String)
+        self.answer = result
+      elsif question.answer_type.element_type == 'date' && result.is_a?(Date)
+        self.answer = result.to_s
+      elsif (question.answer_type.element_type == "checkbox" || question.answer_type.element_type == "multiselect") && result.is_a?(Array)
+        self.observation_answers.destroy_all
+        if question.answer_type.name == "taxonchosenmultiselect"
+          result.each do |taxon_text|
+            scientific_name = taxon_text.split("/")[0].strip
+            taxon = question.data_source.taxa.find_by(scientific_name: scientific_name)
+            self.observation_answers.build(multiselectable: taxon)
+          end
+        else
+          result.each do |option_text|
+            ac = question.answer_choices.find_by(option_text: option_text)
+            self.observation_answers.build(answer_choice: ac)
+          end
+        end
+      elsif (question.answer_type.element_type == "select" || question.answer_type.element_type == "radio") && result.is_a?(String)
+        if question.answer_type.name == "taxonchosensingleselect"
+          scientific_name = result.split("/")[0].strip
+          taxon = question.data_source.taxa.find_by(scientific_name: scientific_name)
+          self.selectable = taxon
+        elsif question.answer_type.name == "locationchosensingleselect"
+          location = survey.project.locations.find_by(name: result)
+          self.selectable = location
+        else
+          ac = question.answer_choices.find_by(option_text: result)
+          self.answer_choice = ac
+        end
+      else
+        self.answer = nil
+        self.answer_choice = nil
+        self.selectable = nil
+        self.observation_answers.destroy_all
+      end
+
+      save
+    end
   end
 end
