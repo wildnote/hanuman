@@ -167,6 +167,23 @@ module Hanuman
       true
     end
 
+    def update_triggered_calculations!
+      triggered_rules = Hanuman::CalculationRule.where(hanuman_conditions: { question_id: question_id })
+      return if triggered_rules.empty?
+
+      if question.ancestors.any? { |q| q.answer_type_id == 57 }
+        triggered_observations = survey.observations.where(question_id: triggered_rules.map(&:question_id))
+        triggered_observations.each do |triggered_observation|
+          if triggered_observation.question.ancestors.all? { |q| q.answer_type_id != 57 } || triggered_observation.parent_repeater_id == self.parent_repeater_id
+            triggered_observations.update_calculation!
+          end
+        end
+      else
+        triggered_observations = survey.observations.where(question_id: triggered_rules.map(&:question_id))
+        triggered_observations.each(&:update_calculation!)
+      end
+    end
+
     def update_calculation!
       return unless question.calculated?
 
@@ -287,6 +304,8 @@ module Hanuman
       end
 
       save
+
+      update_triggered_calculations!
     end
   end
 end
