@@ -38,6 +38,16 @@ module Hanuman
       num_reports_submitted < 1 ? true : false
     end
 
+    # return true if any questions in survey template have calculations
+    def has_calc_engine_calcs?
+      has_calcs = false
+      questions.each do |q|
+        if q.calculated?
+          return true
+        end
+      end
+    end
+
     # after duplicating the survey template remap ancestry and rule information
     def remap_conditional_logic(old_survey_template)
       questions.each do |q|
@@ -146,7 +156,7 @@ module Hanuman
         q.set_api_column_name!
       end
     end
-    
+
     def check_structure_helper(checked, errors, parent, i)
       children = []
       qs = self.questions.order(sort_order: :asc)
@@ -177,7 +187,7 @@ module Hanuman
           # do nothing
           next
         end
-        
+
 
       end
     end
