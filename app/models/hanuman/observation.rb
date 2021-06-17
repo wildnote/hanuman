@@ -237,11 +237,13 @@ module Hanuman
         if param_value.is_a?(Integer) || param_value.is_a?(Float) || param_value.is_a?(TrueClass) || param_value.is_a?(FalseClass)
           param_eval_string = "$#{param_name} = #{param_value};"
         elsif param_value.is_a?(Array)
-          param_eval_string = "$#{param_name} = [#{param_value.map { |v| "#{v.dump}" }.join(',')}];"
+          param_eval_string = "$#{param_name} = [#{param_value.map { |v| "#{v.dump unless v.blank?}" }.join(',')}];"
         elsif param_value.is_a?(Date)
           param_eval_string = "$#{param_name} = Date.parse('#{param_value}');"
-        else
+        elsif !param_value.blank?
           param_eval_string = "$#{param_name} = #{param_value.dump};"
+        else
+          return
         end
 
         context.exec_string(param_eval_string)
