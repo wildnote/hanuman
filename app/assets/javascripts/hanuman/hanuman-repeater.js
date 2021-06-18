@@ -166,7 +166,7 @@ $(document).ready(function(){
 
   });
 
-  
+
 
   function checkMaxPhotos(self, maxPhotos, addedPhotos) {
     if (addedPhotos > maxPhotos) {
@@ -238,7 +238,7 @@ $(document).ready(function(){
           }
         });
       }
-      
+
 
       if(!$(repeater).parent().parent().parent().first().hasClass("form-container-repeater")) {
         var questionId = $(repeater).data("question-id");
@@ -282,7 +282,7 @@ $(document).ready(function(){
         }
 
         $(element).find(".repeater-count:first").text(" " + (index + 1));
-        
+
         if (index > 0) {
           // make unique target for collapse
           var question_id = $(element).attr('data-question-id');
@@ -411,7 +411,7 @@ $(document).ready(function(){
           $removeContainer.remove();
           updateRepeaterControls();
           cl = new ConditionalLogic;
-          cl.findRules(null);
+          cl.findRules(true);
       }
     );
   };
