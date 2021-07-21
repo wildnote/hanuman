@@ -138,8 +138,8 @@ $(document).ready(function(){
 
     // bind ConditionalLogic and re-run the logic to hide and show
     cl = new ConditionalLogic;
-    cl.findRules(false);
-    
+    cl.findRules(true);
+
   });
 
 
