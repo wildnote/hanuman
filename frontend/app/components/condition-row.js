@@ -94,11 +94,13 @@ export default Component.extend({
           }
         }
 
-        if (question.get('parent') && question.get('parent').get('isARepeater')) {
-          return question.get('ancestry') === ruleQuestion.get('ancestry') || ruleQuestion.get('ancestry') === null;
-        } else {
-          return true;
-        }
+        return true;
+
+        // if (question.get('parent') && question.get('parent').get('isARepeater')) {
+        //   return question.get('ancestry') === ruleQuestion.get('ancestry') || ruleQuestion.get('ancestry') === null;
+        // } else {
+        //   return true;
+        // }
       });
     }
   }),

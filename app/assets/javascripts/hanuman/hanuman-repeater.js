@@ -86,10 +86,6 @@ $(document).ready(function(){
       resetMapButtons($clonedContainer);
     },500)
 
-    // bind ConditionalLogic and re-run the logic to hide and show
-    cl = new ConditionalLogic;
-    cl.findRules();
-
     // unbind and rebind the pickers
     $(".datepicker").unbind().datepicker();
     $(".timepicki").unbind().timepicki({
@@ -135,38 +131,18 @@ $(document).ready(function(){
       maxPhotos = $(self).find('#max-photos').attr("data-max-photos");
       if (maxPhotos) {
         addedPhotos = $(self).find('.gallery-item').find("img").length;
+        console.log(maxPhotos + ' ' + addedPhotos);
+        checkMaxPhotos(this, maxPhotos, addedPhotos);
       }
-      console.log(maxPhotos + ' ' + addedPhotos);
-      checkMaxPhotos(this, maxPhotos, addedPhotos);
     });
 
-    // $('.file-upload').on('click', function (e) {
-    //   console.log("clicked");
-    //   maxPhotos = $(this).find('#max-photos').attr("data-max-photos");
-    //   if (maxPhotos) {
-    //     $(this).bind('cloudinarydone', function (e) {
-    //       addedPhotos = $(this).find('.photo-preview').find("img").length;
-    //       checkMaxPhotos(this, maxPhotos, addedPhotos);
-    //     });
-    //   }
-    // });
-
-    // $('.file-upload').on('click', '.remove-upload, .delete-saved-file', function(e) {
-    //   maxPhotos = $(this).parents('.file-upload').find('#max-photos').attr("data-max-photos");
-    //   if(maxPhotos) {
-    //     e.preventDefault();
-    //     self = $(this).parents('.file-upload');
-    //     setTimeout(function() {
-    //       addedPhotos = $(self).find('.photo-preview').find("img").length;
-    //       checkMaxPhotos(self, maxPhotos, addedPhotos)
-    //     }, 100);
-    //   }
-    // });
-
+    // bind ConditionalLogic and re-run the logic to hide and show
+    cl = new ConditionalLogic;
+    cl.findRules(true);
 
   });
 
-  
+
 
   function checkMaxPhotos(self, maxPhotos, addedPhotos) {
     if (addedPhotos > maxPhotos) {
@@ -227,6 +203,7 @@ $(document).ready(function(){
   function updateRepeaterControls() {
     var topLevelRepeaterTypes = [];
     $(".form-container-repeater").each(function (_, repeater) {
+
       var directChildRepeaterTypes = [];
       var $directChildRepeaters = $(repeater).find("> .panel-collapse > .panel-body > .form-container-repeater");
       if ($directChildRepeaters.length) {
@@ -237,7 +214,7 @@ $(document).ready(function(){
           }
         });
       }
-      
+
 
       if(!$(repeater).parent().parent().parent().first().hasClass("form-container-repeater")) {
         var questionId = $(repeater).data("question-id");
@@ -252,7 +229,7 @@ $(document).ready(function(){
           var $destroyButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .destroy-form-container-repeater');
           var $duplicateButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .duplicate-form-container-repeater');
 
-          if (index > 0) {
+          if (index > 0 || repeaterCount > 1) {
             $(element).find(".repeater-count:first").text(" " + (index + 1));
             $destroyButton.show();
           } else {
@@ -274,25 +251,24 @@ $(document).ready(function(){
         var $destroyButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .destroy-form-container-repeater');
         var $duplicateButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .duplicate-form-container-repeater');
 
-        if (index > 0) {
-          $(element).find(".repeater-count:first").text(" " + (index + 1));
+        if (index > 0 || repeaterCount > 1) {
           $destroyButton.show();
+        } else {
+          $destroyButton.hide();
+        }
 
+        $(element).find(".repeater-count:first").text(" " + (index + 1));
 
+        if (index > 0) {
           // make unique target for collapse
           var question_id = $(element).attr('data-question-id');
           $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_" + (index + 1));
           $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_" + (index + 1));
-
-
           console.log($(element).find('.panel-heading.chevron')[0]);
-
-
         } else {
           var question_id = $(element).attr('data-question-id');
           $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_0");
           $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_0");
-          $destroyButton.hide();
         }
 
         if (index + 1 === repeaterCount) {
@@ -383,17 +359,16 @@ $(document).ready(function(){
         var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1];
         var surveyId = window.location.pathname.match(/\/surveys\/(\d+)/)[1];
         $.ajax({
-          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/repeater/"+ repeaterId,
+          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/repeater/" + repeaterId,
           method: "Delete"
-        }).done(function(response) {
+        }).done(function (response) {
           removeObservationFromDom(that);
         });
-      }else{
+      } else {
         removeObservationFromDom(that);
       }
     }
 
-    updateRepeaterControls();
     return false;
   });
 
@@ -410,7 +385,9 @@ $(document).ready(function(){
       2000,
       function() {
           $removeContainer.remove();
-          updateRepeaterControls()
+          updateRepeaterControls();
+          cl = new ConditionalLogic;
+          cl.findRules(true);
       }
     );
   };
@@ -526,6 +503,10 @@ $(document).ready(function(){
         single_backstroke_delete: false,
         search_contains: true
       });
+
+      // Disable calculated fields
+      $('.chosen-multiselect[readonly], .chosen-select[readonly]').parent().find('.chosen-container').css({'pointer-events': 'none','opacity': 0.5});
+
       $(this).find(".bootstrap-checkbox-multiselect").multiselect();
     });
   }
