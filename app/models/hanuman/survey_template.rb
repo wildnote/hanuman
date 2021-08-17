@@ -256,6 +256,13 @@ module Hanuman
         q.update(css_style: style)
       end
     end
+    
+    def reset_db_column_names
+      questions.each do |q|
+        q.db_column_name = q.column_name
+        q.save
+      end
+    end
 
   end
 end
