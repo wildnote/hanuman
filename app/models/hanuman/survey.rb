@@ -30,6 +30,7 @@ module Hanuman
 
     amoeba {
       enable
+      nullify :survey_status_id
       include_association :survey_extension
       include_association :observations
       nullify :uuid

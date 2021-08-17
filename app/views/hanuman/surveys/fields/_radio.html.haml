@@ -9,7 +9,7 @@
       %p
         -if ff.object.answer.present? && ff.object.answer_choice_id.blank?
           - ff.object.question.answer_choices.sorted.each do |a|
-            - if o.question.calculated?
+            - if o.question.calculated? || @survey_readonly
               = radio_button_tag "survey[observations_attributes][#{index}][answer_choice_id]",
                                 a.id, ff.object.answer.eql?(a.formatted_answer_choice), class: 'form-control', onclick: "return false;", style: "cursor: not-allowed; opacity: 0.5",  data: { "label-value" => a.formatted_answer_choice, "default-answer" => o.question.default_answer, "answer-choice-id" =>  a.id}
             - else
@@ -19,7 +19,7 @@
             %br/
         - else
           - ff.object.question.answer_choices.sorted.each do |a|
-            - if o.question.calculated?
+            - if o.question.calculated? || @survey_readonly
               = radio_button_tag "survey[observations_attributes][#{index}][answer_choice_id]",
                               a.id, ff.object.answer_choice_id.eql?(a.id), class: 'form-control', onclick: "return false;", style: "cursor: not-allowed; opacity: 0.5", data: { "label-value" => a.formatted_answer_choice, "default-answer" => o.question.default_answer, "answer-choice-id" =>  a.id}
             - else

@@ -181,5 +181,175 @@ module Hanuman
       self[:flagged] = get_flagged_status
       true
     end
+
+    # Recursively evaluate all calculated fields that would need to be updated as a result of a change to the value of this observation
+    # Returns a list of all observations that were updated
+    def update_triggered_calculations!
+
+      # Get list of all calculations which have this observation as a parameter
+      triggered_rules = Hanuman::CalculationRule.joins(:conditions).where(hanuman_conditions: { question_id: question_id })
+      return if triggered_rules.empty?
+
+      updated_observations = []
+
+      # Case where the modified observation is inside a repeater
+      if question.ancestors.any? { |q| q.answer_type_id == 57 }
+        triggered_observations = survey.observations.where(question_id: triggered_rules.map(&:question_id))
+        # run calcs for any rule at the top level
+        # only run calcs for rules inside a repeater if this parameter observation is in the same repeater
+        triggered_observations.each do |triggered_observation|
+          if triggered_observation.question.ancestors.all? { |q| q.answer_type_id != 57 } || triggered_observation.parent_repeater_id == self.parent_repeater_id
+            updated_observations.push(triggered_observations.update_calculation!)
+          end
+        end
+      else # this parameter observation is at the top level, so we need to run calcs for every triggered rule
+        triggered_observations = survey.observations.where(question_id: triggered_rules.map(&:question_id))
+        updated_observations.push(triggered_observations.each(&:update_calculation!))
+      end
+
+      updated_observations.flatten
+    end
+
+    # update the value of this observation based on its calculation rule
+    # this method will recurisvely update any calculation rules that use this observation as a parameter
+    # calls update_triggered_calculations! at the end and returns the result
+    def update_calculation!
+      return unless question.calculated?
+
+      calculation_rule = Hanuman::CalculationRule.find_by(question_id: question_id)
+      return unless calculation_rule.script.present?
+
+      parameters = {}
+
+      # get the list of parameters for this calculation (i.e. conditions for this calculation rule)
+      calculation_rule.conditions.map(&:question).each do |param_question|
+        # Case where parameter is inside a repeater
+        if param_question.ancestors.any? { |q| q.answer_type_id == 57 }
+          # if the observation being calculated is inside the repeater, we only want to fetch non-top-level parameters that are inside the same repeater
+          if question.ancestors.any? { |q| q.answer_type_id == 57 }
+            param_observation = survey.observations.find_by(question_id: param_question.id, parent_repeater_id: parent_repeater_id)
+            parameters[param_question.api_column_name] = param_observation.native_answer
+          else # if the observation being calculated is at the top level, any parameters inside repeaters should be turned into an array of all answers for that question
+            param_observations = survey.observations.where(question_id: param_question.id)
+            parameters[param_question.api_column_name] = param_observations.map(&:native_answer)
+          end
+        else # if the parameter is top level data, we can just put it straight into the parameters hash
+          param_observation = survey.observations.find_by(question_id: param_question.id)
+          parameters[param_question.api_column_name] = param_observation.native_answer
+        end
+      end
+
+      # our JS evaluator, see: https://github.com/judofyr/duktape.rb
+      context = Duktape::Context.new
+
+      # this sets up the ruby 'outlet' for the JS evaluator - all calcs end in setResult
+      context.define_function("setResult") do |result|
+        set_calculation_result(result)
+      end
+
+      # duktape doesn't have a method to inject a variable into the JS context, so we just build JS strings that assign the variable values, and then execute them
+      parameters.each do |param_name, param_value|
+        if param_value.is_a?(Integer) || param_value.is_a?(Float) || param_value.is_a?(TrueClass) || param_value.is_a?(FalseClass)
+          param_eval_string = "$#{param_name} = #{param_value};"
+        elsif param_value.is_a?(Array)
+          param_eval_string = "$#{param_name} = [#{param_value.map { |v| "#{v.dump unless v.blank?}" }.join(',')}];"
+        elsif param_value.is_a?(Date)
+          param_eval_string = "$#{param_name} = Date.parse('#{param_value}');"
+        elsif !param_value.blank?
+          param_eval_string = "$#{param_name} = #{param_value.dump};"
+        else
+          return
+        end
+
+        context.exec_string(param_eval_string)
+      end
+
+      # once all the parameters have been injected into the context, we can evaluate the script
+      context.exec_string(calculation_rule.script)
+
+      # recursively update any calculations that have this observation as a parameter
+      update_triggered_calculations!
+    end
+
+    # This method returns the value of this observation as a ruby primitive so that we can inject it to duktape
+    def native_answer
+      case question.answer_type.element_type
+      when 'checkbox'
+        answer == 'true'
+      when 'number', 'counter'
+        if answer.nil
+          0
+        else
+          if answer.include?('.')
+            Float(answer) rescue 0
+          else
+            Integer(answer) rescue 0
+          end
+        end
+      when 'multiselect', 'checkboxes'
+        if observation_answers.present?
+          if observation_answers.first.answer_choice_id.present?
+            observation_answers.map { |oa| oa.answer_choice.option_text }
+          elsif observation_answers.first.multiselectable_id.present?
+            observation_answers.map { |oa| oa.multiselectable.name }
+          end
+        else
+          []
+        end
+      when 'date'
+        Date.parse(answer) rescue nil
+      else # default to the pivot_answer implementation for all other answer types
+        pivot_answer == '' ? nil : pivot_answer
+      end
+    end
+
+    # This method takes the output from a calculation executed in duktape and updates the observation with the correct value
+    def set_calculation_result(result)
+      if question.answer_type.element_type == "checkbox" && (result.is_a?(TrueClass) || result.is_a?(FalseClass))
+        self.answer = result ? "true" : ""
+      elsif (question.answer_type.element_type == "number" || question.answer_type.element_type == "number") && result.is_a?(Float)
+        self.answer = result.to_s
+      elsif (question.answer_type.element_type == 'text' || question.answer_type.element_type ==  'textarea' || question.answer_type.element_type == 'time' || question.answer_type.element_type == 'date') && result.is_a?(String)
+        self.answer = result
+      elsif question.answer_type.element_type == 'date' && result.is_a?(Date)
+        self.answer = result.to_s
+      elsif (question.answer_type.element_type == "checkbox" || question.answer_type.element_type == "multiselect") && result.is_a?(Array)
+        self.observation_answers.destroy_all
+        # transform arrays of strings into observation answers
+        if question.answer_type.name == "taxonchosenmultiselect"
+          result.each do |taxon_text|
+            scientific_name = taxon_text.split("/")[0].strip
+            taxon = question.data_source.taxa.find_by(scientific_name: scientific_name)
+            self.observation_answers.build(multiselectable: taxon)
+          end
+        else
+          result.each do |option_text|
+            ac = question.answer_choices.find_by(option_text: option_text)
+            self.observation_answers.build(answer_choice: ac)
+          end
+        end
+      elsif (question.answer_type.element_type == "select" || question.answer_type.element_type == "radio") && result.is_a?(String)
+        # transform string into Taxon, Location, or Answer Choice
+        if question.answer_type.name == "taxonchosensingleselect"
+          scientific_name = result.split("/")[0].strip
+          taxon = question.data_source.taxa.find_by(scientific_name: scientific_name)
+          self.selectable = taxon
+        elsif question.answer_type.name == "locationchosensingleselect"
+          location = survey.project.locations.find_by(name: result)
+          self.selectable = location
+        else
+          ac = question.answer_choices.find_by(option_text: result)
+          self.answer_choice = ac
+        end
+      else
+        # if the result is invalid, clear the observation out
+        self.answer = nil
+        self.answer_choice = nil
+        self.selectable = nil
+        self.observation_answers.destroy_all
+      end
+
+      save
+    end
   end
 end
