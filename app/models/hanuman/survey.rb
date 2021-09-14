@@ -321,5 +321,35 @@ module Hanuman
       photos
     end
 
+    def restore_deleted_cloudinary_photo_assets
+      sql_select = "SELECT op.photo FROM hanuman_observation_photos AS op LEFT JOIN hanuman_observations AS o ON op.observation_id = o.id WHERE o.survey_id = #{self.id}"
+      photo_strings = ActiveRecord::Base.connection.exec_query(sql_select)
+  
+      photo_strings.each do |string|
+        public_id = string["photo"].split('/').last.split('.').first
+        Cloudinary::Api.restore([public_id])
+      end
+    end
+
+    def restore_deleted_cloudinary_video_assets
+      sql_select = "SELECT ov.signature FROM hanuman_observation_videos AS ov LEFT JOIN hanuman_observations AS o ON ov.observation_id = o.id WHERE o.survey_id = #{self.id}"
+      signature_strings = ActiveRecord::Base.connection.exec_query(sql_select)
+  
+      signature_strings.each do |string|
+        public_id = string["video"].split('/').last.split('.').first
+        Cloudinary::Api.restore([public_id])
+      end
+    end
+
+    def restore_deleted_cloudinary_signature_assets
+      sql_select = "SELECT os.signature FROM hanuman_observation_signatures AS os LEFT JOIN hanuman_observations AS o ON os.observation_id = o.id WHERE o.survey_id = #{self.id}"
+      signature_strings = ActiveRecord::Base.connection.exec_query(sql_select)
+  
+      signature_strings.each do |string|
+        public_id = string["signature"].split('/').last.split('.').first
+        Cloudinary::Api.restore([public_id])
+      end
+    end
+    
   end
 end
