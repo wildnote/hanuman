@@ -259,8 +259,7 @@ module Hanuman
     
     def reset_db_column_names
       questions.each do |q|
-        q.db_column_name = q.column_name
-        q.save
+        q.update_column(:db_column_name, q.create_db_column_name)
       end
     end
 

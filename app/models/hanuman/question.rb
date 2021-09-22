@@ -291,7 +291,7 @@ module Hanuman
       self.question_text.strip.parameterize.underscore.gsub(/\s|:|\//, '-')
     end
 
-    def column_name
+    def create_base_string
       base_string = parameterized_text
       if base_string.length > 60
         base_string = base_string[0..59]
@@ -307,7 +307,12 @@ module Hanuman
           end
         end
       end
-
+      base_string
+    end
+    
+    def create_api_column_name
+      base_string = create_base_string
+      
       # checking for duplicate api_column_names and incrementing index by 1
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
@@ -322,17 +327,38 @@ module Hanuman
       else
         base_string
       end
+      
+    end
+
+    def create_db_column_name
+      base_string = create_base_string
+      
+      # checking for duplicate db_column_names and incrementing index by 1
+      if Hanuman::Question.exists?(db_column_name: base_string, survey_template_id: self.survey_template_id)
+        index = 1
+  
+        loop do
+          if Hanuman::Question.exists?(db_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
+            index += 1
+          else
+            return base_string + "_#{index}"
+          end
+        end
+      else
+        base_string
+      end
+
     end
 
     def set_column_names!
       # need to upda©te via update_column instead of a question save so we don't invoke process_question_changes twice
-      self.update_column(:db_column_name, column_name) if self.db_column_name.blank?
-      self.update_column(:api_column_name, column_name) if self.api_column_name.blank?
+      self.update_column(:db_column_name, create_db_column_name) if self.db_column_name.blank?
+      self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
     end
 
     def set_api_column_name!
       # need to update via update_column instead of a question save so we don't invoke process_question_changes twice
-      self.update_column(:api_column_name, column_name) if self.api_column_name.blank?
+      self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
     end
 
     def update_css_style(style_string)
