@@ -237,7 +237,7 @@ module Hanuman
         if param_value.is_a?(Integer) || param_value.is_a?(Float) || param_value.is_a?(TrueClass) || param_value.is_a?(FalseClass)
           param_eval_string = "$#{param_name} = #{param_value};"
         elsif param_value.is_a?(Array)
-          param_eval_string = "$#{param_name} = [#{param_value.map { |v| "#{v.dump unless v.blank?}" }.join(',')}];"
+          param_eval_string = "$#{param_name} = [#{param_value.map { |v| "#{v.to_s unless v.blank?}" }.join(',')}];"
         elsif param_value.is_a?(Date)
           param_eval_string = "$#{param_name} = Date.parse('#{param_value}');"
         elsif !param_value.blank?
@@ -262,7 +262,7 @@ module Hanuman
       when 'checkbox'
         answer == 'true'
       when 'number', 'counter'
-        if answer.nil
+        if answer.nil?
           0
         else
           if answer.include?('.')
