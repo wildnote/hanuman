@@ -184,7 +184,7 @@ module Hanuman
         # only run calcs for rules inside a repeater if this parameter observation is in the same repeater
         triggered_observations.each do |triggered_observation|
           if triggered_observation.question.ancestors.all? { |q| q.answer_type_id != 57 } || triggered_observation.parent_repeater_id == self.parent_repeater_id
-            updated_observations.push(triggered_observations.update_calculation!)
+            updated_observations.push(triggered_observation.update_calculation!)
           end
         end
       else # this parameter observation is at the top level, so we need to run calcs for every triggered rule
@@ -237,7 +237,7 @@ module Hanuman
         if param_value.is_a?(Integer) || param_value.is_a?(Float) || param_value.is_a?(TrueClass) || param_value.is_a?(FalseClass)
           param_eval_string = "$#{param_name} = #{param_value};"
         elsif param_value.is_a?(Array)
-          param_eval_string = "$#{param_name} = [#{param_value.map { |v| "#{v.dump unless v.blank?}" }.join(',')}];"
+          param_eval_string = "$#{param_name} = [#{param_value.map { |v| "#{v.to_s unless v.blank?}" }.join(',')}];"
         elsif param_value.is_a?(Date)
           param_eval_string = "$#{param_name} = Date.parse('#{param_value}');"
         elsif !param_value.blank?
@@ -262,7 +262,7 @@ module Hanuman
       when 'checkbox'
         answer == 'true'
       when 'number', 'counter'
-        if answer.nil
+        if answer.nil?
           0
         else
           if answer.include?('.')
