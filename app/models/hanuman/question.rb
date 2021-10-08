@@ -25,12 +25,12 @@ module Hanuman
     validates_format_of :db_column_name, with: /\A\w+\Z/i, allow_blank: true
     # validates_uniqueness_of :api_column_name, scope: :survey_template_id, allow_blank: true
     validates_format_of :api_column_name, with: /\A\w+\Z/i, allow_blank: true
-    
+
 
     # Callbacks
     after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
-    after_create :set_column_names!
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
+    after_create :set_column_names!
     before_update :answer_type_change, if: :answer_type_id_changed?
     after_save :format_css_style, if: :css_style_changed?
 
@@ -291,7 +291,7 @@ module Hanuman
       self.question_text.strip.parameterize.underscore.gsub(/\s|:|\//, '-')
     end
 
-    def column_name
+    def create_base_string
       base_string = parameterized_text
       if base_string.length > 60
         base_string = base_string[0..59]
@@ -302,37 +302,63 @@ module Hanuman
           base_plus_parent = (a.parameterized_text + "_") + base_plus_parent
           if base_plus_parent.length > 60
             break
-          else 
+          else
             base_string = base_plus_parent
           end
         end
       end
+      base_string
+    end
+    
+    def create_api_column_name
+      base_string = create_base_string
       
       # checking for duplicate api_column_names and incrementing index by 1
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
-        
+
         loop do
           if Hanuman::Question.exists?(api_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
             index += 1
           else
             return base_string + "_#{index}"
-          end 
-        end 
+          end
+        end
       else
         base_string
-      end 
+      end
+      
+    end
+
+    def create_db_column_name
+      base_string = create_base_string
+      
+      # checking for duplicate db_column_names and incrementing index by 1
+      if Hanuman::Question.exists?(db_column_name: base_string, survey_template_id: self.survey_template_id)
+        index = 1
+  
+        loop do
+          if Hanuman::Question.exists?(db_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
+            index += 1
+          else
+            return base_string + "_#{index}"
+          end
+        end
+      else
+        base_string
+      end
+
     end
 
     def set_column_names!
-      self.db_column_name = column_name if self.db_column_name.blank?
-      self.api_column_name = column_name if self.api_column_name.blank?
-      save
-    end 
+      # need to upda©te via update_column instead of a question save so we don't invoke process_question_changes twice
+      self.update_column(:db_column_name, create_db_column_name) if self.db_column_name.blank?
+      self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
+    end
 
     def set_api_column_name!
-      self.api_column_name = column_name if self.api_column_name.blank?
-      save
+      # need to update via update_column instead of a question save so we don't invoke process_question_changes twice
+      self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
     end
 
     def update_css_style(style_string)
@@ -386,7 +412,7 @@ module Hanuman
               puts "unchanged attribute #{k}:#{old_hash[k]}"
             end
           end
-          
+
 
           self.css_style = new_style_string
           self.save
@@ -443,6 +469,10 @@ module Hanuman
     def schedule_flagged_answers_update_worker
       UpdateFlaggedAnswersWorker.perform_async(id)
       self.flagged_answers_change_was_saved = false
+    end
+
+    def calculated?
+      self.rules.any? { |r| r.is_a?(Hanuman::CalculationRule) }
     end
   end
 end

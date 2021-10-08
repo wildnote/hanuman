@@ -143,7 +143,7 @@
                       style="height: 33px;"
                       onkeyup={{action (mut question.helperText) value="target.value"}}
                       onchange={{action (mut question.helperText) value="target.value"}}
-                      maxlength='255'>{{question.helperText}}</textarea>
+                      maxlength='1500'>{{question.helperText}}</textarea>
             {{/form-field}}
           </div>
         </div>
@@ -217,6 +217,23 @@
           </div>
         </div>
 
+        {{#if (or isALatLong isPhoto) }}
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="convertToUtm"
+                        checked={{question.convertToUtm}}
+                        onchange={{action (mut question.convertToUtm) value="target.checked"}} /> Convert to UTM
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Convert to UTM" data-content="When this box is checked, lat/long points collected using this question will automatically be converted to UTM and displayed as such in reports." class="bootstrap-popover">
+                    <span class="glyphicons glyphicons-info-sign"></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
 
         {{#if (and isSuperUser question.isLocationSelect) }}
           <div class="row">
