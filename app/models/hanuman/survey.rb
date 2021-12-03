@@ -295,6 +295,11 @@ module Hanuman
     end
 
     def wetland_calcs_and_sorting_operations
+      reload
+      return if self.lock_callbacks
+
+      update_column(:lock_callbacks, true)
+
       if self.wetland_v2_web_v3? 
         self.set_wetland_dominant_species
       end
@@ -311,6 +316,8 @@ module Hanuman
       if self.should_schedule_sort?
         SortObservationsWorker.perform_async(self.id)
       end
+
+      update_column(:lock_callbacks, false)
     end
 
 
