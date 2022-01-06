@@ -296,7 +296,7 @@ module Hanuman
 
     def wetland_calcs_and_sorting_operations
       reload
-      return if self.lock_callbacks
+      return if self.lock_callbacks || self.has_missing_questions.nil? || self.has_missing_questions
 
       update_column(:lock_callbacks, true)
 
