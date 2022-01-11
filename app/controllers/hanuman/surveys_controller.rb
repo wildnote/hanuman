@@ -35,7 +35,7 @@ module Hanuman
 
     # GET /surveys/1/edit
     def edit
-      @survey = Survey.find(params[:id])
+      @survey = Survey.unscoped.find(params[:id])
     end
 
     # POST /surveys
@@ -77,7 +77,7 @@ module Hanuman
     private
       # Use callbacks to share common setup or constraints between actions.
       def set_survey
-        @survey = Survey.includes(:observations => [:question => [:answer_type]]).find(params[:id])
+        @survey = Survey.unscoped.includes(:observations => [:question => [:answer_type]]).find(params[:id])
       end
 
       # Only allow a trusted parameter "white list" through.
