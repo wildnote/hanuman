@@ -359,18 +359,24 @@ module Hanuman
         else
           update_column(:answer, nil)
         end
+
+        self.generate_update_delta(:answer)
       elsif question.answer_type.name == 'locationchosensingleselect' && selectable_id_changed?
         if selectable.present?
           update_column(:answer, selectable.name)
         else
           update_column(:answer, nil)
         end
+
+        self.generate_update_delta(:answer)
       elsif question.answer_type.name == 'taxonchosensingleselect' && selectable_id_changed?
         if selectable.present?
           update_column(:answer, selectable.formatted_answer_choice_with_symbol)
         else
           update_column(:answer, nil)
         end
+
+        self.generate_update_delta(:answer)
       end
     end
   end
