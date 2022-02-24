@@ -27,6 +27,7 @@ module Hanuman
 
     after_commit :set_entries
 
+    default_scope { where('(has_missing_questions = false OR has_missing_questions IS NULL) AND (hanuman_surveys.marked_for_deletion = false OR hanuman_surveys.marked_for_deletion IS NULL)') }
 
     amoeba {
       enable
