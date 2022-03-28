@@ -140,7 +140,7 @@ module Hanuman
       #         ]
       #       }
       unless self.rules.blank?
-        ActiveModel::ArraySerializer.new(self.rules, each_serializer: Hanuman::RuleHashSerializer).to_json
+        ActiveModel::Serializer::CollectionSerializer.new(self.rules, each_serializer: Hanuman::RuleHashSerializer).to_json
       end
     end
 
@@ -312,10 +312,10 @@ module Hanuman
       end
       base_string
     end
-    
+
     def create_api_column_name
       base_string = create_base_string
-      
+
       # checking for duplicate api_column_names and incrementing index by 1
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
@@ -330,16 +330,16 @@ module Hanuman
       else
         base_string
       end
-      
+
     end
 
     def create_db_column_name
       base_string = create_base_string
-      
+
       # checking for duplicate db_column_names and incrementing index by 1
       if Hanuman::Question.exists?(db_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
-  
+
         loop do
           if Hanuman::Question.exists?(db_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
             index += 1
