@@ -37,7 +37,7 @@ module Hanuman
       css_class = column.gsub('*', '') == sort_column.gsub(' asc,', ',').gsub(' desc,', ',').gsub(' asc', '').gsub(' desc', '') ? "current #{sort_direction}" : nil
       direction = column.gsub('*', '') == sort_column.gsub(' asc,', ',').gsub(' desc,', ',').gsub(' asc', '').gsub(' desc', '') && sort_direction == 'asc' ? 'desc' : 'asc'
       if path_call_string
-        link_to raw(title), eval(path_call_string+"(params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil))"), {:class => css_class}
+        link_to raw(title), eval(path_call_string+"(params.to_unsafe_h.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil))"), {:class => css_class}
       else
         link_to raw(title), params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil), {:class => css_class}
       end
