@@ -1,5 +1,5 @@
 module Hanuman
-  class SurveyExtension < ActiveRecord::Base
+  class SurveyExtension < ApplicationRecord
     has_paper_trail
 
     # Relations

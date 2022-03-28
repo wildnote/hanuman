@@ -1,5 +1,5 @@
 module Hanuman
-  class SurveyTemplate < ActiveRecord::Base
+  class SurveyTemplate < ApplicationRecord
     has_paper_trail
 
     # Constants

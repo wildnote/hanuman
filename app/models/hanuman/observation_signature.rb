@@ -1,5 +1,5 @@
 module Hanuman
-  class ObservationSignature < ActiveRecord::Base
+  class ObservationSignature < ApplicationRecord
     has_paper_trail
     mount_uploader :signature, SignatureUploader
 

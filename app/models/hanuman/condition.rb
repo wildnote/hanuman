@@ -1,5 +1,5 @@
 module Hanuman
-  class Condition < ActiveRecord::Base
+  class Condition < ApplicationRecord
     has_paper_trail
 
     attr_accessor :dup_copying
