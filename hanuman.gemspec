@@ -36,7 +36,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'ember-cli-rails', '~> 0.10.0'
   s.add_dependency 'cocaine'#, '~> 0.5.8'
   s.add_dependency 'kaminari'#, '~> 0.16.1'
-  s.add_dependency 'active_model_serializers'#, '~> 0.8.1'
+  s.add_dependency 'active_model_serializers', '~> 0.8.1'
   s.add_dependency 'acts-as-taggable-on'#, '~> 4.0.0'
   s.add_dependency 'roo'#, '~> 2.3.2'
   # must stay on this version of carrierwave
