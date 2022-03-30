@@ -17,15 +17,20 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency 'rails', '~> 5'
+  s.add_dependency 'rails', '~> 5.2.6'
+
+  s.add_dependency 'sass-rails'#, '~> 5.0'
+  s.add_dependency 'uglifier'#, '>= 1.3.0'
+  s.add_dependency 'turbolinks', '~> 5'
+  s.add_dependency 'jbuilder'#, '~> 2.5'
+
   s.add_dependency 'responders'#, '~> 2.0'
   s.add_dependency 'paper_trail'#, '~> 6.0'
   s.add_dependency 'ancestry' #, '~> 3.0.2'
   s.add_dependency 'amoeba'#, '~> 3.1.0'
   s.add_dependency 'haml-rails'#, '~> 0.5.3'
-  s.add_dependency 'coffee-rails'#, '~> 4.0.1'
-  s.add_dependency 'sass-rails'#, '~> 4.0.3'
-  s.add_dependency 'uglifier'#, '~> 2.5.3'
+  s.add_dependency 'coffee-rails', '~> 4.2'
+
   s.add_dependency 'modernizr-rails'#, '~> 2.7.1'
   s.add_dependency 'jquery-rails'#, '~> 3.1.1'
   s.add_dependency 'ember-cli-rails', '~> 0.10.0'
