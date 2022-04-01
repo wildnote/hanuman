@@ -140,7 +140,7 @@ module Hanuman
       #         ]
       #       }
       unless self.rules.blank?
-        ActiveModel::Serializer::CollectionSerializer.new(self.rules, each_serializer: Hanuman::RuleHashSerializer).to_json
+        ActiveModel::ArraySerializer.new(self.rules, each_serializer: Hanuman::RuleHashSerializer).to_json
       end
     end
 
