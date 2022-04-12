@@ -516,26 +516,20 @@ $(document).ready(function(){
     var lastInputIndex = inputs.length - 1;
     var index = 0;
     var parsleySubstrig = Math.random().toString(36).substring(13);
-    inputs.each(function(){
 
+    inputs.each(function() {
       // removing uploaded photos, docs and videos from $clonedContainer
       if ($(inputs[index]).attr('type') == 'file') {
         $(inputs[index]).siblings('.attachinary_container').last().remove();
       }
       if ($(inputs[index]).attr('id')) {
-        var idStamp = $(inputs[index]).attr("id").match(/\d+/)[0];
-        var newTimeStamp = idStamp.concat(timeStamp);
-        $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/\d+/, newTimeStamp));
+        $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/\d+/, timeStamp));
       }
       if ($(inputs[index]).attr('name')) {
         if ($(inputs[index]).attr('name') != "file") {
-          var nameStamp = $(inputs[index]).attr("name").match(/\d+/)[0];
-          var newTimeStamp = nameStamp.concat(timeStamp);
-          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/\d+/, newTimeStamp));
-        }else if($(inputs[index]).attr("data-cloudinary-field")) {
-          var nameStamp = $(inputs[index]).attr("data-cloudinary-field").match(/\d+/)[0];
-          var newTimeStamp = nameStamp.concat(timeStamp);
-          $(inputs[index]).attr("data-cloudinary-field", $(inputs[index]).attr("data-cloudinary-field").replace(/\d+/, newTimeStamp));
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/\d+/, timeStamp));
+        } else if ($(inputs[index]).attr("data-cloudinary-field")) {
+          $(inputs[index]).attr("data-cloudinary-field", $(inputs[index]).attr("data-cloudinary-field").replace(/\d+/, timeStamp));
         }
       }
       if ($(inputs[index]).attr('data-parsley-multiple')) {
@@ -546,21 +540,16 @@ $(document).ready(function(){
     });
   };
 
-  function updateClonedSelects($clonedRepeater, timeStamp){
+  function updateClonedSelects($clonedRepeater, timeStamp) {
     var select = $($clonedRepeater).find('select');
     var index = 0;
-    select.each(function(){
+    select.each(function() {
       if ($(select[index]).attr('id')) {
-        var idStamp = $(select[index]).attr("id").match(/\d+/)[0];
-        var newTimeStamp = idStamp.concat(timeStamp);
-        $(select[index]).attr("id", $(select[index]).attr("id").replace(/(\d+)/, newTimeStamp));
+        $(select[index]).attr("id", $(select[index]).attr("id").replace(/(\d+)/, timeStamp));
       }
       if ($(select[index]).attr('name')) {
-        var nameStamp = $(select[index]).attr("name").match(/\d+/)[0];
-        var newTimeStamp = nameStamp.concat(timeStamp);
-        $(select[index]).attr("name", $(select[index]).attr("name").replace(/(\d+)/, newTimeStamp));
+        $(select[index]).attr("name", $(select[index]).attr("name").replace(/(\d+)/, timeStamp));
       }
-
       index ++;
     });
   };
@@ -570,9 +559,7 @@ $(document).ready(function(){
     var index = 0;
     labels.each(function(){
       if ($(labels[index]).attr("for") && $(labels[index]).attr("for").match(/\d+/)) {
-        var forStamp = $(labels[index]).attr("for").match(/\d+/)[0];
-        var newTimeStamp = forStamp.concat(timeStamp);
-        $(labels[index]).attr("for", $(labels[index]).attr("for").replace(/(\d+)/, newTimeStamp));
+        $(labels[index]).attr("for", $(labels[index]).attr("for").replace(/(\d+)/, timeStamp));
       }
       index ++
     });
@@ -583,14 +570,10 @@ $(document).ready(function(){
     var index = 0;
     textareas.each(function(){
       if ($(textareas[index]).attr('id')) {
-        var idStamp = $(textareas[index]).attr("id").match(/\d+/)[0];
-        var newTimeStamp = idStamp.concat(timeStamp);
-        $(textareas[index]).attr("id", $(textareas[index]).attr("id").replace(/(\d+)/, newTimeStamp));
+        $(textareas[index]).attr("id", $(textareas[index]).attr("id").replace(/(\d+)/, timeStamp));
       }
       if ($(textareas[index]).attr('name')) {
-        var nameStamp = $(textareas[index]).attr("name").match(/\d+/)[0];
-        var newTimeStamp = nameStamp.concat(timeStamp);
-        $(textareas[index]).attr("name", $(textareas[index]).attr("name").replace(/(\d+)/, newTimeStamp));
+        $(textareas[index]).attr("name", $(textareas[index]).attr("name").replace(/(\d+)/, timeStamp));
       }
       $(textareas[index]).val("");
       index ++;
@@ -612,6 +595,10 @@ $(document).ready(function(){
 
     // begin updating all the inputs found in the cloned repeater
     for (var i = 0; i < clonedRepeater.length; i++) {
+      // creating unique string by concatenating i + timestamp since timestamp wasn't unique
+      // previously we kept concatenating previous with new which ended up creating a very large key breaking the post in some cased -kdh
+      timeStamp = i.toString().concat(timeStamp);
+      // console.log(timeStamp);
       $($(clonedRepeater[i]).find('.latlong')).attr('id', "map".concat(timeStamp));
       updateClonedInputs(clonedRepeater[i], timeStamp);
       updateClonedLabels(clonedRepeater[i], timeStamp);
