@@ -149,10 +149,20 @@ module Hanuman
     end
 
     # duplicate and save a single question with answer choices and conditions
-    def dup_and_save
+    def dup_and_save(new_parent = nil, new_sort_order = nil)
       self.single_cloning = true
       new_q = self.amoeba_dup
-      new_q.sort_order = self.sort_order.to_i
+
+      if new_sort_order.present?
+        new_q.sort_order = new_sort_order
+      else
+        new_q.sort_order = self.sort_order.to_i
+      end
+
+      if new_parent.present?
+        new_q.parent = new_parent
+      end
+
       new_q.save
       # Associate the conditions from the rule
       self.rules.each do |rule|
@@ -191,17 +201,10 @@ module Hanuman
       new_section_q.sort_order = new_section_q.sort_order + increment_sort_by
       new_section_q.save
       descendants_qs.each do |q|
-        new_child_q = q.dup_and_save
-
         new_child_parent = new_section_q.descendants.find_by(duped_question_id: q.parent.id) || new_section_q
         new_child_parent.save
-
-        # Update ancestry relationship dynamically
-        new_child_q.parent = new_child_parent
-
-        # set sort_order
-        new_child_q.sort_order = new_child_q.sort_order + increment_sort_by
-        new_child_q.save
+        new_sort_order = q.sort_order + increment_sort_by
+        q.dup_and_save(new_child_parent, new_sort_order)
       end
 
       # Re-organize / map conditions
@@ -291,7 +294,7 @@ module Hanuman
       self.question_text.strip.parameterize.underscore.gsub(/\s|:|\//, '-')
     end
 
-    def column_name
+    def create_base_string
       base_string = parameterized_text
       if base_string.length > 60
         base_string = base_string[0..59]
@@ -307,7 +310,12 @@ module Hanuman
           end
         end
       end
-
+      base_string
+    end
+    
+    def create_api_column_name
+      base_string = create_base_string
+      
       # checking for duplicate api_column_names and incrementing index by 1
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
@@ -322,17 +330,38 @@ module Hanuman
       else
         base_string
       end
+      
+    end
+
+    def create_db_column_name
+      base_string = create_base_string
+      
+      # checking for duplicate db_column_names and incrementing index by 1
+      if Hanuman::Question.exists?(db_column_name: base_string, survey_template_id: self.survey_template_id)
+        index = 1
+  
+        loop do
+          if Hanuman::Question.exists?(db_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
+            index += 1
+          else
+            return base_string + "_#{index}"
+          end
+        end
+      else
+        base_string
+      end
+
     end
 
     def set_column_names!
       # need to upda©te via update_column instead of a question save so we don't invoke process_question_changes twice
-      self.update_column(:db_column_name, column_name) if self.db_column_name.blank?
-      self.update_column(:api_column_name, column_name) if self.api_column_name.blank?
+      self.update_column(:db_column_name, create_db_column_name) if self.db_column_name.blank?
+      self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
     end
 
     def set_api_column_name!
       # need to update via update_column instead of a question save so we don't invoke process_question_changes twice
-      self.update_column(:api_column_name, column_name) if self.api_column_name.blank?
+      self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
     end
 
     def update_css_style(style_string)
