@@ -356,7 +356,7 @@ module Hanuman
       option_id_key = nil
       option_id = nil
 
-      if (question.answer_type.name == 'chosenselect' || question.answer_type.name == 'radio') && answer_choice_id_changed? && answer != answer_choice.option_text
+      if (question.answer_type.name == 'chosenselect' || question.answer_type.name == 'radio') && answer_choice_id_changed? && answer != answer_choice.try(:option_text)
         if answer_choice.present? && answer !=
           update_column(:answer, answer_choice.option_text)
         else
@@ -365,7 +365,7 @@ module Hanuman
 
         option_id_key = 'answer_choice_id'
         option_id = self.answer_choice_id
-      elsif question.answer_type.name == 'locationchosensingleselect' && selectable_id_changed? && answer != selectable.name
+      elsif question.answer_type.name == 'locationchosensingleselect' && selectable_id_changed? && answer != selectable.try(:name)
         if selectable.present?
           update_column(:answer, selectable.name)
         else
@@ -374,7 +374,7 @@ module Hanuman
 
         option_id_key = 'selectable_id'
         option_id = self.selectable_id
-      elsif question.answer_type.name == 'taxonchosensingleselect' && selectable_id_changed? && answer != selectable.formatted_answer_choice_with_symbol
+      elsif question.answer_type.name == 'taxonchosensingleselect' && selectable_id_changed? && answer != selectable.try(:formatted_answer_choice_with_symbol)
         if selectable.present?
           update_column(:answer, selectable.formatted_answer_choice_with_symbol)
         else
