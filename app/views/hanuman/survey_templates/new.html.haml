@@ -23,7 +23,7 @@
     %h3.panel-title
       - if params[:project_id].present?
         Admin /
-        = link_to "Survey Forms", surveys_project_path(params[:project_id])
+        = link_to "Forms", forms_project_path(params[:project_id])
         \/
         = link_to new_hanuman_project_survey_template_path(params[:project_id]) do
           New Survey
@@ -37,13 +37,13 @@
     .tab-base.tab-stacked-top{style: "margin-bottom:0px;"}
       %ul.nav.nav-tabs.projects-tabs
         %li
-          = link_to main_app.surveys_project_path(params[:project_id]) do
+          = link_to main_app.forms_project_path(params[:project_id]) do
             Project Library
         %li
-          = link_to main_app.company_surveys_project_path(params[:project_id]) do
+          = link_to main_app.company_forms_project_path(params[:project_id]) do
             Company Library
         %li
-          = link_to main_app.library_surveys_project_path(params[:project_id]) do
+          = link_to main_app.library_forms_project_path(params[:project_id]) do
             Wildnote Library
         %li.active
           %a
