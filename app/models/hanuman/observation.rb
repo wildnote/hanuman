@@ -353,30 +353,47 @@ module Hanuman
     end
     
     def fill_answer
-      if (question.answer_type.name == 'chosenselect' || question.answer_type.name == 'radio') && answer_choice_id_changed?
-        if answer_choice.present?
+      option_id_key = nil
+      option_id = nil
+
+      if (question.answer_type.name == 'chosenselect' || question.answer_type.name == 'radio') && answer_choice_id_changed? && answer != answer_choice.try(:option_text)
+        if answer_choice.present? && answer !=
           update_column(:answer, answer_choice.option_text)
         else
           update_column(:answer, nil)
         end
 
-        self.generate_update_delta(:answer)
-      elsif question.answer_type.name == 'locationchosensingleselect' && selectable_id_changed?
+        option_id_key = 'answer_choice_id'
+        option_id = self.answer_choice_id
+      elsif question.answer_type.name == 'locationchosensingleselect' && selectable_id_changed? && answer != selectable.try(:name)
         if selectable.present?
           update_column(:answer, selectable.name)
         else
           update_column(:answer, nil)
         end
 
-        self.generate_update_delta(:answer)
-      elsif question.answer_type.name == 'taxonchosensingleselect' && selectable_id_changed?
+        option_id_key = 'selectable_id'
+        option_id = self.selectable_id
+      elsif question.answer_type.name == 'taxonchosensingleselect' && selectable_id_changed? && answer != selectable.try(:formatted_answer_choice_with_symbol)
         if selectable.present?
           update_column(:answer, selectable.formatted_answer_choice_with_symbol)
         else
           update_column(:answer, nil)
         end
 
-        self.generate_update_delta(:answer)
+        option_id_key = 'selectable_id'
+        option_id = self.selectable_id
+      end
+
+      # backfill any output from fill_answer into the delta that made the change, to prevent conflict resolution issues
+      if option_id_key.present?
+        delta = self.deltas.where("changed_values->>'#{option_id_key}' = '?'", option_id).last
+        if delta.present?
+          delta.changed_values["answer"] = self.answer
+          delta.save
+        else
+          self.generate_update_delta(:answer)
+        end
       end
     end
   end

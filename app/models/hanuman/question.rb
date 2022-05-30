@@ -95,7 +95,8 @@ module Hanuman
       question = self
       parent = question.parent
       survey_template = question.survey_template
-      surveys = survey_template.surveys
+      # need this to run on has_missing_question surveys so need it to be unscoped
+      surveys = Hanuman::Survey.unscoped.where(survey_template_id: question.survey_template_id)
       surveys.each do |s|
         if parent.blank?
           Observation.create_with(
@@ -121,6 +122,7 @@ module Hanuman
 
         s.update_column(:observations_sorted, false)
         s.update_column(:observation_visibility_set, false)
+        s.check_missing_questions
       end
     end
 
@@ -312,10 +314,10 @@ module Hanuman
       end
       base_string
     end
-    
+
     def create_api_column_name
       base_string = create_base_string
-      
+
       # checking for duplicate api_column_names and incrementing index by 1
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
@@ -330,16 +332,16 @@ module Hanuman
       else
         base_string
       end
-      
+
     end
 
     def create_db_column_name
       base_string = create_base_string
-      
+
       # checking for duplicate db_column_names and incrementing index by 1
       if Hanuman::Question.exists?(db_column_name: base_string, survey_template_id: self.survey_template_id)
         index = 1
-  
+
         loop do
           if Hanuman::Question.exists?(db_column_name: base_string + "_#{index}", survey_template_id: self.survey_template_id)
             index += 1
