@@ -1,31 +1,32 @@
 - content_for :title do
-  Edit Survey Form
+  Edit Form
 - content_for :navbar_sub_projects do
   active
 - content_for :navbar_sub_projects_sub_project_surveys do
   active
+- content_for :helper_list do
+  = render "hanuman/survey_templates/helper_list"
 
 .panel.panel-info
   .panel-heading
     %h3.panel-title
       - if params[:project_id]
         Admin /
-        = link_to "Survey Forms", surveys_project_path(params[:project_id])
+        = link_to "Forms", surveys_project_path(params[:project_id])
         \/
-        = link_to "Edit Survey Form", edit_hanuman_project_survey_template_path(params[:project_id], params[:id])
+        = link_to "Edit Form", edit_hanuman_project_survey_template_path(params[:project_id], params[:id])
       - else
-        Admin / Survey Forms / Edit Survey Form - #{@survey_template.name_plus_version}
+        Admin / Forms / Edit Form - #{@survey_template.name_plus_version}
   .tab-base.tab-stacked-top
     %ul.nav.nav-tabs
       %li
         - if params[:project_id]
-          %a{:href => "/hanuman/admin/projects/#{params[:project_id]}/survey_templates/#{@survey_template.id}/edit"} Survey Form Layout
+          %a{:href => "/hanuman/admin/projects/#{params[:project_id]}/survey_templates/#{@survey_template.id}/edit"} Form Layout
         - else
-          %a{:href => "/hanuman/admin/survey_templates/#{@survey_template.id}/edit"} Survey Form Layout
+          %a{:href => "/hanuman/admin/survey_templates/#{@survey_template.id}/edit"} Form Layout
       %li.active
-        %a Survey Form Details
+        %a Form Details
     .tab-content
       = render "form"
 
 = render "hanuman/survey_templates/previously_submitted_list"
-
