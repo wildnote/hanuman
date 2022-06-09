@@ -351,13 +351,13 @@ module Hanuman
 
       save
     end
-    
+
     def fill_answer
       option_id_key = nil
       option_id = nil
 
       if (question.answer_type.name == 'chosenselect' || question.answer_type.name == 'radio') && answer_choice_id_changed? && answer != answer_choice.try(:option_text)
-        if answer_choice.present? && answer !=
+        if answer_choice.present?
           update_column(:answer, answer_choice.option_text)
         else
           update_column(:answer, nil)
