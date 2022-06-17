@@ -29,12 +29,10 @@ module Hanuman
     end
 
     def destroy
-      
+
       begin
         question = Question.find(params[:id])
-        question.paper_trail.without_versioning do
-          respond_with question.destroy
-        end
+        respond_with question.destroy
       rescue Rack::Timeout::RequestTimeoutException => e
         Honeybadger.notify(e, context: {
           name: "Question Deletion Sent To Worker",
