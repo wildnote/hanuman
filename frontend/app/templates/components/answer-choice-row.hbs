@@ -51,6 +51,15 @@
         <span class="glyphicons glyphicons-plus"></span>
         Add Answer Choice
       </a>
+      <a
+        disabled={{question.surveyTemplate.lock}}
+        class="btn btn-success"
+        data-test="add-answer-choice-link"
+        onclick={{action 'import'}}
+      >
+        <span class="glyphicons glyphicons-file-import"></span>
+        Import Answer Choices
+      </a>
     </td>
     {{#if isSuperUser }}
       <td></td>

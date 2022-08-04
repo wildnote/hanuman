@@ -75,6 +75,10 @@ export default DraggableObject.extend({
       }
     },
 
+    import() {
+      window.location.pathname = "/import/answer_choices/" + this.get('question').id;
+    },
+
     inputKeyDown(event) {
       if (event.keyCode === 13) {
         this.get('saveTask').perform();
