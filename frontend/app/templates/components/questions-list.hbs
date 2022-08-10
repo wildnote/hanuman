@@ -19,8 +19,8 @@
       {{else}}
         {{#unless surveyTemplate.fullyEditable}}
           <div class="panel-success helper-text">
-            <p><b>This survey form has existing data.</b></p>
-            <p>You cannot add or delete questions to survey forms with previously submitted data. To add or delete a question duplicate this survey form from the Survey Form Details tab and make your changes to the new version of the form.</p>
+            <p><b>This form has existing data.</b></p>
+            <p>You cannot add or delete questions to survey forms with previously submitted data. To add or delete a question duplicate this survey form from the Form Details tab and make your changes to the new version of the form.</p>
           </div>
         {{/unless}}
       {{/if}}
@@ -85,7 +85,7 @@
           </button>
           {{#if isSuperUser}}
             <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform checkTemplate}}>
-              <span class="glyphicons glyphicons-check"></span>Check Survey Form
+              <span class="glyphicons glyphicons-check"></span>Check Form
             </button>
           {{/if}}
         </div>

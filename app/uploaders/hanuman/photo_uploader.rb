@@ -15,7 +15,7 @@ module Hanuman
     # adding back delete photo on cloudinary when deleted on Wildnote now that we don't see issues with photos as much. Need this to decrease our storage and our
     # data integrity after a user cancels all data should be deleted
     def delete_remote?
-      true
+      false
     end
 
     # Choose what kind of storage to use for this uploader:

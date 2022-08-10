@@ -3,12 +3,12 @@ module Hanuman
     has_paper_trail
 
     # Relations
-    belongs_to :survey#, touch: true -kdh removing touch to we don't update surveys table everytime the observations table is updated
+    belongs_to :survey, -> { unscoped }#, touch: true -kdh removing touch to we don't update surveys table everytime the observations table is updated
     belongs_to :question
     belongs_to :selectable, polymorphic: true
     has_many :observation_answers, dependent: :destroy
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
-    has_many :answer_choices, through: :observation_answers
+    has_many :answer_choices, through: :observation_answers, before_remove: :generate_observation_answer_delta
     belongs_to :answer_choice
 
     has_many :observation_photos, dependent: :destroy
@@ -46,7 +46,7 @@ module Hanuman
     before_save :strip_and_squish_answer
     before_save :set_zero_attributes_to_nil
     before_save :set_flagged_status
-    before_update -> { self.answer = nil }, if: :answer_choice_id_changed?
+    after_save :fill_answer
 
     # Delegations
     delegate :question_text, to: :question
@@ -61,6 +61,9 @@ module Hanuman
       exclude_associations :documents
       exclude_associations :observation_signature
       exclude_associations :signature
+      exclude_associations :deltas
+      nullify :uuid
+      nullify :survey_uuid
     end
 
     def hide_tree!
@@ -131,6 +134,18 @@ module Hanuman
         return Hanuman::Observation.where(id: o_ids)
       else
         nil
+      end
+    end
+
+    # triggered on before_remove
+    # Needed to generate ObservationAnswer deletion deltas when multiselectable answer choices and taxonomy are unselected
+    def generate_observation_answer_delta(option)
+      if self.observation_answers.present?
+        self.observation_answers.each do |oa|
+          if (option.is_a?(Hanuman::AnswerChoice) && oa.answer_choice_id == option.id) || (option.is_a?(Taxon) && oa.multiselectable_id == option.id)
+            oa.generate_deletion_delta
+          end
+        end
       end
     end
 
@@ -335,6 +350,51 @@ module Hanuman
       end
 
       save
+    end
+
+    def fill_answer
+      option_id_key = nil
+      option_id = nil
+
+      if (question.answer_type.name == 'chosenselect' || question.answer_type.name == 'radio') && answer_choice_id_changed? && answer != answer_choice.try(:option_text)
+        if answer_choice.present?
+          update_column(:answer, answer_choice.option_text)
+        else
+          update_column(:answer, nil)
+        end
+
+        option_id_key = 'answer_choice_id'
+        option_id = self.answer_choice_id
+      elsif question.answer_type.name == 'locationchosensingleselect' && selectable_id_changed? && answer != selectable.try(:name)
+        if selectable.present?
+          update_column(:answer, selectable.name)
+        else
+          update_column(:answer, nil)
+        end
+
+        option_id_key = 'selectable_id'
+        option_id = self.selectable_id
+      elsif question.answer_type.name == 'taxonchosensingleselect' && selectable_id_changed? && answer != selectable.try(:formatted_answer_choice_with_symbol)
+        if selectable.present?
+          update_column(:answer, selectable.formatted_answer_choice_with_symbol)
+        else
+          update_column(:answer, nil)
+        end
+
+        option_id_key = 'selectable_id'
+        option_id = self.selectable_id
+      end
+
+      # backfill any output from fill_answer into the delta that made the change, to prevent conflict resolution issues
+      if option_id_key.present?
+        delta = self.deltas.where("changed_values->>'#{option_id_key}' = '?'", option_id).last
+        if delta.present?
+          delta.changed_values["answer"] = self.answer
+          delta.save
+        else
+          self.generate_update_delta(:answer)
+        end
+      end
     end
   end
 end
