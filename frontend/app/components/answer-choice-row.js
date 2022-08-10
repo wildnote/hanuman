@@ -3,6 +3,7 @@ import DraggableObject from 'ember-drag-drop/components/draggable-object';
 import { run } from '@ember/runloop';
 import { isNone } from '@ember/utils';
 import { task } from 'ember-concurrency';
+import { alias } from '@ember/object/computed';
 
 export default DraggableObject.extend({
   tagName: 'tr',
@@ -12,6 +13,8 @@ export default DraggableObject.extend({
 
   isEditingAnswerChoice: false,
   isSortable: true,
+
+  isFullyEditable: alias('question.surveyTemplate.fullyEditable'),
 
   setNewAnswerChoice() {
     let lastAnswer = this.get('question.answerChoices.lastObject');
@@ -52,6 +55,18 @@ export default DraggableObject.extend({
       });
     },
 
+    confirm() {
+      let el = this.get('element');
+      let $confirm = $('.delete-confirm', el);
+      $confirm.fadeIn();
+    },
+
+    cancel() {
+      let el = this.get('element');
+      let $confirm = $('.delete-confirm', el);
+      $confirm.fadeOut();
+    },
+
     delete() {
       let answerChoice = this.get('answerChoice');
       answerChoice.deleteRecord();
@@ -60,10 +75,11 @@ export default DraggableObject.extend({
       }
     },
 
-    inputKeyUp(event) {
-      if (event.keyCode == 13) {
+    inputKeyDown(event) {
+      if (event.keyCode === 13) {
         this.get('saveTask').perform();
+        event.preventDefault();
       }
-    }
+    },
   }
 });

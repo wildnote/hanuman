@@ -1,9 +1,11 @@
 class @ConditionalLogic
 
   self = ConditionalLogic.prototype
+  self.boundElements = []
 
   #scan page and find all objects with conditional logic rules
-  findRules: ->
+  findRules: (runCalcs) ->
+    self.allowCascade = false
     problemWithCL = false
     $("[data-rule!=''][data-rule]").each ->
       $ruleContainer = $(this)
@@ -11,12 +13,10 @@ class @ConditionalLogic
       rules = $.parseJSON($ruleContainer.attr("data-rule"))
       $(rules).each ->
         rule = this
-        console.log(rule)
         matchType = rule.match_type
-        #console.log rule
+
         $(rule.conditions).each ->
-          condition = this
-          conditionQuestionId = condition.question_id
+          conditionQuestionId = this.question_id
           # the container for the rule element(s), could be a single element contained in form-container-entry-item or multiple in form-container-repeater
           $ruleContainer = $ruleContainer
           # the condition container
@@ -25,37 +25,40 @@ class @ConditionalLogic
           if $conditionContainer.length < 1
             $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]")
 
-          if $conditionContainer.length == 0 || $conditionContainer.length > 1
-            console.log "fail"
+          if ($conditionContainer.length == 0 || $conditionContainer.length > 1) && rule.type != 'Hanuman::CalculationRule'
             problemWithCL = true
 
           # the condition element, which we need to check value for conditional logic
           $conditionElement = $conditionContainer.find(".form-control")
+
           # show
           if $conditionElement.length < 1
             $conditionElement = $conditionContainer.find(".form-control-static")
 
-          if $conditionElement.length == 0
+          if $conditionElement.length == 0 && rule.type != 'Hanuman::CalculationRule'
             problemWithCL = true
 
           # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
-          hideQuestions = self.setHideQuestions(condition, $conditionElement)
+          hideQuestions = self.setHideQuestions(this, $conditionElement)
+
 
           ancestorId = rule.question_id
           # bind conditions based on element type
           # text, textarea, select
           if $conditionElement.length < 2
-            self.bindConditions($conditionElement)
+            self.bindConditions($conditionElement, rule, $ruleContainer, this.id)
           # radio buttons
           else
             if $conditionElement.is(":checkbox")
               # limit binding of each checkbox if data-label-value and answer are the same-kdh
-              $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
-              self.bindConditions($conditionElement)
+              if rule.type != 'Hanuman::CalculationRule'
+                $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + this.answer.replace("/","\\/").replace("'","\\'") + "']")
+
+              self.bindConditions($conditionElement, rule, $ruleContainer, this.id)
             else
               for element in $conditionElement
                 do (element) ->
-                  self.bindConditions($(element))
+                  self.bindConditions($(element), rule, $ruleContainer, this.id)
 
           #TODO CLEAN UP THIS CODE WE HAVE STUFF IN HERE WE ARE NOT USING LIKE inRepeater
           # determine if we are in a repeater-this needs to get deleted-kdh
@@ -63,24 +66,44 @@ class @ConditionalLogic
           $repeater = $conditionElement.closest(".form-container-repeater")
           if $repeater.length > 0
               inRepeater = true
-          if rule.conditions.length > 1
-            self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule)
-          else if rule.type == "Hanuman::VisibilityRule"
-            self.hideShowQuestions(hideQuestions, ancestorId, $ruleContainer, $ruleContainer, inRepeater)
+
+          if rule.type != "Hanuman::CalculationRule"
+            self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true)
+
+        if runCalcs && rule.type == "Hanuman::CalculationRule"
+          self.updateCalculation(rule, $ruleContainer)
+
+          # need the direct returns so that the nested loops don't get broken when they're compiled to JS
+          return
+        return
 
     if problemWithCL
       e = new Error("conditional Logic # findRules")
       e.name = 'FAILED: conditional logic'
-      console.log e.name
       Honeybadger.notify e, context:
         type: "FAILED: conditional logic => condition container or element not found or found more than once"
         details: window.location.href
 
+    self.allowCascade = true
     return
 
   #bind conditions to question
-  bindConditions: ($triggerElement) ->
+  bindConditions: ($triggerElement, rule, $ruleContainer, conditionId) ->
+
+    ## Don't double-bind calculations
+    ## We need to store the parameter element, calculated element, condition, and rule in order to not to exclude any necessary bindings
+    if rule.type == "Hanuman::CalculationRule"
+      idx = self.boundElements.findIndex (el) ->
+        return $triggerElement[0] == el[0] && conditionId == el[1] && rule.id == el[2] && $ruleContainer[0] == el[3]
+      return if idx != -1
+      self.boundElements.push([$triggerElement[0], conditionId, rule.id, $ruleContainer[0]])
+
     $triggerElement.on "change", ->
+      ## If this is a calculation rule, we don't care about conditional logic, we just want to re-run the calculations since a value has changed
+      if rule.type == "Hanuman::CalculationRule"
+        self.updateCalculation(rule, $ruleContainer, true)
+        return
+
       # pop out of condition into rules to handle all conditions defined in the rule
       # TODO it seems this is looping through ALL data-rule in the DOM instead of the data-rule associated with the element that triggered the onchange event-kdh
       $repeater = $($triggerElement).closest(".form-container-repeater")
@@ -93,18 +116,17 @@ class @ConditionalLogic
           $container = $ruleElement
           rules = $.parseJSON($ruleElement.attr("data-rule"))
           $(rules).each ->
-            rule = this
-            matchType = rule.match_type
+            matchType = this.match_type
             questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
-            conditions = rule.conditions
-            ancestorId = rule.question_id
+            conditions = this.conditions
+            ancestorId = this.question_id
             matchingCondition = _.where(conditions, {question_id: Number(questionId)})
             if matchingCondition.length > 0
               if conditions.length > 1
-                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule)
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this, false)
               else
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
-                if rule.type == "Hanuman::VisibilityRule"
+                if this.type == "Hanuman::VisibilityRule"
                   self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
       # if not then lets assume its at the top most level outside of a repeater
       else
@@ -114,24 +136,23 @@ class @ConditionalLogic
           $container = $ruleElement
           rules = $.parseJSON($ruleElement.attr("data-rule"))
           $(rules).each ->
-            rule = this
-            matchType = rule.match_type
+            matchType = this.match_type
             questionId = $triggerElement.closest('.form-container-entry-item').attr('data-question-id')
-            conditions = rule.conditions
-            ancestorId = rule.question_id
+            conditions = this.conditions
+            ancestorId = this.question_id
             matchingCondition = _.where(conditions, {question_id: Number(questionId)})
             if matchingCondition.length > 0
               if conditions.length > 1
-                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule)
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this, false)
               else
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
-                if rule.type == "Hanuman::VisibilityRule"
+                if this.type == "Hanuman::VisibilityRule"
                   self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
                 else if hideQuestions == false
-                  self.setLookupValue(rule.value, $ruleElement)
+                  self.setLookupValue(this.value, $ruleElement)
     return
 
-  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule) ->
+  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule, onLoad) ->
     conditionMetTracker = []
     $.each conditions, (index, condition) ->
       if inRepeater
@@ -167,9 +188,8 @@ class @ConditionalLogic
 
     if rule.type == "Hanuman::VisibilityRule"
       self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
-    else if hideShow == false
-      self.setLookupValue(rule.value, $ruleElement)
-
+    else if !onLoad && hideShow == false && rule.type == "Hanuman::LookupRule"
+        self.setLookupValue(rule.value, $ruleElement)
 
   setLookupValue: (value, $ruleElement) ->
     answerType = $ruleElement.data('element-type')
@@ -252,7 +272,6 @@ class @ConditionalLogic
 
   #clear questions
   clearQuestions: (container) ->
-    #console.log container
     # clear out text fields, selects and uncheck radio and checkboxes
     #TODO set these to default values once we implement default values - kdh
     # container.find("input[type!=hidden]").val("")
@@ -368,6 +387,17 @@ class @ConditionalLogic
 
   # get value of triggering question
   getValue: ($conditionElement) ->
+    if ($conditionElement[0] && $conditionElement[0].selectize)
+      value = $conditionElement[0].selectize.getValue()
+      if value.constructor == Array
+        option_strings = []
+        $.each value, (index, optionId) ->
+          option_strings.push $($conditionElement[0].selectize.getItem(optionId)[0]).text()
+
+        return option_strings.join("|&|")
+      else
+        return $($conditionElement[0].selectize.getItem(value)[0]).text()
+
     if $conditionElement.is(":radio")
       selected = $("input[type='radio'][name='" + $conditionElement.attr('name') + "']:checked")
       if selected.length > 0
@@ -377,6 +407,14 @@ class @ConditionalLogic
           return selected.val()
       else
         return
+
+    if $conditionElement.is(":checkbox") && $conditionElement.parents('.form-container-entry-item').data('element-type') == 'checkboxes'
+      option_strings = []
+      $.each $conditionElement, (index, checkbox) ->
+        if $(checkbox).is(":checked")
+          option_strings.push $(checkbox).attr('data-label-value')
+      return option_strings.join("|&|")
+
     if $conditionElement.is(":checkbox")
       if $conditionElement.is(":checked")
         if $conditionElement.attr('data-label-value')
@@ -385,10 +423,11 @@ class @ConditionalLogic
           return $conditionElement.val()
       else
         return
+
     if $conditionElement.is('select[multiple]')
-      if $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").size() > 0
+      if $conditionElement.find("option:selected").length > 0
         option_strings = []
-        $conditionElement.siblings(".chosen-container").find(".chosen-choices li span").each ->
+        $conditionElement.find("option:selected").each ->
           option_strings.push this.innerHTML
         return option_strings.join("|&|")
       else if $conditionElement.is(".selectize-taxon-select") && $conditionElement.children().size() > 0
@@ -399,7 +438,12 @@ class @ConditionalLogic
       else
         return
     if $conditionElement.is('select')
-      return $('#' + $conditionElement.attr('id') + ' option:selected').text()
+      text = $('#' + $conditionElement.attr('id') + ' option:selected').text()
+      if text == 'Please select'
+        return undefined
+      else
+        return text
+
     if $conditionElement.is("p")
       #remove carriage returns and trim leading and trailing whitespace
       #need to refactor to look for value in element data- attribute instead of from html rendered output
@@ -410,10 +454,172 @@ class @ConditionalLogic
         return $conditionElement.find('span.hidden-answer').text().replace(/\↵/g, '').trim()
       else
         return $conditionElement.text().replace(/\↵/g, '').trim()
+
     $conditionElement.val()
+
+  ## AN May 2020 - Start calculated fields code
+  # This method triggers an update of the calculations for the given rule's target question
+  updateCalculation: (rule, $ruleContainer) ->
+    parameters = {} # used to store the survey data object passed to the calculated fields expresssion
+    $target = $ruleContainer.find('.form-control') # the question we are calculating a value for
+    $targetRepeater = $ruleContainer.closest(".form-container-repeater") # the parent repeater of the target, if it exists
+    targetType = $ruleContainer.data('element-type') # the form control type of the target
+
+    $.each rule.conditions, (index, condition) ->
+
+      # If the target question (the one we are calculating a value for) is inside a repeater AND the parameter question is inside a repeater,
+      # we only want the parameter if it's in the same repeater instance as the target
+      if $targetRepeater.length > 0 && $('[data-question-id="' + condition.question_id + '"]').closest(".form-container-repeater").length > 0
+        $question = $targetRepeater.find('[data-question-id="' + condition.question_id + '"]')
+      else
+        $question = $('[data-question-id="' + condition.question_id + '"]')
+
+      elementType = $question.data('element-type') # the form control type of the parameter question
+      columnName = $question.data('api-column-name') # the api column name of the parameter, used to generate the variable name
+      $repeater = $question.closest(".form-container-repeater") # the parent parameter of the target, if it exists
+
+      # If the parameter question is inside a repeater, but the target is top-level, we want to make an array out of the parameter question across all repeater instances
+      if $repeater.length > 0 && $targetRepeater.length == 0
+        entries = []
+        $.each $question, (index, entry) ->
+          value = self.getNativeValue($(entry).find('.form-control'), elementType)
+          entries.push(value)
+        parameters[columnName] = entries
+
+      # Otherwise, we only want the parameter question (either it is top level, or in the same repeater instance as the target)
+      else
+        $conditionElement = $question.find('.form-control')
+        value = self.getNativeValue($conditionElement, elementType)
+        parameters[columnName] = value
+
+    self.interpreter = new Interpreter(rule.script, (interpreter, globalObject) ->
+      # creates a function that can be called from the interpreter context,
+      # which allows us to extract the calculation result and update the UI
+      outputWrapper = (result) -> self.setCalculationResult($target, result, targetType)
+      interpreter.setProperty(globalObject, 'setResult', interpreter.createNativeFunction(outputWrapper))
+
+      # get all of the parameter questions, inject them into the interpreter as $api_column_name variables
+      $.each parameters, (key, value) ->
+        interpreter.setProperty(globalObject, '$' + key, interpreter.nativeToPseudo(value))
+    )
+
+    self.interpreter.run()
+
+  # This method takes a value from the interpreter and updates the UI
+  # $target: jQuery object for the target question
+  # pseudoResult: interpreter object containing the calculation result
+  # elementType: the form control type of the target
+  setCalculationResult: ($target, pseudoResult, elementType) ->
+    result = self.interpreter.pseudoToNative(pseudoResult) # converts from an interpreter object to a native JS object
+
+    if elementType == 'checkbox' && typeof result == 'boolean'
+      $target.prop("checked", result)
+
+    else if (elementType == 'number' || elementType == 'counter') && typeof result == 'number'
+      $target.val(result)
+
+    else if (elementType == 'text' || elementType ==  'textarea' || elementType == 'time') && typeof result == 'string'
+      $target.val(result)
+
+    else if elementType == 'date' && typeof result == 'string'
+      $target.datepicker("setDate", new Date(result))
+
+    else if elementType == 'checkboxes' && Array.isArray(result)
+      $.each $target, (index, checkbox) ->
+        $(checkbox).prop("checked", result.indexOf($(checkbox).attr('data-label-value')) != -1)
+
+    else if elementType == 'multiselect' && Array.isArray(result)
+      if $target.hasClass('chosen-multiselect')
+        $target.find('option').prop('selected', false)
+        $.each result, (index, optionText) -> $target.find('option:contains(' + optionText + ')').prop('selected', true);
+
+      else if $target.hasClass('selectized')
+        $target[0].selectize.clear(true)
+        $.each $target[0].selectize.options, (index, option) ->
+          if result.indexOf(option.text) != -1
+            $target[0].selectize.addItem(option.value, false)
+
+    else if elementType == 'select' && typeof result == 'string'
+      if $target.hasClass('chosen-select')
+        $target.find('option').prop('selected', false)
+        $target.find('option:contains(' + result + ')').prop('selected', true);
+
+      else if $target.hasClass('selectized')
+        $target[0].selectize.clear(true)
+        $.each $target[0].selectize.options, (index, option) ->
+          if option.text == result
+            $target[0].selectize.addItem(option.value, false)
+            return
+
+    else if elementType == 'radio' && typeof result == 'string'
+      $.each $target, (index, radio) ->
+        $(radio).prop("checked", $(radio).attr('data-label-value') == result)
+
+    # If the type of the calculation result doesn't match the element type, or is null/undefined, clear the target
+    else
+      if elementType == 'checkbox'
+        $target.prop("checked", false)
+
+      else if elementType == 'checkboxes' || elementType == 'radio'
+        $.each $target, (index, option) ->
+          $(option).prop("checked", false)
+
+      else if elementType == 'multiselect' || elementType == 'select'
+        if $target.hasClass('chosen-select') || $target.hasClass('chosen-multiselect')
+          $target.find('option').prop('selected', false)
+
+        else if $target.hasClass('selectized')
+          $target[0].selectize.clear(true)
+
+      else
+        $target.val('')
+
+    # for performance reasons, only cascade CL and other calcs if permitted
+    if self.allowCascade
+      if elementType == 'checkboxes' || elementType == 'radio'
+        $.each $target, (index, checkbox) ->
+          $(checkbox).trigger('change')
+
+      else if elementType == 'multiselect' || elementType == 'select'
+        if $target.hasClass('chosen-select') || $target.hasClass('chosen-multiselect')
+          $target.trigger("chosen:updated")
+
+        else if $target.hasClass('selectized')
+          $($target[0]).trigger('change')
+
+      else
+        $target.trigger('change')
+
+
+  # converts the string value taken from a given input to a native JS value that we can pass to the interpreter
+  getNativeValue: ($input, elementType) ->
+    stringValue = self.getValue($input)
+
+    if elementType == 'checkbox'
+      return stringValue == 'true'
+
+    if elementType == 'number' || elementType == 'counter'
+      if $.isNumeric(stringValue)
+        return parseFloat(stringValue)
+      else
+        return 0
+
+    if elementType == 'multiselect' || elementType == 'checkboxes'
+      if stringValue == undefined || stringValue == null || stringValue.trim() == ''
+        return []
+      else
+        return stringValue.split('|&|')
+
+    if elementType == 'date'
+      return $input.datepicker('getDate')
+
+    if stringValue == undefined || stringValue == null || stringValue.trim() == ''
+      return null
+
+    return stringValue
 
 $ ->
   if $('input#survey_survey_template_id').length
     #call findRules on document ready
     cl = new ConditionalLogic
-    cl.findRules()
+    cl.findRules(false)

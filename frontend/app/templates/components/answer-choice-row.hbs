@@ -1,19 +1,34 @@
 {{#if isEditingAnswerChoice}}
   {{!-- new and edit --}}
   <td>
-    {{#object-form for=answerChoice}}
-      {{#form-field for='optionText'}}
+    {{#form-field for='optionText'}}
+      <input type="text"
+            disabled={{question.surveyTemplate.lock}}
+            data-test="answerChoice.optionText"
+            class="form-control {{if saveTask.isRunning 'disabled'}}"
+            value={{answerChoice.optionText}}
+            oninput={{action (mut answerChoice.optionText) value="target.value"}}
+            onkeydown={{action 'inputKeyDown'}}
+            placeholder="Option Text"
+            maxlength='255'/>
+    {{/form-field}}
+  </td>
+  <!-- placeholder TD so that the display and form aligns correctly -->
+  {{#if isSuperUser}}
+    <td>
+      {{#form-field for='definition'}}
         <input type="text"
               disabled={{question.surveyTemplate.lock}}
-              data-test="answerChoice.optionText"
+              data-test="answerChoice.definition"
               class="form-control {{if saveTask.isRunning 'disabled'}}"
-              value={{answerChoice.optionText}}
-              oninput={{action (mut answerChoice.optionText) value="target.value"}}
-              onkeyup={{action 'inputKeyUp'}}
+              value={{answerChoice.definition}}
+              oninput={{action (mut answerChoice.definition) value="target.value"}}
+              onkeydown={{action 'inputKeyDown'}}
+              placeholder="Definition"
               maxlength='255'/>
       {{/form-field}}
-    {{/object-form}}
-  </td>
+    </td>
+  {{/if}}
   <td>
     <a class="btn btn-success {{if saveTask.isRunning 'disabled'}}" data-test="save-answer-choice-link" onclick={{perform saveTask}}>
       {{ if saveTask.isRunning 'Saving...' 'Save' }}
@@ -37,11 +52,19 @@
         Add Answer Choice
       </a>
     </td>
+    {{#if isSuperUser }}
+      <td></td>
+    {{/if}}
     <td></td>
   {{else}}
     <td data-test="answerChoice.optionText">
       {{answerChoice.optionText}}
     </td>
+    {{#if isSuperUser }}
+      <td data-test="answerChoice.definition">
+        {{answerChoice.definition}}
+      </td>
+    {{/if}}
     <td>
       <a
         disabled={{question.surveyTemplate.lock}}
@@ -56,11 +79,20 @@
         disabled={{question.surveyTemplate.lock}}
         class="btn"
         data-test="delete-answer-choice-link"
-        onclick={{action 'delete'}}
+        onclick={{action 'confirm'}}
       >
         <span class="glyphicons glyphicons-bin"></span>
       </a>
       <span class="glyphicons glyphicons-sorting answer-draggable-handle"></span>
     </td>
+    <div class="delete-confirm">
+      {{#if (not isFullyEditable)}}
+        <small data-test-delete-confirm-message>Performing this delete will also remove this answer in any submitted surveys.<br></small>
+      {{/if}}
+      <small>Are you sure you want to delete this answer choice?</small><br>
+      <button style="margin-top: 10px;" class="btn btn-success" data-test="delete-question-link"
+        onclick={{action 'delete'}}>Yes</button>
+      <button style="margin-top: 10px;" class="btn" onclick={{action 'cancel'}}>No</button>
+    </div>
   {{/if}}
 {{/if}}

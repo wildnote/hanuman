@@ -21,7 +21,7 @@ module Hanuman
 
     describe 'Callbacks' do
       it { is_expected.to callback(:set_observations_unsorted).before(:save) }
-      it { is_expected.to callback(:schedule_observation_sorting).after(:commit) }
+      it { is_expected.to callback(:wetland_calcs_and_sorting_operations).after(:commit) }
     end
   end
 end

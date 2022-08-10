@@ -151,7 +151,7 @@
                       style="height: 33px;"
                       onkeyup={{action (mut question.helperText) value="target.value"}}
                       onchange={{action (mut question.helperText) value="target.value"}}
-                      maxlength='255'>{{question.helperText}}</textarea>
+                      maxlength='1500'>{{question.helperText}}</textarea>
             {{/form-field}}
           </div>
         </div>
@@ -225,6 +225,23 @@
           </div>
         </div>
 
+        {{#if (or isALatLong isPhoto) }}
+          <div class="row">
+            <div class="col-md-3">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                        name="convertToUtm"
+                        checked={{question.convertToUtm}}
+                        onchange={{action (mut question.convertToUtm) value="target.checked"}} /> Convert to UTM
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Convert to UTM" data-content="When this box is checked, lat/long points collected using this question will automatically be converted to UTM and displayed as such in reports." class="bootstrap-popover">
+                    <span class="glyphicons glyphicons-info-sign"></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
 
         {{#if (and isSuperUser question.isLocationSelect) }}
           <div class="row">
@@ -275,7 +292,7 @@
           {{#liquid-unless answerChoicesCollapsed }}
 
             {{#each question.errors.answerChoices as |error|}}
-              <div  class="alert alert-danger" role="alert" data-test="answer-choices-error">
+              <div  class="alert alert-danger answer-choice-row" role="alert" data-test="answer-choices-error">
                 {{error.message}}
               </div>
             {{/each}}
@@ -283,7 +300,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table class="table table-hover answer-choice-row">
                       {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction=(action 'sortAnswerChoices') enableSort=true useSwap=true}}
                         {{#each answerChoicesToShow as |answerChoice|}}
                           {{answer-choice-row
@@ -324,6 +341,21 @@
           </div>
         {{/if}}
 
+        <div class="form-group">
+          <div class="col-sm-12">
+            {{#form-field for='flaggedAnswers' label='Flagged Answers'}}
+              <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Flagged Answers" data-content="Please enter a comma-separated list of answers for this question that should cause the survey to be flagged and be displayed in the Project Dashboard Issue Tracker." class="bootstrap-popover">
+                <span class="glyphicons glyphicons-info-sign"></span>
+              </a>
+              <input type="text"
+                     class="form-control"
+                     data-test="question.flaggedAnswers"
+                     value={{question.flaggedAnswers}}
+                     oninput={{action (mut question.flaggedAnswers) value="target.value"}} />
+            {{/form-field}}
+          </div>
+        </div>
+
         {{!-- Lookup rules --}}
         {{#if question.answerType.isLookupRuleable}}
           <div class="form-group" style="margin-top: 15px;">
@@ -347,11 +379,11 @@
                 class="right glyphicon glyphicon-collapse-{{if lookupRulesCollapsed 'up' 'down'}}"></span>
             </div>
           </div>
-          
-          
+
+
           {{#liquid-unless lookupRulesCollapsed }}
             {{#each (sort-by "id:desc" question.lookupRules) as |rule|}}
-              {{rule-panel question=question conditionalQuestions=conditionalQuestions lookupRule=rule}}
+              {{rule-panel question=question conditionalQuestions=conditionalQuestions rule=rule }}
             {{/each}}
           {{/liquid-unless}}
 
@@ -373,7 +405,7 @@
                 Add rule
               </button>
             </div>
-            
+
           {{/if}}
           <div class="col-sm-1">
             <span data-test-open-visibility-rules onclick={{action (toggle "visibilityRulesCollapsed" this)}}
@@ -383,10 +415,28 @@
 
         {{#if question.visibilityRule}}
           {{#liquid-unless visibilityRulesCollapsed }}
-            {{rule-panel question=question conditionalQuestions=conditionalQuestions }}
+            {{rule-panel question=question conditionalQuestions=conditionalQuestions rule=question.visibilityRule }}
           {{/liquid-unless}}
         {{/if}}
         <hr/>
+
+        {{#if (or question.isContainer question.isARepeater) }}
+          <div class="form-group">
+            <div class="col-sm-12">
+              {{#form-field for='reportChildrenWidth' label='Question Text Width'}}
+                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Report Children Width"
+                  data-content="Control the PDF Export layout by allocating a percent split between the Survey Questions and Survey Answers. For example, if you have long questions and short answers, you could allocate 65% to the questions thereby, the remaining 35% will be allocated to the answers. If you leave this blank, the global settings, located in the Survey Admin Details tab will be used."
+                  class="bootstrap-popover">
+                  <span class="glyphicons glyphicons-info-sign"></span>
+                </a>
+                <input type="number" name="reportChildrenWidth" class="form-control" data-test="question.reportChildrenWidth"
+                  value={{question.reportChildrenWidth}} value="target.value"
+                  onkeyup={{action "setReportChildrenWidth" value="target.value"}}
+                  oninput={{action "setReportChildrenWidth" value="target.value"}} />
+              {{/form-field}}
+            </div>
+          </div>
+        {{/if}}
 
         {{#if isSuperUser}}
           <hr style="margin-top:15px;" />
@@ -402,7 +452,39 @@
                 ></span>
               </div>
             </div>
+
+
             {{#liquid-if superUserCollapsed}}
+              {{!-- Calculation rules --}}
+
+              {{#if question.answerType.hasAnAnswer}}
+                <div class="form-group">
+                  <div class="col-sm-{{if (not question.calculationRule) '9' '11'}}">
+                    <label>Calculation Rules</label>
+                    <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Calculation Rules" data-content="Add a JavaScript expression to dynamically calculate the value of this question. If the rule conditions are met the expression will be run." class="bootstrap-popover">
+                      <span class="glyphicons glyphicons-info-sign"></span>
+                    </a>
+                  </div>
+                  {{#if (not question.calculationRule)}}
+                    <div class="col-sm-2">
+                      <button data-test-add-a-calc-rule class="btn btn-success btn-sm" onclick={{perform addRule "Hanuman::CalculationRule"}}>
+                        <span class="glyphicons glyphicons-plus"></span>
+                        Add rule
+                      </button>
+                    </div>
+                  {{/if}}
+                  <div class="col-sm-1">
+                    <span data-test-open-calculation-rules onclick={{action (toggle "calculationRulesCollapsed" this)}} class="right glyphicon glyphicon-collapse-{{if calculationRulesCollapsed 'up' 'down'}}"></span>
+                  </div>
+                </div>
+
+                {{#if question.calculationRule}}
+                  {{#liquid-unless calculationRulesCollapsed }}
+                    {{rule-panel question=question conditionalQuestions=conditionalQuestions rule=question.calculationRule }}
+                  {{/liquid-unless}}
+                {{/if}}
+              {{/if}}
+
               {{question-super-user-only
                 question=question
                 ancestryQuestions=ancestryQuestions

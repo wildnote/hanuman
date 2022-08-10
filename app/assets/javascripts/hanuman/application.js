@@ -24,6 +24,7 @@
 //= require ladda/ladda
 //= require multiple-select/jquery.multiple.select
 //= require typeahead/typeahead.bundle
+//= require acorn_interpreter/acorn_interpreter
 //
 // HANUMAN SPECIFIC JS FILE REFERENCES (ADD FILE REFERENCES AT THE END OF THIS SECTION UNLESS SPECIFIC ORDERING IS NECESSARY)
 //

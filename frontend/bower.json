@@ -2,7 +2,6 @@
   "name": "frontend",
   "dependencies": {
     "pretender": "1.4.1",
-    "Faker": "~3.1.0",
     "remodal": "1.1.0",
     "spin.js": "^2.3.2",
     "selectize": "miguelcobain/selectize.js#master",

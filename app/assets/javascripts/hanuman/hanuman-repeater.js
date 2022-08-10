@@ -86,10 +86,6 @@ $(document).ready(function(){
       resetMapButtons($clonedContainer);
     },500)
 
-    // bind ConditionalLogic and re-run the logic to hide and show
-    cl = new ConditionalLogic;
-    cl.findRules();
-
     // unbind and rebind the pickers
     $(".datepicker").unbind().datepicker();
     $(".timepicki").unbind().timepicki({
@@ -135,38 +131,18 @@ $(document).ready(function(){
       maxPhotos = $(self).find('#max-photos').attr("data-max-photos");
       if (maxPhotos) {
         addedPhotos = $(self).find('.gallery-item').find("img").length;
+        console.log(maxPhotos + ' ' + addedPhotos);
+        checkMaxPhotos(this, maxPhotos, addedPhotos);
       }
-      console.log(maxPhotos + ' ' + addedPhotos);
-      checkMaxPhotos(this, maxPhotos, addedPhotos);
     });
 
-    // $('.file-upload').on('click', function (e) {
-    //   console.log("clicked");
-    //   maxPhotos = $(this).find('#max-photos').attr("data-max-photos");
-    //   if (maxPhotos) {
-    //     $(this).bind('cloudinarydone', function (e) {
-    //       addedPhotos = $(this).find('.photo-preview').find("img").length;
-    //       checkMaxPhotos(this, maxPhotos, addedPhotos);
-    //     });
-    //   }
-    // });
-
-    // $('.file-upload').on('click', '.remove-upload, .delete-saved-file', function(e) {
-    //   maxPhotos = $(this).parents('.file-upload').find('#max-photos').attr("data-max-photos");
-    //   if(maxPhotos) {
-    //     e.preventDefault();
-    //     self = $(this).parents('.file-upload');
-    //     setTimeout(function() {
-    //       addedPhotos = $(self).find('.photo-preview').find("img").length;
-    //       checkMaxPhotos(self, maxPhotos, addedPhotos)
-    //     }, 100);
-    //   }
-    // });
-
+    // bind ConditionalLogic and re-run the logic to hide and show
+    cl = new ConditionalLogic;
+    cl.findRules(true);
 
   });
 
-  
+
 
   function checkMaxPhotos(self, maxPhotos, addedPhotos) {
     if (addedPhotos > maxPhotos) {
@@ -227,6 +203,7 @@ $(document).ready(function(){
   function updateRepeaterControls() {
     var topLevelRepeaterTypes = [];
     $(".form-container-repeater").each(function (_, repeater) {
+
       var directChildRepeaterTypes = [];
       var $directChildRepeaters = $(repeater).find("> .panel-collapse > .panel-body > .form-container-repeater");
       if ($directChildRepeaters.length) {
@@ -237,7 +214,7 @@ $(document).ready(function(){
           }
         });
       }
-      
+
 
       if(!$(repeater).parent().parent().parent().first().hasClass("form-container-repeater")) {
         var questionId = $(repeater).data("question-id");
@@ -252,7 +229,7 @@ $(document).ready(function(){
           var $destroyButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .destroy-form-container-repeater');
           var $duplicateButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .duplicate-form-container-repeater');
 
-          if (index > 0) {
+          if (index > 0 || repeaterCount > 1) {
             $(element).find(".repeater-count:first").text(" " + (index + 1));
             $destroyButton.show();
           } else {
@@ -274,25 +251,24 @@ $(document).ready(function(){
         var $destroyButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .destroy-form-container-repeater');
         var $duplicateButton = $(element).find('> .panel-collapse > .panel-body > .form-container-entry-item > .form-group > div > .duplicate-form-container-repeater');
 
-        if (index > 0) {
-          $(element).find(".repeater-count:first").text(" " + (index + 1));
+        if (index > 0 || repeaterCount > 1) {
           $destroyButton.show();
+        } else {
+          $destroyButton.hide();
+        }
 
+        $(element).find(".repeater-count:first").text(" " + (index + 1));
 
+        if (index > 0) {
           // make unique target for collapse
           var question_id = $(element).attr('data-question-id');
           $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_" + (index + 1));
           $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_" + (index + 1));
-
-
           console.log($(element).find('.panel-heading.chevron')[0]);
-
-
         } else {
           var question_id = $(element).attr('data-question-id');
           $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_0");
           $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_0");
-          $destroyButton.hide();
         }
 
         if (index + 1 === repeaterCount) {
@@ -383,17 +359,16 @@ $(document).ready(function(){
         var projectId = window.location.pathname.match(/\/projects\/(\d+)/)[1];
         var surveyId = window.location.pathname.match(/\/surveys\/(\d+)/)[1];
         $.ajax({
-          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/repeater/"+ repeaterId,
+          url: "/projects/" + projectId + "/hanuman/surveys/" + surveyId + "/repeater_observation/" + dataObservationId + "/repeater/" + repeaterId,
           method: "Delete"
-        }).done(function(response) {
+        }).done(function (response) {
           removeObservationFromDom(that);
         });
-      }else{
+      } else {
         removeObservationFromDom(that);
       }
     }
 
-    updateRepeaterControls();
     return false;
   });
 
@@ -410,7 +385,9 @@ $(document).ready(function(){
       2000,
       function() {
           $removeContainer.remove();
-          updateRepeaterControls()
+          updateRepeaterControls();
+          cl = new ConditionalLogic;
+          cl.findRules(true);
       }
     );
   };
@@ -526,6 +503,10 @@ $(document).ready(function(){
         single_backstroke_delete: false,
         search_contains: true
       });
+
+      // Disable calculated fields
+      $('.chosen-multiselect[readonly], .chosen-select[readonly]').parent().find('.chosen-container').css({'pointer-events': 'none','opacity': 0.5});
+
       $(this).find(".bootstrap-checkbox-multiselect").multiselect();
     });
   }
@@ -535,26 +516,20 @@ $(document).ready(function(){
     var lastInputIndex = inputs.length - 1;
     var index = 0;
     var parsleySubstrig = Math.random().toString(36).substring(13);
-    inputs.each(function(){
 
+    inputs.each(function() {
       // removing uploaded photos, docs and videos from $clonedContainer
       if ($(inputs[index]).attr('type') == 'file') {
         $(inputs[index]).siblings('.attachinary_container').last().remove();
       }
       if ($(inputs[index]).attr('id')) {
-        var idStamp = $(inputs[index]).attr("id").match(/\d+/)[0];
-        var newTimeStamp = idStamp.concat(timeStamp);
-        $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/\d+/, newTimeStamp));
+        $(inputs[index]).attr("id", $(inputs[index]).attr("id").replace(/\d+/, timeStamp));
       }
       if ($(inputs[index]).attr('name')) {
         if ($(inputs[index]).attr('name') != "file") {
-          var nameStamp = $(inputs[index]).attr("name").match(/\d+/)[0];
-          var newTimeStamp = nameStamp.concat(timeStamp);
-          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/\d+/, newTimeStamp));
-        }else if($(inputs[index]).attr("data-cloudinary-field")) {
-          var nameStamp = $(inputs[index]).attr("data-cloudinary-field").match(/\d+/)[0];
-          var newTimeStamp = nameStamp.concat(timeStamp);
-          $(inputs[index]).attr("data-cloudinary-field", $(inputs[index]).attr("data-cloudinary-field").replace(/\d+/, newTimeStamp));
+          $(inputs[index]).attr("name", $(inputs[index]).attr("name").replace(/\d+/, timeStamp));
+        } else if ($(inputs[index]).attr("data-cloudinary-field")) {
+          $(inputs[index]).attr("data-cloudinary-field", $(inputs[index]).attr("data-cloudinary-field").replace(/\d+/, timeStamp));
         }
       }
       if ($(inputs[index]).attr('data-parsley-multiple')) {
@@ -565,21 +540,16 @@ $(document).ready(function(){
     });
   };
 
-  function updateClonedSelects($clonedRepeater, timeStamp){
+  function updateClonedSelects($clonedRepeater, timeStamp) {
     var select = $($clonedRepeater).find('select');
     var index = 0;
-    select.each(function(){
+    select.each(function() {
       if ($(select[index]).attr('id')) {
-        var idStamp = $(select[index]).attr("id").match(/\d+/)[0];
-        var newTimeStamp = idStamp.concat(timeStamp);
-        $(select[index]).attr("id", $(select[index]).attr("id").replace(/(\d+)/, newTimeStamp));
+        $(select[index]).attr("id", $(select[index]).attr("id").replace(/(\d+)/, timeStamp));
       }
       if ($(select[index]).attr('name')) {
-        var nameStamp = $(select[index]).attr("name").match(/\d+/)[0];
-        var newTimeStamp = nameStamp.concat(timeStamp);
-        $(select[index]).attr("name", $(select[index]).attr("name").replace(/(\d+)/, newTimeStamp));
+        $(select[index]).attr("name", $(select[index]).attr("name").replace(/(\d+)/, timeStamp));
       }
-
       index ++;
     });
   };
@@ -589,9 +559,7 @@ $(document).ready(function(){
     var index = 0;
     labels.each(function(){
       if ($(labels[index]).attr("for") && $(labels[index]).attr("for").match(/\d+/)) {
-        var forStamp = $(labels[index]).attr("for").match(/\d+/)[0];
-        var newTimeStamp = forStamp.concat(timeStamp);
-        $(labels[index]).attr("for", $(labels[index]).attr("for").replace(/(\d+)/, newTimeStamp));
+        $(labels[index]).attr("for", $(labels[index]).attr("for").replace(/(\d+)/, timeStamp));
       }
       index ++
     });
@@ -602,14 +570,10 @@ $(document).ready(function(){
     var index = 0;
     textareas.each(function(){
       if ($(textareas[index]).attr('id')) {
-        var idStamp = $(textareas[index]).attr("id").match(/\d+/)[0];
-        var newTimeStamp = idStamp.concat(timeStamp);
-        $(textareas[index]).attr("id", $(textareas[index]).attr("id").replace(/(\d+)/, newTimeStamp));
+        $(textareas[index]).attr("id", $(textareas[index]).attr("id").replace(/(\d+)/, timeStamp));
       }
       if ($(textareas[index]).attr('name')) {
-        var nameStamp = $(textareas[index]).attr("name").match(/\d+/)[0];
-        var newTimeStamp = nameStamp.concat(timeStamp);
-        $(textareas[index]).attr("name", $(textareas[index]).attr("name").replace(/(\d+)/, newTimeStamp));
+        $(textareas[index]).attr("name", $(textareas[index]).attr("name").replace(/(\d+)/, timeStamp));
       }
       $(textareas[index]).val("");
       index ++;
@@ -631,6 +595,10 @@ $(document).ready(function(){
 
     // begin updating all the inputs found in the cloned repeater
     for (var i = 0; i < clonedRepeater.length; i++) {
+      // creating unique string by concatenating i + timestamp since timestamp wasn't unique
+      // previously we kept concatenating previous with new which ended up creating a very large key breaking the post in some cased -kdh
+      timeStamp = i.toString().concat(timeStamp);
+      // console.log(timeStamp);
       $($(clonedRepeater[i]).find('.latlong')).attr('id', "map".concat(timeStamp));
       updateClonedInputs(clonedRepeater[i], timeStamp);
       updateClonedLabels(clonedRepeater[i], timeStamp);

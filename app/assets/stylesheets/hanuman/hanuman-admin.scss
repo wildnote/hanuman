@@ -66,3 +66,15 @@ li > .ember-view > .nested-edit-row-header {
   z-index: 1;
   font-size: 14px;
 }
+
+.answer-choice-form-container {
+  display: flex;
+
+  .form-field:first-child {
+    flex-grow: 1;
+  }
+
+  .form-field:last-child  {
+    flex-grow: 2;
+  }
+}

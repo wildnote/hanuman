@@ -2,19 +2,19 @@
   <div class="panel panel-info">
     <div class="panel-title">
       Admin /
-      <a href="/projects/{{projectId}}/surveys">Survey Forms / </a>
-      <a href="/hanuman/admin/projects/{{projectId}}/survey_templates/{{surveyTemplate.id}}">Edit Survey Form Layout - {{surveyTemplate.namePlusVersion}}</a>
+      <a href="/projects/{{projectId}}/surveys">Forms / </a>
+      <a href="/hanuman/admin/projects/{{projectId}}/survey_templates/{{surveyTemplate.id}}">Edit Form Layout - {{surveyTemplate.namePlusVersion}}</a>
     </div>
     <div class="tab-base tab-stacked-top">
       <ul class="nav nav-tabs">
         <li class="active">
-          <a data-toggle="tab" href="/hanuman/admin/survey_templates/{{surveyTemplate.id}}/edit">Survey Form Layout</a>
+          <a data-toggle="tab" href="/hanuman/admin/survey_templates/{{surveyTemplate.id}}/edit">Form Layout</a>
         </li>
         <li>
           {{#if hasProjectId}}
-            <a href="/hanuman/projects/{{projectId}}/survey_templates/{{surveyTemplate.id}}">Survey Form Details</a>
+            <a href="/hanuman/projects/{{projectId}}/survey_templates/{{surveyTemplate.id}}/edit">Form Details</a>
           {{else}}
-            <a href="/hanuman/survey_templates/{{surveyTemplate.id}}">Survey Form Details</a>
+            <a href="/hanuman/survey_templates/{{surveyTemplate.id}}/edit">Form Details</a>
           {{/if}}
         </li>
       </ul>

@@ -1,7 +1,5 @@
 - content_for :title do
-  New Survey
--# = content_for :navbar_sub_data do
--#   active
+  New Form
 
 - if params[:project_id].present?
 
@@ -23,19 +21,31 @@
     %h3.panel-title
       - if params[:project_id].present?
         Admin /
-        = link_to hanuman_project_survey_templates_path(params[:project_id]) do
-          Survey Forms
-        \/
-        = link_to library_hanuman_project_survey_templates_path(params[:project_id]) do
-          Survey Form Library
+        = link_to "Forms", forms_project_path(params[:project_id])
         \/
         = link_to new_hanuman_project_survey_template_path(params[:project_id]) do
-          New Survey
+          New Form
       - else
         = link_to hanuman_survey_templates_library_path do
-          Survey Form Library
+          Form Library
         \/
         = link_to new_hanuman_survey_template_path() do
-          New Survey
+          New Form
+  - if params[:project_id].present?
+    .tab-base.tab-stacked-top{style: "margin-bottom:0px;"}
+      %ul.nav.nav-tabs.projects-tabs
+        %li
+          = link_to main_app.forms_project_path(params[:project_id]) do
+            Project Library
+        %li
+          = link_to main_app.company_forms_project_path(params[:project_id]) do
+            Company Library
+        %li
+          = link_to main_app.library_forms_project_path(params[:project_id]) do
+            Wildnote Library
+        %li.active
+          %a
+            %span.glyphicons.glyphicons-plus{style: "color: #5ba625; padding-right: 5px;"}
+            New Form
 
   = render "form"

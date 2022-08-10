@@ -15,14 +15,6 @@ export default Component.extend({
     return answerChoices.filter((answerChoice) => choiceIds.includes(answerChoice.id));
   }),
 
-  rule: computed('question.visibilityRule', 'lookupRule', function() {
-    let lookupRule = this.get('lookupRule');
-    if (lookupRule) {
-      return lookupRule;
-    }
-    return this.get('question.visibilityRule');
-  }),
-
   saveConditionTask: task(function*(condition, rule) {
     if (this.get('question.isNew') || rule.get('isNew')) {
       if (rule.get('conditionsPendingSave').indexOf(condition) === -1) {
@@ -54,15 +46,17 @@ export default Component.extend({
   }),
   actions: {
     setRuleMatchType(matchType) {
-      this.set('rule.matchType', matchType);
+      this.rule.set('matchType', matchType);
     },
     setAnswerChoiceRuleValue(answerChoices) {
       let value = answerChoices.map((answerChoice) => answerChoice.id).join(',');
-      this.set('rule.value', value);
+      this.rule.set('value', value);
     },
     deleteRule() {
-      let rule = this.get('lookupRule');
-      rule.destroyRecord();
+      this.rule.destroyRecord();
+    },
+    editorReady(editor) {
+      editor.getSession().setUseWorker(false);
     }
   }
 });

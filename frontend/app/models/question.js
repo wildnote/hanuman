@@ -43,6 +43,11 @@ export default Model.extend(Validator, {
   dbColumnName: attr('string'),
   apiColumnName: attr('string'),
   cssStyle: attr('string'),
+  reportChildrenWidth: attr('number'),
+  flaggedAnswers: attr('string'),
+  convertToUtm: attr('boolean'),
+  reportLabel: attr('string'),
+  excludeFromReport: attr('boolean'),
 
   // Associations
   dataSource: belongsTo('data-source'),
@@ -77,6 +82,10 @@ export default Model.extend(Validator, {
     return this.get('rules').find((rule) => rule.type === 'Hanuman::VisibilityRule');
   }),
 
+  calculationRule: computed('rules.@each.type', function() {
+    return this.get('rules').find((rule) => rule.type === 'Hanuman::CalculationRule');
+  }),
+
   hasChild: computed('childIds.[]', function() {
     return isPresent(this.get('childIds'));
   }),
@@ -89,8 +98,12 @@ export default Model.extend(Validator, {
   }),
 
   parent: computed('parentId', function() {
-    return this.store.peekAll('question').filterBy('id', this.parentId);
+    return this.store.peekAll('question').filterBy('id', this.parentId).get(0);
   }),
+
+  // inRepeater: computed('parentId', function () {
+  //
+  // }),
 
   numChildren: computed('childQuestion', function() {
     if (this.get('childQuestion')) {
