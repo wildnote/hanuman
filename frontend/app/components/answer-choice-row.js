@@ -76,7 +76,8 @@ export default DraggableObject.extend({
     },
 
     import() {
-      window.location.pathname = "/import/answer_choices/" + this.get('question').id;
+      let project_id = document.URL.split("/")[6];
+      window.location.pathname = "project/" + project_id + "/import/answer_choices/" + this.get('question').id;
     },
 
     inputKeyDown(event) {
