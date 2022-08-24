@@ -75,6 +75,11 @@ export default DraggableObject.extend({
       }
     },
 
+    import() {
+      let project_id = document.URL.split("/")[6];
+      window.location.pathname = "project/" + project_id + "/import/answer_choices/" + this.get('question').id;
+    },
+
     inputKeyDown(event) {
       if (event.keyCode === 13) {
         this.get('saveTask').perform();
