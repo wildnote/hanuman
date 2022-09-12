@@ -3,7 +3,7 @@
   .col-sm-7
     - if ff.object.question.answer_choices.blank?
       .helperbelow
-        There are no available answer options. You can add answer options to a question in the survey admin (Design a Survey) page.
+        There are no available answer choices. You can add answer choices to a question in the Form Layout page. Go to Project Setup, Forms Library, select your form, Form Layout tab and edit the Question.
         = ff.hidden_field :answer
     - else
       = select_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
