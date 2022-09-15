@@ -189,6 +189,17 @@ export default Component.extend({
     }
   }),
 
+  importAnswerChoices: task(function* () {
+    let question = this.get('question');
+    // check for question text before saving question
+    if (!question.validate()) {
+      return;
+    }
+    yield this.saveTask.perform(true);
+    let project_id = document.URL.split("/")[6];
+    window.location.pathname = "project/" + project_id + "/import/answer_choices/" + question.id;
+  }),
+
   saveAnswerChoiceTask: task(function*(answerChoice) {
     let question = this.get('question');
     if (question.get('isNew')) {
