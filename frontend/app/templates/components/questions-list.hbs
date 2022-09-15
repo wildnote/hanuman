@@ -28,7 +28,7 @@
       {{#if true }}
         <div class="modal-warning top-level">
           <div class="text">
-            
+
           </div>
           <button class="btn btn-danger" onclick={{action "toggleWarning"}}>
             OK
@@ -36,7 +36,7 @@
         </div>
       {{/if}}
 
-      
+
 
       {{#if (gt selectedQuestions.length 0)}}
         <div data-test-selected-questions class="header-selected">
@@ -103,7 +103,7 @@
               {{else }}
                 <span class="glyphicons gly-spin glyphicons-refresh"></span>
               {{/if}}
-              Check Survey Form
+              Check Form
             </button>
             <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform checkSurveys}}>
               {{#if (not checkingSurveys) }}
