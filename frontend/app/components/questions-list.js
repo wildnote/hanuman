@@ -136,7 +136,7 @@ export default Component.extend({
 
   checkTemplate: task(function* () {
     try {
-      
+
       let surveyTemplate = this.surveyTemplate;
       surveyTemplate.set('checkingTemplate', true);
       let errors = yield surveyTemplate.checkTemplate();
@@ -191,7 +191,10 @@ export default Component.extend({
       let topLevel = this.get('surveyTemplate.questions').filter((question) => {
         return question.hasChild && isBlank(question.parentId);
       });
-      topLevel.forEach((question) => {
+      let allLevel = this.get('surveyTemplate.questions').filter((question) => {
+        return question.hasChild;
+      });
+      allLevel.forEach((question) => {
         this.get('collapsible').toggleCollapsed(question, !this.allCollapsed);
       });
     },
