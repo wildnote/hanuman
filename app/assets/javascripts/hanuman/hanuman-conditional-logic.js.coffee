@@ -518,7 +518,7 @@ class @ConditionalLogic
     else if (elementType == 'number' || elementType == 'counter') && typeof result == 'number'
       $target.val(result)
 
-    else if (elementType == 'text' || elementType ==  'textarea' || elementType == 'time') && typeof result == 'string'
+    else if (elementType == 'text' || elementType ==  'textarea' || elementType == 'time') #&& typeof result == 'string'
       $target.val(result)
 
     else if elementType == 'date' && typeof result == 'string'

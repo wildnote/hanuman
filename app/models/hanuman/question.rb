@@ -357,13 +357,13 @@ module Hanuman
 
     def set_column_names!
       # need to upda©te via update_column instead of a question save so we don't invoke process_question_changes twice
-      self.update_column(:db_column_name, create_db_column_name) if self.db_column_name.blank?
-      self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
+      self.update_attribute(:db_column_name, create_db_column_name) if self.db_column_name.blank?
+      self.update_attribute(:api_column_name, create_api_column_name) if self.api_column_name.blank?
     end
 
     def set_api_column_name!
       # need to update via update_column instead of a question save so we don't invoke process_question_changes twice
-      self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
+      self.update_attribute(:api_column_name, create_api_column_name) if self.api_column_name.blank?
     end
 
     def update_css_style(style_string)
