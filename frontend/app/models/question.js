@@ -174,10 +174,13 @@ export default Model.extend(Validator, {
     answerChoices: {
       custom: {
         validation(_key, _value, model) {
-          let hasAnswerChoices = model.get('answerType.hasAnswerChoices');
-          return hasAnswerChoices && model.get('answerChoicesCount') === 0 ? false : true;
+          // let hasAnswerChoices = model.get('answerType.hasAnswerChoices');
+          // return hasAnswerChoices && model.get('answerChoicesCount') === 0 ? false : true;
+
+          // remove answer choice validation and only check for question text
+          return model.get('questionText');
         },
-        message: 'Please add at least one answers choice.'
+        message: 'Please add question text.'
       }
     },
     dataSource: {

@@ -82,5 +82,8 @@
   "resolutions": {
     "broccoli-uglify-sourcemap": "2.2.0",
     "terser": "3.9.1"
+  },
+  "dependencies": {
+    "node": "^10.20.1"
   }
 }

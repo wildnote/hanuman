@@ -22,12 +22,12 @@ module Hanuman
     validates :survey_extension, presence: true
 
     before_save :set_observations_unsorted, unless: :skip_sort?
-    
+
     after_commit :wetland_calcs_and_sorting_operations, on: [:create, :update], unless: :has_missing_questions
 
     after_commit :set_entries
 
-    default_scope { where('(has_missing_questions = false OR has_missing_questions IS NULL) AND (hanuman_surveys.marked_for_deletion = false OR hanuman_surveys.marked_for_deletion IS NULL)') }
+    default_scope { where('(hanuman_surveys.marked_for_deletion = false OR hanuman_surveys.marked_for_deletion IS NULL)') }
 
     amoeba {
       enable
@@ -301,15 +301,15 @@ module Hanuman
 
       update_column(:lock_callbacks, true)
 
-      if self.wetland_v2_web_v3? 
+      if self.wetland_v2_web_v3?
         self.set_wetland_dominant_species
       end
-  
+
       if self.web_wetland_v3_v4_v5?
         self.set_dominance_test
         self.set_rapid_test_hydrophytic
       end
-  
+
       if self.mobile_v3_or_higher?
         self.sort_veg_repeaters
       end
@@ -343,7 +343,7 @@ module Hanuman
     def restore_deleted_cloudinary_photo_assets
       sql_select = "SELECT op.photo FROM hanuman_observation_photos AS op LEFT JOIN hanuman_observations AS o ON op.observation_id = o.id WHERE o.survey_id = #{self.id}"
       photo_strings = ActiveRecord::Base.connection.exec_query(sql_select)
-  
+
       photo_strings.each do |string|
         public_id = string["photo"].split('/').last.split('.').first
         Cloudinary::Api.restore([public_id])
@@ -353,7 +353,7 @@ module Hanuman
     def restore_deleted_cloudinary_video_assets
       sql_select = "SELECT ov.signature FROM hanuman_observation_videos AS ov LEFT JOIN hanuman_observations AS o ON ov.observation_id = o.id WHERE o.survey_id = #{self.id}"
       signature_strings = ActiveRecord::Base.connection.exec_query(sql_select)
-  
+
       signature_strings.each do |string|
         public_id = string["video"].split('/').last.split('.').first
         Cloudinary::Api.restore([public_id])
@@ -363,12 +363,12 @@ module Hanuman
     def restore_deleted_cloudinary_signature_assets
       sql_select = "SELECT os.signature FROM hanuman_observation_signatures AS os LEFT JOIN hanuman_observations AS o ON os.observation_id = o.id WHERE o.survey_id = #{self.id}"
       signature_strings = ActiveRecord::Base.connection.exec_query(sql_select)
-  
+
       signature_strings.each do |string|
         public_id = string["signature"].split('/').last.split('.').first
         Cloudinary::Api.restore([public_id])
       end
     end
-    
+
   end
 end

@@ -95,7 +95,8 @@ module Hanuman
       question = self
       parent = question.parent
       survey_template = question.survey_template
-      surveys = survey_template.surveys
+      # need this to run on has_missing_question surveys so need it to be unscoped
+      surveys = Hanuman::Survey.unscoped.where(survey_template_id: question.survey_template_id)
       surveys.each do |s|
         if parent.blank?
           Observation.create_with(
@@ -121,6 +122,7 @@ module Hanuman
 
         s.update_column(:observations_sorted, false)
         s.update_column(:observation_visibility_set, false)
+        s.check_missing_questions
       end
     end
 
