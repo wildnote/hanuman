@@ -90,6 +90,7 @@ $(document).ready(function(){
     $(".datepicker").unbind().datepicker();
     $(".timepicki").unbind().timepicki({
       increase_direction: 'up',
+      reset: true,
       on_change: timepickValidate = function(element) {
         return $(element).parsley().validate();
       }
