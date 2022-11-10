@@ -29,6 +29,7 @@ Hanuman::Engine.routes.draw do
           get  :available_tags
           patch :resort_questions
           get :check_template
+          get :check_surveys
         end
       end
     end

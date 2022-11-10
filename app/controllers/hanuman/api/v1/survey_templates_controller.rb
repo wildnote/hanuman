@@ -37,6 +37,12 @@ module Hanuman
       render json: errors.to_json
     end
 
+    def check_surveys
+      survey_template = SurveyTemplate.find(params[:id])
+      errors = survey_template.surveys_integrity_check
+      render json: errors.to_json
+    end
+
     def destroy
       survey_template = SurveyTemplate.find(params[:id])
       if survey_template.fully_editable

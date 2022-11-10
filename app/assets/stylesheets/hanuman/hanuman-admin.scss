@@ -50,6 +50,23 @@ li > .ember-view > .nested-edit-row-header {
   }
 }
 
+.modal-warning {
+  display: none;
+  position: fixed;
+  top: 50%;
+  // right: 18px;
+  color: #000;
+  padding: 10px 10px;
+  text-align: center;
+  width: 93%;
+  background-color: #FFF;
+  border: 1px solid #CCC;
+  border-radius: 5px;
+  box-shadow: 0 5px 10px #777;
+  z-index: 1;
+  font-size: 14px;
+}
+
 .answer-choice-form-container {
   display: flex;
 

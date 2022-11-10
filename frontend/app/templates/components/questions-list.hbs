@@ -19,11 +19,24 @@
       {{else}}
         {{#unless surveyTemplate.fullyEditable}}
           <div class="panel-success helper-text">
-            <p><b>This form has existing data.</b></p>
-            <p>You cannot add or delete questions to survey forms with previously submitted data. To add or delete a question duplicate this survey form from the Form Details tab and make your changes to the new version of the form.</p>
+            <p><b>This survey form has existing data.</b></p>
+            <p>Changes made to this form will cause changes on existing surveys submitted. If you do not want to alter existing surveys duplicate this survey form from the Survey Form Details tab and make your changes to the new version of the form.</p>
           </div>
         {{/unless}}
       {{/if}}
+
+      {{#if true }}
+        <div class="modal-warning top-level">
+          <div class="text">
+
+          </div>
+          <button class="btn btn-danger" onclick={{action "toggleWarning"}}>
+            OK
+          </button>
+        </div>
+      {{/if}}
+
+
 
       {{#if (gt selectedQuestions.length 0)}}
         <div data-test-selected-questions class="header-selected">
@@ -85,7 +98,20 @@
           </button>
           {{#if isSuperUser}}
             <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform checkTemplate}}>
-              <span class="glyphicons glyphicons-check"></span>Check Form
+              {{#if (not checkingTemplate) }}
+                <span class="glyphicons glyphicons-check"></span>
+              {{else }}
+                <span class="glyphicons gly-spin glyphicons-refresh"></span>
+              {{/if}}
+              Check Form
+            </button>
+            <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform checkSurveys}}>
+              {{#if (not checkingSurveys) }}
+              <span class="glyphicons glyphicons-check"></span>
+              {{else }}
+              <span class="glyphicons gly-spin glyphicons-refresh"></span>
+              {{/if}}
+              Check Surveys
             </button>
           {{/if}}
         </div>
@@ -160,7 +186,7 @@
         {{/sortable-group}}
 
         {{!-- Add new question --}}
-        <ul class="sortable ui-sortable ember-view add-new-question {{if (and (or surveyTemplate.lock (not surveyTemplate.fullyEditable)) (not isSuperUser)) 'icon-disabled'}}">
+        <ul class="sortable ui-sortable ember-view add-new-question {{if (and (or surveyTemplate.lock) (not isSuperUser)) 'icon-disabled'}}">
           {{#link-to "survey_templates.record.questions.new"}}
             <li class="li-question row question-border question-border-add-row item">
               <span class="glyphicons glyphicons-plus-sign"></span>

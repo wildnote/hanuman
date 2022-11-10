@@ -17,11 +17,14 @@ export default Component.extend({
   isLoadingQuestions: true,
   isPerformingBulk: false,
   allCollapsed: false,
+  checkingTemplate: false,
+  checkingSurveys: false,
 
   questionsSorting: ['sortOrder'],
   fullQuestions: sort('surveyTemplate.questionsNotDeleted', 'questionsSorting'),
   sortedQuestions: sort('surveyTemplate.filteredQuestions', 'questionsSorting'),
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
+
 
   init() {
     this._super(...arguments);
@@ -111,6 +114,44 @@ export default Component.extend({
 
   setAncestryTask: task(function*(question, opts) {
     let ancestryQuestion = opts.target.acenstry;
+
+    let fromQuestion;
+    if (question.get('parentId')) {
+      let parentId = question.get('parentId');
+      fromQuestion = this.get('sortedQuestions').findBy('id', parentId);
+    }
+
+    let fromParent;
+    if (fromQuestion && fromQuestion.get('parentId')) {
+      fromParent = this.get('sortedQuestions').findBy('id', fromQuestion.get('parentId'));
+    }
+
+    let section;
+    if (fromQuestion) {
+      if (fromQuestion.get('answerType').get('name') === 'section' && fromParent && !fromParent.get('answerType').get('name') === 'repeater') {
+        section = true;
+      }
+    } else {
+      section = false;
+    }
+
+    let withinNested;
+    if (fromQuestion && ancestryQuestion.get('ancestry')) {
+      withinNested = ancestryQuestion.get('ancestry').includes(fromQuestion.get('id'));
+    } else {
+      withinNested = false;
+    }
+
+    // dragging from one repeater into another
+    if (!this.get('surveyTemplate').fullyEditable && question.get("parentId") > 0 && !(section || withinNested)) {
+      // alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
+      this.get('surveyTemplate').toggleWarning(
+        `<span>Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
+        <span>Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!</span><br>`
+      );
+      return;
+    }
+
     if (ancestryQuestion.collapsed) {
       this.get('collapsible').toggleCollapsed(ancestryQuestion);
       yield waitForProperty(ancestryQuestion, 'pendingRecursive', (v) => v === 0);
@@ -126,15 +167,17 @@ export default Component.extend({
     } else {
       sortOrder = ancestryQuestion.get('sortOrder') + 0.1;
     }
-    question.setProperties({ loading: true, parentId, sortOrder });
+    question.set('loading', true);
+    question.setProperties({ parentId, sortOrder });
+    question.set('loading', false);
     yield question.save();
     yield question.reload();
     yield ancestryQuestion.reload();
-    yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
-    question.set('loading', false);
+    yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true, ancestryQuestion);
   }),
 
   checkTemplate: task(function* () {
+    this.set('checkingTemplate', true);
     try {
 
       let surveyTemplate = this.surveyTemplate;
@@ -145,10 +188,60 @@ export default Component.extend({
       }
       console.log("errors");
       console.log(errors);
-      alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition );
+      // alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition );
+
+      if (errors.ancestry.length == 0 && errors.rule.length == 0 && errors.condition.length == 0) {
+        this.get('surveyTemplate').toggleWarning(
+          `<span>No survey form errors.<span><br>`
+        );
+      } else {
+        this.get('surveyTemplate').toggleWarning(
+          `<span>Errors by question:<span>
+          <span>${errors.ancestry}</span><br>
+          <span>${errors.rule}</span><br>
+          <span>${errors.condition}</span><br>`
+        );
+      }
     } catch (e) {
+      this.get('surveyTemplate').toggleWarning(
+        `<span>Something went wrong while checking your survey form.<span>`
+      );
       console.log('Error checking template:', e); // eslint-disable-line no-console
     }
+    this.set('checkingTemplate', false);
+  }),
+
+  checkSurveys: task(function* () {
+    this.set('checkingSurveys', true);
+    try {
+
+      let surveyTemplate = this.surveyTemplate;
+      surveyTemplate.set('checkingSurveys', true);
+      let errors = yield surveyTemplate.checkSurveys();
+      if (errors) {
+        surveyTemplate.set('checkingSurveys', false);
+      }
+      console.log("errors");
+      console.log(errors);
+      // alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition );
+
+      if (errors.surveys.length == 0) {
+        this.get('surveyTemplate').toggleWarning(
+          `<span>No survey errors.<span><br>`
+        );
+      } else {
+        this.get('surveyTemplate').toggleWarning(
+          `<span>Check these surveys for issues:<span>
+          <span>${errors.surveys}</span><br>`
+        );
+      }
+    } catch (e) {
+      this.get('surveyTemplate').toggleWarning(
+        `<span>Something went wrong while checking your surveys.<span>`
+      );
+      console.log('Error checking surveys:', e); // eslint-disable-line no-console
+    }
+    this.set('checkingSurveys', false);
   }),
 
   _filterSectionsAndRepeaters(selectedQuestions) {
@@ -185,6 +278,11 @@ export default Component.extend({
   },
 
   actions: {
+    toggleWarning(html) {
+      this.get('surveyTemplate').toggleWarning(html);
+    },
+
+    
     toggleAllCollapsed() {
       this.toggleProperty('allCollapsed');
 
@@ -224,7 +322,7 @@ export default Component.extend({
       this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
     },
 
-    sortedDropped(viewableSortedQuestions, _draggedQuestion) {
+    sortedDropped(viewableSortedQuestions, draggedQuestion) {
       let allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
       let sortableQuestions = A();
       // Handle collapsed question. When there are questions collapsed we completely removed them from the DOM
@@ -243,7 +341,13 @@ export default Component.extend({
           sortableQuestions.addObjects(collapsedChild);
         }
       });
-      this.get('updateSortOrderTask').perform(sortableQuestions);
+
+      let ancestryQuestion;
+      if (draggedQuestion.get('parentId')) {
+        let parentId = draggedQuestion.get('parentId');
+        ancestryQuestion = sortableQuestions.findBy('id', parentId);
+      }
+      this.get('updateSortOrderTask').perform(sortableQuestions, false, ancestryQuestion);
     },
 
     dragStarted(question) {
@@ -267,6 +371,6 @@ export default Component.extend({
       $('.draggable-object-target')
         .parent()
         .removeClass('dragging-over');
-    }
+    },
   }
 });

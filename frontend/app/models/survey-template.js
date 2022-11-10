@@ -36,6 +36,8 @@ const SurveyTemplate = Model.extend(Validator, {
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),
   resortQuestions: memberAction({ path: 'resort_questions', type: 'patch' }),
   checkTemplate: memberAction({ path: 'check_template', type: 'get' }),
+  checkSurveys: memberAction({ path: 'check_surveys', type: 'get' }),
+
 
   // Validations
   validations: {
@@ -47,7 +49,15 @@ const SurveyTemplate = Model.extend(Validator, {
         in: STATUSES
       }
     }
+  },
+
+  toggleWarning(html) {
+    let $warning = $('.modal-warning');
+    $warning.find('.text').html(html)
+    $warning.toggle();
   }
+
+
 });
 
 SurveyTemplate.reopenClass({
