@@ -168,7 +168,7 @@ export default Model.extend(Validator, {
       'checkbox': ['checkbox', 'text', 'textarea'],
       'counter': ['counter', 'text', 'textarea', 'number'],
       'number': ['number', 'text', 'textarea', 'counter'],
-      'text': ['text', 'textarea'],
+      'text': ['text', 'textarea', 'counter', 'number', 'date', 'time'],
       'textarea': ['textarea', 'text'],
       'time': ['time', 'text', 'textarea'],
       'checkboxlist': ['checkboxlist', 'chosenmultiselect'],
