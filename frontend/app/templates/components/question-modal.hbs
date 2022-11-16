@@ -99,7 +99,7 @@
             {{#unless showQuestionTypePlaceholder}}
               <p class="help-block">{{question.answerType.description}}</p>
             {{/unless}}
-            
+
           </div>
         </div>
         {{#if question.isTaxonType}}
@@ -124,7 +124,7 @@
         <div class="form-group">
           <div class="col-sm-12">
             {{#form-field for='questionText' label='Question Text'}}
-              <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="The question label." class="bootstrap-popover">
+              <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Question Text" data-content="The question label." class="bootstrap-popover">
                 <span class="glyphicons glyphicons-info-sign"></span>
               </a>
               <textarea data-test="question.questionText"
@@ -142,7 +142,7 @@
         <div class="form-group">
           <div class="col-sm-12">
             {{#form-field for='questionHelperText' label='Question Helper Text'}}
-            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Required" data-content="By entering helper text here a i icon will be displayed near the question. Clicking on the i icon will pop up the helper text. Useful for large amounts of helper text including project measures." class="bootstrap-popover">
+            <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Question Helper Text" data-content="By entering helper text here a i icon will be displayed near the question. Clicking on the i icon will pop up the helper text. Useful for large amounts of helper text including project measures." class="bootstrap-popover">
               <span class="glyphicons glyphicons-info-sign"></span>
             </a>
               <textarea data-test="question.helperText"
@@ -175,9 +175,9 @@
 
         {{#liquid-if isPhoto}}
           <div class="form-group">
-            <div class="col-sm-3">
+            <div class="col-sm-6">
               {{#form-field for='maxPhotos' label='Max Photos'}}
-                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" data-container=".panel-info" title="Required" data-content="Set the maximum number of photos that can be captured for this photo question." class="bootstrap-popover">
+                <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Max Photos" data-content="Set the maximum number of photos that can be captured for this photo question." class="bootstrap-popover">
                   <span class="glyphicons glyphicons-info-sign"></span>
                 </a>
                 <input data-test-order type="number"
@@ -192,24 +192,9 @@
             </div>
           </div>
         {{/liquid-if}}
-        <div class="row">
-          {{#if isALatLongInsideARepeater}}
-            <div style="padding-top: 25px;" data-test="capture-lat-long" class="col-md-9">
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input type="checkbox"
-                        disabled={{question.surveyTemplate.lock}}
-                        name="captureLocationData"
-                        checked={{question.combineLatlongAsLine}}
-                        onchange={{action (mut question.combineLatlongAsLine) value="target.checked"}} /> Combine Lat/Long points inside the repeater as a Line
-                </div>
-              </div>
-            </div>
-          {{/if}}
-        </div>
 
         <div class="row">
-          <div class="col-md-3">
+          <div class="col-md-6">
             <div class="form-group">
               <div class="col-sm-12">
                 <input type="checkbox"
@@ -227,7 +212,7 @@
 
         {{#if (or isALatLong isPhoto) }}
           <div class="row">
-            <div class="col-md-3">
+            <div class="col-md-6">
               <div class="form-group">
                 <div class="col-sm-12">
                   <input type="checkbox"
@@ -243,7 +228,7 @@
           </div>
         {{/if}}
 
-        {{#if (and isSuperUser question.isLocationSelect) }}
+        {{#if question.isLocationSelect }}
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
@@ -252,23 +237,29 @@
                         disabled={{question.surveyTemplate.lock}}
                         name="enableSurveyHistory"
                         checked={{question.enableSurveyHistory}}
-                        onchange={{action (mut question.enableSurveyHistory) value="target.checked"}} /> Enable Survey History (Superuser Only)
+                        onchange={{action (mut question.enableSurveyHistory) value="target.checked"}} /> Enable survey history
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Enable survey history" data-content="Enable survey history to be viewed on mobile device from map view." class="bootstrap-popover">
+                    <span class="glyphicons glyphicons-info-sign"></span>
+                  </a>
                 </div>
               </div>
             </div>
           </div>
         {{/if}}
 
-        {{#if (or (and isSuperUser question.isTextField) question.isLocationSelect) }}
+        {{#if question.isLocationSelect }}
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <div class="col-sm-12">
                   <input type="checkbox"
                         disabled={{question.surveyTemplate.lock}}
-                        name="enableSurveyHistory"
+                        name="dynamicLocations"
                         checked={{question.newProjectLocation}}
-                        onchange={{action (mut question.newProjectLocation) value="target.checked"}} /> Create Project Location
+                        onchange={{action (mut question.newProjectLocation) value="target.checked"}} /> Dynamically create locations from mobile
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Dynamic locations" data-content="Allows field users to dynamically create locations from field." class="bootstrap-popover">
+                    <span class="glyphicons glyphicons-info-sign"></span>
+                  </a>
                 </div>
               </div>
             </div>
