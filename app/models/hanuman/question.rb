@@ -147,7 +147,7 @@ module Hanuman
         if parent.parent.present? && parent.parent.answer_type.name == 'repeater'
           parent = parent.parent
         end
-        
+
         top_level_o = Hanuman::Observation.find_by(
             survey_id: s.id,
             question_id: question.id,
@@ -155,7 +155,15 @@ module Hanuman
           )
         s.observations.where(question_id: parent.id).each_with_index do |o, i|
           if i == 0
-            top_level_o.update(parent_repeater_id: o.repeater_id) if top_level_o.present?
+            if top_level_o.present?
+              top_level_o.update(parent_repeater_id: o.repeater_id)
+            else
+              Hanuman::Observation.find_or_create_by(
+                survey_id: s.id,
+                question_id: question.id,
+                parent_repeater_id: o.repeater_id
+              )
+            end
           else
             Hanuman::Observation.find_or_create_by(
               survey_id: s.id,
