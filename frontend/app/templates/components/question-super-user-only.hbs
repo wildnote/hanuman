@@ -1,5 +1,5 @@
 <div class="form-group">
-  <div class="col-sm-6">
+  <!-- <div class="col-sm-6">
     <input type="checkbox"
           disabled={{question.surveyTemplate.lock}}
           name="isHidden"
@@ -8,24 +8,11 @@
           <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Hidden" data-content="A question will be automatically hidden if there is a visibility rule associated with it." class="bootstrap-popover">
             <span class="glyphicons glyphicons-info-sign"></span>
           </a>
-  </div>
+  </div> -->
   <div class="col-sm-6">
     <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform processQuestionChanges}}>
       <span class="glyphicons glyphicons-refresh"></span>Process Question Changes
     </button>
-  </div>
-</div>
-
-<div class="form-group">
-  <div class="col-sm-12">
-    {{#form-field for='parentId' label='Parent Relationship'}}
-      <select class="form-control" data-test="ancestry-select" onchange={{action ancestryChange value="target.value"}}>
-        <option></option>
-        {{#each ancestryQuestions as |opQuestion|}}
-          <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
-        {{/each}}
-      </select>
-    {{/form-field}}
   </div>
 </div>
 
@@ -55,6 +42,15 @@
 
 <div class="form-group">
   <div class="col-sm-12">
+    <input type="checkbox"
+          name="excludeFromReport"
+          checked={{question.excludeFromReport}}
+          onchange={{action (mut question.excludeFromReport) value="target.checked"}} /> Exclude From Report (Superuser Only)
+  </div>
+</div>
+
+<!-- <div class="form-group">
+  <div class="col-sm-12">
     {{#form-field for='externalDataSource' label='External Data Source'}}
       <input type="text"
             class="form-control"
@@ -63,20 +59,9 @@
             oninput={{action (mut question.externalDataSource) value="target.value"}} />
     {{/form-field}}
   </div>
-</div>
+</div> -->
 
-<div class="form-group">
-  <div class="col-sm-12">
-    {{#form-field for='sortOrder' label='Sort Order'}}
-      <input data-test-order type="text"
-            class="form-control"
-            value={{question.sortOrder}}
-            oninput={{action (mut question.sortOrder) value="target.value"}} />
-    {{/form-field}}
-  </div>
-</div>
-
-<div class="form-group">
+<!-- <div class="form-group">
   <div class="col-sm-12">
     {{#form-field for='sortOrder' label='Layout Section'}}
       <input data-test-order type="number"
@@ -118,7 +103,7 @@
             oninput={{action (mut question.layoutColumnPosition) value="target.value"}} />
     {{/form-field}}
   </div>
-</div>
+</div> -->
 
 <div class="form-group">
   <div class="col-sm-12">
@@ -131,16 +116,16 @@
   </div>
 </div>
 
-<div class="form-group">
+<!-- <div class="form-group">
   <div class="col-sm-12">
     {{#form-field for='cssStyle' label='CSS Style'}}
       <textarea style="height: 200px;" class="form-control" data-test="question.cssStyle"
         oninput={{action (mut question.cssStyle) value="target.value"}}>{{question.cssStyleDisplay}}</textarea>
     {{/form-field}}
   </div>
-</div>
+</div> -->
 
-{{#if hasAnAnswer}}
+<!-- {{#if hasAnAnswer}}
   <div class="form-group">
     <div class="col-sm-12">
       <input type="checkbox"
@@ -149,9 +134,9 @@
             onchange={{action (mut question.captureLocationData) value="target.checked"}} /> Capture Location Data (Superuser Only)
     </div>
   </div>
-{{/if}}
+{{/if}} -->
 
-{{#if hasAnAnswer}}
+<!-- {{#if hasAnAnswer}}
   <div class="form-group">
     <div class="col-sm-12">
       <input type="checkbox"
@@ -160,13 +145,4 @@
             onchange={{action (mut question.searchable) value="target.checked"}} /> Searchable (Superuser Only)
     </div>
   </div>
-{{/if}}
-
-<div class="form-group">
-  <div class="col-sm-12">
-    <input type="checkbox"
-          name="excludeFromReport"
-          checked={{question.excludeFromReport}}
-          onchange={{action (mut question.excludeFromReport) value="target.checked"}} /> Exclude From Report (Superuser Only)
-  </div>
-</div>
+{{/if}} -->
