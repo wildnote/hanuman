@@ -146,8 +146,8 @@ export default Component.extend({
     if (!this.get('surveyTemplate').fullyEditable && question.get("parentId") > 0 && !(section || withinNested)) {
       // alert("Questions cannot be moved out of repeaters once there is data submitted on a Survey Form. Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!");
       this.get('surveyTemplate').toggleWarning(
-        `<span>Questions cannot be moved out of repeaters once there is data submitted on a Survey Form.</span><br>
-        <span>Plese delete the question if you no longer want it in the repeater. Warning, this is destructive and may lead to loss of data!</span><br>`
+        `<span>Questions cannot be moved out of repeaters once there is data submitted on a Form.</span><br>
+        <span>Please delete the question if you no longer want it in the repeater. Warning, deleting the question is a destructive action and will delete all survey data associated with the question. To keep historical data while moving the question you can duplicate the form to make a new version.</span><br>`
       );
       return;
     }
@@ -282,7 +282,7 @@ export default Component.extend({
       this.get('surveyTemplate').toggleWarning(html);
     },
 
-    
+
     toggleAllCollapsed() {
       this.toggleProperty('allCollapsed');
 
