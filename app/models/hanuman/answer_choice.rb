@@ -32,7 +32,8 @@ module Hanuman
     end
 
     def clear_observation_dot_answers
-      Hanuman::Observation.unscoped.where(answer_choice_id: id).update_all(answer: nil)
+      Hanuman::Observation.unscoped.where(answer_choice_id: id).update_all(answer: nil, answer_choice_id: nil)
+      Hanuman::ObservationAnswer.where(answer_choice_id: id).update_all(answer_choice_id: nil)
     end
 
     def self.all_sorted
