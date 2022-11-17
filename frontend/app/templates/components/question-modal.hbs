@@ -254,7 +254,7 @@
                 <div class="col-sm-12">
                   <input type="checkbox"
                         disabled={{question.surveyTemplate.lock}}
-                        name="dynamicLocations"
+                        name="enableDynamicLocations"
                         checked={{question.newProjectLocation}}
                         onchange={{action (mut question.newProjectLocation) value="target.checked"}} /> Dynamically create locations from mobile
                   <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Dynamic locations" data-content="Allows field users to dynamically create locations from field." class="bootstrap-popover">
@@ -435,6 +435,31 @@
           </div>
         {{/if}}
 
+        <div class="form-group">
+          <div class="col-sm-12">
+            {{#form-field for='sortOrder' label='Sort Order'}}
+              <input data-test-order type="text"
+                    class="form-control"
+                    value={{question.sortOrder}}
+                    onchange={{action (mut question.sortOrder) value="target.value"}}
+                    oninput={{action (mut question.sortOrder) value="target.value"}} />
+            {{/form-field}}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="col-sm-12">
+            {{#form-field for='parentId' label='Parent Relationship'}}
+              <select class="form-control" data-test="ancestry-select" onchange={{action "ancestryChange" value="target.value"}}>
+                <option></option>
+                {{#each ancestryQuestions as |opQuestion|}}
+                  <option value={{opQuestion.id}} selected={{eq opQuestion.id question.parentId}}>{{opQuestion.questionText}} - {{opQuestion.id}}</option>
+                {{/each}}
+              </select>
+            {{/form-field}}
+          </div>
+        </div>
+
         {{#if isSuperUser}}
           <hr style="margin-top:15px;" />
           <section class="super-user">
@@ -486,7 +511,6 @@
                 question=question
                 ancestryQuestions=ancestryQuestions
                 hasAnAnswer=hasAnAnswer
-                ancestryChange=(action "ancestryChange")
                 processQuestionChanges=processQuestionChanges
               }}
             {{/liquid-if}}
