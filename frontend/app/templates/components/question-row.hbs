@@ -1,6 +1,6 @@
 {{!-- called from surveyTemplate and dislpays each answer type as readonly --}}
 <div data-test-question-row class="row">
-  <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
+  <div class="draggable-target-message">DRAG HERE TO POSITION QUESTION INSIDE THIS SECTION OR REPEATER</div>
   <div class="col-sm-4">
     {{#if (or question.loading (gt question.pendingRecursive 0))}}
       <span class="glyphicons gly-spin glyphicons-refresh"></span>
@@ -14,14 +14,14 @@
       {{/if}}
       {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
         <span class="glyphicons glyphicons-sorting {{if (and question.surveyTemplate.lock (not isSuperUser)) 'icon-disabled'}} {{if question.loading 'hide'}}">
-          {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
+          {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT THIS QUESTION (Also can be dragged to move a question outside of a section or repeater){{/tooltip-on-element}}
         </span>
       {{else}}
         <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
       {{/if}}
       {{#if (and (not ancestrable) (not isSelected))}}
         <span class="glyphicons glyphicons-move-square {{if (or question.surveyTemplate.lock) 'icon-disabled'}} {{if question.loading 'hide'}}">
-          {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
+          {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />INSIDE A SECTION OR REPEATER{{/tooltip-on-element}}
         </span>
       {{/if}}
     {{/if}}
