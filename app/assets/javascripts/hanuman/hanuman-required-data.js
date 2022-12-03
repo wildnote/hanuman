@@ -5,6 +5,23 @@ $(document).ready(function(){
   // this event listener waits one second after user clicks on submit button so that parsley has enough time to add error elements if needed
   if ($('form.parsley-survey').length > 0 && $('[data-required=true]').length > 0) {
     $('input[type="submit"]').on('click', function(){
+
+      // pulled from survey-status.js to determine current survey status to set required fields
+      if ($('select#survey_survey_status_id').length > 0) {
+        if ($('select#survey_survey_status_id').find(":selected").length > 0) {
+          $selectedOption = $('select#survey_survey_status_id').find(":selected");
+          var disableRequiredFields = $selectedOption.data('disable-required-fields');
+
+          if (disableRequiredFields === 'true' || disableRequiredFields === true) {
+            $('[data-parsley-required="true"]').attr('data-parsley-required', 'false');
+            $('.form-container-entry-item[data-required="true"]').attr('data-required', 'disabled-by-status');
+          } else {
+            $('[data-parsley-required="false"]').attr('data-parsley-required', 'true');
+            $('.form-container-entry-item[data-required="disabled-by-status"]').attr('data-required', 'true');
+          }
+        }
+      }
+
       //  this code runs through all the file inputs on survey edit and removes the parsley attrs if the inputs  already have an upload.
       //  if we dont have this code, then the survey will not save because parsley will think the input file is empty.
       if ($(".edit-mode-file").length > 0) {
