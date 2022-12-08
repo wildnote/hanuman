@@ -144,18 +144,18 @@ module Hanuman
       question.save!
     end
 
-
-    def set_question_db_column_names
-      self.questions.each do |q|
-        q.set_column_names!
-      end
-    end
-
-    def set_question_api_column_names
-      self.questions.each do |q|
-        q.set_api_column_name!
-      end
-    end
+    # changing approach due to granular sync issues-kdh
+    # def set_question_db_column_names
+    #   self.questions.each do |q|
+    #     q.set_column_names!
+    #   end
+    # end
+    #
+    # def set_question_api_column_names
+    #   self.questions.each do |q|
+    #     q.set_api_column_name!
+    #   end
+    # end
 
     def check_structure_helper(checked, errors, parent, i)
       children = []
@@ -256,7 +256,7 @@ module Hanuman
         q.update(css_style: style)
       end
     end
-    
+
     def reset_db_column_names
       questions.each do |q|
         q.update_column(:db_column_name, q.create_db_column_name)
