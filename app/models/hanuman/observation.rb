@@ -235,7 +235,7 @@ module Hanuman
           end
         else # if the parameter is top level data, we can just put it straight into the parameters hash
           param_observation = survey.observations.find_by(question_id: param_question.id)
-          parameters[param_question.api_column_name] = param_observation.native_answer
+          parameters[param_question.api_column_name] = param_observation.native_answer if param_observation
         end
       end
 
@@ -313,7 +313,7 @@ module Hanuman
         self.answer = result
       elsif question.answer_type.element_type == 'date' && result.is_a?(Date)
         self.answer = result.to_s
-      elsif (question.answer_type.element_type == "checkbox" || question.answer_type.element_type == "multiselect") && result.is_a?(Array)
+      elsif (question.answer_type.element_type == "checkbox" || question.answer_type.element_type == "multiselect" || question.answer_type.element_type == "checkboxes") && result.is_a?(Array)
         self.observation_answers.destroy_all
         # transform arrays of strings into observation answers
         if question.answer_type.name == "taxonchosenmultiselect"
