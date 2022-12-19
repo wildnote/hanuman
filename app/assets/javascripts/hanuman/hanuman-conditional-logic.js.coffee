@@ -619,7 +619,7 @@ class @ConditionalLogic
     return stringValue
 
 $ ->
-  if $('input#survey_survey_template_id').length
+  if $('input#run_cl').length
     #call findRules on document ready
     cl = new ConditionalLogic
     cl.findRules(false)
