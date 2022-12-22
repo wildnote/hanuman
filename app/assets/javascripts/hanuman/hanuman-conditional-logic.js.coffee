@@ -39,7 +39,8 @@ class @ConditionalLogic
             problemWithCL = true
 
           # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
-          hideQuestions = self.setHideQuestions(this, $conditionElement)
+          # kdh commenting out for performance reasons because this doesn't seem to be used here
+          # hideQuestions = self.setHideQuestions(this, $conditionElement)
 
 
           ancestorId = rule.question_id
