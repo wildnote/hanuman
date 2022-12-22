@@ -4,7 +4,7 @@ class @ConditionalLogic
   self.boundElements = []
 
   #scan page and find all objects with conditional logic rules
-  findRules: (runCalcs) ->
+  findRules: (runCalcs, runConditionals) ->
     self.allowCascade = false
     problemWithCL = false
     $("[data-rule!=''][data-rule]").each ->
@@ -68,7 +68,8 @@ class @ConditionalLogic
               inRepeater = true
 
           if rule.type != "Hanuman::CalculationRule"
-            self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true)
+            if runConditionals
+              self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true)
 
         if runCalcs && rule.type == "Hanuman::CalculationRule"
           self.updateCalculation(rule, $ruleContainer)
@@ -622,4 +623,7 @@ $ ->
   if $('input#run_cl').length
     #call findRules on document ready
     cl = new ConditionalLogic
-    cl.findRules(false)
+    cl.findRules(false, true)
+  else
+    cl = new ConditionalLogic
+    cl.findRules(false, false)
