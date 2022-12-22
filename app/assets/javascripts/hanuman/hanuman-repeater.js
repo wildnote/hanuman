@@ -3,8 +3,8 @@ $(document).ready(function(){
   duplicatedRepeatersOnEdit = []
   var selectizeElements = {};
 
-  updateRepeaterControls()
-  updateRepeaterIds()
+  // updateRepeaterControls()
+  // updateRepeaterIds()
 
   // clicking on button to add repeater
   $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
