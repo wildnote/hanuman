@@ -3,7 +3,7 @@ $(document).ready(function(){
   duplicatedRepeatersOnEdit = []
   var selectizeElements = {};
 
-  // updateRepeaterControls()
+  updateRepeaterControls()
   // updateRepeaterIds()
 
   // clicking on button to add repeater
