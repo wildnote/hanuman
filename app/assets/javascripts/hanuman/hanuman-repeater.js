@@ -139,7 +139,7 @@ $(document).ready(function(){
 
     // bind ConditionalLogic and re-run the logic to hide and show
     cl = new ConditionalLogic;
-    cl.findRules(true);
+    cl.findRules(true, true);
 
   });
 
@@ -388,7 +388,7 @@ $(document).ready(function(){
           $removeContainer.remove();
           updateRepeaterControls();
           cl = new ConditionalLogic;
-          cl.findRules(true);
+          cl.findRules(true, true);
       }
     );
   };
