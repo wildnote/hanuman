@@ -138,8 +138,9 @@ $(document).ready(function(){
     });
 
     // bind ConditionalLogic and re-run the logic to hide and show
+    $context = $('.form-container-survey')
     cl = new ConditionalLogic;
-    cl.findRules(true, true, $clonedContainer);
+    cl.findRules(true, true, $context);
 
   });
 
@@ -387,8 +388,9 @@ $(document).ready(function(){
       function() {
           $removeContainer.remove();
           updateRepeaterControls();
+          $context = $('.form-container-survey')
           cl = new ConditionalLogic;
-          cl.findRules(true, true, $removeContainer);
+          cl.findRules(true, true, $context);
       }
     );
   };
