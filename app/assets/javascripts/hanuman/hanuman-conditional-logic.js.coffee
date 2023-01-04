@@ -4,10 +4,10 @@ class @ConditionalLogic
   self.boundElements = []
 
   #scan page and find all objects with conditional logic rules
-  findRules: (runCalcs, runConditionals) ->
+  findRules: (runCalcs, runConditionals, $context) ->
     self.allowCascade = false
     problemWithCL = false
-    $("[data-rule!=''][data-rule]").each ->
+    $context.find("[data-rule!=''][data-rule]").each ->
       $ruleContainer = $(this)
       #if $ruleElement.attr('data-rule').length > 0
       rules = $.parseJSON($ruleContainer.attr("data-rule"))
@@ -621,10 +621,11 @@ class @ConditionalLogic
     return stringValue
 
 $ ->
+  $context = $('.form-container-survey')
   if $('input#run_cl').length
     #call findRules on document ready
     cl = new ConditionalLogic
-    cl.findRules(false, true)
+    cl.findRules(false, true, $context)
   else
     cl = new ConditionalLogic
-    cl.findRules(false, false)
+    cl.findRules(false, false, $context)
