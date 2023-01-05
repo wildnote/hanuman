@@ -8,9 +8,11 @@ $(document).ready(function(){
   // updateRepeaterIds()
 
   // clicking on button to add repeater
-  $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
+  $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    $(this).hide();
 
     $scrollPosition = $(this).offset().top - 50;
 
@@ -125,8 +127,8 @@ $(document).ready(function(){
       })
     }
 
-     updateRepeaterIds()
-     updateRepeaterControls()
+    updateRepeaterIds()
+    updateRepeaterControls()
 
     $clonedContainer.find('.file-upload').each(function() {
       self = this;
@@ -218,7 +220,6 @@ $(document).ready(function(){
           }
         });
       }
-
 
       if(!$(repeater).parent().parent().parent().first().hasClass("form-container-repeater")) {
         var questionId = $(repeater).data("question-id");
