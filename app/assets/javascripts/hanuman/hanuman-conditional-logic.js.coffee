@@ -166,9 +166,10 @@ class @ConditionalLogic
         if $conditionElement.length < 1
           $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control-static')
 
-      if $conditionElement.is(":checkbox")# || $triggerElement.is(":radio"))
+      # commented out this code in relationship to checkbox (radio was already commented out because onload of edit was broken for top level checkbox)
+      # if $conditionElement.is(":checkbox")# || $triggerElement.is(":radio"))
         # limit binding of each checkbox if data-label-value and answer are the same-kdh
-        $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
+        # $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
 
       hideQuestions = self.setHideQuestions(condition, $conditionElement)
       conditionMet = !hideQuestions
