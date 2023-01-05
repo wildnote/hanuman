@@ -628,4 +628,4 @@ $ ->
     cl.findRules(false, true, $context)
   else
     cl = new ConditionalLogic
-    cl.findRules(false, false, $context)
+    cl.findRules(false, true, $context)
