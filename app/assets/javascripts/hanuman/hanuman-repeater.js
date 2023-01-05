@@ -12,6 +12,7 @@ $(document).ready(function(){
     e.preventDefault();
     e.stopPropagation();
 
+    // hide button to give visual indicator of clicking for large surveys
     $(this).hide();
 
     $scrollPosition = $(this).offset().top - 50;
@@ -353,7 +354,7 @@ $(document).ready(function(){
     $clonedContainer.find('div.form-container-entry-item[data-element-type='+ type +']').find('div.col-sm-7').removeAttr('style')
   }
 
-  $('.form-container-survey').on('click', ".destroy-form-container-repeater", function(){
+  $('.form-container-survey').on('click', ".destroy-form-container-repeater", function() {
     var response = window.confirm('Are you sure you want to delete this observation?')
     var that = this;
     var repeaterId = $(this).closest('.form-container-repeater').find('.repeater-id').val();
@@ -373,7 +374,6 @@ $(document).ready(function(){
         removeObservationFromDom(that);
       }
     }
-
     return false;
   });
 
