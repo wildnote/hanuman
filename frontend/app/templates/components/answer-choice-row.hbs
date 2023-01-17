@@ -14,21 +14,19 @@
     {{/form-field}}
   </td>
   <!-- placeholder TD so that the display and form aligns correctly -->
-  {{#if isSuperUser}}
-    <td>
-      {{#form-field for='definition'}}
-        <input type="text"
-              disabled={{question.surveyTemplate.lock}}
-              data-test="answerChoice.definition"
-              class="form-control {{if saveTask.isRunning 'disabled'}}"
-              value={{answerChoice.definition}}
-              oninput={{action (mut answerChoice.definition) value="target.value"}}
-              onkeydown={{action 'inputKeyDown'}}
-              placeholder="Definition"
-              maxlength='255'/>
-      {{/form-field}}
-    </td>
-  {{/if}}
+  <td>
+    {{#form-field for='definition'}}
+      <input type="text"
+            disabled={{question.surveyTemplate.lock}}
+            data-test="answerChoice.definition"
+            class="form-control {{if saveTask.isRunning 'disabled'}}"
+            value={{answerChoice.definition}}
+            oninput={{action (mut answerChoice.definition) value="target.value"}}
+            onkeydown={{action 'inputKeyDown'}}
+            placeholder="Definition"
+            maxlength='255'/>
+    {{/form-field}}
+  </td>
   <td>
     <a class="btn btn-success {{if saveTask.isRunning 'disabled'}}" data-test="save-answer-choice-link" onclick={{perform saveTask}}>
       {{ if saveTask.isRunning 'Saving...' 'Save' }}
@@ -37,6 +35,7 @@
       Cancel
     </a>
   </td>
+  <td></td>
 
 {{else}}
   {{#if isNewAnswerChoice}}
@@ -52,19 +51,16 @@
         Add Answer Choice
       </a>
     </td>
-    {{#if isSuperUser }}
-      <td></td>
-    {{/if}}
+    <td></td>
+    <td></td>
     <td></td>
   {{else}}
     <td data-test="answerChoice.optionText">
       {{answerChoice.optionText}}
     </td>
-    {{#if isSuperUser }}
-      <td data-test="answerChoice.definition">
-        {{answerChoice.definition}}
-      </td>
-    {{/if}}
+    <td data-test="answerChoice.definition">
+      {{answerChoice.definition}}
+    </td>
     <td>
       <a
         disabled={{question.surveyTemplate.lock}}
@@ -84,6 +80,9 @@
         <span class="glyphicons glyphicons-bin"></span>
       </a>
       <span class="glyphicons glyphicons-sorting answer-draggable-handle"></span>
+    </td>
+    <td data-test="answerChoice.definition">
+      {{answerChoice.sortOrder}}
     </td>
     <div class="delete-confirm">
       {{#if (not isFullyEditable)}}
