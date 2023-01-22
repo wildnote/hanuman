@@ -4,7 +4,9 @@ $(document).ready(function(){
   duplicatedRepeatersOnEdit = []
   var selectizeElements = {};
 
+  // which add, remove buttons can be displayed
   updateRepeaterControls()
+  // don't need to re-run this on load of a survey
   // updateRepeaterIds()
 
   // clicking on button to add repeater
