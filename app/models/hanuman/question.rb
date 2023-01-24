@@ -29,8 +29,8 @@ module Hanuman
 
     # Callbacks
     after_create :process_question_changes_on_observations, if: :survey_template_not_fully_editable?
-    after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_or_sort_order_changed?
-    after_create :set_column_names!
+    after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_and_sort_order_changed?
+    before_save :set_column_names!
     before_update :answer_type_change, if: :answer_type_id_changed?
     after_save :format_css_style, if: :css_style_changed?
 
@@ -74,7 +74,7 @@ module Hanuman
     end
 
     # adding this method so I can check it before calling the job to process question changes on observations to try and decrease the number of 404 errors coming through
-    def survey_template_not_fully_editable_or_sort_order_changed?
+    def survey_template_not_fully_editable_and_sort_order_changed?
       survey_template_not_fully_editable? && sort_order_changed?
     end
 
@@ -316,7 +316,8 @@ module Hanuman
     end
 
     def create_api_column_name
-      base_string = create_base_string
+      # simplifying base_string to not include ancestry as it gets too complicated too quick-kdh
+      base_string = parameterized_text
 
       # checking for duplicate api_column_names and incrementing index by 1
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
@@ -336,7 +337,8 @@ module Hanuman
     end
 
     def create_db_column_name
-      base_string = create_base_string
+      # simplifying base_string to not include ancestry as it gets too complicated too quick-kdh
+      base_string = parameterized_text
 
       # checking for duplicate db_column_names and incrementing index by 1
       if Hanuman::Question.exists?(db_column_name: base_string, survey_template_id: self.survey_template_id)
@@ -356,15 +358,15 @@ module Hanuman
     end
 
     def set_column_names!
-      # need to upda©te via update_column instead of a question save so we don't invoke process_question_changes twice
-      self.update_column(:db_column_name, create_db_column_name) if self.db_column_name.blank?
-      self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
+      # changing approach due to granular sync issues-kdh, trying before save
+      self.db_column_name = create_db_column_name if self.db_column_name.blank?
+      self.api_column_name = create_api_column_name if self.api_column_name.blank?
     end
 
-    def set_api_column_name!
-      # need to update via update_column instead of a question save so we don't invoke process_question_changes twice
-      self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
-    end
+    # def set_api_column_name!
+    #   # need to update via update_column instead of a question save so we don't invoke process_question_changes twice
+    #   self.update_column(:api_column_name, create_api_column_name) if self.api_column_name.blank?
+    # end
 
     def update_css_style(style_string)
       ### method to update css style to avoid accidentally losing styling, and to make upating the style easier
