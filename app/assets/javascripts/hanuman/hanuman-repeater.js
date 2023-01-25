@@ -1,15 +1,21 @@
+
 $(document).ready(function(){
 
   duplicatedRepeatersOnEdit = []
   var selectizeElements = {};
 
+  // which add, remove buttons can be displayed
   updateRepeaterControls()
-  updateRepeaterIds()
+  // don't need to re-run this on load of a survey
+  // updateRepeaterIds()
 
   // clicking on button to add repeater
-  $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e){
+  $('.form-container-survey').on("click", '.duplicate-form-container-repeater', function(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    // hide button to give visual indicator of clicking for large surveys
+    $(this).hide();
 
     $scrollPosition = $(this).offset().top - 50;
 
@@ -124,8 +130,8 @@ $(document).ready(function(){
       })
     }
 
-     updateRepeaterIds()
-     updateRepeaterControls()
+    updateRepeaterIds()
+    updateRepeaterControls()
 
     $clonedContainer.find('.file-upload').each(function() {
       self = this;
@@ -138,8 +144,10 @@ $(document).ready(function(){
     });
 
     // bind ConditionalLogic and re-run the logic to hide and show
+    $context = $('.form-container-survey')
+    // $context = $clonedContainer
     cl = new ConditionalLogic;
-    cl.findRules(true);
+    cl.findRules(false, true, $context);
 
   });
 
@@ -216,7 +224,6 @@ $(document).ready(function(){
         });
       }
 
-
       if(!$(repeater).parent().parent().parent().first().hasClass("form-container-repeater")) {
         var questionId = $(repeater).data("question-id");
         if(!topLevelRepeaterTypes.includes(questionId)) {
@@ -265,7 +272,7 @@ $(document).ready(function(){
           var question_id = $(element).attr('data-question-id');
           $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_" + (index + 1));
           $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_" + (index + 1));
-          console.log($(element).find('.panel-heading.chevron')[0]);
+          // console.log($(element).find('.panel-heading.chevron')[0]);
         } else {
           var question_id = $(element).attr('data-question-id');
           $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_0");
@@ -349,7 +356,7 @@ $(document).ready(function(){
     $clonedContainer.find('div.form-container-entry-item[data-element-type='+ type +']').find('div.col-sm-7').removeAttr('style')
   }
 
-  $('.form-container-survey').on('click', ".destroy-form-container-repeater", function(){
+  $('.form-container-survey').on('click', ".destroy-form-container-repeater", function() {
     var response = window.confirm('Are you sure you want to delete this observation?')
     var that = this;
     var repeaterId = $(this).closest('.form-container-repeater').find('.repeater-id').val();
@@ -369,7 +376,6 @@ $(document).ready(function(){
         removeObservationFromDom(that);
       }
     }
-
     return false;
   });
 
@@ -387,8 +393,9 @@ $(document).ready(function(){
       function() {
           $removeContainer.remove();
           updateRepeaterControls();
+          $context = $('.form-container-survey')
           cl = new ConditionalLogic;
-          cl.findRules(true);
+          cl.findRules(true, true, $context);
       }
     );
   };

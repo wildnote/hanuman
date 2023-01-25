@@ -292,7 +292,13 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="table-responsive">
-                    <table class="table table-hover answer-choice-row">
+                    <table class="table answer-choice-row">
+                      <tr>
+                        <td><b>Text</b></td>
+                        <td><b>Definition</b></td>
+                        <td></td>
+                        <td><b>Custom Sort Order</b></td>
+                      </tr>
                       {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction=(action 'sortAnswerChoices') enableSort=true useSwap=true}}
                         {{#each answerChoicesToShow as |answerChoice|}}
                           {{answer-choice-row
