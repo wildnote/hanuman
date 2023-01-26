@@ -4,10 +4,10 @@ class @ConditionalLogic
   self.boundElements = []
 
   #scan page and find all objects with conditional logic rules
-  findRules: (runCalcs) ->
+  findRules: (runCalcs, runConditionals, $context) ->
     self.allowCascade = false
     problemWithCL = false
-    $("[data-rule!=''][data-rule]").each ->
+    $context.find("[data-rule!=''][data-rule]").each ->
       $ruleContainer = $(this)
       #if $ruleElement.attr('data-rule').length > 0
       rules = $.parseJSON($ruleContainer.attr("data-rule"))
@@ -39,7 +39,8 @@ class @ConditionalLogic
             problemWithCL = true
 
           # deal with any condition, once we get a hide_questions = false then we dont need to run through the rules
-          hideQuestions = self.setHideQuestions(this, $conditionElement)
+          # kdh commenting out for performance reasons because this doesn't seem to be used here
+          # hideQuestions = self.setHideQuestions(this, $conditionElement)
 
 
           ancestorId = rule.question_id
@@ -68,7 +69,8 @@ class @ConditionalLogic
               inRepeater = true
 
           if rule.type != "Hanuman::CalculationRule"
-            self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true)
+            if runConditionals
+              self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true)
 
         if runCalcs && rule.type == "Hanuman::CalculationRule"
           self.updateCalculation(rule, $ruleContainer)
@@ -164,9 +166,10 @@ class @ConditionalLogic
         if $conditionElement.length < 1
           $conditionElement = $("[data-question-id=" + condition.question_id + "]").find('.form-control-static')
 
-      if $conditionElement.is(":checkbox")# || $triggerElement.is(":radio"))
+      # commented out this code in relationship to checkbox (radio was already commented out because onload of edit was broken for top level checkbox)
+      # if $conditionElement.is(":checkbox")# || $triggerElement.is(":radio"))
         # limit binding of each checkbox if data-label-value and answer are the same-kdh
-        $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
+        # $conditionElement = $conditionElement.closest('.form-container-entry-item').find(".form-control[data-label-value='" + condition.answer.replace("/","\\/").replace("'","\\'") + "']")
 
       hideQuestions = self.setHideQuestions(condition, $conditionElement)
       conditionMet = !hideQuestions
@@ -619,7 +622,11 @@ class @ConditionalLogic
     return stringValue
 
 $ ->
-  if $('input#survey_survey_template_id').length
+  $context = $('.form-container-survey')
+  if $('input#run_cl').length
     #call findRules on document ready
     cl = new ConditionalLogic
-    cl.findRules(false)
+    cl.findRules(false, true, $context)
+  else
+    cl = new ConditionalLogic
+    cl.findRules(false, true, $context)

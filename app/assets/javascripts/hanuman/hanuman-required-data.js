@@ -1,6 +1,6 @@
 $(document).ready(function(){
   //  validates all survey forms for date inputs and forms with required fields.
-  $('form').parsley({ excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], input[type=number]' } )
+  // $('form').parsley({ excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], input[type=number]' } )
 
   // this event listener waits one second after user clicks on submit button so that parsley has enough time to add error elements if needed
   if ($('form.parsley-survey').length > 0 && $('[data-required=true]').length > 0) {
@@ -156,24 +156,25 @@ $(document).ready(function(){
     // reads dom for required fields
     function setupRequiredData(){
       var formValidator = $('form.parsley-survey');
-      formValidator.parsley();
 
       // loop through all form inputs with data-required=true and pop data-parsley-required=true into the actual form element to get parsley to work
       var formInputs = $('form.form-horizontal').find('[data-required=true]');
-
-      for (var i = 0; i < formInputs.length; i++) {
-        var formControlElement = $(formInputs[i]).find('.form-control').not('.multiselect-search');
-        if (formControlElement) {
-          formControlElement.attr('data-parsley-required','true');
-          // for checkboxes set to min 1
-          if ($(formInputs[i]).attr('data-element-type') === 'checkboxes') {
-            formControlElement.attr('data-parsley-mincheck','1');
+      if (formInputs.length > 0) {
+        formValidator.parsley();
+        for (var i = 0; i < formInputs.length; i++) {
+          var formControlElement = $(formInputs[i]).find('.form-control').not('.multiselect-search');
+          if (formControlElement) {
+            formControlElement.attr('data-parsley-required','true');
+            // for checkboxes set to min 1
+            if ($(formInputs[i]).attr('data-element-type') === 'checkboxes') {
+              formControlElement.attr('data-parsley-mincheck','1');
+            }
           }
-        }
-        // find photo, document and video upload buttons
-        var fileElement = $(formInputs[i]).find('input[type=file]');
-        if (formControlElement) {
-          fileElement.attr('data-parsley-required','true');
+          // find photo, document and video upload buttons
+          var fileElement = $(formInputs[i]).find('input[type=file]');
+          if (formControlElement) {
+            fileElement.attr('data-parsley-required','true');
+          }
         }
       }
     }
