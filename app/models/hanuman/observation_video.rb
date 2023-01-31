@@ -1,5 +1,5 @@
 module Hanuman
-  class ObservationVideo < ActiveRecord::Base
+  class ObservationVideo < ApplicationRecord
     has_paper_trail
     mount_uploader :video, VideoUploader
 

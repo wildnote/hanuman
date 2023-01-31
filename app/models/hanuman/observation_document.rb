@@ -1,5 +1,5 @@
 module Hanuman
-  class ObservationDocument < ActiveRecord::Base
+  class ObservationDocument < ApplicationRecord
     has_paper_trail
     mount_uploader :document, DocumentUploader
 

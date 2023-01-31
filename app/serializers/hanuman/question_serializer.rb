@@ -7,7 +7,7 @@ module Hanuman
                :layout_column, :layout_column_position, :default_answer, :child_ids,
                :export_continuation_characters, :helper_text, :tag_list, :max_photos, :db_column_name,
                :api_column_name, :css_style, :report_children_width, :marked_for_deletion, :flagged_answers,
-               :convert_to_utm, :report_label, :exclude_from_report
+               :convert_to_utm, :report_label, :exclude_from_report, :data_source_id
 
     has_many :answer_choices
     has_many :rules, serializer: Hanuman::RuleSerializer

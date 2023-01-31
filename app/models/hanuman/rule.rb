@@ -1,5 +1,5 @@
 module Hanuman
-  class Rule < ActiveRecord::Base
+  class Rule < ApplicationRecord
     has_paper_trail
 
     # Delegations

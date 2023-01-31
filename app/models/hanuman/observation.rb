@@ -1,5 +1,5 @@
 module Hanuman
-  class Observation < ActiveRecord::Base
+  class Observation < ApplicationRecord
     has_paper_trail
 
     # Relations

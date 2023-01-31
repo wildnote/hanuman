@@ -1,5 +1,5 @@
 module Hanuman
-  class Setting < ActiveRecord::Base
+  class Setting < ApplicationRecord
     has_paper_trail
     validates_uniqueness_of :key
 

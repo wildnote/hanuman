@@ -36,7 +36,7 @@ Hanuman::Engine.routes.draw do
 
 
 
-  mount_ember_app :frontend, to: '/admin', controller: 'admin', action: 'index', as: 'admin'
+  mount_ember_app :frontend, to: '/admin', controller: 'admin', action: 'index'#, as: 'admin'
   get 'admin/show'
 
   resources :surveys do

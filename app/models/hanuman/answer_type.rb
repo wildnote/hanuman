@@ -1,5 +1,5 @@
 module Hanuman
-  class AnswerType < ActiveRecord::Base
+  class AnswerType < ApplicationRecord
     has_paper_trail
 
     # Constants
