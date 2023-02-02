@@ -438,6 +438,11 @@ class @ConditionalLogic
         $conditionElement.children().each ->
           option_strings.push this.innerHTML
         return option_strings.join("|&|")
+      else if $conditionElement.is(".selectize-location-select") && $conditionElement.children().size() > 0
+        option_strings = []
+        $conditionElement.children().each ->
+          option_strings.push this.innerHTML
+        return option_strings.join("|&|")
       else
         return
     if $conditionElement.is('select')
