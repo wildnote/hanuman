@@ -130,6 +130,8 @@ class @ConditionalLogic
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
                 if this.type == "Hanuman::VisibilityRule"
                   self.hideShowQuestions(hideQuestions, ancestorId, $ruleElement, $container, inRepeater)
+                else if hideQuestions == false
+                  self.setLookupValue(this.value, $ruleElement)
       # if not then lets assume its at the top most level outside of a repeater
       else
         $($triggerElement).closest(".form-container-survey").find("[data-rule!=''][data-rule]").each ->
