@@ -446,6 +446,27 @@ $(document).ready(function(){
         $(this)[0].selectize.destroy();
       }
     });
+      $(element).find(".selectize-location-select").each(function () {
+        if ($(this)[0].selectize) {
+          var data = {};
+          data.inputValue = $(this)[0].selectize.getValue();
+          data.inputOptions = $(this)[0].selectize.options;
+
+          if (data.inputValue instanceof Array) {
+            data.inputText = [];
+            var self = this;
+            $.each(data.inputValue, function () {
+              data.inputText.push($(self)[0].selectize.getItem(this).text());
+            });
+          } else {
+            data.inputText = $(this)[0].selectize.getItem(data.inputValue).text();
+          }
+
+          selectizeElements[$(this).attr("id")] = data;
+
+          $(this)[0].selectize.destroy();
+        }
+      });
 
     $(element).find(".chosen-multiselect").chosen('destroy');
     $(element).find(".chosen-select").chosen('destroy');
@@ -475,6 +496,49 @@ $(document).ready(function(){
                 }
               }
               callback(res.taxa);
+            }
+          });
+        },
+        onInitialize: function () {
+          var selectId = this.$input.attr("id");
+          if (selectId in selectizeElements) {
+            var data = selectizeElements[selectId];
+            if (data.inputValue instanceof Array) {
+              for (var i = 0; i < data.inputValue.length; i++) {
+                this.addOption({value: data.inputValue[i], text: data.inputText[i]});
+                this.addItem(data.inputValue[i]);
+              }
+            } else {
+              this.addOption({value: data.inputValue, text: data.inputText});
+              this.addItem(data.inputValue);
+            }
+          }
+        },
+        preload: true,
+        create: false,
+      });
+
+      $(this).find('.selectize-location-select').selectize({
+        load: function(query, callback) {
+          var projectId = this.$input.data("source");
+          var self = this;
+          $.ajax({
+            url: "/locations/select_list/" + projectId,
+            type: "GET",
+            dataType: "json",
+            data: {
+              query: query
+            },
+            error: function() {
+              callback();
+            },
+            success: function(res) {
+              for (var option in self.options) {
+                if ($.inArray(option, self.items) === -1) {
+                  self.removeOption(option);
+                }
+              }
+              callback(res.locations);
             }
           });
         },
