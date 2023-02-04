@@ -1,6 +1,9 @@
 $(document).ready(function(){
-  //  validates all survey forms for date inputs and forms with required fields.
-  // $('form').parsley({ excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], input[type=number]' } )
+  //  this if statement instantiates parsley on all pages other than survey
+  // survey parsley is setup with data-required=true in dom
+  if ($('[data-parsley-required=true]').length > 0) {
+    $('form').parsley({ excluded: 'input[type=button], input[type=submit], input[type=reset], input[type=hidden], input[type=number]' } )
+  }
 
   // this event listener waits one second after user clicks on submit button so that parsley has enough time to add error elements if needed
   if ($('form.parsley-survey').length > 0 && $('[data-required=true]').length > 0) {
