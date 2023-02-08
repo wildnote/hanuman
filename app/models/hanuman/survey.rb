@@ -310,15 +310,10 @@ module Hanuman
         self.set_rapid_test_hydrophytic
       end
 
-      if self.mobile_v3_or_higher?
-        self.sort_veg_repeaters
-      end
-
-      if self.should_schedule_sort?
-        SortObservationsWorker.perform_async(self.id)
-      end
-
       update_column(:lock_callbacks, false)
+
+      SortObservationsWorker.perform_async(self.id)
+
     end
 
 
