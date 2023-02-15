@@ -634,6 +634,3 @@ $ ->
     #call findRules on document ready
     cl = new ConditionalLogic
     cl.findRules(false, true, $context)
-  else
-    cl = new ConditionalLogic
-    cl.findRules(false, true, $context)
