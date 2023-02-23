@@ -7,10 +7,6 @@ class SortObservationsWorker
 
     survey.update_column(:lock_callbacks, true)
 
-    if survey.mobile_v3_or_higher?
-      survey.sort_veg_repeaters
-    end
-
     unless survey.observations_sorted
       survey.sort_observations!
     end
@@ -18,6 +14,10 @@ class SortObservationsWorker
     unless survey.observation_visibility_set
       survey.set_observation_visibility!
     end
+
+    # if survey.mobile_v3_or_higher?
+    #   survey.sort_veg_repeaters
+    # end
 
     survey.update_column(:lock_callbacks, false)
 
