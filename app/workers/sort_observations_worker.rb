@@ -17,6 +17,7 @@ class SortObservationsWorker
 
     # if survey.mobile_v3_or_higher?
     #   survey.sort_veg_repeaters
+    #   survey.sort_observations!
     # end
 
     survey.update_column(:lock_callbacks, false)
