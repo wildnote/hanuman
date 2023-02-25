@@ -310,9 +310,15 @@ module Hanuman
         self.set_rapid_test_hydrophytic
       end
 
-      update_column(:lock_callbacks, false)
+      unless @survey.observations_sorted
+        @survey.sort_observations!
+      end
 
-      SortObservationsWorker.perform_async(self.id)
+      unless @survey.observation_visibility_set
+        @survey.set_observation_visibility!
+      end
+
+      update_column(:lock_callbacks, false)
 
     end
 
