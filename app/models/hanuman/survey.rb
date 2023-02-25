@@ -301,21 +301,15 @@ module Hanuman
 
       update_column(:lock_callbacks, true)
 
-      if self.wetland_v2_web_v3?
+      if self.survey_template.is_wetland?
         self.set_wetland_dominant_species
-      end
-
-      if self.web_wetland_v3_v4_v5?
+        # self.sort_veg_repeaters
         self.set_dominance_test
         self.set_rapid_test_hydrophytic
       end
 
-      unless @survey.observations_sorted
-        @survey.sort_observations!
-      end
-
-      unless @survey.observation_visibility_set
-        @survey.set_observation_visibility!
+      if self.should_schedule_sort?
+        SortObservationsWorker.perform_async(self.id)
       end
 
       update_column(:lock_callbacks, false)
