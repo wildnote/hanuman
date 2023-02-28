@@ -214,7 +214,7 @@ module Hanuman
     # this method will recurisvely update any calculation rules that use this observation as a parameter
     # calls update_triggered_calculations! at the end and returns the result
     def update_calculation!
-      return unless question.calculated?
+      return unless question.is_calc_engine_calculated?
 
       calculation_rule = Hanuman::CalculationRule.find_by(question_id: question_id)
       return unless calculation_rule.script.present?
