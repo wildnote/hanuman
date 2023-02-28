@@ -32,6 +32,7 @@ module Hanuman
     after_update :process_question_changes_on_observations, if: :survey_template_not_fully_editable_and_sort_order_changed?
     before_save :set_column_names!
     before_update :answer_type_change, if: :answer_type_id_changed?
+    before_update :set_calculated
     after_save :format_css_style, if: :css_style_changed?
 
     # Need to cache the change state of flagged answers in an attribute so that we can access it after_commit
@@ -251,19 +252,6 @@ module Hanuman
             not_imported << name
           end
         end
-        puts "********"
-        puts "********"
-        puts "********"
-        puts "imported"
-        puts imported
-        puts "********"
-        puts "********"
-        puts "********"
-        puts "not imported"
-        puts not_imported
-        puts "********"
-        puts "********"
-        puts "********"
         message = "number of answer choices imported: #{imported.count.to_s}; number of answer choices not imported because they are already attached to the question: #{not_imported.count.to_s}."
       end
       message
@@ -478,8 +466,56 @@ module Hanuman
       self.flagged_answers_change_was_saved = false
     end
 
-    def calculated?
-      self.rules.any? { |r| r.is_a?(Hanuman::CalculationRule) }
+    # TODO replace this method call with appropriate calc engine or both calc engine and wetland calcs calculated
+    # def calculated?
+    #   self.rules.any? { |r| r.is_a?(Hanuman::CalculationRule) }
+    # end
+
+    # return true if question triggers a calc engine calc
+    def triggers_calc_engine_calcs?
+      self.triggers_calculation_questions.count > 0
+    end
+
+    # return tru if question is a calc engine calculated field
+    def is_calc_engine_calculated?
+      self.rules.where(type: 'Hanuman::CalculationRule').count > 0
+    end
+
+    # return true if question triggers a wetland calc
+    def triggers_wetland_calcs?
+      db_column_names = ["species_0", "species_1", "species_2", "species_3", "species_4", "species_5",
+                         "absolute_cover_0", "absolute_cover_1", "absolute_cover_2", "absolute_cover_3", "absolute_cover_4", "absolute_cover_5", "absolute_cover_6",
+                         "dominant_species_1", "dominant_species_2", "dominant_species_3", "dominant_species_4", "dominant_species_5", "dominant_species_6",
+                         "indicator_status_1", "indicator_status_2", "indicator_status_3", "indicator_status_4","indicator_status_5", "indicator_status_6"]
+
+      db_column_names.include? self.db_column_name
+
+    end
+
+    # return true if question is a wetland calculated field
+    def is_wetland_calculated?
+      db_column_names = ["dominant_species_1", "dominant_species_2", "dominant_species_3", "dominant_species_4", "dominant_species_5", "dominant_species_6",
+                         "indicator_status_1", "indicator_status_2", "indicator_status_3", "indicator_status_4","indicator_status_5", "indicator_status_6",
+                         "number_of_domina_0", "total_number_of__0", "percent_of_domin_0", "total_cover_of_c_0", "multiply_by_colu_0", "prevalence_index_1",
+                         "total_cover_of_o_0", "total_cover_of_f_0", "total_cover_of_f_1", "total_cover_of_f_2", "total_cover_of_u_0"]
+
+      db_column_names.include? self.db_column_name
+    end
+
+    def is_wetland_partially_calculated?
+      db_column_names = ["hydrophytic_vege_2", "secondary_indica_0"]
+    end
+
+    def triggers_calcs?
+      self.triggers_calc_engine_calcs? || self.triggers_wetland_calcs?
+    end
+
+    def is_calculated?
+      self.is_calc_engine_calculated? || self.is_wetland_calculated?
+    end
+
+    def set_calculated
+      self.calculated = true if self.is_calculated?
     end
   end
 end

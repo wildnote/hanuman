@@ -48,6 +48,7 @@ export default Model.extend(Validator, {
   convertToUtm: attr('boolean'),
   reportLabel: attr('string'),
   excludeFromReport: attr('boolean'),
+  calculated: attr('boolean'),
 
   // Associations
   dataSource: belongsTo('data-source'),
