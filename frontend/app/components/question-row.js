@@ -31,7 +31,7 @@ export default Component.extend({
     if (question.get('visibilityRule') && !question.get('visibilityRule.isNew')) {
       intial += `<span class="label label-info">Rules</span>`;
     }
-    if (question.get('calculationRule')) {
+    if (question.get('calculationRule') || question.get('calculated')) {
       intial += `<span class="label label-success">Calculated</span>`;
     }
     console.log(intial);
