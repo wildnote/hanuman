@@ -43,9 +43,11 @@ module Hanuman
       has_calcs = false
       questions.each do |q|
         if q.calculated?
-          return true
+          has_calcs = true
+          return
         end
       end
+      return has_calcs
     end
 
     # after duplicating the survey template remap ancestry and rule information
