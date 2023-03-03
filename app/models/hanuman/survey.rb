@@ -310,9 +310,10 @@ module Hanuman
         self.set_rapid_test_hydrophytic
       end
 
-      if self.mobile_v3_or_higher?
-        self.sort_veg_repeaters
-      end
+      # kdh commenting out in favor of button to allow users to invoke to try and deal with smushed repeaters for same % cover on edit
+      # if self.mobile_v3_or_higher?
+      #   self.sort_veg_repeaters
+      # end
 
       if self.should_schedule_sort?
         SortObservationsWorker.perform_async(self.id)
