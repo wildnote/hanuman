@@ -127,6 +127,38 @@ module Hanuman
       end
     end
 
+    def submit_blank_observation_data_single_survey(survey_id)
+      question = self
+      parent = question.parent
+      survey_template = question.survey_template
+      s = Hanuman::Survey.find survey_id
+      if parent.blank?
+        Observation.create_with(
+          answer: ''
+        ).find_or_create_by(
+          survey_id: s.id,
+          question_id: question.id,
+          entry: 1
+        )
+      # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
+      else
+        s.observations.where(question_id: parent.id).each do |o|
+          Hanuman::Observation.create_with(
+            answer: ''
+          ).find_or_create_by(
+            survey_id: s.id,
+            question_id: question.id,
+            entry: o.entry,
+            parent_repeater_id: o.repeater_id
+          )
+        end
+      end
+
+      s.update_column(:observations_sorted, false)
+      s.update_column(:observation_visibility_set, false)
+      s.check_missing_questions
+    end
+
     # build the rule_hash to pass into rails to then be used by javascript for hide/show functions
     def rule_hash
       # "rule": {
