@@ -167,6 +167,8 @@ export default Component.extend({
 
   processQuestionChanges: task(function* () {
     try {
+      // disable button because double click can cause problems
+      $('#pqc_button')[0].disabled = true
       // We need to save the question first
       yield this.saveTask.perform(true);
       let question = this.question;
