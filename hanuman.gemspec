@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency 'rails', '~> 4.2.10'
+  s.add_dependency 'rails', '~> 4.2.11.3'
   s.add_dependency 'responders', '~> 2.0'
   s.add_dependency 'paper_trail', '~> 6.0'
   s.add_dependency 'ancestry' #, '~> 3.0.2'
@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
   # upgrading to 1.0 or 1.1 broke the API on survey create - photo hash was empty-kdh
   s.add_dependency 'carrierwave', '~> 1.3.3'
   s.add_dependency 'cloudinary', '~> 1.25.0'
-  s.add_dependency 'sidekiq', '~> 3.5.0'
+  s.add_dependency 'sidekiq'#, '~> 3.5.0'
   s.add_dependency 'gmaps4rails', '~> 2.1.2'
   s.add_dependency 'pg_search', '~> 2.0.1'
 
