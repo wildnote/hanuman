@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
   # upgrading to 1.0 or 1.1 broke the API on survey create - photo hash was empty-kdh
   s.add_dependency 'carrierwave', '~> 1.3.3'
   s.add_dependency 'cloudinary', '~> 1.25.0'
-  s.add_dependency 'sidekiq'#, '~> 3.5.0'
+  # s.add_dependency 'sidekiq'#, '~> 3.5.0'
   s.add_dependency 'gmaps4rails', '~> 2.1.2'
   s.add_dependency 'pg_search', '~> 2.0.1'
 
