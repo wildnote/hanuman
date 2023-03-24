@@ -30,7 +30,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'jquery-rails', '~> 3.1.1'
   s.add_dependency 'ember-cli-rails', '~> 0.10.0'
   s.add_dependency 'cocaine', '~> 0.5.8'
-  s.add_dependency 'kaminari', '~> 0.16.1'
+  s.add_dependency 'kaminari', '~> 1.2.2'
   s.add_dependency 'active_model_serializers', '~> 0.8.1'
   s.add_dependency 'acts-as-taggable-on', '~> 4.0.0'
   s.add_dependency 'roo', '~> 2.3.2'
@@ -38,7 +38,7 @@ Gem::Specification.new do |s|
   # upgrading to 1.0 or 1.1 broke the API on survey create - photo hash was empty-kdh
   s.add_dependency 'carrierwave', '~> 1.3.3'
   s.add_dependency 'cloudinary', '~> 1.25.0'
-  # s.add_dependency 'sidekiq'#, '~> 3.5.0'
+  s.add_dependency 'sidekiq', '~> 5'
   s.add_dependency 'gmaps4rails', '~> 2.1.2'
   s.add_dependency 'pg_search', '~> 2.0.1'
 
