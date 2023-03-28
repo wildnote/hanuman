@@ -148,7 +148,6 @@ module Hanuman
           ).find_or_create_by(
             survey_id: s.id,
             question_id: question.id,
-            entry: o.entry,
             parent_repeater_id: o.repeater_id
           )
         end
