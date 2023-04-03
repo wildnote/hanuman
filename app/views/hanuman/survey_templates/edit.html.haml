@@ -11,12 +11,12 @@
   .panel-heading
     %h3.panel-title
       - if params[:project_id]
-        Admin /
-        = link_to "Forms", surveys_project_path(params[:project_id])
+        Project Setup /
+        = link_to "Form Library", forms_project_path(params[:project_id])
         \/
         = link_to "Edit Form", edit_hanuman_project_survey_template_path(params[:project_id], params[:id])
       - else
-        Admin / Forms / Edit Form - #{@survey_template.name_plus_version}
+        Project Setup / Forms / Edit Form - #{@survey_template.name_plus_version}
   .tab-base.tab-stacked-top
     %ul.nav.nav-tabs
       %li

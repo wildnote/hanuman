@@ -1,8 +1,8 @@
 <div class="form-horizontal">
   <div class="panel panel-info">
     <div class="panel-title">
-      Admin /
-      <a href="/projects/{{projectId}}/surveys">Forms / </a>
+      Project Setup /
+      <a href="/projects/{{projectId}}/forms">Form Library / </a>
       <a href="/hanuman/admin/projects/{{projectId}}/survey_templates/{{surveyTemplate.id}}">Edit Form Layout - {{surveyTemplate.namePlusVersion}}</a>
     </div>
     <div class="tab-base tab-stacked-top">
@@ -16,6 +16,12 @@
           {{else}}
             <a href="/hanuman/survey_templates/{{surveyTemplate.id}}/edit">Form Details</a>
           {{/if}}
+        </li>
+        <li>
+          <a href="/hanuman/projects/{{projectId}}/survey_templates/{{surveyTemplate.id}}/linked_projects">Linked Projects</a>
+        </li>
+        <li>
+           <a href="/hanuman/projects/{{projectId}}/survey_templates/{{surveyTemplate.id}}/collected_data">Data Collected</a>
         </li>
       </ul>
       <div class="tab-content">

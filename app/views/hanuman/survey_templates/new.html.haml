@@ -20,8 +20,8 @@
   .panel-heading
     %h3.panel-title
       - if params[:project_id].present?
-        Admin /
-        = link_to "Forms", forms_project_path(params[:project_id])
+        Project Setup /
+        = link_to "Form Library", forms_project_path(params[:project_id])
         \/
         = link_to new_hanuman_project_survey_template_path(params[:project_id]) do
           New Form
