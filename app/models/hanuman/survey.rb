@@ -93,6 +93,12 @@ module Hanuman
       @skip_sort || false
     end
 
+    # return survey with just one repeater set based on repeater id parameter
+    # useful for extremely large surveys to deal with performance and timeout problems
+    def sorted_observations_by_repeater(repeater_id)
+      observations.where("(repeater_id = ? OR parent_repeater_id = ?) OR (parent_repeater_id IS NULL AND repeater_id IS NULL)", repeater_id, repeater_id).reorder("hanuman_observations.sort_order ASC")
+    end
+
     def sorted_observations
       observations_sorted ? observations.reorder('hanuman_observations.sort_order ASC') : sort_observations!
     end
