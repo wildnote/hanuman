@@ -34,11 +34,20 @@ $(document).ready(function(){
     // remove hidden field observation ids
     $($clonedContainer).find('.hidden-field-observation-id').remove();
     // remove data-observation-id at the repeater level
-    $($clonedContainer).removeAttr('data-observation-id')
+    $($clonedContainer).removeAttr('data-observation-id');
 
-    //************** BEGIN repeater ids
-    repeaterInputs = $clonedContainer.find(".repeater-id")
-    repeaterClosestPanel = $(this).parents(".panel-body")
+    //************** BEGIN update repeater and parent repeater ids
+    repeaterInputs = $clonedContainer.find(".repeater-id");
+    parentRepeaterInputs = $clonedContainer.find('.parent-repeater-id');
+    repeaterClosestPanel = $(this).parents(".panel-body");
+    $maxRepeater = $('#max_repeater')
+    maxRepeaterVal = parseInt($maxRepeater.val());
+    newRepeaterVal = maxRepeaterVal + 1;
+    repeaterInputs.val(newRepeaterVal);
+    parentRepeaterInputs.each(function (index, element) {
+      $(element).val(newRepeaterVal);
+    });
+    $maxRepeater.val(newRepeaterVal);
     //************ END repeater ids
 
     // collect all container items inside cloned container for iteration later to update all attributes
@@ -130,7 +139,7 @@ $(document).ready(function(){
       })
     }
 
-    updateRepeaterIds()
+    // updateRepeaterIds()
     updateRepeaterControls()
 
     $clonedContainer.find('.file-upload').each(function() {
