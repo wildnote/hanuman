@@ -44,8 +44,9 @@
         %br
       - unless p.direction.blank?
         Heading:
-        =p.direction.to_f.round(6)
-        degrees
+        =p.degrees_to_direction
+        = "(" + p.direction.to_f.round(6).to_s
+        degrees)
         %br
       - unless p.altitude.blank?
         Altitude:

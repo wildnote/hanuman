@@ -48,16 +48,12 @@
                   Speed:
                   =p.speed.round(6).to_s
                   m/s
-              - unless p.speed.blank?
-                .col-sm-7
-                  Speed:
-                  =p.speed.round(6).to_s
-                  m/s
               - unless p.direction.blank?
                 .col-sm-7
                   Heading:
-                  =p.direction.to_f.round(6)
-                  degrees
+                  =p.degrees_to_direction
+                  = "(" + p.direction.to_f.round(6).to_s
+                  degrees)
               - unless p.altitude.blank?
                 .col-sm-7
                   Altitude:
