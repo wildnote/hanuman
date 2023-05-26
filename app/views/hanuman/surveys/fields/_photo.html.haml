@@ -22,7 +22,7 @@
             - unless @survey_readonly
               %p.delete-box
                 = fff.check_box :_destroy, class:"hidden delete-checkbox"
-                %a{class:"btn btn-danger delete-saved-file", style:'font-size: .8em;', href:"#"}Remove photo
+                %a{class:"btn btn-danger delete-saved-file", style:'font-size: .8em;', href:"#"} Remove photo
                 %a.btn.btn-success.rotate-button{ style:'font-size: .8em; cursor: pointer;' } Rotate Left
                 %a.btn.btn-success.rotate-button{ style:'font-size: .8em; cursor: pointer;' } Rotate Right
                 = fff.hidden_field :rotation, class: 'rotation-input', "data-original-rotation": p.rotation
