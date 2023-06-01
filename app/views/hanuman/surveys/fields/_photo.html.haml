@@ -30,6 +30,11 @@
             .form-group
               .col-sm-7
                 = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add photo description here...", readonly: @survey_readonly
+            = fff.label :"Photo sort order"
+            .form-group
+              .col-sm-7
+                = fff.text_field :sort_order, class:"upload-sort-order", readonly: @survey_readonly
+                
             = label_tag "Photo Geolocation Data"
             .form-group
               .col-sm-7
@@ -69,11 +74,6 @@
                   Public ID:
                   =p.public_id
 
-
-            = fff.label :"Photo sort order"
-            .form-group
-              .col-sm-7
-                = fff.text_field :sort_order, class:"upload-sort-order", readonly: @survey_readonly
             %hr
       - unless @survey_readonly
         .photo-preview-container
