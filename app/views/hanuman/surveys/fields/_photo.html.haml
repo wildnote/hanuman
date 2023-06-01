@@ -64,7 +64,9 @@
                   Accuracy:
                   =p.accuracy.to_f.round(2)
                   m
-                .col-sm-7 
+              - unless p.public_id.blank?
+                .col-sm-7
+                  Public ID:
                   =p.public_id
 
 

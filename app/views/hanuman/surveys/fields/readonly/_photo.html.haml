@@ -59,7 +59,10 @@
         =p.accuracy.to_f.round(2)
         m
         %br
-      =p.public_id
+        %br
+      - unless p.public_id.blank?
+        Public ID:
+        =p.public_id
       %br
       %label
         Photo sort order
