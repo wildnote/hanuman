@@ -22,7 +22,7 @@
             - unless @survey_readonly
               %p.delete-box
                 = fff.check_box :_destroy, class:"hidden delete-checkbox"
-                %a{class:"btn btn-danger delete-saved-file", style:'font-size: .8em;', href:"#"}Remove photo
+                %a{class:"btn btn-danger delete-saved-file", style:'font-size: .8em;', href:"#"} Remove photo
                 %a.btn.btn-success.rotate-button{ style:'font-size: .8em; cursor: pointer;' } Rotate Left
                 %a.btn.btn-success.rotate-button{ style:'font-size: .8em; cursor: pointer;' } Rotate Right
                 = fff.hidden_field :rotation, class: 'rotation-input', "data-original-rotation": p.rotation
@@ -30,6 +30,11 @@
             .form-group
               .col-sm-7
                 = fff.text_area :description, rows: 2, cols: 55, placeholder: "Add photo description here...", readonly: @survey_readonly
+            = fff.label :"Photo sort order"
+            .form-group
+              .col-sm-7
+                = fff.text_field :sort_order, class:"upload-sort-order", readonly: @survey_readonly
+                
             = label_tag "Photo Geolocation Data"
             .form-group
               .col-sm-7
@@ -48,16 +53,12 @@
                   Speed:
                   =p.speed.round(6).to_s
                   m/s
-              - unless p.speed.blank?
-                .col-sm-7
-                  Speed:
-                  =p.speed.round(6).to_s
-                  m/s
               - unless p.direction.blank?
                 .col-sm-7
                   Heading:
-                  =p.direction.to_f.round(6)
-                  degrees
+                  =p.degrees_to_direction
+                  = "(" + p.direction.to_f.round(6).to_s
+                  degrees)
               - unless p.altitude.blank?
                 .col-sm-7
                   Altitude:
@@ -68,12 +69,11 @@
                   Accuracy:
                   =p.accuracy.to_f.round(2)
                   m
+              - unless p.public_id.blank?
+                .col-sm-7
+                  Public ID:
+                  =p.public_id
 
-            -
-            = fff.label :"Photo sort order"
-            .form-group
-              .col-sm-7
-                = fff.text_field :sort_order, class:"upload-sort-order", readonly: @survey_readonly
             %hr
       - unless @survey_readonly
         .photo-preview-container

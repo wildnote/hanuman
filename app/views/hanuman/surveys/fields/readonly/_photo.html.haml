@@ -14,12 +14,19 @@
       - else
         = link_to cl_image_tag(p.photo, :crop => :fill, :width => 350, :sign_url => true, angle: p.rotation), cloudinary_url(p.photo, :sign_url => true, angle: p.rotation), html_options = {"data-gallery" => "", class: "gallery-item gallery-photo", id: "photo_" + p.id.to_s, :"data-content-type" => p.photo.resource_type, :"data-download-url" => cloudinary_url(p.photo, :sign_url => true, angle: p.rotation), :"data-file-name" => p.photo.public_id}
         = link_to p.photo.my_public_id + "." + p.photo.format + " | download file", cloudinary_url(p.photo, attachment: true, :sign_url => true, angle: p.rotation), html_options = { download: true }
+
         %br
         %br
       %label
         Photo description
       %br
       = p.description
+      %br
+      %br
+      %label
+        Photo sort order
+      %br
+      = p.sort_order
       %br
       %br
 
@@ -44,8 +51,9 @@
         %br
       - unless p.direction.blank?
         Heading:
-        =p.direction.to_f.round(6)
-        degrees
+        =p.degrees_to_direction
+        = "(" + p.direction.to_f.round(6).to_s
+        degrees)
         %br
       - unless p.altitude.blank?
         Altitude:
@@ -57,12 +65,11 @@
         =p.accuracy.to_f.round(2)
         m
         %br
-      %br
-      %label
-        Photo sort order
-      %br
-      = p.sort_order
-      %br
+        %br
+      - unless p.public_id.blank?
+        Public ID:
+        =p.public_id
       %br
       %br
+      %hr
       %br
