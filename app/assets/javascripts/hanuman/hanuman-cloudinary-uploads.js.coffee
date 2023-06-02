@@ -51,7 +51,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
     $previewContainer.find("."+file+"-preview").last().append "<br>"
     $previewContainer.find("."+file+"-preview").last().append "<hr>"
     $previewContainer.find("."+file+"-preview").last().find('.photo-actions-container').append("<input class='rotation-input' type='hidden' name='" + rotationNameAttr + "'>")
-    
+
     bindPhotoRotation()
 
   else
@@ -115,7 +115,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 # ***** VIDEOS *****
 @bindVideoUploads = ->
   $('.survey-video-upload').on 'click', (e, data) ->
-    
+
     $(e.target).siblings('.progress').removeClass('hidden')
     # progress bar
     $('.cloudinary-fileupload.survey-video-upload').bind 'fileuploadprogress', (e, data) ->
@@ -156,7 +156,7 @@ addTexareaForUpload = (file, data, idx, $previewContainer) ->
 # ***** DOCUMENTS *****
 @bindDocumentUploads = ->
   $('.survey-document-upload').on 'click', (e, data) ->
-    
+
     $(e.target).siblings('.progress').removeClass('hidden')
      # progress bar
     $('.cloudinary-fileupload.survey-document-upload').bind 'fileuploadprogress', (e, data) ->
@@ -344,29 +344,32 @@ $ ->
   # when a user removes an upload in edit, we are resetting the sortorder
   $('.delete-saved-file').on 'click', (e) ->
     e.preventDefault()
-    $($(@).closest('.delete-box').find(".delete-checkbox")).prop( "checked", true )
-    $(@).closest('.delete-box').closest('.upload-view-mode').hide()
-    if $(@).closest(".file-upload-input-button").hasClass('photo-column')
-      file = "photo"
-    else if $(@).closest(".file-upload-input-button").hasClass('video-column')
-      file = "video"
-    else if $(@).closest(".file-upload-input-button").hasClass('document-column')
-      file = "document"
-    else if $(@).closest(".file-upload-input-button").hasClass('signature-column')
-      $(@).closest(".file-upload-input-button").find('.signature-upload').show()
-      return
+    response = window.confirm("Are you sure you want to delete this photo?")
+    if response == true
+      $($(@).closest('.delete-box').find(".delete-checkbox")).prop( "checked", true )
+      $(@).closest('.delete-box').closest('.upload-view-mode').hide(1000)
+      if $(@).closest(".file-upload-input-button").hasClass('photo-column')
+        file = "photo"
+      else if $(@).closest(".file-upload-input-button").hasClass('video-column')
+        file = "video"
+      else if $(@).closest(".file-upload-input-button").hasClass('document-column')
+        file = "document"
+      else if $(@).closest(".file-upload-input-button").hasClass('signature-column')
+        $(@).closest(".file-upload-input-button").find('.signature-upload').show()
+        return
 
-    $(@).closest('.file-upload-input-button').find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
-      $(element).find('.upload-sort-order').val(idx+1)
+      # updating sort order is problematic if users are doing more than one task at a time like deleting and updating sort orders
+      # $(@).closest('.file-upload-input-button').find("."+file+"-preview, .upload-view-mode:visible").each (idx, element) ->
+      #   $(element).find('.upload-sort-order').val(idx+1)
 
-    maxPhotos = $(this).parents('.file-upload').find('#max-photos').attr("data-max-photos")
-    if maxPhotos
-      e.preventDefault()
-      self = $(this).parents('.file-upload')
-      setTimeout ->
-        addedPhotos = $(self).find('.photo-preview').find("img").length
-        checkMaxPhotos(self, maxPhotos, addedPhotos)
-      , 100
+      maxPhotos = $(this).parents('.file-upload').find('#max-photos').attr("data-max-photos")
+      if maxPhotos
+        e.preventDefault()
+        self = $(this).parents('.file-upload')
+        setTimeout ->
+          addedPhotos = $(self).find('.photo-preview').find("img").length
+          checkMaxPhotos(self, maxPhotos, addedPhotos)
+        , 100
 
   # on click removes uploaded files on survey new.
   $('.panel-body').on 'click', '.remove-upload', (e) ->
