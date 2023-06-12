@@ -109,15 +109,43 @@ module Hanuman
           )
         # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
         else
-          s.observations.where(question_id: parent.id).each do |o|
-            Hanuman::Observation.create_with(
-              answer: ''
-            ).find_or_create_by(
-              survey_id: s.id,
-              question_id: question.id,
-              entry: o.entry,
-              parent_repeater_id: o.repeater_id
-            )
+          if parent.answer_type_id == 56
+            # section inside repeater
+            if parent.parent.present? && parent.parent.answer_type_id == 57
+              s.observations.where(question_id: parent.id).each do |o|
+                Hanuman::Observation.create_with(
+                  answer: ''
+                ).find_or_create_by(
+                  survey_id: s.id,
+                  question_id: question.id,
+                  entry: o.entry,
+                  parent_repeater_id: o.parent_repeater_id
+                )
+              end
+            else
+              s.observations.where(question_id: parent.id).each do |o|
+                Hanuman::Observation.create_with(
+                  answer: ''
+                ).find_or_create_by(
+                  survey_id: s.id,
+                  question_id: question.id,
+                  entry: o.entry,
+                  parent_repeater_id: o.repeater_id
+                )
+              end
+            end
+          end
+          if parent.answer_type_id == 57
+            s.observations.where(question_id: parent.id).each do |o|
+              Hanuman::Observation.create_with(
+                answer: ''
+              ).find_or_create_by(
+                survey_id: s.id,
+                question_id: question.id,
+                entry: o.entry,
+                parent_repeater_id: o.repeater_id
+              )
+            end
           end
         end
 
