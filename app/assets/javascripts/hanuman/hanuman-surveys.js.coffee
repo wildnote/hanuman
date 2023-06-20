@@ -5,7 +5,7 @@ $ ->
         $(element).find('.panel-heading.chevron').attr("data-target", "#collapse_" + question_id + "_" + (index + 1))
         $(element).find('.panel-collapse.in').attr("id", "collapse_" + question_id + "_" + (index + 1))
       )
-      
+
   # CHOSEN SINGLE SELECT
   # $(".chosen-select").prepend("<option value=''>&nbsp;</option>");
   $(".chosen-select").chosen
@@ -64,9 +64,31 @@ $ ->
         $(this).parents('.form-container-entry-item').nextAll().each ->
           console.log $(this).find('.form-control')
           $(this).find('.form-control').attr('readonly', false);
+          $dominantRadioButtons = $('.form-container-survey').find("[data-api-column-name ='vegetation_use_scientific_names_of_plants_dominant_species']").find('.form-control')
+          $dominantRadioButtons.css({'pointer-events': 'auto','opacity': 1, 'cursor': 'auto'})
+          $dominantRadioButtons.removeAttr("onclick")
+          i = 0
+          while i < 6
+            j = i + 1
+            $dominantRadioButtons = $('.form-container-survey').find("[data-api-column-name ='vegetation_use_scientific_names_of_plants_dominant_species_" + j + "']").find('.form-control')
+            $dominantRadioButtons.css({'pointer-events': 'auto','opacity': 1, 'cursor': 'auto'})
+            $dominantRadioButtons.removeAttr("onclick")
+            i++
       else
         $(this).parents('.form-container-entry-item').nextAll().each ->
           $(this).find('.form-control').attr('readonly', true);
+          $dominantRadioButtons = $('.form-container-survey').find("[data-api-column-name ='vegetation_use_scientific_names_of_plants_dominant_species']").find('.form-control')
+          $dominantRadioButtons.css({'pointer-events': 'auto','opacity': .5, 'cursor': 'not-allowed'})
+          $dominantRadioButtons.on "click", ->
+            return false
+          i = 0
+          while i < 6
+            j = i + 1
+            $dominantRadioButtons = $('.form-container-survey').find("[data-api-column-name ='vegetation_use_scientific_names_of_plants_dominant_species_" + j + "']").find('.form-control')
+            $dominantRadioButtons.css({'pointer-events': 'auto','opacity': .5, 'cursor': 'not-allowed'})
+            $dominantRadioButtons.on "click", ->
+              return false
+            i++
 
     $manuallyCalcPrevalenceWorksheet.on "click", ->
       if $(this).is(":checked")
