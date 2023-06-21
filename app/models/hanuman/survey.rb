@@ -331,6 +331,11 @@ module Hanuman
         SortObservationsWorker.perform_async(self.id)
       end
 
+      # check for missing photos and try and link them with photos successfully uploaded to cloudinary but no operation_upload delta got sent (ios problem)
+      if self.observation_photos.where("photo IS NULL").count == 0
+        self.link_cloudinary
+      end
+
       update_column(:lock_callbacks, false)
     end
 
