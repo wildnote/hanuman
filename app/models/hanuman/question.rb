@@ -99,59 +99,7 @@ module Hanuman
       # need this to run on has_missing_question surveys so need it to be unscoped
       surveys = Hanuman::Survey.unscoped.where(survey_template_id: question.survey_template_id)
       surveys.each do |s|
-        if parent.blank?
-          Observation.create_with(
-            answer: ''
-          ).find_or_create_by(
-            survey_id: s.id,
-            question_id: question.id,
-            entry: 1
-          )
-        # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
-        else
-          if parent.answer_type_id == 56
-            # section inside repeater
-            if parent.parent.present? && parent.parent.answer_type_id == 57
-              s.observations.where(question_id: parent.id).each do |o|
-                Hanuman::Observation.create_with(
-                  answer: ''
-                ).find_or_create_by(
-                  survey_id: s.id,
-                  question_id: question.id,
-                  entry: o.entry,
-                  parent_repeater_id: o.parent_repeater_id
-                )
-              end
-            else
-              s.observations.where(question_id: parent.id).each do |o|
-                Hanuman::Observation.create_with(
-                  answer: ''
-                ).find_or_create_by(
-                  survey_id: s.id,
-                  question_id: question.id,
-                  entry: o.entry,
-                  parent_repeater_id: o.repeater_id
-                )
-              end
-            end
-          end
-          if parent.answer_type_id == 57
-            s.observations.where(question_id: parent.id).each do |o|
-              Hanuman::Observation.create_with(
-                answer: ''
-              ).find_or_create_by(
-                survey_id: s.id,
-                question_id: question.id,
-                entry: o.entry,
-                parent_repeater_id: o.repeater_id
-              )
-            end
-          end
-        end
-
-        s.update_column(:observations_sorted, false)
-        s.update_column(:observation_visibility_set, false)
-        s.check_missing_questions
+        self.submit_blank_observation_data_single_survey s.id
       end
     end
 
@@ -170,19 +118,49 @@ module Hanuman
         )
       # if new question is in a repeater must add observation for each instance of repeater saved in previous surveys
       else
-        s.observations.where(question_id: parent.id).each do |o|
-          Hanuman::Observation.create_with(
-            answer: ''
-          ).find_or_create_by(
-            survey_id: s.id,
-            question_id: question.id,
-            parent_repeater_id: o.repeater_id
-          )
+        if parent.answer_type_id == 56
+          # section inside repeater
+          if parent.parent.present? && parent.parent.answer_type_id == 57
+            s.observations.where(question_id: parent.id).each do |o|
+              Hanuman::Observation.create_with(
+                answer: ''
+              ).find_or_create_by(
+                survey_id: s.id,
+                question_id: question.id,
+                entry: o.entry,
+                parent_repeater_id: o.parent_repeater_id
+              )
+            end
+          else
+            s.observations.where(question_id: parent.id).each do |o|
+              Hanuman::Observation.create_with(
+                answer: ''
+              ).find_or_create_by(
+                survey_id: s.id,
+                question_id: question.id,
+                entry: o.entry,
+                parent_repeater_id: o.repeater_id
+              )
+            end
+          end
+        end
+        if parent.answer_type_id == 57
+          s.observations.where(question_id: parent.id).each do |o|
+            Hanuman::Observation.create_with(
+              answer: ''
+            ).find_or_create_by(
+              survey_id: s.id,
+              question_id: question.id,
+              entry: o.entry,
+              parent_repeater_id: o.repeater_id
+            )
+          end
         end
       end
 
       s.update_column(:observations_sorted, false)
       s.update_column(:observation_visibility_set, false)
+      s.sort_observations!
       s.check_missing_questions
     end
 
