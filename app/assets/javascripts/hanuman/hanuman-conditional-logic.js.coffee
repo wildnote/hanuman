@@ -274,6 +274,12 @@ class @ConditionalLogic
       # self.clearQuestions($container)
     else
       $container.removeClass("conditional-logic-hidden")
+      # section inside repeaters (or repeaters inside sections) containers need to also be specifically hidden or shown,
+      # make sure they don't have their own specific hide show rule in place and should just be treated like the parent container
+      $childrenContainers = $container.find('.panel-observation')
+      $childrenContainers.each ->
+        if $(this).attr("data-rule") == ""
+          $(this).removeClass("conditional-logic-hidden")
 
   #clear questions
   clearQuestions: (container) ->
