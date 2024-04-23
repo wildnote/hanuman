@@ -2,7 +2,8 @@
   .col-sm-12
   = render "hanuman/surveys/fields/shared/label", ff: ff
   .col-sm-7
-    = ff.object.geometry
+    %pre.geometry-pretty-print
+      = JSON.pretty_generate(GeometryUtil::recursive_convert_to_json(ff.object.geometry))
 
   .col-sm-4.lat-long-input
     - if o.location_metadata.present?

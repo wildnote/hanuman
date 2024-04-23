@@ -2,7 +2,8 @@
   = render "hanuman/surveys/fields/readonly/shared/label", o: o
   .col-sm-7.latlong-in-survey-show
     %p.form-control-static
-      = o.geometry
+      %pre.geometry-pretty-print
+        = JSON.pretty_generate(GeometryUtil::recursive_convert_to_json(o.geometry))
     - if o.datum.present?
       %p.form-control-static= "Datum: #{o.datum}"
     - if o.utm_string.present?
