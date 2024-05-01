@@ -184,21 +184,6 @@
             </div>
           </div>
         {{/liquid-if}}
-        <div class="row">
-          {{#if isALatLongInsideARepeater}}
-            <div style="padding-top: 25px;" data-test="capture-lat-long" class="col-md-9">
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input type="checkbox"
-                        disabled={{question.surveyTemplate.lock}}
-                        name="captureLocationData"
-                        checked={{question.combineLatlongAsLine}}
-                        onchange={{action (mut question.combineLatlongAsLine) value="target.checked"}} /> Combine Lat/Long points inside the repeater as a Line
-                </div>
-              </div>
-            </div>
-          {{/if}}
-        </div>
 
         <div class="row">
           <div class="col-md-3">
