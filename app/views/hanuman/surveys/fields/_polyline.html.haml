@@ -6,17 +6,17 @@
       = JSON.pretty_generate(GeometryUtil::recursive_convert_to_json(ff.object.geometry))
 
   .form-container-entry-item
-  - if o.location_metadata.present?
-    .form-group
-      .control-label.col-sm-5 GNSS location metadata
-      .col-sm-7
-        %pre.geometry-pretty-print
-          = JSON.pretty_generate(GeometryUtil::recursive_convert_to_json(ff.object.location_metadata))
-
-  .form-group
-    .control-label.col-sm-5 Accuracy (m)
-    .col-sm-7
-      = ff.text_field :accuracy, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Accuracy (m)", readonly: @survey_readonly
+  -# - if o.location_metadata.present?
+  -#   .form-group
+  -#     .control-label.col-sm-5 GNSS location metadata
+  -#     .col-sm-7
+  -#       %pre.geometry-pretty-print
+  -#         = JSON.pretty_generate(GeometryUtil::recursive_convert_to_json(ff.object.location_metadata))
+  -#
+  -# .form-group
+  -#   .control-label.col-sm-5 Accuracy (m)
+  -#   .col-sm-7
+  -#     = ff.text_field :accuracy, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Accuracy (m)", readonly: @survey_readonly
   .form-group
     %label.control-label.col-sm-5
     .col-sm-7
