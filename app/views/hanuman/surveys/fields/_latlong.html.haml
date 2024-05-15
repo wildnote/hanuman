@@ -51,7 +51,7 @@
     .control-label.col-sm-5 Label
     .col-sm-7
       - if o.geometry.present?
-        %p.form-control-static.utm-container= "#{o.geometry['properties']['label']}"
+        %p.form-control-static= "#{o.geometry['properties']&.[]('label')}"
   -# .form-group
   -#   .control-label.col-sm-5 Speed (m/s)
   -#   .col-sm-7

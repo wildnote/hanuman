@@ -24,7 +24,7 @@
 
     %p.form-control-static= "#{latitude}, #{longitude}"
     - if o.geometry.present?
-      %p.form-control-static= "Label: #{o.geometry['properties']['label']}"
+      %p.form-control-static= "Label: #{o.geometry['properties']&.[]('label')}"
     - if o.utm_string.present?
       %p.form-control-static= "UTM: #{o.utm_string}"
     -# - unless o.speed.blank?

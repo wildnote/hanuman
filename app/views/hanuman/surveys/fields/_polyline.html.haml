@@ -17,13 +17,21 @@
   -#   .control-label.col-sm-5 Accuracy (m)
   -#   .col-sm-7
   -#     = ff.text_field :accuracy, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Accuracy (m)", readonly: @survey_readonly
-  .form-group
-    %label.control-label.col-sm-5
-    .col-sm-7
-      - if o.datum.present?
-        %p.form-control-static.utm-container= "Datum: #{o.datum}"
-  .form-group
-    %label.control-label.col-sm-5
-    .col-sm-7
-      - if o.utm_string.present?
-        %p.form-control-static.utm-container= "UTM: #{o.utm_string}"
+
+  - if o.geometry.present?
+    .form-group
+      .control-label.col-sm-5 Label
+      .col-sm-7
+        %p.form-control-static= "#{o.geometry['properties']&.[]('label')}"
+
+  - if o.datum.present?
+    .form-group
+      .control-label.col-sm-5 Datum
+      .col-sm-7
+        %p.form-control-static.utm-container= "#{o.datum}"
+
+  - if o.utm_string.present?
+    .form-group
+      .control-label.col-sm-5 UTM
+      .col-sm-7
+        %p.form-control-static.utm-container= "#{o.utm_string}"

@@ -4,6 +4,8 @@
     %p.form-control-static
       %pre.geometry-pretty-print
         = JSON.pretty_generate(GeometryUtil::recursive_convert_to_json(o.geometry))
+    - if o.geometry.present?
+      %p.form-control-static= "Label: #{o.geometry['properties']&.[]('label')}"
     - if o.datum.present?
       %p.form-control-static= "Datum: #{o.datum}"
     - if o.utm_string.present?
