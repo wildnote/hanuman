@@ -48,9 +48,14 @@
     .col-sm-7
       = ff.text_field :longitude, class: "form-control long-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Longitude", readonly: @survey_readonly
   .form-group
-    .control-label.col-sm-5 Speed (m/s)
+    .control-label.col-sm-5 Label
     .col-sm-7
-      = ff.text_field :speed, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Speed (m/s)", readonly: @survey_readonly
+      - if o.geometry.present?
+        %p.form-control-static.utm-container= "#{o.geometry['properties']['label']}"
+  -# .form-group
+  -#   .control-label.col-sm-5 Speed (m/s)
+  -#   .col-sm-7
+  -#     = ff.text_field :speed, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Speed (m/s)", readonly: @survey_readonly
   .form-group
     .control-label.col-sm-5 Direction (degrees from N)
     .col-sm-7
@@ -63,17 +68,13 @@
     .control-label.col-sm-5 Accuracy (m)
     .col-sm-7
       = ff.text_field :accuracy, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Accuracy (m)", readonly: @survey_readonly
-  .form-group
-    .control-label.col-sm-5
-    .col-sm-7
-      - if o.datum.present?
-        %p.form-control-static.utm-container= "Datum: #{o.datum}"
-  .form-group
-    .control-label.col-sm-5
-    .col-sm-7
-      - if o.utm_string.present?
+  - if o.datum.present?
+    .form-group
+      .control-label.col-sm-5 Datum
+      .col-sm-7
+        %p.form-control-static.utm-container= "#{o.datum}"
+  - if o.utm_string.present?
+    .form-group
+      .control-label.col-sm-5 UTM
+      .col-sm-7
         %p.form-control-static.utm-container= "UTM: #{o.utm_string}"
-
-  -# .col-sm-3
-  -#   - unless @survey_readonly
-  -#     %a.btn.btn-success.map-toggle-button  Plot Map Location
