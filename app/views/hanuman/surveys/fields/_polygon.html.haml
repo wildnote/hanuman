@@ -3,7 +3,8 @@
     = render "hanuman/surveys/fields/shared/label", ff: ff
     .col-sm-7
       %pre.geometry-pretty-print
-        = JSON.pretty_generate(GeometryUtil::recursive_convert_to_json(ff.object.geometry))
+        - if ff.object.geometry.present?
+          = JSON.pretty_generate(GeometryUtil::recursive_convert_to_json(ff.object.geometry))
 
 
 .form-container-entry-item
