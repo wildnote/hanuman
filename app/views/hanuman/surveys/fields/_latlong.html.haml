@@ -38,19 +38,43 @@
       %p.form-control-static 
         %strong
           NOTE to user: This Lat/Long has other GNSS location metadata not displayed here.  If you edit the location data below, that GNSS metadata will be deleted.
-    = ff.text_field :latitude, class: "form-control lat-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Latitude", readonly: @survey_readonly
-    = ff.text_field :longitude, class: "form-control long-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Longitude", readonly: @survey_readonly
-    = ff.text_field :speed, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Speed (m/s)", readonly: @survey_readonly
-    = ff.text_field :direction, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Direction (degrees from N)", readonly: @survey_readonly
-    = ff.text_field :altitude, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Altitude (m)", readonly: @survey_readonly
-    = ff.text_field :accuracy, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Accuracy (m)", readonly: @survey_readonly
-
-    - if o.datum.present?
-      %p.form-control-static.utm-container= "Datum: #{o.datum}"
-
-    - if o.utm_string.present?
-      %p.form-control-static.utm-container= "UTM: #{o.utm_string}"
-
-  .col-sm-3
-    - unless @survey_readonly
-      %a.btn.btn-success.map-toggle-button  Plot Map Location
+.form-container-entry-item
+  .form-group
+    .control-label.col-sm-5 Latitude
+    .col-sm-7
+      = ff.text_field :latitude, class: "form-control lat-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Latitude", readonly: @survey_readonly
+  .form-group
+    .control-label.col-sm-5 Longitude
+    .col-sm-7
+      = ff.text_field :longitude, class: "form-control long-entry", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Longitude", readonly: @survey_readonly
+  .form-group
+    .control-label.col-sm-5 Label
+    .col-sm-7
+      - if o.geometry.present?
+        %p.form-control-static= "#{o.geometry['properties']&.[]('label')}"
+  -# .form-group
+  -#   .control-label.col-sm-5 Speed (m/s)
+  -#   .col-sm-7
+  -#     = ff.text_field :speed, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Speed (m/s)", readonly: @survey_readonly
+  .form-group
+    .control-label.col-sm-5 Direction (degrees from N)
+    .col-sm-7
+      = ff.text_field :direction, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Direction (degrees from N)", readonly: @survey_readonly
+  .form-group
+    .control-label.col-sm-5 Altitude (m)
+    .col-sm-7
+      = ff.text_field :altitude, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Altitude (m)", readonly: @survey_readonly
+  .form-group
+    .control-label.col-sm-5 Accuracy (m)
+    .col-sm-7
+      = ff.text_field :accuracy, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Accuracy (m)", readonly: @survey_readonly
+  - if o.datum.present?
+    .form-group
+      .control-label.col-sm-5 Datum
+      .col-sm-7
+        %p.form-control-static.utm-container= "#{o.datum}"
+  - if o.utm_string.present?
+    .form-group
+      .control-label.col-sm-5 UTM
+      .col-sm-7
+        %p.form-control-static.utm-container= "UTM: #{o.utm_string}"

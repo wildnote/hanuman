@@ -184,21 +184,6 @@
             </div>
           </div>
         {{/liquid-if}}
-        <div class="row">
-          {{#if isALatLongInsideARepeater}}
-            <div style="padding-top: 25px;" data-test="capture-lat-long" class="col-md-9">
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input type="checkbox"
-                        disabled={{question.surveyTemplate.lock}}
-                        name="captureLocationData"
-                        checked={{question.combineLatlongAsLine}}
-                        onchange={{action (mut question.combineLatlongAsLine) value="target.checked"}} /> Combine Lat/Long points inside the repeater as a Line
-                </div>
-              </div>
-            </div>
-          {{/if}}
-        </div>
 
         <div class="row">
           <div class="col-md-3">
@@ -235,32 +220,34 @@
           </div>
         {{/if}}
 
-        {{#if (and isSuperUser question.isLocationSelect) }}
-          <div class="row">
-            <div class="col-md-6">
-              <div class="form-group">
-                <div class="col-sm-12">
-                  <input type="checkbox"
-                        disabled={{question.surveyTemplate.lock}}
-                        name="enableSurveyHistory"
-                        checked={{question.enableSurveyHistory}}
-                        onchange={{action (mut question.enableSurveyHistory) value="target.checked"}} /> Enable Survey History (Superuser Only)
-                </div>
-              </div>
-            </div>
-          </div>
-        {{/if}}
-
         {{#if (or (and isSuperUser question.isTextField) question.isLocationSelect) }}
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
                 <div class="col-sm-12">
                   <input type="checkbox"
-                        disabled={{question.surveyTemplate.lock}}
                         name="enableSurveyHistory"
                         checked={{question.newProjectLocation}}
-                        onchange={{action (mut question.newProjectLocation) value="target.checked"}} /> Create Project Location
+                        onchange={{action (mut question.newProjectLocation) value="target.checked"}} /> Dynamic Location
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Dynamic Location" data-content="Allows users to add new locations from the field." class="bootstrap-popover">
+                    <span class="glyphicons glyphicons-info-sign"></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+
+        {{#if (and isSuperUser question.isLocationSelect) }}
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                         disabled={{question.surveyTemplate.lock}}
+                         name="enableSurveyHistory"
+                         checked={{question.enableSurveyHistory}}
+                         onchange={{action (mut question.enableSurveyHistory) value="target.checked"}} /> Enable Survey History (Superuser Only)
                 </div>
               </div>
             </div>
