@@ -86,19 +86,6 @@ export default Component.extend({
     return this.get('questions').findBy('id', this.get('question.parentId'));
   }),
 
-  isALatLongInsideARepeater: computed('question', function() {
-    if (this.get('isALatLong')) {
-      let ancestryQuestion = this.get('ancestryQuestion');
-      if (ancestryQuestion === undefined) {
-        return false;
-      } else {
-        return ancestryQuestion.get('isARepeater');
-      }
-    } else {
-      return false;
-    }
-  }),
-
   isRequiredDisabled: computed(
     'question.answerType.name',
     'question.visibilityRule.{isNew,conditionsPendingSave.[]}',

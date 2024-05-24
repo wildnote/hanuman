@@ -1,0 +1,39 @@
+.form-group.survey-map-field
+  .col-sm-12
+    = render "hanuman/surveys/fields/shared/label", ff: ff
+    .col-sm-7
+      %pre.geometry-pretty-print
+        - if ff.object.geometry.present?
+          = JSON.pretty_generate(GeometryUtil::recursive_convert_to_json(ff.object.geometry))
+
+
+.form-container-entry-item
+  -# - if o.location_metadata.present?
+  -#   .form-group
+  -#     .control-label.col-sm-5 GNSS location metadata
+  -#     .col-sm-7
+  -#       %pre.geometry-pretty-print
+  -#         = JSON.pretty_generate(GeometryUtil::recursive_convert_to_json(ff.object.location_metadata))
+  -#
+  -# .form-group
+  -#   .control-label.col-sm-5 Accuracy (m)
+  -#   .col-sm-7
+  -#     = ff.text_field :accuracy, class: "form-control", maxlength: 230, "data-parsley-type": "number", "data-parsley-type-step": "any", "placeholder": "Accuracy (m)", readonly: @survey_readonly
+
+  - if o.geometry.present?
+    .form-group
+      .control-label.col-sm-5 Label
+      .col-sm-7
+        %p.form-control-static= "#{o.geometry['properties']&.[]('label')}"
+
+  - if o.datum.present?
+    .form-group
+      .control-label.col-sm-5 Datum
+      .col-sm-7
+        %p.form-control-static.utm-container= "#{o.datum}"
+
+  - if o.utm_string.present?
+    .form-group
+      .control-label.col-sm-5 UTM
+      .col-sm-7
+        %p.form-control-static.utm-container= "#{o.utm_string}"
