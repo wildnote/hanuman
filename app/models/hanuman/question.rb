@@ -96,8 +96,7 @@ module Hanuman
       question = self
       parent = question.parent
       survey_template = question.survey_template
-      # need this to run on has_missing_question surveys so need it to be unscoped
-      surveys = Hanuman::Survey.unscoped.where(survey_template_id: question.survey_template_id)
+      surveys = Hanuman::Survey.where(survey_template_id: question.survey_template_id)
       surveys.each do |s|
         self.submit_blank_observation_data_single_survey s.id
       end
