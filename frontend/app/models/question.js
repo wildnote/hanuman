@@ -65,6 +65,8 @@ export default Model.extend(Validator, {
   isARepeater: equal('answerType.name', 'repeater'),
   isLocationSelect: equal('answerType.name', 'locationchosensingleselect'),
   isTextField: equal('answerType.name', 'text'),
+  isTextAreaField: equal('answerType.name', 'textarea'),
+
 
   supportAncestry: match('answerType.name', /section|repeater/),
   isTaxonType: match('answerType.name', /taxon/),
