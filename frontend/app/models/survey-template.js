@@ -1,3 +1,4 @@
+import { computed } from '@ember/object';
 import Model from 'ember-data/model';
 import attr from 'ember-data/attr';
 import { hasMany } from 'ember-data/relationships';
@@ -36,6 +37,10 @@ const SurveyTemplate = Model.extend(Validator, {
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),
   resortQuestions: memberAction({ path: 'resort_questions', type: 'patch' }),
   checkTemplate: memberAction({ path: 'check_template', type: 'get' }),
+
+  isCaDpr: computed('name', function() {
+    return [8,9,10,11,12,13,14,15,16,17,18,107,108,109].includes(this.surveyTemplateExportTypeId);
+  }),
 
   // Validations
   validations: {
