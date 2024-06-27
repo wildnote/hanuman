@@ -38,7 +38,9 @@
                     <p><b>Section</b> A set of questions grouped together.</p>
                     <hr>
                     <p><b>Geographic</b></p>
-                    <p><b>Latitude/Longitude</b> Drop a geographical point.</p>
+                    <p><b>Point</b> Drop a geographical point.</p>
+                    <p><b>Polygon</b> Draw or drop a set of vertices to create a polygon.</p>
+                    <p><b>Polyline</b> Draw or drop a set of vertices to create a polyline.</p>
                     <hr>
                     <p><b>Media</b></p>
                     <p><b>Documents</b> Document upload.</p>
@@ -346,6 +348,20 @@
             {{/form-field}}
           </div>
         </div>
+        {{#if (or question.isTextField question.isTextAreaField)}}
+          {{#if question.surveyTemplate.isCaDpr}}
+            <div class="form-group">
+              <div class="col-sm-12">
+                {{#form-field for='sortOrder' label='Export Continuation Characters (CA DPR ONLY)'}}
+                  <input data-test-order type="number"
+                         class="form-control"
+                         value={{question.exportContinuationCharacters}}
+                         oninput={{action (mut question.exportContinuationCharacters) value="target.value"}} />
+                {{/form-field}}
+              </div>
+            </div>
+          {{/if}}
+        {{/if}}
 
         {{!-- Lookup rules --}}
         {{#if question.answerType.isLookupRuleable}}
