@@ -487,9 +487,10 @@ $(document).ready(function(){
       $(this).find('.selectize-taxon-select').selectize({
         load: function(query, callback) {
           var dataSourceId = this.$input.data("source");
+          var regionId = 8;
           var self = this;
           $.ajax({
-            url: "/taxa/select_list/" + dataSourceId,
+            url: "/taxa/select_list/" + dataSourceId + "/region/" + regionId,
             type: "GET",
             dataType: "json",
             data: {
