@@ -485,12 +485,15 @@ $(document).ready(function(){
   function bindChosenTypes(elements){
     $.each(elements, function () {
       $(this).find('.selectize-taxon-select').selectize({
+        valueField: 'id',
+        labelField: 'formatted_answer_choice_with_symbol',
+        searchField: 'formatted_answer_choice_with_symbol',
         load: function(query, callback) {
           var dataSourceId = this.$input.data("source");
-          var regionId = 8;
+          var regionId = this.$input.data("region");
           var self = this;
           $.ajax({
-            url: "/taxa/select_list/" + dataSourceId + "/region/" + regionId,
+            url: "/taxa/select_list/" + dataSourceId + "/region_id/" + regionId,
             type: "GET",
             dataType: "json",
             data: {
@@ -505,7 +508,7 @@ $(document).ready(function(){
                   self.removeOption(option);
                 }
               }
-              callback(res.taxa);
+              callback(res);
             }
           });
         },
