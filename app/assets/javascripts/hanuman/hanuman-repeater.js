@@ -516,13 +516,15 @@ $(document).ready(function(){
           var selectId = this.$input.attr("id");
           if (selectId in selectizeElements) {
             var data = selectizeElements[selectId];
+            console.log(data.inputValue); // Debugging
+            console.log(data.inputText);  // Debugging
             if (data.inputValue instanceof Array) {
               for (var i = 0; i < data.inputValue.length; i++) {
-                this.addOption({value: data.inputValue[i], text: data.inputText[i]});
+                this.addOption({id: data.inputValue[i], formatted_answer_choice_with_symbol: data.inputText[i]});
                 this.addItem(data.inputValue[i]);
               }
             } else {
-              this.addOption({value: data.inputValue, text: data.inputText});
+              this.addOption({id: data.inputValue, formatted_answer_choice_with_symbol: data.inputText});
               this.addItem(data.inputValue);
             }
           }
