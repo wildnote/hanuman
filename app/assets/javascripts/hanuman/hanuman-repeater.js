@@ -485,11 +485,15 @@ $(document).ready(function(){
   function bindChosenTypes(elements){
     $.each(elements, function () {
       $(this).find('.selectize-taxon-select').selectize({
+        valueField: 'id',
+        labelField: 'formatted_answer_choice_with_symbol',
+        searchField: 'formatted_answer_choice_with_symbol',
         load: function(query, callback) {
           var dataSourceId = this.$input.data("source");
+          var regionId = this.$input.data("region");
           var self = this;
           $.ajax({
-            url: "/taxa/select_list/" + dataSourceId,
+            url: "/taxa/select_list/" + dataSourceId + "/region_id/" + regionId,
             type: "GET",
             dataType: "json",
             data: {
@@ -504,7 +508,7 @@ $(document).ready(function(){
                   self.removeOption(option);
                 }
               }
-              callback(res.taxa);
+              callback(res);
             }
           });
         },
@@ -512,13 +516,15 @@ $(document).ready(function(){
           var selectId = this.$input.attr("id");
           if (selectId in selectizeElements) {
             var data = selectizeElements[selectId];
+            console.log(data.inputValue); // Debugging
+            console.log(data.inputText);  // Debugging
             if (data.inputValue instanceof Array) {
               for (var i = 0; i < data.inputValue.length; i++) {
-                this.addOption({value: data.inputValue[i], text: data.inputText[i]});
+                this.addOption({id: data.inputValue[i], formatted_answer_choice_with_symbol: data.inputText[i]});
                 this.addItem(data.inputValue[i]);
               }
             } else {
-              this.addOption({value: data.inputValue, text: data.inputText});
+              this.addOption({id: data.inputValue, formatted_answer_choice_with_symbol: data.inputText});
               this.addItem(data.inputValue);
             }
           }
