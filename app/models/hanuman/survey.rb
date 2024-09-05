@@ -313,11 +313,8 @@ module Hanuman
 
       update_column(:lock_callbacks, true)
 
-      if self.wetland_v2_web_v3?
+      if self.web_wetland_v5_v6?
         self.set_wetland_dominant_species
-      end
-
-      if self.web_wetland_v3_v4_v5?
         self.set_dominance_test
         self.set_rapid_test_hydrophytic
       end
