@@ -93,10 +93,16 @@ module Hanuman
 
     def process_api_column_name_change
       q = self
+
+      puts q.question_text
+
       api_column_name_was = q.api_column_name_was
       api_column_name_is = q.api_column_name
       variable_name = "$#{api_column_name_was}"
       new_variable_name = "$#{api_column_name_is}"
+
+      puts variable_name
+      puts new_variable_name
 
       # find all rules in survey template referencing old api_column_name and update
       q.conditions.each do |c|
@@ -105,9 +111,11 @@ module Hanuman
         # Replace the old variable name with the new one in the rule
         if r.present? && r.type == "Hanuman::CalculationRule" && r.script.present? && r.script.include?(variable_name)
           updated_rule = r.script.gsub(variable_name, new_variable_name)
+          puts r.script
 
           # Update the rule with the new variable name
           r.update(script: updated_rule)
+          puts r.script
         end
       end
     end
@@ -344,26 +352,19 @@ module Hanuman
 
     def create_base_string
       base_string = parameterized_text
+      if self.ancestry? && self.parent.answer_type_id == 57
+        base_plus_parent = self.parent.parameterized_text + "_" + base_string
+        base_string = base_plus_parent
+      end
       if base_string.length > 60
         base_string = base_string[0..59]
-      end
-      if self.ancestry?
-        base_plus_parent = base_string
-        self.ancestors.order(sort_order: :desc).each do |a|
-          base_plus_parent = (a.parameterized_text + "_") + base_plus_parent
-          if base_plus_parent.length > 60
-            break
-          else
-            base_string = base_plus_parent
-          end
-        end
       end
       base_string
     end
 
     def create_api_column_name
       # simplifying base_string to not include ancestry as it gets too complicated too quick-kdh
-      base_string = parameterized_text
+      base_string = create_base_string
 
       # checking for duplicate api_column_names and incrementing index by 1
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
@@ -384,7 +385,7 @@ module Hanuman
 
     def create_db_column_name
       # simplifying base_string to not include ancestry as it gets too complicated too quick-kdh
-      base_string = parameterized_text
+      base_string = create_base_string
 
       # checking for duplicate db_column_names and incrementing index by 1
       if Hanuman::Question.exists?(db_column_name: base_string, survey_template_id: self.survey_template_id)
