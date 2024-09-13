@@ -34,6 +34,7 @@ module Hanuman
     before_update :answer_type_change, if: :answer_type_id_changed?
     before_update :set_calculated
     after_save :format_css_style, if: :css_style_changed?
+    after_update :process_api_column_name_change, if: :api_column_name_changed?
 
     # Need to cache the change state of flagged answers in an attribute so that we can access it after_commit
     # Need to start this worker after_commit to avoid it firing before the transaction has completed
@@ -88,6 +89,27 @@ module Hanuman
       # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
     def process_question_changes_on_observations
       ProcessQuestionChangesWorker.perform_async(id)
+    end
+
+    def process_api_column_name_change
+      q = self
+      api_column_name_was = q.api_column_name_was
+      api_column_name_is = q.api_column_name
+      variable_name = "$#{api_column_name_was}"
+      new_variable_name = "$#{api_column_name_is}"
+
+      # find all rules in survey template referencing old api_column_name and update
+      q.conditions.each do |c|
+        r = c.rule
+
+        # Replace the old variable name with the new one in the rule
+        if r.script.include?(variable_name)
+          updated_rule = r.script.gsub(variable_name, new_variable_name)
+
+          # Update the rule with the new variable name
+          r.update(script: updated_rule)
+        end
+      end
     end
 
     # if survey has data submitted against it, then submit blank data for each
