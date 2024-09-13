@@ -103,7 +103,7 @@ module Hanuman
         r = c.rule
 
         # Replace the old variable name with the new one in the rule
-        if r.script.include?(variable_name)
+        if r.present? && r.type == "Hanuman::CalculationRule" && r.script.present? && r.script.include?(variable_name)
           updated_rule = r.script.gsub(variable_name, new_variable_name)
 
           # Update the rule with the new variable name
