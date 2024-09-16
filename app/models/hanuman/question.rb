@@ -34,6 +34,7 @@ module Hanuman
     before_update :answer_type_change, if: :answer_type_id_changed?
     before_update :set_calculated
     after_save :format_css_style, if: :css_style_changed?
+    after_update :process_api_column_name_change, if: :api_column_name_changed?
 
     # Need to cache the change state of flagged answers in an attribute so that we can access it after_commit
     # Need to start this worker after_commit to avoid it firing before the transaction has completed
@@ -88,6 +89,35 @@ module Hanuman
       # need to process question changes on observation in job because the changes could cause timeout on survey template with a bunch of questions
     def process_question_changes_on_observations
       ProcessQuestionChangesWorker.perform_async(id)
+    end
+
+    def process_api_column_name_change
+      q = self
+
+      puts q.question_text
+
+      api_column_name_was = q.api_column_name_was
+      api_column_name_is = q.api_column_name
+      variable_name = "$#{api_column_name_was}"
+      new_variable_name = "$#{api_column_name_is}"
+
+      puts variable_name
+      puts new_variable_name
+
+      # find all rules in survey template referencing old api_column_name and update
+      q.conditions.each do |c|
+        r = c.rule
+
+        # Replace the old variable name with the new one in the rule
+        if r.present? && r.type == "Hanuman::CalculationRule" && r.script.present? && r.script.include?(variable_name)
+          updated_rule = r.script.gsub(variable_name, new_variable_name)
+          puts r.script
+
+          # Update the rule with the new variable name
+          r.update(script: updated_rule)
+          puts r.script
+        end
+      end
     end
 
     # if survey has data submitted against it, then submit blank data for each
@@ -322,26 +352,19 @@ module Hanuman
 
     def create_base_string
       base_string = parameterized_text
+      if self.ancestry? && self.parent.answer_type_id == 57
+        base_plus_parent = self.parent.parameterized_text + "_" + base_string
+        base_string = base_plus_parent
+      end
       if base_string.length > 60
         base_string = base_string[0..59]
-      end
-      if self.ancestry?
-        base_plus_parent = base_string
-        self.ancestors.order(sort_order: :desc).each do |a|
-          base_plus_parent = (a.parameterized_text + "_") + base_plus_parent
-          if base_plus_parent.length > 60
-            break
-          else
-            base_string = base_plus_parent
-          end
-        end
       end
       base_string
     end
 
     def create_api_column_name
       # simplifying base_string to not include ancestry as it gets too complicated too quick-kdh
-      base_string = parameterized_text
+      base_string = create_base_string
 
       # checking for duplicate api_column_names and incrementing index by 1
       if Hanuman::Question.exists?(api_column_name: base_string, survey_template_id: self.survey_template_id)
@@ -362,7 +385,7 @@ module Hanuman
 
     def create_db_column_name
       # simplifying base_string to not include ancestry as it gets too complicated too quick-kdh
-      base_string = parameterized_text
+      base_string = create_base_string
 
       # checking for duplicate db_column_names and incrementing index by 1
       if Hanuman::Question.exists?(db_column_name: base_string, survey_template_id: self.survey_template_id)
