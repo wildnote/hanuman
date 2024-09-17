@@ -255,10 +255,27 @@ module Hanuman
                 is_numerical = trigger_observation.answer.to_i.to_s == trigger_observation.answer || trigger_observation.answer.to_f.to_s == trigger_observation.answer
                 is_numerical && trigger_observation.answer.to_f < cond.answer.to_f
               when "starts with"
-                if trigger_observation.answer_choice.present?
+                if trigger_observation.observation_answers.present?
+                  cond_met = false
+                  trigger_observation.observation_answers.each do |obs_answer|
+                    cond_met =
+                      (obs_answer.answer_choice.present? && obs_answer.answer_choice.option_text.starts_with?(cond.answer)) ||
+                        (obs_answer.taxon.present? && obs_answer.taxon.formatted_answer_choice_with_symbol.starts_with?(cond.answer))
+                    break if cond_met
+                  end
+                  cond_met
+                elsif trigger_observation.location.present? && trigger_observation.question.answer_type.name.starts_with?("location")
+                  trigger_observation.location.name.include?(cond.answer)
+                elsif trigger_observation.taxon.present? && trigger_observation.question.answer_type.name.starts_with?("taxon")
+                  trigger_observation.taxon.formatted_answer_choice_with_symbol.starts_with?(cond.answer)
+                elsif trigger_observation.answer_choice.present?
                   trigger_observation.answer_choice.option_text.starts_with?(cond.answer)
                 else
-                  trigger_observation.answer.starts_with?(cond.answer)
+                  if trigger_observation.answer.nil?
+                    cond.answer.nil?
+                  else
+                    trigger_observation.answer.starts_with?(cond.answer)
+                  end
                 end
               when "contains"
                 if trigger_observation.observation_answers.present?
