@@ -71,6 +71,8 @@ export default Model.extend(Validator, {
   supportAncestry: match('answerType.name', /section|repeater/),
   isTaxonType: match('answerType.name', /taxon/),
 
+  displayDataInRepeaterHeader: attr('boolean'),
+
   cssStyleDisplay: computed('cssStyle', function () {
     let styleString = this.get('cssStyle') || '';
     return styleString.split(';').join(";\n");
@@ -104,9 +106,13 @@ export default Model.extend(Validator, {
     return this.store.peekAll('question').filterBy('id', this.parentId).get(0);
   }),
 
-  // inRepeater: computed('parentId', function () {
-  //
-  // }),
+  isinRepeater: computed('parentId', function() {
+    if (this.get('parent') && this.get('parent').get('isARepeater')) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }),
 
   numChildren: computed('childQuestion', function() {
     if (this.get('childQuestion')) {
