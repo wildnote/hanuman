@@ -114,6 +114,22 @@ export default Model.extend(Validator, {
     }
   }),
 
+  canBeDisplayedInRepeater: computed('canBeDisplayedInRepeater', 'answerType.name', function() {
+    let allowableTypes = [
+      'checkbox',
+      'number',
+      'radio',
+      'text',
+      'date',
+      'time',
+      'chosenselect',
+      'locationchosensingleselect',
+      'taxonchosensingleselect',
+      'counter',
+    ];
+    return allowableTypes.includes(this.get('answerType').get('name'));
+  }),
+
   numChildren: computed('childQuestion', function() {
     if (this.get('childQuestion')) {
       return this.get('ancestry').split('/').length;
