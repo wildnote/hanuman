@@ -39,7 +39,7 @@ module Hanuman
       if path_call_string
         link_to raw(title), eval(path_call_string+"(params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil))"), {:class => css_class}
       else
-        link_to raw(title), params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil), {:class => css_class}
+        link_to raw(title), request.params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil), {:class => css_class}
       end
     end
 
