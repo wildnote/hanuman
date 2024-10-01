@@ -204,6 +204,24 @@
           </div>
         </div>
 
+        {{#if (and isSuperUser question.isinRepeater question.canBeDisplayedInRepeater) }}
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                         name="isDisplayedInRepeaterHeader"
+                         checked={{question.displayDataInRepeaterHeader}}
+                         onchange={{action (mut question.displayDataInRepeaterHeader) value="target.checked"}} /> Display data in repeater header
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Display data in repeater header" data-content="Display data in repeater header. Useful for reviewing collapsed repeater information." class="bootstrap-popover">
+                    <span class="glyphicons glyphicons-info-sign"></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
+
         {{#if (or isALatLong isPhoto) }}
           <div class="row">
             <div class="col-md-3">
@@ -222,7 +240,7 @@
           </div>
         {{/if}}
 
-        {{#if (or (and isSuperUser question.isTextField) question.isLocationSelect) }}
+        {{#if question.isLocationSelect }}
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">
