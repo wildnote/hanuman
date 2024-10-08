@@ -114,6 +114,10 @@ export default Model.extend(Validator, {
     }
   }),
 
+  hasDefaultAnswer: computed('defaultAnswer', function() {
+    return isPresent(this.get('defaultAnswer'));
+  }),
+
   canBeDisplayedInRepeater: computed('canBeDisplayedInRepeater', 'answerType.name', function() {
     let allowableTypes = [
       'checkbox',
