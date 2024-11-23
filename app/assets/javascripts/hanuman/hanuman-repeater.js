@@ -158,6 +158,9 @@ $(document).ready(function(){
     cl = new ConditionalLogic;
     cl.findRules(false, true, $context);
 
+    // bind wetland calcs
+    window.setupWetlandCalcRepeaterListeners()
+
   });
 
 
