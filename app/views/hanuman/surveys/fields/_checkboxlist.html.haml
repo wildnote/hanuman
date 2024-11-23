@@ -24,6 +24,6 @@
                                a.id, cbl_answers.include?(a.id), class: 'form-control', data: { "label-value" => a.formatted_answer_choice }
           = label_tag nil, a.formatted_answer_choice
           - if a.definition.present?
-            %span.glyphicons.glyphicons-info-sign.answerc-helper-tooltip{:title => "#{a.definition}",  :style => "color:#663213", :data => {:toggle => "tooltip", :placement => "bottom"}}
+            %span.glyphicons.glyphicons-info-sign.answerc-helper-tooltip.pull-right{:title => "#{a.definition}",  :style => "color:#663213", :data => {:toggle => "tooltip", :placement => "bottom"}}
 
           %br/
