@@ -91,6 +91,7 @@ $(document).ready(function(){
     removeErrorBackground('checkbox', $clonedContainer);
     removeErrorBackground('checkboxes', $clonedContainer);
     removeUserSuccessClass($clonedContainer);
+    $clonedContainer.find('.concatenated-value').text('')
 
     // bind maps
     setTimeout(function(){
