@@ -374,7 +374,7 @@ $(document).ready(function(){
   }
 
   $('.form-container-survey').on('click', ".destroy-form-container-repeater", function() {
-    var response = window.confirm('Are you sure you want to delete this observation?')
+    var response = window.confirm('Are you sure you want to delete this repeater?')
     var that = this;
     var repeaterId = $(this).closest('.form-container-repeater').find('.repeater-id').val();
     var dataObservationId = $($(this).closest('.form-container-repeater')).attr('data-observation-id');
@@ -392,6 +392,15 @@ $(document).ready(function(){
       } else {
         removeObservationFromDom(that);
       }
+      // run cec
+      $context = $('.form-container-survey')
+      // $context = $clonedContainer
+      cl = new ConditionalLogic;
+      cl.findRules(false, true, $context);
+      // re-run wetland calcs
+      coverColumnNames.forEach(function (columnName) {
+        processCoverFields(columnName);
+      });
     }
     return false;
   });
