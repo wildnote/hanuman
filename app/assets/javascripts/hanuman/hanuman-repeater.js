@@ -160,7 +160,7 @@ $(document).ready(function(){
     cl.findRules(false, true, $context);
 
     // bind wetland calcs
-    window.setupWetlandCalcRepeaterListeners();
+    window.initializeCoverFields();
 
     $('div[data-display-in-header="true"]').on('change', '.form-control', function () {
       processRepeaterHeaders();
