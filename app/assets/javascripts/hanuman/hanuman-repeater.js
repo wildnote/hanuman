@@ -172,6 +172,17 @@ $(document).ready(function(){
       });
     });
 
+    window.iSColumnNames.forEach(function (columnName) {
+      var iSInput = $clonedContainer.find('[data-db-column-name="' + columnName + '"]')
+          .find('.form-group .form-control');
+
+      // Attach change event listener for each columnName
+      iSInput.on('change', function () {
+        processISFields(columnName);
+      });
+    });
+
+    // bind repeater header
     $clonedContainer.find('div[data-display-in-header="true"]').on('change', '.form-control', function () {
       window.processRepeaterHeader(this);
     });
