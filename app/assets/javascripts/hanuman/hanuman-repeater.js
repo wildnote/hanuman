@@ -162,7 +162,7 @@ $(document).ready(function(){
     // bind wetland calcs
     window.initializeCoverFields();
 
-    $('div[data-display-in-header="true"]').on('change', '.form-control', function () {
+    $clonedContainer.find('div[data-display-in-header="true"]').on('change', '.form-control', function () {
       processRepeaterHeaders();
     });
 
