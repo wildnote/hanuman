@@ -22,7 +22,8 @@ module.exports = function(defaults) {
     ace: {
       themes: ['github'],
       modes: ['javascript']
-    }
+    },
+    tests: false
   });
 
   app.import('bower_components/animate.css/animate.min.css');
