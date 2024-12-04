@@ -160,10 +160,20 @@ $(document).ready(function(){
     cl.findRules(false, true, $context);
 
     // bind wetland calcs
-    window.initializeCoverFields();
+    // window.initializeCoverFields();
+    window.coverColumnNames.forEach(function (columnName) {
+      var percentCoverInput = $clonedContainer.find('[data-db-column-name="' + columnName + '"]')
+          .find('.form-group .form-control');
+
+      percentCoverInput.on('input', function () {
+        var percentCoverValue = $(this).val();
+        console.log('Value changed in input field for ' + columnName + ':', percentCoverValue);
+        window.processCoverFields(columnName);
+      });
+    });
 
     $clonedContainer.find('div[data-display-in-header="true"]').on('change', '.form-control', function () {
-      processRepeaterHeaders();
+      window.processRepeaterHeader(this);
     });
 
   });
