@@ -165,7 +165,7 @@ $(document).ready(function(){
       var percentCoverInput = $clonedContainer.find('[data-db-column-name="' + columnName + '"]')
           .find('.form-group .form-control');
 
-      percentCoverInput.on('input', function () {
+      percentCoverInput.on('change', function () {
         var percentCoverValue = $(this).val();
         console.log('Value changed in input field for ' + columnName + ':', percentCoverValue);
         window.processCoverFields(columnName);
