@@ -1,4 +1,5 @@
-.col-sm-1
+= ff.label :answer, ff.object.question.question_text, class: "col-sm-4 control-label", id: ff.object.anchor_slug
+.col-sm-1.pull-right
   - if ff.object.question.helper_text.present?
     - if ff.object.question.calculated?
       %span.glyphicons.glyphicons-calculator.question-helper-tooltip{:title => "#{ff.object.question.helper_text}", :data => {:toggle => "tooltip", :placement => "bottom"}}
@@ -7,6 +8,6 @@
       %span.glyphicons.glyphicons-info-sign.question-helper-tooltip{:title => "#{ff.object.question.helper_text}", :data => {:toggle => "tooltip", :placement => "bottom"}}
 
   - elsif ff.object.question.calculated?
-    %span.glyphicons.glyphicons-calculator.question-helper-tooltip{:title => "This answer cannot be modified because it is automatically calculated.", :data => {:toggle => "tooltip", :placement => "bottom"}}
+    %span.glyphicons.glyphicons-calculator.question-helper-tooltip{:title => "This is a calculated field", :data => {:toggle => "tooltip", :placement => "bottom"}}
 
-= ff.label :answer, ff.object.question.question_text, class: "col-sm-4 control-label", id: ff.object.anchor_slug
+

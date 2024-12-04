@@ -91,6 +91,7 @@ $(document).ready(function(){
     removeErrorBackground('checkbox', $clonedContainer);
     removeErrorBackground('checkboxes', $clonedContainer);
     removeUserSuccessClass($clonedContainer);
+    $clonedContainer.find('.concatenated-value').text('')
 
     // bind maps
     setTimeout(function(){
@@ -157,6 +158,34 @@ $(document).ready(function(){
     // $context = $clonedContainer
     cl = new ConditionalLogic;
     cl.findRules(false, true, $context);
+
+    // bind wetland calcs
+    // window.initializeCoverFields();
+    window.coverColumnNames.forEach(function (columnName) {
+      var percentCoverInput = $clonedContainer.find('[data-db-column-name="' + columnName + '"]')
+          .find('.form-group .form-control');
+
+      percentCoverInput.on('change', function () {
+        var percentCoverValue = $(this).val();
+        console.log('Value changed in input field for ' + columnName + ':', percentCoverValue);
+        window.processCoverFields(columnName);
+      });
+    });
+
+    window.iSColumnNames.forEach(function (columnName) {
+      var iSInput = $clonedContainer.find('[data-db-column-name="' + columnName + '"]')
+          .find('.form-group .form-control');
+
+      // Attach change event listener for each columnName
+      iSInput.on('change', function () {
+        processISFields(columnName);
+      });
+    });
+
+    // bind repeater header
+    $clonedContainer.find('div[data-display-in-header="true"]').on('change', '.form-control', function () {
+      window.processRepeaterHeader(this);
+    });
 
   });
 
@@ -366,7 +395,7 @@ $(document).ready(function(){
   }
 
   $('.form-container-survey').on('click', ".destroy-form-container-repeater", function() {
-    var response = window.confirm('Are you sure you want to delete this observation?')
+    var response = window.confirm('Are you sure you want to delete this repeater?')
     var that = this;
     var repeaterId = $(this).closest('.form-container-repeater').find('.repeater-id').val();
     var dataObservationId = $($(this).closest('.form-container-repeater')).attr('data-observation-id');
@@ -384,6 +413,15 @@ $(document).ready(function(){
       } else {
         removeObservationFromDom(that);
       }
+      // run cec
+      $context = $('.form-container-survey')
+      // $context = $clonedContainer
+      cl = new ConditionalLogic;
+      cl.findRules(false, true, $context);
+      // re-run wetland calcs
+      coverColumnNames.forEach(function (columnName) {
+        processCoverFields(columnName);
+      });
     }
     return false;
   });
