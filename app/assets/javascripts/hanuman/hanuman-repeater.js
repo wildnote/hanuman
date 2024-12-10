@@ -414,13 +414,6 @@ $(document).ready(function(){
       } else {
         removeObservationFromDom(that);
       }
-      // run cec
-      $context = $('.form-container-survey')
-      // $context = $clonedContainer
-      cl = new ConditionalLogic;
-      cl.findRules(false, true, $context);
-      // re-run wetland calcs
-      window.runAllWetlandCalcs();
     }
     return false;
   });
@@ -442,6 +435,8 @@ $(document).ready(function(){
           $context = $('.form-container-survey')
           cl = new ConditionalLogic;
           cl.findRules(true, true, $context);
+          // re-run wetland calcs
+          window.runAllWetlandCalcs();
       }
     );
   };
