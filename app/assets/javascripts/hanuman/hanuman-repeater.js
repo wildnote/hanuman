@@ -178,7 +178,7 @@ $(document).ready(function(){
 
       // Attach change event listener for each columnName
       iSInput.on('change', function () {
-        processISFields(columnName);
+        window.processISFields(columnName);
       });
     });
 
@@ -394,6 +394,7 @@ $(document).ready(function(){
     $clonedContainer.find('div.form-container-entry-item[data-element-type='+ type +']').find('div.col-sm-7').removeAttr('style')
   }
 
+  // DELETE REPEATER
   $('.form-container-survey').on('click', ".destroy-form-container-repeater", function() {
     var response = window.confirm('Are you sure you want to delete this repeater?')
     var that = this;
@@ -419,9 +420,7 @@ $(document).ready(function(){
       cl = new ConditionalLogic;
       cl.findRules(false, true, $context);
       // re-run wetland calcs
-      coverColumnNames.forEach(function (columnName) {
-        processCoverFields(columnName);
-      });
+      window.runAllWetlandCalcs();
     }
     return false;
   });
