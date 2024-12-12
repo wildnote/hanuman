@@ -191,7 +191,6 @@
             <div class="form-group">
               <div class="col-sm-12">
                 <input type="checkbox"
-                      disabled={{or isRequiredDisabled question.surveyTemplate.lock}}
                       name="isRequired"
                       checked={{question.required}}
                       onchange={{action (mut question.required) value="target.checked"}} /> Required
