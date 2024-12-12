@@ -193,7 +193,7 @@ class @ConditionalLogic
 
     if rule.type == "Hanuman::VisibilityRule"
       self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
-    else if !onLoad && hideShow == false && rule.type == "Hanuman::LookupRule"
+    else if hideShow == false && rule.type == "Hanuman::LookupRule"
         self.setLookupValue(rule.value, $ruleElement)
 
   setLookupValue: (value, $ruleElement) ->
