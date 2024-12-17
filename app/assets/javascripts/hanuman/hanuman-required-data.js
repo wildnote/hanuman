@@ -183,7 +183,7 @@ $(document).ready(function(){
     }
 
     setupRequiredData();
-  };
+  }
 
   // this listener runs parsley validate on date fields everytime user interacts with the input to give instant feedback on any misformatted dates.
   $('.panel-body').on('change', '.datepicker', function(){
