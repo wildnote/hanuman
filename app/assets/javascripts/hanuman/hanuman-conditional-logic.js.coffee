@@ -268,18 +268,34 @@ class @ConditionalLogic
 
   #hide or show questions
   hideShowQuestions: (hide_questions, ancestor_id, $ruleElement, $container, inRepeater) ->
-    # deal with container
+    # Update the container
     if hide_questions
       $container.addClass("conditional-logic-hidden")
-      # self.clearQuestions($container)
+      $container.find('input.form-control').each ->
+        $(this).attr('data-parsley-required', 'false')
     else
       $container.removeClass("conditional-logic-hidden")
-      # section inside repeaters (or repeaters inside sections) containers need to also be specifically hidden or shown,
-      # make sure they don't have their own specific hide show rule in place and should just be treated like the parent container
-      $childrenContainers = $container.find('.panel-observation')
-      $childrenContainers.each ->
-        if $(this).attr("data-rule") == ""
-          $(this).removeClass("conditional-logic-hidden")
+      $container.find('input.form-control').each ->
+        if $(this).closest('.form-group').attr("data-required") == "true"
+          $(this).attr('data-parsley-required', 'true')
+
+    # Update child containers inside repeaters or sections
+    $childrenContainers = $container.find('.panel-observation')
+    $childrenContainers.each ->
+      $child = $(this)
+      if $child.attr("data-rule") == ""
+        if hide_questions
+          $child.addClass("conditional-logic-hidden")
+          $child.find('input.form-control').each ->
+            $(this).attr('data-parsley-required', 'false')
+        else
+          $child.removeClass("conditional-logic-hidden")
+          $child.find('input.form-control').each ->
+            if $(this).closest('.form-group').attr("data-required") == "true"
+              $(this).attr('data-parsley-required', 'true')
+
+    # Trigger Parsley validation update for the container and its children
+    $container.parsley().validate()
 
   #clear questions
   clearQuestions: (container) ->
