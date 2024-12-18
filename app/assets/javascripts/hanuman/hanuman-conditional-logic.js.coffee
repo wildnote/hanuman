@@ -294,7 +294,7 @@ class @ConditionalLogic
 
 
     # Trigger Parsley validation update for the container and its children
-    $container.parsley().validate()
+    $container.parsley()
 
   #clear questions
   clearQuestions: (container) ->
