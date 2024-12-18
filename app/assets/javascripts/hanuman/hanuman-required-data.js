@@ -19,8 +19,10 @@ $(document).ready(function(){
             $('[data-parsley-required="true"]').attr('data-parsley-required', 'false');
             $('.form-container-entry-item[data-required="true"]').attr('data-required', 'disabled-by-status');
           } else {
-            $('[data-parsley-required="false"]').attr('data-parsley-required', 'true');
-            $('.form-container-entry-item[data-required="disabled-by-status"]').attr('data-required', 'true');
+            // NOW THAT WE NEED TO SET data-parsley-required to false based on hide/show, this block of code can't be used.
+            // I've commented it out and it doesn't seem to be problematic. if i need to re-implement I would need to refactor
+            // $('[data-parsley-required="false"]').attr('data-parsley-required', 'true');
+            // $('.form-container-entry-item[data-required="disabled-by-status"]').attr('data-required', 'true');
           }
         }
       }

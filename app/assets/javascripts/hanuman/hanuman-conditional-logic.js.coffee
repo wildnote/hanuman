@@ -271,28 +271,27 @@ class @ConditionalLogic
     # Update the container
     if hide_questions
       $container.addClass("conditional-logic-hidden")
-      $container.find('input.form-control').each ->
-        $(this).attr('data-parsley-required', 'false')
     else
       $container.removeClass("conditional-logic-hidden")
-      $container.find('input.form-control').each ->
-        if $(this).closest('.form-group').attr("data-required") == "true"
-          $(this).attr('data-parsley-required', 'true')
 
     # Update child containers inside repeaters or sections
-    $childrenContainers = $container.find('.panel-observation')
+    $childrenContainers = $container.find('.form-container-entry-item')
     $childrenContainers.each ->
       $child = $(this)
-      if $child.attr("data-rule") == ""
-        if hide_questions
-          $child.addClass("conditional-logic-hidden")
-          $child.find('input.form-control').each ->
-            $(this).attr('data-parsley-required', 'false')
-        else
-          $child.removeClass("conditional-logic-hidden")
-          $child.find('input.form-control').each ->
-            if $(this).closest('.form-group').attr("data-required") == "true"
-              $(this).attr('data-parsley-required', 'true')
+      if hide_questions
+        $child.addClass("conditional-logic-hidden")
+        $child.find('input.form-control, textarea.form-control, select.form-control').each ->
+          $(this).attr('data-parsley-required', 'false')
+        $child.find('input.cloudinary-fileupload').each ->
+          $(this).attr('data-parsley-required', 'false')
+      else
+        $child.removeClass("conditional-logic-hidden")
+        if $child.attr("data-required") == "true"
+          $child.find('input.form-control, textarea.form-control, select.form-control').each ->
+            $(this).attr('data-parsley-required', 'true')
+          $child.find('input.cloudinary-fileupload').each ->
+            $(this).attr('data-parsley-required', 'true')
+
 
     # Trigger Parsley validation update for the container and its children
     $container.parsley().validate()
