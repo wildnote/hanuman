@@ -193,7 +193,7 @@ class @ConditionalLogic
 
     if rule.type == "Hanuman::VisibilityRule"
       self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
-    else if !onLoad && hideShow == false && rule.type == "Hanuman::LookupRule"
+    else if hideShow == false && rule.type == "Hanuman::LookupRule"
         self.setLookupValue(rule.value, $ruleElement)
 
   setLookupValue: (value, $ruleElement) ->
@@ -268,18 +268,33 @@ class @ConditionalLogic
 
   #hide or show questions
   hideShowQuestions: (hide_questions, ancestor_id, $ruleElement, $container, inRepeater) ->
-    # deal with container
+    # Update the container
     if hide_questions
       $container.addClass("conditional-logic-hidden")
-      # self.clearQuestions($container)
     else
       $container.removeClass("conditional-logic-hidden")
-      # section inside repeaters (or repeaters inside sections) containers need to also be specifically hidden or shown,
-      # make sure they don't have their own specific hide show rule in place and should just be treated like the parent container
-      $childrenContainers = $container.find('.panel-observation')
-      $childrenContainers.each ->
-        if $(this).attr("data-rule") == ""
-          $(this).removeClass("conditional-logic-hidden")
+
+    # Update child containers inside repeaters or sections
+    $childrenContainers = $container.find('.form-container-entry-item')
+    $childrenContainers.each ->
+      $child = $(this)
+      if hide_questions
+        $child.addClass("conditional-logic-hidden")
+        $child.find('input.form-control, textarea.form-control, select.form-control').each ->
+          $(this).attr('data-parsley-required', 'false')
+        $child.find('input.cloudinary-fileupload').each ->
+          $(this).attr('data-parsley-required', 'false')
+      else
+        $child.removeClass("conditional-logic-hidden")
+        if $child.attr("data-required") == "true"
+          $child.find('input.form-control, textarea.form-control, select.form-control').each ->
+            $(this).attr('data-parsley-required', 'true')
+          $child.find('input.cloudinary-fileupload').each ->
+            $(this).attr('data-parsley-required', 'true')
+
+
+    # Trigger Parsley validation update for the container and its children
+    $container.parsley()
 
   #clear questions
   clearQuestions: (container) ->
