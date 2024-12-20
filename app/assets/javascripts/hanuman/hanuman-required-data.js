@@ -117,22 +117,38 @@ $(document).ready(function(){
       }, 500)
     });
 
-    function singleSelectParsleyStyle(){
-      // moves parsley error <ul> element from top to bottom of the single choice input
-      var parsleyErrorElements = $('select.chosen-select').siblings('ul');
-      $('select.chosen-select').siblings('ul').remove();
-      $('select.chosen-select').closest('div.col-sm-7').append(parsleyErrorElements.first());
+    function singleSelectParsleyStyle() {
+      // Select only those chosen selects that are required
+      var requiredChosenSelects = $('select.chosen-select[data-parsley-required="true"]');
+
+      // Move parsley error <ul> elements from top to bottom for each required chosen select
+      requiredChosenSelects.each(function() {
+        var $select = $(this);
+        var parsleyErrorElements = $select.siblings('ul');
+        $select.siblings('ul').remove();
+        $select.closest('div.col-sm-7').append(parsleyErrorElements.first());
+      });
+
+      // Now work with singleChoiceInputs
       var singleChoiceInputs = $('a.chosen-single span:first-child');
-      // Changes single choice input background-color to red/pink if input is empty
-      for (var i = 0; i < singleChoiceInputs.length; i++) {
-        findRequiredSelect = $(singleChoiceInputs[i]).parent().parent().siblings('select').attr('data-parsley-required')
-        if ($(singleChoiceInputs[i]).text() === "Please select" && findRequiredSelect ) {
-          $($($(singleChoiceInputs[i]).parent().parent()).find('.chosen-single')).css('background',"#F2DEDE")
-          $(singleChoiceInputs[i]).attr("style",'margin-right: 0px; background-color:#F2DEDE;');
-        }else if ($(singleChoiceInputs[i]).text() != "Please select"){
-          $(singleChoiceInputs[i]).parent().parent().siblings('select.chosen-select').siblings('ul').remove();
+
+      // Changes single choice input background-color to red/pink if input is empty and required
+      singleChoiceInputs.each(function() {
+        var $span = $(this);
+        // Check if the closest associated select is required
+        var findRequiredSelect = $span
+            .closest('div.col-sm-7')
+            .find('select.chosen-select[data-parsley-required="true"]')
+            .length > 0;
+
+        if ($span.text() === "Please select" && findRequiredSelect) {
+          $span.closest('.chosen-single').css('background', "#F2DEDE");
+          $span.css({'margin-right': '0px', 'background-color': '#F2DEDE'});
+        } else if ($span.text() !== "Please select") {
+          // If a valid selection is made, remove any existing error <ul>
+          $span.closest('div.col-sm-7').find('select.chosen-select').siblings('ul').remove();
         }
-      }
+      });
     }
 
     function multiSelectParsleyStyle(){
