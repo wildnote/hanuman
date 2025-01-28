@@ -17,13 +17,12 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency 'rails', '~> 5.0'
+  s.add_dependency 'rails', '~> 5.2.8'
   s.add_dependency 'responders', '~> 2.0'
-  s.add_dependency 'paper_trail', '~> 6.0'
+  s.add_dependency 'paper_trail'#, '~> 6.0'
   s.add_dependency 'ancestry' #, '~> 3.0.2'
   s.add_dependency 'amoeba', '~> 3.1.0'
-  s.add_dependency  'haml-rails', '~> 2.0'
-  s.add_dependency 'coffee-rails', '~> 4.1.1'
+  s.add_dependency 'haml-rails', '~> 1.0'
   s.add_dependency 'sass-rails', '5.0.7' # requires railties < 6, >= 4.0.0
   s.add_dependency 'uglifier', '~> 2.7.2'
   s.add_dependency 'modernizr-rails', '~> 2.7.1'
