@@ -29,10 +29,10 @@
 // HANUMAN SPECIFIC JS FILE REFERENCES (ADD FILE REFERENCES AT THE END OF THIS SECTION UNLESS SPECIFIC ORDERING IS NECESSARY)
 //
 //= require hanuman/hanuman-surveys
+//= require hanuman/hanuman-required-data
 //= require hanuman/hanuman-conditional-logic
 //= require hanuman/hanuman-repeater
 //= require hanuman/hanuman-cloudinary-uploads
-//= require hanuman/hanuman-required-data
 //
 // END JS FILE REFERENCES (DO NOT MODIFY)
 //

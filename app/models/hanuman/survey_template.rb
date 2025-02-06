@@ -42,7 +42,7 @@ module Hanuman
     def has_calc_engine_calcs?
       has_calcs = false
       questions.each do |q|
-        if q.is_calc_engine_calculated?
+        if q.is_calc_engine_calculated? || q.is_wetland_calculated?
           has_calcs = true
           return true
         end

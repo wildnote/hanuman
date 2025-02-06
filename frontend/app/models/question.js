@@ -71,6 +71,8 @@ export default Model.extend(Validator, {
   supportAncestry: match('answerType.name', /section|repeater/),
   isTaxonType: match('answerType.name', /taxon/),
 
+  displayDataInRepeaterHeader: attr('boolean'),
+
   cssStyleDisplay: computed('cssStyle', function () {
     let styleString = this.get('cssStyle') || '';
     return styleString.split(';').join(";\n");
@@ -104,9 +106,33 @@ export default Model.extend(Validator, {
     return this.store.peekAll('question').filterBy('id', this.parentId).get(0);
   }),
 
-  // inRepeater: computed('parentId', function () {
-  //
-  // }),
+  isinRepeater: computed('parentId', function() {
+    if (this.get('parent') && this.get('parent').get('isARepeater')) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }),
+
+  hasDefaultAnswer: computed('defaultAnswer', function() {
+    return isPresent(this.get('defaultAnswer'));
+  }),
+
+  canBeDisplayedInRepeater: computed('canBeDisplayedInRepeater', 'answerType.name', function() {
+    let allowableTypes = [
+      'checkbox',
+      'number',
+      'radio',
+      'text',
+      'date',
+      'time',
+      'chosenselect',
+      'locationchosensingleselect',
+      'taxonchosensingleselect',
+      'counter',
+    ];
+    return allowableTypes.includes(this.get('answerType').get('name'));
+  }),
 
   numChildren: computed('childQuestion', function() {
     if (this.get('childQuestion')) {

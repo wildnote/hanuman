@@ -23,7 +23,7 @@ module Hanuman
 
     before_save :set_observations_unsorted, unless: :skip_sort?
 
-    after_commit :wetland_calcs_and_sorting_operations, on: [:create, :update], unless: :has_missing_questions
+    # after_commit :wetland_calcs_and_sorting_operations, on: [:create, :update], unless: :has_missing_questions
 
     after_commit :set_entries
 
@@ -103,11 +103,11 @@ module Hanuman
     end
 
     def sorted_observations
-      observations_sorted ? observations.reorder('hanuman_observations.sort_order ASC') : sort_observations!
+      observations.reorder('hanuman_observations.sort_order ASC')
     end
 
     def processed_observations
-      observation_visibility_set ? sorted_observations.where(hidden: false) : set_observation_visibility!
+      sorted_observations.where(hidden: false)
     end
 
     def get_sorted_observations

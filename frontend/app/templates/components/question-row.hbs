@@ -65,6 +65,11 @@
       {{typeInitial}}
     </div>
     <div class="row">
+      {{#if question.hasDefaultAnswer}}
+        <i>default</i> to <strong> {{question.defaultAnswer}} </strong>
+      {{/if}}
+    </div>
+    <div class="row">
       {{#if (and question.visibilityRule question.visibilityRule.savedConditions)}}
         <i>show</i>
         {{#each question.visibilityRule.savedConditions as |condition index|}}
