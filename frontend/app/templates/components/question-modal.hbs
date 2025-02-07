@@ -122,7 +122,6 @@
                 <span class="glyphicons glyphicons-info-sign"></span>
               </a>
               <textarea data-test="question.questionText"
-                      disabled={{question.surveyTemplate.lock}}
                       name="questionText"
                       class="form-control"
                       style="height: 33px;"
@@ -192,7 +191,6 @@
             <div class="form-group">
               <div class="col-sm-12">
                 <input type="checkbox"
-                      disabled={{or isRequiredDisabled question.surveyTemplate.lock}}
                       name="isRequired"
                       checked={{question.required}}
                       onchange={{action (mut question.required) value="target.checked"}} /> Required
@@ -203,6 +201,24 @@
             </div>
           </div>
         </div>
+
+        {{#if (and question.isinRepeater question.canBeDisplayedInRepeater) }}
+          <div class="row">
+            <div class="col-md-12">
+              <div class="form-group">
+                <div class="col-sm-12">
+                  <input type="checkbox"
+                         name="isDisplayedInRepeaterHeader"
+                         checked={{question.displayDataInRepeaterHeader}}
+                         onchange={{action (mut question.displayDataInRepeaterHeader) value="target.checked"}} /> Display data in repeater header
+                  <a tabindex="0" role="button" data-toggle="popover" data-trigger="click" title="Display data in repeater header" data-content="Display data in repeater header. Useful for reviewing collapsed repeater information." class="bootstrap-popover">
+                    <span class="glyphicons glyphicons-info-sign"></span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        {{/if}}
 
         {{#if (or isALatLong isPhoto) }}
           <div class="row">
@@ -222,7 +238,7 @@
           </div>
         {{/if}}
 
-        {{#if (or (and isSuperUser question.isTextField) question.isLocationSelect) }}
+        {{#if question.isLocationSelect }}
           <div class="row">
             <div class="col-md-6">
               <div class="form-group">

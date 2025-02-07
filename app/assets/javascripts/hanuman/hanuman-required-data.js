@@ -19,8 +19,10 @@ $(document).ready(function(){
             $('[data-parsley-required="true"]').attr('data-parsley-required', 'false');
             $('.form-container-entry-item[data-required="true"]').attr('data-required', 'disabled-by-status');
           } else {
-            $('[data-parsley-required="false"]').attr('data-parsley-required', 'true');
-            $('.form-container-entry-item[data-required="disabled-by-status"]').attr('data-required', 'true');
+            // NOW THAT WE NEED TO SET data-parsley-required to false based on hide/show, this block of code can't be used.
+            // I've commented it out and it doesn't seem to be problematic. if i need to re-implement I would need to refactor
+            // $('[data-parsley-required="false"]').attr('data-parsley-required', 'true');
+            // $('.form-container-entry-item[data-required="disabled-by-status"]').attr('data-required', 'true');
           }
         }
       }
@@ -115,22 +117,38 @@ $(document).ready(function(){
       }, 500)
     });
 
-    function singleSelectParsleyStyle(){
-      // moves parsley error <ul> element from top to bottom of the single choice input
-      var parsleyErrorElements = $('select.chosen-select').siblings('ul');
-      $('select.chosen-select').siblings('ul').remove();
-      $('select.chosen-select').closest('div.col-sm-7').append(parsleyErrorElements.first());
+    function singleSelectParsleyStyle() {
+      // Select only those chosen selects that are required
+      var requiredChosenSelects = $('select.chosen-select[data-parsley-required="true"]');
+
+      // Move parsley error <ul> elements from top to bottom for each required chosen select
+      requiredChosenSelects.each(function() {
+        var $select = $(this);
+        var parsleyErrorElements = $select.siblings('ul');
+        $select.siblings('ul').remove();
+        $select.closest('div.col-sm-7').append(parsleyErrorElements.first());
+      });
+
+      // Now work with singleChoiceInputs
       var singleChoiceInputs = $('a.chosen-single span:first-child');
-      // Changes single choice input background-color to red/pink if input is empty
-      for (var i = 0; i < singleChoiceInputs.length; i++) {
-        findRequiredSelect = $(singleChoiceInputs[i]).parent().parent().siblings('select').attr('data-parsley-required')
-        if ($(singleChoiceInputs[i]).text() === "Please select" && findRequiredSelect ) {
-          $($($(singleChoiceInputs[i]).parent().parent()).find('.chosen-single')).css('background',"#F2DEDE")
-          $(singleChoiceInputs[i]).attr("style",'margin-right: 0px; background-color:#F2DEDE;');
-        }else if ($(singleChoiceInputs[i]).text() != "Please select"){
-          $(singleChoiceInputs[i]).parent().parent().siblings('select.chosen-select').siblings('ul').remove();
+
+      // Changes single choice input background-color to red/pink if input is empty and required
+      singleChoiceInputs.each(function() {
+        var $span = $(this);
+        // Check if the closest associated select is required
+        var findRequiredSelect = $span
+            .closest('div.col-sm-7')
+            .find('select.chosen-select[data-parsley-required="true"]')
+            .length > 0;
+
+        if ($span.text() === "Please select" && findRequiredSelect) {
+          $span.closest('.chosen-single').css('background', "#F2DEDE");
+          $span.css({'margin-right': '0px', 'background-color': '#F2DEDE'});
+        } else if ($span.text() !== "Please select") {
+          // If a valid selection is made, remove any existing error <ul>
+          $span.closest('div.col-sm-7').find('select.chosen-select').siblings('ul').remove();
         }
-      }
+      });
     }
 
     function multiSelectParsleyStyle(){
@@ -183,7 +201,7 @@ $(document).ready(function(){
     }
 
     setupRequiredData();
-  };
+  }
 
   // this listener runs parsley validate on date fields everytime user interacts with the input to give instant feedback on any misformatted dates.
   $('.panel-body').on('change', '.datepicker', function(){
