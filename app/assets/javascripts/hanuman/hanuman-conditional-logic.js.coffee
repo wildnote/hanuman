@@ -4,7 +4,7 @@ class @ConditionalLogic
   self.boundElements = []
 
   #scan page and find all objects with conditional logic rules
-  findRules: (runCalcs, runConditionals, $context) ->
+  findRules: (runCalcs, runLookups, $context) ->
     self.allowCascade = false
     problemWithCL = false
     $context.find("[data-rule!=''][data-rule]").each ->
@@ -69,8 +69,7 @@ class @ConditionalLogic
               inRepeater = true
 
           if rule.type != "Hanuman::CalculationRule"
-            if runConditionals
-              self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true)
+            self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, runLookups)
 
         if runCalcs && rule.type == "Hanuman::CalculationRule"
           self.updateCalculation(rule, $ruleContainer)
@@ -125,7 +124,7 @@ class @ConditionalLogic
             matchingCondition = _.where(conditions, {question_id: Number(questionId)})
             if matchingCondition.length > 0
               if conditions.length > 1
-                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this, false)
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this, true)
               else
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
                 if this.type == "Hanuman::VisibilityRule"
@@ -147,7 +146,7 @@ class @ConditionalLogic
             matchingCondition = _.where(conditions, {question_id: Number(questionId)})
             if matchingCondition.length > 0
               if conditions.length > 1
-                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this, false)
+                self.checkConditionsAndHideShow(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, this, true)
               else
                 hideQuestions = self.setHideQuestions(conditions[0], $triggerElement)
                 if this.type == "Hanuman::VisibilityRule"
@@ -156,7 +155,7 @@ class @ConditionalLogic
                   self.setLookupValue(this.value, $ruleElement)
     return
 
-  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule, onLoad) ->
+  checkConditionsAndHideShow: (conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule, runLookups) ->
     conditionMetTracker = []
     $.each conditions, (index, condition) ->
       if inRepeater
@@ -193,7 +192,7 @@ class @ConditionalLogic
 
     if rule.type == "Hanuman::VisibilityRule"
       self.hideShowQuestions(hideShow, ancestorId, $ruleElement, $container, inRepeater)
-    else if hideShow == false && rule.type == "Hanuman::LookupRule"
+    else if hideShow == false && rule.type == "Hanuman::LookupRule" && runLookups == true
         self.setLookupValue(rule.value, $ruleElement)
 
   setLookupValue: (value, $ruleElement) ->
@@ -674,5 +673,7 @@ $ ->
   $context = $('.form-container-survey')
   if $('input#run_cl').length
     #call findRules on document ready
+    # if edit, don't run lookup rules, if new do run lookup rules
     cl = new ConditionalLogic
-    cl.findRules(false, true, $context)
+    isNewSurvey = $('form').attr('id') is 'new_survey'
+    cl.findRules(false, isNewSurvey, $context)
