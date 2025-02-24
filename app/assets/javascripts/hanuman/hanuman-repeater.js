@@ -155,9 +155,12 @@ $(document).ready(function(){
 
     // bind ConditionalLogic and re-run the logic to hide and show
     $context = $('.form-container-survey')
-    // $context = $clonedContainer
+    $contextForConditionals = $clonedContainer
     cl = new ConditionalLogic;
-    cl.findRules(false, true, $context);
+    // bind CL on all context
+    cl.findRules(false, false, $context);
+    // run CDV only on new repeater context
+    cl.findRules(false, true, $contextForConditionals);
 
     // bind wetland calcs
     // window.initializeCoverFields();
@@ -434,7 +437,7 @@ $(document).ready(function(){
           updateRepeaterControls();
           $context = $('.form-container-survey')
           cl = new ConditionalLogic;
-          cl.findRules(true, true, $context);
+          cl.findRules(true, false, $context);
           // re-run wetland calcs
           window.runAllWetlandCalcs();
       }
