@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'uglifier', '~> 2.7.2'
   s.add_dependency 'modernizr-rails', '~> 2.7.1'
   s.add_dependency 'jquery-rails', '~> 4.2.0'
-  s.add_dependency 'ember-cli-rails', '~> 0.10.0'
+  s.add_dependency 'ember-cli-rails'#, '~> 0.10.0'
   s.add_dependency 'cocaine', '~> 0.5.8'
   s.add_dependency 'kaminari', '~> 1.2.2'
   s.add_dependency 'active_model_serializers', '~> 0.8.1'
