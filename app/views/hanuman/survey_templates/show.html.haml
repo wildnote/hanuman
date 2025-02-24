@@ -48,7 +48,7 @@
       .panel-body
         %form.form-horizontal
           .pull-right.edit-delete
-            = link_to admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-success" do
+            = link_to hanuman_admin_path + "/#/survey_templates/" + @survey_template.id.to_s, class: "btn btn-success" do
               %span.glyphicons.glyphicons-pencil
               Edit Form Details + @survey_template.name_plus_version
           .clearfix
