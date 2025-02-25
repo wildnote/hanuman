@@ -34,14 +34,29 @@ module Hanuman
 
     def sortable(column, title, path_call_string = nil)
       title ||= column.titleize
-      css_class = column.gsub('*', '') == sort_column.gsub(' asc,', ',').gsub(' desc,', ',').gsub(' asc', '').gsub(' desc', '') ? "current #{sort_direction}" : nil
-      direction = column.gsub('*', '') == sort_column.gsub(' asc,', ',').gsub(' desc,', ',').gsub(' asc', '').gsub(' desc', '') && sort_direction == 'asc' ? 'desc' : 'asc'
+    
+      clean_column = column.gsub('*', '')
+      clean_sort_column = sort_column.gsub(' asc,', ',').gsub(' desc,', ',').gsub(' asc', '').gsub(' desc', '')
+    
+      css_class = clean_column == clean_sort_column ? "current #{sort_direction}" : nil
+      direction = clean_column == clean_sort_column && sort_direction == 'asc' ? 'desc' : 'asc'
+    
+      # Permit only necessary parameters to avoid "unpermitted parameters" error
+      permitted_params = params.permit(:sort, :direction, :page).to_h
+    
+      updated_params = permitted_params.merge(
+        sort: column.gsub('*,', '!').gsub(',', " #{direction},").gsub('*', ' asc').gsub('!', ' asc,'),
+        direction: direction,
+        page: nil
+      )
+    
       if path_call_string
-        link_to raw(title), eval(path_call_string+"(params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil))"), {:class => css_class}
+        link_to raw(title), eval("#{path_call_string}(updated_params)"), class: css_class
       else
-        link_to raw(title), request.params.merge(:sort => column.gsub('*,', '!').gsub(',', ' ' + direction + ',').gsub('*', ' asc').gsub('!', ' asc,'), :direction => direction, :page => nil), {:class => css_class}
+        link_to raw(title), updated_params, class: css_class
       end
     end
+    
 
     def project_context_engine_pagination(pagination_markup)
       unless pagination_markup.blank?
