@@ -2,15 +2,20 @@ module Hanuman
   class Observation < ActiveRecord::Base
     has_paper_trail
 
-    # Relations
+    # Relations - Basic associations first
     belongs_to :survey, -> { unscoped }#, touch: true -kdh removing touch to we don't update surveys table everytime the observations table is updated
     belongs_to :question
     belongs_to :selectable, polymorphic: true, optional: true
+    belongs_to :answer_choice, optional: true
+
+    # Intermediate associations
     has_many :observation_answers, dependent: :destroy
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
-    has_many :answer_choices, through: :observation_answers, before_remove: :generate_observation_answer_delta
-    belongs_to :answer_choice, optional: true 
 
+    # Through associations after their intermediates
+    has_many :answer_choices, through: :observation_answers, before_remove: :generate_observation_answer_delta
+
+    # Rest of associations
     has_many :observation_photos, dependent: :destroy
     accepts_nested_attributes_for :observation_photos, allow_destroy: true
     has_many :observation_documents, dependent: :destroy
