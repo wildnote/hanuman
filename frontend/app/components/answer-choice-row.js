@@ -1,15 +1,18 @@
-import Ember from 'ember';
-import DraggableObject from 'ember-drag-drop/components/draggable-object';
+import Component from '@ember/component';
+import $ from 'jquery';
 import { run } from '@ember/runloop';
 import { isNone } from '@ember/utils';
 import { task } from 'ember-concurrency';
 import { alias } from '@ember/object/computed';
 
-export default DraggableObject.extend({
-  tagName: 'tr',
-
-  classNameBindings: [':js-draggableObject','isDraggingObject:is-dragging-object:', 'overrideClass','isNewAnswerChoice:no-hover'],
-  attributeBindings: ['dragReady:draggable','answerChoice.id:data-answer-choice-id'],
+export default Component.extend({
+  classNames: [
+    ':js-draggableObject',
+    'isDraggingObject:is-dragging-object:',
+    'overrideClass',
+    'isNewAnswerChoice:no-hover'
+  ],
+  attributeBindings: ['dragReady:draggable', 'answerChoice.id:data-answer-choice-id'],
 
   isEditingAnswerChoice: false,
   isSortable: true,
@@ -51,7 +54,7 @@ export default DraggableObject.extend({
         this.setNewAnswerChoice();
       }
       run.next(this, function() {
-        this.$('input').focus();
+        $('input').focus();
       });
     },
 
@@ -81,5 +84,17 @@ export default DraggableObject.extend({
         event.preventDefault();
       }
     },
+
+    dragStarted(question) {
+      $('.draggable-object-target')
+        .parent(`:not(.model-id-${question.get('parentId')})`)
+        .addClass('dragging-coming-active');
+    },
+
+    dragEnded() {
+      $('.draggable-object-target')
+        .parent()
+        .removeClass('dragging-coming-active');
+    }
   }
 });

@@ -27,7 +27,6 @@ export default Component.extend({
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
 
-
   init() {
     this._super(...arguments);
     this.setProperties({ answerChoicesPendingSave: [] });
@@ -152,10 +151,10 @@ export default Component.extend({
     }
   }),
 
-  processQuestionChanges: task(function* () {
+  processQuestionChanges: task(function*() {
     try {
       // disable button because double click can cause problems
-      $('#pqc_button')[0].disabled = true
+      $('#pqc_button')[0].disabled = true;
       // We need to save the question first
       yield this.saveTask.perform(true);
       let question = this.question;
@@ -167,15 +166,15 @@ export default Component.extend({
     }
   }),
 
-  importAnswerChoices: task(function* () {
+  importAnswerChoices: task(function*() {
     let question = this.get('question');
     // check for question text before saving question
     if (!question.validate()) {
       return;
     }
     yield this.saveTask.perform(true);
-    let project_id = document.URL.split("/")[6];
-    window.location.pathname = "project/" + project_id + "/import/answer_choices/" + question.id;
+    let project_id = document.URL.split('/')[6];
+    window.location.pathname = 'project/' + project_id + '/import/answer_choices/' + question.id;
   }),
 
   saveAnswerChoiceTask: task(function*(answerChoice) {
@@ -308,24 +307,6 @@ export default Component.extend({
   },
 
   actions: {
-    checkDefaultAnswer(value) {
-      // this method is not called anywhere
-
-      // if (equal('question.answerType.name', 'number')) {
-      //   value = value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, ''); // only allow positive and negative numbers and decimals
-      //   set(this.question, 'defaultAnswer', value);
-      //   $('[name="defaultAnswer"]').val(value);
-      // }
-
-      // for some reason both number and counter are getting into the first condition block whether it's the above or the below
-
-      // if (equal('question.answerType.name', 'counter')) {
-      //   value = value.replace(/[^0-9-]/g, '').replace(/(?!^)-/g, ''); // only allow positive and negative integers
-      //   set(this.question, 'defaultAnswer', value);
-      //   $('[name="defaultAnswer"]').val(value);
-      // }
-    },
-
     setReportChildrenWidth(value) {
       value = value.replace(/\D+/g, '');
       value = value.replace(/\b0\b/g, '');
