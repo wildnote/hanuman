@@ -20,7 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'responders', '~> 2.4'
   s.add_dependency 'paper_trail', '~> 10.3'
   s.add_dependency 'ancestry', '~> 3.2.1'
-  s.add_dependency 'amoeba', '~> 3.1.0'
+  s.add_dependency 'amoeba', '~> 3.2.0'
   s.add_dependency 'haml-rails', '~> 2.0'
   s.add_dependency 'coffee-rails', '~> 4.2'
   s.add_dependency 'sass-rails', '~> 5.0'

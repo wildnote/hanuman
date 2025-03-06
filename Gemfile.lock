@@ -4,7 +4,7 @@ PATH
     hanuman (4.0)
       active_model_serializers
       acts-as-taggable-on
-      amoeba (~> 3.1.0)
+      amoeba (~> 3.2.0)
       ancestry (~> 3.2.1)
       carrierwave
       cloudinary
@@ -78,8 +78,8 @@ GEM
       activerecord (>= 5.0, < 6.2)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
-    amoeba (3.1.0)
-      activerecord (>= 3.2.6)
+    amoeba (3.2.0)
+      activerecord (>= 4.2.0)
     ancestry (3.2.1)
       activerecord (>= 4.2.0)
     arel (9.0.0)
