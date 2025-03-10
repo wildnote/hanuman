@@ -18,13 +18,6 @@ module Hanuman
     scope :all_active_sorted, -> { where("status = 'active'").all_sorted }
     scope :all_sorted, -> { order('name ASC') }
 
-    amoeba do
-      include_association :questions
-      customize(lambda { |_original_post, new_post|
-        new_post.name = "#{new_post.name}"
-      })
-    end
-
     def name_plus_version
       template_version.blank? ? name : name + " " + template_version
     end

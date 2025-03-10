@@ -134,18 +134,15 @@ export default Component.extend({
     question.set('loading', false);
   }),
 
-  checkTemplate: task(function* () {
+  checkTemplate: task(function*() {
     try {
-
       let surveyTemplate = this.surveyTemplate;
       surveyTemplate.set('checkingTemplate', true);
       let errors = yield surveyTemplate.checkTemplate();
-      if(errors) {
+      if (errors) {
         surveyTemplate.set('checkingTemplate', false);
+        alert(`Errors by question:\n${errors.ancestry}\n${errors.rule}\n${errors.condition}`);
       }
-      console.log("errors");
-      console.log(errors);
-      alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition );
     } catch (e) {
       console.log('Error checking template:', e); // eslint-disable-line no-console
     }
@@ -188,12 +185,10 @@ export default Component.extend({
     toggleAllCollapsed() {
       this.toggleProperty('allCollapsed');
 
-      let topLevel = this.get('surveyTemplate.questions').filter((question) => {
-        return question.hasChild && isBlank(question.parentId);
-      });
-      let allLevel = this.get('surveyTemplate.questions').filter((question) => {
+      const allLevel = this.get('surveyTemplate.questions').filter((question) => {
         return question.hasChild;
       });
+
       allLevel.forEach((question) => {
         this.get('collapsible').toggleCollapsed(question, !this.allCollapsed);
       });

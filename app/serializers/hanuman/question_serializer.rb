@@ -1,5 +1,8 @@
 module Hanuman
   class QuestionSerializer < ActiveModel::Serializer
+    def json_key
+      'question'
+    end
     attributes :id, :question_text, :answer_type_id, :sort_order,
                :ancestry, :required, :hidden, :external_data_source, :rails_id, :parent_id,
                :capture_location_data, :combine_latlong_as_line, :combine_latlong_as_polygon,
@@ -7,7 +10,8 @@ module Hanuman
                :layout_column, :layout_column_position, :default_answer, :child_ids,
                :export_continuation_characters, :helper_text, :tag_list, :max_photos, :db_column_name,
                :api_column_name, :css_style, :report_children_width, :marked_for_deletion, :flagged_answers,
-               :convert_to_utm, :report_label, :exclude_from_report, :calculated, :display_data_in_repeater_header
+               :convert_to_utm, :report_label, :exclude_from_report, :calculated, :display_data_in_repeater_header,
+               :data_source_id
 
     has_many :answer_choices
     has_many :rules, serializer: Hanuman::RuleSerializer

@@ -19,30 +19,33 @@ export default Component.extend({
     return selectedQuestions.some((question) => question.get('id') === questionId);
   }),
 
-  typeInitial: computed('question.{ancestry,hidden,required,visibilityRule.isNew,displayDataInRepeaterHeader,defaultAnswer}', function() {
-    let question = this.get('question');
-    let intial = '';
-    if (question.get('hidden')) {
-      intial += '<span class="label label-default">Hidden</span>';
+  typeInitial: computed(
+    'question.{ancestry,hidden,required,visibilityRule.isNew,displayDataInRepeaterHeader,defaultAnswer}',
+    function() {
+      let question = this.get('question');
+      let intial = '';
+      if (question.get('hidden')) {
+        intial += '<span class="label label-default">Hidden</span>';
+      }
+      if (question.get('required')) {
+        intial += '<span class="label label-danger">Required</span>';
+      }
+      if (question.get('visibilityRule') && !question.get('visibilityRule.isNew')) {
+        intial += `<span class="label label-info">Rules</span>`;
+      }
+      if (question.get('calculationRule') || question.get('calculated')) {
+        intial += `<span class="label label-success">Calculated</span>`;
+      }
+      if (question.get('displayDataInRepeaterHeader')) {
+        intial += `<span class="label label-default">Display</span>`;
+      }
+      if (question.get('defaultAnswer')) {
+        intial += `<span class="label label-default">Default</span>`;
+      }
+      // console.log(intial);
+      return htmlSafe(intial);
     }
-    if (question.get('required')) {
-      intial += '<span class="label label-danger">Required</span>';
-    }
-    if (question.get('visibilityRule') && !question.get('visibilityRule.isNew')) {
-      intial += `<span class="label label-info">Rules</span>`;
-    }
-    if (question.get('calculationRule') || question.get('calculated')) {
-      intial += `<span class="label label-success">Calculated</span>`;
-    }
-    if (question.get('displayDataInRepeaterHeader')) {
-      intial += `<span class="label label-default">Display</span>`
-    }
-    if (question.get('defaultAnswer')) {
-      intial += `<span class="label label-default">Default</span>`
-    }
-    console.log(intial);
-    return htmlSafe(intial);
-  }),
+  ),
 
   totalChildren: computed('otherQuetions.@each.ancestry', 'question.id', function() {
     let questionId = this.get('question.id');
