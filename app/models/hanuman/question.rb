@@ -34,7 +34,7 @@ module Hanuman
     before_update :answer_type_change, if: :answer_type_id_changed?
     before_update :set_calculated
     after_save :format_css_style, if: :css_style_changed?
-    after_update :process_api_column_name_change, if: :api_column_name_changed?
+    after_update :process_api_column_name_change, if: :saved_change_to_api_column_name?
 
     # Need to cache the change state of flagged answers in an attribute so that we can access it after_commit
     # Need to start this worker after_commit to avoid it firing before the transaction has completed
