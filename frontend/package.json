@@ -10,12 +10,12 @@
     "test": "tests"
   },
   "scripts": {
-    "build": "ember build",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider ember build",
     "lint:js": "eslint .",
     "start": "ember serve",
     "test": "ember exam --launch='Chrome' --random",
-    "prestart": "ember build",
-    "rails-build": "ember build"
+    "prestart": "NODE_OPTIONS=--openssl-legacy-provider ember build",
+    "rails-build": "NODE_OPTIONS=--openssl-legacy-provider ember build"
   },
   "devDependencies": {
     "@babel/core": "^7.26.0",
