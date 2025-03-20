@@ -183,7 +183,7 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     netrc (0.11.0)
-    nokogiri (1.15.7)
+    nokogiri (1.18.3)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     paper_trail (6.0.2)
