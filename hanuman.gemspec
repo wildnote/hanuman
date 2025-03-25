@@ -17,7 +17,15 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency 'rails', '~> 4.2.11.3'
+  s.add_dependency 'rails', '~> 4.2.10'
+  s.add_dependency 'actionmailer',     '~> 4.2.10'
+  s.add_dependency 'actionpack',       '~> 4.2.10'
+  s.add_dependency 'activemodel',      '~> 4.2.10'
+  s.add_dependency 'activerecord',     '~> 4.2.10'
+  s.add_dependency 'activesupport',    '~> 4.2.10'
+  s.add_dependency 'railties',         '~> 4.2.10'
+  s.add_dependency 'actionview',       '~> 4.2.10'
+  s.add_dependency 'activejob',        '~> 4.2.10'
   s.add_dependency 'responders', '~> 2.0'
   s.add_dependency 'paper_trail', '~> 6.0'
   s.add_dependency 'ancestry' #, '~> 3.0.2'
@@ -55,4 +63,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "faker", "~> 1.6.5"
   s.add_development_dependency "rubocop", "~> 0.40.0"
   s.add_development_dependency "codeclimate-test-reporter", "~> 0.5.1"
+  s.add_development_dependency 'bundler', '~> 1.17.3'
 end
