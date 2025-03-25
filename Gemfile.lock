@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    hanuman (3.4)
+    hanuman (3.5.0)
       actionmailer (~> 4.2.10)
       actionpack (~> 4.2.10)
       actionview (~> 4.2.10)
