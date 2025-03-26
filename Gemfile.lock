@@ -169,7 +169,6 @@ GEM
       mime-types-data (~> 3.2015)
     mime-types-data (3.2025.0325)
     mini_mime (1.1.5)
-    mini_portile2 (2.8.8)
     minitest (5.25.5)
     modernizr-rails (2.7.1)
     multi_json (1.15.0)
@@ -183,8 +182,7 @@ GEM
     net-smtp (0.5.1)
       net-protocol
     netrc (0.11.0)
-    nokogiri (1.15.7)
-      mini_portile2 (~> 2.8.2)
+    nokogiri (1.15.7-x86_64-darwin)
       racc (~> 1.4)
     paper_trail (6.0.2)
       activerecord (>= 4.0, < 5.2)
@@ -315,7 +313,7 @@ GEM
     unicode-display_width (1.8.0)
 
 PLATFORMS
-  ruby
+  x86_64-darwin-24
 
 DEPENDENCIES
   codeclimate-test-reporter (~> 0.5.1)
@@ -333,4 +331,4 @@ DEPENDENCIES
   shoulda-matchers (~> 3.1.2)
 
 BUNDLED WITH
-   1.17.3
+   2.3.26
