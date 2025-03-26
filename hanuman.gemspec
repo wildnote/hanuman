@@ -43,7 +43,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'gmaps4rails', '~> 2.1.2'
   s.add_dependency 'pg_search', '~> 2.0.1'
 
-  s.add_development_dependency 'pg', '0.18.4'
+  s.add_development_dependency 'pg'#, '0.18.4'
   s.add_development_dependency 'pry', '0.11.3'
   s.add_development_dependency 'foreigner'
   s.add_development_dependency "rspec-rails", "~> 3.4"
