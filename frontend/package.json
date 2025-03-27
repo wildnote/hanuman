@@ -26,14 +26,14 @@
     "ember-api-actions": "0.1.9",
     "ember-cli": "3.10.0",
     "ember-cli-app-version": "^3.2.0",
-    "ember-cli-babel": "^6.17.2",
+    "ember-cli-babel": "6.17.2",
     "ember-cli-dependency-checker": "^3.0.0",
     "ember-cli-eslint": "5.0.0",
     "ember-cli-htmlbars": "^3.0.1",
     "ember-cli-htmlbars-inline-precompile": "2.1.0",
     "ember-cli-inject-live-reload": "2.0.1",
     "ember-cli-mirage": "0.4.10",
-    "ember-cli-rails-addon": "^0.10.0",
+    "ember-cli-rails-addon": "0.10.0",
     "ember-cli-release": "^0.2.9",
     "ember-cli-sass": "11.0.1",
     "ember-cli-shims": "1.2.0",
@@ -47,7 +47,6 @@
     "ember-exam": "0.8.1",
     "ember-export-application-global": "^2.0.0",
     "ember-group-by": "0.0.5",
-    "ember-load-initializers": "^2.0.0",
     "ember-math-helpers": "2.10.0",
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-model-validator": "3.4.0",
@@ -80,13 +79,13 @@
   "engines": {
     "node": ">=10.*"
   },
-  "resolutions": {
-    "broccoli-uglify-sourcemap": "2.2.0",
-    "terser": "3.9.1",
-    "ember-cli-babel": "^6.17.2",
-    "sass": "1.32.13"
-  },
   "dependencies": {
-    "node": "^12.22.12"
+    "node": "^12.22.12",
+    "ember-load-initializers": "2.0.0"
+  },
+  "resolutions": {
+    "ember-cli-babel": "6.17.2",
+    "ember-cli": "3.10.0",
+    "loader.js": "4.7.0"
   }
 }
