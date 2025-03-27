@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import DraggableObject from 'ember-drag-drop/components/draggable-object';
 import { run } from '@ember/runloop';
 import { isNone } from '@ember/utils';
@@ -8,7 +7,7 @@ import { alias } from '@ember/object/computed';
 export default DraggableObject.extend({
   tagName: 'tr',
 
-  classNameBindings: [':js-draggableObject', 'isDraggingObject:is-dragging-object:', 'overrideClass', 'isNewAnswerChoice:no-hover'],
+  classNameBindings: [':js-draggableObject', 'isDraggingObject:is-dragging-object', 'overrideClass', 'isNewAnswerChoice:no-hover'],
   attributeBindings: ['dragReady:draggable', 'answerChoice.id:data-answer-choice-id'],
 
   isEditingAnswerChoice: false,
