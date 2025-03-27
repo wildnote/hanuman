@@ -26,6 +26,20 @@ module.exports = function(defaults) {
     sassOptions: {
       includePaths: ['bower_components'],
       implementation: require('sass')
+    },
+    babel: {
+      plugins: [
+        require.resolve('ember-auto-import/babel')
+      ]
+    },
+    'ember-cli-babel': {
+      includePolyfill: true,
+      plugins: [
+        [require.resolve('@babel/plugin-transform-runtime'), {
+          regenerator: true,
+          helpers: true
+        }]
+      ]
     }
   });
 

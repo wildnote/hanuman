@@ -16,6 +16,8 @@
     "test": "ember exam --launch='Chrome' --random"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.23.4",
+    "@babel/runtime": "^7.23.4",
     "@ember/jquery": "^0.5.2",
     "@ember/optional-features": "0.7.0",
     "active-model-adapter": "2.2.0",
