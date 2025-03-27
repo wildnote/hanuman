@@ -1,7 +1,5 @@
 import { alias, sort } from '@ember/object/computed';
 import { all, task, waitForProperty } from 'ember-concurrency';
-
-import $ from 'jquery';
 import { A } from '@ember/array';
 import Component from '@ember/component';
 import { computed } from '@ember/object';
@@ -33,9 +31,9 @@ export default Component.extend({
   }),
 
   loadingProgress: computed('surveyTemplate.questions.@each.isLoading', function() {
-    let questions = this.get('surveyTemplate.questions');
-    let total = questions.get('length');
-    let loaded = questions.filterBy('isLoading', false).length;
+    const questions = this.get('surveyTemplate.questions');
+    const total = questions.get('length');
+    const loaded = questions.filterBy('isLoading', false).length;
     if (total === loaded) {
       run.next(this, function() {
         this.set('isLoadingQuestions', false);
@@ -49,13 +47,16 @@ export default Component.extend({
     yield question.save();
     this._recursivelyDelete(question.get('id'));
     if (row) {
-      $('.delete-confirm', row).fadeOut();
+      const confirmEl = row.querySelector('.delete-confirm');
+      if (confirmEl) {
+        confirmEl.style.display = 'none';
+      }
     }
   }),
 
   _recursivelyDelete(questionId) {
-    let childrenQuestions = this.get('surveyTemplate.questions').filterBy('parentId', questionId.toString());
-    for (let childQuestion of childrenQuestions) {
+    const childrenQuestions = this.get('surveyTemplate.questions').filterBy('parentId', questionId.toString());
+    for (const childQuestion of childrenQuestions) {
       this._recursivelyDelete(childQuestion.get('id'));
       childQuestion.deleteRecord();
     }
@@ -65,15 +66,14 @@ export default Component.extend({
     this.set('showConfirmDeletion', false);
     this.set('isPerformingBulk', true);
 
-    let selectedQuestions = this.get('selectedQuestions');
-    let toDeleteQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
-    let deleteQuestionTask = this.get('deleteQuestionTask');
+    const selectedQuestions = this.get('selectedQuestions');
+    const toDeleteQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
+    const deleteQuestionTask = this.get('deleteQuestionTask');
     try {
       yield all(toDeleteQuestions.map((question) => deleteQuestionTask.perform(question)));
       yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
       this.get('notify').success('Questions successfully deleted');
     } catch (e) {
-      console.log('Error:', e); // eslint-disable-line no-console
       this.get('notify').alert('There was an error trying to delete questions');
     }
     this.unSelectAll();
@@ -82,16 +82,16 @@ export default Component.extend({
 
   duplicateQuestionsTask: task(function*() {
     this.set('isPerformingBulk', true);
-    let selectedQuestions = this.get('selectedQuestions');
-    let surveyTemplate = this.get('surveyTemplate');
+    const selectedQuestions = this.get('selectedQuestions');
+    const surveyTemplate = this.get('surveyTemplate');
 
     // If there are entire sections / repeaters then dont copy them all
-    let toDuplicateQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
+    const toDuplicateQuestions = this._filterSectionsAndRepeaters(selectedQuestions);
     try {
       // make sure the list is clean in terms of sorting values
       yield all(
         toDuplicateQuestions.map((question) => {
-          let params = { section: false };
+          const params = { section: false };
           if (question.get('isContainer') || question.get('isARepeater')) {
             params.section = true;
           }
@@ -102,7 +102,6 @@ export default Component.extend({
       yield surveyTemplate.hasMany('questions').reload();
       this.get('notify').success('Questions successfully duplicated');
     } catch (e) {
-      console.log('Error:', e); // eslint-disable-line no-console
       this.get('notify').alert('There was an error trying to duplicate questions');
     }
     this.unSelectAll();
@@ -110,16 +109,16 @@ export default Component.extend({
   }).drop(),
 
   setAncestryTask: task(function*(question, opts) {
-    let ancestryQuestion = opts.target.acenstry;
+    const ancestryQuestion = opts.target.acenstry;
     if (ancestryQuestion.collapsed) {
       this.get('collapsible').toggleCollapsed(ancestryQuestion);
       yield waitForProperty(ancestryQuestion, 'pendingRecursive', (v) => v === 0);
     }
-    let parentId = ancestryQuestion.get('id');
-    let parentChildren = this.get('surveyTemplate.questions')
+    const parentId = ancestryQuestion.get('id');
+    const parentChildren = this.get('surveyTemplate.questions')
       .filterBy('parentId', parentId)
       .sortBy('sortOrder');
-    let lastChild = parentChildren.get('lastObject');
+    const lastChild = parentChildren.get('lastObject');
     let sortOrder;
     if (lastChild) {
       sortOrder = lastChild.get('sortOrder');
@@ -136,29 +135,26 @@ export default Component.extend({
 
   checkTemplate: task(function* () {
     try {
-
-      let surveyTemplate = this.surveyTemplate;
+      const surveyTemplate = this.surveyTemplate;
       surveyTemplate.set('checkingTemplate', true);
-      let errors = yield surveyTemplate.checkTemplate();
+      const errors = yield surveyTemplate.checkTemplate();
       if(errors) {
         surveyTemplate.set('checkingTemplate', false);
+        alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition);
       }
-      console.log("errors");
-      console.log(errors);
-      alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition );
     } catch (e) {
-      console.log('Error checking template:', e); // eslint-disable-line no-console
+      this.get('notify').alert('There was an error checking the template');
     }
   }),
 
   _filterSectionsAndRepeaters(selectedQuestions) {
-    let filtered = selectedQuestions.filter(function(toCheckQuestion) {
+    const filtered = selectedQuestions.filter(function(toCheckQuestion) {
       if (isBlank(toCheckQuestion.get('ancestry'))) {
         // top level question
         return true;
       } else if (toCheckQuestion.get('supportAncestry')) {
         // no top level question but parent
-        let isMyParentSelectd = selectedQuestions.find(function(question) {
+        const isMyParentSelectd = selectedQuestions.find(function(question) {
           return question.get('id') === toCheckQuestion.get('parentId');
         });
         if (!isMyParentSelectd) {
@@ -166,8 +162,8 @@ export default Component.extend({
         }
       }
       // Single question selected
-      let ancestrires = toCheckQuestion.get('ancestry').split('/');
-      let some = selectedQuestions.some(function(question) {
+      const ancestrires = toCheckQuestion.get('ancestry').split('/');
+      const some = selectedQuestions.some(function(question) {
         return ancestrires.includes(`${question.get('id')}`);
       });
       return !some;
@@ -188,10 +184,10 @@ export default Component.extend({
     toggleAllCollapsed() {
       this.toggleProperty('allCollapsed');
 
-      let topLevel = this.get('surveyTemplate.questions').filter((question) => {
+      const topLevel = this.get('surveyTemplate.questions').filter((question) => {
         return question.hasChild && isBlank(question.parentId);
       });
-      let allLevel = this.get('surveyTemplate.questions').filter((question) => {
+      const allLevel = this.get('surveyTemplate.questions').filter((question) => {
         return question.hasChild;
       });
       allLevel.forEach((question) => {
@@ -205,19 +201,22 @@ export default Component.extend({
         this.get('remodal').open('tagging-modal');
       });
     },
+
     clearAll() {
       // Clean state
       this.unSelectAll();
     },
+
     toggleQuestion(question, add = true) {
-      let selectedQuestions = this.get('selectedQuestions');
-      let included = selectedQuestions.includes(question);
+      const selectedQuestions = this.get('selectedQuestions');
+      const included = selectedQuestions.includes(question);
       if (add && !included) {
         selectedQuestions.addObject(question);
       } else if (!add && included) {
         selectedQuestions.removeObject(question);
       }
     },
+
     deleteQuestion(question, elRow) {
       this.get('deleteQuestionTask').perform(question, elRow);
       this.set('selectedQuestions', A());
@@ -225,19 +224,19 @@ export default Component.extend({
     },
 
     sortedDropped(viewableSortedQuestions, _draggedQuestion) {
-      let allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
-      let sortableQuestions = A();
+      const allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
+      const sortableQuestions = A();
       // Handle collapsed question. When there are questions collapsed we completely removed them from the DOM
       // so we have to re-add them so we can update the sort order attributes
       viewableSortedQuestions.forEach((viewableQuestion) => {
         sortableQuestions.addObject(viewableQuestion);
         if (viewableQuestion.get('collapsed')) {
-          let id = viewableQuestion.get('id');
-          let collapsedChild = allQuestions.filter((question) => {
+          const id = viewableQuestion.get('id');
+          const collapsedChild = allQuestions.filter((question) => {
             if (isBlank(question.get('ancestry'))) {
               return false;
             }
-            let ancestrires = question.get('ancestry').split('/');
+            const ancestrires = question.get('ancestry').split('/');
             return ancestrires.includes(id);
           });
           sortableQuestions.addObjects(collapsedChild);
@@ -247,26 +246,45 @@ export default Component.extend({
     },
 
     dragStarted(question) {
-      $('.draggable-object-target')
-        .parent(`:not(.model-id-${question.get('parentId')})`)
-        .addClass('dragging-coming-active');
-    },
-    dragEnded() {
-      $('.draggable-object-target')
-        .parent()
-        .removeClass('dragging-coming-active');
-    },
-    dragOver() {
-      run.next(this, function() {
-        $('.accepts-drag')
-          .parent()
-          .addClass('dragging-over');
+      const targets = this.element.querySelectorAll('.draggable-object-target');
+      targets.forEach(target => {
+        const parent = target.parentElement;
+        if (parent && !parent.classList.contains(`model-id-${question.get('parentId')}`)) {
+          parent.classList.add('dragging-coming-active');
+        }
       });
     },
+
+    dragEnded() {
+      const targets = this.element.querySelectorAll('.draggable-object-target');
+      targets.forEach(target => {
+        const parent = target.parentElement;
+        if (parent) {
+          parent.classList.remove('dragging-coming-active');
+        }
+      });
+    },
+
+    dragOver() {
+      run.next(this, function() {
+        const targets = this.element.querySelectorAll('.accepts-drag');
+        targets.forEach(target => {
+          const parent = target.parentElement;
+          if (parent) {
+            parent.classList.add('dragging-over');
+          }
+        });
+      });
+    },
+
     dragOut() {
-      $('.draggable-object-target')
-        .parent()
-        .removeClass('dragging-over');
+      const targets = this.element.querySelectorAll('.draggable-object-target');
+      targets.forEach(target => {
+        const parent = target.parentElement;
+        if (parent) {
+          parent.classList.remove('dragging-over');
+        }
+      });
     }
   }
 });

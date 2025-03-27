@@ -26,11 +26,6 @@ module.exports = function(defaults) {
     sassOptions: {
       includePaths: ['bower_components'],
       implementation: require('sass')
-    },
-    babel: {
-      plugins: [
-        require.resolve('ember-auto-import/babel')
-      ]
     }
   });
 
