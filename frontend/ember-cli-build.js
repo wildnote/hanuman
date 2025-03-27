@@ -22,6 +22,10 @@ module.exports = function(defaults) {
     ace: {
       themes: ['github'],
       modes: ['javascript']
+    },
+    sassOptions: {
+      includePaths: ['bower_components'],
+      implementation: require('sass')
     }
   });
 
