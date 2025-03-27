@@ -75,7 +75,7 @@
     "prettier": "1.15.2",
     "qunit-dom": "^0.8.3",
     "terser": "3.10.12",
-    "sass": "^1.32.13"
+    "sass": "1.32.13"
   },
   "engines": {
     "node": "10.*"
@@ -83,7 +83,8 @@
   "resolutions": {
     "broccoli-uglify-sourcemap": "2.2.0",
     "terser": "3.9.1",
-    "ember-cli-babel": "6.17.2"
+    "ember-cli-babel": "6.17.2",
+    "sass": "1.32.13"
   },
   "dependencies": {
     "node": "^10.20.1"
