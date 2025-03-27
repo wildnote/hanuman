@@ -31,15 +31,6 @@ module.exports = function(defaults) {
       plugins: [
         require.resolve('ember-auto-import/babel')
       ]
-    },
-    'ember-cli-babel': {
-      includePolyfill: true,
-      plugins: [
-        [require.resolve('@babel/plugin-transform-runtime'), {
-          regenerator: true,
-          helpers: true
-        }]
-      ]
     }
   });
 
