@@ -67,15 +67,14 @@ export default Model.extend(Validator, {
   isTextField: equal('answerType.name', 'text'),
   isTextAreaField: equal('answerType.name', 'textarea'),
 
-
   supportAncestry: match('answerType.name', /section|repeater/),
   isTaxonType: match('answerType.name', /taxon/),
 
   displayDataInRepeaterHeader: attr('boolean'),
 
-  cssStyleDisplay: computed('cssStyle', function () {
+  cssStyleDisplay: computed('cssStyle', function() {
     let styleString = this.get('cssStyle') || '';
-    return styleString.split(';').join(";\n");
+    return styleString.split(';').join(';\n');
   }),
 
   tags: computed('tagList', function() {
@@ -103,7 +102,10 @@ export default Model.extend(Validator, {
   }),
 
   parent: computed('parentId', function() {
-    return this.store.peekAll('question').filterBy('id', this.parentId).get(0);
+    return this.store
+      .peekAll('question')
+      .filterBy('id', this.parentId)
+      .get(0);
   }),
 
   isinRepeater: computed('parentId', function() {
@@ -129,7 +131,7 @@ export default Model.extend(Validator, {
       'chosenselect',
       'locationchosensingleselect',
       'taxonchosensingleselect',
-      'counter',
+      'counter'
     ];
     return allowableTypes.includes(this.get('answerType').get('name'));
   }),
@@ -157,13 +159,7 @@ export default Model.extend(Validator, {
   }),
 
   defaultAnswerEnabled: computed('defaultAnswerEnabled', 'answerType.name', function() {
-    let allowableTypes = [
-      'checkbox',
-      'number',
-      'radio',
-      'text',
-      'textarea',
-    ];
+    let allowableTypes = ['checkbox', 'number', 'radio', 'text', 'textarea'];
     return allowableTypes.includes(this.get('answerType').get('name'));
   }),
 

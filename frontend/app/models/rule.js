@@ -23,11 +23,11 @@ export default Model.extend(Validator, {
     return this.value;
   }),
 
-  isLookupRule: computed('type', function () {
+  isLookupRule: computed('type', function() {
     return this.get('type') === 'Hanuman::LookupRule';
   }),
 
-  isCalculationRule: computed('type', function () {
+  isCalculationRule: computed('type', function() {
     return this.get('type') === 'Hanuman::CalculationRule';
   }),
 
