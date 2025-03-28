@@ -10,7 +10,12 @@ module.exports = function(defaults) {
       includePolyfill: true,
       compileModules: true,
       plugins: [
-        require.resolve('babel-plugin-module-resolver'),
+        [require.resolve('babel-plugin-module-resolver'), {
+          root: ['./app'],
+          alias: {
+            'frontend': './app'
+          }
+        }],
         require.resolve('babel-plugin-transform-object-rest-spread')
       ]
     },
