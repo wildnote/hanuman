@@ -19,7 +19,7 @@
     "@ember/jquery": "^0.5.2",
     "@ember/optional-features": "0.7.0",
     "active-model-adapter": "2.2.0",
-    "babel-plugin-module-resolver": "3",
+    "babel-plugin-module-resolver": "2.7.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "broccoli-asset-rev": "3.0.0",
     "broccoli-uglify-sourcemap": "^2.2.0",
