@@ -7,8 +7,11 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
     'ember-cli-babel': {
-      optional: ['es6.spec.symbols'],
-      includePolyfill: true
+      includePolyfill: true,
+      compileModules: true,
+      plugins: [
+        require.resolve('babel-plugin-transform-object-rest-spread')
+      ]
     },
     eslint: {
       testGenerator: 'qunit',
@@ -22,6 +25,10 @@ module.exports = function(defaults) {
     ace: {
       themes: ['github'],
       modes: ['javascript']
+    },
+    sassOptions: {
+      includePaths: ['bower_components'],
+      implementation: require('sass')
     }
   });
 

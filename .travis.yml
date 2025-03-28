@@ -2,7 +2,7 @@ dist: trusty
 language: ruby
 cache: bundler
 node_js:
-  - "8.10.0"
+  - "10.24.1"  # Last version of Node 10.x
 rvm:
   - 2.2.8
 
@@ -21,7 +21,7 @@ cache:
     - bower_components
 
 before_install:
-  - nvm install 8.10.0
+  - nvm install 10.24.1
   - gem install bundler -v 1.12.5
   - cd frontend
   - curl -o- -L https://yarnpkg.com/install.sh | bash
