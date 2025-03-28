@@ -59,6 +59,8 @@ test('deleting an answer choice', async function(assert) {
   let selector = `[data-answer-choice-id="${firstAnswerChoices.id}"]`;
 
   await click(`${selector} [data-test="delete-answer-choice-link"]`);
+  await click(`${selector} [data-test="confirm-delete-answer-choice"]`);
+
   assert.notEqual(
     firstAnswerChoices.option_text,
     find('[data-test="answerChoice.optionText"]:first')

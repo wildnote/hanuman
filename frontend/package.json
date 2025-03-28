@@ -13,12 +13,21 @@
     "build": "ember build",
     "lint:js": "eslint .",
     "start": "ember serve",
-    "test": "./node_modules/.bin/ember test --environment=test --launch='PhantomJS'"
+    "test": "./node_modules/.bin/ember test --environment=test --launch='PhantomJS' --server --filter=''"
   },
   "devDependencies": {
     "@ember/jquery": "^0.5.2",
     "@ember/optional-features": "0.7.0",
     "active-model-adapter": "2.2.0",
+    "babel-plugin-transform-es2015-arrow-functions": "^6.22.0",
+    "babel-plugin-transform-es2015-block-scoping": "^6.26.0",
+    "babel-plugin-transform-es2015-destructuring": "^6.23.0",
+    "babel-plugin-transform-es2015-modules-amd": "^6.24.1",
+    "babel-plugin-transform-es2015-parameters": "^6.24.1",
+    "babel-plugin-transform-es2015-spread": "^6.22.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-plugin-transform-regenerator": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
     "broccoli-asset-rev": "3.0.0",
     "broccoli-uglify-sourcemap": "^2.2.0",
     "ember-ace": "^2.0.1",
@@ -71,17 +80,18 @@
     "ivy-codemirror": "^2.1.0",
     "liquid-fire": "0.29.5",
     "loader.js": "^4.7.0",
+    "phantomjs-prebuilt": "^2.1.16",
     "prettier": "1.15.2",
     "qunit-dom": "^0.8.3",
-    "terser": "3.10.12",
-    "sass": "1.32.13"
+    "sass": "1.32.13",
+    "terser": "3.10.12"
   },
   "engines": {
     "node": ">=10.*"
   },
   "dependencies": {
-    "node": "^12.22.12",
-    "ember-load-initializers": "2.0.0"
+    "ember-load-initializers": "2.0.0",
+    "node": "^12.22.12"
   },
   "resolutions": {
     "ember-cli-babel": "6.17.2",

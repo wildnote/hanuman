@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (hideAnnouncementEl) {
     hideAnnouncementEl.addEventListener('click', () => {
       const announcementCloseEl = document.querySelector('.hide_announcement.announcement-close');
-      const announcementId = announcementCloseEl ? announcementCloseEl.getAttribute('data-announcementid') : null;
+      let _announcementId = announcementCloseEl ? announcementCloseEl.getAttribute('data-announcementid') : null;
       const announceEl = document.querySelector('announce');
       if (announceEl) {
         announceEl.style.display = 'none';

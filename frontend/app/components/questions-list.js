@@ -133,14 +133,14 @@ export default Component.extend({
     question.set('loading', false);
   }),
 
-  checkTemplate: task(function* () {
+  checkTemplate: task(function*() {
     try {
       const surveyTemplate = this.surveyTemplate;
       surveyTemplate.set('checkingTemplate', true);
       const errors = yield surveyTemplate.checkTemplate();
-      if(errors) {
+      if (errors) {
         surveyTemplate.set('checkingTemplate', false);
-        alert("Errors by question:" + "\n" + errors.ancestry + "\n" + errors.rule + "\n" + errors.condition);
+        alert('Errors by question:' + '\n' + errors.ancestry + '\n' + errors.rule + '\n' + errors.condition);
       }
     } catch (e) {
       this.get('notify').alert('There was an error checking the template');
@@ -247,7 +247,7 @@ export default Component.extend({
 
     dragStarted(question) {
       const targets = this.element.querySelectorAll('.draggable-object-target');
-      targets.forEach(target => {
+      targets.forEach((target) => {
         const parent = target.parentElement;
         if (parent && !parent.classList.contains(`model-id-${question.get('parentId')}`)) {
           parent.classList.add('dragging-coming-active');
@@ -257,7 +257,7 @@ export default Component.extend({
 
     dragEnded() {
       const targets = this.element.querySelectorAll('.draggable-object-target');
-      targets.forEach(target => {
+      targets.forEach((target) => {
         const parent = target.parentElement;
         if (parent) {
           parent.classList.remove('dragging-coming-active');
@@ -268,7 +268,7 @@ export default Component.extend({
     dragOver() {
       run.next(this, function() {
         const targets = this.element.querySelectorAll('.accepts-drag');
-        targets.forEach(target => {
+        targets.forEach((target) => {
           const parent = target.parentElement;
           if (parent) {
             parent.classList.add('dragging-over');
@@ -279,7 +279,7 @@ export default Component.extend({
 
     dragOut() {
       const targets = this.element.querySelectorAll('.draggable-object-target');
-      targets.forEach(target => {
+      targets.forEach((target) => {
         const parent = target.parentElement;
         if (parent) {
           parent.classList.remove('dragging-over');
