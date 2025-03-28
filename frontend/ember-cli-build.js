@@ -10,12 +10,6 @@ module.exports = function(defaults) {
       includePolyfill: true,
       compileModules: true,
       plugins: [
-        [require.resolve('babel-plugin-module-resolver'), {
-          root: ['./app'],
-          alias: {
-            'spin': 'vendor/ladda/spin'
-          }
-        }],
         require.resolve('babel-plugin-transform-object-rest-spread')
       ]
     },
@@ -45,6 +39,5 @@ module.exports = function(defaults) {
   app.import('vendor/bootstrap/popover/bootstrap-popover.js');
   app.import('vendor/wildnote/wildnote-helper-list.js');
   app.import('vendor/rails-ujs-handlers.js');
-  app.import('vendor/ladda/spin.js');
   return app.toTree();
 };
