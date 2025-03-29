@@ -1,4 +1,3 @@
-
 $:.push File.expand_path("../lib", __FILE__)
 
 # Maintain your gem's version:
@@ -14,7 +13,10 @@ Gem::Specification.new do |s|
   s.summary     = "Hanuman. The Hindu monkey god. An open source rails clone of survey monkey."
   s.description = "Hanuman. The Hindu monkey god. An open source rails clone of survey monkey."
 
-  s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
+  # Exclude build artifacts and node_modules from being packaged
+  s.files = Dir["{app,config,db,lib,vendor}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"] - 
+    Dir["frontend/node_modules/**/*", "frontend/tmp/**/*", "frontend/dist/**/*", "frontend/.sass-cache/**/*", 
+        "frontend/.ember-cli/**/*", "frontend/.bower/**/*", "frontend/bower_components/**/*"]
   s.test_files = Dir["test/**/*"]
 
   # Rails and its components - use ~> to allow RailsLTS versions
