@@ -1,0 +1,13 @@
+{
+  "name": "frontend",
+  "dependencies": {
+    "pretender": "1.4.1",
+    "remodal": "1.1.0",
+    "selectize": "miguelcobain/selectize.js#master",
+    "route-recognizer": "0.2.7",
+    "animate.css": "3.5.2"
+  },
+  "resolutions": {
+    "route-recognizer": "0.2.7"
+  }
+}

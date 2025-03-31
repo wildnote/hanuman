@@ -9,9 +9,10 @@ import { on } from '@ember/object/evented';
 import { equal, sort, alias } from '@ember/object/computed';
 import { task, allSettled } from 'ember-concurrency';
 import { bind } from '@ember/runloop';
-import $ from 'jquery';
 import groupBy from 'ember-group-by';
 import window from 'ember-window-mock';
+import $ from 'jquery';
+
 const { testing } = Ember;
 
 export default Component.extend({
@@ -36,46 +37,69 @@ export default Component.extend({
     this._super(...arguments);
     run.scheduleOnce('afterRender', this, function() {
       this.get('remodal').open('question-modal');
-      $('[data-toggle="popover"]').popover({});
-    });
-    // Tabs
-    $('a[data-toggle="tab"]').on('click', function(e) {
-      e.preventDefault();
-      $(this).tab('show');
+      // Initialize popovers using native DOM
+      const popovers = this.element.querySelectorAll('[data-toggle="popover"]');
+      popovers.forEach((el) => {
+        el.setAttribute('data-bs-toggle', 'popover');
+        el.setAttribute('data-bs-trigger', 'hover');
+      });
+
+      // Handle tabs
+      const tabs = this.element.querySelectorAll('a[data-toggle="tab"]');
+      tabs.forEach((tab) => {
+        tab.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = tab.getAttribute('href');
+          const targetTab = this.element.querySelector(targetId);
+          if (targetTab) {
+            // Remove active class from all tabs
+            tabs.forEach((t) => t.classList.remove('active'));
+            // Add active class to clicked tab
+            tab.classList.add('active');
+            // Show target content
+            const tabContents = this.element.querySelectorAll('.tab-pane');
+            tabContents.forEach((content) => content.classList.remove('active'));
+            targetTab.classList.add('active');
+          }
+        });
+      });
     });
 
-    $(document).on('keydown.close-modal', bind(this, this._escapeHandler));
+    document.addEventListener('keydown', bind(this, this._escapeHandler));
+  },
+
+  willDestroyElement() {
+    document.removeEventListener('keydown', bind(this, this._escapeHandler));
+    this._super(...arguments);
   },
 
   filteredAnswerTypes: computed('answerTypes', function() {
-    let answerTypes = this.get('answerTypes');
+    const answerTypes = this.get('answerTypes');
     if (this.get('isSuperUser')) {
       return answerTypes;
-    } else {
-      return answerTypes.filter((answerType) => {
-        return !answerType.get('name').includes('taxon');
-      });
     }
+    return answerTypes.filter((answerType) => {
+      return !answerType.get('name').includes('taxon');
+    });
   }),
 
   answerChoicesToShow: computed('question.answerChoices.@each.{isNew,isDeleted}', 'question.{isNew}', function() {
-    let answerChoices = this.question.get('answerChoices').filter((answerChoice) => !answerChoice.isDeleted);
+    const answerChoices = this.question.get('answerChoices').filter((answerChoice) => !answerChoice.isDeleted);
     if (this.question.isNew) {
       return answerChoices;
-    } else {
-      return answerChoices.filter((answerChoice) => !answerChoice.isNew);
     }
+    return answerChoices.filter((answerChoice) => !answerChoice.isNew);
   }),
 
   ancestryQuestions: computed('questions', function() {
     return this.get('questions').filter((question) => {
-      let allowedTypes = ['section', 'repeater'];
+      const allowedTypes = ['section', 'repeater'];
       return allowedTypes.includes(question.get('answerType.name'));
     });
   }),
 
   conditionalQuestions: computed('questions', 'question', function() {
-    let question = this.get('question');
+    const question = this.get('question');
     return this.get('questions').filter((condQuestion) => {
       return condQuestion !== question && condQuestion.get('answerType.hasAnAnswer');
     });
@@ -89,25 +113,14 @@ export default Component.extend({
     'question.answerType.name',
     'question.visibilityRule.{isNew,conditionsPendingSave.[]}',
     function() {
-      let question = this.get('question');
+      const question = this.get('question');
       let newRule = this.get('question.visibilityRule.isNew');
-      let notTypes = ['section', 'repeater', 'helperabove', 'helperbelow', 'static', 'line'];
-      let pendingConditions = this.get('question.visibilityRule.conditionsPendingSave.length') > 0;
+      const notTypes = ['section', 'repeater', 'helperabove', 'helperbelow', 'static', 'line'];
+      const pendingConditions = this.get('question.visibilityRule.conditionsPendingSave.length') > 0;
       if (newRule === undefined) {
         newRule = true;
       }
-      let isDisabled = !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
-      if (isDisabled) {
-        run.next(this, () => {
-          if (this.get('isDestroyed') || this.get('isDestroying')) {
-            return;
-          }
-          if (question.isDeleted !== undefined && !question.isDeleted) {
-            this.set('question.required', false);
-          }
-        });
-      }
-      return isDisabled;
+      return !newRule || pendingConditions || notTypes.includes(question.get('answerType.name'));
     }
   ),
 
@@ -244,11 +257,6 @@ export default Component.extend({
     }
   }),
 
-  willDestroyElement() {
-    this._super(...arguments);
-    $(document).off('keydown.close-modal');
-  },
-
   _escapeHandler(e) {
     if (e.keyCode == 27) {
       this.send('closeModal');
@@ -307,6 +315,21 @@ export default Component.extend({
   },
 
   actions: {
+    checkDefaultAnswer(value) {
+      // this method is not called anywhere
+      // if (equal('question.answerType.name', 'number')) {
+      //   value = value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, ''); // only allow positive and negative numbers and decimals
+      //   set(this.question, 'defaultAnswer', value);
+      //   $('[name='defaultAnswer']').val(value);
+      // }
+      // for some reason both number and counter are getting into the first condition block whether it's the above or the below
+      // if (equal('question.answerType.name', 'counter')) {
+      //   value = value.replace(/[^0-9-]/g, '').replace(/(?!^)-/g, ''); // only allow positive and negative integers
+      //   set(this.question, 'defaultAnswer', value);
+      //   $('[name='defaultAnswer']').val(value);
+      // }
+    },
+
     setReportChildrenWidth(value) {
       value = value.replace(/\D+/g, '');
       value = value.replace(/\b0\b/g, '');

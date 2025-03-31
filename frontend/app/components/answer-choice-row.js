@@ -1,14 +1,15 @@
-import Component from '@ember/component';
-import $ from 'jquery';
+import DraggableObject from 'ember-drag-drop/components/draggable-object';
 import { run } from '@ember/runloop';
 import { isNone } from '@ember/utils';
 import { task } from 'ember-concurrency';
 import { alias } from '@ember/object/computed';
 
-export default Component.extend({
-  classNames: [
+export default DraggableObject.extend({
+  tagName: 'tr',
+
+  classNameBindings: [
     ':js-draggableObject',
-    'isDraggingObject:is-dragging-object:',
+    'isDraggingObject:is-dragging-object',
     'overrideClass',
     'isNewAnswerChoice:no-hover'
   ],
@@ -20,9 +21,9 @@ export default Component.extend({
   isFullyEditable: alias('question.surveyTemplate.fullyEditable'),
 
   setNewAnswerChoice() {
-    let lastAnswer = this.get('question.answerChoices.lastObject');
-    let sortOrder = lastAnswer && lastAnswer.get('sortOrder') ? lastAnswer.get('sortOrder') + 1 : null;
-    let answerChoice = this.get('question').store.createRecord('answerChoice', {
+    const lastAnswer = this.get('question.answerChoices.lastObject');
+    const sortOrder = lastAnswer && lastAnswer.get('sortOrder') ? lastAnswer.get('sortOrder') + 1 : null;
+    const answerChoice = this.get('question').store.createRecord('answerChoice', {
       optionText: '',
       sortOrder
     });
@@ -30,9 +31,9 @@ export default Component.extend({
   },
 
   saveTask: task(function*() {
-    let answerChoice = this.get('answerChoice');
+    const answerChoice = this.get('answerChoice');
     // Strip any trailing spaces off of an answer before saving it.
-    let optionText = answerChoice.get('optionText');
+    const optionText = answerChoice.get('optionText');
     answerChoice.set('optionText', optionText.trim());
 
     if (answerChoice.validate()) {
@@ -48,30 +49,35 @@ export default Component.extend({
   }),
 
   actions: {
-    toggleForm(_e, forceToSetNew = false) {
+    toggleForm(_, forceToSetNew = false) {
       this.toggleProperty('isEditingAnswerChoice');
       if (forceToSetNew || isNone(this.get('answerChoice'))) {
         this.setNewAnswerChoice();
       }
       run.next(this, function() {
-        $('input').focus();
+        const input = this.element.querySelector('input');
+        if (input) {
+          input.focus();
+        }
       });
     },
 
     confirm() {
-      let el = this.get('element');
-      let $confirm = $('.delete-confirm', el);
-      $confirm.fadeIn();
+      const confirmEl = this.element.querySelector('.delete-confirm');
+      if (confirmEl) {
+        confirmEl.style.display = 'block';
+      }
     },
 
     cancel() {
-      let el = this.get('element');
-      let $confirm = $('.delete-confirm', el);
-      $confirm.fadeOut();
+      const confirmEl = this.element.querySelector('.delete-confirm');
+      if (confirmEl) {
+        confirmEl.style.display = 'none';
+      }
     },
 
     delete() {
-      let answerChoice = this.get('answerChoice');
+      const answerChoice = this.get('answerChoice');
       answerChoice.deleteRecord();
       if (!answerChoice.get('isNew')) {
         answerChoice.save();
@@ -83,18 +89,6 @@ export default Component.extend({
         this.get('saveTask').perform();
         event.preventDefault();
       }
-    },
-
-    dragStarted(question) {
-      $('.draggable-object-target')
-        .parent(`:not(.model-id-${question.get('parentId')})`)
-        .addClass('dragging-coming-active');
-    },
-
-    dragEnded() {
-      $('.draggable-object-target')
-        .parent()
-        .removeClass('dragging-coming-active');
     }
   }
 });

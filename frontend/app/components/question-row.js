@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/string';
@@ -14,68 +13,71 @@ export default Component.extend({
   isPreviewable: or('question.isTaxonType', 'question.answerType.hasAnswerChoices'),
 
   isSelected: computed('selectedQuestions.[]', 'question.id', function() {
-    let selectedQuestions = this.get('selectedQuestions');
-    let questionId = this.get('question.id');
+    const selectedQuestions = this.get('selectedQuestions');
+    const questionId = this.get('question.id');
     return selectedQuestions.some((question) => question.get('id') === questionId);
   }),
 
   typeInitial: computed(
     'question.{ancestry,hidden,required,visibilityRule.isNew,displayDataInRepeaterHeader,defaultAnswer}',
     function() {
-      let question = this.get('question');
-      let intial = '';
+      const question = this.get('question');
+      let initial = '';
       if (question.get('hidden')) {
-        intial += '<span class="label label-default">Hidden</span>';
+        initial += '<span class="label label-default">Hidden</span>';
       }
       if (question.get('required')) {
-        intial += '<span class="label label-danger">Required</span>';
+        initial += '<span class="label label-danger">Required</span>';
       }
       if (question.get('visibilityRule') && !question.get('visibilityRule.isNew')) {
-        intial += `<span class="label label-info">Rules</span>`;
+        initial += '<span class="label label-info">Rules</span>';
       }
       if (question.get('calculationRule') || question.get('calculated')) {
-        intial += `<span class="label label-success">Calculated</span>`;
+        initial += '<span class="label label-success">Calculated</span>';
       }
       if (question.get('displayDataInRepeaterHeader')) {
-        intial += `<span class="label label-default">Display</span>`;
+        initial += '<span class="label label-default">Display</span>';
       }
       if (question.get('defaultAnswer')) {
-        intial += `<span class="label label-default">Default</span>`;
+        initial += '<span class="label label-default">Default</span>';
       }
-      // console.log(intial);
-      return htmlSafe(intial);
+      return htmlSafe(initial);
     }
   ),
 
   totalChildren: computed('otherQuetions.@each.ancestry', 'question.id', function() {
-    let questionId = this.get('question.id');
+    const questionId = this.get('question.id');
     return this.get('otherQuetions').filter((question) => question.get('ancestry') === questionId).length;
   }),
 
   actions: {
     highlightConditional(questionId) {
-      let question = this.get('store').peekRecord('question', questionId);
+      const question = this.get('store').peekRecord('question', questionId);
       question.set('highlighted', true);
     },
 
     unHighlightConditional(questionId) {
-      let question = this.get('store').peekRecord('question', questionId);
+      const question = this.get('store').peekRecord('question', questionId);
       question.set('highlighted', false);
     },
 
     confirm() {
-      let el = this.get('element');
-      let $confirm = $('.delete-confirm', el);
-      $confirm.fadeIn();
+      const confirmEl = this.element.querySelector('.delete-confirm');
+      if (confirmEl) {
+        confirmEl.style.display = 'block';
+      }
     },
+
     cancel() {
-      let el = this.get('element');
-      let $confirm = $('.delete-confirm', el);
-      $confirm.fadeOut();
+      const confirmEl = this.element.querySelector('.delete-confirm');
+      if (confirmEl) {
+        confirmEl.style.display = 'none';
+      }
     },
+
     delete() {
-      let question = this.get('question');
-      let el = this.get('element');
+      const question = this.get('question');
+      const el = this.get('element');
       this.sendAction('deleteQuestion', question, el);
     },
 
@@ -84,15 +86,15 @@ export default Component.extend({
     },
 
     toggleQuestion(e) {
-      let checked = e.target.checked;
-      let question = this.get('question');
-      let questionId = this.get('question.id');
-      let otherQuetions = this.get('otherQuetions');
+      const checked = e.target.checked;
+      const question = this.get('question');
+      const questionId = this.get('question.id');
+      const otherQuetions = this.get('otherQuetions');
       this.get('toggleQuestion')(question, checked);
       // Toggle children questions
       otherQuetions.forEach((otherQuetion) => {
         if (otherQuetion.get('ancestry')) {
-          let ancestrires = otherQuetion.get('ancestry').split('/');
+          const ancestrires = otherQuetion.get('ancestry').split('/');
           if (ancestrires.includes(questionId)) {
             otherQuetion.set('ancestrySelected', checked);
             this.get('toggleQuestion')(otherQuetion, checked);

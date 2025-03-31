@@ -34,7 +34,7 @@ export default Component.extend({
       projectId = window.location.href.split('/')[6];
     }
     if (projectId || testing) {
-      let response = yield this.ajax.request(`/locations?project_id=${projectId}`);
+      const response = yield this.ajax.request(`/locations?project_id=${projectId}`);
       this.set('locations', response.locations);
     } else {
       this.set('locations', []);
@@ -42,10 +42,10 @@ export default Component.extend({
   }),
 
   loadDataSources: task(function*() {
-    let currentQuestion = this.get('currentQuestion');
-    let dataSourceId = currentQuestion.belongsTo('dataSource').id();
+    const currentQuestion = this.get('currentQuestion');
+    const dataSourceId = currentQuestion.belongsTo('dataSource').id();
     if (dataSourceId) {
-      let response = yield this.ajax.request(`/data_sources/${dataSourceId}/data_source_taxon_mappings`);
+      const response = yield this.ajax.request(`/data_sources/${dataSourceId}/data_source_taxon_mappings`);
       this.set('dataSources', response.data_sources);
     } else {
       this.set('dataSources', []);
@@ -53,9 +53,9 @@ export default Component.extend({
   }),
 
   availableQuestions: computed('rule', 'question.@each.answerType.name', function() {
-    let ruleQuestion = this.get('rule.question');
+    const ruleQuestion = this.get('rule.question');
     if (this.rule.get('type') === 'Hanuman::LookupRule') {
-      let supportedQuestionForLookup = [
+      const supportedQuestionForLookup = [
         'checkbox',
         'checkboxlist',
         'chosenmultiselect',
@@ -69,39 +69,30 @@ export default Component.extend({
         if (supportedQuestionForLookup.includes(question.get('answerType.name'))) {
           if (question.get('parent') && question.get('parent').get('isARepeater')) {
             return question.get('ancestry') === ruleQuestion.get('ancestry');
-          } else {
-            return true;
           }
-        } else {
-          return false;
+          return true;
         }
-      });
-    } else {
-      return this.questions.filter((question) => {
-        // Disallow calculation rules that would end up creating a state of infinite recursion
-        if (question.get('calculationRule')) {
-          let conditions = question.get('calculationRule').get('conditions');
-          let recursive = false;
-          conditions.forEach(function(condition) {
-            if (condition.get('questionId') === ruleQuestion.get('railsId').toString()) {
-              recursive = true;
-            }
-          });
-
-          if (recursive) {
-            return false;
-          }
-        }
-
-        return true;
-
-        // if (question.get('parent') && question.get('parent').get('isARepeater')) {
-        //   return question.get('ancestry') === ruleQuestion.get('ancestry') || ruleQuestion.get('ancestry') === null;
-        // } else {
-        //   return true;
-        // }
+        return false;
       });
     }
+    return this.questions.filter((question) => {
+      // Disallow calculation rules that would end up creating a state of infinite recursion
+      if (question.get('calculationRule')) {
+        const conditions = question.get('calculationRule').get('conditions');
+        let recursive = false;
+        conditions.forEach((condition) => {
+          if (condition.get('questionId') === ruleQuestion.get('railsId').toString()) {
+            recursive = true;
+          }
+        });
+
+        if (recursive) {
+          return false;
+        }
+      }
+
+      return true;
+    });
   }),
 
   operators: computed('currentQuestion', function() {

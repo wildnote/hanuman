@@ -1,21 +1,25 @@
-import $ from 'jquery';
-
 if (!window.jacobs) {
   window.jacobs = false;
 }
 
-$('.hide_announcement').click(function() {
-  $('announce')
-    .first()
-    .slideUp();
+document.addEventListener('DOMContentLoaded', () => {
+  const hideAnnouncementEl = document.querySelector('.hide_announcement');
+  if (hideAnnouncementEl) {
+    hideAnnouncementEl.addEventListener('click', () => {
+      const announcementCloseEl = document.querySelector('.hide_announcement.announcement-close');
+      let _announcementId = announcementCloseEl ? announcementCloseEl.getAttribute('data-announcementid') : null;
+      const announceEl = document.querySelector('announce');
+      if (announceEl) {
+        announceEl.style.display = 'none';
+      }
 
-  $.ajax({
-    url: '/users/read_latest_terms/',
-    type: 'GET',
-    error: function(_error) {
-      // console.log(error);
-    }
-  });
+      fetch('/users/read_latest_terms/', {
+        method: 'GET'
+      }).catch(() => {
+        // Handle error silently
+      });
+    });
+  }
 });
 
 export function initialize(application) {
@@ -26,21 +30,6 @@ export function initialize(application) {
 }
 
 export default {
-  name: 'jacobs',
-  initialize() {
-    const _aid = $('.announcement-wrapper').attr('data-announcementid'); // Added underscore to mark as unused
-
-    $('.announcement-wrapper')
-      .first()
-      .fadeOut();
-
-    $.ajax({
-      url: '/users/read_latest_terms/',
-      type: 'GET',
-      success() {
-        // eslint-disable-next-line no-console
-        // console.log('success');
-      }
-    });
-  }
+  name: 'isJacobs',
+  initialize
 };
