@@ -16,9 +16,9 @@
     "test": "./node_modules/.bin/ember test --environment=test --launch='PhantomJS' --server --filter=''"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.5",
     "@ember/jquery": "^0.5.2",
     "@ember/optional-features": "0.7.0",
-    "@babel/plugin-proposal-object-rest-spread": "^7.20.5",
     "active-model-adapter": "2.2.0",
     "babel-plugin-module-resolver": "2.7.1",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
@@ -36,7 +36,7 @@
     "ember-cli-htmlbars-inline-precompile": "2.1.0",
     "ember-cli-inject-live-reload": "2.0.1",
     "ember-cli-mirage": "0.4.10",
-    "ember-cli-rails-addon": "0.12.0",
+    "ember-cli-rails-addon": "0.6.0",
     "ember-cli-release": "^0.2.9",
     "ember-cli-sass": "10.0.0",
     "ember-cli-shims": "1.2.0",

@@ -29,7 +29,9 @@ module.exports = function(defaults) {
     sassOptions: {
       includePaths: ['bower_components'],
       implementation: require('sass')
-    }
+    },
+    storeConfigInMeta: false,
+    generateAssetMap: true,
   });
 
   app.import('bower_components/animate.css/animate.min.css');

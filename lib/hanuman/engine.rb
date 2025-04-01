@@ -25,7 +25,6 @@ module Hanuman
     end
 
     config.to_prepare do
-      require 'ember_cli/helpers'
       Dir.glob(Rails.root + 'app/decorators/**/*_decorator*.rb').each do |c|
         require_dependency(c)
       end
@@ -34,5 +33,6 @@ module Hanuman
     initializer 'static assets' do |app|
       app.middleware.insert_before(::ActionDispatch::Static, ::ActionDispatch::Static, "#{root}/public")
     end
+
   end
 end

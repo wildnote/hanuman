@@ -28,7 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'activejob',        '~> 5.2.7'
 
   # Use a version of ember-cli-rails that supports both Rails 4.2 and Ruby 3
-  s.add_dependency 'ember-cli-rails', '~> 0.12.0'
+  s.add_dependency 'ember-cli-rails', '0.12.0'
   s.add_dependency 'ruby3-backward-compatibility'
 
   # Keep other dependencies as they are
