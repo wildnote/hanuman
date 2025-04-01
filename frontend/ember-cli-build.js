@@ -11,7 +11,8 @@ module.exports = function(defaults) {
       compileModules: true,
       plugins: [
         require.resolve('babel-plugin-transform-object-rest-spread')
-      ]
+      ],
+      exclude: ['transform-es2015-block-scoping', 'transform-es2015-typeof-symbol']
     },
     eslint: {
       testGenerator: 'qunit',

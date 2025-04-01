@@ -16,6 +16,7 @@
     "test": "./node_modules/.bin/ember test --environment=test --launch='PhantomJS' --server --filter=''"
   },
   "devDependencies": {
+    "@babel/core": "^7.23.3",
     "@babel/plugin-proposal-object-rest-spread": "^7.20.5",
     "@ember/jquery": "^0.5.2",
     "@ember/optional-features": "0.7.0",
@@ -56,7 +57,6 @@
     "ember-notify": "5.3.0",
     "ember-power-select": "2.2.1",
     "ember-qunit": "4.2.0",
-    "ember-remodal": "2.0.0",
     "ember-resolver": "^5.0.1",
     "ember-route-action-helper": "2.0.6",
     "ember-sortable": "1.12.3",
@@ -66,6 +66,7 @@
     "ember-tooltips": "2.11.1",
     "ember-truth-helpers": "2.1.0",
     "ember-window-mock": "^0.5.3",
+    "eslint": "^5.16.0",
     "eslint-config-prettier": "3.3.0",
     "eslint-plugin-ember": "^5.2.0",
     "eslint-plugin-prettier": "3.0.0",
@@ -85,13 +86,19 @@
   },
   "dependencies": {
     "ember-load-initializers": "2.0.0",
-    "node": "^16.20.2"
+    "node": "^16.20.2",
+    "pretender": "1.4.1",
+    "ember-remodal": "2.0.0",
+    "selectize": "github:miguelcobain/selectize.js#master",
+    "route-recognizer": "0.2.7",
+    "animate.css": "3.5.2"
   },
   "resolutions": {
     "ember-cli-babel": "6.17.2",
     "ember-cli": "3.28.0",
     "loader.js": "4.7.0",
     "@embroider/macros": "1.0.0",
-    "liquid-fire": "0.31.0"
+    "liquid-fire": "0.31.0",
+    "route-recognizer": "0.2.7"
   }
 }
