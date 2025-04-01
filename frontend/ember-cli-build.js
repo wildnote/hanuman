@@ -27,14 +27,14 @@ module.exports = function(defaults) {
       modes: ['javascript']
     },
     sassOptions: {
-      includePaths: ['bower_components'],
+      includePaths: ['node_modules'],
       implementation: require('sass')
     },
     storeConfigInMeta: false,
     generateAssetMap: true,
   });
 
-  app.import('bower_components/animate.css/animate.min.css');
+  app.import('node_modules/animate.css/animate.min.css');
   app.import('vendor/bootstrap/dropdown/bootstrap-dropdown.js');
   app.import('vendor/bootstrap/tab/bootstrap-tab.js');
   app.import('vendor/bootstrap/tooltip/bootstrap-tooltip.js');
