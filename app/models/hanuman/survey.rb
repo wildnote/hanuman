@@ -19,7 +19,8 @@ module Hanuman
     # Validations
     validates :survey_template_id, presence: true
     validates :survey_date, presence: true
-    validates :survey_extension, presence: true
+    # Make survey_extension validation conditional to fix circular dependency in Rails 5
+    validates :survey_extension, presence: true, on: :update
 
     before_save :set_observations_unsorted, unless: :skip_sort?
 
@@ -336,7 +337,7 @@ module Hanuman
         self.set_rapid_test_hydrophytic
       end
 
-      # sort observations always, instead of relying on flag that doesn't seem to be working 
+      # sort observations always, instead of relying on flag that doesn't seem to be working
       SortObservationsWorker.perform_async(self.id)
 
       update_column(:lock_callbacks, false)
