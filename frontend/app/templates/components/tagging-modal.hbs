@@ -1,7 +1,7 @@
 {{#ember-remodal
   forService=true
   name='tagging-modal'
-  onOpen=(perform fetchAvailableTags)
+  onOpen=(action "handleModalOpen")
   closeOnEscape=false
   disableNativeClose=true
 }}
