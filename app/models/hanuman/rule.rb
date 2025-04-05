@@ -10,8 +10,11 @@ module Hanuman
 
     # Relations
     belongs_to :question
-    has_many :conditions, dependent: :destroy
+    has_many :conditions, dependent: :destroy, autosave: true
     after_commit :update_observation_visibility
+
+    # Always include conditions when loading a rule
+    default_scope { includes(:conditions) }
 
     # Validations
     #validates :question_id, presence: true

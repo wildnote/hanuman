@@ -8,7 +8,27 @@ import Validator from './../mixins/model-validator';
 
 export default Model.extend(Validator, {
   init() {
+    this._super(...arguments);
     this.set('conditionsPendingSave', A());
+
+    // Ensure conditions is initialized
+    if (!this.get('conditions')) {
+      console.warn('Conditions not initialized for rule:', this.id);
+      this.set('conditions', A());
+    }
+  },
+
+  didLoad() {
+    this._super(...arguments);
+    console.log('Rule loaded:', this.id);
+
+    // Check if conditions are loaded
+    const conditions = this.get('conditions');
+    if (conditions) {
+      console.log('Rule has conditions:', conditions.toArray());
+    } else {
+      console.warn('Rule loaded without conditions:', this.id);
+    }
   },
 
   textValue: computed('value', 'question.answerType.hasAnswerChoices', function() {
@@ -38,7 +58,7 @@ export default Model.extend(Validator, {
   script: attr('string', { defaultValue: '' }), // Script has to be blank, rather than null, otherwise Ace Editor will fail on init
 
   // Relations
-  conditions: hasMany('condition', { async: false }),
+  conditions: hasMany('condition', { async: false, inverse: 'rule' }),
   question: belongsTo('question'),
 
   savedConditions: filterBy('conditions', 'isNew', false),

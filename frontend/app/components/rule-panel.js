@@ -7,6 +7,39 @@ import { inject as service } from '@ember/service';
 export default Component.extend({
   store: service(),
   classNames: 'panel rule-panel',
+
+  init() {
+    this._super(...arguments);
+    // Check if rule has conditions
+    const rule = this.get('rule');
+    if (!rule) {
+      console.warn('Rule is null or undefined in rule-panel component');
+      return;
+    }
+
+    console.log('Rule panel initialized with rule:', rule.get('id'));
+
+    // Check if rule has conditions
+    const conditions = rule.get('conditions');
+    if (!conditions) {
+      console.warn('Rule is missing conditions relationship:', rule.get('id'));
+    } else {
+      console.log('Rule has conditions relationship. Conditions:', conditions.toArray());
+
+      // Try to force load conditions if the array is empty
+      if (conditions.get('length') === 0) {
+        console.log('Attempting to force load conditions for rule:', rule.get('id'));
+
+        // Try to reload the rule to get its conditions
+        this.store.findRecord('rule', rule.get('id'), { include: 'conditions', reload: true }).then(updatedRule => {
+          console.log('Rule reloaded with conditions:', updatedRule.get('conditions').toArray());
+        }).catch(error => {
+          console.error('Error reloading rule:', error);
+        });
+      }
+    }
+  },
+
   conditions: filterBy('rule.conditions', 'isNew', false),
 
   choicesValueSelected: computed('rule.value', 'question.answerChoices.[]', function() {
