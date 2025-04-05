@@ -886,7 +886,43 @@
         parameters[columnName] = entries;
       } else {
         // Otherwise, we only want the parameter question (either it is top level, or in the same repeater instance as the target).
+        // Find the condition element with various selectors
         var $conditionElement = $question.find('.form-control');
+
+        // If not found, try form-control-static
+        if ($conditionElement.length < 1) {
+          $conditionElement = $question.find('.form-control-static');
+        }
+
+        // If still not found, try input, select, textarea elements directly
+        if ($conditionElement.length < 1) {
+          $conditionElement = $question.find('input, select, textarea');
+        }
+
+        // If still not found, try any clickable elements
+        if ($conditionElement.length < 1) {
+          $conditionElement = $question.find('input[type=radio], input[type=checkbox], select, button');
+        }
+
+        // Special handling for radio buttons and checkboxes
+        if ($conditionElement.is(':radio') || $conditionElement.is(':checkbox')) {
+          // For radio buttons, use the checked one if available
+          if ($conditionElement.is(':radio')) {
+            var $checked = $conditionElement.filter(':checked');
+            if ($checked.length > 0) {
+              $conditionElement = $checked;
+            }
+          }
+          // For checkboxes, handle differently based on the element type
+          else if ($conditionElement.is(':checkbox') && elementType === 'checkboxes') {
+            // Keep all checkboxes in $conditionElement
+          }
+          // For single checkbox, use it as is
+          else if ($conditionElement.is(':checkbox') && elementType === 'checkbox') {
+            // Keep the checkbox in $conditionElement
+          }
+        }
+
         value = self.getNativeValue($conditionElement, elementType);
         parameters[columnName] = value;
       }
@@ -996,21 +1032,54 @@
 
   ConditionalLogic.prototype.getNativeValue = function($input, elementType) {
     var self = this;
+    console.log('getNativeValue called with input:', $input);
+    console.log('Element type:', elementType);
+
+    // Special handling for radio buttons
+    if ($input.is(':radio')) {
+      console.log('Handling radio button in getNativeValue');
+      // Get the checked radio button
+      var $checked = $input.filter(':checked');
+      if ($checked.length > 0) {
+        console.log('Found checked radio button:', $checked);
+        // Use the checked radio button's value
+        var radioValue = $checked.attr('data-label-value') || $checked.val();
+        console.log('Radio value:', radioValue);
+        return radioValue;
+      } else {
+        console.log('No radio button checked');
+        return null;
+      }
+    }
+
     var stringValue = self.getValue($input);
+    console.log('String value from getValue:', stringValue);
 
     if (elementType === 'checkbox') {
-      return stringValue === 'true';
+      console.log('Handling single checkbox');
+      // Check if the checkbox is checked directly
+      if ($input.is(':checkbox')) {
+        return $input.is(':checked');
+      }
+      // Fallback to string comparison if needed
+      return stringValue === 'true' || stringValue === 'Yes';
     }
 
     if (elementType === 'number' || elementType === 'counter') {
+      console.log('Handling number or counter');
       return $.isNumeric(stringValue) ? parseFloat(stringValue) : 0;
     }
 
     if (elementType === 'multiselect' || elementType === 'checkboxes') {
-      if (stringValue === undefined || stringValue === null || stringValue.trim() === '') {
+      console.log('Handling multiselect or checkboxes');
+      if (stringValue === undefined || stringValue === null || stringValue === '') {
         return [];
-      } else {
+      } else if (typeof stringValue === 'string' && stringValue.includes('|&|')) {
         return stringValue.split('|&|');
+      } else if (Array.isArray(stringValue)) {
+        return stringValue;
+      } else {
+        return [stringValue];
       }
     }
 
