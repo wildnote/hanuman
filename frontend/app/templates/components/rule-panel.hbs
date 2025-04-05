@@ -40,31 +40,23 @@
             <td width="10px"></td>
             <td width="10px"></td>
           </tr>
-          {{#if rule.conditions}}
-            {{#each conditions as |condition|}}
-              {{condition-row
-                condition=condition
-                rule=rule
-                question=question
-                questions=conditionalQuestions
-                saveTask=saveConditionTask
-                removeTask=removeConditionTask
-                isNewCondition=false
-              }}
-            {{else}}
-              <tr>
-                <td colspan="5" class="text-center">
-                  <em>No conditions found. Try adding a new condition below.</em>
-                </td>
-              </tr>
-            {{/each}}
+          {{#each conditions as |condition|}}
+            {{condition-row
+              condition=condition
+              rule=rule
+              question=question
+              questions=conditionalQuestions
+              saveTask=saveConditionTask
+              removeTask=removeConditionTask
+              isNewCondition=false
+            }}
           {{else}}
             <tr>
               <td colspan="5" class="text-center">
-                <em>Conditions could not be loaded. Please try refreshing the page.</em>
+                <em>No conditions found. Try adding a new condition below.</em>
               </td>
             </tr>
-          {{/if}}
+          {{/each}}
           {{condition-row
             rule=rule
             question=question

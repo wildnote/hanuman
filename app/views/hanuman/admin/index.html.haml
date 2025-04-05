@@ -17,48 +17,6 @@
   window.superUser = #{current_user.superuser?};
   window.jacobs = #{current_user.organization.id == 547};
 
-  // Simple debug script for API responses
-  (function() {
-    var originalOpen = XMLHttpRequest.prototype.open;
-    XMLHttpRequest.prototype.open = function() {
-      this.addEventListener('load', function() {
-        var url = this.responseURL;
-        if (url && url.includes('/hanuman/api/v1/questions/') && this.status === 200) {
-          try {
-            var response = JSON.parse(this.responseText);
-            console.log('Question API Response:', response);
-
-            // Check for rules and conditions
-            if (response.question && response.question.rules) {
-              console.log('Rules found:', response.question.rules);
-
-              response.question.rules.forEach(function(rule) {
-                console.log('Rule ' + rule.id + ' conditions:', rule.conditions);
-              });
-            }
-          } catch (e) {
-            console.error('Error parsing response:', e);
-          }
-        }
-
-        if (url && url.includes('/hanuman/api/v1/rules/') && this.status === 200) {
-          try {
-            var response = JSON.parse(this.responseText);
-            console.log('Rule API Response:', response);
-
-            // Check for conditions
-            if (response.rule && response.rule.conditions) {
-              console.log('Conditions found:', response.rule.conditions);
-            }
-          } catch (e) {
-            console.error('Error parsing response:', e);
-          }
-        }
-      });
-      originalOpen.apply(this, arguments);
-    };
-  })();
-
 #ember-container
   %base{href: "/hanuman/admin/"}
   = include_ember_script_tags :frontend

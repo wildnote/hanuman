@@ -10,7 +10,7 @@ module Hanuman
 
     # Relations
     belongs_to :question
-    has_many :conditions, dependent: :destroy, autosave: true
+    has_many :conditions, dependent: :destroy
     after_commit :update_observation_visibility
 
     # Always include conditions when loading a rule

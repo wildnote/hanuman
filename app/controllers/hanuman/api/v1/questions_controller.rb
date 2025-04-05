@@ -17,30 +17,6 @@ module Hanuman
     def show
       # Make sure to include rules and their conditions
       question = Question.includes(:taggings, :answer_choices, rules: [:conditions]).find(params[:id])
-
-      # Log what we're returning for debugging
-      Rails.logger.info "DEBUGGING: Question #{question.id} has #{question.rules.size} rules"
-
-      question.rules.each do |rule|
-        Rails.logger.info "DEBUGGING: Rule #{rule.id} has #{rule.conditions.size} conditions"
-
-        # Log each condition
-        rule.conditions.each do |condition|
-          Rails.logger.info "DEBUGGING: Condition #{condition.id}: operator=#{condition.operator}, answer=#{condition.answer}, question_id=#{condition.question_id}"
-        end
-
-        # Check if the rule actually has the conditions loaded
-        if rule.association(:conditions).loaded?
-          Rails.logger.info "DEBUGGING: Rule #{rule.id} has conditions loaded"
-        else
-          Rails.logger.info "DEBUGGING: Rule #{rule.id} does NOT have conditions loaded"
-        end
-      end
-
-      # Log the actual JSON that will be returned
-      serialized = ActiveModelSerializers::SerializableResource.new(question).as_json
-      Rails.logger.info "DEBUGGING: Serialized question: #{serialized.inspect}"
-
       respond_with question
     end
 

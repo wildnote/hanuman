@@ -8,26 +8,6 @@ module Hanuman
 
     def show
       rule = Rule.includes(:conditions).find(params[:id])
-
-      # Log what we're returning for debugging
-      Rails.logger.info "DEBUGGING: Rule #{rule.id} has #{rule.conditions.size} conditions"
-
-      # Log each condition
-      rule.conditions.each do |condition|
-        Rails.logger.info "DEBUGGING: Condition #{condition.id}: operator=#{condition.operator}, answer=#{condition.answer}, question_id=#{condition.question_id}"
-      end
-
-      # Check if the rule actually has the conditions loaded
-      if rule.association(:conditions).loaded?
-        Rails.logger.info "DEBUGGING: Rule #{rule.id} has conditions loaded"
-      else
-        Rails.logger.info "DEBUGGING: Rule #{rule.id} does NOT have conditions loaded"
-      end
-
-      # Log the actual JSON that will be returned
-      serialized = ActiveModelSerializers::SerializableResource.new(rule, root: :rule).as_json
-      Rails.logger.info "DEBUGGING: Serialized rule: #{serialized.inspect}"
-
       respond_with rule, root: :rule
     end
 
