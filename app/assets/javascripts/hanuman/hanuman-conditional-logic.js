@@ -384,8 +384,48 @@
             $triggerElement = $triggerElement.first();
           }
         }
-      } else {
-        // For other element types, just use the first one
+      }
+      // For checkboxes, handle differently based on the condition
+      else if ($triggerElement.is(':checkbox')) {
+        console.log('Handling multiple checkboxes');
+
+        // For 'is equal to' conditions, find the checkbox with the matching value
+        if (condition.operator === 'is equal to') {
+          var $matchingValue = $triggerElement.filter(function() {
+            return $(this).val() === condition.answer || $(this).attr('data-label-value') === condition.answer;
+          });
+
+          if ($matchingValue.length > 0) {
+            console.log('Using checkbox with matching value:', $matchingValue);
+            $triggerElement = $matchingValue;
+          } else {
+            // If no match, use all checkboxes (to check if any are checked)
+            console.log('No matching checkbox found, using all checkboxes');
+          }
+        }
+        // For 'is not equal to' conditions, use all checkboxes
+        else if (condition.operator === 'is not equal to') {
+          console.log('Using all checkboxes for "is not equal to" condition');
+          // Keep all checkboxes in $triggerElement
+        }
+        // For 'is empty' conditions, use all checkboxes
+        else if (condition.operator === 'is empty') {
+          console.log('Using all checkboxes for "is empty" condition');
+          // Keep all checkboxes in $triggerElement
+        }
+        // For 'is not empty' conditions, use all checkboxes
+        else if (condition.operator === 'is not empty') {
+          console.log('Using all checkboxes for "is not empty" condition');
+          // Keep all checkboxes in $triggerElement
+        }
+        // For other conditions, use the first checkbox
+        else {
+          console.log('Using first checkbox as fallback');
+          $triggerElement = $triggerElement.first();
+        }
+      }
+      // For other element types, just use the first one
+      else {
         console.log('Using first element as fallback');
         $triggerElement = $triggerElement.first();
       }
@@ -398,12 +438,29 @@
 
     var selectedArray, namedString, selectedValues, hideQuestions, selectedValue;
 
-    if (elementType === 'checkboxes') {
-      // Concatenate all values of checked checkboxes
-      namedString = "input:checkbox[name='" + $triggerElement.attr('name') + "']:checked";
+    if (elementType === 'checkboxes' || $triggerElement.is(':checkbox')) {
+      console.log('Handling checkboxes in evaluation');
+
+      // If we have multiple checkboxes
+      if ($triggerElement.length > 1) {
+        console.log('Multiple checkboxes found, getting all checked values');
+        // Get all checkboxes with the same name
+        var checkboxName = $triggerElement.first().attr('name');
+        namedString = "input:checkbox[name='" + checkboxName + "']:checked";
+      } else {
+        // Single checkbox
+        console.log('Single checkbox found, using its name');
+        namedString = "input:checkbox[name='" + $triggerElement.attr('name') + "']:checked";
+      }
+
+      // Get all checked values
       selectedArray = $(namedString).map(function() {
-        return $(this).attr('data-label-value');
+        var value = $(this).attr('data-label-value') || $(this).val();
+        console.log('Checked checkbox value:', value);
+        return value;
       }).get();
+
+      console.log('Selected checkbox values:', selectedArray);
 
       // Force "is equal to" operator to "contains" since multiple checkboxes need to be checked
       hideQuestions = this.evaluateCheckboxConditions(operator, answer, selectedArray);
