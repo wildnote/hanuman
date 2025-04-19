@@ -28,29 +28,12 @@
             problemWithCL = true;
           }
 
-          // Try to find the form control element with various selectors
           var $conditionElement = $conditionContainer.find(".form-control");
-
-          // If not found, try form-control-static
           if ($conditionElement.length < 1) {
             $conditionElement = $conditionContainer.find(".form-control-static");
           }
 
-          // If still not found, try input, select, textarea elements directly
-          if ($conditionElement.length < 1) {
-            $conditionElement = $conditionContainer.find("input, select, textarea");
-          }
-
-          // If still not found, try any clickable elements
-          if ($conditionElement.length < 1) {
-            $conditionElement = $conditionContainer.find("input[type=radio], input[type=checkbox], select, button");
-          }
-
-          console.log('Found condition element:', $conditionElement);
-          console.log('Condition container:', $conditionContainer);
-
           if ($conditionElement.length === 0 && rule.type !== 'Hanuman::CalculationRule') {
-            console.warn('No condition element found for condition question ID:', conditionQuestionId);
             problemWithCL = true;
           }
 
@@ -107,78 +90,19 @@
   ConditionalLogic.prototype.bindConditions = function($triggerElement, rule, $ruleContainer, conditionId) {
     var self = this;
 
-    console.log('bindConditions called for element:', $triggerElement);
-    console.log('rule:', rule);
-    console.log('ruleContainer:', $ruleContainer);
-    console.log('conditionId:', conditionId);
-
-    // Check if the trigger element exists
-    if (!$triggerElement || $triggerElement.length === 0) {
-      console.warn('Trigger element not found, trying to find it again');
-
-      // Try to find the condition container
-      var conditionQuestionId;
-      if (rule.conditions && rule.conditions.length > 0) {
-        // Find the condition with the matching ID
-        var condition = rule.conditions.find(function(c) { return c.id == conditionId; });
-        if (condition) {
-          conditionQuestionId = condition.question_id;
-        }
-      }
-
-      if (conditionQuestionId) {
-        console.log('Looking for condition question ID:', conditionQuestionId);
-        var $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]");
-        console.log('Found condition container:', $conditionContainer);
-
-        // Try to find the form control element with various selectors
-        $triggerElement = $conditionContainer.find(".form-control");
-
-        // If not found, try form-control-static
-        if ($triggerElement.length < 1) {
-          $triggerElement = $conditionContainer.find(".form-control-static");
-        }
-
-        // If still not found, try input, select, textarea elements directly
-        if ($triggerElement.length < 1) {
-          $triggerElement = $conditionContainer.find("input, select, textarea");
-        }
-
-        // If still not found, try any clickable elements
-        if ($triggerElement.length < 1) {
-          $triggerElement = $conditionContainer.find("input[type=radio], input[type=checkbox], select, button");
-        }
-
-        console.log('Found trigger element:', $triggerElement);
-      }
-
-      // If still not found, return
-      if (!$triggerElement || $triggerElement.length === 0) {
-        console.warn('Could not find trigger element, skipping binding');
-        return;
-      }
-    }
-
     if (rule.type === "Hanuman::CalculationRule") {
       var idx = self.boundElements.findIndex(function(el) {
         return $triggerElement[0] === el[0] && conditionId === el[1] && rule.id === el[2] && $ruleContainer[0] === el[3];
       });
 
       if (idx !== -1) {
-        console.log('Element already bound, skipping');
         return;
       }
 
       self.boundElements.push([$triggerElement[0], conditionId, rule.id, $ruleContainer[0]]);
     }
 
-    // Unbind any existing change handlers to prevent duplicates
-    $triggerElement.off("change.conditionalLogic");
-
-    // Bind the change handler with a namespace
-    $triggerElement.on("change.conditionalLogic", function() {
-      console.log('Change event triggered for element:', $triggerElement);
-      console.log('Current value:', self.getValue($triggerElement));
+    $triggerElement.on("change", function() {
       if (rule.type === "Hanuman::CalculationRule") {
         self.updateCalculation(rule, $ruleContainer, true);
         return;
@@ -244,44 +168,18 @@
 
   ConditionalLogic.prototype.checkConditionsAndHideShow = function(conditions, ancestorId, $ruleElement, $container, inRepeater, matchType, rule) {
     var self = this;
-    console.log('checkConditionsAndHideShow called');
-    console.log('conditions:', conditions);
-    console.log('ancestorId:', ancestorId);
-    console.log('ruleElement:', $ruleElement);
-    console.log('container:', $container);
-    console.log('inRepeater:', inRepeater);
-    console.log('matchType:', matchType);
-    console.log('rule:', rule);
-
     var conditionMetTracker = [];
 
     $.each(conditions, function(index, condition) {
-      // Find the condition container first
-      var $conditionContainer = inRepeater
-          ? $container.parents(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]")
-          : $("[data-question-id=" + condition.question_id + "]");
+      var $conditionElement = inRepeater
+          ? $container.parents(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control')
+          : $("[data-question-id=" + condition.question_id + "]").find('.form-control');
 
-      console.log('Condition container for question ID ' + condition.question_id + ':', $conditionContainer);
-
-      // Try to find the form control element with various selectors
-      var $conditionElement = $conditionContainer.find(".form-control");
-
-      // If not found, try form-control-static
       if ($conditionElement.length < 1) {
-        $conditionElement = $conditionContainer.find(".form-control-static");
+        $conditionElement = inRepeater
+            ? $container.parents(".form-container-repeater").find("[data-question-id=" + condition.question_id + "]").find('.form-control-static')
+            : $("[data-question-id=" + condition.question_id + "]").find('.form-control-static');
       }
-
-      // If still not found, try input, select, textarea elements directly
-      if ($conditionElement.length < 1) {
-        $conditionElement = $conditionContainer.find("input, select, textarea");
-      }
-
-      // If still not found, try any clickable elements
-      if ($conditionElement.length < 1) {
-        $conditionElement = $conditionContainer.find("input[type=radio], input[type=checkbox], select, button");
-      }
-
-      console.log('Found condition element for question ID ' + condition.question_id + ':', $conditionElement);
 
       var hideQuestions = self.setHideQuestions(condition, $conditionElement);
       conditionMetTracker.push(!hideQuestions);
@@ -357,110 +255,17 @@
   };
 
   ConditionalLogic.prototype.setHideQuestions = function(condition, $triggerElement) {
-    console.log('setHideQuestions called with triggerElement:', $triggerElement);
-
-    // If triggerElement contains multiple elements, use only the relevant one
-    if ($triggerElement.length > 1) {
-      console.log('TriggerElement contains multiple elements, filtering...');
-
-      // For radio buttons, use the checked one if available
-      if ($triggerElement.is(':radio')) {
-        var $checked = $triggerElement.filter(':checked');
-        if ($checked.length > 0) {
-          console.log('Using checked radio button:', $checked);
-          $triggerElement = $checked;
-        } else {
-          // If no radio is checked, try to find one with the matching value
-          var $matchingValue = $triggerElement.filter(function() {
-            return $(this).val() === condition.answer || $(this).attr('data-label-value') === condition.answer;
-          });
-
-          if ($matchingValue.length > 0) {
-            console.log('Using radio button with matching value:', $matchingValue);
-            $triggerElement = $matchingValue;
-          } else {
-            // If still no match, just use the first one
-            console.log('Using first radio button as fallback');
-            $triggerElement = $triggerElement.first();
-          }
-        }
-      }
-      // For checkboxes, handle differently based on the condition
-      else if ($triggerElement.is(':checkbox')) {
-        console.log('Handling multiple checkboxes');
-
-        // For 'is equal to' conditions, find the checkbox with the matching value
-        if (condition.operator === 'is equal to') {
-          var $matchingValue = $triggerElement.filter(function() {
-            return $(this).val() === condition.answer || $(this).attr('data-label-value') === condition.answer;
-          });
-
-          if ($matchingValue.length > 0) {
-            console.log('Using checkbox with matching value:', $matchingValue);
-            $triggerElement = $matchingValue;
-          } else {
-            // If no match, use all checkboxes (to check if any are checked)
-            console.log('No matching checkbox found, using all checkboxes');
-          }
-        }
-        // For 'is not equal to' conditions, use all checkboxes
-        else if (condition.operator === 'is not equal to') {
-          console.log('Using all checkboxes for "is not equal to" condition');
-          // Keep all checkboxes in $triggerElement
-        }
-        // For 'is empty' conditions, use all checkboxes
-        else if (condition.operator === 'is empty') {
-          console.log('Using all checkboxes for "is empty" condition');
-          // Keep all checkboxes in $triggerElement
-        }
-        // For 'is not empty' conditions, use all checkboxes
-        else if (condition.operator === 'is not empty') {
-          console.log('Using all checkboxes for "is not empty" condition');
-          // Keep all checkboxes in $triggerElement
-        }
-        // For other conditions, use the first checkbox
-        else {
-          console.log('Using first checkbox as fallback');
-          $triggerElement = $triggerElement.first();
-        }
-      }
-      // For other element types, just use the first one
-      else {
-        console.log('Using first element as fallback');
-        $triggerElement = $triggerElement.first();
-      }
-    }
-
     var operator = condition.operator;
     var answer = condition.answer;
     var elementType = $triggerElement.closest('.form-container-entry-item').attr('data-element-type');
-    console.log('Element type:', elementType);
-
     var selectedArray, namedString, selectedValues, hideQuestions, selectedValue;
 
-    if (elementType === 'checkboxes' || $triggerElement.is(':checkbox')) {
-      console.log('Handling checkboxes in evaluation');
-
-      // If we have multiple checkboxes
-      if ($triggerElement.length > 1) {
-        console.log('Multiple checkboxes found, getting all checked values');
-        // Get all checkboxes with the same name
-        var checkboxName = $triggerElement.first().attr('name');
-        namedString = "input:checkbox[name='" + checkboxName + "']:checked";
-      } else {
-        // Single checkbox
-        console.log('Single checkbox found, using its name');
-        namedString = "input:checkbox[name='" + $triggerElement.attr('name') + "']:checked";
-      }
-
-      // Get all checked values
+    if (elementType === 'checkboxes') {
+      // Concatenate all values of checked checkboxes
+      namedString = "input:checkbox[name='" + $triggerElement.attr('name') + "']:checked";
       selectedArray = $(namedString).map(function() {
-        var value = $(this).attr('data-label-value') || $(this).val();
-        console.log('Checked checkbox value:', value);
-        return value;
+        return $(this).attr('data-label-value');
       }).get();
-
-      console.log('Selected checkbox values:', selectedArray);
 
       // Force "is equal to" operator to "contains" since multiple checkboxes need to be checked
       hideQuestions = this.evaluateCheckboxConditions(operator, answer, selectedArray);
@@ -886,43 +691,7 @@
         parameters[columnName] = entries;
       } else {
         // Otherwise, we only want the parameter question (either it is top level, or in the same repeater instance as the target).
-        // Find the condition element with various selectors
         var $conditionElement = $question.find('.form-control');
-
-        // If not found, try form-control-static
-        if ($conditionElement.length < 1) {
-          $conditionElement = $question.find('.form-control-static');
-        }
-
-        // If still not found, try input, select, textarea elements directly
-        if ($conditionElement.length < 1) {
-          $conditionElement = $question.find('input, select, textarea');
-        }
-
-        // If still not found, try any clickable elements
-        if ($conditionElement.length < 1) {
-          $conditionElement = $question.find('input[type=radio], input[type=checkbox], select, button');
-        }
-
-        // Special handling for radio buttons and checkboxes
-        if ($conditionElement.is(':radio') || $conditionElement.is(':checkbox')) {
-          // For radio buttons, use the checked one if available
-          if ($conditionElement.is(':radio')) {
-            var $checked = $conditionElement.filter(':checked');
-            if ($checked.length > 0) {
-              $conditionElement = $checked;
-            }
-          }
-          // For checkboxes, handle differently based on the element type
-          else if ($conditionElement.is(':checkbox') && elementType === 'checkboxes') {
-            // Keep all checkboxes in $conditionElement
-          }
-          // For single checkbox, use it as is
-          else if ($conditionElement.is(':checkbox') && elementType === 'checkbox') {
-            // Keep the checkbox in $conditionElement
-          }
-        }
-
         value = self.getNativeValue($conditionElement, elementType);
         parameters[columnName] = value;
       }
@@ -1032,54 +801,21 @@
 
   ConditionalLogic.prototype.getNativeValue = function($input, elementType) {
     var self = this;
-    console.log('getNativeValue called with input:', $input);
-    console.log('Element type:', elementType);
-
-    // Special handling for radio buttons
-    if ($input.is(':radio')) {
-      console.log('Handling radio button in getNativeValue');
-      // Get the checked radio button
-      var $checked = $input.filter(':checked');
-      if ($checked.length > 0) {
-        console.log('Found checked radio button:', $checked);
-        // Use the checked radio button's value
-        var radioValue = $checked.attr('data-label-value') || $checked.val();
-        console.log('Radio value:', radioValue);
-        return radioValue;
-      } else {
-        console.log('No radio button checked');
-        return null;
-      }
-    }
-
     var stringValue = self.getValue($input);
-    console.log('String value from getValue:', stringValue);
 
     if (elementType === 'checkbox') {
-      console.log('Handling single checkbox');
-      // Check if the checkbox is checked directly
-      if ($input.is(':checkbox')) {
-        return $input.is(':checked');
-      }
-      // Fallback to string comparison if needed
-      return stringValue === 'true' || stringValue === 'Yes';
+      return stringValue === 'true';
     }
 
     if (elementType === 'number' || elementType === 'counter') {
-      console.log('Handling number or counter');
       return $.isNumeric(stringValue) ? parseFloat(stringValue) : 0;
     }
 
     if (elementType === 'multiselect' || elementType === 'checkboxes') {
-      console.log('Handling multiselect or checkboxes');
-      if (stringValue === undefined || stringValue === null || stringValue === '') {
+      if (stringValue === undefined || stringValue === null || stringValue.trim() === '') {
         return [];
-      } else if (typeof stringValue === 'string' && stringValue.includes('|&|')) {
-        return stringValue.split('|&|');
-      } else if (Array.isArray(stringValue)) {
-        return stringValue;
       } else {
-        return [stringValue];
+        return stringValue.split('|&|');
       }
     }
 
