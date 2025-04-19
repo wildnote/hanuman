@@ -171,13 +171,10 @@ module Hanuman
 
     def sort_observations!
       sorted_obs = self.get_sorted_observations
-
       sorted_obs.each_with_index do |sorted_observation, index|
         Hanuman::Observation.find(sorted_observation.id).update_column(:sort_order, index)
       end
-
       self.update_column(:observations_sorted, true)
-
       self.observations.reorder('hanuman_observations.sort_order ASC')
     end
 
