@@ -9,7 +9,7 @@ module Hanuman
     MATCH_TYPES = %w(any all)
 
     # Relations
-    belongs_to :question
+    belongs_to :question, optional: true
     has_many :conditions, dependent: :destroy
     after_commit :update_observation_visibility
 

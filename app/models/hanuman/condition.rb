@@ -13,7 +13,7 @@ module Hanuman
 
     # Relations
     belongs_to :question, optional: true
-    belongs_to :rule, optional: true
+    belongs_to :rule, optional: true # optional true required for form duplication
 
     # Validations
     validates :rule_id, presence: true, unless: :dup_copying
