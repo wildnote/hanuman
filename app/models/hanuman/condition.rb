@@ -12,8 +12,8 @@ module Hanuman
     ]
 
     # Relations
-    belongs_to :question
-    belongs_to :rule
+    belongs_to :question, optional: true
+    belongs_to :rule, optional: true
 
     # Validations
     validates :rule_id, presence: true, unless: :dup_copying
