@@ -104,11 +104,11 @@ module Hanuman
     end
 
     def sorted_observations
-      observations.reorder('hanuman_observations.sort_order ASC')
+      observations_sorted ? observations.reorder('hanuman_observations.sort_order ASC') : sort_observations!
     end
 
     def processed_observations
-      sorted_observations.where(hidden: false)
+      observation_visibility_set ? sorted_observations.where(hidden: false) : set_observation_visibility!
     end
 
     def get_sorted_observations
