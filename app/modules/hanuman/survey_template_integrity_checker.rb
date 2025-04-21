@@ -81,16 +81,16 @@ module Hanuman
           # Check rules and conditions
           if question.rules.any?
             question.rules.each do |rule|
-              # Check rule completeness based on rule type
-              if rule.type == "Hanuman::LookupRule" && rule.value.blank?
-                result[:valid] = false
-                result[:errors] << "Question #{question.id} has lookup rule #{rule.id} with blank default value"
-              end
-              
-              # Check for empty conditions
+              # Check for empty rules (rules with no conditions)
               if rule.conditions.empty?
                 result[:valid] = false
                 result[:errors] << "Question #{question.id} has #{rule.type} #{rule.id} with no conditions"
+              else
+                # Only check default value for lookup rules that have conditions
+                if rule.type == "Hanuman::LookupRule" && rule.value.blank?
+                  result[:valid] = false
+                  result[:errors] << "Question #{question.id} has lookup rule #{rule.id} with blank default value"
+                end
               end
               
               # Check for script in calculation rules
@@ -121,8 +121,44 @@ module Hanuman
           # Check answer choices
           if question.answer_type&.has_answer_choices?
             if question.answer_choices.empty?
-              result[:valid] = false
-              result[:errors] << "Question #{question.id} requires answer choices but has none"
+              # Special handling for locationchosensingleselect answer type
+              if question.answer_type.name == "locationchosensingleselect"
+                # Check if new_project_location is set
+                if question.new_project_location
+                  # This is a dynamic location question, so it's okay to have no answer choices
+                  Rails.logger.info "Question #{question.id} is a dynamic location question (new_project_location=true)"
+                else
+                  # Check if there are locations in the project
+                  project = question.survey_template.project
+                  if project && project.locations.any?
+                    Rails.logger.info "Question #{question.id} is a location question with project locations available"
+                  else
+                    # Add a warning for location questions with no project locations
+                    warning_message = "Question #{question.id} is a location question but has no project locations available"
+                    result[:warnings] << warning_message
+                    Rails.logger.info warning_message
+                    result[:details][:location_warnings] ||= []
+                    result[:details][:location_warnings] << warning_message
+                  end
+                end
+              # Special handling for taxon question types
+              elsif ["taxonchosenmultiselect", "taxonchosensingleselect"].include?(question.answer_type.name)
+                # Check if data_source_id is set
+                if question.data_source_id.blank?
+                  # Add a warning for taxon questions with no data source
+                  warning_message = "Question #{question.id} is a taxon question but has no data source selected"
+                  result[:warnings] << warning_message
+                  Rails.logger.info warning_message
+                  result[:details][:taxon_warnings] ||= []
+                  result[:details][:taxon_warnings] << warning_message
+                else
+                  Rails.logger.info "Question #{question.id} is a taxon question with data source ID: #{question.data_source_id}"
+                end
+              else
+                # For non-location, non-taxon questions that require answer choices, this is an error
+                result[:valid] = false
+                result[:errors] << "Question #{question.id} requires answer choices but has none"
+              end
             else
               # Check for duplicate answer choice values
               answer_choice_values = question.answer_choices.map(&:option_text)
