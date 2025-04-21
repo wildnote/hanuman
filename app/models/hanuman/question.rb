@@ -214,7 +214,7 @@ module Hanuman
     end
 
     def survey_cloning?
-      !!!single_cloning
+      !single_cloning
     end
 
     # duplicate and save a single question with answer choices and conditions
