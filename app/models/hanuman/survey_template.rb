@@ -45,7 +45,14 @@ module Hanuman
 
     # after duplicating the survey template remap ancestry and rule information
     def remap_conditional_logic(old_survey_template)
-      # Handle ancestry remapping
+      remap_ancestry
+      copy_tag_lists
+      remap_conditions
+      reassign_answer_choices_on_lookup_rules
+    end
+
+    # Remap ancestry for all questions
+    def remap_ancestry
       questions.each do |q|
         unless q.ancestry.blank?
           ancestry_array = q.ancestry.split('/')
@@ -58,11 +65,19 @@ module Hanuman
           q.ancestry = new_ancestors_string
           q.save!
         end
-        
-        # Copy tag lists from original questions
-        copy_tag_lists_from_original(q) if q.duped_question_id
+      end
+    end
 
-        # Remap conditions for this question's rules
+    # Copy tag lists from original questions to duplicated questions
+    def copy_tag_lists
+      questions.each do |q|
+        copy_tag_lists_from_original(q) if q.duped_question_id
+      end
+    end
+
+    # Remap conditions for all questions' rules
+    def remap_conditions
+      questions.each do |q|
         q.rules.each do |rule|
           rule.conditions.each do |condition|
             if condition.question_id
@@ -75,8 +90,6 @@ module Hanuman
           end
         end
       end
-
-      reassign_answer_choices_on_lookup_rules
     end
 
     # Copy tag lists from original questions to duplicated questions
