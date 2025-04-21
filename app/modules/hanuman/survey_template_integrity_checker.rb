@@ -33,22 +33,40 @@ module Hanuman
         api_column_names = questions.map(&:api_column_name).compact
         duplicate_api_names = api_column_names.select { |name| api_column_names.count(name) > 1 }.uniq
         if duplicate_api_names.any?
-          result[:valid] = false
-          result[:errors] << "Form has questions with duplicate api_column_names"
+          # Don't set valid to false for duplicate API column names
+          result[:warnings] << "Form has questions with duplicate api_column_names"
           result[:details][:duplicate_api_names] = duplicate_api_names.map do |name|
             questions_with_name = questions.select { |q| q.api_column_name == name }
             "Questions (#{questions_with_name.map(&:id).join(', ')}) have api_column_name: #{name}"
+          end
+          
+          # Add detailed warning messages for each duplicate API column name
+          duplicate_api_names.each do |name|
+            questions_with_name = questions.select { |q| q.api_column_name == name }
+            question_ids_text = questions_with_name.map(&:id).join(', ')
+            warning_message = "Duplicate api_column_name '#{name}' found in questions: #{question_ids_text}"
+            result[:warnings] << warning_message
+            Rails.logger.info warning_message
           end
         end
         
         db_column_names = questions.map(&:db_column_name).compact
         duplicate_db_names = db_column_names.select { |name| db_column_names.count(name) > 1 }.uniq
         if duplicate_db_names.any?
-          result[:valid] = false
-          result[:errors] << "Form has questions with duplicate db_column_names"
+          # Don't set valid to false for duplicate DB column names
+          result[:warnings] << "Form has questions with duplicate db_column_names"
           result[:details][:duplicate_db_names] = duplicate_db_names.map do |name|
             questions_with_name = questions.select { |q| q.db_column_name == name }
             "Questions (#{questions_with_name.map(&:id).join(', ')}) have db_column_name: #{name}"
+          end
+          
+          # Add detailed warning messages for each duplicate DB column name
+          duplicate_db_names.each do |name|
+            questions_with_name = questions.select { |q| q.db_column_name == name }
+            question_ids_text = questions_with_name.map(&:id).join(', ')
+            warning_message = "Duplicate db_column_name '#{name}' found in questions: #{question_ids_text}"
+            result[:warnings] << warning_message
+            Rails.logger.info warning_message
           end
         end
         
@@ -126,6 +144,29 @@ module Hanuman
               end
             end
           end
+        end
+        
+        # Log a summary of all errors and warnings
+        if result[:errors].any? || result[:warnings].any?
+          Rails.logger.info "=== Form Integrity Check Summary ==="
+          Rails.logger.info "Form ID: #{id}"
+          Rails.logger.info "Valid: #{result[:valid]}"
+          
+          if result[:errors].any?
+            Rails.logger.info "=== ERRORS ==="
+            result[:errors].each do |error|
+              Rails.logger.info "ERROR: #{error}"
+            end
+          end
+          
+          if result[:warnings].any?
+            Rails.logger.info "=== WARNINGS ==="
+            result[:warnings].each do |warning|
+              Rails.logger.info "WARNING: #{warning}"
+            end
+          end
+          
+          Rails.logger.info "================================"
         end
       end
     end
