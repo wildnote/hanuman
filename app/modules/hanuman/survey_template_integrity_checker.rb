@@ -75,7 +75,7 @@ module Hanuman
           # Check question structure
           if question.sort_order.nil?
             result[:valid] = false
-            result[:errors] << "Question #{question.id} has no sort order"
+            result[:errors] << "Question #{question.id} (#{question.question_text}) has no sort order"
           end
           
           # Check rules and conditions
@@ -83,20 +83,20 @@ module Hanuman
             question.rules.each do |rule|
               # Check for empty rules (rules with no conditions)
               if rule.conditions.empty?
-                result[:valid] = false
-                result[:errors] << "Question #{question.id} has #{rule.type} #{rule.id} with no conditions"
+                result[:warnings] << "Question #{question.id} (#{question.question_text}) has #{rule.type} #{rule.id} with no conditions, rule has been deleted"
+                rule.destroy
               else
                 # Only check default value for lookup rules that have conditions
                 if rule.type == "Hanuman::LookupRule" && rule.value.blank?
                   result[:valid] = false
-                  result[:errors] << "Question #{question.id} has lookup rule #{rule.id} with blank default value"
+                  result[:errors] << "Question #{question.id} (#{question.question_text}) has lookup rule #{rule.id} with blank default value"
                 end
               end
               
               # Check for script in calculation rules
               if rule.type == "Hanuman::CalculationRule" && rule.script.blank?
                 result[:valid] = false
-                result[:errors] << "Question #{question.id} has calculation rule #{rule.id} with no script"
+                result[:errors] << "Question #{question.id} (#{question.question_text}) has calculation rule #{rule.id} with no script"
               end
               
               # Check conditions
@@ -104,14 +104,14 @@ module Hanuman
                 # Check condition references to ensure they point to questions in the same survey template
                 unless question_ids.include?(condition.question_id)
                   result[:valid] = false
-                  result[:errors] << "Rule #{rule.id} has condition #{condition.id} referencing question #{condition.question_id} which is not in this survey template"
+                  result[:errors] << "Question #{question.id} (#{question.question_text}): Rule #{rule.id} has condition #{condition.id} referencing question #{condition.question_id} which is not in this survey template"
                 end
                 
                 # Check condition completeness based on rule type
                 if ['Hanuman::VisibilityRule', 'Hanuman::LookupRule'].include?(rule.type)
                   if condition.answer.blank? && !['is empty', 'is not empty'].include?(condition.operator)
                     result[:valid] = false
-                    result[:errors] << "Rule #{rule.id} has condition #{condition.id} with blank answer"
+                    result[:errors] << "Question #{question.id} (#{question.question_text}): Rule #{rule.id} has condition #{condition.id} with blank answer"
                   end
                 end
               end
@@ -128,25 +128,19 @@ module Hanuman
                   # This is a dynamic location question, so it's okay to have no answer choices
                   Rails.logger.info "Question #{question.id} is a dynamic location question (new_project_location=true)"
                 else
-                  # Check if there are locations in the project
-                  project = question.survey_template.project
-                  if project && project.locations.any?
-                    Rails.logger.info "Question #{question.id} is a location question with project locations available"
-                  else
-                    # Add a warning for location questions with no project locations
-                    warning_message = "Question #{question.id} is a location question but has no project locations available"
-                    result[:warnings] << warning_message
-                    Rails.logger.info warning_message
-                    result[:details][:location_warnings] ||= []
-                    result[:details][:location_warnings] << warning_message
-                  end
+                  # no project context so can't check if there are locations
+                  warning_message = "Question #{question.id} (#{question.question_text}) is a location question dynamic locations not setup, confirm locations exist in the project"
+                  result[:warnings] << warning_message
+                  Rails.logger.info warning_message
+                  result[:details][:location_warnings] ||= []
+                  result[:details][:location_warnings] << warning_message
                 end
               # Special handling for taxon question types
               elsif ["taxonchosenmultiselect", "taxonchosensingleselect"].include?(question.answer_type.name)
                 # Check if data_source_id is set
                 if question.data_source_id.blank?
                   # Add a warning for taxon questions with no data source
-                  warning_message = "Question #{question.id} is a taxon question but has no data source selected"
+                  warning_message = "Question #{question.id} (#{question.question_text}) is a taxon question but has no data source selected"
                   result[:warnings] << warning_message
                   Rails.logger.info warning_message
                   result[:details][:taxon_warnings] ||= []
@@ -157,25 +151,25 @@ module Hanuman
               else
                 # For non-location, non-taxon questions that require answer choices, this is an error
                 result[:valid] = false
-                result[:errors] << "Question #{question.id} requires answer choices but has none"
+                result[:errors] << "Question #{question.id} (#{question.question_text}) requires answer choices but has none"
               end
             else
               # Check for duplicate answer choice values
               answer_choice_values = question.answer_choices.map(&:option_text)
               duplicate_values = answer_choice_values.select { |value| answer_choice_values.count(value) > 1 }.uniq
               if duplicate_values.any?
-                result[:warnings] << "Question #{question.id} has duplicate answer choice values"
+                result[:warnings] << "Question #{question.id} (#{question.question_text}) has duplicate answer choice values"
                 result[:details][:duplicate_answer_choices] ||= []
                 duplicate_values.each do |value|
                   choices_with_value = question.answer_choices.select { |choice| choice.option_text == value }
-                  result[:details][:duplicate_answer_choices] << "Question #{question.id} has multiple answer choices (#{choices_with_value.map(&:id).join(', ')}) with the same value: #{value}"
+                  result[:details][:duplicate_answer_choices] << "Question #{question.id} (#{question.question_text}) has multiple answer choices (#{choices_with_value.map(&:id).join(', ')}) with the same value: #{value}"
                 end
               end
               
               question.answer_choices.each do |choice|
                 if choice.option_text.blank?
                   result[:valid] = false
-                  result[:errors] << "Question #{question.id} has answer choice #{choice.id} with blank option text"
+                  result[:errors] << "Question #{question.id} (#{question.question_text}) has answer choice #{choice.id} with blank option text"
                 end
               end
             end
