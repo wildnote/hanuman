@@ -49,11 +49,18 @@ module Hanuman
     amoeba do
       include_association :rules
       include_association :answer_choices
-      include_association :conditions, if: :survey_cloning?
+      exclude_association :conditions
+      exclude_association :observations
 
       # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
       customize(lambda { |original_question,new_question|
+        Rails.logger.info "Amoeba customize block - Before setting duped_question_id"
+        Rails.logger.info "Original question ID: #{original_question.id}"
+        Rails.logger.info "New question ID: #{new_question.id}"
+        Rails.logger.info "New question duped_question_id before: #{new_question.duped_question_id}"
         new_question.duped_question_id = original_question.id
+        Rails.logger.info "New question duped_question_id after setting: #{new_question.duped_question_id}"
+        Rails.logger.info "New question attributes: #{new_question.attributes.inspect}"
       })
     end
 
@@ -219,8 +226,12 @@ module Hanuman
 
     # duplicate and save a single question with answer choices and conditions
     def dup_and_save(new_parent = nil, new_sort_order = nil)
+      Rails.logger.info "Starting dup_and_save for question #{self.id}"
       self.single_cloning = true
       new_q = self.amoeba_dup
+      Rails.logger.info "After amoeba_dup - New question ID: #{new_q.id}"
+      Rails.logger.info "New question duped_question_id: #{new_q.duped_question_id}"
+      Rails.logger.info "New question attributes: #{new_q.attributes.inspect}"
 
       if new_sort_order.present?
         new_q.sort_order = new_sort_order
@@ -232,7 +243,10 @@ module Hanuman
         new_q.parent = new_parent
       end
 
+      Rails.logger.info "Before saving new question - duped_question_id: #{new_q.duped_question_id}"
       new_q.save
+      Rails.logger.info "After saving new question - duped_question_id: #{new_q.duped_question_id}"
+      Rails.logger.info "After saving - New question attributes: #{new_q.attributes.inspect}"
       # Associate the conditions from the rule
       self.rules.each do |rule|
         rule.conditions.each do |condition|

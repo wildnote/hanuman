@@ -28,6 +28,10 @@ module Hanuman
     amoeba do
       enable
       exclude_associations :deltas
+      customize(lambda { |original_condition, new_condition|
+        # Set dup_copying to true to bypass validation
+        new_condition.dup_copying = true
+      })
     end
 
     # when a condition gets deleted, check to see of the rule attached to that condition has other conditions attached to it
@@ -48,6 +52,20 @@ module Hanuman
           s.update_column(:observation_visibility_set, false)
         end
       end
+    end
+
+    # Debug method to check validation status
+    def validation_debug_info
+      {
+        id: id,
+        question_id: question_id,
+        rule_id: rule_id,
+        operator: operator,
+        answer: answer,
+        dup_copying: dup_copying,
+        valid: valid?,
+        errors: errors.full_messages
+      }
     end
 
 
