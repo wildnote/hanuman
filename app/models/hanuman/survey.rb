@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
 
     # Relations
-    belongs_to :survey_template
+    belongs_to :survey_template, optional: true
     has_many :observations, dependent: :destroy
     accepts_nested_attributes_for :observations, allow_destroy: true
     has_many :unscope_observations, -> { unscope(:includes, :order) }, class_name: 'Hanuman::Observation'

@@ -7,7 +7,7 @@ module Hanuman
     attr_accessor :single_cloning, :flagged_answers_change_was_saved
 
     # Relations
-    belongs_to :answer_type
+    belongs_to :answer_type, optional: true
     belongs_to :survey_template, optional: true
     has_many :answer_choices, -> { order :sort_order, :option_text }, dependent: :destroy, inverse_of: :question
     # if a user deletes a question from survey admin we need to delete related observations, giving warning in survey admin

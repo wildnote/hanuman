@@ -4,7 +4,7 @@ module Hanuman
 
     # Relations - Basic associations first
     belongs_to :survey, -> { unscoped }, optional: true #, touch: true -kdh removing touch to we don't update surveys table everytime the observations table is updated
-    belongs_to :question
+    belongs_to :question, optional: true
     belongs_to :selectable, polymorphic: true, optional: true
     belongs_to :answer_choice, optional: true
 

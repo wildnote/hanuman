@@ -4,7 +4,7 @@ module Hanuman
     mount_uploader :signature, SignatureUploader
 
     # Relations
-    belongs_to :observation, -> { unscope(:includes, :order) }
+    belongs_to :observation, -> { unscope(:includes, :order) }, optional: true
     has_one    :survey, through: :observation
 
     after_commit :set_media_access_mode_to_authenticated, on: :create
