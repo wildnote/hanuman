@@ -47,7 +47,7 @@ module Hanuman
     # after duplicating the survey template remap ancestry and rule information
     def remap_conditional_logic(old_survey_template)
       remap_ancestry
-      copy_tag_lists
+      # copy_tag_lists
       remap_conditions
       reassign_answer_choices_on_lookup_rules
     end

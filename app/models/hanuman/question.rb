@@ -51,6 +51,7 @@ module Hanuman
       include_association :answer_choices
       exclude_association :conditions
       exclude_association :observations
+      exclude_association :taggings
 
       # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
       customize(lambda { |original_question,new_question|
@@ -61,6 +62,16 @@ module Hanuman
         new_question.duped_question_id = original_question.id
         Rails.logger.info "New question duped_question_id after setting: #{new_question.duped_question_id}"
         Rails.logger.info "New question attributes: #{new_question.attributes.inspect}"
+      })
+
+      # Handle taggings using acts-as-taggable-on's methods
+      customize(lambda { |original_question, new_question|
+        # Get all tags from the original question
+        tag_list = original_question.tag_list
+        # Set the same tags on the new question
+        new_question.tag_list = tag_list
+        # Save without validation to avoid any validation issues
+        new_question.save(validate: false)
       })
     end
 
