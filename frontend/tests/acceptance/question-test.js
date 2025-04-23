@@ -117,7 +117,7 @@ test('saving a question with answer_type with answers without adding any answers
   let el = find('[data-test="answer-choices-error"]');
   let count = el.length;
   assert.equal(count, 1);
-  assert.equal(el.text().trim(), 'Please add at least one answers choice.');
+  assert.equal(el.text().trim(), 'Please add at least one answer choice.');
 });
 
 test('canceling question edition', async function(assert) {

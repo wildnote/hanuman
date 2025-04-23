@@ -13,7 +13,7 @@
     "build": "ember build",
     "lint:js": "eslint .",
     "start": "ember serve",
-    "test": "./node_modules/.bin/ember test --environment=test --launch='PhantomJS' --server --filter=''"
+    "test": "ember test --environment=test --launch='Chrome' --server"
   },
   "devDependencies": {
     "@babel/core": "^7.23.3",
