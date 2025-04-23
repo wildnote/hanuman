@@ -54,6 +54,7 @@
     "ember-math-helpers": "2.10.0",
     "ember-maybe-import-regenerator": "^0.1.6",
     "ember-model-validator": "3.4.0",
+    "ember-native-dom-helpers": "0.7.0",
     "ember-notify": "5.3.0",
     "ember-power-select": "2.2.1",
     "ember-qunit": "4.2.0",
@@ -85,13 +86,13 @@
     "yarn": "1.22.22"
   },
   "dependencies": {
+    "animate.css": "3.5.2",
     "ember-load-initializers": "2.0.0",
+    "ember-remodal": "^2.0.0",
     "node": "^16.20.2",
     "pretender": "1.4.1",
-    "ember-remodal": "^2.0.0",
-    "selectize": "github:miguelcobain/selectize.js#master",
     "route-recognizer": "0.2.7",
-    "animate.css": "3.5.2"
+    "selectize": "github:miguelcobain/selectize.js#master"
   },
   "resolutions": {
     "ember-cli-babel": "^6.17.2",

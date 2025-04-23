@@ -2341,7 +2341,7 @@ broccoli-funnel-reducer@^1.0.0:
   resolved "https://registry.yarnpkg.com/broccoli-funnel-reducer/-/broccoli-funnel-reducer-1.0.0.tgz#11365b2a785aec9b17972a36df87eef24c5cc0ea"
   integrity sha512-SaOCEdh+wnt2jFUV2Qb32m7LXyElvFwW3NKNaEJyi5PGQNwxfqpkc0KI6AbQANKgdj/40U2UC0WuGThFwuEUaA==
 
-broccoli-funnel@^1.0.1, broccoli-funnel@^1.0.2:
+broccoli-funnel@^1.0.1, broccoli-funnel@^1.0.2, broccoli-funnel@^1.1.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/broccoli-funnel/-/broccoli-funnel-1.2.0.tgz#cddc3afc5ff1685a8023488fff74ce6fb5a51296"
   integrity sha512-0pbFNUA5Ml+gPPd58Rj/M26OS21+bMiV0F+m6+9OVzAhAdppVLxylSsXfWAt2WOD3kS+D8UsDv6GSmnZhbw/dw==
@@ -4575,6 +4575,14 @@ ember-model-validator@3.4.0:
   resolved "https://registry.yarnpkg.com/ember-model-validator/-/ember-model-validator-3.4.0.tgz#a64317452494e17666bfa256435e69b11f3e74cc"
   integrity sha512-/nzpV6ciGnRXq3MkRKyANUF9hPgV0qp6KEesnw++kaj6/4B16M8m3bPcdn2A0ev/GdXSi3M9CPpJDHNR9vWdpw==
   dependencies:
+    ember-cli-babel "^6.6.0"
+
+ember-native-dom-helpers@0.7.0:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/ember-native-dom-helpers/-/ember-native-dom-helpers-0.7.0.tgz#98a87c11a391cec5c12382a4857e59ea2fb4b00a"
+  integrity sha512-ySJRGRhwYIWUAZKilB8xEcIatP9wKfEBX6JFG8bG4Ck7GvA0eau265hTGZz/+ntZuwcY4HrzSNkwimlHx4cM/A==
+  dependencies:
+    broccoli-funnel "^1.1.0"
     ember-cli-babel "^6.6.0"
 
 ember-notify@5.3.0:
