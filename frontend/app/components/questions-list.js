@@ -184,7 +184,7 @@ export default Component.extend({
     toggleAllCollapsed() {
       this.toggleProperty('allCollapsed');
 
-      const topLevel = this.get('surveyTemplate.questions').filter((question) => {
+      const _topLevel = this.get('surveyTemplate.questions').filter((question) => {
         return question.hasChild && isBlank(question.parentId);
       });
       const allLevel = this.get('surveyTemplate.questions').filter((question) => {

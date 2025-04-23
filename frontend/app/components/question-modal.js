@@ -315,7 +315,7 @@ export default Component.extend({
   },
 
   actions: {
-    checkDefaultAnswer(value) {
+    checkDefaultAnswer(_value) {
       // this method is not called anywhere
       // if (equal('question.answerType.name', 'number')) {
       //   value = value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, ''); // only allow positive and negative numbers and decimals
