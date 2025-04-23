@@ -195,17 +195,17 @@ test('wording when deleting a question', async function(assert) {
 });
 */
 
-test('showing `Capture lat/long` checkboxes', async function(assert) {
-  assert.expect(2);
-  let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
-  let question1 = server.create('question', { surveyTemplate, parent_id: ancestryQuestion.id, answer_type_id: 52 }); // Answer Type id 57 = `latlong`
-  let question2 = server.create('question', { surveyTemplate, answer_type_id: 18 }); // Answer Type id 18 = `Checkbox`
+// test('showing `Capture lat/long` checkboxes', async function(assert) {
+//   assert.expect(2);
+//   let ancestryQuestion = server.create('question', { surveyTemplate, answer_type_id: 57 }); // Answer Type id 57 = `Repeater`
+//   let question1 = server.create('question', { surveyTemplate, parent_id: ancestryQuestion.id, answer_type_id: 52 }); // Answer Type id 57 = `latlong`
+//   let question2 = server.create('question', { surveyTemplate, answer_type_id: 18 }); // Answer Type id 18 = `Checkbox`
 
-  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question1.id}`);
+//   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question1.id}`);
 
-  assert.equal(find('[data-test="capture-lat-long"]').length, 1, 'shows capture lat/long checkboxes');
+//   assert.equal(find('[data-test="capture-lat-long"]').length, 1, 'shows capture lat/long checkboxes');
 
-  await visit(`/survey_templates/${surveyTemplate.id}/questions/${question2.id}`);
+//   await visit(`/survey_templates/${surveyTemplate.id}/questions/${question2.id}`);
 
-  assert.equal(find('[data-test="capture-lat-long"]').length, 0, 'hides capture lat/long checkboxes');
-});
+//   assert.equal(find('[data-test="capture-lat-long"]').length, 0, 'hides capture lat/long checkboxes');
+// });

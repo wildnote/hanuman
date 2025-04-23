@@ -9,7 +9,7 @@ LinkComponent.reopen({
   attributeBindings: ['data-test']
 });
 
-window.jQuery = window.$ = $;  // Make jQuery globally available
+window.jQuery = window.$ = $; // Make jQuery globally available
 
 const App = Application.extend({
   rootElement: '#ember-container',

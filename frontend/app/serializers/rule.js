@@ -9,10 +9,9 @@ export default ActiveModelSerializer.extend(DS.EmbeddedRecordsMixin, {
   },
 
   // Make sure conditions are properly handled
-  normalize(modelClass, resourceHash, prop) {
+  normalize(modelClass, resourceHash, _prop) {
     // Ensure conditions is always an array
     if (resourceHash && !resourceHash.conditions) {
-      console.warn('Rule is missing conditions array, adding empty array:', resourceHash.id);
       resourceHash.conditions = [];
     }
 
