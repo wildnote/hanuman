@@ -114,10 +114,10 @@ module Hanuman
 
       puts q.question_text
 
-      api_column_name_was = q.api_column_name_was
-      api_column_name_is = q.api_column_name
-      variable_name = "$#{api_column_name_was}"
-      new_variable_name = "$#{api_column_name_is}"
+      previous_api_column_name = q.api_column_name_in_database
+      current_api_column_name = q.api_column_name
+      variable_name = "$#{previous_api_column_name}"
+      new_variable_name = "$#{current_api_column_name}"
 
       puts variable_name
       puts new_variable_name
