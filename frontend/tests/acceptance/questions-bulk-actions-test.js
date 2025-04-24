@@ -53,7 +53,8 @@ test('cloning questions with conditional logic', async function(assert) {
   // Create dependent question
   let dependentQuestion = server.create('question', {
     surveyTemplate,
-    question_text: 'Dependent Question'
+    question_text: 'Dependent Question',
+    answer_type_id: 15
   });
   assert.ok(dependentQuestion.id, 'Dependent question was created');
   console.log('Dependent question:', dependentQuestion);
@@ -112,8 +113,9 @@ test('cloning questions with conditional logic', async function(assert) {
   let clonedDependentQuestion = allQuestions[allQuestions.length - 1];
 
   // Debug logging
-  console.log('All rules:', server.db.rules);
+  console.log('Cloned trigger question:', clonedTriggerQuestion);
   console.log('Cloned dependent question:', clonedDependentQuestion);
+
   let clonedRules = server.db.rules.where({ question_id: clonedDependentQuestion.id });
   console.log('Cloned rules:', clonedRules);
 
