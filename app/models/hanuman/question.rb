@@ -227,7 +227,27 @@ module Hanuman
       #         ]
       #       }
       unless self.rules.blank?
-        Hanuman::RuleHashSerializer.new(self.rules.first).to_json
+        # Replace ActiveModel::ArraySerializer with a manual serialization approach
+        rules_data = self.rules.map do |rule|
+          {
+            id: rule.id,
+            question_id: rule.question_id,
+            match_type: rule.match_type,
+            hidden: rule.question.hidden,
+            type: rule.type,
+            value: rule.value,
+            script: rule.script,
+            conditions: rule.conditions.map do |condition|
+              {
+                id: condition.id,
+                question_id: condition.question_id,
+                operator: condition.operator,
+                answer: condition.answer
+              }
+            end
+          }
+        end
+        rules_data.to_json
       end
     end
 
