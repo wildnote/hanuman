@@ -21,8 +21,7 @@ module Hanuman
         sort_orders = questions.map(&:sort_order)
         duplicate_sort_orders = sort_orders.select { |order| sort_orders.count(order) > 1 }.uniq
         if duplicate_sort_orders.any?
-          result[:valid] = false
-          result[:errors] << "Form has questions with duplicate sort orders"
+          result[:warnings] << "Form has questions with duplicate sort orders"
           result[:details][:duplicate_sort_orders] = duplicate_sort_orders.map do |order|
             questions_with_order = questions.select { |q| q.sort_order == order }
             "Questions (#{questions_with_order.map(&:id).join(', ')}) have sort order: #{order}"
