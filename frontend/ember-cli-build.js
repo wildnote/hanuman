@@ -7,8 +7,11 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
     'ember-cli-babel': {
-      optional: ['es6.spec.symbols'],
-      includePolyfill: true
+      includePolyfill: true,
+      compileModules: true,
+      plugins: [
+        require.resolve('babel-plugin-transform-object-rest-spread')
+      ]
     },
     eslint: {
       testGenerator: 'qunit',
@@ -22,10 +25,16 @@ module.exports = function(defaults) {
     ace: {
       themes: ['github'],
       modes: ['javascript']
-    }
+    },
+    sassOptions: {
+      includePaths: ['node_modules'],
+      implementation: require('sass')
+    },
+    storeConfigInMeta: false,
+    generateAssetMap: true,
   });
 
-  app.import('bower_components/animate.css/animate.min.css');
+  app.import('node_modules/animate.css/animate.min.css');
   app.import('vendor/bootstrap/dropdown/bootstrap-dropdown.js');
   app.import('vendor/bootstrap/tab/bootstrap-tab.js');
   app.import('vendor/bootstrap/tooltip/bootstrap-tooltip.js');

@@ -3,10 +3,10 @@ module Hanuman
     has_paper_trail
 
     # Relations
-    belongs_to  :observation, -> { unscope(:includes, :order) }#, touch: true
+    belongs_to  :observation, -> { unscope(:includes, :order) }, optional: true #, touch: true
     has_one     :survey, through: :observation
-    belongs_to  :answer_choice
-    belongs_to  :multiselectable, polymorphic: true
+    belongs_to  :answer_choice, optional: true
+    belongs_to  :multiselectable, polymorphic: true, optional: true
 
     amoeba do
       nullify :uuid

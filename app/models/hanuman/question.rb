@@ -7,8 +7,8 @@ module Hanuman
     attr_accessor :single_cloning, :flagged_answers_change_was_saved
 
     # Relations
-    belongs_to :answer_type
-    belongs_to :survey_template
+    belongs_to :answer_type, optional: true
+    belongs_to :survey_template, optional: true
     has_many :answer_choices, -> { order :sort_order, :option_text }, dependent: :destroy, inverse_of: :question
     # if a user deletes a question from survey admin we need to delete related observations, giving warning in survey admin
     has_many :observations, dependent: :destroy #**** controlling the delete through a confirm on the ember side of things-kdh *****
@@ -34,7 +34,7 @@ module Hanuman
     before_update :answer_type_change, if: :answer_type_id_changed?
     before_update :set_calculated
     after_save :format_css_style, if: :css_style_changed?
-    after_update :process_api_column_name_change, if: :api_column_name_changed?
+    after_update :process_api_column_name_change, if: :saved_change_to_api_column_name?
 
     # Need to cache the change state of flagged answers in an attribute so that we can access it after_commit
     # Need to start this worker after_commit to avoid it firing before the transaction has completed
@@ -49,11 +49,29 @@ module Hanuman
     amoeba do
       include_association :rules
       include_association :answer_choices
-      include_association :conditions, if: :survey_cloning?
+      exclude_association :conditions
+      exclude_association :observations
+      exclude_association :taggings
 
       # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
       customize(lambda { |original_question,new_question|
+        Rails.logger.info "Amoeba customize block - Before setting duped_question_id"
+        Rails.logger.info "Original question ID: #{original_question.id}"
+        Rails.logger.info "New question ID: #{new_question.id}"
+        Rails.logger.info "New question duped_question_id before: #{new_question.duped_question_id}"
         new_question.duped_question_id = original_question.id
+        Rails.logger.info "New question duped_question_id after setting: #{new_question.duped_question_id}"
+        Rails.logger.info "New question attributes: #{new_question.attributes.inspect}"
+      })
+
+      # Handle taggings using acts-as-taggable-on's methods
+      customize(lambda { |original_question, new_question|
+        # Get all tags from the original question
+        tag_list = original_question.tag_list
+        # Set the same tags on the new question
+        new_question.tag_list = tag_list
+        # Save without validation to avoid any validation issues
+        new_question.save(validate: false)
       })
     end
 
@@ -96,10 +114,10 @@ module Hanuman
 
       puts q.question_text
 
-      api_column_name_was = q.api_column_name_was
-      api_column_name_is = q.api_column_name
-      variable_name = "$#{api_column_name_was}"
-      new_variable_name = "$#{api_column_name_is}"
+      previous_api_column_name = q.api_column_name_in_database
+      current_api_column_name = q.api_column_name
+      variable_name = "$#{previous_api_column_name}"
+      new_variable_name = "$#{current_api_column_name}"
 
       puts variable_name
       puts new_variable_name
@@ -209,18 +227,42 @@ module Hanuman
       #         ]
       #       }
       unless self.rules.blank?
-        ActiveModel::ArraySerializer.new(self.rules, each_serializer: Hanuman::RuleHashSerializer).to_json
+        # Replace ActiveModel::ArraySerializer with a manual serialization approach
+        rules_data = self.rules.map do |rule|
+          {
+            id: rule.id,
+            question_id: rule.question_id,
+            match_type: rule.match_type,
+            hidden: rule.question.hidden,
+            type: rule.type,
+            value: rule.value,
+            script: rule.script,
+            conditions: rule.conditions.map do |condition|
+              {
+                id: condition.id,
+                question_id: condition.question_id,
+                operator: condition.operator,
+                answer: condition.answer
+              }
+            end
+          }
+        end
+        rules_data.to_json
       end
     end
 
     def survey_cloning?
-      !!!single_cloning
+      !single_cloning
     end
 
     # duplicate and save a single question with answer choices and conditions
     def dup_and_save(new_parent = nil, new_sort_order = nil)
+      Rails.logger.info "Starting dup_and_save for question #{self.id}"
       self.single_cloning = true
       new_q = self.amoeba_dup
+      Rails.logger.info "After amoeba_dup - New question ID: #{new_q.id}"
+      Rails.logger.info "New question duped_question_id: #{new_q.duped_question_id}"
+      Rails.logger.info "New question attributes: #{new_q.attributes.inspect}"
 
       if new_sort_order.present?
         new_q.sort_order = new_sort_order
@@ -232,15 +274,24 @@ module Hanuman
         new_q.parent = new_parent
       end
 
+      Rails.logger.info "Before saving new question - duped_question_id: #{new_q.duped_question_id}"
       new_q.save
-      # Associate the conditions from the rule
-      self.rules.each do |rule|
+      Rails.logger.info "After saving new question - duped_question_id: #{new_q.duped_question_id}"
+      Rails.logger.info "After saving - New question attributes: #{new_q.attributes.inspect}"
+      
+      # Update question_id references in conditions
+      new_q.rules.each do |rule|
         rule.conditions.each do |condition|
-          new_condition = condition.amoeba_dup
-          new_condition.rule = new_q.rules.find_by(duped_rule_id: rule.id)
-          new_condition.save
+          if condition.question_id
+            new_question = new_q.survey_template.questions.find_by(duped_question_id: condition.question_id)
+            if new_question
+              condition.question_id = new_question.id
+              condition.save!
+            end
+          end
         end
       end
+      
       new_q
     end
 
@@ -259,39 +310,50 @@ module Hanuman
 
       # remap sort orders leaving space for new questions before saving new question
       section_q.survey_template.questions.where("sort_order > ?", start_sort_order).each do |q|
-        q.paper_trail.without_versioning do
+        PaperTrail.request(enabled: false) do
           q.update_attribute('sort_order', q.sort_order + increment_sort_by)
         end
       end
 
-      # this will duplicate the question, will need to create a new rule,
-      # and then set the condtions to new rule id
+      # Duplicate the section question
       new_section_q = section_q.amoeba_dup
       new_section_q.sort_order = new_section_q.sort_order + increment_sort_by
       new_section_q.save
+
+      # Update conditions for the section question
+      new_section_q.rules.each do |rule|
+        rule.conditions.each do |condition|
+          if condition.question_id
+            new_question = new_section_q.survey_template.questions.find_by(duped_question_id: condition.question_id)
+            if new_question
+              condition.question_id = new_question.id
+              condition.save!
+            end
+          end
+        end
+      end
+
+      # Duplicate all descendants
       descendants_qs.each do |q|
         new_child_parent = new_section_q.descendants.find_by(duped_question_id: q.parent.id) || new_section_q
         new_child_parent.save
         new_sort_order = q.sort_order + increment_sort_by
-        q.dup_and_save(new_child_parent, new_sort_order)
-      end
+        new_q = q.amoeba_dup
+        new_q.sort_order = new_sort_order
+        new_q.parent = new_child_parent
+        new_q.save
 
-      # Re-organize / map conditions
-      new_section_q.descendants.order(:sort_order).each do |question|
-        next if question.rule_conditions.empty?
-        question.rule_conditions.each do |condition|
-          next unless descendants_qs.include?(condition.question)
-          condition.question_id = new_section_q.descendants.find_by(duped_question_id: condition.question.id).id
-          condition.save
-        end
-      end
-
-      # Associate the conditions from the rule
-      self.rules.each do |rule|
-        rule.conditions.each do |condition|
-          new_condition = condition.amoeba_dup
-          new_condition.rule = new_section_q.rules.find_by(duped_rule_id: rule.id)
-          new_condition.save
+        # Update conditions for each descendant
+        new_q.rules.each do |rule|
+          rule.conditions.each do |condition|
+            if condition.question_id
+              new_question = new_q.survey_template.questions.find_by(duped_question_id: condition.question_id)
+              if new_question
+                condition.question_id = new_question.id
+                condition.save!
+              end
+            end
+          end
         end
       end
 

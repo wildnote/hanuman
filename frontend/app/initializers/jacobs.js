@@ -2,19 +2,24 @@ if (!window.jacobs) {
   window.jacobs = false;
 }
 
-$('.hide_announcement').click(function () {
-  var a_id = $('.hide_announcement.announcement-close').attr("data-announcementid");
-  // createCookie("announcement_" + a_id, "hidden", 45);
-  //$(this).parent().slideDown();
-  $('announce').first().slideUp();
+document.addEventListener('DOMContentLoaded', () => {
+  const hideAnnouncementEl = document.querySelector('.hide_announcement');
+  if (hideAnnouncementEl) {
+    hideAnnouncementEl.addEventListener('click', () => {
+      const announcementCloseEl = document.querySelector('.hide_announcement.announcement-close');
+      let _announcementId = announcementCloseEl ? announcementCloseEl.getAttribute('data-announcementid') : null;
+      const announceEl = document.querySelector('announce');
+      if (announceEl) {
+        announceEl.style.display = 'none';
+      }
 
-  $.ajax({
-    url: "/users/read_latest_terms/",
-    type: "GET",
-    error: function (error) {
-      console.log(error)
-    },
-  });
+      fetch('/users/read_latest_terms/', {
+        method: 'GET'
+      }).catch(() => {
+        // Handle error silently
+      });
+    });
+  }
 });
 
 export function initialize(application) {

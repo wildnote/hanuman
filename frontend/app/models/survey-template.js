@@ -39,7 +39,7 @@ const SurveyTemplate = Model.extend(Validator, {
   checkTemplate: memberAction({ path: 'check_template', type: 'get' }),
 
   isCaDpr: computed('name', function() {
-    return [8,9,10,11,12,13,14,15,16,17,18,107,108,109].includes(this.surveyTemplateExportTypeId);
+    return [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 107, 108, 109].includes(this.surveyTemplateExportTypeId);
   }),
 
   // Validations

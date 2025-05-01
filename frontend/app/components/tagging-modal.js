@@ -78,6 +78,10 @@ export default Component.extend({
   },
 
   actions: {
+    // Add an explicit action for handling modal open
+    handleModalOpen() {
+      this.get('fetchAvailableTags').perform();
+    },
     save() {
       this.get('saveQuestions').perform();
     },

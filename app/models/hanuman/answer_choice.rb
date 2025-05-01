@@ -8,7 +8,7 @@ module Hanuman
     scope :second_level, -> { where(ancestry: nil) }
 
     # Relations
-    belongs_to :question, inverse_of: :answer_choices
+    belongs_to :question, inverse_of: :answer_choices, optional: true
 
     # Validations
     validates :option_text, :question, presence: true

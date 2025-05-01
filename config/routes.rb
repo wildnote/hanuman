@@ -34,9 +34,9 @@ Hanuman::Engine.routes.draw do
     end
   end
 
+  # Mount the Ember app with explicit configuration
+  mount_ember_app :frontend, to: '/admin', controller: 'admin', action: 'index', as: 'hanuman_admin'
 
-
-  mount_ember_app :frontend, to: '/admin', controller: 'admin', action: 'index', as: 'admin'
   get 'admin/show'
 
   resources :surveys do
@@ -66,8 +66,5 @@ Hanuman::Engine.routes.draw do
   resources :answer_types
 
   get 'about' => 'about#index'
-
-  #root 'about#index'
-  mount_ember_assets :frontend, to: "/admin"
 
 end

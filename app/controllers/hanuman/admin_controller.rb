@@ -6,6 +6,5 @@ module Hanuman
 
     def index
     end
-
   end
 end

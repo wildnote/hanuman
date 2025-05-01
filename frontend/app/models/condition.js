@@ -23,7 +23,7 @@ const Condition = Model.extend(Validator, {
   questionId: attr('string'),
 
   // Associations
-  rule: belongsTo('rule'),
+  rule: belongsTo('rule', { inverse: 'conditions' }),
 
   question: computed('questionId', function() {
     return this.store.peekRecord('question', this.questionId);

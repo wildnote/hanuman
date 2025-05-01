@@ -2,15 +2,20 @@ module Hanuman
   class Observation < ActiveRecord::Base
     has_paper_trail
 
-    # Relations
-    belongs_to :survey, -> { unscoped }#, touch: true -kdh removing touch to we don't update surveys table everytime the observations table is updated
-    belongs_to :question
-    belongs_to :selectable, polymorphic: true
+    # Relations - Basic associations first
+    belongs_to :survey, -> { unscoped }, optional: true #, touch: true -kdh removing touch to we don't update surveys table everytime the observations table is updated
+    belongs_to :question, optional: true
+    belongs_to :selectable, polymorphic: true, optional: true
+    belongs_to :answer_choice, optional: true
+
+    # Intermediate associations
     has_many :observation_answers, dependent: :destroy
     accepts_nested_attributes_for :observation_answers, allow_destroy: true
-    has_many :answer_choices, through: :observation_answers, before_remove: :generate_observation_answer_delta
-    belongs_to :answer_choice
 
+    # Through associations after their intermediates
+    has_many :answer_choices, through: :observation_answers, before_remove: :generate_observation_answer_delta
+
+    # Rest of associations
     has_many :observation_photos, dependent: :destroy
     accepts_nested_attributes_for :observation_photos, allow_destroy: true
     has_many :observation_documents, dependent: :destroy
@@ -28,8 +33,6 @@ module Hanuman
     # I would think the dependent destroy on the observation_signature would work but it does not and needed it on this reference as well.
     # TODO delete the secondary has_many and has_one defintions since they are duplicate code and just rely on the above references to the real objects.
     has_one :signature, class_name: 'Hanuman::ObservationSignature', dependent: :destroy
-
-    belongs_to :selectable, polymorphic: true
 
     # Validations
     validates :question_id, presence: true

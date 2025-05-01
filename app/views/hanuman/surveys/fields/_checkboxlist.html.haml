@@ -14,7 +14,7 @@
 
           - if o.question.calculated? || @survey_readonly
             = check_box_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",
-                               a.id, cbl_answers.include?(a.id), class: 'form-control', onclick: "return false;", style: "cursor: not-allowed; opacity: 0.5", data: { "label-value" => a.formatted_answer_choice }
+                               a.id, cbl_answers.include?(a.id), onclick: "return false;", class: 'form-control', style: "cursor: not-allowed; opacity: 0.5", data: { "label-value" => a.formatted_answer_choice }
 
           - elsif a.option_text == ff.object.question.default_answer && ff.object.answer == a.option_text
             = check_box_tag "survey[observations_attributes][#{index}][answer_choice_ids][]",

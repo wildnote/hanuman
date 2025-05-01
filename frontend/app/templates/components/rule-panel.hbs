@@ -50,6 +50,12 @@
               removeTask=removeConditionTask
               isNewCondition=false
             }}
+          {{else}}
+            <tr>
+              <td colspan="5" class="text-center">
+                <em>No conditions found. Try adding a new condition below.</em>
+              </td>
+            </tr>
           {{/each}}
           {{condition-row
             rule=rule

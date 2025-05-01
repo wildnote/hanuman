@@ -8,6 +8,7 @@ import Validator from './../mixins/model-validator';
 
 export default Model.extend(Validator, {
   init() {
+    this._super(...arguments);
     this.set('conditionsPendingSave', A());
   },
 
@@ -23,11 +24,11 @@ export default Model.extend(Validator, {
     return this.value;
   }),
 
-  isLookupRule: computed('type', function () {
+  isLookupRule: computed('type', function() {
     return this.get('type') === 'Hanuman::LookupRule';
   }),
 
-  isCalculationRule: computed('type', function () {
+  isCalculationRule: computed('type', function() {
     return this.get('type') === 'Hanuman::CalculationRule';
   }),
 
@@ -38,7 +39,7 @@ export default Model.extend(Validator, {
   script: attr('string', { defaultValue: '' }), // Script has to be blank, rather than null, otherwise Ace Editor will fail on init
 
   // Relations
-  conditions: hasMany('condition', { async: false }),
+  conditions: hasMany('condition', { async: false, inverse: 'rule' }),
   question: belongsTo('question'),
 
   savedConditions: filterBy('conditions', 'isNew', false),

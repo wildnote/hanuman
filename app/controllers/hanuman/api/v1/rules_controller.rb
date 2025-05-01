@@ -3,11 +3,12 @@ module Hanuman
     respond_to :json
 
     def index
-      respond_with Rule.all
+      respond_with Rule.includes(:conditions).all
     end
 
     def show
-      respond_with Rule.find(params[:id]), root: :rule
+      rule = Rule.includes(:conditions).find(params[:id])
+      respond_with rule, root: :rule
     end
 
     def create

@@ -15,7 +15,9 @@ module Hanuman
     end
 
     def show
-      respond_with Question.find(params[:id])
+      # Make sure to include rules and their conditions
+      question = Question.includes(:taggings, :answer_choices, rules: [:conditions]).find(params[:id])
+      respond_with question
     end
 
     def create

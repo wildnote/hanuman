@@ -3,7 +3,7 @@ module Hanuman
     has_paper_trail
 
     # Relations
-    belongs_to :survey_template
+    belongs_to :survey_template, optional: true
     has_many :observations, dependent: :destroy
     accepts_nested_attributes_for :observations, allow_destroy: true
     has_many :unscope_observations, -> { unscope(:includes, :order) }, class_name: 'Hanuman::Observation'
@@ -19,7 +19,8 @@ module Hanuman
     # Validations
     validates :survey_template_id, presence: true
     validates :survey_date, presence: true
-    validates :survey_extension, presence: true
+    # Make survey_extension validation conditional to fix circular dependency in Rails 5
+    validates :survey_extension, presence: true, on: :update
 
     before_save :set_observations_unsorted, unless: :skip_sort?
 
@@ -170,13 +171,10 @@ module Hanuman
 
     def sort_observations!
       sorted_obs = self.get_sorted_observations
-
       sorted_obs.each_with_index do |sorted_observation, index|
         Hanuman::Observation.find(sorted_observation.id).update_column(:sort_order, index)
       end
-
       self.update_column(:observations_sorted, true)
-
       self.observations.reorder('hanuman_observations.sort_order ASC')
     end
 
@@ -336,7 +334,7 @@ module Hanuman
         self.set_rapid_test_hydrophytic
       end
 
-      # sort observations always, instead of relying on flag that doesn't seem to be working 
+      # sort observations always, instead of relying on flag that doesn't seem to be working
       SortObservationsWorker.perform_async(self.id)
 
       update_column(:lock_callbacks, false)

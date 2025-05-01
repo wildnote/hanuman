@@ -41,16 +41,17 @@ test('collapsing and uncollapsing', async function(assert) {
   });
 
   await visit(`/survey_templates/${surveyTemplate.id}`);
+
   // Showing
   assert.equal(find('[data-question-id]').length, 2, 'all top questions displayed');
   await click(`[data-question-id="${topAncestry.id}"] [data-test-collapse]`);
-  assert.equal(find('[data-question-id]').length, 5, 'only 4 questions showen');
+  assert.equal(find('[data-question-id]').length, 5, '5 questions shown');
   await click(`[data-question-id="${firstAncestry.id}"] [data-test-collapse]`);
-  assert.equal(find('[data-question-id]').length, 8, '8 questions showen');
+  assert.equal(find('[data-question-id]').length, 8, '8 questions shown');
   await click(`[data-question-id="${secondAncestry.id}"] [data-test-collapse]`);
-  assert.equal(find('[data-question-id]').length, 10, '10 questions showen');
+  assert.equal(find('[data-question-id]').length, 10, '10 questions shown');
 
-  // Hidding
+  // Hiding
   await click(`[data-question-id="${secondAncestry.id}"] [data-test-collapse]`);
   assert.equal(find('[data-question-id]').length, 8, '2 questions hidden');
   await click(`[data-question-id="${firstAncestry.id}"] [data-test-collapse]`);
@@ -96,9 +97,9 @@ test('bulk collapsing and uncollapsing', async function(assert) {
   // Showing
   assert.equal(find('[data-question-id]').length, 2, 'all top questions displayed');
   await click('[data-test-bulk-collapse]');
-  assert.equal(find('[data-question-id]').length, 5, 'only 4 questions showen');
 
-  // Hidding
+  assert.equal(find('[data-question-id]').length, 10, 'open all containers');
+  // Hiding
   await click('[data-test-bulk-collapse]');
-  assert.equal(find('[data-question-id]').length, 2, '2 questions showen');
+  assert.equal(find('[data-question-id]').length, 2, '2 questions shown');
 });

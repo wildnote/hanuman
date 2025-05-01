@@ -20,6 +20,16 @@ test('selecting multiple questions', async function(assert) {
   assert.equal(find('[data-test-total-selected-questions]').text(), '2', 'total number of selected is correct');
 });
 
+test('selecting non-adjacent questions', async function(assert) {
+  assert.expect(2);
+  server.createList('question', 5, { surveyTemplate });
+  await visit(`/survey_templates/${surveyTemplate.id}`);
+  await find('[data-test-question-row] [data-test-question-selector]')[0].click();
+  await find('[data-test-question-row] [data-test-question-selector]')[4].click();
+  assert.equal(find('[data-test-selected-questions]').length, 1, 'selected header is shown');
+  assert.equal(find('[data-test-total-selected-questions]').text(), '2', 'total number of selected is correct');
+});
+
 test('de-selecting multiple questions', async function(assert) {
   assert.expect(2);
   server.createList('question', 5, { surveyTemplate });

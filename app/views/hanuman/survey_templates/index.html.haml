@@ -29,7 +29,7 @@
 
         %tbody
           - @survey_templates.each do |survey_template|
-            - survey_template_ember_link = admin_path + "/survey_templates/" + survey_template.id.to_s
+            - survey_template_ember_link = hanuman_admin_path + "/survey_templates/" + survey_template.id.to_s
             %tr
               %td= link_to survey_template.name, survey_template_ember_link
               %td= link_to survey_template.survey_type, survey_template_ember_link
