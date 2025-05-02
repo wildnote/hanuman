@@ -49,29 +49,17 @@ module Hanuman
     amoeba do
       include_association :rules
       include_association :answer_choices
+      exclude_association :taggings
       exclude_association :conditions
       exclude_association :observations
-      exclude_association :taggings
+      exclude_association :tags
+      exclude_association :tag_list
 
       # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
       customize(lambda { |original_question,new_question|
-        Rails.logger.info "Amoeba customize block - Before setting duped_question_id"
-        Rails.logger.info "Original question ID: #{original_question.id}"
-        Rails.logger.info "New question ID: #{new_question.id}"
-        Rails.logger.info "New question duped_question_id before: #{new_question.duped_question_id}"
         new_question.duped_question_id = original_question.id
-        Rails.logger.info "New question duped_question_id after setting: #{new_question.duped_question_id}"
-        Rails.logger.info "New question attributes: #{new_question.attributes.inspect}"
-      })
-
-      # Handle taggings using acts-as-taggable-on's methods
-      customize(lambda { |original_question, new_question|
-        # Get all tags from the original question
-        tag_list = original_question.tag_list
-        # Set the same tags on the new question
-        new_question.tag_list = tag_list
-        # Save without validation to avoid any validation issues
-        new_question.save(validate: false)
+        # have to manually clear out tag_taggings otherwise validation fails
+        new_question.tag_taggings = []
       })
     end
 
