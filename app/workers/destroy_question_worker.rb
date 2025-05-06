@@ -4,7 +4,7 @@ class DestroyQuestionWorker
   def perform(question_id, user_id)
 
     begin
-      PaperTrail.whodunnit = user_id
+      PaperTrail.request.whodunnit = user_id
       question = Hanuman::Question.unscoped.find(question_id)
       question.destroy
     rescue => e
