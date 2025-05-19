@@ -22,8 +22,19 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     run.scheduleOnce('afterRender', this, function() {
-      if (this.condition && isBlank(this.condition.questionId) && this.availableQuestions[0]) {
+      if (this.condition && isBlank(this.condition.questionId) && this.availableQuestions && this.availableQuestions[0]) {
         this.set('condition.questionId', this.availableQuestions[0].id);
+      }
+
+      // Ensure data for answer dropdowns is loaded after currentQuestion is established
+      const currentQuestion = this.get('currentQuestion');
+      if (currentQuestion) {
+        if (currentQuestion.isLocationSelect && isBlank(this.locations)) {
+          this.loadLocations.perform();
+        }
+        if (currentQuestion.isTaxonType) { // Assuming dataSources load has internal checks or is safe to call
+          this.loadDataSources.perform();
+        }
       }
     });
   },
