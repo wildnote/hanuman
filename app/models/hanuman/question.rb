@@ -45,24 +45,6 @@ module Hanuman
     # scope :not_marked_for_deletion, -> { where(marked_for_deletion: false) }
     default_scope { where(marked_for_deletion: false) }
 
-
-    amoeba do
-      include_association :rules
-      include_association :answer_choices
-      exclude_association :taggings
-      exclude_association :conditions
-      exclude_association :observations
-      exclude_association :tags
-      exclude_association :tag_list
-
-      # set duplicated_question_id so I can remap the ancestry relationships on a survey template duplicate-kdh
-      customize(lambda { |original_question,new_question|
-        new_question.duped_question_id = original_question.id
-        # have to manually clear out tag_taggings otherwise validation fails
-        new_question.tag_taggings = []
-      })
-    end
-
     def self.sort(sort_column, sort_direction)
       joins(:answer_type).order(("#{sort_column}  #{sort_direction}")
         .gsub('asc asc', 'asc')
