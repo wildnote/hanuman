@@ -665,15 +665,26 @@
     var $targetRepeater = $ruleContainer.closest(".form-container-repeater"); // The parent repeater of the target, if it exists
     var targetType = $ruleContainer.data('element-type'); // The form control type of the target
 
+    // Cache all condition questions upfront
+    var conditionQuestions = {};
+    $.each(rule.conditions, function(index, condition) {
+      var $question = $('[data-question-id="' + condition.question_id + '"]');
+      conditionQuestions[condition.question_id] = {
+        $element: $question,
+        inRepeater: $question.closest(".form-container-repeater").length > 0
+      };
+    });
+
     $.each(rule.conditions, function(index, condition) {
       var $question, elementType, columnName, $repeater, value;
+      var cachedQuestion = conditionQuestions[condition.question_id];
 
       // If the target question is inside a repeater AND the parameter question is inside a repeater,
       // we only want the parameter if it's in the same repeater instance as the target.
-      if ($targetRepeater.length > 0 && $('[data-question-id="' + condition.question_id + '"]').closest(".form-container-repeater").length > 0) {
+      if ($targetRepeater.length > 0 && cachedQuestion.inRepeater) {
         $question = $targetRepeater.find('[data-question-id="' + condition.question_id + '"]');
       } else {
-        $question = $('[data-question-id="' + condition.question_id + '"]');
+        $question = cachedQuestion.$element;
       }
 
       elementType = $question.data('element-type'); // The form control type of the parameter question
@@ -684,8 +695,9 @@
       // we want to make an array out of the parameter question across all repeater instances.
       if ($repeater.length > 0 && $targetRepeater.length === 0) {
         var entries = [];
-        $.each($question, function(index, entry) {
-          value = self.getNativeValue($(entry).find('.form-control'), elementType);
+        var $conditionElements = $question.find('.form-control');
+        $conditionElements.each(function(index, entry) {
+          value = self.getNativeValue($(entry), elementType);
           entries.push(value);
         });
         parameters[columnName] = entries;
@@ -718,71 +730,134 @@
   ConditionalLogic.prototype.setCalculationResult = function($target, pseudoResult, elementType) {
     var self = this;
     var result = self.interpreter.pseudoToNative(pseudoResult); // Converts from an interpreter object to a native JS object
+    var shouldTriggerChange = false;
 
     if (elementType === 'checkbox' && typeof result === 'boolean') {
-      $target.prop("checked", result);
+      var currentValue = $target.prop("checked");
+      if (currentValue !== result) {
+        $target.prop("checked", result);
+        shouldTriggerChange = true;
+      }
     } else if ((elementType === 'number' || elementType === 'counter') && typeof result === 'number') {
-      $target.val(result);
+      var currentValue = parseFloat($target.val());
+      if (currentValue !== result) {
+        $target.val(result);
+        shouldTriggerChange = true;
+      }
     } else if (elementType === 'text' || elementType === 'textarea' || elementType === 'time') {
-      $target.val(result);
+      var currentValue = $target.val();
+      if (currentValue !== result) {
+        $target.val(result);
+        shouldTriggerChange = true;
+      }
     } else if (elementType === 'date' && typeof result === 'string') {
-      $target.datepicker("setDate", new Date(result));
+      var currentDate = $target.datepicker("getDate");
+      var newDate = new Date(result);
+      if (!currentDate || currentDate.getTime() !== newDate.getTime()) {
+        $target.datepicker("setDate", newDate);
+        shouldTriggerChange = true;
+      }
     } else if (elementType === 'checkboxes' && Array.isArray(result)) {
-      $.each($target, function(index, checkbox) {
-        $(checkbox).prop("checked", result.indexOf($(checkbox).attr('data-label-value')) !== -1);
+      var $checkboxes = $target;
+      $checkboxes.each(function(index, checkbox) {
+        var $checkbox = $(checkbox);
+        var currentValue = $checkbox.prop("checked");
+        var newValue = result.indexOf($checkbox.attr('data-label-value')) !== -1;
+        if (currentValue !== newValue) {
+          $checkbox.prop("checked", newValue);
+          shouldTriggerChange = true;
+        }
       });
     } else if (elementType === 'multiselect' && Array.isArray(result)) {
       if ($target.hasClass('chosen-multiselect')) {
-        $target.find('option').prop('selected', false);
-        $.each(result, function(index, optionText) {
-          $target.find('option:contains(' + optionText + ')').prop('selected', true);
-        });
+        var currentValues = $target.find('option:selected').map(function() { return $(this).text(); }).get();
+        if (!_.isEqual(currentValues.sort(), result.sort())) {
+          $target.find('option').prop('selected', false);
+          $.each(result, function(index, optionText) {
+            $target.find('option:contains(' + optionText + ')').prop('selected', true);
+          });
+          shouldTriggerChange = true;
+        }
       } else if ($target.hasClass('selectized')) {
-        $target[0].selectize.clear(true);
-        $.each($target[0].selectize.options, function(index, option) {
-          if (result.indexOf(option.text) !== -1) {
-            $target[0].selectize.addItem(option.value, false);
-          }
-        });
+        var currentValues = $target[0].selectize.getValue();
+        if (!_.isEqual(currentValues.sort(), result.sort())) {
+          $target[0].selectize.clear(true);
+          $.each($target[0].selectize.options, function(index, option) {
+            if (result.indexOf(option.text) !== -1) {
+              $target[0].selectize.addItem(option.value, false);
+            }
+          });
+          shouldTriggerChange = true;
+        }
       }
     } else if (elementType === 'select' && typeof result === 'string') {
-      if ($target.hasClass('chosen-select')) {
-        $target.find('option').prop('selected', false);
-        $target.find('option:contains(' + result + ')').prop('selected', true);
-      } else if ($target.hasClass('selectized')) {
-        $target[0].selectize.clear(true);
-        $.each($target[0].selectize.options, function(index, option) {
-          if (option.text === result) {
-            $target[0].selectize.addItem(option.value, false);
-            return false; // Exit loop early
+      var currentValue = $target.find('option:selected').text();
+      if (currentValue !== result) {
+        if ($target.hasClass('chosen-select')) {
+          $target.find('option').prop('selected', false);
+          $target.find('option:contains(' + result + ')').prop('selected', true);
+        } else if ($target.hasClass('selectized')) {
+          $target[0].selectize.clear(true);
+          $.each($target[0].selectize.options, function(index, option) {
+            if (option.text === result) {
+              $target[0].selectize.addItem(option.value, false);
+              return false;
+            }
+          });
+        }
+        shouldTriggerChange = true;
+      }
+    } else if (elementType === 'radio' && typeof result === 'string') {
+      var $radios = $target;
+      var currentValue = $radios.filter(':checked').attr('data-label-value');
+      if (currentValue !== result) {
+        $radios.each(function(index, radio) {
+          var $radio = $(radio);
+          var newValue = $radio.attr('data-label-value') === result;
+          if ($radio.prop("checked") !== newValue) {
+            $radio.prop("checked", newValue);
+            shouldTriggerChange = true;
           }
         });
       }
-    } else if (elementType === 'radio' && typeof result === 'string') {
-      $.each($target, function(index, radio) {
-        $(radio).prop("checked", $(radio).attr('data-label-value') === result);
-      });
     } else {
       // If the type of the calculation result doesn't match the element type, or is null/undefined, clear the target
       if (elementType === 'checkbox') {
-        $target.prop("checked", false);
+        if ($target.prop("checked")) {
+          $target.prop("checked", false);
+          shouldTriggerChange = true;
+        }
       } else if (elementType === 'checkboxes' || elementType === 'radio') {
+        var hasChecked = false;
         $.each($target, function(index, option) {
-          $(option).prop("checked", false);
+          if ($(option).prop("checked")) {
+            $(option).prop("checked", false);
+            hasChecked = true;
+          }
         });
+        shouldTriggerChange = hasChecked;
       } else if (elementType === 'multiselect' || elementType === 'select') {
         if ($target.hasClass('chosen-select') || $target.hasClass('chosen-multiselect')) {
-          $target.find('option').prop('selected', false);
+          if ($target.find('option:selected').length > 0) {
+            $target.find('option').prop('selected', false);
+            shouldTriggerChange = true;
+          }
         } else if ($target.hasClass('selectized')) {
-          $target[0].selectize.clear(true);
+          if ($target[0].selectize.getValue().length > 0) {
+            $target[0].selectize.clear(true);
+            shouldTriggerChange = true;
+          }
         }
       } else {
-        $target.val('');
+        if ($target.val() !== '') {
+          $target.val('');
+          shouldTriggerChange = true;
+        }
       }
     }
 
-    // For performance reasons, only cascade CL and other calculations if permitted
-    if (self.allowCascade) {
+    // Only trigger change events if the value actually changed
+    if (self.allowCascade && shouldTriggerChange) {
       if (elementType === 'checkboxes' || elementType === 'radio') {
         $.each($target, function(index, checkbox) {
           $(checkbox).trigger('change');
