@@ -607,9 +607,9 @@ module Hanuman
 
     def set_calculated
       self.calculated = self.is_calculated?
-      Rails.logger.info "Setting calculated to #{self.calculated} for #{self.inspect}"
+      # Rails.logger.info "Setting calculated to #{self.calculated} for #{self.inspect}"
     rescue => e
-      Rails.logger.error "Error in before_update: #{e.message}"
+      # Rails.logger.error "Error in before_update: #{e.message}"
       raise e
     end
   end
