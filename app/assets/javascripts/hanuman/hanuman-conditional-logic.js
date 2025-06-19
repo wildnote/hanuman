@@ -695,7 +695,23 @@
       // we want to make an array out of the parameter question across all repeater instances.
       if ($repeater.length > 0 && $targetRepeater.length === 0) {
         var entries = [];
-        var $conditionElements = $question.find('.form-control');
+        var $conditionElements;
+        
+        // Handle radio buttons specially to avoid duplicates
+        if (elementType === 'radio') {
+          // For radio buttons, get unique groups by name attribute
+          var radioNames = {};
+          $question.find('.form-control[type="radio"]').each(function() {
+            var name = $(this).attr('name');
+            if (!radioNames[name]) {
+              radioNames[name] = $(this);
+            }
+          });
+          $conditionElements = $($.map(radioNames, function(element) { return element; }));
+        } else {
+          $conditionElements = $question.find('.form-control');
+        }
+        
         $conditionElements.each(function(index, entry) {
           value = self.getNativeValue($(entry), elementType);
           entries.push(value);
