@@ -84,8 +84,10 @@ module Hanuman
 
       puts q.question_text
 
-      previous_api_column_name = q.api_column_name_in_database
-      current_api_column_name = q.api_column_name
+      # Get the change information - returns [old_value, new_value]
+      change = q.saved_change_to_api_column_name
+      previous_api_column_name = change[0]  # old value
+      current_api_column_name = change[1]   # new value
       variable_name = "$#{previous_api_column_name}"
       new_variable_name = "$#{current_api_column_name}"
 
