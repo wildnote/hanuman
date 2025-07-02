@@ -697,7 +697,7 @@
         var entries = [];
         var $conditionElements;
         
-        // Handle radio buttons specially to avoid duplicates
+        // Handle radio buttons and select elements specially to avoid duplicates
         if (elementType === 'radio') {
           // For radio buttons, get unique groups by name attribute
           var radioNames = {};
@@ -708,6 +708,9 @@
             }
           });
           $conditionElements = $($.map(radioNames, function(element) { return element; }));
+        } else if (elementType === 'select') {
+          // For select elements, get the actual select element (not the Selectize wrapper)
+          $conditionElements = $question.find('select.form-control');
         } else {
           $conditionElements = $question.find('.form-control');
         }
