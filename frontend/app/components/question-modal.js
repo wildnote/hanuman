@@ -35,40 +35,138 @@ export default Component.extend({
 
   didInsertElement() {
     this._super(...arguments);
+    
     run.scheduleOnce('afterRender', this, function() {
       this.get('remodal').open('question-modal');
-      // Initialize popovers using native DOM
-      const popovers = this.element.querySelectorAll('[data-toggle="popover"]');
-      popovers.forEach((el) => {
-        el.setAttribute('data-bs-toggle', 'popover');
-        el.setAttribute('data-bs-trigger', 'hover');
-      });
-
-      // Handle tabs
-      const tabs = this.element.querySelectorAll('a[data-toggle="tab"]');
-      tabs.forEach((tab) => {
-        tab.addEventListener('click', (e) => {
-          e.preventDefault();
-          const targetId = tab.getAttribute('href');
-          const targetTab = this.element.querySelector(targetId);
-          if (targetTab) {
-            // Remove active class from all tabs
-            tabs.forEach((t) => t.classList.remove('active'));
-            // Add active class to clicked tab
-            tab.classList.add('active');
-            // Show target content
-            const tabContents = this.element.querySelectorAll('.tab-pane');
-            tabContents.forEach((content) => content.classList.remove('active'));
-            targetTab.classList.add('active');
+      
+      // Function to initialize popovers when content is ready
+      const initializePopovers = () => {
+        // Check for popover elements
+        const $popovers = $(this.element).find('.bootstrap-popover');
+        
+        // Also check in the entire document for popovers that might be in the modal
+        const $allPopovers = $('.bootstrap-popover');
+        
+        // Check if the modal content is in a different location
+        const $modalContent = $('.remodal-wrapper, .remodal, [data-remodal-id="question-modal"]');
+        
+        // Check if the modal is actually visible/open
+        const $visibleModal = $('.remodal.remodal-is-opened, .remodal.remodal-is-visible');
+        
+        // Use visible modal content if available, otherwise use component element
+        const $targetElement = $visibleModal.length > 0 ? $visibleModal : $(this.element);
+        const $targetPopovers = $targetElement.find('.bootstrap-popover');
+        
+        if ($targetPopovers.length === 0) {
+          this.retryCount = (this.retryCount || 0) + 1;
+          
+          // Limit retries to prevent infinite loop
+          if (this.retryCount > 50) {
+            return;
           }
+          
+          setTimeout(() => {
+            initializePopovers.call(this);
+          }, 100);
+          return;
+        }
+        
+        // Use the target popovers instead of the original ones
+        const $finalPopovers = $targetPopovers;
+        
+        const $dataTogglePopovers = $targetElement.find('[data-toggle="popover"]');
+        
+        // Try to initialize popovers
+        try {
+          $finalPopovers.popover({
+            container: 'body',
+            html: true
+          });
+          
+          // Fix z-index issue by setting higher z-index for popovers when they're shown
+          $finalPopovers.on('shown.bs.popover', function() {
+            const $popover = $('.popover').last(); // Get the most recently shown popover
+            const $modal = $('.remodal.remodal-is-opened, .remodal.remodal-is-visible');
+            const modalZIndex = parseInt($modal.css('z-index')) || 0;
+            const newZIndex = Math.max(modalZIndex + 10000, 999999);
+            $popover.css('z-index', newZIndex);
+            
+            // Add scrollable content for tall popovers
+            const $content = $popover.find('.popover-content');
+            if ($content.height() > 300) {
+              $content.css({
+                'max-height': '300px',
+                'overflow-y': 'auto',
+                'padding-right': '10px'
+              });
+            }
+          });
+          
+          $dataTogglePopovers.popover({
+            container: 'body',
+            html: true
+          });
+          
+          // Fix z-index issue for data-toggle popovers too
+          $dataTogglePopovers.on('shown.bs.popover', function() {
+            const $popover = $('.popover').last();
+            const $modal = $('.remodal.remodal-is-opened, .remodal.remodal-is-visible');
+            const modalZIndex = parseInt($modal.css('z-index')) || 0;
+            const newZIndex = Math.max(modalZIndex + 10000, 999999);
+            $popover.css('z-index', newZIndex);
+            
+            // Add scrollable content for tall popovers
+            const $content = $popover.find('.popover-content');
+            if ($content.height() > 300) {
+              $content.css({
+                'max-height': '300px',
+                'overflow-y': 'auto',
+                'padding-right': '10px'
+              });
+            }
+          });
+          
+          // Test click events (for debugging if needed)
+          $finalPopovers.on('click', function(e) {
+            // Popover click event - can be used for debugging if needed
+          });
+          
+          // Test manual trigger (removed for production)
+          
+        } catch (error) {
+          // Silently handle popover initialization errors
+        }
+        
+        // Handle tabs
+        const tabs = this.element.querySelectorAll('a[data-toggle="tab"]');
+        tabs.forEach((tab) => {
+          tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = tab.getAttribute('href');
+            const targetTab = this.element.querySelector(targetId);
+            if (targetTab) {
+              // Remove active class from all tabs
+              tabs.forEach((t) => t.classList.remove('active'));
+              // Add active class to clicked tab
+              tab.classList.add('active');
+              // Show target content
+              const tabContents = this.element.querySelectorAll('.tab-pane');
+              tabContents.forEach((content) => content.classList.remove('active'));
+              targetTab.classList.add('active');
+            }
+          });
         });
-      });
+      };
+      
+      // Start the initialization process
+      setTimeout(initializePopovers, 100);
     });
 
     document.addEventListener('keydown', bind(this, this._escapeHandler));
   },
 
   willDestroyElement() {
+    
     document.removeEventListener('keydown', bind(this, this._escapeHandler));
     this._super(...arguments);
   },
