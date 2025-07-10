@@ -1377,29 +1377,42 @@ export default Component.extend({
     })));
     
     if (allDescendants.length === 0) {
+      console.log('[CUSTOM DRAG] No descendants to highlight');
       return;
     }
     
     // Use run.scheduleOnce to ensure DOM is ready
     run.scheduleOnce('afterRender', this, () => {
+      console.log('[CUSTOM DRAG] DOM ready, starting highlight process');
+      
       // Create a Set of descendant IDs for faster lookup
       const descendantIds = new Set(allDescendants.map(descendant => descendant.get('id').toString()));
+      console.log('[CUSTOM DRAG] Looking for descendant IDs:', Array.from(descendantIds));
       
       // Find all sortable-item elements once
       const descendantElements = this.element.querySelectorAll('.sortable-item');
+      console.log('[CUSTOM DRAG] Found', descendantElements.length, 'sortable-item elements in DOM');
+      
+      let highlightedCount = 0;
       
       // Process each element efficiently
-      descendantElements.forEach(element => {
+      descendantElements.forEach((element, index) => {
         const questionElement = element.querySelector('[data-question-id]');
         if (questionElement) {
           const questionId = questionElement.getAttribute('data-question-id');
+          console.log('[CUSTOM DRAG] Element', index, 'has question ID:', questionId);
+          
           if (descendantIds.has(questionId)) {
             element.classList.add('children-highlight');
+            highlightedCount++;
+            console.log('[CUSTOM DRAG] Added children-highlight class to element with question ID:', questionId);
           }
+        } else {
+          console.log('[CUSTOM DRAG] Element', index, 'has no data-question-id attribute');
         }
       });
       
-      console.log('[CUSTOM DRAG] Highlighted', allDescendants.length, 'descendants');
+      console.log('[CUSTOM DRAG] Highlighted', highlightedCount, 'out of', allDescendants.length, 'expected descendants');
     });
   },
 
