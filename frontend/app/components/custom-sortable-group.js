@@ -64,12 +64,19 @@ export default Component.extend({
         this.set('selectedIndex', index);
         this.createDropZones();
         
-        // Debounce highlighting to prevent performance issues
-        const timeout = run.later(this, () => {
-          this.highlightChildren(item);
-        }, 100); // Increased delay for better debouncing
-        
-        this.registerTimeout(timeout, 'highlight');
+        // Only highlight children if this is a container
+        const isContainer = item.get('isARepeater') || item.get('isContainer');
+        if (isContainer) {
+          console.log('[CUSTOM DRAG] Selected item is a container, highlighting children');
+          // Debounce highlighting to prevent performance issues
+          const timeout = run.later(this, () => {
+            this.highlightChildren(item);
+          }, 100); // Increased delay for better debouncing
+          
+          this.registerTimeout(timeout, 'highlight');
+        } else {
+          console.log('[CUSTOM DRAG] Selected item is not a container, skipping children highlight');
+        }
       }
     },
 
