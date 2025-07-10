@@ -276,88 +276,123 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Move item from', selectedIndex, 'to', targetIndex);
       
-      const items = this.get('items').slice();
-      const draggedItem = items.splice(selectedIndex, 1)[0];
-      items.splice(targetIndex, 0, draggedItem);
+      const items = this.get('items');
+      const targetQuestion = items.objectAt(targetIndex);
       
-      // Check if we're moving out of a container (setting parentId to null)
-      const currentParentId = draggedItem.get('parentId');
-      if (currentParentId) {
-        console.log('[CUSTOM DRAG] Moving item out of container, clearing ancestry');
-        draggedItem.set('parentId', null);
+      // Smart ancestry handling
+      const currentParentId = selectedItem.get('parentId');
+      const targetParentId = targetQuestion ? targetQuestion.get('parentId') : null;
+      
+      console.log('[CUSTOM DRAG] Smart ancestry check - currentParentId:', currentParentId, 'targetParentId:', targetParentId);
+      
+      // If moving from container to top level, clear ancestry
+      if (currentParentId && !targetParentId) {
+        console.log('[CUSTOM DRAG] Moving from container to top level, clearing ancestry');
+        selectedItem.set('parentId', null);
         
-        // Save the question to persist the ancestry change
-        draggedItem.save().then(() => {
-          console.log('[CUSTOM DRAG] Question ancestry cleared successfully');
+        // Save the ancestry change first
+        selectedItem.save().then(() => {
+          console.log('[CUSTOM DRAG] Ancestry cleared successfully');
+          this.send('performMoveLogic', selectedIndex, targetIndex);
         }).catch((error) => {
           console.error('[CUSTOM DRAG] Error clearing ancestry:', error);
         });
+      } else {
+        // No ancestry change needed, just move
+        this.send('performMoveLogic', selectedIndex, targetIndex);
       }
+    },
+
+    performMoveLogic(fromIndex, toIndex) {
+      const items = this.get('items').slice();
+      const draggedItem = items.splice(fromIndex, 1)[0];
+      items.splice(toIndex, 0, draggedItem);
       
-      // Call the onChange callback
-      if (typeof this.get('onChange') === 'function') {
-        run(() => {
-          this.get('onChange')(items, draggedItem);
-        });
+      // Use parent's updateSortOrderTask to persist the changes to database
+      const parentComponent = this.get('parentView');
+      if (parentComponent && parentComponent.get('updateSortOrderTask')) {
+        console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to persist sort order changes');
+        parentComponent.get('updateSortOrderTask').perform(items, false); // false = don't re-sort, use array order
+      } else {
+        console.error('[CUSTOM DRAG] Could not access parent updateSortOrderTask');
+        // Fallback to onChange callback
+        if (typeof this.get('onChange') === 'function') {
+          run(() => {
+            this.get('onChange')(items, draggedItem);
+          });
+        }
       }
       
       // Clear selection
       this.set('selectedItem', null);
       this.set('selectedIndex', -1);
       this.removeDropZones();
-    }
-  },
+      
+      console.log('[CUSTOM DRAG] Move completed successfully');
+    },
 
-  moveQuestionToPosition(question, targetIndex) {
-    console.log('[CUSTOM DRAG] moveQuestionToPosition called with question:', question.get('questionText'), 'targetIndex:', targetIndex);
-    
-    // Don't run if we're setting ancestry
-    if (this.get('isSettingAncestry')) {
-      console.log('[CUSTOM DRAG] Skipping moveQuestionToPosition because ancestry is being set');
-      return;
-    }
-    
-    const items = this.get('items');
-    const currentIndex = items.indexOf(question);
-    
-    if (currentIndex === -1) {
-      console.log('[CUSTOM DRAG] Question not found in items array');
-      return;
-    }
-    
-    if (currentIndex === targetIndex) {
-      console.log('[CUSTOM DRAG] Question already at target position');
-      return;
-    }
-    
-    console.log('[CUSTOM DRAG] Move question from', currentIndex, 'to', targetIndex);
-    
-    const itemsCopy = items.slice();
-    const draggedItem = itemsCopy.splice(currentIndex, 1)[0];
-    itemsCopy.splice(targetIndex, 0, draggedItem);
-    
-    // Use parent's updateSortOrderTask to persist the changes to database
-    const parentComponent = this.get('parentView');
-    if (parentComponent && parentComponent.get('updateSortOrderTask')) {
-      console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to persist sort order changes');
-      parentComponent.get('updateSortOrderTask').perform(itemsCopy, false); // false = don't re-sort, use array order
-    } else {
-      console.error('[CUSTOM DRAG] Could not access parent updateSortOrderTask');
-      // Fallback to onChange callback
-      if (typeof this.get('onChange') === 'function') {
-        run(() => {
-          this.get('onChange')(itemsCopy, draggedItem);
-        });
+    moveQuestionToPosition(question, targetIndex) {
+      console.log('[CUSTOM DRAG] moveQuestionToPosition called with question:', question.get('questionText'), 'targetIndex:', targetIndex);
+      
+      // Don't run if we're setting ancestry
+      if (this.get('isSettingAncestry')) {
+        console.log('[CUSTOM DRAG] Skipping moveQuestionToPosition because ancestry is being set');
+        return;
       }
+      
+      const items = this.get('items');
+      const currentIndex = items.indexOf(question);
+      
+      if (currentIndex === -1) {
+        console.log('[CUSTOM DRAG] Question not found in items array');
+        return;
+      }
+      
+      if (currentIndex === targetIndex) {
+        console.log('[CUSTOM DRAG] Question already at target position');
+        return;
+      }
+      
+      console.log('[CUSTOM DRAG] Move question from', currentIndex, 'to', targetIndex);
+      
+      const itemsCopy = items.slice();
+      const draggedItem = itemsCopy.splice(currentIndex, 1)[0];
+      itemsCopy.splice(targetIndex, 0, draggedItem);
+      
+      // Use parent's updateSortOrderTask to persist the changes to database
+      const parentComponent = this.get('parentView');
+      if (parentComponent && parentComponent.get('updateSortOrderTask')) {
+        console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to persist sort order changes');
+        parentComponent.get('updateSortOrderTask').perform(itemsCopy, false); // false = don't re-sort, use array order
+      } else {
+        console.error('[CUSTOM DRAG] Could not access parent updateSortOrderTask');
+        // Fallback to onChange callback
+        if (typeof this.get('onChange') === 'function') {
+          run(() => {
+            this.get('onChange')(itemsCopy, draggedItem);
+          });
+        }
+      }
+      
+      console.log('[CUSTOM DRAG] Question moved successfully');
     }
-    
-    console.log('[CUSTOM DRAG] Question moved successfully');
   },
   
   createDropZones() {
     run.scheduleOnce('afterRender', this, () => {
       const items = this.element.querySelectorAll('.sortable-item');
+      const selectedItem = this.get('selectedItem');
       console.log('[CUSTOM DRAG] Creating drop zones for', items.length, 'items');
+      
+      if (!selectedItem) {
+        console.log('[CUSTOM DRAG] No selected item, skipping drop zone creation');
+        return;
+      }
+      
+      // Determine if selected item is inside a container
+      const selectedParentId = selectedItem.get('parentId');
+      const isSelectedInsideContainer = selectedParentId !== null;
+      console.log('[CUSTOM DRAG] Selected item parentId:', selectedParentId, 'isInsideContainer:', isSelectedInsideContainer);
       
       items.forEach((element, index) => {
         // Don't create drop zones for the selected item
@@ -375,7 +410,37 @@ export default Component.extend({
             }
           }
           
-          if (isContainer) {
+          // Determine if this question is in the same container as the selected item
+          const questionParentId = question ? question.get('parentId') : null;
+          const isInSameContainer = questionParentId === selectedParentId;
+          
+          // Smart drop zone logic
+          let shouldShowContainerDropZone = false;
+          let shouldShowRegularDropZone = false;
+          
+          if (isSelectedInsideContainer) {
+            // Selected item is inside a container
+            if (isContainer) {
+              // Always allow moving to other containers
+              shouldShowContainerDropZone = true;
+            } else if (isInSameContainer) {
+              // Allow repositioning within the same container
+              shouldShowRegularDropZone = true;
+            }
+            // Don't show regular drop zones for top-level questions when selected item is in container
+          } else {
+            // Selected item is at top level
+            if (isContainer) {
+              // Allow moving into containers
+              shouldShowContainerDropZone = true;
+            } else if (!questionParentId) {
+              // Only allow repositioning at top level (questions with no parentId)
+              shouldShowRegularDropZone = true;
+            }
+            // Don't show regular drop zones for questions inside containers when selected item is at top level
+          }
+          
+          if (shouldShowContainerDropZone) {
             // Add green drop zone for containers (ancestry functionality)
             element.classList.add('container-drop-zone-active');
             
@@ -406,7 +471,7 @@ export default Component.extend({
             element.addEventListener('mouseleave', leaveHandler);
             
             console.log('[CUSTOM DRAG] Added green drop zone for container at index:', index, 'question:', question ? question.get('questionText') : 'unknown');
-          } else {
+          } else if (shouldShowRegularDropZone) {
             // Add blue drop zone for regular positioning
             element.classList.add('drop-zone-active');
             
@@ -437,6 +502,8 @@ export default Component.extend({
             element.addEventListener('mouseleave', leaveHandler);
             
             console.log('[CUSTOM DRAG] Added blue drop zone for regular positioning at index:', index);
+          } else {
+            console.log('[CUSTOM DRAG] No drop zone added for index:', index, 'question:', question ? question.get('questionText') : 'unknown');
           }
         }
       });
