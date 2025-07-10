@@ -17,6 +17,8 @@ export default Component.extend({
   placementQuestion: null,
   placementContainer: null,
   highlightTimeout: null,
+  cleanupTimeouts: [],
+  activeEventListeners: [],
   
   actions: {
     selectItem(item, index) {
@@ -52,9 +54,12 @@ export default Component.extend({
         if (this.get('highlightTimeout')) {
           run.cancel(this.get('highlightTimeout'));
         }
-        this.set('highlightTimeout', run.later(this, () => {
+        const timeout = run.later(this, () => {
           this.highlightChildren(item);
-        }, 50));
+        }, 100); // Increased delay for better debouncing
+        
+        this.set('highlightTimeout', timeout);
+        this.registerTimeout(timeout);
       }
     },
 
@@ -734,35 +739,31 @@ export default Component.extend({
         return;
       }
       
-      // Get the container's current sort order to base children sort orders on
-      const containerSortOrder = container.get('sortOrder');
-      console.log('[CUSTOM DRAG] Container sort order:', containerSortOrder);
-      
-      // Update children to ensure they stay with the container and have proper sort orders
-      const updatePromises = children.map((child, index) => {
-        const childParentId = child.get('parentId');
-        const newSortOrder = containerSortOrder + (index + 1) * 0.001; // Increment by 0.001 for each child
+      // Use the parent's setAncestryTask for each child to ensure proper handling
+      const parentComponent = this.get('parentView');
+      if (parentComponent && parentComponent.get('setAncestryTask')) {
+        console.log('[CUSTOM DRAG] Using parent setAncestryTask for children updates');
         
-        console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId from', childParentId, 'to', containerId, 'sortOrder to', newSortOrder);
-        
-        // Update both parentId and sortOrder
-        child.set('parentId', containerId);
-        child.set('sortOrder', newSortOrder);
-        
-        return child.save();
-      });
-      
-      // Wait for all children to be updated
-      Promise.all(updatePromises).then(() => {
-        console.log('[CUSTOM DRAG] All children ancestry and sort order updated successfully');
-        
-        // Log the final state
-        children.forEach((child, index) => {
-          console.log(`[CUSTOM DRAG] Child ${index} final state:`, child.get('questionText'), 'parentId:', child.get('parentId'), 'sortOrder:', child.get('sortOrder'));
+        // Update each child using the parent's setAncestryTask
+        const updatePromises = children.map((child, index) => {
+          const newSortOrder = container.get('sortOrder') + (index + 1) * 0.001;
+          console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId to', containerId, 'sortOrder to', newSortOrder);
+          
+          return parentComponent.get('setAncestryTask').perform(child, containerId, newSortOrder);
         });
-      }).catch((error) => {
-        console.error('[CUSTOM DRAG] Error updating children ancestry and sort order:', error);
-      });
+        
+        // Wait for all children to be updated
+        Promise.all(updatePromises).then(() => {
+          console.log('[CUSTOM DRAG] All children updated successfully using parent setAncestryTask');
+          
+          // Force a UI refresh
+          parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
+        }).catch((error) => {
+          console.error('[CUSTOM DRAG] Error updating children using parent setAncestryTask:', error);
+        });
+      } else {
+        console.error('[CUSTOM DRAG] Could not access parent setAncestryTask');
+      }
     },
 
     moveQuestionToPosition(question, targetIndex) {
@@ -836,7 +837,7 @@ export default Component.extend({
   },
   
   createDropZones() {
-    run.scheduleOnce('afterRender', this, () => {
+    const timeout = run.scheduleOnce('afterRender', this, () => {
       const items = this.element.querySelectorAll('.sortable-item');
       const selectedItem = this.get('selectedItem');
       console.log('[CUSTOM DRAG] Creating drop zones for', items.length, 'items');
@@ -871,7 +872,7 @@ export default Component.extend({
           };
           
           moveIcon._selectionClickHandler = selectionClickHandler;
-          moveIcon.addEventListener('click', selectionClickHandler);
+          this.registerEventListener(moveIcon, 'click', selectionClickHandler);
           console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
         }
       });
@@ -1136,13 +1137,27 @@ export default Component.extend({
 
   removeChildrenHighlight() {
     // Use run.scheduleOnce to ensure DOM is ready
-    run.scheduleOnce('afterRender', this, () => {
+    const timeout = run.scheduleOnce('afterRender', this, () => {
       // Remove highlight from all elements
       const elements = this.element.querySelectorAll('.children-highlight');
       elements.forEach(element => {
         element.classList.remove('children-highlight');
       });
     });
+    
+    // Register timeout for cleanup
+    this.get('cleanupTimeouts').push(timeout);
+  },
+
+  // Helper method to register timeouts for cleanup
+  registerTimeout(timeout) {
+    this.get('cleanupTimeouts').push(timeout);
+  },
+
+  // Helper method to register event listeners for cleanup
+  registerEventListener(element, event, handler) {
+    element.addEventListener(event, handler);
+    this.get('activeEventListeners').push({ element, event, handler });
   },
 
   // Ensure selection is cleared when component updates
@@ -1210,7 +1225,7 @@ export default Component.extend({
           };
           
           moveIcon._selectionClickHandler = selectionClickHandler;
-          moveIcon.addEventListener('click', selectionClickHandler);
+          this.registerEventListener(moveIcon, 'click', selectionClickHandler);
           console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
         }
       });
@@ -1225,9 +1240,31 @@ export default Component.extend({
 
   // Clean up timeouts when component is destroyed
   willDestroyElement() {
+    // Clean up all timeouts
     if (this.get('highlightTimeout')) {
       run.cancel(this.get('highlightTimeout'));
     }
+    
+    // Clean up all registered timeouts
+    this.get('cleanupTimeouts').forEach(timeout => {
+      if (timeout) {
+        run.cancel(timeout);
+      }
+    });
+    this.set('cleanupTimeouts', []);
+    
+    // Clean up all event listeners
+    this.get('activeEventListeners').forEach(({ element, event, handler }) => {
+      if (element && element.removeEventListener) {
+        element.removeEventListener(event, handler);
+      }
+    });
+    this.set('activeEventListeners', []);
+    
+    // Remove drop zones and highlights
+    this.removeDropZones();
+    this.removeChildrenHighlight();
+    
     this._super(...arguments);
   },
 
