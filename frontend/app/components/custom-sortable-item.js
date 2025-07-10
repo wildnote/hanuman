@@ -37,23 +37,30 @@ export default Component.extend({
     const model = this.get('model');
     
     if (!model) {
+      console.log('[CUSTOM ITEM] No model, returning 0');
       return 0;
     }
     
-    // Only indent questions that have a parent (are nested)
     const parentId = model.get('parentId');
+    const ancestry = model.get('ancestry');
+    
+    console.log('[CUSTOM ITEM] Question:', model.get('questionText'), 'parentId:', parentId, 'ancestry:', ancestry);
+    
+    // Only indent questions that have a parent (are nested)
     if (parentId) {
       // This question has a parent, so it should be indented
-      const ancestry = model.get('ancestry');
       if (ancestry) {
         const ancestryLevels = ancestry.split('/').length;
+        console.log('[CUSTOM ITEM] Using ancestry levels:', ancestryLevels);
         return ancestryLevels;
       } else {
+        console.log('[CUSTOM ITEM] Using parentId fallback, returning 1');
         return 1; // If there's a parentId but no ancestry, it's at least level 1
       }
     }
     
     // No parentId means this is a top-level question - no indentation
+    console.log('[CUSTOM ITEM] Top-level question, returning 0');
     return 0;
   }),
 
@@ -69,32 +76,9 @@ export default Component.extend({
   didInsertElement() {
     this._super(...arguments);
     
-    // Add click handler to the drag handle
-    const dragHandle = this.element.querySelector('.glyphicons-sorting');
-    if (dragHandle) {
-      dragHandle.addEventListener('click', this.handleClick.bind(this));
-    }
+    // The custom-sortable-group component now handles move icon clicks
+    // No need for additional click handlers here
   },
   
-  willDestroyElement() {
-    this._super(...arguments);
-    
-    // Remove click handler
-    const dragHandle = this.element.querySelector('.glyphicons-sorting');
-    if (dragHandle) {
-      dragHandle.removeEventListener('click', this.handleClick.bind(this));
-    }
-  },
-  
-  handleClick(event) {
-    console.log('[CUSTOM ITEM] Handle clicked for item:', this.get('model.questionText'));
-    
-    // Prevent event bubbling
-    event.preventDefault();
-    event.stopPropagation();
-    
-    if (typeof this.get('onSelect') === 'function') {
-      this.get('onSelect')(this.get('model'), this.get('index'));
-    }
-  }
+
 }); 

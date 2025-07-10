@@ -12,12 +12,10 @@
           {{/tooltip-on-element}}
         </span>
       {{/if}}
-      {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
+      {{#if (or (not question.hasChild) question.hasChild)}}
         <span class="glyphicons glyphicons-sorting {{if (and (or question.surveyTemplate.lock (not isFullyEditable)) (not isSuperUser)) 'icon-disabled'}} {{if question.loading 'hide'}}" style="cursor: pointer;">
           {{#tooltip-on-element duration=1500 side='right'}}CLICK TO<br />SELECT FOR MOVING{{/tooltip-on-element}}
         </span>
-      {{else}}
-        <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
       {{/if}}
 
     {{/if}}

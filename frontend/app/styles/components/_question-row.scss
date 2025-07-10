@@ -124,21 +124,29 @@
     opacity: 0.9;
   }
 
-  &.has-ancestry-1 {
-    margin-left: 20px;
+  // Override Bootstrap row margin for our custom sortable items
+  // This removes the default -15px margin that Bootstrap adds
+  &.row {
+    margin-left: 0;
+    margin-right: 0;
   }
-  &.has-ancestry-2 {
-    margin-left: 40px;
-  }
-  &.has-ancestry-3 {
-    margin-left: 60px;
-  }
-  &.has-ancestry-4 {
-    margin-left: 80px;
-  }
-  &.has-ancestry-5 {
-    margin-left: 100px;
-  }
+
+  // Old indentation system disabled - using new custom indentation
+  // &.has-ancestry-1 {
+  //   margin-left: 20px;
+  // }
+  // &.has-ancestry-2 {
+  //   margin-left: 40px;
+  // }
+  // &.has-ancestry-3 {
+  //   margin-left: 60px;
+  // }
+  // &.has-ancestry-4 {
+  //   margin-left: 80px;
+  // }
+  // &.has-ancestry-5 {
+  //   margin-left: 100px;
+  // }
   .glyphicons-sorting,
   .glyphicons-move-square {
     font-size: 14px;

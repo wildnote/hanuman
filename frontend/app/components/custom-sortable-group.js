@@ -730,12 +730,12 @@ export default Component.extend({
           element.removeEventListener('click', element._selectionClickHandler);
         }
         
-        // Add click handler for selection
-        const selectionClickHandler = (event) => {
-          console.log('[CUSTOM DRAG] Item clicked for selection at index:', index);
-          
-          // Only handle if not clicking on a drop zone
-          if (!event.target.closest('.drop-zone-active') && !event.target.closest('.container-drop-zone-active')) {
+        // Add click handler only to the move icon (glyphicons-sorting)
+        const moveIcon = element.querySelector('.glyphicons-sorting');
+        if (moveIcon) {
+          const selectionClickHandler = (event) => {
+            console.log('[CUSTOM DRAG] Move icon clicked for selection at index:', index);
+            
             const questionElement = element.querySelector('[data-question-id]');
             if (questionElement) {
               const questionId = questionElement.getAttribute('data-question-id');
@@ -745,12 +745,12 @@ export default Component.extend({
                 this.send('selectItem', question, index);
               }
             }
-          }
-        };
-        
-        element._selectionClickHandler = selectionClickHandler;
-        element.addEventListener('click', selectionClickHandler);
-        console.log('[CUSTOM DRAG] Added selection click handler for item at index:', index);
+          };
+          
+          moveIcon._selectionClickHandler = selectionClickHandler;
+          moveIcon.addEventListener('click', selectionClickHandler);
+          console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
+        }
       });
       
       // Determine if selected item is inside a container
@@ -950,9 +950,11 @@ export default Component.extend({
         element.removeEventListener('mouseleave', element._containerDropLeaveHandler);
         delete element._containerDropLeaveHandler;
       }
-      if (element._selectionClickHandler) {
-        element.removeEventListener('click', element._selectionClickHandler);
-        delete element._selectionClickHandler;
+      // Remove selection click handler from move icon
+      const moveIcon = element.querySelector('.glyphicons-sorting');
+      if (moveIcon && moveIcon._selectionClickHandler) {
+        moveIcon.removeEventListener('click', moveIcon._selectionClickHandler);
+        delete moveIcon._selectionClickHandler;
       }
     });
   },
@@ -1002,6 +1004,14 @@ export default Component.extend({
     
     // Ensure selection handlers are always available
     this.ensureSelectionHandlers();
+    
+    // If we have a selected item, ensure drop zones are maintained after DOM updates
+    if (selectedItem) {
+      run.scheduleOnce('afterRender', this, () => {
+        console.log('[CUSTOM DRAG] DOM updated, ensuring drop zones are maintained');
+        this.createDropZones();
+      });
+    }
   },
 
   // Ensure selection click handlers are always available
@@ -1011,31 +1021,34 @@ export default Component.extend({
       console.log('[CUSTOM DRAG] Ensuring selection handlers for', items.length, 'items');
       
       items.forEach((element, index) => {
-        // Only add if not already present
-        if (!element._selectionClickHandler) {
-          // Add click handler for selection
+        // Add click handler only to the move icon (glyphicons-sorting)
+        const moveIcon = element.querySelector('.glyphicons-sorting');
+        if (moveIcon && !moveIcon._selectionClickHandler) {
           const selectionClickHandler = (event) => {
-            console.log('[CUSTOM DRAG] Item clicked for selection at index:', index);
+            console.log('[CUSTOM DRAG] Move icon clicked for selection at index:', index);
             
-            // Only handle if not clicking on a drop zone
-            if (!event.target.closest('.drop-zone-active') && !event.target.closest('.container-drop-zone-active')) {
-              const questionElement = element.querySelector('[data-question-id]');
-              if (questionElement) {
-                const questionId = questionElement.getAttribute('data-question-id');
-                const question = this.get('items').findBy('id', questionId);
-                if (question) {
-                  console.log('[CUSTOM DRAG] Calling selectItem for question:', question.get('questionText'));
-                  this.send('selectItem', question, index);
-                }
+            const questionElement = element.querySelector('[data-question-id]');
+            if (questionElement) {
+              const questionId = questionElement.getAttribute('data-question-id');
+              const question = this.get('items').findBy('id', questionId);
+              if (question) {
+                console.log('[CUSTOM DRAG] Calling selectItem for question:', question.get('questionText'));
+                this.send('selectItem', question, index);
               }
             }
           };
           
-          element._selectionClickHandler = selectionClickHandler;
-          element.addEventListener('click', selectionClickHandler);
-          console.log('[CUSTOM DRAG] Added selection click handler for item at index:', index);
+          moveIcon._selectionClickHandler = selectionClickHandler;
+          moveIcon.addEventListener('click', selectionClickHandler);
+          console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
         }
       });
+      
+      // If we have a selected item, ensure drop zones are recreated
+      if (this.get('selectedItem')) {
+        console.log('[CUSTOM DRAG] Selected item exists, recreating drop zones');
+        this.createDropZones();
+      }
     });
   },
 
