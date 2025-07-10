@@ -871,17 +871,27 @@ export default Component.extend({
         parentId: c.get('parentId'),
         sortOrder: c.get('sortOrder')
       })) : 'null/undefined');
-      const children = childrenBeforeMove || [];
-      console.log('[CUSTOM DRAG] Found', children.length, 'children to update');
-      if (children.length === 0) {
-        console.log('[CUSTOM DRAG] No children to update');
-        // Even if no children, still refresh UI and clear flags
+      
+      // Only update DIRECT children of the container (not all descendants)
+      // The descendants will be moved automatically when their parent containers move
+      const directChildren = items.filter(item => item.get('parentId') === containerId);
+      console.log('[CUSTOM DRAG] Found', directChildren.length, 'direct children to update');
+      console.log('[CUSTOM DRAG] Direct children:', directChildren.map(d => ({
+        id: d.get('id'),
+        text: d.get('questionText'),
+        parentId: d.get('parentId'),
+        sortOrder: d.get('sortOrder')
+      })));
+      
+      if (directChildren.length === 0) {
+        console.log('[CUSTOM DRAG] No direct children to update');
+        // Even if no direct children, still refresh UI and clear flags
         const parentComponent = this.get('parentView');
         if (parentComponent && parentComponent.get('updateSortOrderTask')) {
           parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
             this.set('isSettingAncestry', false);
             this.set('isMovingContainer', false);
-            console.log('[CUSTOM DRAG] UI refreshed after container move (no children)');
+            console.log('[CUSTOM DRAG] UI refreshed after container move (no direct children)');
           });
         } else {
           this.set('isSettingAncestry', false);
@@ -897,38 +907,39 @@ export default Component.extend({
         const updateChildrenSequentially = async () => {
           console.log('[CUSTOM DRAG] Step 4: Starting children updates');
           
-          // Step 4a: Use the childrenBeforeMove array which is already sorted by sortOrder
-          console.log('[CUSTOM DRAG] Using childrenBeforeMove array (already sorted by sortOrder):', children.map(c => ({
+          // Step 4a: Use the directChildren array (only direct children, not nested)
+          console.log('[CUSTOM DRAG] Using directChildren array:', directChildren.map(c => ({
             text: c.get('questionText'),
-            sortOrder: c.get('sortOrder')
+            sortOrder: c.get('sortOrder'),
+            parentId: c.get('parentId')
           })));
           
-          // Use the children array as-is since it's already sorted by sortOrder from placeInsideBottom
-          const sortedChildren = children;
+          // Sort direct children by their current sortOrder to preserve their intended order
+          const sortedDirectChildren = directChildren.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
           
-          // Step 4b: Update all children in their original order
-          // Calculate the base sort order for children (right after the container)
+          // Step 4b: Update all direct children in their original order
+          // Calculate the base sort order for direct children (right after the container)
           const baseSortOrder = container.get('sortOrder') + 0.001;
           
-          // Find the minimum sort order among children to calculate relative offsets
-          const minChildSortOrder = Math.min(...sortedChildren.map(child => child.get('sortOrder')));
+          // Find the minimum sort order among direct children to calculate relative offsets
+          const minChildSortOrder = Math.min(...sortedDirectChildren.map(child => child.get('sortOrder')));
           
-          for (let i = 0; i < sortedChildren.length; i++) {
-            const child = sortedChildren[i];
+          for (let i = 0; i < sortedDirectChildren.length; i++) {
+            const child = sortedDirectChildren[i];
             // Preserve the relative sort order difference from the minimum
             const relativeOffset = child.get('sortOrder') - minChildSortOrder;
             const newSortOrder = baseSortOrder + relativeOffset;
             
-            console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId to', containerId, 'sortOrder to', newSortOrder, '(original sortOrder was', child.get('sortOrder'), ', relativeOffset was', relativeOffset, ')');
+            console.log('[CUSTOM DRAG] Updating direct child', child.get('questionText'), 'parentId to', containerId, 'sortOrder to', newSortOrder, '(original sortOrder was', child.get('sortOrder'), ', relativeOffset was', relativeOffset, ')');
             
-            // Update child directly
+            // Update direct child only
             child.set('parentId', containerId);
             child.set('sortOrder', newSortOrder);
             
             try {
               const savedChild = await child.save();
-              console.log('[CUSTOM DRAG] Child', child.get('questionText'), 'saved successfully');
-              console.log('[CUSTOM DRAG] Saved child data:', {
+              console.log('[CUSTOM DRAG] Direct child', child.get('questionText'), 'saved successfully');
+              console.log('[CUSTOM DRAG] Saved direct child data:', {
                 id: savedChild.get('id'),
                 text: savedChild.get('questionText'),
                 parentId: savedChild.get('parentId'),
@@ -936,16 +947,16 @@ export default Component.extend({
                 ancestry: savedChild.get('ancestry')
               });
             } catch (error) {
-              console.error('[CUSTOM DRAG] Error saving child', child.get('questionText'), ':', error);
+              console.error('[CUSTOM DRAG] Error saving direct child', child.get('questionText'), ':', error);
             }
           }
           
-          console.log('[CUSTOM DRAG] Step 4b: All children updated successfully');
+          console.log('[CUSTOM DRAG] Step 4b: All direct children updated successfully');
           
-          // Step 4c: Reload all children to ensure they have the latest data
-          const reloadPromises = sortedChildren.map(child => child.reload());
+          // Step 4c: Reload all direct children to ensure they have the latest data
+          const reloadPromises = sortedDirectChildren.map(child => child.reload());
           await Promise.all(reloadPromises);
-          console.log('[CUSTOM DRAG] Step 4c: All children reloaded');
+          console.log('[CUSTOM DRAG] Step 4c: All direct children reloaded');
           
           // Step 4d: Final UI refresh to show all changes
           parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
@@ -954,15 +965,15 @@ export default Component.extend({
             this.set('isMovingContainer', false);
             this.cleanupAfterMove();
             
-            // Log ancestry/sortOrder of all children after final UI refresh
-            const refreshedChildren = children.map(c => ({
+            // Log ancestry/sortOrder of all direct children after final UI refresh
+            const refreshedDirectChildren = directChildren.map(c => ({
               id: c.get('id'),
               text: c.get('questionText'),
               parentId: c.get('parentId'),
               sortOrder: c.get('sortOrder'),
               ancestry: c.get('ancestry')
             }));
-            console.log('[CUSTOM DRAG] Final children state after move:', refreshedChildren);
+            console.log('[CUSTOM DRAG] Final direct children state after move:', refreshedDirectChildren);
           });
         };
         
@@ -1301,35 +1312,59 @@ export default Component.extend({
     
     const items = this.get('items');
     const containerId = container.get('id');
-    const children = items.filter(item => item.get('parentId') === containerId);
     
-    console.log('[CUSTOM DRAG] Found', children.length, 'children to highlight');
+    // Recursively find ALL descendants of this container
+    const allDescendants = this.getAllDescendants(containerId, items);
     
-    if (children.length === 0) {
+    console.log('[CUSTOM DRAG] Found', allDescendants.length, 'descendants to highlight');
+    console.log('[CUSTOM DRAG] Descendants:', allDescendants.map(d => ({
+      id: d.get('id'),
+      text: d.get('questionText'),
+      parentId: d.get('parentId')
+    })));
+    
+    if (allDescendants.length === 0) {
       return;
     }
     
     // Use run.scheduleOnce to ensure DOM is ready
     run.scheduleOnce('afterRender', this, () => {
-      // Create a Set of child IDs for faster lookup
-      const childIds = new Set(children.map(child => child.get('id').toString()));
+      // Create a Set of descendant IDs for faster lookup
+      const descendantIds = new Set(allDescendants.map(descendant => descendant.get('id').toString()));
       
       // Find all sortable-item elements once
-      const childElements = this.element.querySelectorAll('.sortable-item');
+      const descendantElements = this.element.querySelectorAll('.sortable-item');
       
       // Process each element efficiently
-      childElements.forEach(element => {
+      descendantElements.forEach(element => {
         const questionElement = element.querySelector('[data-question-id]');
         if (questionElement) {
           const questionId = questionElement.getAttribute('data-question-id');
-          if (childIds.has(questionId)) {
+          if (descendantIds.has(questionId)) {
             element.classList.add('children-highlight');
           }
         }
       });
       
-      console.log('[CUSTOM DRAG] Highlighted', children.length, 'children');
+      console.log('[CUSTOM DRAG] Highlighted', allDescendants.length, 'descendants');
     });
+  },
+
+  // Helper method to recursively find all descendants of a container
+  getAllDescendants(containerId, items) {
+    const descendants = [];
+    
+    // Find direct children
+    const directChildren = items.filter(item => item.get('parentId') === containerId);
+    descendants.push(...directChildren);
+    
+    // Recursively find children of children
+    directChildren.forEach(child => {
+      const childDescendants = this.getAllDescendants(child.get('id'), items);
+      descendants.push(...childDescendants);
+    });
+    
+    return descendants;
   },
 
   removeChildrenHighlight() {
