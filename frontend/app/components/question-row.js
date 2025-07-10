@@ -55,6 +55,64 @@ export default Component.extend({
     return this.get('otherQuetions').filter((question) => question.get('ancestry') === questionId).length;
   }),
 
+  // Calculate indentation level based on ancestry
+  indentationLevel: computed('question.{parentId,ancestry}', function() {
+    const question = this.get('question');
+    
+    if (!question) {
+      console.log('[INDENT] No question, returning 0');
+      return 0;
+    }
+    
+    // Debug: log all available properties
+    console.log('[INDENT] Question properties:', {
+      id: question.get('id'),
+      questionText: question.get('questionText'),
+      parentId: question.get('parentId'),
+      ancestry: question.get('ancestry'),
+      childIds: question.get('childIds'),
+      sortOrder: question.get('sortOrder'),
+      isARepeater: question.get('isARepeater'),
+      isContainer: question.get('isContainer'),
+      childQuestion: question.get('childQuestion'),
+      numChildren: question.get('numChildren')
+    });
+    
+    // Try using the existing numChildren computed property first
+    const numChildren = question.get('numChildren');
+    if (numChildren > 0) {
+      console.log('[INDENT] Using numChildren system - numChildren:', numChildren);
+      return numChildren;
+    }
+    
+    // Try using the existing ancestry system
+    const ancestry = question.get('ancestry');
+    if (ancestry) {
+      const ancestryLevels = ancestry.split('/').length;
+      console.log('[INDENT] Using ancestry system - ancestry:', ancestry, 'levels:', ancestryLevels);
+      return ancestryLevels;
+    }
+    
+    // Fallback to parentId system
+    const parentId = question.get('parentId');
+    if (parentId) {
+      console.log('[INDENT] Using parentId system - parentId:', parentId);
+      return 1; // If there's a parentId, it's at least level 1
+    }
+    
+    console.log('[INDENT] No hierarchy found, returning 0');
+    return 0;
+  }),
+
+  // Generate indentation style for the question text
+  indentationStyle: computed('indentationLevel', function() {
+    const level = this.get('indentationLevel');
+    const indentPixels = level * 20; // 20px per level
+    const style = `margin-left: ${indentPixels}px;`;
+    console.log('[INDENT] Generated style:', style, 'for level:', level);
+    return htmlSafe(style);
+  }),
+
   actions: {
     highlightConditional(questionId) {
       const question = this.get('store').peekRecord('question', questionId);

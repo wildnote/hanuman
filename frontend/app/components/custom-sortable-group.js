@@ -417,7 +417,21 @@ export default Component.extend({
         // Save the ancestry change first
         selectedItem.save().then(() => {
           console.log('[CUSTOM DRAG] Ancestry updated successfully');
-          this.send('performMoveLogic', selectedIndex, targetIndex);
+          
+          // Reload the item to get the updated data
+          selectedItem.reload().then(() => {
+            console.log('[CUSTOM DRAG] Item reloaded, new parentId:', selectedItem.get('parentId'));
+            
+            // Force a UI refresh by calling the parent's updateSortOrderTask with the current data
+            const parentComponent = this.get('parentView');
+            if (parentComponent && parentComponent.get('updateSortOrderTask')) {
+              console.log('[CUSTOM DRAG] Forcing UI refresh after ancestry change');
+              parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
+            }
+            
+            // Now perform the move
+            this.send('performMoveLogic', selectedIndex, targetIndex);
+          });
         }).catch((error) => {
           console.error('[CUSTOM DRAG] Error updating ancestry:', error);
         });
@@ -430,7 +444,25 @@ export default Component.extend({
           
           selectedItem.save().then(() => {
             console.log('[CUSTOM DRAG] Ancestry updated successfully');
-            this.send('performMoveLogic', selectedIndex, targetIndex);
+            
+            // Reload the item to get the updated data
+            selectedItem.reload().then(() => {
+              console.log('[CUSTOM DRAG] Item reloaded, new parentId:', selectedItem.get('parentId'));
+              
+              // Force a complete refresh of this component
+              this.forceRefresh();
+              
+              // Wait for the refresh to complete, then perform the move
+              run.scheduleOnce('afterRender', this, () => {
+                console.log('[CUSTOM DRAG] After force refresh, checking UI state');
+                this.checkUIState();
+                
+                run.scheduleOnce('afterRender', this, () => {
+                  console.log('[CUSTOM DRAG] Performing move after UI state check');
+                  this.send('performMoveLogic', selectedIndex, targetIndex);
+                });
+              });
+            });
           }).catch((error) => {
             console.error('[CUSTOM DRAG] Error updating ancestry:', error);
           });
@@ -447,15 +479,69 @@ export default Component.extend({
     },
 
     performMoveLogic(fromIndex, toIndex) {
+      // Get the current items array (which should reflect any ancestry changes)
       const items = this.get('items').slice();
-      const draggedItem = items.splice(fromIndex, 1)[0];
-      items.splice(toIndex, 0, draggedItem);
+      
+      // Find the dragged item by ID to ensure we have the latest data
+      const selectedItem = this.get('selectedItem');
+      let draggedItem = null;
+      let actualFromIndex = fromIndex;
+      
+      if (selectedItem) {
+        // Find the item by ID in case the index has changed
+        const itemId = selectedItem.get('id');
+        draggedItem = items.findBy('id', itemId);
+        if (draggedItem) {
+          actualFromIndex = items.indexOf(draggedItem);
+          console.log('[CUSTOM DRAG] Found dragged item by ID at index:', actualFromIndex);
+        }
+      }
+      
+      if (!draggedItem) {
+        // Fallback to original logic
+        draggedItem = items.splice(fromIndex, 1)[0];
+        items.splice(toIndex, 0, draggedItem);
+      } else {
+        // Use the found item and its actual index
+        items.splice(actualFromIndex, 1);
+        items.splice(toIndex, 0, draggedItem);
+      }
+      
+      console.log('[CUSTOM DRAG] performMoveLogic - draggedItem:', draggedItem.get('questionText'), 'parentId:', draggedItem.get('parentId'));
+      console.log('[CUSTOM DRAG] performMoveLogic - fromIndex:', actualFromIndex, 'toIndex:', toIndex);
       
       // Check if the moved item is a container and handle children ancestry updates
       const isContainer = draggedItem.get('isARepeater') || draggedItem.get('isContainer');
       if (isContainer) {
         console.log('[CUSTOM DRAG] Container moved, updating children ancestry');
+        
+        // Find all children of this container that need to be moved with it
+        const containerId = draggedItem.get('id');
+        const children = items.filter(item => item.get('parentId') === containerId);
+        
+        console.log('[CUSTOM DRAG] Found', children.length, 'children to move with container');
+        
+        // Update children ancestry first
         this.send('updateContainerChildrenAncestry', draggedItem, items);
+        
+        // If this is a move within the same container (same parent), we need to handle the children differently
+        const oldParentId = selectedItem ? selectedItem.get('parentId') : null;
+        const newParentId = draggedItem.get('parentId');
+        
+        console.log('[CUSTOM DRAG] Container move - oldParentId:', oldParentId, 'newParentId:', newParentId);
+        
+        if (oldParentId === newParentId && oldParentId !== null) {
+          console.log('[CUSTOM DRAG] Container moved within same parent, children will move with it automatically');
+          // The children will move with the container automatically since they share the same parent
+        } else {
+          console.log('[CUSTOM DRAG] Container moved to different parent, children ancestry updated');
+          // Children ancestry has been updated, they should now appear in the correct position
+        }
+        
+        // Log the current state of children after ancestry update
+        children.forEach((child, index) => {
+          console.log(`[CUSTOM DRAG] Child ${index}:`, child.get('questionText'), 'parentId:', child.get('parentId'));
+        });
       }
       
       // Use parent's updateSortOrderTask to persist the changes to database
@@ -595,7 +681,7 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Move question from', currentIndex, 'to', targetIndex);
       
-      const itemsCopy = items.slice();
+      let itemsCopy = items.slice();
       const draggedItem = itemsCopy.splice(currentIndex, 1)[0];
       itemsCopy.splice(targetIndex, 0, draggedItem);
       
@@ -603,6 +689,14 @@ export default Component.extend({
       const parentComponent = this.get('parentView');
       if (parentComponent && parentComponent.get('updateSortOrderTask')) {
         console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to persist sort order changes');
+        
+        // If this is a container, ensure children are properly positioned
+        const isContainer = draggedItem.get('isARepeater') || draggedItem.get('isContainer');
+        if (isContainer) {
+          console.log('[CUSTOM DRAG] Container moved, ensuring children are properly positioned');
+          itemsCopy = this.reorderContainerWithChildren(itemsCopy, draggedItem);
+        }
+        
         parentComponent.get('updateSortOrderTask').perform(itemsCopy, false); // false = don't re-sort, use array order
       } else {
         console.error('[CUSTOM DRAG] Could not access parent updateSortOrderTask');
@@ -943,5 +1037,110 @@ export default Component.extend({
         }
       });
     });
+  },
+
+  // Force a complete refresh of the component
+  forceRefresh() {
+    console.log('[CUSTOM DRAG] Forcing complete component refresh');
+    
+    // Clear selection
+    this.set('selectedItem', null);
+    this.set('selectedIndex', -1);
+    this.removeDropZones();
+    
+    // Force a re-render by triggering a property change
+    run.scheduleOnce('afterRender', this, () => {
+      const currentItems = this.get('items');
+      this.set('items', currentItems.slice()); // Force a new array reference
+      
+      // Re-add selection handlers
+      this.ensureSelectionHandlers();
+      
+      // Log the current state after refresh
+      console.log('[CUSTOM DRAG] After force refresh - items count:', currentItems.length);
+      currentItems.forEach((item, index) => {
+        console.log(`[CUSTOM DRAG] Item ${index}:`, item.get('questionText'), 'parentId:', item.get('parentId'));
+      });
+    });
+  },
+
+  // Check if UI reflects the data changes
+  checkUIState() {
+    console.log('[CUSTOM DRAG] Checking UI state');
+    const items = this.get('items');
+    const domItems = this.element.querySelectorAll('.sortable-item');
+    
+    console.log('[CUSTOM DRAG] Data items count:', items.length);
+    console.log('[CUSTOM DRAG] DOM items count:', domItems.length);
+    
+    items.forEach((item, index) => {
+      console.log(`[CUSTOM DRAG] Data item ${index}:`, item.get('questionText'), 'parentId:', item.get('parentId'));
+    });
+    
+    domItems.forEach((element, index) => {
+      const questionElement = element.querySelector('[data-question-id]');
+      if (questionElement) {
+        const questionId = questionElement.getAttribute('data-question-id');
+        console.log(`[CUSTOM DRAG] DOM item ${index}: questionId:`, questionId);
+      }
+    });
+  },
+
+  // Reorder items array to ensure container and its children are properly positioned
+  reorderContainerWithChildren(items, container) {
+    console.log('[CUSTOM DRAG] Reordering container with children:', container.get('questionText'));
+    
+    const containerId = container.get('id');
+    const containerIndex = items.indexOf(container);
+    
+    if (containerIndex === -1) {
+      console.log('[CUSTOM DRAG] Container not found in items array');
+      return items;
+    }
+    
+    // Find all children of this container
+    const children = items.filter(item => item.get('parentId') === containerId);
+    console.log('[CUSTOM DRAG] Found', children.length, 'children for container');
+    
+    if (children.length === 0) {
+      console.log('[CUSTOM DRAG] No children to reorder');
+      return items;
+    }
+    
+    // Create a new array with container and children properly positioned
+    const reorderedItems = [];
+    const processedItems = new Set();
+    
+    // Add all items before the container
+    for (let i = 0; i < containerIndex; i++) {
+      const item = items[i];
+      if (item.get('parentId') !== containerId) { // Don't include children yet
+        reorderedItems.push(item);
+        processedItems.add(item.get('id'));
+      }
+    }
+    
+    // Add the container
+    reorderedItems.push(container);
+    processedItems.add(container.get('id'));
+    
+    // Add all children of this container
+    children.forEach(child => {
+      reorderedItems.push(child);
+      processedItems.add(child.get('id'));
+    });
+    
+    // Add all remaining items
+    for (let i = containerIndex + 1; i < items.length; i++) {
+      const item = items[i];
+      if (!processedItems.has(item.get('id'))) {
+        reorderedItems.push(item);
+      }
+    }
+    
+    console.log('[CUSTOM DRAG] Reordered items array - container at index:', reorderedItems.indexOf(container));
+    console.log('[CUSTOM DRAG] Children positioned after container');
+    
+    return reorderedItems;
   }
 }); 

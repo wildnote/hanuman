@@ -5,6 +5,7 @@ export default Component.extend({
   tagName: 'li',
   classNames: ['li-question', 'row', 'question-border', 'item', 'sortable-item'],
   classNameBindings: ['isSelected:selected', 'isContainerSelected:container-selected'],
+  attributeBindings: ['indentationStyle:style'],
   
   // Properties
   model: null,
@@ -29,6 +30,40 @@ export default Component.extend({
     const isContainerSelected = this.get('isSelected') && this.get('isContainer');
     console.log('[CUSTOM ITEM] Container selected check - isSelected:', this.get('isSelected'), 'isContainer:', this.get('isContainer'), 'result:', isContainerSelected);
     return isContainerSelected;
+  }),
+
+  // Calculate indentation level based on ancestry
+  indentationLevel: computed('model.{parentId,ancestry}', function() {
+    const model = this.get('model');
+    
+    if (!model) {
+      return 0;
+    }
+    
+    // Only indent questions that have a parent (are nested)
+    const parentId = model.get('parentId');
+    if (parentId) {
+      // This question has a parent, so it should be indented
+      const ancestry = model.get('ancestry');
+      if (ancestry) {
+        const ancestryLevels = ancestry.split('/').length;
+        return ancestryLevels;
+      } else {
+        return 1; // If there's a parentId but no ancestry, it's at least level 1
+      }
+    }
+    
+    // No parentId means this is a top-level question - no indentation
+    return 0;
+  }),
+
+  // Generate indentation style for the entire row
+  indentationStyle: computed('indentationLevel', function() {
+    const level = this.get('indentationLevel');
+    const indentPixels = level * 20; // 20px per level
+    const style = `margin-left: ${indentPixels}px;`;
+    console.log('[CUSTOM ITEM] Indentation style:', style, 'for level:', level);
+    return style;
   }),
   
   didInsertElement() {
