@@ -13,6 +13,9 @@ export default Component.extend({
   selectedItem: null,
   selectedIndex: -1,
   isSettingAncestry: false,
+  showPlacementOptions: false,
+  placementQuestion: null,
+  placementContainer: null,
   
   actions: {
     selectItem(item, index) {
@@ -58,65 +61,96 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Container drop zone clicked for container:', containerQuestion.get('questionText'));
       
-      // Show prompt to user
-      const containerName = containerQuestion.get('questionText');
+      // Show placement options modal directly
       const questionName = selectedItem.get('questionText');
+      const containerName = containerQuestion.get('questionText');
+      console.log('[CUSTOM DRAG] Showing placement modal for:', questionName, 'and container:', containerName);
       
-      console.log('[CUSTOM DRAG] Showing prompt for:', questionName, 'and container:', containerName);
-      
-      const choice = confirm(`Where would you like to place "${questionName}"?\n\nClick OK to place it INSIDE "${containerName}"\nClick Cancel to place it AFTER "${containerName}"`);
-      
-      console.log('[CUSTOM DRAG] User choice:', choice ? 'INSIDE' : 'AFTER');
-      
-      if (choice) {
-        // User chose to place it INSIDE the container
-        console.log('[CUSTOM DRAG] Moving', questionName, 'INSIDE', containerName);
-        
-        // Use the parent's setAncestryTask to properly handle ancestry
-        const parentComponent = this.get('parentView');
-        if (parentComponent && parentComponent.get('setAncestryTask')) {
-          console.log('[CUSTOM DRAG] Using parent setAncestryTask');
-          parentComponent.get('setAncestryTask').perform(selectedItem, { target: { acenstry: containerQuestion } });
-        } else {
-          console.log('[CUSTOM DRAG] Parent setAncestryTask not available, falling back to manual ancestry');
-          
-          // Set flag to prevent moveToPosition from interfering
-          this.set('isSettingAncestry', true);
-          
-          // Set the ancestry relationship
-          const oldParentId = selectedItem.get('parentId');
-          console.log('[CUSTOM DRAG] Old parentId:', oldParentId, 'New parentId:', containerQuestion.get('id'));
-          
-          selectedItem.set('parentId', containerQuestion.get('id'));
-          
-          // Save the question to persist the ancestry change
-          selectedItem.save().then(() => {
-            console.log('[CUSTOM DRAG] Question ancestry updated successfully');
-            console.log('[CUSTOM DRAG] Question parentId after save:', selectedItem.get('parentId'));
-            
-            // Don't call onChange for ancestry changes - let the parent handle the re-render
-            // The ancestry change will be reflected when the parent re-fetches the data
-            console.log('[CUSTOM DRAG] Ancestry set successfully, not calling onChange to avoid sort override');
-            
-            // Clear the ancestry flag
-            this.set('isSettingAncestry', false);
-          }).catch((error) => {
-            console.error('[CUSTOM DRAG] Error updating ancestry:', error);
-            this.set('isSettingAncestry', false);
-          });
-        }
-      } else {
-        // User chose to place it AFTER the container (normal positioning)
-        console.log('[CUSTOM DRAG] Moving', questionName, 'AFTER', containerName);
-        this.send('moveToPosition', containerIndex + 1);
-        return; // Don't clear selection yet, let moveToPosition handle it
-      }
+      this.send('showPlacementModal', selectedItem, containerQuestion);
+    },
+
+    showPlacementModal(question, container) {
+      console.log('[CUSTOM DRAG] Showing placement modal for:', question.get('questionText'), 'and container:', container.get('questionText'));
+      this.set('showPlacementOptions', true);
+      this.set('placementQuestion', question);
+      this.set('placementContainer', container);
+    },
+
+    hidePlacementModal() {
+      this.set('showPlacementOptions', false);
+      this.set('placementQuestion', null);
+      this.set('placementContainer', null);
       
       // Clear selection
-      console.log('[CUSTOM DRAG] Clearing selection after container action');
       this.set('selectedItem', null);
       this.set('selectedIndex', -1);
       this.removeDropZones();
+    },
+
+    placeInsideTop() {
+      const question = this.get('placementQuestion');
+      const container = this.get('placementContainer');
+      
+      if (!question || !container) return;
+      
+      console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'INSIDE TOP of', container.get('questionText'));
+      
+      // Use the parent's setAncestryTask to properly handle ancestry
+      const parentComponent = this.get('parentView');
+      if (parentComponent && parentComponent.get('setAncestryTask')) {
+        console.log('[CUSTOM DRAG] Using parent setAncestryTask for inside top');
+        parentComponent.get('setAncestryTask').perform(question, { target: { acenstry: container } });
+      }
+      
+      this.send('hidePlacementModal');
+    },
+
+    placeInsideBottom() {
+      const question = this.get('placementQuestion');
+      const container = this.get('placementContainer');
+      
+      if (!question || !container) return;
+      
+      console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'INSIDE BOTTOM of', container.get('questionText'));
+      
+      // Use the parent's setAncestryTask to properly handle ancestry
+      const parentComponent = this.get('parentView');
+      if (parentComponent && parentComponent.get('setAncestryTask')) {
+        console.log('[CUSTOM DRAG] Using parent setAncestryTask for inside bottom');
+        parentComponent.get('setAncestryTask').perform(question, { target: { acenstry: container } });
+      }
+      
+      this.send('hidePlacementModal');
+    },
+
+    placeAboveContainer() {
+      const question = this.get('placementQuestion');
+      const container = this.get('placementContainer');
+      
+      if (!question || !container) return;
+      
+      console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'ABOVE', container.get('questionText'));
+      
+      // Find the container's index and place the question before it
+      const containerIndex = this.get('items').indexOf(container);
+      this.send('moveToPosition', containerIndex);
+      
+      this.send('hidePlacementModal');
+    },
+
+    placeBelowContainer() {
+      const question = this.get('placementQuestion');
+      const container = this.get('placementContainer');
+      
+      if (!question || !container) return;
+      
+      console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'BELOW', container.get('questionText'));
+      
+      // Find the container's index and place the question after it
+      const containerIndex = this.get('items').indexOf(container);
+      this.send('moveToPosition', containerIndex + 1);
+      
+      this.send('hidePlacementModal');
     },
 
     moveToPosition(targetIndex) {
@@ -139,34 +173,18 @@ export default Component.extend({
       const draggedItem = items.splice(selectedIndex, 1)[0];
       items.splice(targetIndex, 0, draggedItem);
       
-      // Check if the target position is inside a container
-      const targetQuestion = items[targetIndex];
-      if (targetQuestion && (targetQuestion.get('isARepeater') || targetQuestion.get('isContainer'))) {
-        console.log('[CUSTOM DRAG] Moving item into container:', targetQuestion.get('questionText'));
-        
-        // Set the ancestry relationship
-        draggedItem.set('parentId', targetQuestion.get('id'));
+      // Check if we're moving out of a container (setting parentId to null)
+      const currentParentId = draggedItem.get('parentId');
+      if (currentParentId) {
+        console.log('[CUSTOM DRAG] Moving item out of container, clearing ancestry');
+        draggedItem.set('parentId', null);
         
         // Save the question to persist the ancestry change
         draggedItem.save().then(() => {
-          console.log('[CUSTOM DRAG] Question ancestry updated successfully');
+          console.log('[CUSTOM DRAG] Question ancestry cleared successfully');
         }).catch((error) => {
-          console.error('[CUSTOM DRAG] Error updating ancestry:', error);
+          console.error('[CUSTOM DRAG] Error clearing ancestry:', error);
         });
-      } else {
-        // Check if we're moving out of a container (setting parentId to null)
-        const currentParentId = draggedItem.get('parentId');
-        if (currentParentId) {
-          console.log('[CUSTOM DRAG] Moving item out of container');
-          draggedItem.set('parentId', null);
-          
-          // Save the question to persist the ancestry change
-          draggedItem.save().then(() => {
-            console.log('[CUSTOM DRAG] Question ancestry cleared successfully');
-          }).catch((error) => {
-            console.error('[CUSTOM DRAG] Error clearing ancestry:', error);
-          });
-        }
       }
       
       // Call the onChange callback

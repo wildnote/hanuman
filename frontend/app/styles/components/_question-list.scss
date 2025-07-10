@@ -143,3 +143,134 @@
     top: 18px;
   }
 }
+
+// Placement modal styles
+.placement-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placement-modal {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.placement-modal-header {
+  background: #f8f9fa;
+  padding: 20px;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  h4 {
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      color: #333;
+    }
+  }
+}
+
+.placement-modal-body {
+  padding: 20px;
+  
+  p {
+    margin: 0 0 20px 0;
+    color: #666;
+    font-size: 14px;
+  }
+}
+
+.placement-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.placement-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  
+  &:hover {
+    border-color: #5a87cf;
+    background-color: #f8f9ff;
+  }
+  
+  .icon {
+    font-size: 24px;
+    margin-bottom: 8px;
+  }
+  
+  .text {
+    font-size: 12px;
+    font-weight: 500;
+    color: #333;
+    line-height: 1.2;
+  }
+  
+  &.inside-top {
+    &:hover {
+      border-color: #28a745;
+      background-color: #f8fff9;
+    }
+  }
+  
+  &.inside-bottom {
+    &:hover {
+      border-color: #28a745;
+      background-color: #f8fff9;
+    }
+  }
+  
+  &.above {
+    &:hover {
+      border-color: #ffc107;
+      background-color: #fffbf0;
+    }
+  }
+  
+  &.below {
+    &:hover {
+      border-color: #ffc107;
+      background-color: #fffbf0;
+    }
+  }
+}

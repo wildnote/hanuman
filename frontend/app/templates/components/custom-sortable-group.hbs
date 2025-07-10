@@ -1,3 +1,35 @@
 {{yield (hash
   item=(component "custom-sortable-item" onSelect=(action "selectItem") selectedItem=selectedItem selectedIndex=selectedIndex)
-)}} 
+)}}
+
+{{#if showPlacementOptions}}
+  <div class="placement-modal-overlay">
+    <div class="placement-modal">
+      <div class="placement-modal-header">
+        <h4>Place "{{placementQuestion.questionText}}"</h4>
+        <button class="close-btn" {{action "hidePlacementModal"}}>&times;</button>
+      </div>
+      <div class="placement-modal-body">
+        <p>Where would you like to place this question relative to "{{placementContainer.questionText}}"?</p>
+        <div class="placement-options">
+          <button class="placement-btn inside-top" {{action "placeInsideTop"}}>
+            <span class="icon">⬆️</span>
+            <span class="text">Inside container at top</span>
+          </button>
+          <button class="placement-btn inside-bottom" {{action "placeInsideBottom"}}>
+            <span class="icon">⬇️</span>
+            <span class="text">Inside container at bottom</span>
+          </button>
+          <button class="placement-btn above" {{action "placeAboveContainer"}}>
+            <span class="icon">⬆️</span>
+            <span class="text">Above container</span>
+          </button>
+          <button class="placement-btn below" {{action "placeBelowContainer"}}>
+            <span class="icon">⬇️</span>
+            <span class="text">Below container</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+{{/if}} 
