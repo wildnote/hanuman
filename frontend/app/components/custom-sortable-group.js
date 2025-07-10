@@ -540,14 +540,15 @@ export default Component.extend({
       }
       
       // Clear ancestry and save
+      const containerParentId = container.get('parentId');
       const oldParentId = question.get('parentId');
-      console.log('[CUSTOM DRAG] Clearing ancestry from parentId:', oldParentId, 'to null');
-      
-      question.set('parentId', null);
-      
+      console.log('[CUSTOM DRAG] Setting ancestry from parentId:', oldParentId, 'to container parentId:', containerParentId);
+
+      question.set('parentId', containerParentId);
+
       // Save the question to persist the ancestry change
       question.save().then(() => {
-        console.log('[CUSTOM DRAG] Question ancestry cleared successfully');
+        console.log('[CUSTOM DRAG] Question ancestry set to container parentId successfully');
         
         // Reload the question and container to update UI
         question.reload().then(() => {
@@ -633,14 +634,15 @@ export default Component.extend({
       }
       
       // Clear ancestry and save
+      const containerParentId = container.get('parentId');
       const oldParentId = question.get('parentId');
-      console.log('[CUSTOM DRAG] Clearing ancestry from parentId:', oldParentId, 'to null');
-      
-      question.set('parentId', null);
-      
+      console.log('[CUSTOM DRAG] Setting ancestry from parentId:', oldParentId, 'to container parentId:', containerParentId);
+
+      question.set('parentId', containerParentId);
+
       // Save the question to persist the ancestry change
       question.save().then(() => {
-        console.log('[CUSTOM DRAG] Question ancestry cleared successfully');
+        console.log('[CUSTOM DRAG] Question ancestry set to container parentId successfully');
         
         // Reload the question and container to update UI
         question.reload().then(() => {
