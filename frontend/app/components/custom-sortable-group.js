@@ -23,8 +23,15 @@ export default Component.extend({
       console.log('[CUSTOM DRAG] Item isARepeater:', item.get('isARepeater'));
       console.log('[CUSTOM DRAG] Item isContainer:', item.get('isContainer'));
       console.log('[CUSTOM DRAG] Item parentId:', item.get('parentId'));
+      console.log('[CUSTOM DRAG] Item id:', item.get('id'));
       console.log('[CUSTOM DRAG] Current selectedItem:', this.get('selectedItem') ? this.get('selectedItem').get('questionText') : 'null');
       console.log('[CUSTOM DRAG] Current selectedIndex:', this.get('selectedIndex'));
+      
+      // Check if item is in the current items array
+      const items = this.get('items');
+      const itemInArray = items.findBy('id', item.get('id'));
+      console.log('[CUSTOM DRAG] Item found in array:', !!itemInArray);
+      console.log('[CUSTOM DRAG] Item index in array:', items.indexOf(itemInArray));
       
       if (this.get('selectedItem') === item) {
         // Deselect if clicking the same item
@@ -269,7 +276,7 @@ export default Component.extend({
             if (isContainer) {
               console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
               const items = this.get('items');
-              this.updateContainerChildrenAncestry(question, items);
+              this.send('updateContainerChildrenAncestry', question, items);
             }
             
             this.send('moveQuestionToPosition', question, targetIndex);
@@ -323,7 +330,7 @@ export default Component.extend({
             if (isContainer) {
               console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
               const items = this.get('items');
-              this.updateContainerChildrenAncestry(question, items);
+              this.send('updateContainerChildrenAncestry', question, items);
             }
             
             this.send('moveQuestionToPosition', question, targetIndex);
@@ -448,7 +455,7 @@ export default Component.extend({
       const isContainer = draggedItem.get('isARepeater') || draggedItem.get('isContainer');
       if (isContainer) {
         console.log('[CUSTOM DRAG] Container moved, updating children ancestry');
-        this.updateContainerChildrenAncestry(draggedItem, items);
+        this.send('updateContainerChildrenAncestry', draggedItem, items);
       }
       
       // Use parent's updateSortOrderTask to persist the changes to database
@@ -468,6 +475,12 @@ export default Component.extend({
           this.set('selectedItem', null);
           this.set('selectedIndex', -1);
           this.removeDropZones();
+          
+          // Force a re-render to ensure the UI is updated
+          run.scheduleOnce('afterRender', this, () => {
+            console.log('[CUSTOM DRAG] After render, ensuring drop zones are removed');
+            this.removeDropZones();
+          });
         }).catch((error) => {
           console.error('[CUSTOM DRAG] Error in parent updateSortOrderTask:', error);
           // Ensure selection is cleared even on error
@@ -615,6 +628,36 @@ export default Component.extend({
         console.log('[CUSTOM DRAG] No selected item, skipping drop zone creation');
         return;
       }
+      
+      // Add click handlers to all items for selection
+      items.forEach((element, index) => {
+        // Remove any existing selection click handlers first
+        if (element._selectionClickHandler) {
+          element.removeEventListener('click', element._selectionClickHandler);
+        }
+        
+        // Add click handler for selection
+        const selectionClickHandler = (event) => {
+          console.log('[CUSTOM DRAG] Item clicked for selection at index:', index);
+          
+          // Only handle if not clicking on a drop zone
+          if (!event.target.closest('.drop-zone-active') && !event.target.closest('.container-drop-zone-active')) {
+            const questionElement = element.querySelector('[data-question-id]');
+            if (questionElement) {
+              const questionId = questionElement.getAttribute('data-question-id');
+              const question = this.get('items').findBy('id', questionId);
+              if (question) {
+                console.log('[CUSTOM DRAG] Calling selectItem for question:', question.get('questionText'));
+                this.send('selectItem', question, index);
+              }
+            }
+          }
+        };
+        
+        element._selectionClickHandler = selectionClickHandler;
+        element.addEventListener('click', selectionClickHandler);
+        console.log('[CUSTOM DRAG] Added selection click handler for item at index:', index);
+      });
       
       // Determine if selected item is inside a container
       const selectedParentId = selectedItem.get('parentId');
@@ -813,6 +856,10 @@ export default Component.extend({
         element.removeEventListener('mouseleave', element._containerDropLeaveHandler);
         delete element._containerDropLeaveHandler;
       }
+      if (element._selectionClickHandler) {
+        element.removeEventListener('click', element._selectionClickHandler);
+        delete element._selectionClickHandler;
+      }
     });
   },
   
@@ -840,11 +887,61 @@ export default Component.extend({
     const selectedItem = this.get('selectedItem');
     const items = this.get('items');
     
-    if (selectedItem && !items.includes(selectedItem)) {
-      console.log('[CUSTOM DRAG] Selected item no longer in items array, clearing selection');
-      this.set('selectedItem', null);
-      this.set('selectedIndex', -1);
-      this.removeDropZones();
+    if (selectedItem) {
+      // Check if the selected item is still in the items array
+      const itemStillExists = items.findBy('id', selectedItem.get('id'));
+      
+      if (!itemStillExists) {
+        console.log('[CUSTOM DRAG] Selected item no longer in items array, clearing selection');
+        this.set('selectedItem', null);
+        this.set('selectedIndex', -1);
+        this.removeDropZones();
+      } else {
+        // Update the selectedIndex to match the current position
+        const currentIndex = items.indexOf(itemStillExists);
+        if (currentIndex !== this.get('selectedIndex')) {
+          console.log('[CUSTOM DRAG] Selected item index changed from', this.get('selectedIndex'), 'to', currentIndex);
+          this.set('selectedIndex', currentIndex);
+        }
+      }
     }
+    
+    // Ensure selection handlers are always available
+    this.ensureSelectionHandlers();
+  },
+
+  // Ensure selection click handlers are always available
+  ensureSelectionHandlers() {
+    run.scheduleOnce('afterRender', this, () => {
+      const items = this.element.querySelectorAll('.sortable-item');
+      console.log('[CUSTOM DRAG] Ensuring selection handlers for', items.length, 'items');
+      
+      items.forEach((element, index) => {
+        // Only add if not already present
+        if (!element._selectionClickHandler) {
+          // Add click handler for selection
+          const selectionClickHandler = (event) => {
+            console.log('[CUSTOM DRAG] Item clicked for selection at index:', index);
+            
+            // Only handle if not clicking on a drop zone
+            if (!event.target.closest('.drop-zone-active') && !event.target.closest('.container-drop-zone-active')) {
+              const questionElement = element.querySelector('[data-question-id]');
+              if (questionElement) {
+                const questionId = questionElement.getAttribute('data-question-id');
+                const question = this.get('items').findBy('id', questionId);
+                if (question) {
+                  console.log('[CUSTOM DRAG] Calling selectItem for question:', question.get('questionText'));
+                  this.send('selectItem', question, index);
+                }
+              }
+            }
+          };
+          
+          element._selectionClickHandler = selectionClickHandler;
+          element.addEventListener('click', selectionClickHandler);
+          console.log('[CUSTOM DRAG] Added selection click handler for item at index:', index);
+        }
+      });
+    });
   }
 }); 
