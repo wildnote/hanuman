@@ -44,6 +44,7 @@ export default Component.extend({
         this.set('selectedIndex', -1);
         this.removeDropZones();
         this.removeChildrenHighlight();
+        this.cleanupAfterMove();
       } else {
         // Select new item
         console.log('[CUSTOM DRAG] Selecting new item');
@@ -52,15 +53,11 @@ export default Component.extend({
         this.createDropZones();
         
         // Debounce highlighting to prevent performance issues
-        if (this.get('highlightTimeout')) {
-          run.cancel(this.get('highlightTimeout'));
-        }
         const timeout = run.later(this, () => {
           this.highlightChildren(item);
         }, 100); // Increased delay for better debouncing
         
-        this.set('highlightTimeout', timeout);
-        this.registerTimeout(timeout);
+        this.registerTimeout(timeout, 'highlight');
       }
     },
 
@@ -260,16 +257,19 @@ export default Component.extend({
                 console.error('[CUSTOM DRAG] Error in Step 3 (UI refresh):', error);
                 this.set('isSettingAncestry', false);
                 this.set('isMovingContainer', false);
+                this.cleanupAfterMove();
               });
             }).catch((error) => {
               console.error('[CUSTOM DRAG] Error in Step 2 (container reload):', error);
               this.set('isSettingAncestry', false);
               this.set('isMovingContainer', false);
+              this.cleanupAfterMove();
             });
           }).catch((error) => {
             console.error('[CUSTOM DRAG] Error in Step 1 (container save):', error);
             this.set('isSettingAncestry', false);
             this.set('isMovingContainer', false);
+            this.cleanupAfterMove();
           });
         } else {
           // For non-containers, use the parent's setAncestryTask
@@ -279,13 +279,16 @@ export default Component.extend({
             parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
               console.log('[CUSTOM DRAG] UI refreshed after container move');
               this.set('isSettingAncestry', false);
+              this.cleanupAfterMove();
             }).catch((error) => {
               console.error('[CUSTOM DRAG] Error refreshing UI:', error);
               this.set('isSettingAncestry', false);
+              this.cleanupAfterMove();
             });
           }).catch((error) => {
             console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
             this.set('isSettingAncestry', false);
+            this.cleanupAfterMove();
           });
         }
       } else {
@@ -386,16 +389,19 @@ export default Component.extend({
                 console.error('[CUSTOM DRAG] Error in Step 3 (UI refresh):', error);
                 this.set('isSettingAncestry', false);
                 this.set('isMovingContainer', false);
+                this.cleanupAfterMove();
               });
             }).catch((error) => {
               console.error('[CUSTOM DRAG] Error in Step 2 (container reload):', error);
               this.set('isSettingAncestry', false);
               this.set('isMovingContainer', false);
+              this.cleanupAfterMove();
             });
           }).catch((error) => {
             console.error('[CUSTOM DRAG] Error in Step 1 (container save):', error);
             this.set('isSettingAncestry', false);
             this.set('isMovingContainer', false);
+            this.cleanupAfterMove();
           });
         } else {
           // For non-containers, use the parent's setAncestryTask
@@ -405,13 +411,16 @@ export default Component.extend({
             parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
               console.log('[CUSTOM DRAG] UI refreshed after container move');
               this.set('isSettingAncestry', false);
+              this.cleanupAfterMove();
             }).catch((error) => {
               console.error('[CUSTOM DRAG] Error refreshing UI:', error);
               this.set('isSettingAncestry', false);
+              this.cleanupAfterMove();
             });
           }).catch((error) => {
             console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
             this.set('isSettingAncestry', false);
+            this.cleanupAfterMove();
           });
         }
       } else {
@@ -489,6 +498,7 @@ export default Component.extend({
       }).catch((error) => {
         console.error('[CUSTOM DRAG] Error clearing ancestry:', error);
         this.set('isSettingAncestry', false);
+        this.cleanupAfterMove();
       });
       
       this.send('hidePlacementModal');
@@ -531,6 +541,24 @@ export default Component.extend({
       // Set flag to prevent moveToPosition from interfering
       this.set('isSettingAncestry', true);
       
+      // Check if the moved item is a container and capture children BEFORE clearing ancestry
+      const isContainer = question.get('isARepeater') || question.get('isContainer');
+      let childrenBeforeMove = [];
+      if (isContainer) {
+        console.log('[CUSTOM DRAG] Container moved via placement modal, capturing children BEFORE clearing ancestry');
+        const containerId = question.get('id');
+        const allChildren = items.filter(item => item.get('parentId') === containerId);
+        // Sort children by their current sortOrder to preserve their intended order
+        childrenBeforeMove = allChildren.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
+        console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move for below placement');
+        console.log('[CUSTOM DRAG] Children before move (sorted by sortOrder):', childrenBeforeMove.map(c => ({
+          id: c.get('id'),
+          text: c.get('questionText'),
+          parentId: c.get('parentId'),
+          sortOrder: c.get('sortOrder')
+        })));
+      }
+      
       // Clear ancestry and save
       const oldParentId = question.get('parentId');
       console.log('[CUSTOM DRAG] Clearing ancestry from parentId:', oldParentId, 'to null');
@@ -551,13 +579,8 @@ export default Component.extend({
             console.log('[CUSTOM DRAG] Moving question to pre-calculated target position:', targetIndex);
             
             // Check if the moved item is a container and handle children ancestry updates
-            const isContainer = question.get('isARepeater') || question.get('isContainer');
             if (isContainer) {
               console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
-              const items = this.get('items');
-              const containerId = question.get('id');
-              const childrenBeforeMove = items.filter(item => item.get('parentId') === containerId);
-              console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move for above/below placement');
               this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
             }
             
@@ -568,6 +591,7 @@ export default Component.extend({
       }).catch((error) => {
         console.error('[CUSTOM DRAG] Error clearing ancestry:', error);
         this.set('isSettingAncestry', false);
+        this.cleanupAfterMove();
       });
       
       this.send('hidePlacementModal');
@@ -801,6 +825,7 @@ export default Component.extend({
           this.set('selectedItem', null);
           this.set('selectedIndex', -1);
           this.removeDropZones();
+          this.cleanupAfterMove();
           
           // Force a re-render to ensure the UI is updated
           run.scheduleOnce('afterRender', this, () => {
@@ -813,6 +838,7 @@ export default Component.extend({
           this.set('selectedItem', null);
           this.set('selectedIndex', -1);
           this.removeDropZones();
+          this.cleanupAfterMove();
         });
       } else {
         console.error('[CUSTOM DRAG] Could not access parent updateSortOrderTask');
@@ -913,6 +939,7 @@ export default Component.extend({
             console.log('[CUSTOM DRAG] Step 4d: Final UI refresh completed');
             this.set('isSettingAncestry', false);
             this.set('isMovingContainer', false);
+            this.cleanupAfterMove();
             
             // Log ancestry/sortOrder of all children after final UI refresh
             const refreshedChildren = children.map(c => ({
@@ -930,6 +957,7 @@ export default Component.extend({
           console.error('[CUSTOM DRAG] Error in sequential children update:', error);
           this.set('isSettingAncestry', false);
           this.set('isMovingContainer', false);
+          this.cleanupAfterMove();
         });
       } else {
         console.error('[CUSTOM DRAG] Could not access parent setAncestryTask');
@@ -1021,11 +1049,6 @@ export default Component.extend({
       
       // Add click handlers to all items for selection
       items.forEach((element, index) => {
-        // Remove any existing selection click handlers first
-        if (element._selectionClickHandler) {
-          element.removeEventListener('click', element._selectionClickHandler);
-        }
-        
         // Add click handler only to the move icon (glyphicons-sorting)
         const moveIcon = element.querySelector('.glyphicons-sorting');
         if (moveIcon) {
@@ -1043,8 +1066,8 @@ export default Component.extend({
             }
           };
           
-          moveIcon._selectionClickHandler = selectionClickHandler;
-          this.registerEventListener(moveIcon, 'click', selectionClickHandler);
+          // Use safe event listener to prevent duplicates
+          this.safeAddEventListener(moveIcon, 'click', selectionClickHandler);
           console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
         }
       });
@@ -1163,16 +1186,16 @@ export default Component.extend({
               
               this.send('moveToContainer', index);
             };
-            element._containerDropClickHandler = clickHandler;
-            element.addEventListener('click', clickHandler);
+            
+            // Use safe event listener to prevent duplicates
+            this.safeAddEventListener(element, 'click', clickHandler);
             
             // Add mouse enter/leave for visual feedback
             const enterHandler = () => this.highlightContainerDropZone(element);
             const leaveHandler = () => this.unhighlightContainerDropZone(element);
-            element._containerDropEnterHandler = enterHandler;
-            element._containerDropLeaveHandler = leaveHandler;
-            element.addEventListener('mouseenter', enterHandler);
-            element.addEventListener('mouseleave', leaveHandler);
+            
+            this.safeAddEventListener(element, 'mouseenter', enterHandler);
+            this.safeAddEventListener(element, 'mouseleave', leaveHandler);
             
             console.log('[CUSTOM DRAG] Added green drop zone for container at index:', index, 'question:', question ? question.get('questionText') : 'unknown');
           } else if (shouldShowRegularDropZone) {
@@ -1194,16 +1217,16 @@ export default Component.extend({
               
               this.send('moveToPosition', index);
             };
-            element._dropClickHandler = clickHandler;
-            element.addEventListener('click', clickHandler);
+            
+            // Use safe event listener to prevent duplicates
+            this.safeAddEventListener(element, 'click', clickHandler);
             
             // Add mouse enter/leave for visual feedback
             const enterHandler = () => this.highlightDropZone(element);
             const leaveHandler = () => this.unhighlightDropZone(element);
-            element._dropEnterHandler = enterHandler;
-            element._dropLeaveHandler = leaveHandler;
-            element.addEventListener('mouseenter', enterHandler);
-            element.addEventListener('mouseleave', leaveHandler);
+            
+            this.safeAddEventListener(element, 'mouseenter', enterHandler);
+            this.safeAddEventListener(element, 'mouseleave', leaveHandler);
             
             console.log('[CUSTOM DRAG] Added blue drop zone for regular positioning at index:', index);
           } else {
@@ -1212,6 +1235,9 @@ export default Component.extend({
         }
       });
     });
+    
+    // Register timeout for cleanup
+    this.registerTimeout(timeout, 'dropZone');
   },
   
   removeDropZones() {
@@ -1221,37 +1247,18 @@ export default Component.extend({
     items.forEach(element => {
       element.classList.remove('drop-zone-active', 'drop-zone-highlighted', 'container-drop-zone-active', 'container-drop-zone-highlighted');
       
-      // Remove event listeners
-      if (element._dropClickHandler) {
-        element.removeEventListener('click', element._dropClickHandler);
-        delete element._dropClickHandler;
-      }
-      if (element._dropEnterHandler) {
-        element.removeEventListener('mouseenter', element._dropEnterHandler);
-        delete element._dropEnterHandler;
-      }
-      if (element._dropLeaveHandler) {
-        element.removeEventListener('mouseleave', element._dropLeaveHandler);
-        delete element._dropLeaveHandler;
-      }
-      if (element._containerDropClickHandler) {
-        element.removeEventListener('click', element._containerDropClickHandler);
-        delete element._containerDropClickHandler;
-      }
-      if (element._containerDropEnterHandler) {
-        element.removeEventListener('mouseenter', element._containerDropEnterHandler);
-        delete element._containerDropEnterHandler;
-      }
-      if (element._containerDropLeaveHandler) {
-        element.removeEventListener('mouseleave', element._containerDropLeaveHandler);
-        delete element._containerDropLeaveHandler;
-      }
-      // Remove selection click handler from move icon
-      const moveIcon = element.querySelector('.glyphicons-sorting');
-      if (moveIcon && moveIcon._selectionClickHandler) {
-        moveIcon.removeEventListener('click', moveIcon._selectionClickHandler);
-        delete moveIcon._selectionClickHandler;
-      }
+      // Remove only drop zone related event listeners from this element
+      const listeners = this.get('activeEventListeners');
+      const elementListeners = listeners.filter(({ element: el, event }) => {
+        // Keep selection handlers (click on move icons), remove drop zone handlers
+        const isSelectionHandler = event === 'click' && el.classList.contains('glyphicons-sorting');
+        const isDropZoneHandler = event === 'click' || event === 'mouseenter' || event === 'mouseleave';
+        return el === element && isDropZoneHandler && !isSelectionHandler;
+      });
+      
+      elementListeners.forEach(({ element: el, event, handler }) => {
+        this.safeRemoveEventListener(el, event, handler);
+      });
     });
   },
   
@@ -1318,18 +1325,51 @@ export default Component.extend({
     });
     
     // Register timeout for cleanup
-    this.get('cleanupTimeouts').push(timeout);
+    this.registerTimeout(timeout, 'childrenHighlight');
   },
 
-  // Helper method to register timeouts for cleanup
-  registerTimeout(timeout) {
+  // Helper method to safely remove event listeners and prevent duplicates
+  safeRemoveEventListener(element, event, handler) {
+    if (element && element.removeEventListener) {
+      element.removeEventListener(event, handler);
+    }
+    
+    // Remove from activeEventListeners array
+    const listeners = this.get('activeEventListeners');
+    const index = listeners.findIndex(({ element: el, event: evt, handler: hdlr }) => 
+      el === element && evt === event && hdlr === handler
+    );
+    if (index !== -1) {
+      listeners.splice(index, 1);
+    }
+  },
+
+  // Helper method to safely add event listeners and prevent duplicates
+  safeAddEventListener(element, event, handler) {
+    // Remove existing listener first to prevent duplicates
+    this.safeRemoveEventListener(element, event, handler);
+    
+    // Add new listener
+    element.addEventListener(event, handler);
+    this.get('activeEventListeners').push({ element, event, handler });
+  },
+
+  // Helper method to register timeouts for cleanup with deduplication
+  registerTimeout(timeout, timeoutType = 'general') {
+    // Cancel existing timeout of the same type if it exists
+    const existingTimeout = this.get(`_${timeoutType}Timeout`);
+    if (existingTimeout) {
+      run.cancel(existingTimeout);
+    }
+    
+    // Store the new timeout
+    this.set(`_${timeoutType}Timeout`, timeout);
     this.get('cleanupTimeouts').push(timeout);
   },
 
   // Helper method to register event listeners for cleanup
   registerEventListener(element, event, handler) {
-    element.addEventListener(event, handler);
-    this.get('activeEventListeners').push({ element, event, handler });
+    this.safeAddEventListener(element, event, handler);
   },
 
   // Ensure selection is cleared when component updates
@@ -1381,24 +1421,33 @@ export default Component.extend({
       items.forEach((element, index) => {
         // Add click handler only to the move icon (glyphicons-sorting)
         const moveIcon = element.querySelector('.glyphicons-sorting');
-        if (moveIcon && !moveIcon._selectionClickHandler) {
-          const selectionClickHandler = (event) => {
-            console.log('[CUSTOM DRAG] Move icon clicked for selection at index:', index);
-            
-            const questionElement = element.querySelector('[data-question-id]');
-            if (questionElement) {
-              const questionId = questionElement.getAttribute('data-question-id');
-              const question = this.get('items').findBy('id', questionId);
-              if (question) {
-                console.log('[CUSTOM DRAG] Calling selectItem for question:', question.get('questionText'));
-                this.send('selectItem', question, index);
-              }
-            }
-          };
+        if (moveIcon) {
+          // Check if handler already exists to prevent duplicates
+          const existingHandler = this.get('activeEventListeners').find(({ element: el, event }) => 
+            el === moveIcon && event === 'click'
+          );
           
-          moveIcon._selectionClickHandler = selectionClickHandler;
-          this.registerEventListener(moveIcon, 'click', selectionClickHandler);
-          console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
+          if (!existingHandler) {
+            const selectionClickHandler = (event) => {
+              console.log('[CUSTOM DRAG] Move icon clicked for selection at index:', index);
+              
+              const questionElement = element.querySelector('[data-question-id]');
+              if (questionElement) {
+                const questionId = questionElement.getAttribute('data-question-id');
+                const question = this.get('items').findBy('id', questionId);
+                if (question) {
+                  console.log('[CUSTOM DRAG] Calling selectItem for question:', question.get('questionText'));
+                  this.send('selectItem', question, index);
+                }
+              }
+            };
+            
+            // Use safe event listener to prevent duplicates
+            this.safeAddEventListener(moveIcon, 'click', selectionClickHandler);
+            console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
+          } else {
+            console.log('[CUSTOM DRAG] Selection handler already exists for item at index:', index);
+          }
         }
       });
       
@@ -1410,14 +1459,11 @@ export default Component.extend({
     });
   },
 
-  // Clean up timeouts when component is destroyed
-  willDestroyElement() {
-    // Clean up all timeouts
-    if (this.get('highlightTimeout')) {
-      run.cancel(this.get('highlightTimeout'));
-    }
+  // Comprehensive cleanup method called after every move operation
+  cleanupAfterMove() {
+    console.log('[CUSTOM DRAG] Performing comprehensive cleanup after move');
     
-    // Clean up all registered timeouts
+    // Cancel all registered timeouts
     this.get('cleanupTimeouts').forEach(timeout => {
       if (timeout) {
         run.cancel(timeout);
@@ -1425,17 +1471,68 @@ export default Component.extend({
     });
     this.set('cleanupTimeouts', []);
     
-    // Clean up all event listeners
-    this.get('activeEventListeners').forEach(({ element, event, handler }) => {
+    // Clear specific timeout references
+    this.set('_highlightTimeout', null);
+    this.set('_dropZoneTimeout', null);
+    this.set('_selectionTimeout', null);
+    this.set('_childrenHighlightTimeout', null);
+    
+    // Remove only drop zone and highlight related event listeners
+    const listeners = this.get('activeEventListeners');
+    const listenersToRemove = listeners.filter(({ element, event }) => {
+      // Keep selection handlers (click on move icons), remove drop zone handlers
+      const isSelectionHandler = event === 'click' && element.classList.contains('glyphicons-sorting');
+      const isDropZoneHandler = event === 'click' || event === 'mouseenter' || event === 'mouseleave';
+      return isDropZoneHandler && !isSelectionHandler;
+    });
+    
+    listenersToRemove.forEach(({ element, event, handler }) => {
       if (element && element.removeEventListener) {
         element.removeEventListener(event, handler);
       }
     });
-    this.set('activeEventListeners', []);
     
-    // Remove drop zones and highlights
+    // Remove the filtered listeners from tracking array
+    this.set('activeEventListeners', listeners.filter(listener => 
+      !listenersToRemove.includes(listener)
+    ));
+    
+    // Remove all drop zones and highlights
     this.removeDropZones();
     this.removeChildrenHighlight();
+    
+    // Clear any remaining DOM classes
+    if (this.element) {
+      const items = this.element.querySelectorAll('.sortable-item');
+      items.forEach(element => {
+        element.classList.remove(
+          'drop-zone-active', 
+          'drop-zone-highlighted', 
+          'container-drop-zone-active', 
+          'container-drop-zone-highlighted',
+          'children-highlight'
+        );
+      });
+    }
+    
+    // Re-add selection handlers after cleanup
+    run.scheduleOnce('afterRender', this, () => {
+      this.ensureSelectionHandlers();
+    });
+    
+    console.log('[CUSTOM DRAG] Cleanup completed - activeEventListeners:', this.get('activeEventListeners').length, 'cleanupTimeouts:', this.get('cleanupTimeouts').length);
+  },
+
+  // Clean up timeouts when component is destroyed
+  willDestroyElement() {
+    // Use comprehensive cleanup method
+    this.cleanupAfterMove();
+    
+    // Clear any remaining timeout references
+    this.set('_highlightTimeout', null);
+    this.set('_dropZoneTimeout', null);
+    this.set('_selectionTimeout', null);
+    this.set('_childrenHighlightTimeout', null);
     
     this._super(...arguments);
   },
