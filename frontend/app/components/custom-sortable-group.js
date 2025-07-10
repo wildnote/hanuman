@@ -401,10 +401,13 @@ export default Component.extend({
           let newSortOrder;
           
           if (containerChildren.length > 0) {
-            // Place after the last child
-            const lastChildSortOrder = containerChildren[containerChildren.length - 1].get('sortOrder');
+            // Find the child with the highest sortOrder (actual last child)
+            const lastChild = containerChildren.reduce((max, child) => 
+              child.get('sortOrder') > max.get('sortOrder') ? child : max
+            );
+            const lastChildSortOrder = lastChild.get('sortOrder');
             newSortOrder = lastChildSortOrder + 0.001;
-            console.log('[CUSTOM DRAG] Placing after last child, sortOrder:', newSortOrder);
+            console.log('[CUSTOM DRAG] Placing after last child, sortOrder:', newSortOrder, '(lastChild text:', lastChild.get('questionText'), ')');
           } else {
             // No children, place right after the container
             newSortOrder = container.get('sortOrder') + 0.001;
@@ -454,10 +457,13 @@ export default Component.extend({
           let newSortOrder;
           
           if (containerChildren.length > 0) {
-            // Place after the last child (use the same logic as setAncestryTask)
-            const lastChildSortOrder = containerChildren[containerChildren.length - 1].get('sortOrder');
+            // Find the child with the highest sortOrder (actual last child)
+            const lastChild = containerChildren.reduce((max, child) => 
+              child.get('sortOrder') > max.get('sortOrder') ? child : max
+            );
+            const lastChildSortOrder = lastChild.get('sortOrder');
             newSortOrder = lastChildSortOrder + 0.001;
-            console.log('[CUSTOM DRAG] Placing single question after last child, sortOrder:', newSortOrder, '(lastChild:', lastChildSortOrder, ')');
+            console.log('[CUSTOM DRAG] Placing single question after last child, sortOrder:', newSortOrder, '(lastChild:', lastChildSortOrder, 'child text:', lastChild.get('questionText'), ')');
           } else {
             // No children, place right after the container (same as setAncestryTask)
             newSortOrder = container.get('sortOrder') + 0.1;
