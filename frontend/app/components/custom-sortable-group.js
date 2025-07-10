@@ -48,6 +48,10 @@ export default Component.extend({
       } else {
         // Select new item
         console.log('[CUSTOM DRAG] Selecting new item');
+        
+        // Clean up before selecting new item
+        this.cleanupAfterMove();
+        
         this.set('selectedItem', item);
         this.set('selectedIndex', index);
         this.createDropZones();
@@ -1002,11 +1006,16 @@ export default Component.extend({
       if (parentComponent && parentComponent.get('updateSortOrderTask')) {
         console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to persist sort order changes');
         
-        // If this is a container, ensure children are properly positioned
+        // Check if this is a placement modal move (above/below) where we've already handled children
+        const isPlacementModalMove = this.get('isMovingContainer') || this.get('isSettingAncestry');
+        
+        // If this is a container, ensure children are properly positioned (but skip if we've already handled them)
         const isContainer = draggedItem.get('isARepeater') || draggedItem.get('isContainer');
-        if (isContainer) {
-          console.log('[CUSTOM DRAG] Container moved, ensuring children are properly positioned');
+        if (isContainer && !isPlacementModalMove) {
+          console.log('[CUSTOM DRAG] Container moved via direct drag, ensuring children are properly positioned');
           itemsCopy = this.reorderContainerWithChildren(itemsCopy, draggedItem);
+        } else if (isContainer && isPlacementModalMove) {
+          console.log('[CUSTOM DRAG] Container moved via placement modal, skipping reorderContainerWithChildren (children already handled)');
         }
         
         // Call updateSortOrderTask with reSort=false to use our array order
@@ -1346,12 +1355,33 @@ export default Component.extend({
 
   // Helper method to safely add event listeners and prevent duplicates
   safeAddEventListener(element, event, handler) {
-    // Remove existing listener first to prevent duplicates
-    this.safeRemoveEventListener(element, event, handler);
+    console.log('[CUSTOM DRAG] safeAddEventListener called for:', { event, elementClass: element.className });
+    
+    // Check if this exact listener already exists
+    const existingListener = this.get('activeEventListeners').find(({ element: el, event: evt, handler: hdlr }) => 
+      el === element && evt === event && hdlr === handler
+    );
+    
+    if (existingListener) {
+      console.log('[CUSTOM DRAG] Listener already exists, skipping add');
+      return;
+    }
+    
+    // Check if there's any listener for this element/event combination
+    const existingElementListener = this.get('activeEventListeners').find(({ element: el, event: evt }) => 
+      el === element && evt === event
+    );
+    
+    if (existingElementListener) {
+      console.log('[CUSTOM DRAG] Removing existing listener for same element/event before adding new one');
+      this.safeRemoveEventListener(existingElementListener.element, existingElementListener.event, existingElementListener.handler);
+    }
     
     // Add new listener
     element.addEventListener(event, handler);
     this.get('activeEventListeners').push({ element, event, handler });
+    
+    console.log('[CUSTOM DRAG] Added listener, total activeEventListeners:', this.get('activeEventListeners').length);
   },
 
   // Helper method to register timeouts for cleanup with deduplication
@@ -1376,6 +1406,12 @@ export default Component.extend({
   didUpdate() {
     this._super(...arguments);
     
+    // Periodic cleanup check to prevent listener accumulation
+    if (this.get('activeEventListeners').length > 20) {
+      console.warn('[CUSTOM DRAG] High listener count detected in didUpdate, performing cleanup');
+      this.cleanupAfterMove();
+    }
+    
     // If we have a selected item but it's no longer in the items array, clear selection
     const selectedItem = this.get('selectedItem');
     const items = this.get('items');
@@ -1390,6 +1426,7 @@ export default Component.extend({
         this.set('selectedIndex', -1);
         this.removeDropZones();
         this.removeChildrenHighlight();
+        this.cleanupAfterMove();
       } else {
         // Update the selectedIndex to match the current position
         const currentIndex = items.indexOf(itemStillExists);
@@ -1460,6 +1497,12 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Selection handlers summary - Added:', addedCount, 'Skipped:', skippedCount, 'Total activeEventListeners:', this.get('activeEventListeners').length);
       
+      // Display listener count warning if high
+      const listenerCount = this.get('activeEventListeners').length;
+      if (listenerCount > 15) {
+        console.warn(`[CUSTOM DRAG] WARNING: High listener count: ${listenerCount}. Consider refreshing the page.`);
+      }
+      
       // If we have a selected item, ensure drop zones are recreated
       if (this.get('selectedItem')) {
         console.log('[CUSTOM DRAG] Selected item exists, recreating drop zones');
@@ -1472,6 +1515,18 @@ export default Component.extend({
   cleanupAfterMove() {
     console.log('[CUSTOM DRAG] Performing comprehensive cleanup after move');
     console.log('[CUSTOM DRAG] Before cleanup - activeEventListeners:', this.get('activeEventListeners').length, 'cleanupTimeouts:', this.get('cleanupTimeouts').length);
+    
+    // Emergency cleanup if we have too many listeners
+    if (this.get('activeEventListeners').length > 50) {
+      console.warn('[CUSTOM DRAG] EMERGENCY: Too many event listeners detected, performing aggressive cleanup');
+      this.get('activeEventListeners').forEach(({ element, event, handler }) => {
+        if (element && element.removeEventListener) {
+          element.removeEventListener(event, handler);
+        }
+      });
+      this.set('activeEventListeners', []);
+      console.log('[CUSTOM DRAG] Emergency cleanup completed');
+    }
     
     // Cancel all registered timeouts
     this.get('cleanupTimeouts').forEach(timeout => {
