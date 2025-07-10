@@ -95,11 +95,52 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'INSIDE TOP of', container.get('questionText'));
       
-      // Use the parent's setAncestryTask to properly handle ancestry
+      // Set flag to prevent moveToPosition from interfering
+      this.set('isSettingAncestry', true);
+      
+      // Set the ancestry relationship
+      const oldParentId = question.get('parentId');
+      console.log('[CUSTOM DRAG] Old parentId:', oldParentId, 'New parentId:', container.get('id'));
+      
+      question.set('parentId', container.get('id'));
+      
+      // Find existing children of the container to determine proper sort order for top placement
       const parentComponent = this.get('parentView');
-      if (parentComponent && parentComponent.get('setAncestryTask')) {
-        console.log('[CUSTOM DRAG] Using parent setAncestryTask for inside top');
-        parentComponent.get('setAncestryTask').perform(question, { target: { acenstry: container } });
+      if (parentComponent && parentComponent.get('surveyTemplate')) {
+        const surveyTemplate = parentComponent.get('surveyTemplate');
+        const parentChildren = surveyTemplate.get('questions')
+          .filterBy('parentId', container.get('id'))
+          .sortBy('sortOrder');
+        
+        let newSortOrder;
+        if (parentChildren.get('length') > 0) {
+          // Place before the first child (at the top)
+          const firstChild = parentChildren.get('firstObject');
+          newSortOrder = firstChild.get('sortOrder') - 0.1;
+          console.log('[CUSTOM DRAG] Found existing children, placing before first child at sortOrder:', newSortOrder);
+        } else {
+          // No existing children, place right after the container
+          newSortOrder = container.get('sortOrder') + 0.1;
+          console.log('[CUSTOM DRAG] No existing children, placing after container at sortOrder:', newSortOrder);
+        }
+        
+        question.set('sortOrder', newSortOrder);
+        
+        // Save the question to persist the ancestry change
+        question.save().then(() => {
+          console.log('[CUSTOM DRAG] Question ancestry updated successfully for top placement');
+          console.log('[CUSTOM DRAG] Question parentId after save:', question.get('parentId'));
+          console.log('[CUSTOM DRAG] Question sortOrder after save:', question.get('sortOrder'));
+          
+          // Clear the ancestry flag
+          this.set('isSettingAncestry', false);
+        }).catch((error) => {
+          console.error('[CUSTOM DRAG] Error updating ancestry:', error);
+          this.set('isSettingAncestry', false);
+        });
+      } else {
+        console.error('[CUSTOM DRAG] Could not access surveyTemplate for sort order calculation');
+        this.set('isSettingAncestry', false);
       }
       
       this.send('hidePlacementModal');
@@ -113,7 +154,7 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'INSIDE BOTTOM of', container.get('questionText'));
       
-      // Use the parent's setAncestryTask to properly handle ancestry
+      // Use the parent's setAncestryTask to properly handle ancestry (places at bottom)
       const parentComponent = this.get('parentView');
       if (parentComponent && parentComponent.get('setAncestryTask')) {
         console.log('[CUSTOM DRAG] Using parent setAncestryTask for inside bottom');
