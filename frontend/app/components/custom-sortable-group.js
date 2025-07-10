@@ -284,9 +284,9 @@ export default Component.extend({
           }
         }
         
-        // For containers, use setAncestryTask then update children ancestry
+        // For containers, use direct ancestry setting then update children ancestry
         if (isContainer) {
-          console.log('[CUSTOM DRAG] Using setAncestryTask for container, then updating children');
+          console.log('[CUSTOM DRAG] Using direct ancestry setting for container, then updating children');
           this.set('isMovingContainer', true);
           // Store the children before the move
           const items = this.get('items');
@@ -299,13 +299,20 @@ export default Component.extend({
             parentId: c.get('parentId'),
             sortOrder: c.get('sortOrder')
           })));
-          parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
-            console.log('[CUSTOM DRAG] setAncestryTask completed for container');
+          
+          // Set ancestry directly
+          const targetContainerId = container.get('id');
+          const newSortOrder = container.get('sortOrder') + 0.001;
+          question.set('parentId', targetContainerId);
+          question.set('sortOrder', newSortOrder);
+          
+          question.save().then(() => {
+            console.log('[CUSTOM DRAG] Container ancestry set directly');
             console.log('[CUSTOM DRAG] Container after move - parentId:', question.get('parentId'), 'sortOrder:', question.get('sortOrder'));
             // Update children ancestry to follow the moved container
             this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
           }).catch((error) => {
-            console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
+            console.error('[CUSTOM DRAG] Error setting container ancestry:', error);
             this.set('isSettingAncestry', false);
             this.set('isMovingContainer', false);
           });
@@ -753,17 +760,33 @@ export default Component.extend({
       const parentComponent = this.get('parentView');
       if (parentComponent && parentComponent.get('setAncestryTask')) {
         console.log('[CUSTOM DRAG] Using parent setAncestryTask for children updates');
-        const updatePromises = children.map((child, index) => {
-          const newSortOrder = container.get('sortOrder') + (index + 1) * 0.001;
-          console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId to', containerId, 'sortOrder to', newSortOrder);
+        
+        // Update children sequentially to avoid race conditions
+        const updateChildrenSequentially = async () => {
+          for (let i = 0; i < children.length; i++) {
+            const child = children[i];
+            const newSortOrder = container.get('sortOrder') + (i + 1) * 0.001;
+            console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId to', containerId, 'sortOrder to', newSortOrder);
+            
+            // Update child directly
+            child.set('parentId', containerId);
+            child.set('sortOrder', newSortOrder);
+            
+            try {
+              await child.save();
+              console.log('[CUSTOM DRAG] Child', child.get('questionText'), 'saved successfully');
+            } catch (error) {
+              console.error('[CUSTOM DRAG] Error saving child', child.get('questionText'), ':', error);
+            }
+          }
           
-          // Update child directly instead of using setAncestryTask
-          child.set('parentId', containerId);
-          child.set('sortOrder', newSortOrder);
-          return child.save();
-        });
-        Promise.all(updatePromises).then(() => {
-          console.log('[CUSTOM DRAG] All children updated successfully using parent setAncestryTask');
+          console.log('[CUSTOM DRAG] All children updated successfully');
+          
+          // Reload all children to ensure they have the latest data
+          const reloadPromises = children.map(child => child.reload());
+          await Promise.all(reloadPromises);
+          console.log('[CUSTOM DRAG] All children reloaded');
+          
           // Now refresh the UI and clear flags
           parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
             this.set('isSettingAncestry', false);
@@ -773,12 +796,15 @@ export default Component.extend({
               id: c.get('id'),
               text: c.get('questionText'),
               parentId: c.get('parentId'),
-              sortOrder: c.get('sortOrder')
+              sortOrder: c.get('sortOrder'),
+              ancestry: c.get('ancestry')
             }));
             console.log('[CUSTOM DRAG] Children after move and UI refresh:', refreshedChildren);
           });
-        }).catch((error) => {
-          console.error('[CUSTOM DRAG] Error updating children using parent setAncestryTask:', error);
+        };
+        
+        updateChildrenSequentially().catch((error) => {
+          console.error('[CUSTOM DRAG] Error in sequential children update:', error);
           this.set('isSettingAncestry', false);
           this.set('isMovingContainer', false);
         });
