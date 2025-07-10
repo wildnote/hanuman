@@ -19,6 +19,7 @@ export default Component.extend({
   highlightTimeout: null,
   cleanupTimeouts: [],
   activeEventListeners: [],
+  isMovingContainer: false, // Flag to prevent UI refresh during container moves
   
   actions: {
     selectItem(item, index) {
@@ -204,28 +205,27 @@ export default Component.extend({
         // For containers, use setAncestryTask then update children ancestry
         if (isContainer) {
           console.log('[CUSTOM DRAG] Using setAncestryTask for container, then updating children');
-          
+          this.set('isMovingContainer', true);
           // Store the children before the move
           const items = this.get('items');
           const containerId = question.get('id');
           const childrenBeforeMove = items.filter(item => item.get('parentId') === containerId);
           console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move');
-          
+          console.log('[CUSTOM DRAG] Children before move:', childrenBeforeMove.map(c => ({
+            id: c.get('id'),
+            text: c.get('questionText'),
+            parentId: c.get('parentId'),
+            sortOrder: c.get('sortOrder')
+          })));
           parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
             console.log('[CUSTOM DRAG] setAncestryTask completed for container');
+            console.log('[CUSTOM DRAG] Container after move - parentId:', question.get('parentId'), 'sortOrder:', question.get('sortOrder'));
             // Update children ancestry to follow the moved container
             this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
-            // UI refresh
-            parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
-              console.log('[CUSTOM DRAG] UI refreshed after container and children move');
-              this.set('isSettingAncestry', false);
-            }).catch((error) => {
-              console.error('[CUSTOM DRAG] Error refreshing UI:', error);
-              this.set('isSettingAncestry', false);
-            });
           }).catch((error) => {
             console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
             this.set('isSettingAncestry', false);
+            this.set('isMovingContainer', false);
           });
         } else {
           // For non-containers, use the parent's setAncestryTask
@@ -287,28 +287,27 @@ export default Component.extend({
         // For containers, use setAncestryTask then update children ancestry
         if (isContainer) {
           console.log('[CUSTOM DRAG] Using setAncestryTask for container, then updating children');
-          
+          this.set('isMovingContainer', true);
           // Store the children before the move
           const items = this.get('items');
           const containerId = question.get('id');
           const childrenBeforeMove = items.filter(item => item.get('parentId') === containerId);
           console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move');
-          
+          console.log('[CUSTOM DRAG] Children before move:', childrenBeforeMove.map(c => ({
+            id: c.get('id'),
+            text: c.get('questionText'),
+            parentId: c.get('parentId'),
+            sortOrder: c.get('sortOrder')
+          })));
           parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
             console.log('[CUSTOM DRAG] setAncestryTask completed for container');
+            console.log('[CUSTOM DRAG] Container after move - parentId:', question.get('parentId'), 'sortOrder:', question.get('sortOrder'));
             // Update children ancestry to follow the moved container
             this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
-            // UI refresh
-            parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
-              console.log('[CUSTOM DRAG] UI refreshed after container and children move');
-              this.set('isSettingAncestry', false);
-            }).catch((error) => {
-              console.error('[CUSTOM DRAG] Error refreshing UI:', error);
-              this.set('isSettingAncestry', false);
-            });
           }).catch((error) => {
             console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
             this.set('isSettingAncestry', false);
+            this.set('isMovingContainer', false);
           });
         } else {
           // For non-containers, use the parent's setAncestryTask
@@ -726,43 +725,57 @@ export default Component.extend({
 
     updateContainerChildrenAncestry(container, items, childrenBeforeMove) {
       console.log('[CUSTOM DRAG] Updating children ancestry for container:', container.get('questionText'));
-      
       const containerId = container.get('id');
-      
-      // Use the children that were identified before the move
       const children = childrenBeforeMove || [];
-      
       console.log('[CUSTOM DRAG] Found', children.length, 'children to update');
-      
       if (children.length === 0) {
         console.log('[CUSTOM DRAG] No children to update');
+        // Even if no children, still refresh UI and clear flags
+        const parentComponent = this.get('parentView');
+        if (parentComponent && parentComponent.get('updateSortOrderTask')) {
+          parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
+            this.set('isSettingAncestry', false);
+            this.set('isMovingContainer', false);
+            console.log('[CUSTOM DRAG] UI refreshed after container move (no children)');
+          });
+        } else {
+          this.set('isSettingAncestry', false);
+          this.set('isMovingContainer', false);
+        }
         return;
       }
-      
-      // Use the parent's setAncestryTask for each child to ensure proper handling
       const parentComponent = this.get('parentView');
       if (parentComponent && parentComponent.get('setAncestryTask')) {
         console.log('[CUSTOM DRAG] Using parent setAncestryTask for children updates');
-        
-        // Update each child using the parent's setAncestryTask
         const updatePromises = children.map((child, index) => {
           const newSortOrder = container.get('sortOrder') + (index + 1) * 0.001;
           console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId to', containerId, 'sortOrder to', newSortOrder);
-          
           return parentComponent.get('setAncestryTask').perform(child, containerId, newSortOrder);
         });
-        
-        // Wait for all children to be updated
         Promise.all(updatePromises).then(() => {
           console.log('[CUSTOM DRAG] All children updated successfully using parent setAncestryTask');
-          
-          // Force a UI refresh
-          parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
+          // Now refresh the UI and clear flags
+          parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
+            this.set('isSettingAncestry', false);
+            this.set('isMovingContainer', false);
+            // Log ancestry/sortOrder of all children after UI refresh
+            const refreshedChildren = children.map(c => ({
+              id: c.get('id'),
+              text: c.get('questionText'),
+              parentId: c.get('parentId'),
+              sortOrder: c.get('sortOrder')
+            }));
+            console.log('[CUSTOM DRAG] Children after move and UI refresh:', refreshedChildren);
+          });
         }).catch((error) => {
           console.error('[CUSTOM DRAG] Error updating children using parent setAncestryTask:', error);
+          this.set('isSettingAncestry', false);
+          this.set('isMovingContainer', false);
         });
       } else {
         console.error('[CUSTOM DRAG] Could not access parent setAncestryTask');
+        this.set('isSettingAncestry', false);
+        this.set('isMovingContainer', false);
       }
     },
 
