@@ -12,21 +12,21 @@
       <div class="placement-modal-body">
         <p>Where would you like to place this question relative to "{{placementContainer.questionText}}"?</p>
         <div class="placement-options">
-          <button class="placement-btn inside-top" {{action "placeInsideTop"}}>
+          <button class="placement-btn outside above" {{action "placeAboveContainer"}}>
             <span class="icon">⬆️</span>
-            <span class="text">Inside container at top</span>
+            <span class="text">Above "{{placementContainer.questionText}}"</span>
           </button>
-          <button class="placement-btn inside-bottom" {{action "placeInsideBottom"}}>
-            <span class="icon">⬇️</span>
-            <span class="text">Inside container at bottom</span>
-          </button>
-          <button class="placement-btn above" {{action "placeAboveContainer"}}>
+          <button class="placement-btn inside inside-top" {{action "placeInsideTop"}}>
             <span class="icon">⬆️</span>
-            <span class="text">Above container</span>
+            <span class="text">Inside "{{placementContainer.questionText}}" at top</span>
           </button>
-          <button class="placement-btn below" {{action "placeBelowContainer"}}>
+          <button class="placement-btn inside inside-bottom" {{action "placeInsideBottom"}}>
             <span class="icon">⬇️</span>
-            <span class="text">Below container</span>
+            <span class="text">Inside "{{placementContainer.questionText}}" at bottom</span>
+          </button>
+          <button class="placement-btn outside below" {{action "placeBelowContainer"}}>
+            <span class="icon">⬇️</span>
+            <span class="text">Below "{{placementContainer.questionText}}"</span>
           </button>
         </div>
       </div>
