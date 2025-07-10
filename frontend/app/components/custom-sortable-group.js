@@ -266,21 +266,62 @@ export default Component.extend({
             this.cleanupAfterMove();
           });
         } else {
-          // For non-containers, use the parent's setAncestryTask
-          parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
-            console.log('[CUSTOM DRAG] setAncestryTask completed for inside top placement');
-            // Refresh the UI
-            parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
-              console.log('[CUSTOM DRAG] UI refreshed after container move');
-              this.set('isSettingAncestry', false);
-              this.cleanupAfterMove();
+          // For non-containers, manually set ancestry and sort order for INSIDE TOP placement
+          console.log('[CUSTOM DRAG] Using manual ancestry setting for single question (INSIDE TOP)');
+          
+          // Ensure the container is expanded so the placed item will be visible
+          if (container.get('collapsed')) {
+            console.log('[CUSTOM DRAG] Container is collapsed, expanding it');
+            const collapsible = parentComponent.get('collapsible');
+            if (collapsible) {
+              collapsible.toggleCollapsed(container);
+            }
+          }
+          
+          // Find the first child of the container to place before it
+          const containerChildren = items.filter(item => item.get('parentId') === container.get('id'));
+          let newSortOrder;
+          
+          if (containerChildren.length > 0) {
+            // Place before the first child (use a value between container and first child)
+            const firstChildSortOrder = containerChildren[0].get('sortOrder');
+            // Ensure we're after the container but before the first child
+            newSortOrder = Math.max(container.get('sortOrder') + 0.001, firstChildSortOrder - 0.001);
+            console.log('[CUSTOM DRAG] Placing single question between container and first child, sortOrder:', newSortOrder, '(container:', container.get('sortOrder'), ', firstChild:', firstChildSortOrder, ')');
+          } else {
+            // No children, place right after the container (same as setAncestryTask)
+            newSortOrder = container.get('sortOrder') + 0.1;
+            console.log('[CUSTOM DRAG] No children, placing single question after container, sortOrder:', newSortOrder);
+          }
+          
+          question.set('parentId', container.get('id'));
+          question.set('sortOrder', newSortOrder);
+          
+          question.save().then(() => {
+            console.log('[CUSTOM DRAG] Single question moved and saved (INSIDE TOP)');
+            console.log('[CUSTOM DRAG] Question after move - parentId:', question.get('parentId'), 'sortOrder:', question.get('sortOrder'));
+            
+            // Reload the question to ensure we have fresh data
+            question.reload().then(() => {
+              console.log('[CUSTOM DRAG] Single question reloaded');
+              
+              // Refresh the UI
+              parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
+                console.log('[CUSTOM DRAG] UI refreshed after single question move');
+                this.set('isSettingAncestry', false);
+                this.cleanupAfterMove();
+              }).catch((error) => {
+                console.error('[CUSTOM DRAG] Error refreshing UI:', error);
+                this.set('isSettingAncestry', false);
+                this.cleanupAfterMove();
+              });
             }).catch((error) => {
-              console.error('[CUSTOM DRAG] Error refreshing UI:', error);
+              console.error('[CUSTOM DRAG] Error reloading single question:', error);
               this.set('isSettingAncestry', false);
               this.cleanupAfterMove();
             });
           }).catch((error) => {
-            console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
+            console.error('[CUSTOM DRAG] Error saving single question:', error);
             this.set('isSettingAncestry', false);
             this.cleanupAfterMove();
           });
@@ -388,21 +429,61 @@ export default Component.extend({
             this.cleanupAfterMove();
           });
         } else {
-          // For non-containers, use the parent's setAncestryTask
-          parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
-            console.log('[CUSTOM DRAG] setAncestryTask completed for inside bottom placement');
-            // Refresh the UI
-            parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
-              console.log('[CUSTOM DRAG] UI refreshed after container move');
-              this.set('isSettingAncestry', false);
-              this.cleanupAfterMove();
+          // For non-containers, manually set ancestry and sort order for INSIDE BOTTOM placement
+          console.log('[CUSTOM DRAG] Using manual ancestry setting for single question (INSIDE BOTTOM)');
+          
+          // Ensure the container is expanded so the placed item will be visible
+          if (container.get('collapsed')) {
+            console.log('[CUSTOM DRAG] Container is collapsed, expanding it');
+            const collapsible = parentComponent.get('collapsible');
+            if (collapsible) {
+              collapsible.toggleCollapsed(container);
+            }
+          }
+          
+          // Find the last child of the container to place after it
+          const containerChildren = items.filter(item => item.get('parentId') === container.get('id'));
+          let newSortOrder;
+          
+          if (containerChildren.length > 0) {
+            // Place after the last child (use the same logic as setAncestryTask)
+            const lastChildSortOrder = containerChildren[containerChildren.length - 1].get('sortOrder');
+            newSortOrder = lastChildSortOrder + 0.001;
+            console.log('[CUSTOM DRAG] Placing single question after last child, sortOrder:', newSortOrder, '(lastChild:', lastChildSortOrder, ')');
+          } else {
+            // No children, place right after the container (same as setAncestryTask)
+            newSortOrder = container.get('sortOrder') + 0.1;
+            console.log('[CUSTOM DRAG] No children, placing single question after container, sortOrder:', newSortOrder);
+          }
+          
+          question.set('parentId', container.get('id'));
+          question.set('sortOrder', newSortOrder);
+          
+          question.save().then(() => {
+            console.log('[CUSTOM DRAG] Single question moved and saved (INSIDE BOTTOM)');
+            console.log('[CUSTOM DRAG] Question after move - parentId:', question.get('parentId'), 'sortOrder:', question.get('sortOrder'));
+            
+            // Reload the question to ensure we have fresh data
+            question.reload().then(() => {
+              console.log('[CUSTOM DRAG] Single question reloaded');
+              
+              // Refresh the UI
+              parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
+                console.log('[CUSTOM DRAG] UI refreshed after single question move');
+                this.set('isSettingAncestry', false);
+                this.cleanupAfterMove();
+              }).catch((error) => {
+                console.error('[CUSTOM DRAG] Error refreshing UI:', error);
+                this.set('isSettingAncestry', false);
+                this.cleanupAfterMove();
+              });
             }).catch((error) => {
-              console.error('[CUSTOM DRAG] Error refreshing UI:', error);
+              console.error('[CUSTOM DRAG] Error reloading single question:', error);
               this.set('isSettingAncestry', false);
               this.cleanupAfterMove();
             });
           }).catch((error) => {
-            console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
+            console.error('[CUSTOM DRAG] Error saving single question:', error);
             this.set('isSettingAncestry', false);
             this.cleanupAfterMove();
           });
