@@ -374,7 +374,10 @@ export default Component.extend({
             if (isContainer) {
               console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
               const items = this.get('items');
-              this.send('updateContainerChildrenAncestry', question, items);
+              const containerId = question.get('id');
+              const childrenBeforeMove = items.filter(item => item.get('parentId') === containerId);
+              console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move for above/below placement');
+              this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
             }
             
             this.send('moveQuestionToPosition', question, targetIndex);
@@ -449,7 +452,10 @@ export default Component.extend({
             if (isContainer) {
               console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
               const items = this.get('items');
-              this.send('updateContainerChildrenAncestry', question, items);
+              const containerId = question.get('id');
+              const childrenBeforeMove = items.filter(item => item.get('parentId') === containerId);
+              console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move for above/below placement');
+              this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
             }
             
             // Use moveQuestionToPosition which calls updateSortOrderTask with reSort=false
@@ -750,7 +756,11 @@ export default Component.extend({
         const updatePromises = children.map((child, index) => {
           const newSortOrder = container.get('sortOrder') + (index + 1) * 0.001;
           console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId to', containerId, 'sortOrder to', newSortOrder);
-          return parentComponent.get('setAncestryTask').perform(child, containerId, newSortOrder);
+          
+          // Update child directly instead of using setAncestryTask
+          child.set('parentId', containerId);
+          child.set('sortOrder', newSortOrder);
+          return child.save();
         });
         Promise.all(updatePromises).then(() => {
           console.log('[CUSTOM DRAG] All children updated successfully using parent setAncestryTask');
