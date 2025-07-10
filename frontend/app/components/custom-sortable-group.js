@@ -132,8 +132,20 @@ export default Component.extend({
           console.log('[CUSTOM DRAG] Question parentId after save:', question.get('parentId'));
           console.log('[CUSTOM DRAG] Question sortOrder after save:', question.get('sortOrder'));
           
-          // Clear the ancestry flag
-          this.set('isSettingAncestry', false);
+          // Reload the question and container to update UI
+          question.reload().then(() => {
+            container.reload().then(() => {
+              // Use parent's updateSortOrderTask to refresh the UI
+              const parentComponent = this.get('parentView');
+              if (parentComponent && parentComponent.get('updateSortOrderTask')) {
+                console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to refresh UI');
+                parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
+              }
+              
+              // Clear the ancestry flag
+              this.set('isSettingAncestry', false);
+            });
+          });
         }).catch((error) => {
           console.error('[CUSTOM DRAG] Error updating ancestry:', error);
           this.set('isSettingAncestry', false);
@@ -154,11 +166,23 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'INSIDE BOTTOM of', container.get('questionText'));
       
+      // Set flag to prevent moveToPosition from interfering
+      this.set('isSettingAncestry', true);
+      
       // Use the parent's setAncestryTask to properly handle ancestry (places at bottom)
       const parentComponent = this.get('parentView');
       if (parentComponent && parentComponent.get('setAncestryTask')) {
         console.log('[CUSTOM DRAG] Using parent setAncestryTask for inside bottom');
-        parentComponent.get('setAncestryTask').perform(question, { target: { acenstry: container } });
+        parentComponent.get('setAncestryTask').perform(question, { target: { acenstry: container } }).then(() => {
+          // Clear the ancestry flag after the task completes
+          this.set('isSettingAncestry', false);
+        }).catch((error) => {
+          console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
+          this.set('isSettingAncestry', false);
+        });
+      } else {
+        console.error('[CUSTOM DRAG] Could not access parent setAncestryTask');
+        this.set('isSettingAncestry', false);
       }
       
       this.send('hidePlacementModal');
@@ -172,9 +196,41 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'ABOVE', container.get('questionText'));
       
-      // Find the container's index and place the question before it
-      const containerIndex = this.get('items').indexOf(container);
-      this.send('moveToPosition', containerIndex);
+      // Set flag to prevent moveToPosition from interfering
+      this.set('isSettingAncestry', true);
+      
+      // Clear ancestry and save
+      const oldParentId = question.get('parentId');
+      console.log('[CUSTOM DRAG] Clearing ancestry from parentId:', oldParentId, 'to null');
+      
+      question.set('parentId', null);
+      
+      // Save the question to persist the ancestry change
+      question.save().then(() => {
+        console.log('[CUSTOM DRAG] Question ancestry cleared successfully');
+        
+        // Reload the question and container to update UI
+        question.reload().then(() => {
+          container.reload().then(() => {
+            // Use parent's updateSortOrderTask to refresh the UI
+            const parentComponent = this.get('parentView');
+            if (parentComponent && parentComponent.get('updateSortOrderTask')) {
+              console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to refresh UI');
+              parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
+            }
+            
+            // Clear the ancestry flag
+            this.set('isSettingAncestry', false);
+            
+            // Now move to the correct position
+            const containerIndex = this.get('items').indexOf(container);
+            this.send('moveToPosition', containerIndex);
+          });
+        });
+      }).catch((error) => {
+        console.error('[CUSTOM DRAG] Error clearing ancestry:', error);
+        this.set('isSettingAncestry', false);
+      });
       
       this.send('hidePlacementModal');
     },
@@ -187,9 +243,41 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'BELOW', container.get('questionText'));
       
-      // Find the container's index and place the question after it
-      const containerIndex = this.get('items').indexOf(container);
-      this.send('moveToPosition', containerIndex + 1);
+      // Set flag to prevent moveToPosition from interfering
+      this.set('isSettingAncestry', true);
+      
+      // Clear ancestry and save
+      const oldParentId = question.get('parentId');
+      console.log('[CUSTOM DRAG] Clearing ancestry from parentId:', oldParentId, 'to null');
+      
+      question.set('parentId', null);
+      
+      // Save the question to persist the ancestry change
+      question.save().then(() => {
+        console.log('[CUSTOM DRAG] Question ancestry cleared successfully');
+        
+        // Reload the question and container to update UI
+        question.reload().then(() => {
+          container.reload().then(() => {
+            // Use parent's updateSortOrderTask to refresh the UI
+            const parentComponent = this.get('parentView');
+            if (parentComponent && parentComponent.get('updateSortOrderTask')) {
+              console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to refresh UI');
+              parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
+            }
+            
+            // Clear the ancestry flag
+            this.set('isSettingAncestry', false);
+            
+            // Now move to the correct position
+            const containerIndex = this.get('items').indexOf(container);
+            this.send('moveToPosition', containerIndex + 1);
+          });
+        });
+      }).catch((error) => {
+        console.error('[CUSTOM DRAG] Error clearing ancestry:', error);
+        this.set('isSettingAncestry', false);
+      });
       
       this.send('hidePlacementModal');
     },
