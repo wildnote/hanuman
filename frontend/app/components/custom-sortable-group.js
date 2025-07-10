@@ -1418,6 +1418,9 @@ export default Component.extend({
       const items = this.element.querySelectorAll('.sortable-item');
       console.log('[CUSTOM DRAG] Ensuring selection handlers for', items.length, 'items');
       
+      let addedCount = 0;
+      let skippedCount = 0;
+      
       items.forEach((element, index) => {
         // Add click handler only to the move icon (glyphicons-sorting)
         const moveIcon = element.querySelector('.glyphicons-sorting');
@@ -1445,11 +1448,17 @@ export default Component.extend({
             // Use safe event listener to prevent duplicates
             this.safeAddEventListener(moveIcon, 'click', selectionClickHandler);
             console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
+            addedCount++;
           } else {
             console.log('[CUSTOM DRAG] Selection handler already exists for item at index:', index);
+            skippedCount++;
           }
+        } else {
+          console.log('[CUSTOM DRAG] No move icon found for item at index:', index);
         }
       });
+      
+      console.log('[CUSTOM DRAG] Selection handlers summary - Added:', addedCount, 'Skipped:', skippedCount, 'Total activeEventListeners:', this.get('activeEventListeners').length);
       
       // If we have a selected item, ensure drop zones are recreated
       if (this.get('selectedItem')) {
@@ -1462,6 +1471,7 @@ export default Component.extend({
   // Comprehensive cleanup method called after every move operation
   cleanupAfterMove() {
     console.log('[CUSTOM DRAG] Performing comprehensive cleanup after move');
+    console.log('[CUSTOM DRAG] Before cleanup - activeEventListeners:', this.get('activeEventListeners').length, 'cleanupTimeouts:', this.get('cleanupTimeouts').length);
     
     // Cancel all registered timeouts
     this.get('cleanupTimeouts').forEach(timeout => {
@@ -1483,8 +1493,18 @@ export default Component.extend({
       // Keep selection handlers (click on move icons), remove drop zone handlers
       const isSelectionHandler = event === 'click' && element.classList.contains('glyphicons-sorting');
       const isDropZoneHandler = event === 'click' || event === 'mouseenter' || event === 'mouseleave';
-      return isDropZoneHandler && !isSelectionHandler;
+      const shouldRemove = isDropZoneHandler && !isSelectionHandler;
+      
+      if (shouldRemove) {
+        console.log('[CUSTOM DRAG] Removing listener:', { event, elementClass: element.className });
+      } else {
+        console.log('[CUSTOM DRAG] Keeping listener:', { event, elementClass: element.className });
+      }
+      
+      return shouldRemove;
     });
+    
+    console.log('[CUSTOM DRAG] Removing', listenersToRemove.length, 'drop zone listeners, keeping', listeners.length - listenersToRemove.length, 'selection listeners');
     
     listenersToRemove.forEach(({ element, event, handler }) => {
       if (element && element.removeEventListener) {
@@ -1517,6 +1537,7 @@ export default Component.extend({
     
     // Re-add selection handlers after cleanup
     run.scheduleOnce('afterRender', this, () => {
+      console.log('[CUSTOM DRAG] Re-adding selection handlers after cleanup');
       this.ensureSelectionHandlers();
     });
     
