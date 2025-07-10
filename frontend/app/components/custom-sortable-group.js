@@ -207,12 +207,14 @@ export default Component.extend({
           console.log('[CUSTOM DRAG] Using strict sequencing for container move (INSIDE TOP)');
           this.set('isMovingContainer', true);
           
-          // Store the children before the move
+          // Store the children BEFORE any moves happen, sorted by their current sortOrder
           const items = this.get('items');
           const containerId = question.get('id');
-          const childrenBeforeMove = items.filter(item => item.get('parentId') === containerId);
+          const allChildren = items.filter(item => item.get('parentId') === containerId);
+          // Sort children by their current sortOrder to preserve their intended order
+          const childrenBeforeMove = allChildren.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
           console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move');
-          console.log('[CUSTOM DRAG] Children before move:', childrenBeforeMove.map(c => ({
+          console.log('[CUSTOM DRAG] Children before move (sorted by sortOrder):', childrenBeforeMove.map(c => ({
             id: c.get('id'),
             text: c.get('questionText'),
             parentId: c.get('parentId'),
@@ -331,12 +333,14 @@ export default Component.extend({
           console.log('[CUSTOM DRAG] Using strict sequencing for container move');
           this.set('isMovingContainer', true);
           
-          // Store the children before the move
+          // Store the children BEFORE any moves happen, sorted by their current array position
           const items = this.get('items');
           const containerId = question.get('id');
-          const childrenBeforeMove = items.filter(item => item.get('parentId') === containerId);
+          const allChildren = items.filter(item => item.get('parentId') === containerId);
+          // Sort children by their current sortOrder to preserve their intended order
+          const childrenBeforeMove = allChildren.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
           console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move');
-          console.log('[CUSTOM DRAG] Children before move:', childrenBeforeMove.map(c => ({
+          console.log('[CUSTOM DRAG] Children before move (sorted by sortOrder):', childrenBeforeMove.map(c => ({
             id: c.get('id'),
             text: c.get('questionText'),
             parentId: c.get('parentId'),
@@ -434,6 +438,25 @@ export default Component.extend({
       // Set flag to prevent moveToPosition from interfering
       this.set('isSettingAncestry', true);
       
+      // Check if the moved item is a container and capture children BEFORE clearing ancestry
+      const isContainer = question.get('isARepeater') || question.get('isContainer');
+      let childrenBeforeMove = [];
+      if (isContainer) {
+        console.log('[CUSTOM DRAG] Container moved via placement modal, capturing children BEFORE clearing ancestry');
+        const items = this.get('items');
+        const containerId = question.get('id');
+        const allChildren = items.filter(item => item.get('parentId') === containerId);
+        // Sort children by their current sortOrder to preserve their intended order
+        childrenBeforeMove = allChildren.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
+        console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move for above/below placement');
+        console.log('[CUSTOM DRAG] Children before move (sorted by sortOrder):', childrenBeforeMove.map(c => ({
+          id: c.get('id'),
+          text: c.get('questionText'),
+          parentId: c.get('parentId'),
+          sortOrder: c.get('sortOrder')
+        })));
+      }
+      
       // Clear ancestry and save
       const oldParentId = question.get('parentId');
       console.log('[CUSTOM DRAG] Clearing ancestry from parentId:', oldParentId, 'to null');
@@ -454,13 +477,9 @@ export default Component.extend({
             console.log('[CUSTOM DRAG] Moving question to pre-calculated target position:', targetIndex);
             
             // Check if the moved item is a container and handle children ancestry updates
-            const isContainer = question.get('isARepeater') || question.get('isContainer');
             if (isContainer) {
               console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
               const items = this.get('items');
-              const containerId = question.get('id');
-              const childrenBeforeMove = items.filter(item => item.get('parentId') === containerId);
-              console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move for above/below placement');
               this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
             }
             
@@ -816,6 +835,12 @@ export default Component.extend({
     updateContainerChildrenAncestry(container, items, childrenBeforeMove) {
       console.log('[CUSTOM DRAG] Updating children ancestry for container:', container.get('questionText'));
       const containerId = container.get('id');
+      console.log('[CUSTOM DRAG] childrenBeforeMove parameter:', childrenBeforeMove ? childrenBeforeMove.map(c => ({
+        id: c.get('id'),
+        text: c.get('questionText'),
+        parentId: c.get('parentId'),
+        sortOrder: c.get('sortOrder')
+      })) : 'null/undefined');
       const children = childrenBeforeMove || [];
       console.log('[CUSTOM DRAG] Found', children.length, 'children to update');
       if (children.length === 0) {
@@ -842,12 +867,14 @@ export default Component.extend({
         const updateChildrenSequentially = async () => {
           console.log('[CUSTOM DRAG] Step 4: Starting children updates');
           
-          // Step 4a: Sort children by their original sort order to preserve their sequence
-          const sortedChildren = children.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
-          console.log('[CUSTOM DRAG] Children sorted by original sort order:', sortedChildren.map(c => ({
+          // Step 4a: Use the childrenBeforeMove array which is already sorted by sortOrder
+          console.log('[CUSTOM DRAG] Using childrenBeforeMove array (already sorted by sortOrder):', children.map(c => ({
             text: c.get('questionText'),
-            originalSortOrder: c.get('sortOrder')
+            sortOrder: c.get('sortOrder')
           })));
+          
+          // Use the children array as-is since it's already sorted by sortOrder from placeInsideBottom
+          const sortedChildren = children;
           
           // Step 4b: Update all children in their original order
           for (let i = 0; i < sortedChildren.length; i++) {
@@ -860,8 +887,15 @@ export default Component.extend({
             child.set('sortOrder', newSortOrder);
             
             try {
-              await child.save();
+              const savedChild = await child.save();
               console.log('[CUSTOM DRAG] Child', child.get('questionText'), 'saved successfully');
+              console.log('[CUSTOM DRAG] Saved child data:', {
+                id: savedChild.get('id'),
+                text: savedChild.get('questionText'),
+                parentId: savedChild.get('parentId'),
+                sortOrder: savedChild.get('sortOrder'),
+                ancestry: savedChild.get('ancestry')
+              });
             } catch (error) {
               console.error('[CUSTOM DRAG] Error saving child', child.get('questionText'), ':', error);
             }
