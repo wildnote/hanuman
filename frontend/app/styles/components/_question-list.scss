@@ -6,6 +6,62 @@
   opacity: 0.2;
 }
 
+// Custom sortable drop zones
+.drop-zone-active {
+  border: 2px dashed #ccc;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: #5a87cf;
+    background-color: #e8f4fd;
+  }
+}
+
+.drop-zone-highlighted {
+  border: 2px solid #5a87cf !important;
+  background-color: #d4edda !important;
+  transform: scale(1.02);
+}
+
+// Container drop zones for ancestry
+.container-drop-zone-active {
+  border: 2px dashed #28a745;
+  background-color: #f8fff9;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: #28a745;
+    background-color: #d4edda;
+  }
+}
+
+.container-drop-zone-highlighted {
+  border: 2px solid #28a745 !important;
+  background-color: #c3e6cb !important;
+  transform: scale(1.02);
+}
+
+// Selected item styling
+.sortable-item.selected {
+  background-color: #fff3cd;
+  border: 2px solid #ffc107;
+  
+  // Container styling when selected
+  &.container-selected {
+    cursor: pointer;
+    background-color: #fff3cd;
+    border: 2px solid #28a745;
+    
+    &:hover {
+      background-color: #d4edda;
+      border-color: #1e7e34;
+    }
+  }
+}
+
 .header-selected {
   text-rendering: optimizeLegibility;
   background-color: #5a87cf;

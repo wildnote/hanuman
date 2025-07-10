@@ -1,5 +1,5 @@
 {{!-- called from surveyTemplate and dislpays each answer type as readonly --}}
-<div data-test-question-row class="row">
+<div data-test-question-row class="row" data-question-id={{question.id}}>
   <div class="draggable-target-message">DRAG HERE TO POSITION UNDER THIS SECTION</div>
   <div class="col-sm-4">
     {{#if (or question.loading (gt question.pendingRecursive 0))}}
@@ -19,11 +19,7 @@
       {{else}}
         <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
       {{/if}}
-      {{#if (and (not ancestrable) (not isSelected))}}
-        <span class="glyphicons glyphicons-move-square {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'icon-disabled'}} {{if question.loading 'hide'}}">
-          {{#tooltip-on-element duration=1500 side='right'}}DRAG TO MOVE<br />UNDER SECTION{{/tooltip-on-element}}
-        </span>
-      {{/if}}
+
     {{/if}}
     <span data-test="question.questionText">
       {{question.questionText}}

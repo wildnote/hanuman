@@ -1,13 +1,35 @@
 import Component from '@ember/component';
+import { computed } from '@ember/object';
 
 export default Component.extend({
   tagName: 'li',
   classNames: ['li-question', 'row', 'question-border', 'item', 'sortable-item'],
+  classNameBindings: ['isSelected:selected', 'isContainerSelected:container-selected'],
   
   // Properties
   model: null,
   index: 0,
   onSelect: null,
+  selectedItem: null,
+  selectedIndex: -1,
+  
+  // Computed properties
+  isSelected: computed('model', 'index', 'selectedItem', 'selectedIndex', function() {
+    return this.get('selectedItem') === this.get('model') || this.get('selectedIndex') === this.get('index');
+  }),
+
+  isContainer: computed('model', function() {
+    const model = this.get('model');
+    const isContainer = model && (model.get('isARepeater') || model.get('isContainer'));
+    console.log('[CUSTOM ITEM] Container check for', model ? model.get('questionText') : 'no model', 'isContainer:', isContainer);
+    return isContainer;
+  }),
+
+  isContainerSelected: computed('isSelected', 'isContainer', function() {
+    const isContainerSelected = this.get('isSelected') && this.get('isContainer');
+    console.log('[CUSTOM ITEM] Container selected check - isSelected:', this.get('isSelected'), 'isContainer:', this.get('isContainer'), 'result:', isContainerSelected);
+    return isContainerSelected;
+  }),
   
   didInsertElement() {
     this._super(...arguments);
