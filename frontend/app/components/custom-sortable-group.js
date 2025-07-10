@@ -16,6 +16,7 @@ export default Component.extend({
   showPlacementOptions: false,
   placementQuestion: null,
   placementContainer: null,
+  highlightTimeout: null,
   
   actions: {
     selectItem(item, index) {
@@ -46,7 +47,14 @@ export default Component.extend({
         this.set('selectedItem', item);
         this.set('selectedIndex', index);
         this.createDropZones();
-        this.highlightChildren(item);
+        
+        // Debounce highlighting to prevent performance issues
+        if (this.get('highlightTimeout')) {
+          run.cancel(this.get('highlightTimeout'));
+        }
+        this.set('highlightTimeout', run.later(this, () => {
+          this.highlightChildren(item);
+        }, 50));
       }
     },
 
@@ -726,31 +734,34 @@ export default Component.extend({
         return;
       }
       
-      // Update children to ensure they stay with the container
-      const updatePromises = children.map(child => {
+      // Get the container's current sort order to base children sort orders on
+      const containerSortOrder = container.get('sortOrder');
+      console.log('[CUSTOM DRAG] Container sort order:', containerSortOrder);
+      
+      // Update children to ensure they stay with the container and have proper sort orders
+      const updatePromises = children.map((child, index) => {
         const childParentId = child.get('parentId');
+        const newSortOrder = containerSortOrder + (index + 1) * 0.001; // Increment by 0.001 for each child
         
-        // Children should always have the container as their parent
-        if (childParentId !== containerId) {
-          console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId from', childParentId, 'to', containerId);
-          child.set('parentId', containerId);
-          return child.save();
-        } else {
-          console.log('[CUSTOM DRAG] Child', child.get('questionText'), 'parentId already correct:', childParentId);
-          return Promise.resolve();
-        }
+        console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId from', childParentId, 'to', containerId, 'sortOrder to', newSortOrder);
+        
+        // Update both parentId and sortOrder
+        child.set('parentId', containerId);
+        child.set('sortOrder', newSortOrder);
+        
+        return child.save();
       });
       
       // Wait for all children to be updated
       Promise.all(updatePromises).then(() => {
-        console.log('[CUSTOM DRAG] All children ancestry updated successfully');
+        console.log('[CUSTOM DRAG] All children ancestry and sort order updated successfully');
         
         // Log the final state
         children.forEach((child, index) => {
-          console.log(`[CUSTOM DRAG] Child ${index} final state:`, child.get('questionText'), 'parentId:', child.get('parentId'));
+          console.log(`[CUSTOM DRAG] Child ${index} final state:`, child.get('questionText'), 'parentId:', child.get('parentId'), 'sortOrder:', child.get('sortOrder'));
         });
       }).catch((error) => {
-        console.error('[CUSTOM DRAG] Error updating children ancestry:', error);
+        console.error('[CUSTOM DRAG] Error updating children ancestry and sort order:', error);
       });
     },
 
@@ -1095,42 +1106,35 @@ export default Component.extend({
     const children = items.filter(item => item.get('parentId') === containerId);
     
     console.log('[CUSTOM DRAG] Found', children.length, 'children to highlight');
-    console.log('[CUSTOM DRAG] Container ID:', containerId);
-    console.log('[CUSTOM DRAG] Children IDs:', children.map(c => c.get('id')));
+    
+    if (children.length === 0) {
+      return;
+    }
     
     // Use run.scheduleOnce to ensure DOM is ready
     run.scheduleOnce('afterRender', this, () => {
-      // Highlight each child
-      children.forEach((child, index) => {
-        console.log('[CUSTOM DRAG] Highlighting child', index, ':', child.get('questionText'), 'ID:', child.get('id'));
-        
-        // Find the DOM element for this child
-        const childElements = this.element.querySelectorAll('.sortable-item');
-        console.log('[CUSTOM DRAG] Found', childElements.length, 'sortable-item elements');
-        
-        childElements.forEach((element, elementIndex) => {
-          console.log('[CUSTOM DRAG] Checking element', elementIndex, 'HTML:', element.outerHTML.substring(0, 200) + '...');
-          
-          // Look for data-question-id within the sortable-item (which contains the question-row)
-          const questionElement = element.querySelector('[data-question-id]');
-          if (questionElement) {
-            const questionId = questionElement.getAttribute('data-question-id');
-            console.log('[CUSTOM DRAG] Checking element with questionId:', questionId, 'against child ID:', child.get('id'));
-            if (questionId === child.get('id').toString()) {
-              element.classList.add('children-highlight');
-              console.log('[CUSTOM DRAG] Added children-highlight class to child element for:', child.get('questionText'));
-            }
-          } else {
-            console.log('[CUSTOM DRAG] No data-question-id found in element', elementIndex);
+      // Create a Set of child IDs for faster lookup
+      const childIds = new Set(children.map(child => child.get('id').toString()));
+      
+      // Find all sortable-item elements once
+      const childElements = this.element.querySelectorAll('.sortable-item');
+      
+      // Process each element efficiently
+      childElements.forEach(element => {
+        const questionElement = element.querySelector('[data-question-id]');
+        if (questionElement) {
+          const questionId = questionElement.getAttribute('data-question-id');
+          if (childIds.has(questionId)) {
+            element.classList.add('children-highlight');
           }
-        });
+        }
       });
+      
+      console.log('[CUSTOM DRAG] Highlighted', children.length, 'children');
     });
   },
 
   removeChildrenHighlight() {
-    console.log('[CUSTOM DRAG] Removing children highlight');
-    
     // Use run.scheduleOnce to ensure DOM is ready
     run.scheduleOnce('afterRender', this, () => {
       // Remove highlight from all elements
@@ -1138,8 +1142,6 @@ export default Component.extend({
       elements.forEach(element => {
         element.classList.remove('children-highlight');
       });
-      
-      console.log('[CUSTOM DRAG] Removed children-highlight class from', elements.length, 'elements');
     });
   },
 
@@ -1219,6 +1221,14 @@ export default Component.extend({
         this.createDropZones();
       }
     });
+  },
+
+  // Clean up timeouts when component is destroyed
+  willDestroyElement() {
+    if (this.get('highlightTimeout')) {
+      run.cancel(this.get('highlightTimeout'));
+    }
+    this._super(...arguments);
   },
 
   // Force a complete refresh of the component
