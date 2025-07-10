@@ -98,60 +98,42 @@ export default Component.extend({
       // Set flag to prevent moveToPosition from interfering
       this.set('isSettingAncestry', true);
       
-      // Set the ancestry relationship
-      const oldParentId = question.get('parentId');
-      console.log('[CUSTOM DRAG] Old parentId:', oldParentId, 'New parentId:', container.get('id'));
-      
-      question.set('parentId', container.get('id'));
-      
-      // Find existing children of the container to determine proper sort order for top placement
+      // Use the parent's setAncestryTask to properly handle ancestry (this will expand the container if needed)
       const parentComponent = this.get('parentView');
-      if (parentComponent && parentComponent.get('surveyTemplate')) {
-        const surveyTemplate = parentComponent.get('surveyTemplate');
-        const parentChildren = surveyTemplate.get('questions')
-          .filterBy('parentId', container.get('id'))
-          .sortBy('sortOrder');
-        
-        let newSortOrder;
-        if (parentChildren.get('length') > 0) {
-          // Place before the first child (at the top)
-          const firstChild = parentChildren.get('firstObject');
-          newSortOrder = firstChild.get('sortOrder') - 0.1;
-          console.log('[CUSTOM DRAG] Found existing children, placing before first child at sortOrder:', newSortOrder);
-        } else {
-          // No existing children, place right after the container
-          newSortOrder = container.get('sortOrder') + 0.1;
-          console.log('[CUSTOM DRAG] No existing children, placing after container at sortOrder:', newSortOrder);
-        }
-        
-        question.set('sortOrder', newSortOrder);
-        
-        // Save the question to persist the ancestry change
-        question.save().then(() => {
-          console.log('[CUSTOM DRAG] Question ancestry updated successfully for top placement');
-          console.log('[CUSTOM DRAG] Question parentId after save:', question.get('parentId'));
-          console.log('[CUSTOM DRAG] Question sortOrder after save:', question.get('sortOrder'));
-          
-          // Reload the question and container to update UI
-          question.reload().then(() => {
-            container.reload().then(() => {
-              // Use parent's updateSortOrderTask to refresh the UI
-              const parentComponent = this.get('parentView');
-              if (parentComponent && parentComponent.get('updateSortOrderTask')) {
-                console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to refresh UI');
-                parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
+      if (parentComponent && parentComponent.get('setAncestryTask')) {
+        console.log('[CUSTOM DRAG] Using parent setAncestryTask for inside top');
+        parentComponent.get('setAncestryTask').perform(question, { target: { acenstry: container } }).then(() => {
+          // After ancestry is set, adjust the sort order to place at top
+          const surveyTemplate = parentComponent.get('surveyTemplate');
+          if (surveyTemplate) {
+            const parentChildren = surveyTemplate.get('questions')
+              .filterBy('parentId', container.get('id'))
+              .sortBy('sortOrder');
+            
+            if (parentChildren.get('length') > 1) { // More than just the question we just added
+              // Find the first child (excluding our question)
+              const firstChild = parentChildren.reject(q => q.get('id') === question.get('id')).get('firstObject');
+              if (firstChild) {
+                // Place our question before the first child
+                const newSortOrder = firstChild.get('sortOrder') - 0.1;
+                console.log('[CUSTOM DRAG] Adjusting sort order to place at top:', newSortOrder);
+                question.set('sortOrder', newSortOrder);
+                question.save().then(() => {
+                  // Refresh the UI
+                  parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
+                });
               }
-              
-              // Clear the ancestry flag
-              this.set('isSettingAncestry', false);
-            });
-          });
+            }
+          }
+          
+          // Clear the ancestry flag
+          this.set('isSettingAncestry', false);
         }).catch((error) => {
-          console.error('[CUSTOM DRAG] Error updating ancestry:', error);
+          console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
           this.set('isSettingAncestry', false);
         });
       } else {
-        console.error('[CUSTOM DRAG] Could not access surveyTemplate for sort order calculation');
+        console.error('[CUSTOM DRAG] Could not access parent setAncestryTask');
         this.set('isSettingAncestry', false);
       }
       
@@ -196,6 +178,11 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'ABOVE', container.get('questionText'));
       
+      // Calculate target position BEFORE clearing ancestry
+      const containerIndex = this.get('items').indexOf(container);
+      const targetIndex = containerIndex;
+      console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for container at index:', containerIndex);
+      
       // Set flag to prevent moveToPosition from interfering
       this.set('isSettingAncestry', true);
       
@@ -212,19 +199,12 @@ export default Component.extend({
         // Reload the question and container to update UI
         question.reload().then(() => {
           container.reload().then(() => {
-            // Use parent's updateSortOrderTask to refresh the UI
-            const parentComponent = this.get('parentView');
-            if (parentComponent && parentComponent.get('updateSortOrderTask')) {
-              console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to refresh UI');
-              parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
-            }
-            
             // Clear the ancestry flag
             this.set('isSettingAncestry', false);
             
-            // Now move to the correct position
-            const containerIndex = this.get('items').indexOf(container);
-            this.send('moveToPosition', containerIndex);
+            // Now move the specific question to the pre-calculated target position
+            console.log('[CUSTOM DRAG] Moving question to pre-calculated target position:', targetIndex);
+            this.moveQuestionToPosition(question, targetIndex);
           });
         });
       }).catch((error) => {
@@ -243,6 +223,11 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'BELOW', container.get('questionText'));
       
+      // Calculate target position BEFORE clearing ancestry
+      const containerIndex = this.get('items').indexOf(container);
+      const targetIndex = containerIndex + 1;
+      console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for container at index:', containerIndex);
+      
       // Set flag to prevent moveToPosition from interfering
       this.set('isSettingAncestry', true);
       
@@ -259,19 +244,12 @@ export default Component.extend({
         // Reload the question and container to update UI
         question.reload().then(() => {
           container.reload().then(() => {
-            // Use parent's updateSortOrderTask to refresh the UI
-            const parentComponent = this.get('parentView');
-            if (parentComponent && parentComponent.get('updateSortOrderTask')) {
-              console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to refresh UI');
-              parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
-            }
-            
             // Clear the ancestry flag
             this.set('isSettingAncestry', false);
             
-            // Now move to the correct position
-            const containerIndex = this.get('items').indexOf(container);
-            this.send('moveToPosition', containerIndex + 1);
+            // Now move the specific question to the pre-calculated target position
+            console.log('[CUSTOM DRAG] Moving question to pre-calculated target position:', targetIndex);
+            this.moveQuestionToPosition(question, targetIndex);
           });
         });
       }).catch((error) => {
@@ -328,6 +306,52 @@ export default Component.extend({
       this.set('selectedIndex', -1);
       this.removeDropZones();
     }
+  },
+
+  moveQuestionToPosition(question, targetIndex) {
+    console.log('[CUSTOM DRAG] moveQuestionToPosition called with question:', question.get('questionText'), 'targetIndex:', targetIndex);
+    
+    // Don't run if we're setting ancestry
+    if (this.get('isSettingAncestry')) {
+      console.log('[CUSTOM DRAG] Skipping moveQuestionToPosition because ancestry is being set');
+      return;
+    }
+    
+    const items = this.get('items');
+    const currentIndex = items.indexOf(question);
+    
+    if (currentIndex === -1) {
+      console.log('[CUSTOM DRAG] Question not found in items array');
+      return;
+    }
+    
+    if (currentIndex === targetIndex) {
+      console.log('[CUSTOM DRAG] Question already at target position');
+      return;
+    }
+    
+    console.log('[CUSTOM DRAG] Move question from', currentIndex, 'to', targetIndex);
+    
+    const itemsCopy = items.slice();
+    const draggedItem = itemsCopy.splice(currentIndex, 1)[0];
+    itemsCopy.splice(targetIndex, 0, draggedItem);
+    
+    // Use parent's updateSortOrderTask to persist the changes to database
+    const parentComponent = this.get('parentView');
+    if (parentComponent && parentComponent.get('updateSortOrderTask')) {
+      console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to persist sort order changes');
+      parentComponent.get('updateSortOrderTask').perform(itemsCopy, false); // false = don't re-sort, use array order
+    } else {
+      console.error('[CUSTOM DRAG] Could not access parent updateSortOrderTask');
+      // Fallback to onChange callback
+      if (typeof this.get('onChange') === 'function') {
+        run(() => {
+          this.get('onChange')(itemsCopy, draggedItem);
+        });
+      }
+    }
+    
+    console.log('[CUSTOM DRAG] Question moved successfully');
   },
   
   createDropZones() {
