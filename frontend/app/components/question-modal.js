@@ -494,6 +494,10 @@ export default Component.extend({
 
     closeModal() {
       let question = this.get('question');
+      console.log('[QUESTION MODAL] closeModal called');
+      console.log('[QUESTION MODAL] transitionToSurveyStep:', this.get('transitionToSurveyStep'));
+      console.log('[QUESTION MODAL] typeof transitionToSurveyStep:', typeof this.get('transitionToSurveyStep'));
+      
       if (
         !question.get('hasDirtyAttributes') ||
         window.confirm('You will lose any unsaved changes. Are you sure you want to continue?')
@@ -508,7 +512,15 @@ export default Component.extend({
           .filter((answerChoice) => answerChoice.isNew)
           .forEach((answerChoice) => answerChoice.destroyRecord());
         this.get('remodal').close('question-modal');
-        this.sendAction('transitionToSurveyStep');
+        
+        console.log('[QUESTION MODAL] About to call transitionToSurveyStep');
+        if (this.get('transitionToSurveyStep') && typeof this.get('transitionToSurveyStep') === 'function') {
+          console.log('[QUESTION MODAL] Calling transitionToSurveyStep');
+          this.get('transitionToSurveyStep')();
+        } else {
+          console.log('[QUESTION MODAL] transitionToSurveyStep not available or not a function');
+        }
+        
         if (question.get('wasNew')) {
           if (testing) {
             return question.set('wasNew', false);

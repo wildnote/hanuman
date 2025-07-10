@@ -15,5 +15,16 @@ export default Route.extend({
 
   setupController(controller, models) {
     controller.setProperties(models);
+  },
+
+  actions: {
+    transitionToSurveyStep() {
+      console.log('[NEW ROUTE] transitionToSurveyStep called');
+      let surveyTemplate = this.modelFor('survey-templates.record');
+      console.log('[NEW ROUTE] surveyTemplate:', surveyTemplate);
+      console.log('[NEW ROUTE] About to transition to survey_templates.record');
+      this.transitionTo('survey_templates.record', surveyTemplate);
+      console.log('[NEW ROUTE] Transition completed');
+    }
   }
 });

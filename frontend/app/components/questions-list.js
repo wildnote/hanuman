@@ -224,6 +224,11 @@ export default Component.extend({
     },
 
     sortedDropped(viewableSortedQuestions, _draggedQuestion) {
+      console.log('[questions-list] sortedDropped called', viewableSortedQuestions, _draggedQuestion);
+      // Log the order before
+      const before = this.get('surveyTemplate.questionsNotDeleted').map(q => [q.get('id'), q.get('sortOrder')]);
+      console.log('Before update:', before);
+
       const allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
       const sortableQuestions = A();
       // Handle collapsed question. When there are questions collapsed we completely removed them from the DOM
@@ -242,49 +247,14 @@ export default Component.extend({
           sortableQuestions.addObjects(collapsedChild);
         }
       });
-      this.get('updateSortOrderTask').perform(sortableQuestions);
-    },
-
-    dragStarted(question) {
-      const targets = this.element.querySelectorAll('.draggable-object-target');
-      targets.forEach((target) => {
-        const parent = target.parentElement;
-        if (parent && !parent.classList.contains(`model-id-${question.get('parentId')}`)) {
-          parent.classList.add('dragging-coming-active');
-        }
-      });
-    },
-
-    dragEnded() {
-      const targets = this.element.querySelectorAll('.draggable-object-target');
-      targets.forEach((target) => {
-        const parent = target.parentElement;
-        if (parent) {
-          parent.classList.remove('dragging-coming-active');
-        }
-      });
-    },
-
-    dragOver() {
-      run.next(this, function() {
-        const targets = this.element.querySelectorAll('.accepts-drag');
-        targets.forEach((target) => {
-          const parent = target.parentElement;
-          if (parent) {
-            parent.classList.add('dragging-over');
-          }
-        });
-      });
-    },
-
-    dragOut() {
-      const targets = this.element.querySelectorAll('.draggable-object-target');
-      targets.forEach((target) => {
-        const parent = target.parentElement;
-        if (parent) {
-          parent.classList.remove('dragging-over');
-        }
-      });
+      // Log the new order
+      const after = sortableQuestions.map(q => [q.get('id'), q.get('sortOrder')]);
+      console.log('New order to update:', after);
+      console.log('Questions in new order:', sortableQuestions.map(q => q.get('questionText')));
+      
+      // Pass the questions in the new order to updateSortOrderTask
+      // The order of the array determines the new sort_order values
+      this.get('updateSortOrderTask').perform(sortableQuestions, false); // false = don't re-sort, use array order
     }
   }
 });

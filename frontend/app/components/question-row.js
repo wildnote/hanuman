@@ -3,6 +3,7 @@ import { computed } from '@ember/object';
 import { htmlSafe } from '@ember/string';
 import { or } from '@ember/object/computed';
 import { inject as service } from '@ember/service';
+import { run } from '@ember/runloop';
 
 export default Component.extend({
   store: service(),
@@ -22,6 +23,10 @@ export default Component.extend({
     'question.{ancestry,hidden,required,visibilityRule.isNew,displayDataInRepeaterHeader,defaultAnswer}',
     function() {
       const question = this.get('question');
+      if (!question) {
+        return htmlSafe('');
+      }
+      
       let initial = '';
       if (question.get('hidden')) {
         initial += '<span class="label label-default">Hidden</span>';
@@ -43,7 +48,7 @@ export default Component.extend({
       }
       return htmlSafe(initial);
     }
-  ),
+  ).readOnly(),
 
   totalChildren: computed('otherQuetions.@each.ancestry', 'question.id', function() {
     const questionId = this.get('question.id');
@@ -53,12 +58,20 @@ export default Component.extend({
   actions: {
     highlightConditional(questionId) {
       const question = this.get('store').peekRecord('question', questionId);
-      question.set('highlighted', true);
+      if (question) {
+        run.scheduleOnce('actions', this, () => {
+          question.set('highlighted', true);
+        });
+      }
     },
 
     unHighlightConditional(questionId) {
       const question = this.get('store').peekRecord('question', questionId);
-      question.set('highlighted', false);
+      if (question) {
+        run.scheduleOnce('actions', this, () => {
+          question.set('highlighted', false);
+        });
+      }
     },
 
     confirm() {
@@ -78,7 +91,9 @@ export default Component.extend({
     delete() {
       const question = this.get('question');
       const el = this.get('element');
-      this.sendAction('deleteQuestion', question, el);
+      if (this.get('deleteQuestion')) {
+        this.get('deleteQuestion')(question, el);
+      }
     },
 
     toggleCollapsed() {
@@ -96,8 +111,10 @@ export default Component.extend({
         if (otherQuetion.get('ancestry')) {
           const ancestrires = otherQuetion.get('ancestry').split('/');
           if (ancestrires.includes(questionId)) {
-            otherQuetion.set('ancestrySelected', checked);
-            this.get('toggleQuestion')(otherQuetion, checked);
+            run.scheduleOnce('actions', this, () => {
+              otherQuetion.set('ancestrySelected', checked);
+              this.get('toggleQuestion')(otherQuetion, checked);
+            });
           }
         }
       });

@@ -107,7 +107,7 @@
         </div>
       </div>
       <div class="{{if isPerformingBulk 'opacited'}}">
-        {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange="sortedDropped" as |group|}}
+        {{#custom-sortable-group items=sortedQuestions onChange=(action "sortedDropped") as |group|}}
           <!-- hardcode survey date row here -->
           <li class="li-question row question-border">
             <div class="row">
@@ -127,37 +127,22 @@
               {{/if}}
             </div>
           </li>
-          {{#each sortedQuestions as |question|}}
+          {{#each sortedQuestions as |question index|}}
             {{#if (not question.isLoading)}}
-              {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
-                {{#if question.supportAncestry}}
-                  {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction=(action 'dragOver') dragOutAction=(action 'dragOut')}}
-                    {{question-row
-                      question=question
-                      otherQuetions=surveyTemplate.questions
-                      deleteQuestion='deleteQuestion'
-                      toggleQuestion=(action "toggleQuestion")
-                      isFullyEditable=isFullyEditable
-                      ancestrable=true
-                      selectedQuestions=selectedQuestions
-                    }}
-                  {{/draggable-object-target}}
-                {{else}}
-                  {{#draggable-object content=question dragStartHook=(action 'dragStarted' question) dragEndHook=(action 'dragEnded') dragHandle='.glyphicons-move-square'}}
-                    {{question-row
-                      question=question
-                      otherQuetions=surveyTemplate.questions
-                      deleteQuestion='deleteQuestion'
-                      toggleQuestion=(action "toggleQuestion")
-                      isFullyEditable=isFullyEditable
-                      selectedQuestions=selectedQuestions
-                    }}
-                  {{/draggable-object}}
-                {{/if}}
-              {{/sortable-item}}
+              {{#group.item model=question index=index}}
+                {{question-row
+                  question=question
+                  otherQuetions=surveyTemplate.questions
+                  deleteQuestion=(action "deleteQuestion")
+                  toggleQuestion=(action "toggleQuestion")
+                  isFullyEditable=isFullyEditable
+                  ancestrable=true
+                  selectedQuestions=selectedQuestions
+                }}
+              {{/group.item}}
             {{/if}}
           {{/each}}
-        {{/sortable-group}}
+        {{/custom-sortable-group}}
 
         {{!-- Add new question --}}
         <ul class="sortable ui-sortable ember-view add-new-question {{if (and (or surveyTemplate.lock (not surveyTemplate.fullyEditable)) (not isSuperUser)) 'icon-disabled'}}">

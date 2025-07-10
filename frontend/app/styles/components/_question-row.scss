@@ -18,19 +18,73 @@
   &.is-dragging {
     background-color: white;
     z-index: 9999999999;
+    opacity: 0.8;
+    transform: rotate(5deg);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   }
 
   &.dragging-coming-active {
-    background-color: #466873;
-    color: white;
+    background-color: #466873 !important;
+    color: white !important;
+    border: 2px dashed #ff0000 !important;
     .draggable-target-message {
-      display: inline;
+      display: inline !important;
     }
   }
   &.dragging-coming-active.dragging-over {
     background-color: #b9b508 !important;
+    border: 2px solid #ff0000 !important;
     .draggable-target-message {
       background-color: #b15959 !important;
+    }
+  }
+
+  // Add drop zone indicators
+  &.sortable-item {
+    position: relative;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: transparent;
+      transition: background-color 0.2s ease;
+    }
+    
+    &.dragging-coming-active::before {
+      background-color: #ff0000;
+    }
+  }
+
+  // Custom drag-and-drop styles
+  &.drop-zone-active {
+    background-color: #f0f8ff !important;
+    border: 2px dashed #007bff !important;
+    cursor: pointer;
+    
+    &::before {
+      background-color: #007bff !important;
+    }
+    
+    &:hover {
+      background-color: #e3f2fd !important;
+      border-color: #0056b3 !important;
+      
+      &::before {
+        background-color: #0056b3 !important;
+      }
+    }
+  }
+  
+  &.drop-zone-highlighted {
+    background-color: #e3f2fd !important;
+    border-color: #0056b3 !important;
+    
+    &::before {
+      background-color: #0056b3 !important;
     }
   }
 

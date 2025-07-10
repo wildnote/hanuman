@@ -13,8 +13,8 @@
         </span>
       {{/if}}
       {{#if (or (and (not question.hasChild) (not isSelected)) (and question.hasChild question.collapsed))}}
-        <span class="glyphicons glyphicons-sorting {{if (and (or question.surveyTemplate.lock (not isFullyEditable)) (not isSuperUser)) 'icon-disabled'}} {{if question.loading 'hide'}}">
-          {{#tooltip-on-element duration=1500 side='right'}}DRAG TO<br />SORT QUESTION{{/tooltip-on-element}}
+        <span class="glyphicons glyphicons-sorting {{if (and (or question.surveyTemplate.lock (not isFullyEditable)) (not isSuperUser)) 'icon-disabled'}} {{if question.loading 'hide'}}" style="cursor: pointer;">
+          {{#tooltip-on-element duration=1500 side='right'}}CLICK TO<br />SELECT FOR MOVING{{/tooltip-on-element}}
         </span>
       {{else}}
         <div style="height: 18px;margin-right: 22px;display: inline-block;"></div>
