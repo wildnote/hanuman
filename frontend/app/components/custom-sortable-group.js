@@ -19,15 +19,22 @@ export default Component.extend({
   
   actions: {
     selectItem(item, index) {
-      console.log('[CUSTOM DRAG] Select item:', item.get('questionText'), 'at index:', index);
+      console.log('[CUSTOM DRAG] Select item called:', item.get('questionText'), 'at index:', index);
+      console.log('[CUSTOM DRAG] Item isARepeater:', item.get('isARepeater'));
+      console.log('[CUSTOM DRAG] Item isContainer:', item.get('isContainer'));
+      console.log('[CUSTOM DRAG] Item parentId:', item.get('parentId'));
+      console.log('[CUSTOM DRAG] Current selectedItem:', this.get('selectedItem') ? this.get('selectedItem').get('questionText') : 'null');
+      console.log('[CUSTOM DRAG] Current selectedIndex:', this.get('selectedIndex'));
       
       if (this.get('selectedItem') === item) {
         // Deselect if clicking the same item
+        console.log('[CUSTOM DRAG] Deselecting same item');
         this.set('selectedItem', null);
         this.set('selectedIndex', -1);
         this.removeDropZones();
       } else {
         // Select new item
+        console.log('[CUSTOM DRAG] Selecting new item');
         this.set('selectedItem', item);
         this.set('selectedIndex', index);
         this.createDropZones();
@@ -60,6 +67,58 @@ export default Component.extend({
       }
       
       console.log('[CUSTOM DRAG] Container drop zone clicked for container:', containerQuestion.get('questionText'));
+      
+      // Check if this is a container-to-container repositioning at the same level
+      const selectedParentId = selectedItem.get('parentId');
+      const containerParentId = containerQuestion.get('parentId');
+      const selectedIsContainer = selectedItem.get('isARepeater') || selectedItem.get('isContainer');
+      const targetIsContainer = containerQuestion.get('isARepeater') || containerQuestion.get('isContainer');
+      
+      // If both are containers at the same level, show placement modal with repositioning options
+      if (selectedIsContainer && targetIsContainer && selectedParentId === containerParentId) {
+        console.log('[CUSTOM DRAG] Container-to-container repositioning at same level');
+        const questionName = selectedItem.get('questionText');
+        const containerName = containerQuestion.get('questionText');
+        console.log('[CUSTOM DRAG] Showing placement modal for container repositioning:', questionName, 'and container:', containerName);
+        this.send('showPlacementModal', selectedItem, containerQuestion);
+        return;
+      }
+      
+      // Check two-level container rule for moving into containers
+      // Determine current container level of selected item
+      let selectedContainerLevel = 0;
+      if (selectedParentId) {
+        const selectedParent = items.findBy('id', selectedParentId);
+        if (selectedParent && selectedParent.get('parentId')) {
+          selectedContainerLevel = 2; // Inside a container that's inside another container
+        } else {
+          selectedContainerLevel = 1; // Inside a top-level container
+        }
+      }
+      
+      // Determine target container level
+      let targetContainerLevel = 0;
+      if (containerParentId) {
+        targetContainerLevel = 2; // Container is inside another container
+      } else {
+        targetContainerLevel = 1; // Top-level container
+      }
+      
+      console.log('[CUSTOM DRAG] Container levels - selected:', selectedContainerLevel, 'target:', targetContainerLevel);
+      
+      // Check if this move would violate the two-level rule
+      if (selectedContainerLevel === 2 && targetContainerLevel === 2) {
+        // Moving from Level 2 to Level 2 - check if they're in the same Level 1 container
+        const selectedLevel1Container = items.findBy('id', selectedParentId);
+        const targetLevel1Container = items.findBy('id', containerParentId);
+        
+        if (selectedLevel1Container && targetLevel1Container && 
+            selectedLevel1Container.get('id') !== targetLevel1Container.get('id')) {
+          console.log('[CUSTOM DRAG] Cannot move from Level 2 to Level 2 in different Level 1 containers');
+          // Show error message or prevent the move
+          return;
+        }
+      }
       
       // Show placement options modal directly
       const questionName = selectedItem.get('questionText');
@@ -204,7 +263,16 @@ export default Component.extend({
             
             // Now move the specific question to the pre-calculated target position
             console.log('[CUSTOM DRAG] Moving question to pre-calculated target position:', targetIndex);
-            this.moveQuestionToPosition(question, targetIndex);
+            
+            // Check if the moved item is a container and handle children ancestry updates
+            const isContainer = question.get('isARepeater') || question.get('isContainer');
+            if (isContainer) {
+              console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
+              const items = this.get('items');
+              this.updateContainerChildrenAncestry(question, items);
+            }
+            
+            this.send('moveQuestionToPosition', question, targetIndex);
           });
         });
       }).catch((error) => {
@@ -249,7 +317,16 @@ export default Component.extend({
             
             // Now move the specific question to the pre-calculated target position
             console.log('[CUSTOM DRAG] Moving question to pre-calculated target position:', targetIndex);
-            this.moveQuestionToPosition(question, targetIndex);
+            
+            // Check if the moved item is a container and handle children ancestry updates
+            const isContainer = question.get('isARepeater') || question.get('isContainer');
+            if (isContainer) {
+              console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
+              const items = this.get('items');
+              this.updateContainerChildrenAncestry(question, items);
+            }
+            
+            this.send('moveQuestionToPosition', question, targetIndex);
           });
         });
       }).catch((error) => {
@@ -271,34 +348,93 @@ export default Component.extend({
       const selectedItem = this.get('selectedItem');
       
       if (!selectedItem || selectedIndex === targetIndex) {
+        console.log('[CUSTOM DRAG] No selected item or same position, returning');
         return;
       }
       
       console.log('[CUSTOM DRAG] Move item from', selectedIndex, 'to', targetIndex);
+      console.log('[CUSTOM DRAG] Selected item:', selectedItem.get('questionText'), 'parentId:', selectedItem.get('parentId'));
       
       const items = this.get('items');
       const targetQuestion = items.objectAt(targetIndex);
       
-      // Smart ancestry handling
+      // Smart ancestry handling with two-level container rule
       const currentParentId = selectedItem.get('parentId');
       const targetParentId = targetQuestion ? targetQuestion.get('parentId') : null;
       
       console.log('[CUSTOM DRAG] Smart ancestry check - currentParentId:', currentParentId, 'targetParentId:', targetParentId);
       
-      // If moving from container to top level, clear ancestry
+      // Determine the current container level of the selected item
+      let currentContainerLevel = 0;
+      if (currentParentId) {
+        const currentParent = items.findBy('id', currentParentId);
+        if (currentParent && currentParent.get('parentId')) {
+          currentContainerLevel = 2; // Inside a container that's inside another container
+        } else {
+          currentContainerLevel = 1; // Inside a top-level container
+        }
+      }
+      
+      // Determine the target container level
+      let targetContainerLevel = 0;
+      if (targetParentId) {
+        const targetParent = items.findBy('id', targetParentId);
+        if (targetParent && targetParent.get('parentId')) {
+          targetContainerLevel = 2; // Moving to a container that's inside another container
+        } else {
+          targetContainerLevel = 1; // Moving to a top-level container
+        }
+      }
+      
+      console.log('[CUSTOM DRAG] Container levels - current:', currentContainerLevel, 'target:', targetContainerLevel);
+      
+      // Apply two-level container rule
       if (currentParentId && !targetParentId) {
-        console.log('[CUSTOM DRAG] Moving from container to top level, clearing ancestry');
-        selectedItem.set('parentId', null);
+        // Moving from inside a container to top level
+        if (currentContainerLevel === 2) {
+          // If moving from Level 2 to top level, set ancestry to the Level 1 container
+          const level1Container = items.findBy('id', currentParentId);
+          if (level1Container) {
+            console.log('[CUSTOM DRAG] Moving from Level 2 to top level, setting ancestry to Level 1 container:', level1Container.get('questionText'));
+            selectedItem.set('parentId', level1Container.get('id'));
+          } else {
+            console.log('[CUSTOM DRAG] Moving from Level 2 to top level, clearing ancestry (no Level 1 container found)');
+            selectedItem.set('parentId', null);
+          }
+        } else {
+          // Moving from Level 1 to top level, clear ancestry
+          console.log('[CUSTOM DRAG] Moving from Level 1 to top level, clearing ancestry');
+          selectedItem.set('parentId', null);
+        }
         
         // Save the ancestry change first
         selectedItem.save().then(() => {
-          console.log('[CUSTOM DRAG] Ancestry cleared successfully');
+          console.log('[CUSTOM DRAG] Ancestry updated successfully');
           this.send('performMoveLogic', selectedIndex, targetIndex);
         }).catch((error) => {
-          console.error('[CUSTOM DRAG] Error clearing ancestry:', error);
+          console.error('[CUSTOM DRAG] Error updating ancestry:', error);
         });
+      } else if (currentParentId && targetParentId) {
+        // Moving from one container to another container
+        if (currentContainerLevel === 2 && targetContainerLevel === 1) {
+          // Moving from Level 2 to Level 1 container
+          console.log('[CUSTOM DRAG] Moving from Level 2 to Level 1 container');
+          selectedItem.set('parentId', targetParentId);
+          
+          selectedItem.save().then(() => {
+            console.log('[CUSTOM DRAG] Ancestry updated successfully');
+            this.send('performMoveLogic', selectedIndex, targetIndex);
+          }).catch((error) => {
+            console.error('[CUSTOM DRAG] Error updating ancestry:', error);
+          });
+        } else {
+          // Other container-to-container moves (Level 1 to Level 1, Level 2 to Level 2, Level 1 to Level 2)
+          console.log('[CUSTOM DRAG] Container-to-container move, no ancestry change needed');
+          this.send('performMoveLogic', selectedIndex, targetIndex);
+        }
       } else {
         // No ancestry change needed, just move
+        console.log('[CUSTOM DRAG] No ancestry change needed, performing simple move');
         this.send('performMoveLogic', selectedIndex, targetIndex);
       }
     },
@@ -308,11 +444,37 @@ export default Component.extend({
       const draggedItem = items.splice(fromIndex, 1)[0];
       items.splice(toIndex, 0, draggedItem);
       
+      // Check if the moved item is a container and handle children ancestry updates
+      const isContainer = draggedItem.get('isARepeater') || draggedItem.get('isContainer');
+      if (isContainer) {
+        console.log('[CUSTOM DRAG] Container moved, updating children ancestry');
+        this.updateContainerChildrenAncestry(draggedItem, items);
+      }
+      
       // Use parent's updateSortOrderTask to persist the changes to database
       const parentComponent = this.get('parentView');
       if (parentComponent && parentComponent.get('updateSortOrderTask')) {
         console.log('[CUSTOM DRAG] Using parent updateSortOrderTask to persist sort order changes');
-        parentComponent.get('updateSortOrderTask').perform(items, false); // false = don't re-sort, use array order
+        
+        // Clear selection immediately to prevent issues
+        this.set('selectedItem', null);
+        this.set('selectedIndex', -1);
+        this.removeDropZones();
+        
+        // Perform the update and ensure selection is cleared after completion
+        parentComponent.get('updateSortOrderTask').perform(items, false).then(() => {
+          console.log('[CUSTOM DRAG] Parent updateSortOrderTask completed, ensuring selection is cleared');
+          // Double-check that selection is cleared after UI refresh
+          this.set('selectedItem', null);
+          this.set('selectedIndex', -1);
+          this.removeDropZones();
+        }).catch((error) => {
+          console.error('[CUSTOM DRAG] Error in parent updateSortOrderTask:', error);
+          // Ensure selection is cleared even on error
+          this.set('selectedItem', null);
+          this.set('selectedIndex', -1);
+          this.removeDropZones();
+        });
       } else {
         console.error('[CUSTOM DRAG] Could not access parent updateSortOrderTask');
         // Fallback to onChange callback
@@ -321,14 +483,79 @@ export default Component.extend({
             this.get('onChange')(items, draggedItem);
           });
         }
+        
+        // Clear selection
+        this.set('selectedItem', null);
+        this.set('selectedIndex', -1);
+        this.removeDropZones();
       }
       
-      // Clear selection
-      this.set('selectedItem', null);
-      this.set('selectedIndex', -1);
-      this.removeDropZones();
-      
       console.log('[CUSTOM DRAG] Move completed successfully');
+    },
+
+    updateContainerChildrenAncestry(container, items) {
+      console.log('[CUSTOM DRAG] Updating children ancestry for container:', container.get('questionText'));
+      
+      // Find all children of this container
+      const containerId = container.get('id');
+      const children = items.filter(item => item.get('parentId') === containerId);
+      
+      console.log('[CUSTOM DRAG] Found', children.length, 'children to update');
+      
+      if (children.length === 0) {
+        console.log('[CUSTOM DRAG] No children to update');
+        return;
+      }
+      
+      // Determine the new container level
+      const containerParentId = container.get('parentId');
+      let newContainerLevel = 0;
+      if (containerParentId) {
+        const containerParent = items.findBy('id', containerParentId);
+        if (containerParent && containerParent.get('parentId')) {
+          newContainerLevel = 2; // Container is inside another container
+        } else {
+          newContainerLevel = 1; // Container is at top level
+        }
+      }
+      
+      console.log('[CUSTOM DRAG] Container moved to level:', newContainerLevel);
+      
+      // Update children based on the two-level container rule
+      const updatePromises = children.map(child => {
+        const childParentId = child.get('parentId');
+        let newParentId = childParentId; // Default to current parent
+        
+        if (newContainerLevel === 2) {
+          // Container is now at Level 2 (inside another container)
+          // Children should remain inside this container (parentId = containerId)
+          newParentId = containerId;
+        } else if (newContainerLevel === 1) {
+          // Container is now at Level 1 (top level)
+          // Children should remain inside this container (parentId = containerId)
+          newParentId = containerId;
+        } else {
+          // Container is now at top level (no parent)
+          // Children should remain inside this container (parentId = containerId)
+          newParentId = containerId;
+        }
+        
+        if (childParentId !== newParentId) {
+          console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId from', childParentId, 'to', newParentId);
+          child.set('parentId', newParentId);
+          return child.save();
+        } else {
+          console.log('[CUSTOM DRAG] Child', child.get('questionText'), 'parentId unchanged:', childParentId);
+          return Promise.resolve();
+        }
+      });
+      
+      // Wait for all children to be updated
+      Promise.all(updatePromises).then(() => {
+        console.log('[CUSTOM DRAG] All children ancestry updated successfully');
+      }).catch((error) => {
+        console.error('[CUSTOM DRAG] Error updating children ancestry:', error);
+      });
     },
 
     moveQuestionToPosition(question, targetIndex) {
@@ -405,8 +632,12 @@ export default Component.extend({
           if (questionElement) {
             const questionId = questionElement.getAttribute('data-question-id');
             question = this.get('items').findBy('id', questionId);
-            if (question && (question.get('isARepeater') || question.get('isContainer'))) {
-              isContainer = true;
+            if (question) {
+              console.log('[CUSTOM DRAG] Found question at index', index, ':', question.get('questionText'), 'isARepeater:', question.get('isARepeater'), 'isContainer:', question.get('isContainer'));
+              if (question.get('isARepeater') || question.get('isContainer')) {
+                isContainer = true;
+                console.log('[CUSTOM DRAG] Question identified as container');
+              }
             }
           }
           
@@ -414,15 +645,49 @@ export default Component.extend({
           const questionParentId = question ? question.get('parentId') : null;
           const isInSameContainer = questionParentId === selectedParentId;
           
-          // Smart drop zone logic
+          // Smart drop zone logic with two-level container rule
           let shouldShowContainerDropZone = false;
           let shouldShowRegularDropZone = false;
+          
+          // Determine selected item's container level
+          let selectedContainerLevel = 0;
+          if (selectedParentId) {
+            const selectedParent = this.get('items').findBy('id', selectedParentId);
+            if (selectedParent && selectedParent.get('parentId')) {
+              selectedContainerLevel = 2; // Inside a container that's inside another container
+            } else {
+              selectedContainerLevel = 1; // Inside a top-level container
+            }
+          }
+          
+          // Determine target question's container level
+          let targetContainerLevel = 0;
+          if (questionParentId) {
+            const targetParent = this.get('items').findBy('id', questionParentId);
+            if (targetParent && targetParent.get('parentId')) {
+              targetContainerLevel = 2; // Inside a container that's inside another container
+            } else {
+              targetContainerLevel = 1; // Inside a top-level container
+            }
+          }
           
           if (isSelectedInsideContainer) {
             // Selected item is inside a container
             if (isContainer) {
-              // Always allow moving to other containers
-              shouldShowContainerDropZone = true;
+              // Check two-level container rule for container-to-container moves
+              if (selectedContainerLevel === 2 && targetContainerLevel === 2) {
+                // Moving from Level 2 to Level 2 - only allow if they're in the same Level 1 container
+                const selectedLevel1Container = this.get('items').findBy('id', selectedParentId);
+                const targetLevel1Container = this.get('items').findBy('id', questionParentId);
+                
+                if (selectedLevel1Container && targetLevel1Container && 
+                    selectedLevel1Container.get('id') === targetLevel1Container.get('id')) {
+                  shouldShowContainerDropZone = true;
+                }
+              } else {
+                // Other container-to-container moves are allowed
+                shouldShowContainerDropZone = true;
+              }
             } else if (isInSameContainer) {
               // Allow repositioning within the same container
               shouldShowRegularDropZone = true;
@@ -431,8 +696,14 @@ export default Component.extend({
           } else {
             // Selected item is at top level
             if (isContainer) {
-              // Allow moving into containers
-              shouldShowContainerDropZone = true;
+              // Always show container drop zone for containers (allows placement modal with options)
+              if (targetContainerLevel === 2) {
+                // Moving into a Level 2 container - this is allowed from top level
+                shouldShowContainerDropZone = true;
+              } else {
+                // Moving into a Level 1 container - this is always allowed from top level
+                shouldShowContainerDropZone = true;
+              }
             } else if (!questionParentId) {
               // Only allow repositioning at top level (questions with no parentId)
               shouldShowRegularDropZone = true;
@@ -559,5 +830,21 @@ export default Component.extend({
 
   unhighlightContainerDropZone(element) {
     element.classList.remove('container-drop-zone-highlighted');
+  },
+
+  // Ensure selection is cleared when component updates
+  didUpdate() {
+    this._super(...arguments);
+    
+    // If we have a selected item but it's no longer in the items array, clear selection
+    const selectedItem = this.get('selectedItem');
+    const items = this.get('items');
+    
+    if (selectedItem && !items.includes(selectedItem)) {
+      console.log('[CUSTOM DRAG] Selected item no longer in items array, clearing selection');
+      this.set('selectedItem', null);
+      this.set('selectedIndex', -1);
+      this.removeDropZones();
+    }
   }
 }); 
