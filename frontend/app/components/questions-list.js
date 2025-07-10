@@ -109,7 +109,7 @@ export default Component.extend({
   }).drop(),
 
   setAncestryTask: task(function*(question, opts) {
-    const ancestryQuestion = opts.target.acenstry;
+            const ancestryQuestion = opts.target.ancestry;
     if (ancestryQuestion.collapsed) {
       this.get('collapsible').toggleCollapsed(ancestryQuestion);
       yield waitForProperty(ancestryQuestion, 'pendingRecursive', (v) => v === 0);
