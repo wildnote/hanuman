@@ -10,6 +10,8 @@ export default Component.extend({
   collapsible: service(),
   attributeBindings: ['question.id:data-question-id'],
 
+
+
   isPreviewing: false,
   isPreviewable: or('question.isTaxonType', 'question.answerType.hasAnswerChoices'),
 

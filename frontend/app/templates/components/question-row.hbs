@@ -13,8 +13,14 @@
         </span>
       {{/if}}
       {{#if (or (not question.hasChild) question.hasChild)}}
-        <span class="glyphicons glyphicons-sorting {{if (and (or question.surveyTemplate.lock (not isFullyEditable)) (not isSuperUser)) 'icon-disabled'}} {{if question.loading 'hide'}}" style="cursor: pointer;">
-          {{#tooltip-on-element duration=1500 side='right'}}CLICK TO<br />SELECT FOR MOVING{{/tooltip-on-element}}
+        <span class="glyphicons glyphicons-sorting {{if (not isFullyEditable) 'icon-disabled'}} {{if question.loading 'hide'}}" style="{{unless (not isFullyEditable) 'cursor: pointer;'}}">
+          {{#tooltip-on-element duration=1500 side='right'}}
+            {{#if (not isFullyEditable)}}
+              SURVEY LOCKED<br />CANNOT MOVE
+            {{else}}
+              CLICK TO<br />SELECT FOR MOVING
+            {{/if}}
+          {{/tooltip-on-element}}
         </span>
       {{/if}}
 
@@ -102,12 +108,12 @@
     {{/each}}
   </div>
   <div class="col-sm-2">
-    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success" disabled=(and question.surveyTemplate.lock (and (not question.defaultAnswerEnabled) (not question.isTaxonType)))}}
+    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success" disabled=(and (not isFullyEditable) (and (not question.defaultAnswerEnabled) (not question.isTaxonType)))}}
       <span class="glyphicons glyphicons-pencil"></span>
       Edit
     {{/link-to}}
     {{#if (not ancestrable)}}
-      <a class="btn btn-delete {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'disabled'}}" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
+      <a class="btn btn-delete {{if (not isFullyEditable) 'disabled'}}" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
         <span class="glyphicons glyphicons-bin"></span>
       </a>
     {{else}}

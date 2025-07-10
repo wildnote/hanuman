@@ -7,6 +7,7 @@ export default Component.extend({
   
   // Properties
   items: [],
+  isFullyEditable: null,
   onChange: null,
   
   // Internal state
@@ -30,6 +31,13 @@ export default Component.extend({
       console.log('[CUSTOM DRAG] Item id:', item.get('id'));
       console.log('[CUSTOM DRAG] Current selectedItem:', this.get('selectedItem') ? this.get('selectedItem').get('questionText') : 'null');
       console.log('[CUSTOM DRAG] Current selectedIndex:', this.get('selectedIndex'));
+      
+      // Check if survey template is locked - prevent selection if not fully editable
+      const isFullyEditable = this.get('isFullyEditable');
+      if (!isFullyEditable) {
+        console.log('[CUSTOM DRAG] Survey template is not fully editable, preventing selection');
+        return;
+      }
       
       // Check if item is in the current items array
       const items = this.get('items');
@@ -1191,30 +1199,37 @@ export default Component.extend({
         return;
       }
       
-      // Add click handlers to all items for selection
-      items.forEach((element, index) => {
-        // Add click handler only to the move icon (glyphicons-sorting)
-        const moveIcon = element.querySelector('.glyphicons-sorting');
-        if (moveIcon) {
-          const selectionClickHandler = (event) => {
-            console.log('[CUSTOM DRAG] Move icon clicked for selection at index:', index);
-            
-            const questionElement = element.querySelector('[data-question-id]');
-            if (questionElement) {
-              const questionId = questionElement.getAttribute('data-question-id');
-              const question = this.get('items').findBy('id', questionId);
-              if (question) {
-                console.log('[CUSTOM DRAG] Calling selectItem for question:', question.get('questionText'));
-                this.send('selectItem', question, index);
+      // Check if survey template is locked - don't add selection handlers if not fully editable
+      const isFullyEditable = this.get('isFullyEditable');
+      
+      if (isFullyEditable) {
+        // Add click handlers to all items for selection
+        items.forEach((element, index) => {
+          // Add click handler only to the move icon (glyphicons-sorting)
+          const moveIcon = element.querySelector('.glyphicons-sorting');
+          if (moveIcon) {
+            const selectionClickHandler = (event) => {
+              console.log('[CUSTOM DRAG] Move icon clicked for selection at index:', index);
+              
+              const questionElement = element.querySelector('[data-question-id]');
+              if (questionElement) {
+                const questionId = questionElement.getAttribute('data-question-id');
+                const question = this.get('items').findBy('id', questionId);
+                if (question) {
+                  console.log('[CUSTOM DRAG] Calling selectItem for question:', question.get('questionText'));
+                  this.send('selectItem', question, index);
+                }
               }
-            }
-          };
-          
-          // Use safe event listener to prevent duplicates
-          this.safeAddEventListener(moveIcon, 'click', selectionClickHandler);
-          console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
-        }
-      });
+            };
+            
+            // Use safe event listener to prevent duplicates
+            this.safeAddEventListener(moveIcon, 'click', selectionClickHandler);
+            console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
+          }
+        });
+      } else {
+        console.log('[CUSTOM DRAG] Survey template is not fully editable, skipping selection handlers');
+      }
       
       // Determine if selected item is inside a container
       const selectedParentId = selectedItem.get('parentId');
@@ -1565,6 +1580,19 @@ export default Component.extend({
   didUpdate() {
     this._super(...arguments);
     
+    // Check if survey template is locked - clear selection if not fully editable
+    const isFullyEditable = this.get('isFullyEditable');
+    
+    if (!isFullyEditable && this.get('selectedItem')) {
+      console.log('[CUSTOM DRAG] Survey template is not fully editable, clearing existing selection');
+      this.set('selectedItem', null);
+      this.set('selectedIndex', -1);
+      this.removeDropZones();
+      this.removeChildrenHighlight();
+      this.cleanupAfterMove();
+      return; // Don't proceed with other updates when locked
+    }
+    
     // Periodic cleanup check to prevent listener accumulation
     if (this.get('activeEventListeners').length > 20) {
       console.warn('[CUSTOM DRAG] High listener count detected in didUpdate, performing cleanup');
@@ -1611,6 +1639,14 @@ export default Component.extend({
   // Ensure selection click handlers are always available
   ensureSelectionHandlers() {
     run.scheduleOnce('afterRender', this, () => {
+      // Check if survey template is locked - don't add selection handlers if not fully editable
+      const isFullyEditable = this.get('isFullyEditable');
+      
+      if (!isFullyEditable) {
+        console.log('[CUSTOM DRAG] Survey template is not fully editable, skipping selection handlers in ensureSelectionHandlers');
+        return;
+      }
+      
       const items = this.element.querySelectorAll('.sortable-item');
       console.log('[CUSTOM DRAG] Ensuring selection handlers for', items.length, 'items');
       
