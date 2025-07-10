@@ -237,11 +237,22 @@ export default Component.extend({
           const containerChildren = items.filter(item => item.get('parentId') === targetContainerId);
           let newSortOrder;
           
+          if (containerChildren.length > 0) {
+            // Find the minimum sortOrder among existing children and place before it
+            const minChildSortOrder = Math.min(...containerChildren.map(child => child.get('sortOrder')));
+            newSortOrder = minChildSortOrder;
+            console.log('[CUSTOM DRAG] Placing container before first child with sortOrder:', newSortOrder, '(min child sortOrder was:', minChildSortOrder, ')');
+          } else {
+            // No children, use container's sortOrder + 1
+            newSortOrder = container.get('sortOrder') + 1;
+            console.log('[CUSTOM DRAG] No children, placing container after container with sortOrder:', newSortOrder);
+          }
+          
           // Set parentId to make it a child of the container
           question.set('parentId', targetContainerId);
+          question.set('sortOrder', newSortOrder);
           
-          // Don't set sortOrder manually - let updateSortOrderTask handle it
-          console.log('[CUSTOM DRAG] Set parentId to container, letting updateSortOrderTask handle sortOrder');
+          console.log('[CUSTOM DRAG] Set parentId to container and sortOrder to:', newSortOrder);
           
                       question.save().then(() => {
               console.log('[CUSTOM DRAG] Step 1: Container moved and saved (INSIDE TOP)');
@@ -254,15 +265,21 @@ export default Component.extend({
                 // Step 2.5: Reposition the container as the first child in the array
                 const fullQuestions = parentComponent.get('fullQuestions');
                 const targetContainerIndex = fullQuestions.indexOf(container);
+                console.log('[CUSTOM DRAG] Target container index:', targetContainerIndex);
+                
                 if (targetContainerIndex !== -1) {
-                  // Remove the container from its current position
+                  // Remove the container from its current position FIRST
                   const containerIndex = fullQuestions.indexOf(question);
+                  console.log('[CUSTOM DRAG] Container current index:', containerIndex);
                   if (containerIndex !== -1) {
                     fullQuestions.removeAt(containerIndex);
+                    console.log('[CUSTOM DRAG] Removed container from index:', containerIndex);
                   }
+                  
                   // Insert it right after the target container (as first child)
-                  fullQuestions.insertAt(targetContainerIndex + 1, question);
-                  console.log('[CUSTOM DRAG] Repositioned container as first child in array');
+                  const insertIndex = targetContainerIndex + 1;
+                  fullQuestions.insertAt(insertIndex, question);
+                  console.log('[CUSTOM DRAG] Inserted container at index:', insertIndex, 'right after target container');
                 }
                 
                 // Step 3: Update children ancestry BEFORE any UI refresh
@@ -296,11 +313,22 @@ export default Component.extend({
           const containerChildren = items.filter(item => item.get('parentId') === container.get('id'));
           let newSortOrder;
           
+          if (containerChildren.length > 0) {
+            // Find the minimum sortOrder among existing children and place before it
+            const minChildSortOrder = Math.min(...containerChildren.map(child => child.get('sortOrder')));
+            newSortOrder = minChildSortOrder;
+            console.log('[CUSTOM DRAG] Placing single question before first child with sortOrder:', newSortOrder, '(min child sortOrder was:', minChildSortOrder, ')');
+          } else {
+            // No children, use container's sortOrder + 1
+            newSortOrder = container.get('sortOrder') + 1;
+            console.log('[CUSTOM DRAG] No children, placing single question after container with sortOrder:', newSortOrder);
+          }
+          
           // Set parentId to make it a child of the container
           question.set('parentId', container.get('id'));
+          question.set('sortOrder', newSortOrder);
           
-          // Don't set sortOrder manually - let updateSortOrderTask handle it
-          console.log('[CUSTOM DRAG] Set parentId to container, letting updateSortOrderTask handle sortOrder');
+          console.log('[CUSTOM DRAG] Set parentId to container and sortOrder to:', newSortOrder);
           
                       question.save().then(() => {
               console.log('[CUSTOM DRAG] Single question moved and saved (INSIDE TOP)');
@@ -313,20 +341,57 @@ export default Component.extend({
                 // Reposition the question as the first child in the array before calling updateSortOrderTask
                 const fullQuestions = parentComponent.get('fullQuestions');
                 const containerIndex = fullQuestions.indexOf(container);
+                console.log('[CUSTOM DRAG] Container index:', containerIndex);
+                
                 if (containerIndex !== -1) {
-                  // Remove the question from its current position
+                  // Remove the question from its current position FIRST
                   const questionIndex = fullQuestions.indexOf(question);
+                  console.log('[CUSTOM DRAG] Question current index:', questionIndex);
                   if (questionIndex !== -1) {
                     fullQuestions.removeAt(questionIndex);
+                    console.log('[CUSTOM DRAG] Removed question from index:', questionIndex);
                   }
-                  // Insert it right after the container (as first child)
-                  fullQuestions.insertAt(containerIndex + 1, question);
-                  console.log('[CUSTOM DRAG] Repositioned question as first child in array');
+                  
+                  // Find the first child of the container to insert before it
+                  const containerChildren = fullQuestions.filter(q => q.get('parentId') === container.get('id'));
+                  let insertIndex;
+                  
+                  if (containerChildren.length > 0) {
+                    // Find the first child's position in the array
+                    const firstChild = containerChildren[0];
+                    const firstChildIndex = fullQuestions.indexOf(firstChild);
+                    insertIndex = firstChildIndex;
+                    console.log('[CUSTOM DRAG] Inserting question before first child at index:', insertIndex);
+                  } else {
+                    // No children, insert right after the container
+                    insertIndex = containerIndex + 1;
+                    console.log('[CUSTOM DRAG] No children, inserting question after container at index:', insertIndex);
+                  }
+                  
+                  fullQuestions.insertAt(insertIndex, question);
+                  console.log('[CUSTOM DRAG] Inserted question at index:', insertIndex);
                 }
                 
-                // Refresh the UI with the repositioned array
+                // For inside top placement, we need to call updateSortOrderTask to normalize sortOrders
+                // but we need to ensure the question stays as the first child
+                console.log('[CUSTOM DRAG] Calling updateSortOrderTask for inside top placement with integer sortOrders');
+                console.log('[CUSTOM DRAG] Array order before updateSortOrderTask:', fullQuestions.map((q, i) => ({
+                  index: i,
+                  id: q.get('id'),
+                  text: q.get('questionText'),
+                  parentId: q.get('parentId'),
+                  sortOrder: q.get('sortOrder')
+                })));
+                
                 parentComponent.get('updateSortOrderTask').perform(fullQuestions, false).then(() => {
-                  console.log('[CUSTOM DRAG] UI refreshed after single question move');
+                  console.log('[CUSTOM DRAG] UI refreshed after inside top placement');
+                  console.log('[CUSTOM DRAG] Final array order after updateSortOrderTask:', fullQuestions.map((q, i) => ({
+                    index: i,
+                    id: q.get('id'),
+                    text: q.get('questionText'),
+                    parentId: q.get('parentId'),
+                    sortOrder: q.get('sortOrder')
+                  })));
                   this.set('isSettingAncestry', false);
                   this.cleanupAfterMove();
                 }).catch((error) => {
