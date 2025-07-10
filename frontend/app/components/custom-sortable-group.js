@@ -39,12 +39,14 @@ export default Component.extend({
         this.set('selectedItem', null);
         this.set('selectedIndex', -1);
         this.removeDropZones();
+        this.removeChildrenHighlight();
       } else {
         // Select new item
         console.log('[CUSTOM DRAG] Selecting new item');
         this.set('selectedItem', item);
         this.set('selectedIndex', index);
         this.createDropZones();
+        this.highlightChildren(item);
       }
     },
 
@@ -53,6 +55,7 @@ export default Component.extend({
       this.set('selectedItem', null);
       this.set('selectedIndex', -1);
       this.removeDropZones();
+      this.removeChildrenHighlight();
     },
 
     moveToContainer(containerIndex) {
@@ -188,11 +191,17 @@ export default Component.extend({
         // For containers, use setAncestryTask then update children ancestry
         if (isContainer) {
           console.log('[CUSTOM DRAG] Using setAncestryTask for container, then updating children');
+          
+          // Store the children before the move
+          const items = this.get('items');
+          const containerId = question.get('id');
+          const childrenBeforeMove = items.filter(item => item.get('parentId') === containerId);
+          console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move');
+          
           parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
             console.log('[CUSTOM DRAG] setAncestryTask completed for container');
             // Update children ancestry to follow the moved container
-            const items = this.get('items');
-            this.send('updateContainerChildrenAncestry', question, items);
+            this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
             // UI refresh
             parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
               console.log('[CUSTOM DRAG] UI refreshed after container and children move');
@@ -265,11 +274,17 @@ export default Component.extend({
         // For containers, use setAncestryTask then update children ancestry
         if (isContainer) {
           console.log('[CUSTOM DRAG] Using setAncestryTask for container, then updating children');
+          
+          // Store the children before the move
+          const items = this.get('items');
+          const containerId = question.get('id');
+          const childrenBeforeMove = items.filter(item => item.get('parentId') === containerId);
+          console.log('[CUSTOM DRAG] Found', childrenBeforeMove.length, 'children before move');
+          
           parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
             console.log('[CUSTOM DRAG] setAncestryTask completed for container');
             // Update children ancestry to follow the moved container
-            const items = this.get('items');
-            this.send('updateContainerChildrenAncestry', question, items);
+            this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
             // UI refresh
             parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
               console.log('[CUSTOM DRAG] UI refreshed after container and children move');
@@ -696,12 +711,13 @@ export default Component.extend({
       console.log('[CUSTOM DRAG] Move completed successfully');
     },
 
-    updateContainerChildrenAncestry(container, items) {
+    updateContainerChildrenAncestry(container, items, childrenBeforeMove) {
       console.log('[CUSTOM DRAG] Updating children ancestry for container:', container.get('questionText'));
       
-      // Find all children of this container
       const containerId = container.get('id');
-      const children = items.filter(item => item.get('parentId') === containerId);
+      
+      // Use the children that were identified before the move
+      const children = childrenBeforeMove || [];
       
       console.log('[CUSTOM DRAG] Found', children.length, 'children to update');
       
@@ -711,7 +727,6 @@ export default Component.extend({
       }
       
       // Update children to ensure they stay with the container
-      // The key is that children should always have parentId = containerId
       const updatePromises = children.map(child => {
         const childParentId = child.get('parentId');
         
@@ -1072,6 +1087,62 @@ export default Component.extend({
     element.classList.remove('container-drop-zone-highlighted');
   },
 
+  highlightChildren(container) {
+    console.log('[CUSTOM DRAG] Highlighting children for container:', container.get('questionText'));
+    
+    const items = this.get('items');
+    const containerId = container.get('id');
+    const children = items.filter(item => item.get('parentId') === containerId);
+    
+    console.log('[CUSTOM DRAG] Found', children.length, 'children to highlight');
+    console.log('[CUSTOM DRAG] Container ID:', containerId);
+    console.log('[CUSTOM DRAG] Children IDs:', children.map(c => c.get('id')));
+    
+    // Use run.scheduleOnce to ensure DOM is ready
+    run.scheduleOnce('afterRender', this, () => {
+      // Highlight each child
+      children.forEach((child, index) => {
+        console.log('[CUSTOM DRAG] Highlighting child', index, ':', child.get('questionText'), 'ID:', child.get('id'));
+        
+        // Find the DOM element for this child
+        const childElements = this.element.querySelectorAll('.sortable-item');
+        console.log('[CUSTOM DRAG] Found', childElements.length, 'sortable-item elements');
+        
+        childElements.forEach((element, elementIndex) => {
+          console.log('[CUSTOM DRAG] Checking element', elementIndex, 'HTML:', element.outerHTML.substring(0, 200) + '...');
+          
+          // Look for data-question-id within the sortable-item (which contains the question-row)
+          const questionElement = element.querySelector('[data-question-id]');
+          if (questionElement) {
+            const questionId = questionElement.getAttribute('data-question-id');
+            console.log('[CUSTOM DRAG] Checking element with questionId:', questionId, 'against child ID:', child.get('id'));
+            if (questionId === child.get('id').toString()) {
+              element.classList.add('children-highlight');
+              console.log('[CUSTOM DRAG] Added children-highlight class to child element for:', child.get('questionText'));
+            }
+          } else {
+            console.log('[CUSTOM DRAG] No data-question-id found in element', elementIndex);
+          }
+        });
+      });
+    });
+  },
+
+  removeChildrenHighlight() {
+    console.log('[CUSTOM DRAG] Removing children highlight');
+    
+    // Use run.scheduleOnce to ensure DOM is ready
+    run.scheduleOnce('afterRender', this, () => {
+      // Remove highlight from all elements
+      const elements = this.element.querySelectorAll('.children-highlight');
+      elements.forEach(element => {
+        element.classList.remove('children-highlight');
+      });
+      
+      console.log('[CUSTOM DRAG] Removed children-highlight class from', elements.length, 'elements');
+    });
+  },
+
   // Ensure selection is cleared when component updates
   didUpdate() {
     this._super(...arguments);
@@ -1089,6 +1160,7 @@ export default Component.extend({
         this.set('selectedItem', null);
         this.set('selectedIndex', -1);
         this.removeDropZones();
+        this.removeChildrenHighlight();
       } else {
         // Update the selectedIndex to match the current position
         const currentIndex = items.indexOf(itemStillExists);
@@ -1157,6 +1229,7 @@ export default Component.extend({
     this.set('selectedItem', null);
     this.set('selectedIndex', -1);
     this.removeDropZones();
+    this.removeChildrenHighlight();
     
     // Force a re-render by triggering a property change
     run.scheduleOnce('afterRender', this, () => {
