@@ -185,12 +185,54 @@ export default Component.extend({
           }
         }
         
-        // Use the parent's setAncestryTask to handle the move
-        parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
-          console.log('[CUSTOM DRAG] setAncestryTask completed for inside top placement');
+        // For containers, use custom approach to ensure children move with parent
+        if (isContainer) {
+          console.log('[CUSTOM DRAG] Using custom approach for container with children');
           
-          // Always use the recursive update for containers
-          if (isContainer) {
+          // First, set the ancestry to the container
+          const oldParentId = question.get('parentId');
+          console.log('[CUSTOM DRAG] Setting ancestry from parentId:', oldParentId, 'to', container.get('id'));
+          
+          question.set('parentId', container.get('id'));
+          
+          // Calculate sort order to place at top of container's children
+          const surveyTemplate = parentComponent.get('surveyTemplate');
+          if (surveyTemplate) {
+            const containerChildren = surveyTemplate.get('questions')
+              .filterBy('parentId', container.get('id'))
+              .sortBy('sortOrder');
+            
+            console.log('[CUSTOM DRAG] Container children found:', containerChildren.get('length'));
+            containerChildren.forEach((child, index) => {
+              console.log('[CUSTOM DRAG] Child', index, ':', child.get('questionText'), 'sortOrder:', child.get('sortOrder'));
+            });
+            
+            let newSortOrder;
+            if (containerChildren.get('length') > 0) {
+              // Place before the first child
+              const firstChild = containerChildren.get('firstObject');
+              newSortOrder = firstChild.get('sortOrder') - 0.1;
+              console.log('[CUSTOM DRAG] Placing before first child (ID:', firstChild.get('id'), '), newSortOrder:', newSortOrder);
+            } else {
+              // No children, place right after the container
+              newSortOrder = container.get('sortOrder') + 0.1;
+              console.log('[CUSTOM DRAG] No children, placing after container (ID:', container.get('id'), '), newSortOrder:', newSortOrder);
+            }
+            
+            // Ensure the sort order is valid (not negative or too small)
+            if (newSortOrder <= 0) {
+              newSortOrder = container.get('sortOrder') + 0.1;
+              console.log('[CUSTOM DRAG] Adjusted sort order to:', newSortOrder, 'to ensure it\'s valid');
+            }
+            
+            question.set('sortOrder', newSortOrder);
+            console.log('[CUSTOM DRAG] Final sort order set for question:', newSortOrder);
+          }
+          
+          // Save the container first
+          question.save().then(() => {
+            console.log('[CUSTOM DRAG] Container moved successfully');
+            
             // Reload the moved container to ensure it has the latest data
             question.reload().then(() => {
               console.log('[CUSTOM DRAG] Container reloaded successfully');
@@ -223,8 +265,15 @@ export default Component.extend({
               console.error('[CUSTOM DRAG] Error reloading container:', error);
               this.set('isSettingAncestry', false);
             });
-          } else {
-            // No children, just refresh the UI
+          }).catch((error) => {
+            console.error('[CUSTOM DRAG] Error saving container:', error);
+            this.set('isSettingAncestry', false);
+          });
+        } else {
+          // For non-containers, use the parent's setAncestryTask
+          parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
+            console.log('[CUSTOM DRAG] setAncestryTask completed for inside top placement');
+            // Refresh the UI
             parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
               console.log('[CUSTOM DRAG] UI refreshed after container move');
               this.set('isSettingAncestry', false);
@@ -232,11 +281,11 @@ export default Component.extend({
               console.error('[CUSTOM DRAG] Error refreshing UI:', error);
               this.set('isSettingAncestry', false);
             });
-          }
-        }).catch((error) => {
-          console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
-          this.set('isSettingAncestry', false);
-        });
+          }).catch((error) => {
+            console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
+            this.set('isSettingAncestry', false);
+          });
+        }
       } else {
         console.error('[CUSTOM DRAG] Could not access parent component');
         this.set('isSettingAncestry', false);
@@ -277,12 +326,54 @@ export default Component.extend({
           }
         }
         
-        // Use the parent's setAncestryTask to handle the move
-        parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
-          console.log('[CUSTOM DRAG] setAncestryTask completed for inside bottom placement');
+        // For containers, use custom approach to ensure children move with parent
+        if (isContainer) {
+          console.log('[CUSTOM DRAG] Using custom approach for container with children');
           
-          // Always use the recursive update for containers
-          if (isContainer) {
+          // First, set the ancestry to the container
+          const oldParentId = question.get('parentId');
+          console.log('[CUSTOM DRAG] Setting ancestry from parentId:', oldParentId, 'to', container.get('id'));
+          
+          question.set('parentId', container.get('id'));
+          
+          // Calculate sort order to place at bottom of container's children
+          const surveyTemplate = parentComponent.get('surveyTemplate');
+          if (surveyTemplate) {
+            const containerChildren = surveyTemplate.get('questions')
+              .filterBy('parentId', container.get('id'))
+              .sortBy('sortOrder');
+            
+            console.log('[CUSTOM DRAG] Container children found:', containerChildren.get('length'));
+            containerChildren.forEach((child, index) => {
+              console.log('[CUSTOM DRAG] Child', index, ':', child.get('questionText'), 'sortOrder:', child.get('sortOrder'));
+            });
+            
+            let newSortOrder;
+            if (containerChildren.get('length') > 0) {
+              // Place after the last child
+              const lastChild = containerChildren.get('lastObject');
+              newSortOrder = lastChild.get('sortOrder') + 0.1;
+              console.log('[CUSTOM DRAG] Placing after last child (ID:', lastChild.get('id'), '), newSortOrder:', newSortOrder);
+            } else {
+              // No children, place right after the container
+              newSortOrder = container.get('sortOrder') + 0.1;
+              console.log('[CUSTOM DRAG] No children, placing after container (ID:', container.get('id'), '), newSortOrder:', newSortOrder);
+            }
+            
+            // Ensure the sort order is valid (not negative or too small)
+            if (newSortOrder <= 0) {
+              newSortOrder = container.get('sortOrder') + 0.1;
+              console.log('[CUSTOM DRAG] Adjusted sort order to:', newSortOrder, 'to ensure it\'s valid');
+            }
+            
+            question.set('sortOrder', newSortOrder);
+            console.log('[CUSTOM DRAG] Final sort order set for question:', newSortOrder);
+          }
+          
+          // Save the container first
+          question.save().then(() => {
+            console.log('[CUSTOM DRAG] Container moved successfully');
+            
             // Reload the moved container to ensure it has the latest data
             question.reload().then(() => {
               console.log('[CUSTOM DRAG] Container reloaded successfully');
@@ -315,8 +406,15 @@ export default Component.extend({
               console.error('[CUSTOM DRAG] Error reloading container:', error);
               this.set('isSettingAncestry', false);
             });
-          } else {
-            // No children, just refresh the UI
+          }).catch((error) => {
+            console.error('[CUSTOM DRAG] Error saving container:', error);
+            this.set('isSettingAncestry', false);
+          });
+        } else {
+          // For non-containers, use the parent's setAncestryTask
+          parentComponent.get('setAncestryTask').perform(question, { target: { ancestry: container } }).then(() => {
+            console.log('[CUSTOM DRAG] setAncestryTask completed for inside bottom placement');
+            // Refresh the UI
             parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
               console.log('[CUSTOM DRAG] UI refreshed after container move');
               this.set('isSettingAncestry', false);
@@ -324,11 +422,11 @@ export default Component.extend({
               console.error('[CUSTOM DRAG] Error refreshing UI:', error);
               this.set('isSettingAncestry', false);
             });
-          }
-        }).catch((error) => {
-          console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
-          this.set('isSettingAncestry', false);
-        });
+          }).catch((error) => {
+            console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
+            this.set('isSettingAncestry', false);
+          });
+        }
       } else {
         console.error('[CUSTOM DRAG] Could not access parent component');
         this.set('isSettingAncestry', false);
