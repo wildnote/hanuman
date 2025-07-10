@@ -171,13 +171,41 @@ export default Component.extend({
       
       console.log('[CUSTOM DRAG] Question is container:', isContainer, 'with', children.length, 'children');
       
-      // Move container and children together as a unit
+      // Custom approach for inside top placement
       const parentComponent = this.get('parentView');
-      if (parentComponent && parentComponent.get('setAncestryTask')) {
-        console.log('[CUSTOM DRAG] Moving container and children together');
+      if (parentComponent) {
+        console.log('[CUSTOM DRAG] Using custom approach for inside top placement');
         
-        // First, move the container
-        parentComponent.get('setAncestryTask').perform(question, { target: { acenstry: container } }).then(() => {
+        // First, set the ancestry to the container
+        const oldParentId = question.get('parentId');
+        console.log('[CUSTOM DRAG] Setting ancestry from parentId:', oldParentId, 'to', container.get('id'));
+        
+        question.set('parentId', container.get('id'));
+        
+        // Calculate sort order to place at top of container's children
+        const surveyTemplate = parentComponent.get('surveyTemplate');
+        if (surveyTemplate) {
+          const containerChildren = surveyTemplate.get('questions')
+            .filterBy('parentId', container.get('id'))
+            .sortBy('sortOrder');
+          
+          let newSortOrder;
+          if (containerChildren.get('length') > 0) {
+            // Place before the first child
+            const firstChild = containerChildren.get('firstObject');
+            newSortOrder = firstChild.get('sortOrder') - 0.1;
+            console.log('[CUSTOM DRAG] Placing before first child, newSortOrder:', newSortOrder);
+          } else {
+            // No children, place right after the container
+            newSortOrder = container.get('sortOrder') + 0.1;
+            console.log('[CUSTOM DRAG] No children, placing after container, newSortOrder:', newSortOrder);
+          }
+          
+          question.set('sortOrder', newSortOrder);
+        }
+        
+        // Save the container first
+        question.save().then(() => {
           console.log('[CUSTOM DRAG] Container moved successfully');
           
           // If this is a container with children, update their ancestry
@@ -194,14 +222,24 @@ export default Component.extend({
             Promise.all(updatePromises).then(() => {
               console.log('[CUSTOM DRAG] All children ancestry updated successfully');
               
-              // Force a complete UI refresh to show the moved container and children
-              parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
-                console.log('[CUSTOM DRAG] UI refreshed after container and children move');
+              // Reload all children to ensure they have the latest data
+              const reloadPromises = children.map(child => child.reload());
+              Promise.all(reloadPromises).then(() => {
+                console.log('[CUSTOM DRAG] All children reloaded successfully');
                 
-                // Clear the ancestry flag
-                this.set('isSettingAncestry', false);
+                // Force a complete UI refresh to show the moved container and children
+                // Use reSort=false to preserve our manual positioning
+                parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
+                  console.log('[CUSTOM DRAG] UI refreshed after container and children move');
+                  
+                  // Clear the ancestry flag
+                  this.set('isSettingAncestry', false);
+                }).catch((error) => {
+                  console.error('[CUSTOM DRAG] Error refreshing UI:', error);
+                  this.set('isSettingAncestry', false);
+                });
               }).catch((error) => {
-                console.error('[CUSTOM DRAG] Error refreshing UI:', error);
+                console.error('[CUSTOM DRAG] Error reloading children:', error);
                 this.set('isSettingAncestry', false);
               });
             }).catch((error) => {
@@ -210,7 +248,7 @@ export default Component.extend({
             });
           } else {
             // No children, just refresh the UI
-            parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
+            parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
               console.log('[CUSTOM DRAG] UI refreshed after container move');
               this.set('isSettingAncestry', false);
             }).catch((error) => {
@@ -219,11 +257,11 @@ export default Component.extend({
             });
           }
         }).catch((error) => {
-          console.error('[CUSTOM DRAG] Error in setAncestryTask:', error);
+          console.error('[CUSTOM DRAG] Error saving container:', error);
           this.set('isSettingAncestry', false);
         });
       } else {
-        console.error('[CUSTOM DRAG] Could not access parent setAncestryTask');
+        console.error('[CUSTOM DRAG] Could not access parent component');
         this.set('isSettingAncestry', false);
       }
       
@@ -271,14 +309,24 @@ export default Component.extend({
             Promise.all(updatePromises).then(() => {
               console.log('[CUSTOM DRAG] All children ancestry updated successfully');
               
-              // Force a complete UI refresh to show the moved container and children
-              parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
-                console.log('[CUSTOM DRAG] UI refreshed after container and children move');
+              // Reload all children to ensure they have the latest data
+              const reloadPromises = children.map(child => child.reload());
+              Promise.all(reloadPromises).then(() => {
+                console.log('[CUSTOM DRAG] All children reloaded successfully');
                 
-                // Clear the ancestry flag
-                this.set('isSettingAncestry', false);
+                // Force a complete UI refresh to show the moved container and children
+                // Use reSort=false to preserve our manual positioning
+                parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
+                  console.log('[CUSTOM DRAG] UI refreshed after container and children move');
+                  
+                  // Clear the ancestry flag
+                  this.set('isSettingAncestry', false);
+                }).catch((error) => {
+                  console.error('[CUSTOM DRAG] Error refreshing UI:', error);
+                  this.set('isSettingAncestry', false);
+                });
               }).catch((error) => {
-                console.error('[CUSTOM DRAG] Error refreshing UI:', error);
+                console.error('[CUSTOM DRAG] Error reloading children:', error);
                 this.set('isSettingAncestry', false);
               });
             }).catch((error) => {
@@ -287,7 +335,7 @@ export default Component.extend({
             });
           } else {
             // No children, just refresh the UI
-            parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
+            parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false).then(() => {
               console.log('[CUSTOM DRAG] UI refreshed after container move');
               this.set('isSettingAncestry', false);
             }).catch((error) => {
