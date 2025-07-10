@@ -907,10 +907,19 @@ export default Component.extend({
           const sortedChildren = children;
           
           // Step 4b: Update all children in their original order
+          // Calculate the base sort order for children (right after the container)
+          const baseSortOrder = container.get('sortOrder') + 0.001;
+          
+          // Find the minimum sort order among children to calculate relative offsets
+          const minChildSortOrder = Math.min(...sortedChildren.map(child => child.get('sortOrder')));
+          
           for (let i = 0; i < sortedChildren.length; i++) {
             const child = sortedChildren[i];
-            const newSortOrder = container.get('sortOrder') + (i + 1) * 0.001;
-            console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId to', containerId, 'sortOrder to', newSortOrder, '(original sortOrder was', child.get('sortOrder'), ')');
+            // Preserve the relative sort order difference from the minimum
+            const relativeOffset = child.get('sortOrder') - minChildSortOrder;
+            const newSortOrder = baseSortOrder + relativeOffset;
+            
+            console.log('[CUSTOM DRAG] Updating child', child.get('questionText'), 'parentId to', containerId, 'sortOrder to', newSortOrder, '(original sortOrder was', child.get('sortOrder'), ', relativeOffset was', relativeOffset, ')');
             
             // Update child directly
             child.set('parentId', containerId);
