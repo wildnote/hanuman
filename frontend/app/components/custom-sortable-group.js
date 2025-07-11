@@ -24,30 +24,18 @@ export default Component.extend({
   
   actions: {
     selectItem(item, index) {
-      console.log('[CUSTOM DRAG] Select item called:', item.get('questionText'), 'at index:', index);
-      console.log('[CUSTOM DRAG] Item isARepeater:', item.get('isARepeater'));
-      console.log('[CUSTOM DRAG] Item isContainer:', item.get('isContainer'));
-      console.log('[CUSTOM DRAG] Item parentId:', item.get('parentId'));
-      console.log('[CUSTOM DRAG] Item id:', item.get('id'));
-      console.log('[CUSTOM DRAG] Current selectedItem:', this.get('selectedItem') ? this.get('selectedItem').get('questionText') : 'null');
-      console.log('[CUSTOM DRAG] Current selectedIndex:', this.get('selectedIndex'));
-      
       // Check if survey template is locked - prevent selection if not fully editable
       const isFullyEditable = this.get('isFullyEditable');
       if (!isFullyEditable) {
-        console.log('[CUSTOM DRAG] Survey template is not fully editable, preventing selection');
         return;
       }
       
       // Check if item is in the current items array
       const items = this.get('items');
       const itemInArray = items.findBy('id', item.get('id'));
-      console.log('[CUSTOM DRAG] Item found in array:', !!itemInArray);
-      console.log('[CUSTOM DRAG] Item index in array:', items.indexOf(itemInArray));
       
       if (this.get('selectedItem') === item) {
         // Deselect if clicking the same item
-        console.log('[CUSTOM DRAG] Deselecting same item');
         this.set('selectedItem', null);
         this.set('selectedIndex', -1);
         this.removeDropZones();
@@ -55,7 +43,6 @@ export default Component.extend({
         this.cleanupAfterMove();
       } else {
         // Select new item
-        console.log('[CUSTOM DRAG] Selecting new item');
         
         // Clean up before selecting new item
         this.cleanupAfterMove();
@@ -67,15 +54,12 @@ export default Component.extend({
         // Only highlight children if this is a container
         const isContainer = item.get('isARepeater') || item.get('isContainer');
         if (isContainer) {
-          console.log('[CUSTOM DRAG] Selected item is a container, highlighting children');
           // Debounce highlighting to prevent performance issues
           const timeout = run.later(this, () => {
             this.highlightChildren(item);
           }, 100); // Increased delay for better debouncing
           
           this.registerTimeout(timeout, 'highlight');
-        } else {
-          console.log('[CUSTOM DRAG] Selected item is not a container, skipping children highlight');
         }
       }
     },
@@ -911,61 +895,48 @@ export default Component.extend({
         
         // Update children sequentially to avoid race conditions
         const updateChildrenSequentially = async () => {
-          console.log('[CUSTOM DRAG] Step 4: Starting children updates');
-          
-          // Step 4a: Use the directChildren array (only direct children, not nested)
-          console.log('[CUSTOM DRAG] Using directChildren array:', directChildren.map(c => ({
-            text: c.get('questionText'),
-            sortOrder: c.get('sortOrder'),
-            parentId: c.get('parentId')
-          })));
+          // Step 4: Starting children updates
           
           // Sort direct children by their current sortOrder to preserve their intended order
           const sortedDirectChildren = directChildren.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
           
           // Step 4b: Update all direct children in their original order
+          // Calculate the container's new sort order based on its position in the items array
+          const containerIndex = items.indexOf(container);
+          const containerNewSortOrder = containerIndex + 1;
+          
           // Calculate the base sort order for direct children (right after the container)
-          const baseSortOrder = container.get('sortOrder') + 0.001;
+          const baseSortOrder = containerNewSortOrder + 1;
           
           // Find the minimum sort order among direct children to calculate relative offsets
           const minChildSortOrder = Math.min(...sortedDirectChildren.map(child => child.get('sortOrder')));
           
           for (let i = 0; i < sortedDirectChildren.length; i++) {
             const child = sortedDirectChildren[i];
-            // Preserve the relative sort order difference from the minimum
+            // Preserve the relative sort order difference from the minimum, but use integer spacing
             const relativeOffset = child.get('sortOrder') - minChildSortOrder;
             const newSortOrder = baseSortOrder + relativeOffset;
             
-            console.log('[CUSTOM DRAG] Updating direct child', child.get('questionText'), 'parentId to', containerId, 'sortOrder to', newSortOrder, '(original sortOrder was', child.get('sortOrder'), ', relativeOffset was', relativeOffset, ')');
+            // Updating direct child
             
             // Update direct child only
             child.set('parentId', containerId);
             child.set('sortOrder', newSortOrder);
             
             try {
-              const savedChild = await child.save();
-              console.log('[CUSTOM DRAG] Direct child', child.get('questionText'), 'saved successfully');
-              console.log('[CUSTOM DRAG] Saved direct child data:', {
-                id: savedChild.get('id'),
-                text: savedChild.get('questionText'),
-                parentId: savedChild.get('parentId'),
-                sortOrder: savedChild.get('sortOrder'),
-                ancestry: savedChild.get('ancestry')
-              });
+              await child.save();
             } catch (error) {
               console.error('[CUSTOM DRAG] Error saving direct child', child.get('questionText'), ':', error);
             }
           }
           
-          console.log('[CUSTOM DRAG] Step 4b: All direct children updated successfully');
+          // Step 4b: All direct children updated successfully
           
           // Step 4c: Reload all direct children to ensure they have the latest data
           const reloadPromises = sortedDirectChildren.map(child => child.reload());
           await Promise.all(reloadPromises);
-          console.log('[CUSTOM DRAG] Step 4c: All direct children reloaded');
           
           // Step 4d: Create a properly ordered array for the final UI refresh
-          console.log('[CUSTOM DRAG] Step 4d: Creating properly ordered array for final UI refresh');
           
           // Get the current full questions array
           const fullQuestions = parentComponent.get('fullQuestions');
@@ -976,12 +947,7 @@ export default Component.extend({
           
           // Get ALL descendants of the container (not just direct children)
           const allDescendants = this.getAllDescendants(container.get('id'), fullQuestions);
-          console.log('[CUSTOM DRAG] All descendants of moved container:', allDescendants.map(d => ({
-            id: d.get('id'),
-            text: d.get('questionText'),
-            parentId: d.get('parentId'),
-            sortOrder: d.get('sortOrder')
-          })));
+          // Removed excessive logging
           
           // Add all questions in their current order, but ensure container and ALL descendants are together
           fullQuestions.forEach(question => {
@@ -1011,29 +977,13 @@ export default Component.extend({
             }
           });
           
-          console.log('[CUSTOM DRAG] Properly ordered questions for final refresh:', properlyOrderedQuestions.map(q => ({
-            id: q.get('id'),
-            text: q.get('questionText'),
-            parentId: q.get('parentId'),
-            sortOrder: q.get('sortOrder')
-          })));
+          // Removed excessive logging
           
           // Use the properly ordered array for the final UI refresh
           parentComponent.get('updateSortOrderTask').perform(properlyOrderedQuestions, false).then(() => {
-            console.log('[CUSTOM DRAG] Step 4d: Final UI refresh completed with proper ordering');
             this.set('isSettingAncestry', false);
             this.set('isMovingContainer', false);
             this.cleanupAfterMove();
-            
-            // Log ancestry/sortOrder of all direct children after final UI refresh
-            const refreshedDirectChildren = directChildren.map(c => ({
-              id: c.get('id'),
-              text: c.get('questionText'),
-              parentId: c.get('parentId'),
-              sortOrder: c.get('sortOrder'),
-              ancestry: c.get('ancestry')
-            }));
-            console.log('[CUSTOM DRAG] Final direct children state after move:', refreshedDirectChildren);
           });
         };
         
@@ -1129,10 +1079,8 @@ export default Component.extend({
     const timeout = run.scheduleOnce('afterRender', this, () => {
       const items = this.element.querySelectorAll('.sortable-item');
       const selectedItem = this.get('selectedItem');
-      console.log('[CUSTOM DRAG] Creating drop zones for', items.length, 'items');
       
       if (!selectedItem) {
-        console.log('[CUSTOM DRAG] No selected item, skipping drop zone creation');
         return;
       }
       
@@ -1146,14 +1094,11 @@ export default Component.extend({
           const moveIcon = element.querySelector('.glyphicons-sorting');
           if (moveIcon) {
             const selectionClickHandler = (event) => {
-              console.log('[CUSTOM DRAG] Move icon clicked for selection at index:', index);
-              
               const questionElement = element.querySelector('[data-question-id]');
               if (questionElement) {
                 const questionId = questionElement.getAttribute('data-question-id');
                 const question = this.get('items').findBy('id', questionId);
                 if (question) {
-                  console.log('[CUSTOM DRAG] Calling selectItem for question:', question.get('questionText'));
                   this.send('selectItem', question, index);
                 }
               }
@@ -1161,17 +1106,13 @@ export default Component.extend({
             
             // Use safe event listener to prevent duplicates
             this.safeAddEventListener(moveIcon, 'click', selectionClickHandler);
-            console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
           }
         });
-      } else {
-        console.log('[CUSTOM DRAG] Survey template is not fully editable, skipping selection handlers');
       }
       
       // Determine if selected item is inside a container
       const selectedParentId = selectedItem.get('parentId');
       const isSelectedInsideContainer = selectedParentId !== null;
-      console.log('[CUSTOM DRAG] Selected item parentId:', selectedParentId, 'isInsideContainer:', isSelectedInsideContainer);
       
       items.forEach((element, index) => {
         // Don't create drop zones for the selected item
@@ -1185,10 +1126,8 @@ export default Component.extend({
             const questionId = questionElement.getAttribute('data-question-id');
             question = this.get('items').findBy('id', questionId);
             if (question) {
-              console.log('[CUSTOM DRAG] Found question at index', index, ':', question.get('questionText'), 'isARepeater:', question.get('isARepeater'), 'isContainer:', question.get('isContainer'));
               if (question.get('isARepeater') || question.get('isContainer')) {
                 isContainer = true;
-                console.log('[CUSTOM DRAG] Question identified as container');
               }
             }
           }
@@ -1208,12 +1147,10 @@ export default Component.extend({
             const selectedContainerId = selectedItem.get('id');
             const selectedChildren = this.get('items').filter(item => item.get('parentId') === selectedContainerId);
             selectedHasChildContainers = selectedChildren.some(child => child.get('isARepeater') || child.get('isContainer'));
-            console.log('[CUSTOM DRAG] Selected container has child containers:', selectedHasChildContainers);
           }
           
           // Check if selected item is a child container (inside another container)
           const isSelectedChildContainer = isSelectedContainer && selectedParentId !== null;
-          console.log('[CUSTOM DRAG] Selected item is child container:', isSelectedChildContainer);
           
           // Determine selected item's container level
           let selectedContainerLevel = 0;
@@ -1239,33 +1176,24 @@ export default Component.extend({
           
           // Handle child container logic first (regardless of where the target item is)
           if (isSelectedChildContainer) {
-            console.log('[CUSTOM DRAG] Selected container is a child container, checking item at index', index, '- isContainer:', isContainer, 'questionParentId:', questionParentId, 'question text:', question ? question.get('questionText') : 'unknown');
-            
             // Allow repositioning within the same container
             if (isInSameContainer) {
-              console.log('[CUSTOM DRAG] Item is in same container, allowing repositioning');
               shouldShowRegularDropZone = true;
             }
             // Allow moving to top level (both containers and questions with no parentId)
             else if (!questionParentId) {
-              console.log('[CUSTOM DRAG] Item is at top level, checking if container or question');
               if (isContainer) {
                 // Show container drop zone for top-level containers
                 shouldShowContainerDropZone = true;
-                console.log('[CUSTOM DRAG] Setting container drop zone for top-level container');
               }
               // Always show regular drop zone for top-level items (both containers and questions)
               shouldShowRegularDropZone = true;
-              console.log('[CUSTOM DRAG] Setting regular drop zone for top-level item');
-            } else {
-              console.log('[CUSTOM DRAG] Item is not at top level and not in same container, skipping - questionParentId:', questionParentId);
             }
           } else if (isSelectedInsideContainer) {
             // Selected item is inside a container (but not a child container)
             if (isContainer) {
               if (selectedHasChildContainers) {
                 // If selected container has child containers, only allow same-level moves
-                console.log('[CUSTOM DRAG] Selected container has child containers, restricting to same-level moves only');
                 // Only allow container-to-container moves at the same level
                 if (selectedContainerLevel === targetContainerLevel) {
                   shouldShowContainerDropZone = true;
@@ -1296,7 +1224,6 @@ export default Component.extend({
             if (isContainer) {
               // If selected container has child containers, only allow top-level moves
               if (selectedHasChildContainers) {
-                console.log('[CUSTOM DRAG] Selected container has child containers, restricting to top-level moves only');
                 // Only allow moving to top level (no container drop zones)
                 if (!questionParentId) {
                   shouldShowRegularDropZone = true;
@@ -1329,8 +1256,6 @@ export default Component.extend({
             
             // Add click handler for container drop
             const clickHandler = (event) => {
-              console.log('[CUSTOM DRAG] Container drop zone clicked for index:', index, 'question:', question ? question.get('questionText') : 'unknown');
-              
               // Prevent event bubbling
               event.preventDefault();
               event.stopPropagation();
@@ -1347,8 +1272,6 @@ export default Component.extend({
             
             this.safeAddEventListener(element, 'mouseenter', enterHandler);
             this.safeAddEventListener(element, 'mouseleave', leaveHandler);
-            
-            console.log('[CUSTOM DRAG] Added green drop zone for container at index:', index, 'question:', question ? question.get('questionText') : 'unknown');
           } else if (shouldShowRegularDropZone) {
             // Add blue drop zone for regular positioning
             element.classList.add('drop-zone-active');
@@ -1360,8 +1283,6 @@ export default Component.extend({
             
             // Add click handler for drop
             const clickHandler = (event) => {
-              console.log('[CUSTOM DRAG] Drop zone clicked for index:', index);
-              
               // Prevent event bubbling
               event.preventDefault();
               event.stopPropagation();
@@ -1378,10 +1299,6 @@ export default Component.extend({
             
             this.safeAddEventListener(element, 'mouseenter', enterHandler);
             this.safeAddEventListener(element, 'mouseleave', leaveHandler);
-            
-            console.log('[CUSTOM DRAG] Added blue drop zone for regular positioning at index:', index);
-          } else {
-            console.log('[CUSTOM DRAG] No drop zone added for index:', index, 'question:', question ? question.get('questionText') : 'unknown', 'shouldShowContainerDropZone:', shouldShowContainerDropZone, 'shouldShowRegularDropZone:', shouldShowRegularDropZone);
           }
         }
       });
@@ -1393,7 +1310,6 @@ export default Component.extend({
   
   removeDropZones() {
     const items = this.element.querySelectorAll('.sortable-item');
-    console.log('[CUSTOM DRAG] Removing drop zones');
     
     items.forEach(element => {
       element.classList.remove('drop-zone-active', 'drop-zone-highlighted', 'container-drop-zone-active', 'container-drop-zone-highlighted');
@@ -1430,58 +1346,35 @@ export default Component.extend({
   },
 
   highlightChildren(container) {
-    console.log('[CUSTOM DRAG] Highlighting children for container:', container.get('questionText'));
-    
     const items = this.get('items');
     const containerId = container.get('id');
     
     // Recursively find ALL descendants of this container
     const allDescendants = this.getAllDescendants(containerId, items);
     
-    console.log('[CUSTOM DRAG] Found', allDescendants.length, 'descendants to highlight');
-    console.log('[CUSTOM DRAG] Descendants:', allDescendants.map(d => ({
-      id: d.get('id'),
-      text: d.get('questionText'),
-      parentId: d.get('parentId')
-    })));
-    
     if (allDescendants.length === 0) {
-      console.log('[CUSTOM DRAG] No descendants to highlight');
       return;
     }
     
     // Use run.scheduleOnce to ensure DOM is ready
     run.scheduleOnce('afterRender', this, () => {
-      console.log('[CUSTOM DRAG] DOM ready, starting highlight process');
-      
       // Create a Set of descendant IDs for faster lookup
       const descendantIds = new Set(allDescendants.map(descendant => descendant.get('id').toString()));
-      console.log('[CUSTOM DRAG] Looking for descendant IDs:', Array.from(descendantIds));
       
       // Find all sortable-item elements once
       const descendantElements = this.element.querySelectorAll('.sortable-item');
-      console.log('[CUSTOM DRAG] Found', descendantElements.length, 'sortable-item elements in DOM');
-      
-      let highlightedCount = 0;
       
       // Process each element efficiently
-      descendantElements.forEach((element, index) => {
+      descendantElements.forEach((element) => {
         const questionElement = element.querySelector('[data-question-id]');
         if (questionElement) {
           const questionId = questionElement.getAttribute('data-question-id');
-          console.log('[CUSTOM DRAG] Element', index, 'has question ID:', questionId);
           
           if (descendantIds.has(questionId)) {
             element.classList.add('children-highlight');
-            highlightedCount++;
-            console.log('[CUSTOM DRAG] Added children-highlight class to element with question ID:', questionId);
           }
-        } else {
-          console.log('[CUSTOM DRAG] Element', index, 'has no data-question-id attribute');
         }
       });
-      
-      console.log('[CUSTOM DRAG] Highlighted', highlightedCount, 'out of', allDescendants.length, 'expected descendants');
     });
   },
 
@@ -1534,15 +1427,12 @@ export default Component.extend({
 
   // Helper method to safely add event listeners and prevent duplicates
   safeAddEventListener(element, event, handler) {
-    console.log('[CUSTOM DRAG] safeAddEventListener called for:', { event, elementClass: element.className });
-    
     // Check if this exact listener already exists
     const existingListener = this.get('activeEventListeners').find(({ element: el, event: evt, handler: hdlr }) => 
       el === element && evt === event && hdlr === handler
     );
     
     if (existingListener) {
-      console.log('[CUSTOM DRAG] Listener already exists, skipping add');
       return;
     }
     
@@ -1552,15 +1442,12 @@ export default Component.extend({
     );
     
     if (existingElementListener) {
-      console.log('[CUSTOM DRAG] Removing existing listener for same element/event before adding new one');
       this.safeRemoveEventListener(existingElementListener.element, existingElementListener.event, existingElementListener.handler);
     }
     
     // Add new listener
     element.addEventListener(event, handler);
     this.get('activeEventListeners').push({ element, event, handler });
-    
-    console.log('[CUSTOM DRAG] Added listener, total activeEventListeners:', this.get('activeEventListeners').length);
   },
 
   // Helper method to register timeouts for cleanup with deduplication
@@ -1589,7 +1476,6 @@ export default Component.extend({
     const isFullyEditable = this.get('isFullyEditable');
     
     if (!isFullyEditable && this.get('selectedItem')) {
-      console.log('[CUSTOM DRAG] Survey template is not fully editable, clearing existing selection');
       this.set('selectedItem', null);
       this.set('selectedIndex', -1);
       this.removeDropZones();
@@ -1600,7 +1486,6 @@ export default Component.extend({
     
     // Periodic cleanup check to prevent listener accumulation
     if (this.get('activeEventListeners').length > 20) {
-      console.warn('[CUSTOM DRAG] High listener count detected in didUpdate, performing cleanup');
       this.cleanupAfterMove();
     }
     
@@ -1613,7 +1498,6 @@ export default Component.extend({
       const itemStillExists = items.findBy('id', selectedItem.get('id'));
       
       if (!itemStillExists) {
-        console.log('[CUSTOM DRAG] Selected item no longer in items array, clearing selection');
         this.set('selectedItem', null);
         this.set('selectedIndex', -1);
         this.removeDropZones();
@@ -1623,7 +1507,6 @@ export default Component.extend({
         // Update the selectedIndex to match the current position
         const currentIndex = items.indexOf(itemStillExists);
         if (currentIndex !== this.get('selectedIndex')) {
-          console.log('[CUSTOM DRAG] Selected item index changed from', this.get('selectedIndex'), 'to', currentIndex);
           this.set('selectedIndex', currentIndex);
         }
       }
@@ -1635,7 +1518,6 @@ export default Component.extend({
     // If we have a selected item, ensure drop zones are maintained after DOM updates
     if (selectedItem) {
       run.scheduleOnce('afterRender', this, () => {
-        console.log('[CUSTOM DRAG] DOM updated, ensuring drop zones are maintained');
         this.createDropZones();
       });
     }
@@ -1648,12 +1530,10 @@ export default Component.extend({
       const isFullyEditable = this.get('isFullyEditable');
       
       if (!isFullyEditable) {
-        console.log('[CUSTOM DRAG] Survey template is not fully editable, skipping selection handlers in ensureSelectionHandlers');
         return;
       }
       
       const items = this.element.querySelectorAll('.sortable-item');
-      console.log('[CUSTOM DRAG] Ensuring selection handlers for', items.length, 'items');
       
       let addedCount = 0;
       let skippedCount = 0;
@@ -1669,14 +1549,11 @@ export default Component.extend({
           
           if (!existingHandler) {
             const selectionClickHandler = (event) => {
-              console.log('[CUSTOM DRAG] Move icon clicked for selection at index:', index);
-              
               const questionElement = element.querySelector('[data-question-id]');
               if (questionElement) {
                 const questionId = questionElement.getAttribute('data-question-id');
                 const question = this.get('items').findBy('id', questionId);
                 if (question) {
-                  console.log('[CUSTOM DRAG] Calling selectItem for question:', question.get('questionText'));
                   this.send('selectItem', question, index);
                 }
               }
@@ -1684,28 +1561,17 @@ export default Component.extend({
             
             // Use safe event listener to prevent duplicates
             this.safeAddEventListener(moveIcon, 'click', selectionClickHandler);
-            console.log('[CUSTOM DRAG] Added selection click handler to move icon for item at index:', index);
             addedCount++;
           } else {
-            console.log('[CUSTOM DRAG] Selection handler already exists for item at index:', index);
             skippedCount++;
           }
-        } else {
-          console.log('[CUSTOM DRAG] No move icon found for item at index:', index);
         }
       });
       
-      console.log('[CUSTOM DRAG] Selection handlers summary - Added:', addedCount, 'Skipped:', skippedCount, 'Total activeEventListeners:', this.get('activeEventListeners').length);
-      
-      // Display listener count warning if high
-      const listenerCount = this.get('activeEventListeners').length;
-      if (listenerCount > 15) {
-        console.warn(`[CUSTOM DRAG] WARNING: High listener count: ${listenerCount}. Consider refreshing the page.`);
-      }
+      // Removed excessive logging
       
       // If we have a selected item, ensure drop zones are recreated
       if (this.get('selectedItem')) {
-        console.log('[CUSTOM DRAG] Selected item exists, recreating drop zones');
         this.createDropZones();
       }
     });
@@ -1713,19 +1579,14 @@ export default Component.extend({
 
   // Comprehensive cleanup method called after every move operation
   cleanupAfterMove() {
-    console.log('[CUSTOM DRAG] Performing comprehensive cleanup after move');
-    console.log('[CUSTOM DRAG] Before cleanup - activeEventListeners:', this.get('activeEventListeners').length, 'cleanupTimeouts:', this.get('cleanupTimeouts').length);
-    
     // Emergency cleanup if we have too many listeners
     if (this.get('activeEventListeners').length > 50) {
-      console.warn('[CUSTOM DRAG] EMERGENCY: Too many event listeners detected, performing aggressive cleanup');
       this.get('activeEventListeners').forEach(({ element, event, handler }) => {
         if (element && element.removeEventListener) {
           element.removeEventListener(event, handler);
         }
       });
       this.set('activeEventListeners', []);
-      console.log('[CUSTOM DRAG] Emergency cleanup completed');
     }
     
     // Cancel all registered timeouts
@@ -1750,16 +1611,8 @@ export default Component.extend({
       const isDropZoneHandler = event === 'click' || event === 'mouseenter' || event === 'mouseleave';
       const shouldRemove = isDropZoneHandler && !isSelectionHandler;
       
-      if (shouldRemove) {
-        console.log('[CUSTOM DRAG] Removing listener:', { event, elementClass: element.className });
-      } else {
-        console.log('[CUSTOM DRAG] Keeping listener:', { event, elementClass: element.className });
-      }
-      
       return shouldRemove;
     });
-    
-    console.log('[CUSTOM DRAG] Removing', listenersToRemove.length, 'drop zone listeners, keeping', listeners.length - listenersToRemove.length, 'selection listeners');
     
     listenersToRemove.forEach(({ element, event, handler }) => {
       if (element && element.removeEventListener) {
@@ -1792,11 +1645,8 @@ export default Component.extend({
     
     // Re-add selection handlers after cleanup
     run.scheduleOnce('afterRender', this, () => {
-      console.log('[CUSTOM DRAG] Re-adding selection handlers after cleanup');
       this.ensureSelectionHandlers();
     });
-    
-    console.log('[CUSTOM DRAG] Cleanup completed - activeEventListeners:', this.get('activeEventListeners').length, 'cleanupTimeouts:', this.get('cleanupTimeouts').length);
   },
 
   // Clean up timeouts when component is destroyed
@@ -1815,8 +1665,6 @@ export default Component.extend({
 
   // Force a complete refresh of the component
   forceRefresh() {
-    console.log('[CUSTOM DRAG] Forcing complete component refresh');
-    
     // Clear selection
     this.set('selectedItem', null);
     this.set('selectedIndex', -1);
@@ -1830,23 +1678,13 @@ export default Component.extend({
       
       // Re-add selection handlers
       this.ensureSelectionHandlers();
-      
-      // Log the current state after refresh
-      console.log('[CUSTOM DRAG] After force refresh - items count:', currentItems.length);
-      currentItems.forEach((item, index) => {
-        console.log(`[CUSTOM DRAG] Item ${index}:`, item.get('questionText'), 'parentId:', item.get('parentId'));
-      });
     });
   },
 
   // Check if UI reflects the data changes
   checkUIState() {
-    console.log('[CUSTOM DRAG] Checking UI state');
     const items = this.get('items');
     const domItems = this.element.querySelectorAll('.sortable-item');
-    
-    console.log('[CUSTOM DRAG] Data items count:', items.length);
-    console.log('[CUSTOM DRAG] DOM items count:', domItems.length);
     
     items.forEach((item, index) => {
       console.log(`[CUSTOM DRAG] Data item ${index}:`, item.get('questionText'), 'parentId:', item.get('parentId'));
@@ -1863,22 +1701,17 @@ export default Component.extend({
 
   // Reorder items array to ensure container and its children are properly positioned
   reorderContainerWithChildren(items, container) {
-    console.log('[CUSTOM DRAG] Reordering container with children:', container.get('questionText'));
-    
     const containerId = container.get('id');
     const containerIndex = items.indexOf(container);
     
     if (containerIndex === -1) {
-      console.log('[CUSTOM DRAG] Container not found in items array');
       return items;
     }
     
     // Find all children of this container
     const children = items.filter(item => item.get('parentId') === containerId);
-    console.log('[CUSTOM DRAG] Found', children.length, 'children for container');
     
     if (children.length === 0) {
-      console.log('[CUSTOM DRAG] No children to reorder');
       return items;
     }
     
@@ -1913,9 +1746,6 @@ export default Component.extend({
       }
     }
     
-    console.log('[CUSTOM DRAG] Reordered items array - container at index:', reorderedItems.indexOf(container));
-    console.log('[CUSTOM DRAG] Children positioned after container');
-    
     return reorderedItems;
   },
 
@@ -1935,8 +1765,6 @@ export default Component.extend({
       // Sort children by their old sortOrder to preserve their relative order
       children = children.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
       
-      console.log('[CUSTOM DRAG] [RECURSIVE] Found', children.length, 'children for parent:', parent.get('questionText'));
-      
       if (children.length === 0) {
         resolve(sortOrder);
         return;
@@ -1952,7 +1780,6 @@ export default Component.extend({
         let child = children[index];
         child.set('parentId', parentId);
         child.set('sortOrder', sortOrder);
-        console.log('[CUSTOM DRAG] [RECURSIVE] Setting', child.get('questionText'), 'parentId to', parentId, 'sortOrder to', sortOrder);
         
         child.save().then(() => {
           return child.reload();

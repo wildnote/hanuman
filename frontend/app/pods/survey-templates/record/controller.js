@@ -24,15 +24,14 @@ export default Controller.extend({
   },
 
   updateSortOrderTask: task(function*(questions, reSort = false) {
-    console.log('[updateSortOrderTask] Starting with questions:', questions);
-    console.log('[updateSortOrderTask] reSort:', reSort);
+    console.log('[updateSortOrderTask] Starting with', questions.length, 'questions, reSort:', reSort);
     
     let lastSortOrder = 0;
     let surveyTemplate = this.get('surveyTemplate');
     let ids = [];
     
     if (reSort) {
-      console.log('[updateSortOrderTask] Re-sorting questions by existing sortOrder with nested structure support');
+      console.log('[updateSortOrderTask] Re-sorting questions by existing sortOrder');
       questions = [...questions.toArray()];
       
       // Create a map of parent containers to their children for efficient lookup
@@ -101,18 +100,9 @@ export default Controller.extend({
         // Default fallback
         return 0;
       });
-      
-      console.log('[updateSortOrderTask] Questions after nested structure sort:', questions.map(q => ({
-        id: q.get('id'),
-        text: q.get('questionText'),
-        sortOrder: q.get('sortOrder'),
-        parentId: q.get('parentId')
-      })));
     } else {
       console.log('[updateSortOrderTask] Using questions in provided order (from drag-and-drop)');
     }
-    
-    console.log('[updateSortOrderTask] Final question order:', questions.map(q => [q.get('id'), q.get('questionText')]));
     
     for (let index = 0; index < questions.get('length'); index++) {
       let question = questions.objectAt(index);
@@ -123,15 +113,14 @@ export default Controller.extend({
         newSortOrder++;
       }
       if (oldSortOrder !== newSortOrder) {
-        console.log(`[updateSortOrderTask] Updating question ${question.get('id')} (${question.get('questionText')}) from sortOrder ${oldSortOrder} to ${newSortOrder}`);
+        console.log(`[updateSortOrderTask] Updating ${question.get('questionText')} from ${oldSortOrder} to ${newSortOrder}`);
         question.set('sortOrder', newSortOrder);
       }
       lastSortOrder = newSortOrder;
       ids.push(question.get('id'));
     }
     
-    console.log('[updateSortOrderTask] Final IDs to send:', ids);
-    console.log('[updateSortOrderTask] Calling surveyTemplate.resortQuestions with:', { ids });
+    console.log('[updateSortOrderTask] Calling surveyTemplate.resortQuestions with', ids.length, 'questions');
     
     yield surveyTemplate.resortQuestions({ ids });
     this._checkAncestryConsistency(questions);
@@ -170,7 +159,7 @@ export default Controller.extend({
         
         // If the question is outside its parent's scope, fix it
         if (sortOrder < parentSortOrder || sortOrder > parentEndSortOrder) {
-          console.log('[updateSortOrderTask] Question', question.get('id'), 'outside parent scope. parentSortOrder:', parentSortOrder, 'questionSortOrder:', sortOrder, 'parentEndSortOrder:', parentEndSortOrder);
+          console.log('[updateSortOrderTask] Question', question.get('questionText'), 'outside parent scope. parentSortOrder:', parentSortOrder, 'questionSortOrder:', sortOrder, 'parentEndSortOrder:', parentEndSortOrder);
           
           // Find the correct parent based on ancestry
           let ancestry = question.get('ancestry');
@@ -181,7 +170,7 @@ export default Controller.extend({
               let ancestorId = ancestryParts[i];
               let ancestor = questions.findBy('id', ancestorId);
               if (ancestor && ancestor.get('sortOrder') <= sortOrder) {
-                console.log('[updateSortOrderTask] Setting question', question.get('id'), 'parentId to', ancestorId);
+                console.log('[updateSortOrderTask] Setting question', question.get('questionText'), 'parentId to', ancestorId);
                 question.set('parentId', ancestorId);
                 question.save().then(() => {
                   question.reload();
@@ -191,14 +180,12 @@ export default Controller.extend({
             }
           } else {
             // If no ancestry, set to null (top level)
-            console.log('[updateSortOrderTask] Setting question', question.get('id'), 'parentId to null (top level)');
+            console.log('[updateSortOrderTask] Setting question', question.get('questionText'), 'parentId to null (top level)');
             question.set('parentId', null);
             question.save().then(() => {
               question.reload();
             });
           }
-        } else {
-          console.log('[updateSortOrderTask] Question', question.get('id'), 'within parent scope. parentSortOrder:', parentSortOrder, 'questionSortOrder:', sortOrder, 'parentEndSortOrder:', parentEndSortOrder);
         }
       }
     });
