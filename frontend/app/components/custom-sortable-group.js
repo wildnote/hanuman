@@ -1239,10 +1239,15 @@ export default Component.extend({
           
           // Handle child container logic first (regardless of where the target item is)
           if (isSelectedChildContainer) {
-            console.log('[CUSTOM DRAG] Selected container is a child container, only allowing top-level moves');
-            console.log('[CUSTOM DRAG] Checking item at index', index, '- isContainer:', isContainer, 'questionParentId:', questionParentId, 'question text:', question ? question.get('questionText') : 'unknown');
+            console.log('[CUSTOM DRAG] Selected container is a child container, checking item at index', index, '- isContainer:', isContainer, 'questionParentId:', questionParentId, 'question text:', question ? question.get('questionText') : 'unknown');
+            
+            // Allow repositioning within the same container
+            if (isInSameContainer) {
+              console.log('[CUSTOM DRAG] Item is in same container, allowing repositioning');
+              shouldShowRegularDropZone = true;
+            }
             // Allow moving to top level (both containers and questions with no parentId)
-            if (!questionParentId) {
+            else if (!questionParentId) {
               console.log('[CUSTOM DRAG] Item is at top level, checking if container or question');
               if (isContainer) {
                 // Show container drop zone for top-level containers
@@ -1253,7 +1258,7 @@ export default Component.extend({
               shouldShowRegularDropZone = true;
               console.log('[CUSTOM DRAG] Setting regular drop zone for top-level item');
             } else {
-              console.log('[CUSTOM DRAG] Item is not at top level, skipping - questionParentId:', questionParentId);
+              console.log('[CUSTOM DRAG] Item is not at top level and not in same container, skipping - questionParentId:', questionParentId);
             }
           } else if (isSelectedInsideContainer) {
             // Selected item is inside a container (but not a child container)
