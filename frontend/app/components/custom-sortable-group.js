@@ -1330,8 +1330,11 @@ export default Component.extend({
             } else if (isInSameContainer) {
               // Allow repositioning within the same container
               shouldShowRegularDropZone = true;
+            } else if (!questionParentId) {
+              // Allow moving to top level (questions with no parentId)
+              shouldShowRegularDropZone = true;
             }
-            // Don't show regular drop zones for top-level questions when selected item is in container
+            // Don't show regular drop zones for questions inside containers when selected item is in container
           } else {
             // Selected item is at top level
             if (isContainer) {
