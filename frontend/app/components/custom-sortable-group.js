@@ -830,38 +830,44 @@ export default Component.extend({
               // Clear the ancestry flag
               this.set('isSettingAncestry', false);
 
-              // Now move the specific question to the pre-calculated target position
-              console.log('[CUSTOM DRAG] Moving question to pre-calculated target position:', targetIndex);
+              // Get fresh items array after reload and recalculate target position
+              const freshItems = this.get('items');
+              const freshTargetIndex = freshItems.indexOf(targetQuestion);
+              // If the dragged question's current index is less than the target, subtract 1 to account for removal
+              const currentIndex = freshItems.indexOf(question);
+              let finalTargetIndex = freshTargetIndex;
+              if (currentIndex < freshTargetIndex) {
+                finalTargetIndex = freshTargetIndex - 1;
+              }
+              console.log('[CUSTOM DRAG] Moving question to fresh target position:', finalTargetIndex);
 
               // Check if the moved item is a container and handle children ancestry updates
               if (isContainer) {
                 console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
-                const items = this.get('items');
 
                 // First, actually move the container to the target position
-                const currentIndex = items.indexOf(question);
-                if (currentIndex !== -1 && currentIndex !== targetIndex) {
-                  console.log('[CUSTOM DRAG] Moving container from index', currentIndex, 'to index', targetIndex);
-                  items.removeAt(currentIndex);
+                if (currentIndex !== -1 && currentIndex !== finalTargetIndex) {
+                  console.log('[CUSTOM DRAG] Moving container from index', currentIndex, 'to index', finalTargetIndex);
+                  freshItems.removeAt(currentIndex);
                   // Adjust target index if we removed an item before the target position
-                  let adjustedTargetIndex = targetIndex;
-                  if (currentIndex < targetIndex) {
-                    adjustedTargetIndex = targetIndex - 1;
+                  let adjustedTargetIndex = finalTargetIndex;
+                  if (currentIndex < finalTargetIndex) {
+                    adjustedTargetIndex = finalTargetIndex - 1;
                     console.log(
                       '[CUSTOM DRAG] Adjusted target index from',
-                      targetIndex,
+                      finalTargetIndex,
                       'to',
                       adjustedTargetIndex,
                       'due to removal'
                     );
                   }
-                  items.insertAt(adjustedTargetIndex, question);
+                  freshItems.insertAt(adjustedTargetIndex, question);
                 }
 
-                this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
+                this.send('updateContainerChildrenAncestry', question, freshItems, childrenBeforeMove);
               } else {
                 // For non-containers, use moveQuestionToPosition to handle the positioning
-                this.send('moveQuestionToPosition', question, targetIndex);
+                this.send('moveQuestionToPosition', question, finalTargetIndex);
               }
             });
           });
@@ -940,37 +946,45 @@ export default Component.extend({
               // Clear the ancestry flag
               this.set('isSettingAncestry', false);
 
-              // Now move the specific question to the pre-calculated target position
-              console.log('[CUSTOM DRAG] Moving question to pre-calculated target position:', targetIndex);
+              // Get fresh items array after reload and recalculate target position
+              const freshItems = this.get('items');
+              // For placeBelowQuestion, ensure we always insert immediately after the target
+              const freshTargetIndex = freshItems.indexOf(targetQuestion) + 1;
+              // If the dragged question's current index is less than the target, subtract 1 to account for removal
+              const currentIndex = freshItems.indexOf(question);
+              let finalTargetIndex = freshTargetIndex;
+              if (currentIndex < freshTargetIndex) {
+                finalTargetIndex = freshTargetIndex - 1;
+              }
+              console.log('[CUSTOM DRAG] Moving question to fresh target position:', finalTargetIndex);
 
               // Check if the moved item is a container and handle children ancestry updates
               if (isContainer) {
                 console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
 
                 // First, actually move the container to the target position
-                const currentIndex = items.indexOf(question);
-                if (currentIndex !== -1 && currentIndex !== targetIndex) {
-                  console.log('[CUSTOM DRAG] Moving container from index', currentIndex, 'to index', targetIndex);
-                  items.removeAt(currentIndex);
+                if (currentIndex !== -1 && currentIndex !== finalTargetIndex) {
+                  console.log('[CUSTOM DRAG] Moving container from index', currentIndex, 'to index', finalTargetIndex);
+                  freshItems.removeAt(currentIndex);
                   // Adjust target index if we removed an item before the target position
-                  let adjustedTargetIndex = targetIndex;
-                  if (currentIndex < targetIndex) {
-                    adjustedTargetIndex = targetIndex - 1;
+                  let adjustedTargetIndex = finalTargetIndex;
+                  if (currentIndex < finalTargetIndex) {
+                    adjustedTargetIndex = finalTargetIndex - 1;
                     console.log(
                       '[CUSTOM DRAG] Adjusted target index from',
-                      targetIndex,
+                      finalTargetIndex,
                       'to',
                       adjustedTargetIndex,
                       'due to removal'
                     );
                   }
-                  items.insertAt(adjustedTargetIndex, question);
+                  freshItems.insertAt(adjustedTargetIndex, question);
                 }
 
-                this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
+                this.send('updateContainerChildrenAncestry', question, freshItems, childrenBeforeMove);
               } else {
                 // For non-containers, use moveQuestionToPosition to handle the positioning
-                this.send('moveQuestionToPosition', question, targetIndex);
+                this.send('moveQuestionToPosition', question, finalTargetIndex);
               }
             });
           });
