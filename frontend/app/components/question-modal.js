@@ -28,6 +28,13 @@ export default Component.extend({
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
 
+  // Custom order for answer type groups
+  sortedGroupedAnswerTypes: computed('groupedAnswerTypes.[]', function() {
+    const groupedAnswerTypes = this.get('groupedAnswerTypes');
+    
+    return groupedAnswerTypes.sortBy('value'); // Sort alphabetically by group name
+  }),
+
   init() {
     this._super(...arguments);
     this.setProperties({ answerChoicesPendingSave: [] });
