@@ -7,4 +7,4 @@ export default Controller.extend({
       this.transitionToRoute('survey_templates.record');
     }
   }
-}); 
+});

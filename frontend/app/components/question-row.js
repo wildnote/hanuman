@@ -10,8 +10,6 @@ export default Component.extend({
   collapsible: service(),
   attributeBindings: ['question.id:data-question-id'],
 
-
-
   isPreviewing: false,
   isPreviewable: or('question.isTaxonType', 'question.answerType.hasAnswerChoices'),
 
@@ -28,7 +26,7 @@ export default Component.extend({
       if (!question) {
         return htmlSafe('');
       }
-      
+
       let initial = '';
       if (question.get('hidden')) {
         initial += '<span class="label label-default">Hidden</span>';
@@ -60,12 +58,12 @@ export default Component.extend({
   // Calculate indentation level based on ancestry
   indentationLevel: computed('question.{parentId,ancestry}', function() {
     const question = this.get('question');
-    
+
     if (!question) {
       console.log('[INDENT] No question, returning 0');
       return 0;
     }
-    
+
     // Debug: log all available properties
     console.log('[INDENT] Question properties:', {
       id: question.get('id'),
@@ -79,14 +77,14 @@ export default Component.extend({
       childQuestion: question.get('childQuestion'),
       numChildren: question.get('numChildren')
     });
-    
+
     // Try using the existing numChildren computed property first
     const numChildren = question.get('numChildren');
     if (numChildren > 0) {
       console.log('[INDENT] Using numChildren system - numChildren:', numChildren);
       return numChildren;
     }
-    
+
     // Try using the existing ancestry system
     const ancestry = question.get('ancestry');
     if (ancestry) {
@@ -94,14 +92,14 @@ export default Component.extend({
       console.log('[INDENT] Using ancestry system - ancestry:', ancestry, 'levels:', ancestryLevels);
       return ancestryLevels;
     }
-    
+
     // Fallback to parentId system
     const parentId = question.get('parentId');
     if (parentId) {
       console.log('[INDENT] Using parentId system - parentId:', parentId);
       return 1; // If there's a parentId, it's at least level 1
     }
-    
+
     console.log('[INDENT] No hierarchy found, returning 0');
     return 0;
   }),

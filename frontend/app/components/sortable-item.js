@@ -26,15 +26,15 @@ export default SortableItem.extend({
     console.log('[DRAG] Element:', this.element);
     console.log('[DRAG] Group:', this.get('group'));
     console.log('[DRAG] Handle:', this.get('handle'));
-    
+
     try {
       // Temporarily override sendAction to prevent deprecation warnings
       const originalSendAction = this.sendAction;
       this.sendAction = () => {};
-      
+
       // Call parent method
       this._super(...arguments);
-      
+
       // Restore original sendAction
       this.sendAction = originalSendAction;
     } catch (error) {
@@ -46,15 +46,15 @@ export default SortableItem.extend({
     console.log('[DRAG] _startDrag called for:', this.get('model.id'));
     console.log('[DRAG] Drag started, element:', this.element);
     console.log('[DRAG] Position before drag:', this.get('position'));
-    
+
     try {
       // Temporarily override sendAction to prevent deprecation warnings
       const originalSendAction = this.sendAction;
       this.sendAction = () => {};
-      
+
       // Call parent method
       this._super(...arguments);
-      
+
       // Restore original sendAction
       this.sendAction = originalSendAction;
     } catch (error) {
@@ -67,15 +67,15 @@ export default SortableItem.extend({
     console.log('[DRAG] Drag completed, wasDropped:', this.get('wasDropped'));
     console.log('[DRAG] Current position:', this.get('position'));
     console.log('[DRAG] Final element position:', this.element ? this.element.style.transform : 'no element');
-    
+
     try {
       // Temporarily override sendAction to prevent deprecation warnings
       const originalSendAction = this.sendAction;
       this.sendAction = () => {};
-      
+
       // Call parent method
       this._super(...arguments);
-      
+
       // Restore original sendAction
       this.sendAction = originalSendAction;
     } catch (error) {
@@ -86,15 +86,15 @@ export default SortableItem.extend({
   drop() {
     console.log('[DRAG] drop called for:', this.get('model.id'));
     console.log('[DRAG] Drop event fired!');
-    
+
     try {
       // Temporarily override sendAction to prevent deprecation warnings
       const originalSendAction = this.sendAction;
       this.sendAction = () => {};
-      
+
       // Call parent method
       this._super(...arguments);
-      
+
       // Restore original sendAction
       this.sendAction = originalSendAction;
     } catch (error) {
@@ -104,15 +104,15 @@ export default SortableItem.extend({
 
   dragEnter() {
     console.log('[DRAG] dragEnter called for:', this.get('model.id'));
-    
+
     try {
       // Temporarily override sendAction to prevent deprecation warnings
       const originalSendAction = this.sendAction;
       this.sendAction = () => {};
-      
+
       // Call parent method
       this._super(...arguments);
-      
+
       // Restore original sendAction
       this.sendAction = originalSendAction;
     } catch (error) {
@@ -122,15 +122,15 @@ export default SortableItem.extend({
 
   dragLeave() {
     console.log('[DRAG] dragLeave called for:', this.get('model.id'));
-    
+
     try {
       // Temporarily override sendAction to prevent deprecation warnings
       const originalSendAction = this.sendAction;
       this.sendAction = () => {};
-      
+
       // Call parent method
       this._super(...arguments);
-      
+
       // Restore original sendAction
       this.sendAction = originalSendAction;
     } catch (error) {
@@ -141,15 +141,15 @@ export default SortableItem.extend({
   _cancelDrag() {
     console.log('[DRAG] _cancelDrag called for:', this.get('model.id'));
     console.log('[DRAG] Drag cancelled!');
-    
+
     try {
       // Temporarily override sendAction to prevent deprecation warnings
       const originalSendAction = this.sendAction;
       this.sendAction = () => {};
-      
+
       // Call parent method
       this._super(...arguments);
-      
+
       // Restore original sendAction
       this.sendAction = originalSendAction;
     } catch (error) {

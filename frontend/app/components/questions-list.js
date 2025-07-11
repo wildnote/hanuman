@@ -19,21 +19,21 @@ export default Component.extend({
   questionsSorting: ['sortOrder'],
   fullQuestions: sort('surveyTemplate.questionsNotDeleted', 'questionsSorting'),
   sortedQuestions: sort('surveyTemplate.filteredQuestions', 'questionsSorting'),
-  
+
   // Computed property that includes all questions for drag-and-drop but maintains visual collapse
   dragDropQuestions: computed('fullQuestions.[]', 'sortedQuestions.[]', function() {
     const fullQuestions = this.get('fullQuestions');
     const sortedQuestions = this.get('sortedQuestions');
     const dragDropArray = A();
-    
+
     // Add all questions in their proper order
     fullQuestions.forEach((question) => {
       dragDropArray.addObject(question);
     });
-    
+
     return dragDropArray;
   }),
-  
+
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
 
   init() {
@@ -124,7 +124,7 @@ export default Component.extend({
   }).drop(),
 
   setAncestryTask: task(function*(question, opts) {
-            const ancestryQuestion = opts.target.ancestry;
+    const ancestryQuestion = opts.target.ancestry;
     if (ancestryQuestion.collapsed) {
       this.get('collapsible').toggleCollapsed(ancestryQuestion);
       yield waitForProperty(ancestryQuestion, 'pendingRecursive', (v) => v === 0);
@@ -241,7 +241,7 @@ export default Component.extend({
     sortedDropped(viewableSortedQuestions, _draggedQuestion) {
       const allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
       const sortableQuestions = A();
-      
+
       // Handle collapsed questions. When there are questions collapsed we completely removed them from the DOM
       // so we have to re-add them so we can update the sort order attributes
       viewableSortedQuestions.forEach((viewableQuestion) => {
@@ -258,7 +258,7 @@ export default Component.extend({
           sortableQuestions.addObjects(collapsedChild);
         }
       });
-      
+
       this.get('updateSortOrderTask').perform(sortableQuestions);
     },
 
