@@ -283,10 +283,24 @@ export default Component.extend({
                     console.log('[CUSTOM DRAG] Removed container from index:', containerIndex);
                   }
                   
-                  // Insert it right after the target container (as first child)
-                  const insertIndex = targetContainerIndex + 1;
+                  // Find the first child of the target container to insert before it
+                  const targetContainerChildren = fullQuestions.filter(q => q.get('parentId') === container.get('id'));
+                  let insertIndex;
+                  
+                  if (targetContainerChildren.length > 0) {
+                    // Find the first child's position in the array
+                    const firstChild = targetContainerChildren[0];
+                    const firstChildIndex = fullQuestions.indexOf(firstChild);
+                    insertIndex = firstChildIndex;
+                    console.log('[CUSTOM DRAG] Inserting container before first child at index:', insertIndex);
+                  } else {
+                    // No children, insert right after the target container
+                    insertIndex = targetContainerIndex + 1;
+                    console.log('[CUSTOM DRAG] No children, inserting container after target container at index:', insertIndex);
+                  }
+                  
                   fullQuestions.insertAt(insertIndex, question);
-                  console.log('[CUSTOM DRAG] Inserted container at index:', insertIndex, 'right after target container');
+                  console.log('[CUSTOM DRAG] Inserted container at index:', insertIndex);
                 }
                 
                 // Step 3: Update children ancestry BEFORE any UI refresh
@@ -1197,6 +1211,10 @@ export default Component.extend({
             console.log('[CUSTOM DRAG] Selected container has child containers:', selectedHasChildContainers);
           }
           
+          // Check if selected item is a child container (inside another container)
+          const isSelectedChildContainer = isSelectedContainer && selectedParentId !== null;
+          console.log('[CUSTOM DRAG] Selected item is child container:', isSelectedChildContainer);
+          
           // Determine selected item's container level
           let selectedContainerLevel = 0;
           if (selectedParentId) {
@@ -1219,11 +1237,29 @@ export default Component.extend({
             }
           }
           
-          if (isSelectedInsideContainer) {
-            // Selected item is inside a container
+          // Handle child container logic first (regardless of where the target item is)
+          if (isSelectedChildContainer) {
+            console.log('[CUSTOM DRAG] Selected container is a child container, only allowing top-level moves');
+            console.log('[CUSTOM DRAG] Checking item at index', index, '- isContainer:', isContainer, 'questionParentId:', questionParentId, 'question text:', question ? question.get('questionText') : 'unknown');
+            // Allow moving to top level (both containers and questions with no parentId)
+            if (!questionParentId) {
+              console.log('[CUSTOM DRAG] Item is at top level, checking if container or question');
+              if (isContainer) {
+                // Show container drop zone for top-level containers
+                shouldShowContainerDropZone = true;
+                console.log('[CUSTOM DRAG] Setting container drop zone for top-level container');
+              }
+              // Always show regular drop zone for top-level items (both containers and questions)
+              shouldShowRegularDropZone = true;
+              console.log('[CUSTOM DRAG] Setting regular drop zone for top-level item');
+            } else {
+              console.log('[CUSTOM DRAG] Item is not at top level, skipping - questionParentId:', questionParentId);
+            }
+          } else if (isSelectedInsideContainer) {
+            // Selected item is inside a container (but not a child container)
             if (isContainer) {
-              // If selected container has child containers, only allow same-level moves
               if (selectedHasChildContainers) {
+                // If selected container has child containers, only allow same-level moves
                 console.log('[CUSTOM DRAG] Selected container has child containers, restricting to same-level moves only');
                 // Only allow container-to-container moves at the same level
                 if (selectedContainerLevel === targetContainerLevel) {
@@ -1340,7 +1376,7 @@ export default Component.extend({
             
             console.log('[CUSTOM DRAG] Added blue drop zone for regular positioning at index:', index);
           } else {
-            console.log('[CUSTOM DRAG] No drop zone added for index:', index, 'question:', question ? question.get('questionText') : 'unknown');
+            console.log('[CUSTOM DRAG] No drop zone added for index:', index, 'question:', question ? question.get('questionText') : 'unknown', 'shouldShowContainerDropZone:', shouldShowContainerDropZone, 'shouldShowRegularDropZone:', shouldShowRegularDropZone);
           }
         }
       });
