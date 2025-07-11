@@ -435,7 +435,7 @@ export default Component.extend({
       
       // Calculate target position BEFORE clearing ancestry
       const containerIndex = this.get('items').indexOf(container);
-      const targetIndex = containerIndex;
+      const targetIndex = containerIndex; // For "ABOVE", we want to place at the same position as the container
       console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for container at index:', containerIndex);
       
       // Store targetIndex and placement type for use in children update
@@ -488,10 +488,20 @@ export default Component.extend({
             if (isContainer) {
               console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
               const items = this.get('items');
+              
+              // First, actually move the container to the target position
+              const currentIndex = items.indexOf(question);
+              if (currentIndex !== -1 && currentIndex !== targetIndex) {
+                console.log('[CUSTOM DRAG] Moving container from index', currentIndex, 'to index', targetIndex);
+                items.removeAt(currentIndex);
+                items.insertAt(targetIndex, question);
+              }
+              
               this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
+            } else {
+              // For non-containers, use moveQuestionToPosition to handle the positioning
+              this.send('moveQuestionToPosition', question, targetIndex);
             }
-            
-            this.send('moveQuestionToPosition', question, targetIndex);
           });
         });
       }).catch((error) => {
@@ -585,11 +595,20 @@ export default Component.extend({
             // Check if the moved item is a container and handle children ancestry updates
             if (isContainer) {
               console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
+              
+              // First, actually move the container to the target position
+              const currentIndex = items.indexOf(question);
+              if (currentIndex !== -1 && currentIndex !== targetIndex) {
+                console.log('[CUSTOM DRAG] Moving container from index', currentIndex, 'to index', targetIndex);
+                items.removeAt(currentIndex);
+                items.insertAt(targetIndex, question);
+              }
+              
               this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
+            } else {
+              // For non-containers, use moveQuestionToPosition to handle the positioning
+              this.send('moveQuestionToPosition', question, targetIndex);
             }
-            
-            // Use moveQuestionToPosition which calls updateSortOrderTask with reSort=false
-            this.send('moveQuestionToPosition', question, targetIndex);
           });
         });
       }).catch((error) => {
@@ -1110,8 +1129,9 @@ export default Component.extend({
           console.log('[CUSTOM DRAG] Final updateSortOrderTask completed');
           
           // Force a UI refresh to ensure the changes are visible
-          await parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
-          
+          // Note: We don't need to call updateSortOrderTask again with fullQuestions
+          // because the first call already updated the sort orders and the computed
+          // properties will automatically reflect the changes
           console.log('[CUSTOM DRAG] UI refresh completed');
           
           // Only complete the move after all children are updated
