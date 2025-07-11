@@ -238,85 +238,70 @@ export default Component.extend({
       this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
     },
 
-    sortedDropped(sortedQuestions, _draggedQuestion) {
-      console.log('[questions-list] sortedDropped called with', sortedQuestions.length, 'questions');
+    sortedDropped(viewableSortedQuestions, _draggedQuestion) {
+      const allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
+      const sortableQuestions = A();
       
-      // Skip if we're already handling container moves (to prevent conflicts)
-      const parentComponent = this.get('parentView');
-      if (parentComponent && (parentComponent.get('isSettingAncestry') || parentComponent.get('isMovingContainer'))) {
-        console.log('[questions-list] Skipping sortedDropped because container move is already being handled');
-        return;
-      }
-      
-      // Get all questions to find descendants
-      const allQuestions = this.get('fullQuestions');
-      const completeArray = [...sortedQuestions.toArray()];
-      const processedIds = new Set();
-      
-      // Add all questions from sortedQuestions to processed set
-      sortedQuestions.forEach(q => processedIds.add(q.get('id')));
-      
-      // Find all moved containers (questions with children)
-      const movedContainers = sortedQuestions.filter(q => q.get('hasChild'));
-      
-      // For each moved container, find and add all descendants
-      movedContainers.forEach(container => {
-        const descendants = allQuestions.filter(q => {
-          if (!q.get('ancestry')) return false;
-          const ancestries = q.get('ancestry').split('/');
-          return ancestries.includes(container.get('id').toString());
-        });
-        
-        console.log('[questions-list] Container', container.get('questionText'), 'has', descendants.length, 'descendants');
-        
-        // Add descendants that aren't already in the array
-        descendants.forEach(desc => {
-          if (!processedIds.has(desc.get('id'))) {
-            completeArray.push(desc);
-            processedIds.add(desc.get('id'));
-          }
-        });
-      });
-      
-      // Create a map of question ID to its new position in the sortedQuestions array
-      const newPositions = new Map();
-      sortedQuestions.forEach((question, index) => {
-        newPositions.set(question.get('id'), index);
-      });
-      
-      // Update sort orders for all questions in the complete array
-      completeArray.forEach((question, index) => {
-        const questionId = question.get('id');
-        const newPosition = newPositions.get(questionId);
-        
-        if (newPosition !== undefined) {
-          // This question was in the drag-and-drop array, use its new position
-          const newSortOrder = (newPosition + 1) * 10; // Use multiples of 10 for spacing
-          question.set('sortOrder', newSortOrder);
-        } else {
-          // This is a descendant that wasn't in the drag-and-drop array
-          // Find its parent and position it after the parent
-          const parentId = question.get('parentId');
-          if (parentId) {
-            const parent = completeArray.find(q => q.get('id') === parentId);
-            if (parent) {
-              const parentSortOrder = parent.get('sortOrder');
-              // Position descendants after their parent with integer spacing
-              const newSortOrder = parentSortOrder + 1;
-              console.log('[questions-list] Descendant', question.get('questionText'), '-> sort order', newSortOrder, 'after parent', parent.get('questionText'));
-              question.set('sortOrder', newSortOrder);
+      // Handle collapsed questions. When there are questions collapsed we completely removed them from the DOM
+      // so we have to re-add them so we can update the sort order attributes
+      viewableSortedQuestions.forEach((viewableQuestion) => {
+        sortableQuestions.addObject(viewableQuestion);
+        if (viewableQuestion.get('collapsed')) {
+          const id = viewableQuestion.get('id');
+          const collapsedChild = allQuestions.filter((question) => {
+            if (isBlank(question.get('ancestry'))) {
+              return false;
             }
-          }
+            const ancestrires = question.get('ancestry').split('/');
+            return ancestrires.includes(id);
+          });
+          sortableQuestions.addObjects(collapsedChild);
         }
       });
       
-      // Sort the complete array by the new sort orders
-      completeArray.sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
-      
-      console.log('[questions-list] Final array has', completeArray.length, 'questions with updated sort orders');
-      
-      // Pass the complete array to updateSortOrderTask
-      this.get('updateSortOrderTask').perform(completeArray, false); // false = don't re-sort, use array order
+      this.get('updateSortOrderTask').perform(sortableQuestions);
+    },
+
+    dragStarted(question) {
+      const targets = this.element.querySelectorAll('.draggable-object-target');
+      targets.forEach((target) => {
+        const parent = target.parentElement;
+        if (parent && !parent.classList.contains(`model-id-${question.get('parentId')}`)) {
+          parent.classList.add('dragging-coming-active');
+        }
+      });
+    },
+
+    dragEnded() {
+      const targets = this.element.querySelectorAll('.draggable-object-target');
+      targets.forEach((target) => {
+        const parent = target.parentElement;
+        if (parent) {
+          parent.classList.remove('dragging-coming-active');
+        }
+      });
+    },
+
+    dragOver() {
+      run.next(this, function() {
+        const targets = this.element.querySelectorAll('.accepts-drag');
+        targets.forEach((target) => {
+          const parent = target.parentElement;
+          if (parent) {
+            parent.classList.add('dragging-over');
+          }
+        });
+      });
+    },
+
+    dragOut() {
+      const targets = this.element.querySelectorAll('.draggable-object-target');
+      targets.forEach((target) => {
+        const parent = target.parentElement;
+        if (parent) {
+          parent.classList.remove('dragging-over');
+        }
+      });
     }
   }
 });

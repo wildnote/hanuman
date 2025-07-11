@@ -118,6 +118,18 @@
             padding: 0 !important;
             border: none !important;
           }
+          
+          /* Hide collapsed questions but keep them in DOM for drag-and-drop */
+          .li-question.collapsed {
+            display: none !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            visibility: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+          }
         </style>
         {{#custom-sortable-group items=dragDropQuestions isFullyEditable=isFullyEditable onChange=(action "sortedDropped") as |group|}}
           <!-- hardcode survey date row here -->
