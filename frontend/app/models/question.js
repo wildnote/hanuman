@@ -196,6 +196,24 @@ export default Model.extend(Validator, {
         message: 'This question has children questions, therefore the question type must be section or repeater.'
       }
     },
+    apiColumnName: {
+      custom: {
+        validation(_key, value, model) {
+          if (!value) return true;
+          let surveyTemplate = model.get('surveyTemplate');
+          if (!surveyTemplate) return true;
+          let questions = surveyTemplate.get('questions');
+          let currentId = model.get('id');
+          let conflict = questions.any(q =>
+            q.get('id') !== currentId &&
+            q.get('apiColumnName') &&
+            q.get('apiColumnName').toLowerCase() === value.toLowerCase()
+          );
+          return !conflict;
+        },
+        message: 'API Column Name must be unique within this form.'
+      }
+    },
     answerChoices: {
       custom: {
         validation(_key, _value, model) {
