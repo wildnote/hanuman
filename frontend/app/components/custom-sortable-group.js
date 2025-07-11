@@ -436,6 +436,10 @@ export default Component.extend({
       const targetIndex = containerIndex;
       console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for container at index:', containerIndex);
       
+      // Store targetIndex and placement type for use in children update
+      this.set('targetIndex', targetIndex);
+      this.set('placementType', 'above');
+      
       // Set flag to prevent moveToPosition from interfering
       this.set('isSettingAncestry', true);
       
@@ -530,6 +534,10 @@ export default Component.extend({
       }
       
       console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for container at index:', containerIndex);
+      
+      // Store targetIndex and placement type for use in children update
+      this.set('targetIndex', targetIndex);
+      this.set('placementType', 'below');
       
       // Set flag to prevent moveToPosition from interfering
       this.set('isSettingAncestry', true);
@@ -945,11 +953,25 @@ export default Component.extend({
         const updateChildrenSequentially = async () => {
           console.log('[CUSTOM DRAG] updateChildrenSequentially started');
           
-          // Calculate sort orders for all descendants using integer spacing
-          const containerIndex = items.indexOf(container);
-          const containerNewSortOrder = containerIndex + 1;
+          // For placement modal moves, wait for the move to complete and get the updated array
+          const isPlacementModalMove = this.get('isMovingContainer') || this.get('isSettingAncestry');
           
-          console.log('[CUSTOM DRAG] Container index:', containerIndex, 'new sort order:', containerNewSortOrder);
+          let containerIndex, containerNewSortOrder;
+          
+          if (isPlacementModalMove) {
+            // Use the fullQuestions array which should reflect the completed move
+            const fullQuestions = parentComponent.get('fullQuestions');
+            containerIndex = fullQuestions.indexOf(container);
+            containerNewSortOrder = containerIndex + 1;
+            console.log('[CUSTOM DRAG] Placement modal move - using fullQuestions array, container index:', containerIndex);
+          } else {
+            // Use the current items array for drag-and-drop moves
+            containerIndex = items.indexOf(container);
+            containerNewSortOrder = containerIndex + 1;
+            console.log('[CUSTOM DRAG] Drag-and-drop move - using items array, container index:', containerIndex);
+          }
+          
+          console.log('[CUSTOM DRAG] Container actual position after move:', containerIndex, 'sort order:', containerNewSortOrder);
           
           // Update the container's sort order first
           container.set('sortOrder', containerNewSortOrder);
@@ -959,9 +981,28 @@ export default Component.extend({
           const sortedDescendants = allDescendants.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
           
           // Calculate the base sort order for descendants (right after the container)
-          const baseSortOrder = containerNewSortOrder + 1;
-          
-          console.log('[CUSTOM DRAG] Base sort order for descendants:', baseSortOrder);
+          // For placement modal moves, we know the target position from the move
+          let baseSortOrder;
+          if (isPlacementModalMove) {
+            // The container was moved to targetIndex, so descendants should start at targetIndex + 1
+            const targetIndex = this.get('targetIndex') || 0;
+            
+            // Check if this was an "above" placement by looking at the placement type
+            const placementType = this.get('placementType'); // We'll need to store this
+            if (placementType === 'above') {
+              // For "above" placement, the moved container is at targetIndex, so descendants should be at targetIndex + 1
+              baseSortOrder = targetIndex + 2; // +2 because array is 0-indexed and we want descendants after container
+            } else {
+              // For "below" placement, the moved container is at targetIndex, so descendants should be at targetIndex + 1
+              baseSortOrder = targetIndex + 2; // +2 because array is 0-indexed and we want descendants after container
+            }
+            console.log('[CUSTOM DRAG] Placement modal move - targetIndex:', targetIndex, 'placementType:', placementType, 'Base sort order for descendants:', baseSortOrder);
+          } else {
+            // For direct moves, find where the container actually ended up in the items array
+            const containerFinalIndex = items.findIndex(q => q.get('id') === container.get('id'));
+            baseSortOrder = containerFinalIndex + 2; // +2 because array is 0-indexed and we want descendants after container
+            console.log('[CUSTOM DRAG] Direct move - Container final index:', containerFinalIndex, 'Base sort order for descendants:', baseSortOrder);
+          }
           
           // Update all descendants with integer sort orders
           for (let i = 0; i < sortedDescendants.length; i++) {
@@ -991,7 +1032,8 @@ export default Component.extend({
           console.log('[CUSTOM DRAG] All descendants updated with integer sort orders');
           
           // Force all items in the reordered array to have sort orders that match their positions
-          const properlyOrderedQuestions = items.map((item, index) => {
+          const arrayToUse = isPlacementModalMove ? parentComponent.get('fullQuestions') : items;
+          const properlyOrderedQuestions = arrayToUse.map((item, index) => {
             const newSortOrder = index + 1;
             console.log('[CUSTOM DRAG] Forcing sort order for', item.get('questionText'), 'from', item.get('sortOrder'), 'to', newSortOrder);
             item.set('sortOrder', newSortOrder);
@@ -1034,6 +1076,8 @@ export default Component.extend({
           // Only complete the move after all children are updated
           this.set('isSettingAncestry', false);
           this.set('isMovingContainer', false);
+          this.set('targetIndex', null); // Clear the stored targetIndex
+          this.set('placementType', null); // Clear the stored placementType
           this.cleanupAfterMove();
           
           console.log('[CUSTOM DRAG] Container move completed successfully');
@@ -1107,18 +1151,26 @@ export default Component.extend({
           itemsCopy = this.reorderContainerWithChildren(itemsCopy, draggedItem);
         } else if (isContainer && isPlacementModalMove) {
           console.log('[CUSTOM DRAG] Container moved via placement modal, skipping reorderContainerWithChildren (children already handled)');
+          
+          // For placement modal moves, wait for the move to complete before proceeding
+          // The children update logic will handle the rest
+          return;
         }
         
         // Call updateSortOrderTask with reSort=false to use our array order
         parentComponent.get('updateSortOrderTask').perform(itemsCopy, false).then(() => {
           console.log('[CUSTOM DRAG] updateSortOrderTask completed successfully');
           
-          // Force a UI refresh to ensure the changes are visible
-          parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
-            console.log('[CUSTOM DRAG] UI refresh completed');
-          }).catch((error) => {
-            console.error('[CUSTOM DRAG] Error refreshing UI:', error);
-          });
+          // Only do UI refresh for non-placement modal moves
+          // Placement modal moves will be handled by the children update logic
+          if (!isPlacementModalMove) {
+            // Force a UI refresh to ensure the changes are visible
+            parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true).then(() => {
+              console.log('[CUSTOM DRAG] UI refresh completed');
+            }).catch((error) => {
+              console.error('[CUSTOM DRAG] Error refreshing UI:', error);
+            });
+          }
         }).catch((error) => {
           console.error('[CUSTOM DRAG] Error in updateSortOrderTask:', error);
         });
