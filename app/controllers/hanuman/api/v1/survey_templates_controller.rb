@@ -56,11 +56,14 @@ module Hanuman
           new_sort_order = i + 1
           Rails.logger.info "Updating question #{id} to sort_order #{new_sort_order}"
           
-          # Use update_all for direct database update
-          Question.where(id: id).update_all(sort_order: new_sort_order)
+          # Use find and save to ensure delta generation works
+          question = Question.find(id)
+          if question.sort_order != new_sort_order
+            question.sort_order = new_sort_order
+            question.save!
+          end
           
           # Verify the update
-          question = Question.find(id)
           Rails.logger.info "Question #{id} sort_order after update: #{question.sort_order}"
         end
       end

@@ -247,7 +247,10 @@ module Hanuman
         self.survey_template.questions
           .where("sort_order > ?", original_sort_order)
           .where.not(id: new_q.id) # Exclude the new question
-          .update_all("sort_order = sort_order + 1")
+          .each do |question|
+            question.sort_order = question.sort_order + 1
+            question.save!
+          end
       end
 
       if new_parent.present?
