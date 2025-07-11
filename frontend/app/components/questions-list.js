@@ -223,38 +223,17 @@ export default Component.extend({
       this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
     },
 
-    sortedDropped(viewableSortedQuestions, _draggedQuestion) {
-      console.log('[questions-list] sortedDropped called', viewableSortedQuestions, _draggedQuestion);
-      // Log the order before
-      const before = this.get('surveyTemplate.questionsNotDeleted').map(q => [q.get('id'), q.get('sortOrder')]);
-      console.log('Before update:', before);
-
-      const allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
-      const sortableQuestions = A();
-      // Handle collapsed question. When there are questions collapsed we completely removed them from the DOM
-      // so we have to re-add them so we can update the sort order attributes
-      viewableSortedQuestions.forEach((viewableQuestion) => {
-        sortableQuestions.addObject(viewableQuestion);
-        if (viewableQuestion.get('collapsed')) {
-          const id = viewableQuestion.get('id');
-          const collapsedChild = allQuestions.filter((question) => {
-            if (isBlank(question.get('ancestry'))) {
-              return false;
-            }
-            const ancestrires = question.get('ancestry').split('/');
-            return ancestrires.includes(id);
-          });
-          sortableQuestions.addObjects(collapsedChild);
-        }
-      });
-      // Log the new order
-      const after = sortableQuestions.map(q => [q.get('id'), q.get('sortOrder')]);
-      console.log('New order to update:', after);
-      console.log('Questions in new order:', sortableQuestions.map(q => q.get('questionText')));
+    sortedDropped(sortedQuestions, _draggedQuestion) {
+      console.log('[questions-list] sortedDropped called', sortedQuestions, _draggedQuestion);
+      
+      // The drag-and-drop system now works with the full questions array
+      // So we can directly use the sorted questions array for the sort order update
+      console.log('[questions-list] Using full questions array for sort order update');
+      console.log('[questions-list] Questions in new order:', sortedQuestions.map((q, index) => 
+        `${index}: ${q.get('questionText')} (id: ${q.get('id')}, parentId: ${q.get('parentId')})`));
       
       // Pass the questions in the new order to updateSortOrderTask
-      // The order of the array determines the new sort_order values
-      this.get('updateSortOrderTask').perform(sortableQuestions, false); // false = don't re-sort, use array order
+      this.get('updateSortOrderTask').perform(sortedQuestions, false); // false = don't re-sort, use array order
     }
   }
 });

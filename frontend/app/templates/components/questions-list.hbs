@@ -107,7 +107,7 @@
         </div>
       </div>
       <div class="{{if isPerformingBulk 'opacited'}}">
-        {{#custom-sortable-group items=sortedQuestions isFullyEditable=isFullyEditable onChange=(action "sortedDropped") as |group|}}
+        {{#custom-sortable-group items=fullQuestions isFullyEditable=isFullyEditable onChange=(action "sortedDropped") as |group|}}
           <!-- hardcode survey date row here -->
           <li class="li-question row question-border">
             <div class="row">
