@@ -107,7 +107,19 @@
         </div>
       </div>
       <div class="{{if isPerformingBulk 'opacited'}}">
-        {{#custom-sortable-group items=fullQuestions isFullyEditable=isFullyEditable onChange=(action "sortedDropped") as |group|}}
+        <style>
+          .completely-hidden {
+            display: none !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            visibility: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+          }
+        </style>
+        {{#custom-sortable-group items=dragDropQuestions isFullyEditable=isFullyEditable onChange=(action "sortedDropped") as |group|}}
           <!-- hardcode survey date row here -->
           <li class="li-question row question-border">
             <div class="row">
@@ -127,18 +139,23 @@
               {{/if}}
             </div>
           </li>
-          {{#each sortedQuestions as |question index|}}
+          {{#each dragDropQuestions as |question index|}}
             {{#if (not question.isLoading)}}
-              {{#group.item model=question index=index}}
-                {{question-row
-                  question=question
-                  otherQuetions=surveyTemplate.questions
-                  deleteQuestion=(action "deleteQuestion")
-                  toggleQuestion=(action "toggleQuestion")
-                  isFullyEditable=isFullyEditable
-                  ancestrable=true
-                  selectedQuestions=selectedQuestions
-                }}
+              {{#group.item model=question index=index class=(if question.ancestryCollapsed "completely-hidden")}}
+                {{#if (or (not question.ancestryCollapsed) (eq question.parentId null))}}
+                  {{question-row
+                    question=question
+                    otherQuetions=surveyTemplate.questions
+                    deleteQuestion=(action "deleteQuestion")
+                    toggleQuestion=(action "toggleQuestion")
+                    isFullyEditable=isFullyEditable
+                    ancestrable=true
+                    selectedQuestions=selectedQuestions
+                  }}
+                {{else}}
+                  <!-- Hidden item for drag-and-drop - completely invisible -->
+                  <div style="display: none; height: 0; overflow: hidden; position: absolute; visibility: hidden;"></div>
+                {{/if}}
               {{/group.item}}
             {{/if}}
           {{/each}}

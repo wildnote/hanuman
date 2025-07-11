@@ -19,6 +19,23 @@ export default Component.extend({
   questionsSorting: ['sortOrder'],
   fullQuestions: sort('surveyTemplate.questionsNotDeleted', 'questionsSorting'),
   sortedQuestions: sort('surveyTemplate.filteredQuestions', 'questionsSorting'),
+  
+  // Computed property that includes all questions for drag-and-drop but maintains visual collapse
+  dragDropQuestions: computed('fullQuestions.[]', 'sortedQuestions.[]', function() {
+    const fullQuestions = this.get('fullQuestions');
+    const sortedQuestions = this.get('sortedQuestions');
+    const dragDropArray = A();
+    
+    // Add all questions in their proper order
+    fullQuestions.forEach((question) => {
+      dragDropArray.addObject(question);
+    });
+    
+    console.log('[questions-list] dragDropQuestions computed - full count:', fullQuestions.length, 'visible count:', sortedQuestions.length, 'drag-drop count:', dragDropArray.length);
+    
+    return dragDropArray;
+  }),
+  
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
 
   init() {
