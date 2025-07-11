@@ -4,7 +4,7 @@ import { computed } from '@ember/object';
 export default Component.extend({
   tagName: 'li',
   classNames: ['li-question', 'row', 'question-border', 'item', 'sortable-item'],
-  classNameBindings: ['isSelected:selected', 'isContainerSelected:container-selected'],
+  classNameBindings: ['isSelected:selected', 'isContainerSelected:container-selected', 'model.highlighted:highlighted'],
   attributeBindings: ['indentationStyle:style'],
 
   // Properties
