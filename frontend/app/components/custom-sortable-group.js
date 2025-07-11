@@ -206,6 +206,7 @@ export default Component.extend({
         if (isContainer) {
           console.log('[CUSTOM DRAG] Using strict sequencing for container move (INSIDE TOP)');
           this.set('isMovingContainer', true);
+          this.set('placementType', 'inside-top'); // Set the placement type for proper descendant positioning
           
           // Store the children BEFORE any moves happen, sorted by their current sortOrder
           const items = this.get('items');
@@ -304,6 +305,7 @@ export default Component.extend({
         } else {
           // For non-containers, manually set ancestry and sort order for INSIDE TOP placement
           console.log('[CUSTOM DRAG] Using manual ancestry setting for single question (INSIDE TOP)');
+          this.set('placementType', 'inside-top'); // Set the placement type for consistency
           
           // Ensure the container is expanded so the placed item will be visible
           if (container.get('collapsed')) {
@@ -953,20 +955,24 @@ export default Component.extend({
         const updateChildrenSequentially = async () => {
           console.log('[CUSTOM DRAG] updateChildrenSequentially started');
           
-          // For placement modal moves, wait for the move to complete and get the updated array
+          // Determine if this is a placement modal move
           const isPlacementModalMove = this.get('isMovingContainer') || this.get('isSettingAncestry');
+          
+          // Determine which array to use for positioning
+          const arrayToUse = isPlacementModalMove ? parentComponent.get('fullQuestions') : items;
+          
+          // For placement modal moves, wait for the move to complete and get the updated array
           
           let containerIndex, containerNewSortOrder;
           
           if (isPlacementModalMove) {
             // Use the fullQuestions array which should reflect the completed move
-            const fullQuestions = parentComponent.get('fullQuestions');
-            containerIndex = fullQuestions.indexOf(container);
+            containerIndex = arrayToUse.findIndex(q => q.get('id') === container.get('id'));
             containerNewSortOrder = containerIndex + 1;
             console.log('[CUSTOM DRAG] Placement modal move - using fullQuestions array, container index:', containerIndex);
           } else {
             // Use the current items array for drag-and-drop moves
-            containerIndex = items.indexOf(container);
+            containerIndex = items.findIndex(q => q.get('id') === container.get('id'));
             containerNewSortOrder = containerIndex + 1;
             console.log('[CUSTOM DRAG] Drag-and-drop move - using items array, container index:', containerIndex);
           }
@@ -980,23 +986,25 @@ export default Component.extend({
           // Sort all descendants by their current sortOrder to preserve their intended order
           const sortedDescendants = allDescendants.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
           
-          // Calculate the base sort order for descendants (right after the container)
-          // For placement modal moves, we know the target position from the move
+          // Calculate base sort order for descendants
           let baseSortOrder;
           if (isPlacementModalMove) {
-            // The container was moved to targetIndex, so descendants should start at targetIndex + 1
+            // For placement modal moves, use the container's actual position after the move
+            const containerIndex = arrayToUse.findIndex(q => q.get('id') === container.get('id'));
             const targetIndex = this.get('targetIndex') || 0;
+            const placementType = this.get('placementType');
             
-            // Check if this was an "above" placement by looking at the placement type
-            const placementType = this.get('placementType'); // We'll need to store this
-            if (placementType === 'above') {
+            if (placementType === 'inside-top') {
+              // For "inside top" placement, descendants should be positioned right after the container
+              baseSortOrder = containerIndex + 2; // +2 because array is 0-indexed and we want descendants after container
+            } else if (placementType === 'above') {
               // For "above" placement, the moved container is at targetIndex, so descendants should be at targetIndex + 1
               baseSortOrder = targetIndex + 2; // +2 because array is 0-indexed and we want descendants after container
             } else {
               // For "below" placement, the moved container is at targetIndex, so descendants should be at targetIndex + 1
               baseSortOrder = targetIndex + 2; // +2 because array is 0-indexed and we want descendants after container
             }
-            console.log('[CUSTOM DRAG] Placement modal move - targetIndex:', targetIndex, 'placementType:', placementType, 'Base sort order for descendants:', baseSortOrder);
+            console.log('[CUSTOM DRAG] Placement modal move - container index:', containerIndex, 'targetIndex:', targetIndex, 'placementType:', placementType, 'Base sort order for descendants:', baseSortOrder);
           } else {
             // For direct moves, find where the container actually ended up in the items array
             const containerFinalIndex = items.findIndex(q => q.get('id') === container.get('id'));
@@ -1017,9 +1025,23 @@ export default Component.extend({
               // For nested descendants, only update sort order, preserve parentId
               descendant.set('sortOrder', newSortOrder);
             } else {
-              // For direct children, update both parentId and sort order
+              // For direct children, update both parentId and ancestry
               descendant.set('parentId', containerId);
               descendant.set('sortOrder', newSortOrder);
+              
+              // Update ancestry to reflect the new grandparent
+              const containerAncestry = container.get('ancestry');
+              let newAncestry;
+              if (containerAncestry) {
+                // Container has ancestry, so descendant gets container's ancestry + container's ID
+                newAncestry = `${containerAncestry}/${containerId}`;
+              } else {
+                // Container is at top level, so descendant just gets container's ID
+                newAncestry = containerId.toString();
+              }
+              descendant.set('ancestry', newAncestry);
+              
+              console.log('[CUSTOM DRAG] Updated descendant ancestry:', descendant.get('questionText'), 'ancestry:', newAncestry);
             }
             
             try {
@@ -1031,8 +1053,27 @@ export default Component.extend({
           
           console.log('[CUSTOM DRAG] All descendants updated with integer sort orders');
           
+          // Reorder the arrayToUse to put descendants in the correct positions
+          // Remove all descendants from their current positions
+          allDescendants.forEach(descendant => {
+            const descendantIndex = arrayToUse.findIndex(q => q.get('id') === descendant.get('id'));
+            if (descendantIndex !== -1) {
+              arrayToUse.removeAt(descendantIndex);
+            }
+          });
+          
+          // Find the container's position in the reordered array
+          const containerPosition = arrayToUse.findIndex(q => q.get('id') === container.get('id'));
+          
+          // Insert all descendants right after the container
+          allDescendants.forEach((descendant, index) => {
+            const insertIndex = containerPosition + 1 + index;
+            arrayToUse.insertAt(insertIndex, descendant);
+          });
+          
+          console.log('[CUSTOM DRAG] Reordered arrayToUse - descendants now positioned after container');
+          
           // Force all items in the reordered array to have sort orders that match their positions
-          const arrayToUse = isPlacementModalMove ? parentComponent.get('fullQuestions') : items;
           const properlyOrderedQuestions = arrayToUse.map((item, index) => {
             const newSortOrder = index + 1;
             console.log('[CUSTOM DRAG] Forcing sort order for', item.get('questionText'), 'from', item.get('sortOrder'), 'to', newSortOrder);
