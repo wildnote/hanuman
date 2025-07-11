@@ -115,6 +115,10 @@ export default Component.extend({
       );
       yield surveyTemplate.reload();
       yield surveyTemplate.hasMany('questions').reload();
+      
+      // Trigger a resort to ensure proper ordering after cloning
+      yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
+      
       this.get('notify').success('Questions successfully duplicated');
     } catch (e) {
       this.get('notify').alert('There was an error trying to duplicate questions');

@@ -239,12 +239,24 @@ module Hanuman
       if new_sort_order.present?
         new_q.sort_order = new_sort_order
       else
-        new_q.sort_order = self.sort_order.to_i
+        # For single question cloning, increment sort order and shift other questions
+        original_sort_order = self.sort_order.to_i
+        new_q.sort_order = original_sort_order + 1
+        
+        # Shift all questions with higher sort orders to make space
+        self.survey_template.questions
+          .where("sort_order > ?", original_sort_order)
+          .where.not(id: new_q.id) # Exclude the new question
+          .update_all("sort_order = sort_order + 1")
       end
 
       if new_parent.present?
         new_q.parent = new_parent
       end
+
+      # Clear api_column_name and db_column_name for cloned questions
+      new_q.api_column_name = nil
+      new_q.db_column_name = nil
 
       Rails.logger.info "Before saving new question - duped_question_id: #{new_q.duped_question_id}"
       new_q.save
@@ -290,6 +302,11 @@ module Hanuman
       # Duplicate the section question
       new_section_q = section_q.amoeba_dup
       new_section_q.sort_order = new_section_q.sort_order + increment_sort_by
+      
+      # Clear api_column_name and db_column_name for cloned section question
+      new_section_q.api_column_name = nil
+      new_section_q.db_column_name = nil
+      
       new_section_q.save
 
       # Update conditions for the section question
@@ -313,6 +330,11 @@ module Hanuman
         new_q = q.amoeba_dup
         new_q.sort_order = new_sort_order
         new_q.parent = new_child_parent
+        
+        # Clear api_column_name and db_column_name for cloned descendant questions
+        new_q.api_column_name = nil
+        new_q.db_column_name = nil
+        
         new_q.save
 
         # Update conditions for each descendant
