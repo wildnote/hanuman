@@ -762,11 +762,11 @@ export default Component.extend({
       if (isContainer) {
         console.log('[CUSTOM DRAG] Container moved, handling children properly');
         
-        // Find all children of this container
+        // Find all descendants of this container (not just direct children)
         const containerId = draggedItem.get('id');
-        const children = items.filter(item => item.get('parentId') === containerId);
+        const allDescendants = this.getAllDescendants(containerId, items);
         
-        console.log('[CUSTOM DRAG] Found', children.length, 'children to move with container');
+        console.log('[CUSTOM DRAG] Found', allDescendants.length, 'descendants to move with container');
         
         // Store the old parent ID for comparison
         const oldParentId = selectedItem ? selectedItem.get('parentId') : null;
@@ -775,30 +775,71 @@ export default Component.extend({
         console.log('[CUSTOM DRAG] Container move - oldParentId:', oldParentId, 'newParentId:', newParentId);
         
         // Update children ancestry and ensure they move with the container
-        if (children.length > 0) {
+        if (allDescendants.length > 0) {
           // First, update the children's ancestry to reflect the new container position
           this.send('updateContainerChildrenAncestry', draggedItem, items);
           
-          // Then, ensure children are properly positioned in the items array
-          // Children should appear right after their container in the UI
+          // Then, ensure all descendants are properly positioned in the items array
+          // All descendants should appear right after their container in the UI
           const containerIndex = items.indexOf(draggedItem);
-          const childrenToMove = children.slice(); // Create a copy to avoid mutation issues
+          const descendantsToMove = allDescendants.slice(); // Create a copy to avoid mutation issues
           
-          // Remove children from their current positions
-          childrenToMove.forEach(child => {
-            const childIndex = items.indexOf(child);
-            if (childIndex !== -1) {
-              items.splice(childIndex, 1);
+          // Remove all descendants from their current positions
+          descendantsToMove.forEach(descendant => {
+            const descendantIndex = items.indexOf(descendant);
+            if (descendantIndex !== -1) {
+              items.splice(descendantIndex, 1);
             }
           });
           
-          // Insert children right after the container
-          childrenToMove.forEach((child, index) => {
-            const insertIndex = containerIndex + 1 + index;
-            items.splice(insertIndex, 0, child);
+          // First, remove all descendants from their current positions
+          descendantsToMove.forEach(descendant => {
+            const descendantIndex = items.indexOf(descendant);
+            if (descendantIndex !== -1) {
+              items.splice(descendantIndex, 1);
+            }
           });
           
-          console.log('[CUSTOM DRAG] Repositioned', childrenToMove.length, 'children after container');
+          // Move the container to the target position
+          const currentContainerIndex = items.indexOf(draggedItem);
+          const targetIndex = toIndex; // Use the original target index
+          
+          if (currentContainerIndex !== targetIndex) {
+            // Remove container from current position
+            items.splice(currentContainerIndex, 1);
+            // Insert container at target position
+            items.splice(targetIndex, 0, draggedItem);
+            
+            console.log('[CUSTOM DRAG] Moved container from index', currentContainerIndex, 'to target index', targetIndex);
+          }
+          
+          // Now insert all descendants right after the container
+          const newContainerIndex = items.indexOf(draggedItem);
+          descendantsToMove.forEach((descendant, index) => {
+            const insertIndex = newContainerIndex + 1 + index;
+            items.splice(insertIndex, 0, descendant);
+          });
+          
+          console.log('[CUSTOM DRAG] Repositioned', descendantsToMove.length, 'descendants after container at index', newContainerIndex);
+          
+          // Debug: Log the items array after reordering
+          console.log('[CUSTOM DRAG] Items array after reordering:', items.map((item, index) => ({
+            index,
+            text: item.get('questionText'),
+            parentId: item.get('parentId'),
+            sortOrder: item.get('sortOrder')
+          })));
+          
+          // Debug: Check if descendants are grouped together after container
+          const containerIndexAfterMove = items.indexOf(draggedItem);
+          console.log('[CUSTOM DRAG] Container index after move:', containerIndexAfterMove);
+          
+          const descendantsAfterMove = allDescendants.map(descendant => ({
+            text: descendant.get('questionText'),
+            index: items.indexOf(descendant),
+            parentId: descendant.get('parentId')
+          }));
+          console.log('[CUSTOM DRAG] Descendants positions after move:', descendantsAfterMove);
         }
       }
       
@@ -812,7 +853,14 @@ export default Component.extend({
         this.set('selectedIndex', -1);
         this.removeDropZones();
         
-        // Perform the update and ensure selection is cleared after completion
+        // If this is a container move, the children update will handle the final completion
+        if (isContainer) {
+          console.log('[CUSTOM DRAG] Container move - children update will handle final completion');
+          // Don't complete the move here - let updateContainerChildrenAncestry handle it
+          return;
+        }
+        
+        // For non-container moves, perform the update and ensure selection is cleared after completion
         parentComponent.get('updateSortOrderTask').perform(items, false).then(() => {
           console.log('[CUSTOM DRAG] Parent updateSortOrderTask completed, ensuring selection is cleared');
           // Double-check that selection is cleared after UI refresh
@@ -862,18 +910,17 @@ export default Component.extend({
         sortOrder: c.get('sortOrder')
       })) : 'null/undefined');
       
-      // Only update DIRECT children of the container (not all descendants)
-      // The descendants will be moved automatically when their parent containers move
-      const directChildren = items.filter(item => item.get('parentId') === containerId);
-      console.log('[CUSTOM DRAG] Found', directChildren.length, 'direct children to update');
-      console.log('[CUSTOM DRAG] Direct children:', directChildren.map(d => ({
+      // Update ALL descendants of the container but preserve their parent-child relationships
+      const allDescendants = this.getAllDescendants(containerId, items);
+      console.log('[CUSTOM DRAG] Found', allDescendants.length, 'descendants to update');
+      console.log('[CUSTOM DRAG] All descendants:', allDescendants.map(d => ({
         id: d.get('id'),
         text: d.get('questionText'),
         parentId: d.get('parentId'),
         sortOrder: d.get('sortOrder')
       })));
       
-      if (directChildren.length === 0) {
+      if (allDescendants.length === 0) {
         console.log('[CUSTOM DRAG] No direct children to update');
         // Even if no direct children, still refresh UI and clear flags
         const parentComponent = this.get('parentView');
@@ -892,102 +939,116 @@ export default Component.extend({
       const parentComponent = this.get('parentView');
       if (parentComponent && parentComponent.get('setAncestryTask')) {
         console.log('[CUSTOM DRAG] Using parent setAncestryTask for children updates');
+        console.log('[CUSTOM DRAG] About to start updateChildrenSequentially');
         
         // Update children sequentially to avoid race conditions
         const updateChildrenSequentially = async () => {
-          // Step 4: Starting children updates
+          console.log('[CUSTOM DRAG] updateChildrenSequentially started');
           
-          // Sort direct children by their current sortOrder to preserve their intended order
-          const sortedDirectChildren = directChildren.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
-          
-          // Step 4b: Update all direct children in their original order
-          // Calculate the container's new sort order based on its position in the items array
+          // Calculate sort orders for all descendants using integer spacing
           const containerIndex = items.indexOf(container);
           const containerNewSortOrder = containerIndex + 1;
           
-          // Calculate the base sort order for direct children (right after the container)
+          console.log('[CUSTOM DRAG] Container index:', containerIndex, 'new sort order:', containerNewSortOrder);
+          
+          // Update the container's sort order first
+          container.set('sortOrder', containerNewSortOrder);
+          await container.save();
+          
+          // Sort all descendants by their current sortOrder to preserve their intended order
+          const sortedDescendants = allDescendants.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
+          
+          // Calculate the base sort order for descendants (right after the container)
           const baseSortOrder = containerNewSortOrder + 1;
           
-          // Find the minimum sort order among direct children to calculate relative offsets
-          const minChildSortOrder = Math.min(...sortedDirectChildren.map(child => child.get('sortOrder')));
+          console.log('[CUSTOM DRAG] Base sort order for descendants:', baseSortOrder);
           
-          for (let i = 0; i < sortedDirectChildren.length; i++) {
-            const child = sortedDirectChildren[i];
-            // Preserve the relative sort order difference from the minimum, but use integer spacing
-            const relativeOffset = child.get('sortOrder') - minChildSortOrder;
-            const newSortOrder = baseSortOrder + relativeOffset;
+          // Update all descendants with integer sort orders
+          for (let i = 0; i < sortedDescendants.length; i++) {
+            const descendant = sortedDescendants[i];
+            const newSortOrder = baseSortOrder + i;
             
-            // Updating direct child
+            console.log('[CUSTOM DRAG] Descendant', descendant.get('questionText'), '-> sort order:', newSortOrder);
             
-            // Update direct child only
-            child.set('parentId', containerId);
-            child.set('sortOrder', newSortOrder);
+            // Update descendant - preserve existing parent-child relationships, only update sort order
+            const isDirectChild = descendant.get('parentId') === containerId;
+            if (!isDirectChild) {
+              // For nested descendants, only update sort order, preserve parentId
+              descendant.set('sortOrder', newSortOrder);
+            } else {
+              // For direct children, update both parentId and sort order
+              descendant.set('parentId', containerId);
+              descendant.set('sortOrder', newSortOrder);
+            }
             
             try {
-              await child.save();
+              await descendant.save();
             } catch (error) {
-              console.error('[CUSTOM DRAG] Error saving direct child', child.get('questionText'), ':', error);
+              console.error('[CUSTOM DRAG] Error saving descendant', descendant.get('questionText'), ':', error);
             }
           }
           
-          // Step 4b: All direct children updated successfully
+          console.log('[CUSTOM DRAG] All descendants updated with integer sort orders');
           
-          // Step 4c: Reload all direct children to ensure they have the latest data
-          const reloadPromises = sortedDirectChildren.map(child => child.reload());
-          await Promise.all(reloadPromises);
-          
-          // Step 4d: Create a properly ordered array for the final UI refresh
-          
-          // Get the current full questions array
-          const fullQuestions = parentComponent.get('fullQuestions');
-          
-          // Create a new array with the correct order: container first, then ALL its descendants
-          const properlyOrderedQuestions = [];
-          const processedIds = new Set();
-          
-          // Get ALL descendants of the container (not just direct children)
-          const allDescendants = this.getAllDescendants(container.get('id'), fullQuestions);
-          // Removed excessive logging
-          
-          // Add all questions in their current order, but ensure container and ALL descendants are together
-          fullQuestions.forEach(question => {
-            const questionId = question.get('id');
-            
-            // Skip if already processed
-            if (processedIds.has(questionId)) {
-              return;
-            }
-            
-            // If this is the moved container, add it and ALL its descendants
-            if (questionId === container.get('id')) {
-              properlyOrderedQuestions.push(question);
-              processedIds.add(questionId);
-              
-              // Add ALL descendants of this container (including nested children)
-              allDescendants.forEach(descendant => {
-                if (!processedIds.has(descendant.get('id'))) {
-                  properlyOrderedQuestions.push(descendant);
-                  processedIds.add(descendant.get('id'));
-                }
-              });
-            } else {
-              // Add other questions normally
-              properlyOrderedQuestions.push(question);
-              processedIds.add(questionId);
-            }
+          // Force all items in the reordered array to have sort orders that match their positions
+          const properlyOrderedQuestions = items.map((item, index) => {
+            const newSortOrder = index + 1;
+            console.log('[CUSTOM DRAG] Forcing sort order for', item.get('questionText'), 'from', item.get('sortOrder'), 'to', newSortOrder);
+            item.set('sortOrder', newSortOrder);
+            return item;
           });
           
-          // Removed excessive logging
+          // Debug: Log the items array being used for final update
+          console.log('[CUSTOM DRAG] Items array for final update:', properlyOrderedQuestions.map((item, index) => ({
+            index,
+            text: item.get('questionText'),
+            parentId: item.get('parentId'),
+            sortOrder: item.get('sortOrder')
+          })));
+          
+          console.log('[CUSTOM DRAG] About to perform final updateSortOrderTask');
+          
+          console.log('[CUSTOM DRAG] Final properlyOrderedQuestions array:', properlyOrderedQuestions.map(q => ({
+            id: q.get('id'),
+            text: q.get('questionText'),
+            parentId: q.get('parentId'),
+            sortOrder: q.get('sortOrder')
+          })));
+          
+          console.log('[CUSTOM DRAG] Container position in array:', properlyOrderedQuestions.findIndex(q => q.get('id') === container.get('id')));
+          console.log('[CUSTOM DRAG] Container descendants positions:', allDescendants.map(descendant => ({
+            text: descendant.get('questionText'),
+            position: properlyOrderedQuestions.findIndex(q => q.get('id') === descendant.get('id'))
+          })));
           
           // Use the properly ordered array for the final UI refresh
-          parentComponent.get('updateSortOrderTask').perform(properlyOrderedQuestions, false).then(() => {
-            this.set('isSettingAncestry', false);
-            this.set('isMovingContainer', false);
-            this.cleanupAfterMove();
-          });
+          await parentComponent.get('updateSortOrderTask').perform(properlyOrderedQuestions, false);
+          
+          console.log('[CUSTOM DRAG] Final updateSortOrderTask completed');
+          
+          // Force a UI refresh to ensure the changes are visible
+          await parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
+          
+          console.log('[CUSTOM DRAG] UI refresh completed');
+          
+          // Only complete the move after all children are updated
+          this.set('isSettingAncestry', false);
+          this.set('isMovingContainer', false);
+          this.cleanupAfterMove();
+          
+          console.log('[CUSTOM DRAG] Container move completed successfully');
         };
         
-        updateChildrenSequentially().catch((error) => {
+        console.log('[CUSTOM DRAG] About to call updateChildrenSequentially');
+        
+        // Add a timeout to ensure the function completes
+        const timeoutPromise = new Promise((resolve, reject) => {
+          setTimeout(() => {
+            reject(new Error('updateChildrenSequentially timed out after 10 seconds'));
+          }, 10000);
+        });
+        
+        Promise.race([updateChildrenSequentially(), timeoutPromise]).catch((error) => {
           console.error('[CUSTOM DRAG] Error in sequential children update:', error);
           this.set('isSettingAncestry', false);
           this.set('isMovingContainer', false);
