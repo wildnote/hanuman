@@ -12,18 +12,31 @@
       <div class="placement-modal-body">
         <p>Where would you like to place this question relative to "{{placementContainer.questionText}}"?</p>
         <div class="placement-options">
-          <button class="placement-btn outside above" {{action "placeAboveContainer"}}>
-            <span class="icon">⬆️</span>
-            <span class="text">Above "{{placementContainer.questionText}}"</span>
-          </button>
-          <button class="placement-btn inside inside-top" {{action "placeInsideTop"}}>
-            <span class="icon">⬆️</span>
-            <span class="text">Inside "{{placementContainer.questionText}}" at top</span>
-          </button>
-          <button class="placement-btn outside below" {{action "placeBelowContainer"}}>
-            <span class="icon">⬇️</span>
-            <span class="text">Below "{{placementContainer.questionText}}"</span>
-          </button>
+          {{#if (eq placementType "container")}}
+            {{!-- Container placement options (Above/Below/Inside) --}}
+            <button class="placement-btn outside above" {{action "placeAboveContainer"}}>
+              <span class="icon">⬆️</span>
+              <span class="text">Above "{{placementContainer.questionText}}"</span>
+            </button>
+            <button class="placement-btn inside inside-top" {{action "placeInsideTop"}}>
+              <span class="icon">⬆️</span>
+              <span class="text">Inside "{{placementContainer.questionText}}" at top</span>
+            </button>
+            <button class="placement-btn outside below" {{action "placeBelowContainer"}}>
+              <span class="icon">⬇️</span>
+              <span class="text">Below "{{placementContainer.questionText}}"</span>
+            </button>
+          {{else}}
+            {{!-- Question placement options (Above/Below only) --}}
+            <button class="placement-btn outside above" {{action "placeAboveQuestion"}}>
+              <span class="icon">⬆️</span>
+              <span class="text">Above "{{placementContainer.questionText}}"</span>
+            </button>
+            <button class="placement-btn outside below" {{action "placeBelowQuestion"}}>
+              <span class="icon">⬇️</span>
+              <span class="text">Below "{{placementContainer.questionText}}"</span>
+            </button>
+          {{/if}}
         </div>
       </div>
     </div>
