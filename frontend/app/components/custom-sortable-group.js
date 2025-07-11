@@ -435,7 +435,7 @@ export default Component.extend({
       
       // Calculate target position BEFORE clearing ancestry
       const containerIndex = this.get('items').indexOf(container);
-      const targetIndex = containerIndex; // For "ABOVE", we want to place at the same position as the container
+      const targetIndex = containerIndex; // For "ABOVE", we place at the target container's position, which pushes it down
       console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for container at index:', containerIndex);
       
       // Store targetIndex and placement type for use in children update
@@ -494,7 +494,13 @@ export default Component.extend({
               if (currentIndex !== -1 && currentIndex !== targetIndex) {
                 console.log('[CUSTOM DRAG] Moving container from index', currentIndex, 'to index', targetIndex);
                 items.removeAt(currentIndex);
-                items.insertAt(targetIndex, question);
+                // Adjust target index if we removed an item before the target position
+                let adjustedTargetIndex = targetIndex;
+                if (currentIndex < targetIndex) {
+                  adjustedTargetIndex = targetIndex - 1;
+                  console.log('[CUSTOM DRAG] Adjusted target index from', targetIndex, 'to', adjustedTargetIndex, 'due to removal');
+                }
+                items.insertAt(adjustedTargetIndex, question);
               }
               
               this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
@@ -601,7 +607,13 @@ export default Component.extend({
               if (currentIndex !== -1 && currentIndex !== targetIndex) {
                 console.log('[CUSTOM DRAG] Moving container from index', currentIndex, 'to index', targetIndex);
                 items.removeAt(currentIndex);
-                items.insertAt(targetIndex, question);
+                // Adjust target index if we removed an item before the target position
+                let adjustedTargetIndex = targetIndex;
+                if (currentIndex < targetIndex) {
+                  adjustedTargetIndex = targetIndex - 1;
+                  console.log('[CUSTOM DRAG] Adjusted target index from', targetIndex, 'to', adjustedTargetIndex, 'due to removal');
+                }
+                items.insertAt(adjustedTargetIndex, question);
               }
               
               this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
