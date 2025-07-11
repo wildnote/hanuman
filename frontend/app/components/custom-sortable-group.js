@@ -50,6 +50,10 @@ export default Component.extend({
 
         this.set('selectedItem', item);
         this.set('selectedIndex', index);
+        
+        // Show timed prompt
+        this.showMovePrompt();
+        
         this.createDropZones();
 
         // Only highlight children if this is a container
@@ -1742,6 +1746,10 @@ export default Component.extend({
       }
 
       console.log('[CUSTOM DRAG] Question moved successfully');
+    },
+
+    selectForMove(question, index) {
+      this.send('selectItem', question, index);
     }
   },
 
@@ -1760,8 +1768,8 @@ export default Component.extend({
       if (isFullyEditable) {
         // Add click handlers to all items for selection
         items.forEach((element, index) => {
-          // Add click handler only to the move icon (glyphicons-sorting)
-          const moveIcon = element.querySelector('.glyphicons-sorting');
+                  // Add click handler to the move icon (glyphicons-move)
+        const moveIcon = element.querySelector('.glyphicons-move');
           if (moveIcon) {
             const selectionClickHandler = (event) => {
               const questionElement = element.querySelector('[data-question-id]');
@@ -1777,6 +1785,8 @@ export default Component.extend({
             // Use safe event listener to prevent duplicates
             this.safeAddEventListener(moveIcon, 'click', selectionClickHandler);
           }
+
+
         });
       }
 
@@ -2232,8 +2242,8 @@ export default Component.extend({
       let skippedCount = 0;
 
       items.forEach((element, index) => {
-        // Add click handler only to the move icon (glyphicons-sorting)
-        const moveIcon = element.querySelector('.glyphicons-sorting');
+        // Add click handler to the move icon (glyphicons-move)
+        const moveIcon = element.querySelector('.glyphicons-move');
         if (moveIcon) {
           // Check if handler already exists to prevent duplicates
           const existingHandler = this.get('activeEventListeners').find(
@@ -2494,5 +2504,70 @@ export default Component.extend({
 
       processChild(0);
     });
+  },
+
+  showMovePrompt() {
+    // Create a temporary prompt element
+    const prompt = document.createElement('div');
+    prompt.className = 'move-prompt';
+    prompt.innerHTML = `
+      <div style="
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #007bff;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 10000;
+        font-size: 14px;
+        font-weight: 500;
+        max-width: 300px;
+        animation: slideIn 0.3s ease-out;
+      ">
+        <span style="margin-right: 8px;">📋</span>
+        Click on a drop zone to move this question
+      </div>
+    `;
+    
+    // Add CSS animation
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+      @keyframes slideOut {
+        from {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+      }
+    `;
+    document.head.appendChild(style);
+    
+    // Add to DOM
+    document.body.appendChild(prompt);
+    
+    // Remove after 4 seconds
+    setTimeout(() => {
+      prompt.style.animation = 'slideOut 0.3s ease-in';
+      setTimeout(() => {
+        if (prompt.parentNode) {
+          prompt.parentNode.removeChild(prompt);
+        }
+      }, 300);
+    }, 4000);
   }
 });

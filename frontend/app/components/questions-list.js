@@ -302,6 +302,8 @@ export default Component.extend({
           parent.classList.remove('dragging-over');
         }
       });
-    }
+    },
+
+
   }
 });

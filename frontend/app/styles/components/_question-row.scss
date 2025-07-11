@@ -1,4 +1,6 @@
 .li-question {
+  cursor: default;
+  
   &.highlighted {
     background-color: #fff2ac;
     background-image: linear-gradient(to right, #ffe359 0%, #fff2ac 100%);
@@ -42,6 +44,7 @@
   // Add drop zone indicators
   &.sortable-item {
     position: relative;
+    cursor: default;
     
     &::before {
       content: '';
@@ -98,17 +101,72 @@
     color: #9c9c9c;
   }
 
-  .glyphicons-sunglasses,
+  // Improved icon styling
+  .icon-spacing {
+    margin-right: 8px;
+    font-size: 16px;
+    color: #666;
+    transition: color 0.2s ease, transform 0.1s ease;
+    display: inline-block;
+    vertical-align: middle;
+    
+    &:hover {
+      color: #333;
+      transform: scale(1.1);
+    }
+    
+    &.icon-disabled {
+      color: #ccc;
+      cursor: not-allowed;
+      
+      &:hover {
+        color: #ccc;
+        transform: none;
+      }
+    }
+  }
+
+  .glyphicons-move {
+    color: rgb(143, 98, 71);
+    cursor: default;
+    font-size: 16px;
+    transition: color 0.2s ease, transform 0.1s ease;
+    display: inline-block;
+    vertical-align: middle;
+    
+    &:hover {
+      color: rgba(143, 98, 71, 0.6);
+      transform: scale(1.1);
+      cursor: move;
+    }
+    
+    &.icon-disabled {
+      color: #ccc;
+      cursor: not-allowed;
+      
+      &:hover {
+        color: #ccc;
+        transform: none;
+        cursor: not-allowed;
+      }
+    }
+  }
+
   .glyphicon.glyphicon-collapse-up,
   .glyphicon.glyphicon-collapse-down {
     color: rgb(143, 98, 71) !important;
     cursor: pointer;
-    font-size: 15px;
-    margin-right: 5px;
+    font-size: 16px;
+    transition: color 0.2s ease, transform 0.1s ease;
+    display: inline-block;
+    vertical-align: middle;
+    
     &:hover {
       color: rgba(143, 98, 71, 0.6) !important;
+      transform: scale(1.1);
     }
   }
+
   .gly-spin.glyphicons-refresh {
     margin-right: 10px;
   }
@@ -129,6 +187,7 @@
   &.row {
     margin-left: 0;
     margin-right: 0;
+    cursor: default;
   }
 
   // Old indentation system disabled - using new custom indentation

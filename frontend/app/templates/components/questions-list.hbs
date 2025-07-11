@@ -136,7 +136,6 @@
           <li class="li-question row question-border">
             <div class="row">
               <div class="col-sm-4" data-test="question.answerType.displayName">
-                <span class="glyphicons glyphicons-sorting text-muted"></span>
                 Survey Date
               </div>
               <div class="col-sm-2">Date</div>
@@ -157,6 +156,7 @@
                 {{#if (or (not question.ancestryCollapsed) (eq question.parentId null))}}
                   {{question-row
                     question=question
+                    index=index
                     otherQuetions=surveyTemplate.questions
                     deleteQuestion=(action "deleteQuestion")
                     toggleQuestion=(action "toggleQuestion")
