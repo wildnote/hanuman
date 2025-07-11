@@ -138,6 +138,8 @@ export default Controller.extend({
   }),
 
   _checkAncestryConsistency(questions) {
+    console.log('[updateSortOrderTask] Checking ancestry consistency for', questions.length, 'questions');
+    
     questions.forEach(function(question) {
       if (isPresent(question.get('parentId'))) {
         let parentId = question.get('parentId');
@@ -145,18 +147,58 @@ export default Controller.extend({
         let sortOrder = question.get('sortOrder');
 
         if (isBlank(parent)) {
+          console.log('[updateSortOrderTask] Parent not found for question', question.get('id'), 'parentId:', parentId);
           return;
         }
 
-        if (parent.get('sortOrder') > sortOrder) {
-          question.set('parentId', null);
-          let questionToAskDown = questions.findBy('sortOrder', question.get('sortOrder') + 1);
-          if (isPresent(questionToAskDown)) {
-            question.set('parentId', questionToAskDown.get('parentId'));
+        // Only fix parentId if the question is actually outside its parent's scope
+        // A child can have a higher sort order than its parent if the parent was moved down
+        // We should check if the question is still within the parent's descendant range
+        let parentSortOrder = parent.get('sortOrder');
+        
+        // Find the next sibling or end of parent's children
+        let nextSibling = null;
+        for (let i = 0; i < questions.length; i++) {
+          let q = questions.objectAt(i);
+          if (q.get('sortOrder') > parentSortOrder && q.get('parentId') === parentId) {
+            nextSibling = q;
+            break;
           }
-          question.save().then(() => {
-            question.reload();
-          });
+        }
+        
+        let parentEndSortOrder = nextSibling ? nextSibling.get('sortOrder') : parentSortOrder + 1000;
+        
+        // If the question is outside its parent's scope, fix it
+        if (sortOrder < parentSortOrder || sortOrder > parentEndSortOrder) {
+          console.log('[updateSortOrderTask] Question', question.get('id'), 'outside parent scope. parentSortOrder:', parentSortOrder, 'questionSortOrder:', sortOrder, 'parentEndSortOrder:', parentEndSortOrder);
+          
+          // Find the correct parent based on ancestry
+          let ancestry = question.get('ancestry');
+          if (ancestry) {
+            let ancestryParts = ancestry.split('/');
+            // Find the most recent ancestor that exists in the questions array
+            for (let i = ancestryParts.length - 1; i >= 0; i--) {
+              let ancestorId = ancestryParts[i];
+              let ancestor = questions.findBy('id', ancestorId);
+              if (ancestor && ancestor.get('sortOrder') <= sortOrder) {
+                console.log('[updateSortOrderTask] Setting question', question.get('id'), 'parentId to', ancestorId);
+                question.set('parentId', ancestorId);
+                question.save().then(() => {
+                  question.reload();
+                });
+                break;
+              }
+            }
+          } else {
+            // If no ancestry, set to null (top level)
+            console.log('[updateSortOrderTask] Setting question', question.get('id'), 'parentId to null (top level)');
+            question.set('parentId', null);
+            question.save().then(() => {
+              question.reload();
+            });
+          }
+        } else {
+          console.log('[updateSortOrderTask] Question', question.get('id'), 'within parent scope. parentSortOrder:', parentSortOrder, 'questionSortOrder:', sortOrder, 'parentEndSortOrder:', parentEndSortOrder);
         }
       }
     });

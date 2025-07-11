@@ -243,14 +243,97 @@ export default Component.extend({
     sortedDropped(sortedQuestions, _draggedQuestion) {
       console.log('[questions-list] sortedDropped called', sortedQuestions, _draggedQuestion);
       
-      // The drag-and-drop system now works with the full questions array
-      // So we can directly use the sorted questions array for the sort order update
+      // The drag-and-drop system works with the full questions array
+      // We need to include all descendants of moved containers for proper sort order updates
       console.log('[questions-list] Using full questions array for sort order update');
       console.log('[questions-list] Questions in new order:', sortedQuestions.map((q, index) => 
         `${index}: ${q.get('questionText')} (id: ${q.get('id')}, parentId: ${q.get('parentId')})`));
       
-      // Pass the questions in the new order to updateSortOrderTask
-      this.get('updateSortOrderTask').perform(sortedQuestions, false); // false = don't re-sort, use array order
+      // Get all questions to find descendants
+      const allQuestions = this.get('fullQuestions');
+      const completeArray = [...sortedQuestions.toArray()];
+      const processedIds = new Set();
+      
+      // Add all questions from sortedQuestions to processed set
+      sortedQuestions.forEach(q => processedIds.add(q.get('id')));
+      
+      // Find all moved containers (questions with children)
+      const movedContainers = sortedQuestions.filter(q => q.get('hasChild'));
+      
+      console.log('[questions-list] Found moved containers:', movedContainers.map(c => ({
+        id: c.get('id'),
+        text: c.get('questionText'),
+        hasChild: c.get('hasChild')
+      })));
+      
+      // For each moved container, find and add all descendants
+      movedContainers.forEach(container => {
+        const descendants = allQuestions.filter(q => {
+          if (!q.get('ancestry')) return false;
+          const ancestries = q.get('ancestry').split('/');
+          return ancestries.includes(container.get('id').toString());
+        });
+        
+        console.log('[questions-list] Found descendants for container', container.get('id'), ':', descendants.map(d => ({
+          id: d.get('id'),
+          text: d.get('questionText'),
+          ancestry: d.get('ancestry')
+        })));
+        
+        // Add descendants that aren't already in the array
+        descendants.forEach(desc => {
+          if (!processedIds.has(desc.get('id'))) {
+            completeArray.push(desc);
+            processedIds.add(desc.get('id'));
+          }
+        });
+      });
+      
+      // Instead of sorting by existing sort order, we need to update sort orders
+      // to reflect the new positions from the drag-and-drop
+      console.log('[questions-list] Updating sort orders for all questions including descendants');
+      
+      // Create a map of question ID to its new position in the sortedQuestions array
+      const newPositions = new Map();
+      sortedQuestions.forEach((question, index) => {
+        newPositions.set(question.get('id'), index);
+      });
+      
+      // Update sort orders for all questions in the complete array
+      completeArray.forEach((question, index) => {
+        const questionId = question.get('id');
+        const newPosition = newPositions.get(questionId);
+        
+        if (newPosition !== undefined) {
+          // This question was in the drag-and-drop array, use its new position
+          const newSortOrder = newPosition + 1;
+          console.log('[questions-list] Updating question', question.get('questionText'), 'to sort order', newSortOrder);
+          question.set('sortOrder', newSortOrder);
+        } else {
+          // This is a descendant that wasn't in the drag-and-drop array
+          // Find its parent and position it after the parent
+          const parentId = question.get('parentId');
+          if (parentId) {
+            const parent = completeArray.find(q => q.get('id') === parentId);
+            if (parent) {
+              const parentSortOrder = parent.get('sortOrder');
+              // Position descendants after their parent with a small offset
+              const newSortOrder = parentSortOrder + 0.1;
+              console.log('[questions-list] Updating descendant', question.get('questionText'), 'to sort order', newSortOrder, 'after parent', parent.get('questionText'));
+              question.set('sortOrder', newSortOrder);
+            }
+          }
+        }
+      });
+      
+      // Sort the complete array by the new sort orders
+      completeArray.sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
+      
+      console.log('[questions-list] Final complete array with updated sort orders:', completeArray.map((q, index) => 
+        `${index}: ${q.get('questionText')} (id: ${q.get('id')}, parentId: ${q.get('parentId')}, sortOrder: ${q.get('sortOrder')})`));
+      
+      // Pass the complete array to updateSortOrderTask
+      this.get('updateSortOrderTask').perform(completeArray, false); // false = don't re-sort, use array order
     }
   }
 });
