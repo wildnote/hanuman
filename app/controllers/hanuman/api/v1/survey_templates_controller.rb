@@ -33,7 +33,7 @@ module Hanuman
 
     def check_template
       survey_template = SurveyTemplate.find(params[:id])
-      errors = survey_template.check_structure_and_rules
+      errors = survey_template.check_form_integrity
       render json: errors.to_json
     end
 

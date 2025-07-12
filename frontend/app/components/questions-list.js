@@ -156,10 +156,28 @@ export default Component.extend({
     try {
       const surveyTemplate = this.surveyTemplate;
       surveyTemplate.set('checkingTemplate', true);
-      const errors = yield surveyTemplate.checkTemplate();
-      if (errors) {
+      const result = yield surveyTemplate.checkTemplate();
+      
+      if (result) {
         surveyTemplate.set('checkingTemplate', false);
-        alert('Errors by question:' + '\n' + errors.ancestry + '\n' + errors.rule + '\n' + errors.condition);
+        
+        let message = '';
+        
+        if (result.errors && result.errors.length > 0) {
+          message += 'ERRORS:\n' + result.errors.join('\n') + '\n\n';
+        }
+        
+        if (result.warnings && result.warnings.length > 0) {
+          message += 'WARNINGS:\n' + result.warnings.join('\n');
+        }
+        
+        if (result.valid === false) {
+          alert('Form Integrity Check Failed:\n\n' + message);
+        } else if (result.warnings && result.warnings.length > 0) {
+          alert('Form Integrity Check Completed with Warnings:\n\n' + message);
+        } else {
+          alert('Form Integrity Check Passed - No issues found!');
+        }
       }
     } catch (e) {
       this.get('notify').alert('There was an error checking the template');
