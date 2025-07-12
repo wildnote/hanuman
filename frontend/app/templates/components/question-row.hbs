@@ -121,7 +121,7 @@
       Edit
     {{/link-to}}
     {{#if (not ancestrable)}}
-      <a class="btn btn-delete {{if (not isFullyEditable) 'disabled'}}" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
+      <a class="btn btn-delete {{if (or question.surveyTemplate.lock (not isFullyEditable)) 'disabled'}}" data-test="confirm-delete-question-link" onclick={{action 'confirm'}}>
         <span class="glyphicons glyphicons-bin"></span>
       </a>
     {{else}}
