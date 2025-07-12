@@ -116,7 +116,7 @@
     {{/each}}
   </div>
   <div class="col-sm-2">
-    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success" disabled=(and (not isFullyEditable) (and (not question.defaultAnswerEnabled) (not question.isTaxonType)))}}
+    {{#link-to "survey_templates.record.questions.edit" question.id class="btn btn-sm btn-success" disabled=(and question.surveyTemplate.lock (and (not question.defaultAnswerEnabled) (not question.isTaxonType)))}}
       <span class="glyphicons glyphicons-pencil"></span>
       Edit
     {{/link-to}}
