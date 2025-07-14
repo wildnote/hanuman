@@ -708,76 +708,6 @@ export default Component.extend({
 
       console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'BELOW', container.get('questionText'));
 
-      // Calculate target position that accounts for container's children
-      const items = this.get('items');
-      const containerIndex = items.indexOf(container);
-
-      // Find the last descendant of the container to place after it
-      let targetIndex = containerIndex + 1;
-      const containerId = container.get('id');
-
-      // Get all descendants of this container (including nested children)
-      const allDescendants = this.getAllDescendants(containerId, items);
-      console.log(
-        '[CUSTOM DRAG] Looking for descendants of container:',
-        container.get('questionText'),
-        'with ID:',
-        containerId,
-        'Found',
-        allDescendants.length,
-        'descendants'
-      );
-
-      if (allDescendants.length > 0) {
-        // Find the last descendant in the items array
-        let lastDescendantIndex = -1;
-        for (let i = 0; i < allDescendants.length; i++) {
-          const descendant = allDescendants[i];
-          const descendantIndex = items.indexOf(descendant);
-          if (descendantIndex > lastDescendantIndex) {
-            lastDescendantIndex = descendantIndex;
-          }
-        }
-        
-        if (lastDescendantIndex !== -1) {
-          // Place after the last descendant
-          targetIndex = lastDescendantIndex + 1;
-          
-          // BUT: Check if there are other questions in the same section after this position
-          // If so, we need to place BEFORE those questions, not after them
-          const containerParentId = container.get('parentId');
-          const questionsInSameSection = items.filter(item => item.get('parentId') === containerParentId);
-          
-          // Find the next section question that comes after our target position
-          let nextSectionQuestionIndex = -1;
-          for (let i = targetIndex; i < items.length; i++) {
-            const item = items[i];
-            if (item.get('parentId') === containerParentId && item.get('id') !== question.get('id')) {
-              nextSectionQuestionIndex = i;
-              break;
-            }
-          }
-          
-          if (nextSectionQuestionIndex !== -1) {
-            // There's a section question after our target - place before it
-            targetIndex = nextSectionQuestionIndex;
-            console.log('[CUSTOM DRAG] Found section question after target, placing before it at index:', targetIndex);
-          } else {
-            console.log('[CUSTOM DRAG] No section questions after target, placing at index:', targetIndex);
-          }
-        }
-      } else {
-        // No descendants, place right after the container
-        targetIndex = containerIndex + 1;
-        console.log('[CUSTOM DRAG] No descendants found, placing right after container at index:', targetIndex);
-      }
-
-      console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for container at index:', containerIndex);
-
-      // Store targetIndex and placement type for use in children update
-      this.set('targetIndex', targetIndex);
-      this.set('placementType', 'below');
-
       // Set flag to prevent moveToPosition from interfering
       this.set('isSettingAncestry', true);
 
@@ -786,6 +716,7 @@ export default Component.extend({
       let childrenBeforeMove = [];
       if (isContainer) {
         console.log('[CUSTOM DRAG] Container moved via placement modal, capturing children BEFORE clearing ancestry');
+        const items = this.get('items');
         const containerId = question.get('id');
         const allChildren = items.filter((item) => item.get('parentId') === containerId);
         // Sort children by their current sortOrder to preserve their intended order
@@ -813,39 +744,6 @@ export default Component.extend({
       );
 
       question.set('parentId', containerParentId);
-      
-      // Calculate the correct sort order based on where the question will actually be placed
-      const parentSectionId = containerParentId;
-      const questionsInSameSection = items.filter(item => item.get('parentId') === parentSectionId);
-      
-      // Find the container's sort order
-      const containerSortOrder = container.get('sortOrder');
-      
-      // Find questions that come after the container in the same section
-      const questionsAfterContainer = questionsInSameSection.filter(item => 
-        item.get('sortOrder') > containerSortOrder && item.get('id') !== question.get('id')
-      );
-      
-      let newSortOrder;
-      if (questionsAfterContainer.length > 0) {
-        // There are questions after the container - place between container and next question
-        const nextQuestion = questionsAfterContainer.reduce((min, item) => 
-          item.get('sortOrder') < min.get('sortOrder') ? item : min
-        );
-        const nextQuestionSortOrder = nextQuestion.get('sortOrder');
-        
-        // Place between container and next question
-        newSortOrder = containerSortOrder + (nextQuestionSortOrder - containerSortOrder) / 2;
-        console.log('[CUSTOM DRAG] Questions after container found, placing between container (', containerSortOrder, ') and next question (', nextQuestionSortOrder, ') at sort order:', newSortOrder);
-      } else {
-        // No questions after container - place after the container
-        // Use the target array position to calculate the correct sort order
-        newSortOrder = targetIndex + 1; // Convert 0-indexed array position to 1-indexed sort order
-        console.log('[CUSTOM DRAG] No questions after container, placing at target position (', targetIndex, ') with sort order:', newSortOrder);
-      }
-      
-      question.set('sortOrder', newSortOrder);
-      console.log('[CUSTOM DRAG] Final sort order set to:', newSortOrder);
 
       // Save the question to persist the ancestry change
       question
@@ -859,23 +757,26 @@ export default Component.extend({
               // Clear the ancestry flag
               this.set('isSettingAncestry', false);
 
-              // Now move the specific question to the pre-calculated target position
-              console.log('[CUSTOM DRAG] Moving question to pre-calculated target position:', targetIndex);
+              // Use the same logic as placeBelowQuestion - calculate target position in one pass
+              console.log('[CUSTOM DRAG] Calculating target position for below container placement');
+              const freshItems = this.get('items');
+              const targetIndex = this.calculateAdjustedTargetIndex(container, freshItems, 'below');
+              console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for container at index:', freshItems.indexOf(container));
 
               // Check if the moved item is a container and handle children ancestry updates
               if (isContainer) {
                 console.log('[CUSTOM DRAG] Container moved via placement modal, updating children ancestry');
 
                 // First, actually move the container to the target position
-                const currentIndex = items.indexOf(question);
+                const currentIndex = freshItems.indexOf(question);
                 if (currentIndex !== -1 && currentIndex !== targetIndex) {
                   console.log('[CUSTOM DRAG] Moving container from index', currentIndex, 'to index', targetIndex);
-                  items.removeAt(currentIndex);
+                  freshItems.removeAt(currentIndex);
                   // Adjust target index if we removed an item before the target position
                   let adjustedTargetIndex = targetIndex;
                   
                   // NEW: Only apply adjustment if NOT moving to the very bottom
-                  const isMovingToBottom = targetIndex >= items.length;
+                  const isMovingToBottom = targetIndex >= freshItems.length;
                   if (currentIndex < targetIndex && !isMovingToBottom) {
                     adjustedTargetIndex = targetIndex - 1;
                     console.log(
@@ -886,35 +787,13 @@ export default Component.extend({
                       'due to removal'
                     );
                   }
-                  items.insertAt(adjustedTargetIndex, question);
+                  freshItems.insertAt(adjustedTargetIndex, question);
                 }
 
-                this.send('updateContainerChildrenAncestry', question, items, childrenBeforeMove);
+                this.send('updateContainerChildrenAncestry', question, freshItems, childrenBeforeMove);
               } else {
-                // For non-containers, we need to actually move the question to the target position
-                // and shift all subsequent items down
-                const currentIndex = items.indexOf(question);
-                if (currentIndex !== -1 && currentIndex !== targetIndex) {
-                  console.log('[CUSTOM DRAG] Moving question from index', currentIndex, 'to index', targetIndex);
-                  
-                  // Remove the question from its current position
-                  items.removeAt(currentIndex);
-                  
-                  // Safety check: clamp target index to array length
-                  const safeTargetIndex = Math.max(0, Math.min(targetIndex, items.length));
-                  console.log('[CUSTOM DRAG] Safe target index:', safeTargetIndex, 'original:', targetIndex, 'array length:', items.length);
-                  
-                  // Insert at the target position (this will shift all subsequent items down)
-                  items.insertAt(safeTargetIndex, question);
-                  
-                  console.log('[CUSTOM DRAG] Question moved to target position, array length:', items.length);
-                }
-                
-                // Skip updateSortOrderTask since we've already set the correct parentId and sortOrder
-                // The database will handle the positioning correctly without re-sorting
-                console.log('[CUSTOM DRAG] Skipping updateSortOrderTask - question already positioned correctly');
-                this.set('isSettingAncestry', false);
-                this.cleanupAfterMove();
+                // For non-containers, use moveQuestionToPosition to handle the positioning
+                this.send('moveQuestionToPosition', question, targetIndex);
               }
             });
           });
