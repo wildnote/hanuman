@@ -149,9 +149,6 @@ export default Component.extend({
         targetContainerLevel
       );
 
-      // ENFORCE TWO-LEVEL MAXIMUM NESTING RULE
-      // Prevent creating more than two levels of nesting
-      
       // Check if this move would violate the two-level rule
       if (selectedContainerLevel === 2 && targetContainerLevel === 2) {
         // Moving from Level 2 to Level 2 - check if they're in the same Level 1 container
@@ -167,21 +164,6 @@ export default Component.extend({
           // Show error message or prevent the move
           return;
         }
-      }
-      
-      // NEW: Prevent moving items into Level 2 containers (would create Level 3 nesting)
-      if (targetContainerLevel === 2) {
-        console.log('[CUSTOM DRAG] Cannot move into Level 2 container - would create more than two levels of nesting');
-        // Show error message or prevent the move
-        return;
-      }
-      
-      // NEW: Prevent moving containers that are already at Level 1 into other containers
-      // This would create Level 2 nesting which is not allowed for containers
-      if (selectedIsContainer && selectedContainerLevel === 1 && targetContainerLevel === 1) {
-        console.log('[CUSTOM DRAG] Cannot move Level 1 container into another Level 1 container - would create Level 2 nesting');
-        // Show error message or prevent the move
-        return;
       }
 
       // Show placement options modal directly
@@ -1110,24 +1092,6 @@ export default Component.extend({
 
       console.log('[CUSTOM DRAG] Container levels - current:', currentContainerLevel, 'target:', targetContainerLevel);
 
-      // ENFORCE TWO-LEVEL MAXIMUM NESTING RULE
-      // Prevent creating more than two levels of nesting
-      
-      // Check if this move would violate the two-level rule
-      const selectedIsContainer = selectedItem.get('isARepeater') || selectedItem.get('isContainer');
-      
-      // NEW: Prevent moving items into Level 2 containers (would create Level 3 nesting)
-      if (targetContainerLevel === 2) {
-        console.log('[CUSTOM DRAG] Cannot move into Level 2 container - would create more than two levels of nesting');
-        return;
-      }
-      
-      // NEW: Prevent moving containers that are already at Level 1 into other containers
-      if (selectedIsContainer && currentContainerLevel === 1 && targetContainerLevel === 1) {
-        console.log('[CUSTOM DRAG] Cannot move Level 1 container into another Level 1 container - would create Level 2 nesting');
-        return;
-      }
-
       // Apply two-level container rule
       if (currentParentId && !targetParentId) {
         // Moving from inside a container to top level
@@ -1178,10 +1142,9 @@ export default Component.extend({
           });
       } else if (currentParentId && targetParentId) {
         // Moving from one container to another container
-        // With our new rules, we only allow Level 0 to Level 1 and Level 1 to Level 0 moves
-        if (currentContainerLevel === 0 && targetContainerLevel === 1) {
-          // Moving from Level 0 to Level 1 container
-          console.log('[CUSTOM DRAG] Moving from Level 0 to Level 1 container');
+        if (currentContainerLevel === 2 && targetContainerLevel === 1) {
+          // Moving from Level 2 to Level 1 container
+          console.log('[CUSTOM DRAG] Moving from Level 2 to Level 1 container');
           selectedItem.set('parentId', targetParentId);
 
           selectedItem
@@ -1211,40 +1174,8 @@ export default Component.extend({
             .catch((error) => {
               console.error('[CUSTOM DRAG] Error updating ancestry:', error);
             });
-        } else if (currentContainerLevel === 1 && targetContainerLevel === 0) {
-          // Moving from Level 1 to Level 0 (top level)
-          console.log('[CUSTOM DRAG] Moving from Level 1 to Level 0 (top level)');
-          selectedItem.set('parentId', null);
-
-          selectedItem
-            .save()
-            .then(() => {
-              console.log('[CUSTOM DRAG] Ancestry updated successfully');
-
-              // Reload the item to get the updated data
-              selectedItem.reload().then(() => {
-                console.log('[CUSTOM DRAG] Item reloaded, new parentId:', selectedItem.get('parentId'));
-
-                // Force a complete refresh of this component
-                this.forceRefresh();
-
-                // Wait for the refresh to complete, then perform the move
-                run.scheduleOnce('afterRender', this, () => {
-                  console.log('[CUSTOM DRAG] After force refresh, checking UI state');
-                  this.checkUIState();
-
-                  run.scheduleOnce('afterRender', this, () => {
-                    console.log('[CUSTOM DRAG] Performing move after UI state check');
-                    this.send('performMoveLogic', selectedIndex, targetIndex);
-                  });
-                });
-              });
-            })
-            .catch((error) => {
-              console.error('[CUSTOM DRAG] Error updating ancestry:', error);
-            });
         } else {
-          // Other allowed container-to-container moves (Level 0 to Level 0)
+          // Other container-to-container moves (Level 1 to Level 1, Level 2 to Level 2, Level 1 to Level 2)
           console.log('[CUSTOM DRAG] Container-to-container move, no ancestry change needed');
           this.send('performMoveLogic', selectedIndex, targetIndex);
         }
@@ -1954,13 +1885,9 @@ export default Component.extend({
             }
           }
 
-          // ENFORCE TWO-LEVEL MAXIMUM NESTING RULE
-          // Prevent creating more than two levels of nesting (Level 0 -> Level 1 -> Level 2 max)
-          
           // Handle child container logic first (regardless of where the target item is)
           if (isSelectedChildContainer) {
-            // Selected item is a container that's already inside another container (Level 1)
-            // Only allow repositioning within the same container or moving to top level
+            // Allow repositioning within the same container
             if (isInSameContainer) {
               shouldShowRegularDropZone = true;
             }
@@ -1973,9 +1900,8 @@ export default Component.extend({
               // Always show regular drop zone for top-level items (both containers and questions)
               shouldShowRegularDropZone = true;
             }
-            // DO NOT allow moving into other containers (would create Level 2 nesting)
           } else if (isSelectedInsideContainer) {
-            // Selected item is inside a container (Level 1) but not a child container
+            // Selected item is inside a container (but not a child container)
             if (isContainer) {
               if (selectedHasChildContainers) {
                 // If selected container has child containers, only allow same-level moves
@@ -1984,20 +1910,23 @@ export default Component.extend({
                   shouldShowContainerDropZone = true;
                 }
               } else {
-                // ENFORCE TWO-LEVEL MAXIMUM NESTING RULE
-                // Only allow container-to-container moves that don't create Level 2 nesting
-                if (selectedContainerLevel === 0 && targetContainerLevel === 1) {
-                  // Moving from Level 0 to Level 1 - this is allowed
-                  shouldShowContainerDropZone = true;
-                } else if (selectedContainerLevel === 1 && targetContainerLevel === 0) {
-                  // Moving from Level 1 to Level 0 - this is allowed
-                  shouldShowContainerDropZone = true;
-                } else if (selectedContainerLevel === 0 && targetContainerLevel === 0) {
-                  // Moving from Level 0 to Level 0 - this is allowed
+                // Check two-level container rule for container-to-container moves
+                if (selectedContainerLevel === 2 && targetContainerLevel === 2) {
+                  // Moving from Level 2 to Level 2 - only allow if they're in the same Level 1 container
+                  const selectedLevel1Container = this.get('items').findBy('id', selectedParentId);
+                  const targetLevel1Container = this.get('items').findBy('id', questionParentId);
+
+                  if (
+                    selectedLevel1Container &&
+                    targetLevel1Container &&
+                    selectedLevel1Container.get('id') === targetLevel1Container.get('id')
+                  ) {
+                    shouldShowContainerDropZone = true;
+                  }
+                } else {
+                  // Other container-to-container moves are allowed
                   shouldShowContainerDropZone = true;
                 }
-                // DO NOT allow Level 1 to Level 1 moves (would create Level 2 nesting)
-                // DO NOT allow any Level 2 moves (Level 2 containers are not allowed)
               }
             } else if (isInSameContainer) {
               // Allow repositioning within the same container
@@ -2008,7 +1937,7 @@ export default Component.extend({
             }
             // Don't show regular drop zones for questions inside containers when selected item is in container
           } else {
-            // Selected item is at top level (Level 0)
+            // Selected item is at top level
             if (isContainer) {
               // If selected container has child containers, only allow top-level moves
               if (selectedHasChildContainers) {
@@ -2017,15 +1946,14 @@ export default Component.extend({
                   shouldShowRegularDropZone = true;
                 }
               } else {
-                // Check if target container is at Level 1 (not Level 2)
-                if (targetContainerLevel === 1) {
-                  // Moving into a Level 1 container - this is allowed from top level
+                // Always show container drop zone for containers (allows placement modal with options)
+                if (targetContainerLevel === 2) {
+                  // Moving into a Level 2 container - this is allowed from top level
                   shouldShowContainerDropZone = true;
-                } else if (targetContainerLevel === 0) {
-                  // Moving to top level - this is always allowed
-                  shouldShowRegularDropZone = true;
+                } else {
+                  // Moving into a Level 1 container - this is always allowed from top level
+                  shouldShowContainerDropZone = true;
                 }
-                // DO NOT allow moving into Level 2 containers (would create Level 2 nesting)
               }
             } else if (!questionParentId) {
               // Only allow repositioning at top level (questions with no parentId)
