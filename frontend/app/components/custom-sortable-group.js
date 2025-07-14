@@ -642,6 +642,13 @@ export default Component.extend({
       );
 
       question.set('parentId', containerParentId);
+      
+      // Calculate the correct sort order based on where the question will actually be placed
+      const sortItems = this.get('items');
+      const sortTargetIndex = this.calculateAdjustedTargetIndex(container, sortItems, 'below');
+      const newSortOrder = sortTargetIndex + 1; // Convert 0-indexed array position to 1-indexed sort order
+      question.set('sortOrder', newSortOrder);
+      console.log('[CUSTOM DRAG] Set sort order to:', newSortOrder, 'based on target index:', sortTargetIndex);
 
       // Save the question to persist the ancestry change
       question
@@ -744,6 +751,13 @@ export default Component.extend({
       );
 
       question.set('parentId', containerParentId);
+      
+      // Calculate the correct sort order based on where the question will actually be placed
+      const sortItems = this.get('items');
+      const sortTargetIndex = this.calculateAdjustedTargetIndex(container, sortItems, 'below');
+      const newSortOrder = sortTargetIndex + 1; // Convert 0-indexed array position to 1-indexed sort order
+      question.set('sortOrder', newSortOrder);
+      console.log('[CUSTOM DRAG] Set sort order to:', newSortOrder, 'based on target index:', sortTargetIndex);
 
       // Save the question to persist the ancestry change
       question
@@ -2670,13 +2684,30 @@ export default Component.extend({
       const containerId = targetItem.get('id');
       const allDescendants = this.getAllDescendants(containerId, items);
       
-      // The actual position where we should insert is after the container AND all its descendants
-      const adjustedIndex = targetIndex + 1 + allDescendants.length;
-      
-      console.log('[CUSTOM DRAG] Container with', allDescendants.length, 'descendants');
-      console.log('[CUSTOM DRAG] Original targetIndex:', targetIndex, 'Adjusted targetIndex:', adjustedIndex);
-      
-      return adjustedIndex;
+      if (allDescendants.length > 0) {
+        // Find the actual last descendant position in the array
+        let lastDescendantIndex = -1;
+        for (let i = 0; i < allDescendants.length; i++) {
+          const descendant = allDescendants[i];
+          const descendantIndex = items.indexOf(descendant);
+          if (descendantIndex > lastDescendantIndex) {
+            lastDescendantIndex = descendantIndex;
+          }
+        }
+        
+        // Place after the last descendant
+        const adjustedIndex = lastDescendantIndex + 1;
+        
+        console.log('[CUSTOM DRAG] Container with', allDescendants.length, 'descendants');
+        console.log('[CUSTOM DRAG] Last descendant at index:', lastDescendantIndex, 'Adjusted targetIndex:', adjustedIndex);
+        
+        return adjustedIndex;
+      } else {
+        // No descendants, place right after the container
+        const adjustedIndex = targetIndex + 1;
+        console.log('[CUSTOM DRAG] Container with no descendants, placing at index:', adjustedIndex);
+        return adjustedIndex;
+      }
     }
     
     // For non-containers or 'above' placement, just place after/before the item
