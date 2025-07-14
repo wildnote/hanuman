@@ -1774,8 +1774,8 @@ export default Component.extend({
       if (isFullyEditable) {
         // Add click handlers to all items for selection
         items.forEach((element, index) => {
-                  // Add click handler to the move icon (glyphicons-move)
-        const moveIcon = element.querySelector('.glyphicons-move');
+          // Add click handler to the move icon (glyphicons-move)
+          const moveIcon = element.querySelector('.glyphicons-move');
           if (moveIcon) {
             const selectionClickHandler = (event) => {
               const questionElement = element.querySelector('[data-question-id]');
@@ -1791,14 +1791,23 @@ export default Component.extend({
             // Use safe event listener to prevent duplicates
             this.safeAddEventListener(moveIcon, 'click', selectionClickHandler);
           }
-
-
         });
+      }
+
+      // If selected item is a container, highlight its children
+      const isSelectedContainer = selectedItem.get('isARepeater') || selectedItem.get('isContainer');
+      if (isSelectedContainer) {
+        this.highlightChildren(selectedItem);
       }
 
       // Determine if selected item is inside a container
       const selectedParentId = selectedItem.get('parentId');
       const isSelectedInsideContainer = selectedParentId !== null;
+
+      // Get all descendants of selected container (if it's a container)
+      const selectedContainerDescendants = isSelectedContainer ? 
+        this.getAllDescendants(selectedItem.get('id'), this.get('items')).map(item => item.get('id')) : 
+        [];
 
       items.forEach((element, index) => {
         // Don't create drop zones for the selected item
@@ -1818,38 +1827,39 @@ export default Component.extend({
             }
           }
 
-          // Determine if this question is in the same container as the selected item
-          const questionParentId = question ? question.get('parentId') : null;
-          const isInSameContainer = questionParentId === selectedParentId;
+          // Don't create drop zones for children of the selected container
+          if (isSelectedContainer && question && selectedContainerDescendants.includes(question.get('id'))) {
+            // Skip this item - it's a child of the selected container
+          } else {
+            // Determine if this question is in the same container as the selected item
+            const questionParentId = question ? question.get('parentId') : null;
+            const isInSameContainer = questionParentId === selectedParentId;
 
-          // Smart drop zone logic with two-level container rule
-          let shouldShowContainerDropZone = false;
-          let shouldShowRegularDropZone = false;
+            // Smart drop zone logic with two-level container rule
+            let shouldShowContainerDropZone = false;
+            let shouldShowRegularDropZone = false;
 
-          // Check if selected item is a container (needed for some logic)
-          const isSelectedContainer = selectedItem.get('isARepeater') || selectedItem.get('isContainer');
-
-          // NEW LOGIC: Use the canPlaceInside function to determine drop zone types
-          if (question) {
-            // Check if we can place inside this container
-            const canPlaceInside = this.canPlaceInside(selectedItem, question, this.get('items'));
-            
-            if (canPlaceInside) {
-              // Green drop zone - "Inside" option is available
-              shouldShowContainerDropZone = true;
-            } else if (isContainer) {
-              // Blue drop zone for containers when "Inside" is not available
-              shouldShowRegularDropZone = true;
-            } else if (isInSameContainer) {
-              // Blue drop zone for repositioning within same container
-              shouldShowRegularDropZone = true;
-            } else if (!questionParentId) {
-              // Blue drop zone for moving to top level
-              shouldShowRegularDropZone = true;
+            // NEW LOGIC: Use the canPlaceInside function to determine drop zone types
+            if (question) {
+              // Check if we can place inside this container
+              const canPlaceInside = this.canPlaceInside(selectedItem, question, this.get('items'));
+              
+              if (canPlaceInside) {
+                // Green drop zone - "Inside" option is available
+                shouldShowContainerDropZone = true;
+              } else if (isContainer) {
+                // Blue drop zone for containers when "Inside" is not available
+                shouldShowRegularDropZone = true;
+              } else if (isInSameContainer) {
+                // Blue drop zone for repositioning within same container
+                shouldShowRegularDropZone = true;
+              } else if (!questionParentId) {
+                // Blue drop zone for moving to top level
+                shouldShowRegularDropZone = true;
+              }
             }
-          }
 
-          if (shouldShowContainerDropZone) {
+            if (shouldShowContainerDropZone) {
             // Add green drop zone for containers (ancestry functionality)
             element.classList.add('container-drop-zone-active');
 
@@ -1911,8 +1921,9 @@ export default Component.extend({
             this.safeAddEventListener(element, 'mouseleave', leaveHandler);
           }
         }
-      });
+      }
     });
+  });
 
     // Register timeout for cleanup
     this.registerTimeout(timeout, 'dropZone');
@@ -2020,6 +2031,24 @@ export default Component.extend({
     // Target must be a container to place inside
     if (!isTargetContainer) {
       return false;
+    }
+
+    // CRITICAL: Prevent containers from being placed inside themselves or their descendants
+    if (isSelectedContainer) {
+      const selectedId = selectedItem.get('id');
+      const targetId = targetContainer.get('id');
+      
+      // Can't place inside itself
+      if (selectedId === targetId) {
+        return false;
+      }
+      
+      // Can't place inside any of its descendants
+      const descendants = this.getAllDescendants(selectedId, items);
+      const hasDescendant = descendants.some(descendant => descendant.get('id') === targetId);
+      if (hasDescendant) {
+        return false;
+      }
     }
 
     // Determine levels
