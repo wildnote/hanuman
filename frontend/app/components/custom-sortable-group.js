@@ -839,8 +839,9 @@ export default Component.extend({
         console.log('[CUSTOM DRAG] Questions after container found, placing between container (', containerSortOrder, ') and next question (', nextQuestionSortOrder, ') at sort order:', newSortOrder);
       } else {
         // No questions after container - place after the container
-        newSortOrder = containerSortOrder + 1;
-        console.log('[CUSTOM DRAG] No questions after container, placing after container (', containerSortOrder, ') at sort order:', newSortOrder);
+        // Use the target array position to calculate the correct sort order
+        newSortOrder = targetIndex + 1; // Convert 0-indexed array position to 1-indexed sort order
+        console.log('[CUSTOM DRAG] No questions after container, placing at target position (', targetIndex, ') with sort order:', newSortOrder);
       }
       
       question.set('sortOrder', newSortOrder);
@@ -899,8 +900,12 @@ export default Component.extend({
                   // Remove the question from its current position
                   items.removeAt(currentIndex);
                   
+                  // Safety check: clamp target index to array length
+                  const safeTargetIndex = Math.max(0, Math.min(targetIndex, items.length));
+                  console.log('[CUSTOM DRAG] Safe target index:', safeTargetIndex, 'original:', targetIndex, 'array length:', items.length);
+                  
                   // Insert at the target position (this will shift all subsequent items down)
-                  items.insertAt(targetIndex, question);
+                  items.insertAt(safeTargetIndex, question);
                   
                   console.log('[CUSTOM DRAG] Question moved to target position, array length:', items.length);
                 }
@@ -931,9 +936,9 @@ export default Component.extend({
 
       console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'ABOVE', targetQuestion.get('questionText'));
 
-      // Calculate target position
-      const targetIndex = this.get('items').indexOf(targetQuestion);
-      console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for question at index:', targetIndex);
+      // Calculate target position - account for containers with children
+      const targetIndex = this.calculateAdjustedTargetIndex(targetQuestion, this.get('items'), 'above');
+      console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for question at index:', this.get('items').indexOf(targetQuestion));
 
       // Store targetIndex and placement type for use in children update
       this.set('targetIndex', targetIndex);
@@ -1015,7 +1020,14 @@ export default Component.extend({
                     );
                   }
                   console.log('[CUSTOM DRAG] About to insert at index:', adjustedTargetIndex, 'array length:', freshItems.length);
-                  freshItems.insertAt(adjustedTargetIndex, question);
+                  // Safety check for insertAt
+                  if (adjustedTargetIndex >= 0 && adjustedTargetIndex <= freshItems.length) {
+                    freshItems.insertAt(adjustedTargetIndex, question);
+                  } else {
+                    console.error('[CUSTOM DRAG] Invalid adjustedTargetIndex for insertAt:', adjustedTargetIndex, 'array length:', freshItems.length);
+                    // Fallback: insert at the end
+                    freshItems.pushObject(question);
+                  }
                 }
 
                 this.send('updateContainerChildrenAncestry', question, freshItems, childrenBeforeMove);
@@ -1043,9 +1055,9 @@ export default Component.extend({
 
       console.log('[CUSTOM DRAG] Placing', question.get('questionText'), 'BELOW', targetQuestion.get('questionText'));
 
-      // Calculate target position
+      // Calculate target position - account for containers with children
       const items = this.get('items');
-      const targetIndex = items.indexOf(targetQuestion) + 1;
+      const targetIndex = this.calculateAdjustedTargetIndex(targetQuestion, items, 'below');
       console.log(
         '[CUSTOM DRAG] Target position calculated:',
         targetIndex,
@@ -1103,7 +1115,7 @@ export default Component.extend({
               // Get fresh items array after reload and recalculate target position
               const freshItems = this.get('items');
               // For placeBelowQuestion, ensure we always insert immediately after the target
-              const freshTargetIndex = freshItems.indexOf(targetQuestion) + 1;
+              const freshTargetIndex = this.calculateAdjustedTargetIndex(targetQuestion, freshItems, 'below');
               // If the dragged question's current index is less than the target, subtract 1 to account for removal
               const currentIndex = freshItems.indexOf(question);
               let finalTargetIndex = freshTargetIndex;
@@ -1157,7 +1169,14 @@ export default Component.extend({
                     console.log('[CUSTOM DRAG] Clamped target index to array length:', adjustedTargetIndex);
                   }
                   console.log('[CUSTOM DRAG] About to insert at index:', adjustedTargetIndex, 'array length:', freshItems.length);
-                  freshItems.insertAt(adjustedTargetIndex, question);
+                  // Safety check for insertAt
+                  if (adjustedTargetIndex >= 0 && adjustedTargetIndex <= freshItems.length) {
+                    freshItems.insertAt(adjustedTargetIndex, question);
+                  } else {
+                    console.error('[CUSTOM DRAG] Invalid adjustedTargetIndex for insertAt:', adjustedTargetIndex, 'array length:', freshItems.length);
+                    // Fallback: insert at the end
+                    freshItems.pushObject(question);
+                  }
                 }
 
                 this.send('updateContainerChildrenAncestry', question, freshItems, childrenBeforeMove);
@@ -2760,6 +2779,29 @@ export default Component.extend({
         }
       }, 300);
     }, 4000);
+  },
+
+  // Helper method to calculate adjusted target index for containers with children
+  calculateAdjustedTargetIndex(targetItem, items, placementType = 'below') {
+    const targetIndex = items.indexOf(targetItem);
+    const isTargetContainer = targetItem.get('isARepeater') || targetItem.get('isContainer');
+    
+    if (isTargetContainer && placementType === 'below') {
+      // Find all descendants of this container
+      const containerId = targetItem.get('id');
+      const allDescendants = this.getAllDescendants(containerId, items);
+      
+      // The actual position where we should insert is after the container AND all its descendants
+      const adjustedIndex = targetIndex + 1 + allDescendants.length;
+      
+      console.log('[CUSTOM DRAG] Container with', allDescendants.length, 'descendants');
+      console.log('[CUSTOM DRAG] Original targetIndex:', targetIndex, 'Adjusted targetIndex:', adjustedIndex);
+      
+      return adjustedIndex;
+    }
+    
+    // For non-containers or 'above' placement, just place after/before the item
+    return placementType === 'below' ? targetIndex + 1 : targetIndex;
   },
 
   // Helper method to determine if an item can be placed above/below a target item
