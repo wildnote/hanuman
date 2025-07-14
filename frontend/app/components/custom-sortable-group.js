@@ -2222,9 +2222,21 @@ export default Component.extend({
       return true;
     }
 
-    // Rule 2: Top level container - can only be placed inside top level containers
+    // Rule 2: Top level container - can only be placed inside top level containers (but not if it has container children)
     if (isSelectedContainer && selectedLevel === 0) {
-      return targetLevel === 0; // Only top level containers
+      // Check if this container has container children
+      const selectedDescendants = this.getAllDescendants(selectedItem.get('id'), items);
+      const hasContainerChildren = selectedDescendants.some(descendant => 
+        descendant.get('isARepeater') || descendant.get('isContainer')
+      );
+      
+      if (hasContainerChildren) {
+        // Cannot be placed inside other containers (would violate two-level rule)
+        return false;
+      }
+      
+      // Can be placed inside other top level containers (only if it doesn't have container children)
+      return targetLevel === 0;
     }
 
     // Rule 3: Second level container - can only be placed within its parent container or at top level
@@ -2756,6 +2768,11 @@ export default Component.extend({
     const targetParentId = targetItem.get('parentId');
     const isSelectedContainer = selectedItem.get('isARepeater') || selectedItem.get('isContainer');
     const isTargetContainer = targetItem.get('isARepeater') || targetItem.get('isContainer');
+    
+    // Allow top-level containers to be placed above/below other top-level containers
+    if (isSelectedContainer && isTargetContainer && !selectedParentId && !targetParentId) {
+      return true;
+    }
     
     // If target is a container, we might want to insert into it instead of placing relative to it
     if (isTargetContainer) {
