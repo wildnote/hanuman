@@ -39,6 +39,11 @@ module Hanuman
     # 7. Answer choices with blank option_text
     #    - All answer choices must have non-blank option_text
     #
+    # 8. Ancestry and sort order relationship violations
+    #    - Children of containers must be grouped together with sequential sort orders
+    #    - No other questions should be placed between children of the same parent
+    #    - Children must have the correct ancestry string matching their parent
+    #
     # == WARNINGS (valid: true, but issues should be addressed) ==
     # 1. Duplicate sort orders
     #    - Multiple questions with the same sort_order value
@@ -144,6 +149,9 @@ module Hanuman
             Rails.logger.info warning_message
           end
         end
+        
+        # Check ancestry and sort order relationships
+        check_ancestry_and_sort_order_integrity(result, questions)
         
         # Check each question
         questions.each do |question|
@@ -272,6 +280,122 @@ module Hanuman
           end
           
           Rails.logger.info "================================"
+        end
+      end
+    end
+
+    private
+
+    # Check ancestry and sort order relationships for all questions
+    # This ensures that children of containers are properly grouped together
+    # and have sequential sort orders without other questions mixed in between
+    def check_ancestry_and_sort_order_integrity(result, questions)
+      # Get all container questions (sections and repeaters)
+      containers = questions.select { |q| q.answer_type&.name&.in?(['section', 'repeater']) }
+      
+      containers.each do |container|
+        # Get all direct children of this container
+        container_children = questions.select { |q| q.parent_id == container.id }
+        
+        next if container_children.empty?
+        
+        # Sort children by sort_order
+        sorted_children = container_children.sort_by(&:sort_order)
+        
+        # Check if children are grouped together (no gaps with other questions)
+        container_sort_order = container.sort_order
+        first_child_sort_order = sorted_children.first.sort_order
+        last_child_sort_order = sorted_children.last.sort_order
+        
+        # Find all questions that should be between the container and its children
+        questions_between = questions.select do |q|
+          q.id != container.id && 
+          !container_children.map(&:id).include?(q.id) &&
+          q.sort_order > container_sort_order &&
+          q.sort_order < first_child_sort_order
+        end
+        
+        # Check if there are questions between container and its first child
+        if questions_between.any?
+          result[:valid] = false
+          result[:errors] << "Container question #{container.id} (#{container.question_text}) has children that are not immediately following it in sort order"
+          result[:details][:ancestry_violations] ||= []
+          result[:details][:ancestry_violations] << {
+            container_id: container.id,
+            container_text: container.question_text,
+            issue: "Questions between container and first child",
+            questions_between: questions_between.map { |q| { id: q.id, text: q.question_text, sort_order: q.sort_order } }
+          }
+        end
+        
+        # Check if children are sequential (no gaps between them)
+        sorted_children.each_with_index do |child, index|
+          next if index == 0 # Skip first child
+          
+          previous_child = sorted_children[index - 1]
+          expected_sort_order = previous_child.sort_order + 1
+          
+          if child.sort_order != expected_sort_order
+            result[:valid] = false
+            result[:errors] << "Container question #{container.id} (#{container.question_text}) has non-sequential child sort orders"
+            result[:details][:ancestry_violations] ||= []
+            result[:details][:ancestry_violations] << {
+              container_id: container.id,
+              container_text: container.question_text,
+              issue: "Non-sequential child sort orders",
+              previous_child: { id: previous_child.id, text: previous_child.question_text, sort_order: previous_child.sort_order },
+              current_child: { id: child.id, text: child.question_text, sort_order: child.sort_order },
+              expected_sort_order: expected_sort_order
+            }
+          end
+        end
+        
+        # Check if children have correct ancestry
+        expected_ancestry = container.ancestry.present? ? "#{container.ancestry}/#{container.id}" : container.id.to_s
+        
+        sorted_children.each do |child|
+          if child.ancestry != expected_ancestry
+            result[:valid] = false
+            result[:errors] << "Child question #{child.id} (#{child.question_text}) has incorrect ancestry for parent #{container.id} (#{container.question_text})"
+            result[:details][:ancestry_violations] ||= []
+            result[:details][:ancestry_violations] << {
+              container_id: container.id,
+              container_text: container.question_text,
+              child_id: child.id,
+              child_text: child.question_text,
+              issue: "Incorrect ancestry",
+              expected_ancestry: expected_ancestry,
+              actual_ancestry: child.ancestry
+            }
+          end
+        end
+        
+        # Check if there are questions after the last child that should be children
+        questions_after_children = questions.select do |q|
+          q.id != container.id && 
+          !container_children.map(&:id).include?(q.id) &&
+          q.sort_order > last_child_sort_order &&
+          q.sort_order < last_child_sort_order + 1000 # Reasonable gap threshold
+        end
+        
+        # If there are questions immediately after children, check if they should be children
+        if questions_after_children.any?
+          # Check if any of these questions have ancestry that suggests they should be children
+          misplaced_children = questions_after_children.select do |q|
+            q.ancestry == expected_ancestry
+          end
+          
+          if misplaced_children.any?
+            result[:valid] = false
+            result[:errors] << "Container question #{container.id} (#{container.question_text}) has children with sort orders outside the expected range"
+            result[:details][:ancestry_violations] ||= []
+            result[:details][:ancestry_violations] << {
+              container_id: container.id,
+              container_text: container.question_text,
+              issue: "Children with sort orders outside expected range",
+              misplaced_children: misplaced_children.map { |q| { id: q.id, text: q.question_text, sort_order: q.sort_order } }
+            }
+          end
         end
       end
     end
