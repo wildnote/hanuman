@@ -3,6 +3,82 @@ module Hanuman
     extend ActiveSupport::Concern
 
     # Check the integrity of a form
+    #
+    # This method performs comprehensive validation of a survey template to ensure
+    # data integrity and proper configuration. It returns a hash with the following structure:
+    # {
+    #   valid: boolean,      # Overall validity status
+    #   errors: array,       # Critical issues that prevent form from being valid
+    #   warnings: array,     # Non-critical issues that should be addressed
+    #   details: hash        # Detailed information about specific issues
+    # }
+    #
+    # === ISSUES CHECKED ===
+    #
+    # == CRITICAL ERRORS (valid: false) ==
+    # 1. Questions without sort_order
+    #    - Questions must have a sort_order to determine display sequence
+    #
+    # 2. Lookup rules with blank default values
+    #    - LookupRule types must have a value set when conditions exist
+    #
+    # 3. Calculation rules without scripts
+    #    - CalculationRule types must have a script defined
+    #
+    # 4. Rule conditions referencing non-existent questions
+    #    - Conditions must reference questions within the same survey template
+    #
+    # 5. Incomplete rule conditions
+    #    - VisibilityRule and LookupRule conditions must have answers unless using 'is empty'/'is not empty' operators
+    #
+    # 6. Questions requiring answer choices but having none
+    #    - Questions with answer_type.has_answer_choices? must have answer_choices defined
+    #    - Exception: locationchosensingleselect with new_project_location=true
+    #    - Exception: taxon questions (taxonchosenmultiselect, taxonchosensingleselect) with data_source_id
+    #
+    # 7. Answer choices with blank option_text
+    #    - All answer choices must have non-blank option_text
+    #
+    # == WARNINGS (valid: true, but issues should be addressed) ==
+    # 1. Duplicate sort orders
+    #    - Multiple questions with the same sort_order value
+    #    - Can cause display ordering issues
+    #
+    # 2. Duplicate API column names
+    #    - Multiple questions with the same api_column_name
+    #    - Can cause data export/import conflicts
+    #
+    # 3. Duplicate DB column names
+    #    - Multiple questions with the same db_column_name
+    #    - Can cause database storage conflicts
+    #
+    # 4. Empty rules (automatically deleted)
+    #    - Rules with no conditions are automatically removed
+    #    - Warning logged before deletion
+    #
+    # 5. Location questions without dynamic location setup
+    #    - locationchosensingleselect questions without new_project_location=true
+    #    - Requires manual verification that locations exist in the project
+    #
+    # 6. Taxon questions without data source
+    #    - taxonchosenmultiselect/taxonchosensingleselect questions without data_source_id
+    #    - May not function properly without proper data source configuration
+    #
+    # 7. Duplicate answer choice values
+    #    - Multiple answer choices with the same option_text within a question
+    #    - Can cause user confusion and data ambiguity
+    #
+    # == SPECIAL HANDLING ==
+    # - Location questions (locationchosensingleselect) with new_project_location=true are allowed to have no answer choices
+    # - Taxon questions (taxonchosenmultiselect, taxonchosensingleselect) with data_source_id are allowed to have no answer choices
+    # - Empty rules are automatically cleaned up during the check
+    #
+    # == LOGGING ==
+    # - All errors and warnings are logged to Rails.logger
+    # - A summary is logged when any issues are found
+    # - Detailed information is included in the returned details hash
+    #
+    # @return [Hash] Integrity check results with valid, errors, warnings, and details
     def check_form_integrity
       {
         valid: true,
