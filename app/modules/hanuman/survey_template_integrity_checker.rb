@@ -329,13 +329,25 @@ module Hanuman
         end
         
         # Check if children are sequential (no gaps between them)
+        # Only check for gaps that are within the same ancestry level
         sorted_children.each_with_index do |child, index|
           next if index == 0 # Skip first child
           
           previous_child = sorted_children[index - 1]
           expected_sort_order = previous_child.sort_order + 1
           
-          if child.sort_order != expected_sort_order
+          # Check if there are any questions between the previous child and current child
+          # that belong to the same parent (same ancestry level)
+          questions_between_children = questions.select do |q|
+            q.id != container.id && 
+            q.id != previous_child.id && 
+            q.id != child.id &&
+            q.parent_id == container.id && # Same parent
+            q.sort_order > previous_child.sort_order &&
+            q.sort_order < child.sort_order
+          end
+          
+          if questions_between_children.any?
             result[:valid] = false
             result[:errors] << "Container question #{container.id} (#{container.question_text}) has non-sequential child sort orders"
             result[:details][:ancestry_violations] ||= []
@@ -345,7 +357,8 @@ module Hanuman
               issue: "Non-sequential child sort orders",
               previous_child: { id: previous_child.id, text: previous_child.question_text, sort_order: previous_child.sort_order },
               current_child: { id: child.id, text: child.question_text, sort_order: child.sort_order },
-              expected_sort_order: expected_sort_order
+              expected_sort_order: expected_sort_order,
+              questions_between: questions_between_children.map { |q| { id: q.id, text: q.question_text, sort_order: q.sort_order } }
             }
           end
         end
