@@ -62,32 +62,32 @@
     }
   }
 
-  // Custom drag-and-drop styles
+  // Custom drag-and-drop styles - green theme
   &.drop-zone-active {
-    background-color: #f0f8ff !important;
-    border: 2px dashed #007bff !important;
+    background-color: #f8fff9 !important;
+    border: 2px dashed #28a745 !important;
     cursor: pointer;
     
     &::before {
-      background-color: #007bff !important;
+      background-color: #28a745 !important;
     }
     
     &:hover {
-      background-color: #e3f2fd !important;
-      border-color: #0056b3 !important;
+      background-color: #d4edda !important;
+      border-color: #1e7e34 !important;
       
       &::before {
-        background-color: #0056b3 !important;
+        background-color: #1e7e34 !important;
       }
     }
   }
   
   &.drop-zone-highlighted {
-    background-color: #e3f2fd !important;
-    border-color: #0056b3 !important;
+    background-color: #c3e6cb !important;
+    border-color: #1e7e34 !important;
     
     &::before {
-      background-color: #0056b3 !important;
+      background-color: #1e7e34 !important;
     }
   }
 

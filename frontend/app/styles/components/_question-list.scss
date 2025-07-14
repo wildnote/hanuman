@@ -6,41 +6,41 @@
   opacity: 0.2;
 }
 
-// Custom sortable drop zones
+// Custom sortable drop zones - both green with different shades
 .drop-zone-active {
-  border: 2px dashed #ccc;
-  background-color: #f9f9f9;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  
-  &:hover {
-    border-color: #5a87cf;
-    background-color: #e8f4fd;
-  }
-}
-
-.drop-zone-highlighted {
-  border: 2px solid #5a87cf !important;
-  background-color: #d4edda !important;
-  transform: scale(1.02);
-}
-
-// Container drop zones for ancestry
-.container-drop-zone-active {
   border: 2px dashed #28a745;
   background-color: #f8fff9;
   cursor: pointer;
   transition: all 0.2s ease;
   
   &:hover {
-    border-color: #28a745;
+    border-color: #1e7e34;
     background-color: #d4edda;
   }
 }
 
-.container-drop-zone-highlighted {
-  border: 2px solid #28a745 !important;
+.drop-zone-highlighted {
+  border: 2px solid #1e7e34 !important;
   background-color: #c3e6cb !important;
+  transform: scale(1.02);
+}
+
+// Container drop zones for ancestry - darker green
+.container-drop-zone-active {
+  border: 2px dashed #0d4a1a;
+  background-color: #d4e8d4;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: #0a3a15;
+    background-color: #a8c8a8;
+  }
+}
+
+.container-drop-zone-highlighted {
+  border: 2px solid #0a3a15 !important;
+  background-color: #8fb88f !important;
   transform: scale(1.02);
 }
 
