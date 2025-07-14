@@ -1634,28 +1634,17 @@ export default Component.extend({
           // Find the container's position in the reordered array
           const containerPosition = arrayToUse.findIndex((q) => q.get('id') === container.get('id'));
 
-          // Insert all descendants right after the container
-          allDescendants.forEach((descendant, index) => {
+          // Insert descendants in the order of their sort orders to preserve hierarchical structure
+          const sortedDescendantsForInsertion = allDescendants.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
+          sortedDescendantsForInsertion.forEach((descendant, index) => {
             const insertIndex = containerPosition + 1 + index;
             arrayToUse.insertAt(insertIndex, descendant);
           });
 
           console.log('[CUSTOM DRAG] Reordered arrayToUse - descendants now positioned after container');
 
-          // Force all items in the reordered array to have sort orders that match their positions
-          const properlyOrderedQuestions = arrayToUse.map((item, index) => {
-            const newSortOrder = index + 1;
-            console.log(
-              '[CUSTOM DRAG] Forcing sort order for',
-              item.get('questionText'),
-              'from',
-              item.get('sortOrder'),
-              'to',
-              newSortOrder
-            );
-            item.set('sortOrder', newSortOrder);
-            return item;
-          });
+          // Use the arrayToUse directly since we've already set the correct sort orders
+          const properlyOrderedQuestions = arrayToUse;
 
           // Debug: Log the items array being used for final update
           console.log(
