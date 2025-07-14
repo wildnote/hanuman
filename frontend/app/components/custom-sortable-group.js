@@ -645,7 +645,7 @@ export default Component.extend({
       
       // Calculate the correct sort order based on where the question will actually be placed
       const sortItems = this.get('items');
-      const sortTargetIndex = this.calculateAdjustedTargetIndex(container, sortItems, 'below');
+      const sortTargetIndex = this.calculateAdjustedTargetIndex(container, sortItems, 'above');
       const newSortOrder = sortTargetIndex + 1; // Convert 0-indexed array position to 1-indexed sort order
       question.set('sortOrder', newSortOrder);
       console.log('[CUSTOM DRAG] Set sort order to:', newSortOrder, 'based on target index:', sortTargetIndex);
