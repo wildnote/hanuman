@@ -122,48 +122,20 @@ export default Component.extend({
         return;
       }
 
-      // Check two-level container rule for moving into containers
-      // Determine current container level of selected item
-      let selectedContainerLevel = 0;
-      if (selectedParentId) {
-        const selectedParent = items.findBy('id', selectedParentId);
-        if (selectedParent && selectedParent.get('parentId')) {
-          selectedContainerLevel = 2; // Inside a container that's inside another container
-        } else {
-          selectedContainerLevel = 1; // Inside a top-level container
-        }
-      }
-
-      // Determine target container level
-      let targetContainerLevel = 0;
-      if (containerParentId) {
-        targetContainerLevel = 2; // Container is inside another container
-      } else {
-        targetContainerLevel = 1; // Top-level container
-      }
-
+      // Log the move attempt for debugging
       console.log(
-        '[CUSTOM DRAG] Container levels - selected:',
-        selectedContainerLevel,
-        'target:',
-        targetContainerLevel
+        '[CUSTOM DRAG] Attempting to move:',
+        selectedItem.get('questionText'),
+        'into container:',
+        containerQuestion.get('questionText')
       );
 
-      // Check if this move would violate the two-level rule
-      if (selectedContainerLevel === 2 && targetContainerLevel === 2) {
-        // Moving from Level 2 to Level 2 - check if they're in the same Level 1 container
-        const selectedLevel1Container = items.findBy('id', selectedParentId);
-        const targetLevel1Container = items.findBy('id', containerParentId);
-
-        if (
-          selectedLevel1Container &&
-          targetLevel1Container &&
-          selectedLevel1Container.get('id') !== targetLevel1Container.get('id')
-        ) {
-          console.log('[CUSTOM DRAG] Cannot move from Level 2 to Level 2 in different Level 1 containers');
-          // Show error message or prevent the move
-          return;
-        }
+      // Use the same validation logic as the dropzone creation
+      const canPlaceInside = this.canPlaceInside(selectedItem, containerQuestion, items);
+      
+      if (!canPlaceInside) {
+        console.log('[CUSTOM DRAG] Cannot place inside this container based on nesting rules');
+        return;
       }
 
       // Show placement options modal directly
@@ -1854,117 +1826,27 @@ export default Component.extend({
           let shouldShowContainerDropZone = false;
           let shouldShowRegularDropZone = false;
 
-          // Check if selected item is a container with child containers
+          // Check if selected item is a container (needed for some logic)
           const isSelectedContainer = selectedItem.get('isARepeater') || selectedItem.get('isContainer');
-          let selectedHasChildContainers = false;
-          if (isSelectedContainer) {
-            const selectedContainerId = selectedItem.get('id');
-            const selectedChildren = this.get('items').filter((item) => item.get('parentId') === selectedContainerId);
-            selectedHasChildContainers = selectedChildren.some(
-              (child) => child.get('isARepeater') || child.get('isContainer')
-            );
-          }
 
-          // Check if selected item is a child container (inside another container)
-          const isSelectedChildContainer = isSelectedContainer && selectedParentId !== null;
-
-          // Determine selected item's container level
-          let selectedContainerLevel = 0;
-          if (selectedParentId) {
-            const selectedParent = this.get('items').findBy('id', selectedParentId);
-            if (selectedParent && selectedParent.get('parentId')) {
-              selectedContainerLevel = 2; // Inside a container that's inside another container
-            } else {
-              selectedContainerLevel = 1; // Inside a top-level container
-            }
-          }
-
-          // Determine target question's container level
-          let targetContainerLevel = 0;
-          if (questionParentId) {
-            const targetParent = this.get('items').findBy('id', questionParentId);
-            if (targetParent && targetParent.get('parentId')) {
-              targetContainerLevel = 2; // Inside a container that's inside another container
-            } else {
-              targetContainerLevel = 1; // Inside a top-level container
-            }
-          }
-
-          // Handle child container logic first (regardless of where the target item is)
-          if (isSelectedChildContainer) {
-            // Allow repositioning within the same container
-            if (isInSameContainer) {
+          // NEW LOGIC: Use the canPlaceInside function to determine drop zone types
+          if (question) {
+            // Check if we can place inside this container
+            const canPlaceInside = this.canPlaceInside(selectedItem, question, this.get('items'));
+            
+            if (canPlaceInside) {
+              // Green drop zone - "Inside" option is available
+              shouldShowContainerDropZone = true;
+            } else if (isContainer) {
+              // Blue drop zone for containers when "Inside" is not available
               shouldShowRegularDropZone = true;
-            }
-            // Allow moving to top level (both containers and questions with no parentId)
-            else if (!questionParentId) {
-              if (isContainer) {
-                // Show container drop zone for top-level containers
-                shouldShowContainerDropZone = true;
-              }
-              // Always show regular drop zone for top-level items (both containers and questions)
-              shouldShowRegularDropZone = true;
-            }
-          } else if (isSelectedInsideContainer) {
-            // Selected item is inside a container (but not a child container)
-            if (isContainer) {
-              if (selectedHasChildContainers) {
-                // If selected container has child containers, only allow same-level moves
-                // Only allow container-to-container moves at the same level
-                if (selectedContainerLevel === targetContainerLevel) {
-                  shouldShowContainerDropZone = true;
-                }
-              } else {
-                // Check two-level container rule for container-to-container moves
-                if (selectedContainerLevel === 2 && targetContainerLevel === 2) {
-                  // Moving from Level 2 to Level 2 - only allow if they're in the same Level 1 container
-                  const selectedLevel1Container = this.get('items').findBy('id', selectedParentId);
-                  const targetLevel1Container = this.get('items').findBy('id', questionParentId);
-
-                  if (
-                    selectedLevel1Container &&
-                    targetLevel1Container &&
-                    selectedLevel1Container.get('id') === targetLevel1Container.get('id')
-                  ) {
-                    shouldShowContainerDropZone = true;
-                  }
-                } else {
-                  // Other container-to-container moves are allowed
-                  shouldShowContainerDropZone = true;
-                }
-              }
             } else if (isInSameContainer) {
-              // Allow repositioning within the same container
+              // Blue drop zone for repositioning within same container
               shouldShowRegularDropZone = true;
             } else if (!questionParentId) {
-              // Allow moving to top level (questions with no parentId)
+              // Blue drop zone for moving to top level
               shouldShowRegularDropZone = true;
             }
-            // Don't show regular drop zones for questions inside containers when selected item is in container
-          } else {
-            // Selected item is at top level
-            if (isContainer) {
-              // If selected container has child containers, only allow top-level moves
-              if (selectedHasChildContainers) {
-                // Only allow moving to top level (no container drop zones)
-                if (!questionParentId) {
-                  shouldShowRegularDropZone = true;
-                }
-              } else {
-                // Always show container drop zone for containers (allows placement modal with options)
-                if (targetContainerLevel === 2) {
-                  // Moving into a Level 2 container - this is allowed from top level
-                  shouldShowContainerDropZone = true;
-                } else {
-                  // Moving into a Level 1 container - this is always allowed from top level
-                  shouldShowContainerDropZone = true;
-                }
-              }
-            } else if (!questionParentId) {
-              // Only allow repositioning at top level (questions with no parentId)
-              shouldShowRegularDropZone = true;
-            }
-            // Don't show regular drop zones for questions inside containers when selected item is at top level
           }
 
           if (shouldShowContainerDropZone) {
@@ -2126,6 +2008,67 @@ export default Component.extend({
     });
 
     return descendants;
+  },
+
+  // Helper method to determine if "Inside" placement is valid for the selected item into the target container
+  canPlaceInside(selectedItem, targetContainer, items) {
+    const selectedParentId = selectedItem.get('parentId');
+    const targetParentId = targetContainer.get('parentId');
+    const isSelectedContainer = selectedItem.get('isARepeater') || selectedItem.get('isContainer');
+    const isTargetContainer = targetContainer.get('isARepeater') || targetContainer.get('isContainer');
+
+    // Target must be a container to place inside
+    if (!isTargetContainer) {
+      return false;
+    }
+
+    // Determine levels
+    const selectedParent = selectedParentId ? this.get('items').findBy('id', selectedParentId) : null;
+    const targetParent = targetParentId ? this.get('items').findBy('id', targetParentId) : null;
+    const selectedLevel = selectedParentId ? (selectedParent && selectedParent.get('parentId') ? 2 : 1) : 0;
+    const targetLevel = targetParentId ? (targetParent && targetParent.get('parentId') ? 2 : 1) : 0;
+
+    // Rule 1: Top level question - can be placed inside any container
+    if (!isSelectedContainer && selectedLevel === 0) {
+      return true;
+    }
+
+    // Rule 2: Top level container - can only be placed inside top level containers
+    if (isSelectedContainer && selectedLevel === 0) {
+      return targetLevel === 0; // Only top level containers
+    }
+
+    // Rule 3: Second level container - can only be placed within its parent container or at top level
+    if (isSelectedContainer && selectedLevel === 1) {
+      // Can be placed inside its parent container (same parent)
+      if (selectedParentId === targetContainer.get('id')) {
+        return true;
+      }
+      // Can be placed at top level (target is top level)
+      if (targetLevel === 0) {
+        return true;
+      }
+      return false; // Cannot be placed inside other containers
+    }
+
+    // Rule 4: Question inside a container - can only be placed within its container, parent container, or top level
+    if (!isSelectedContainer && selectedLevel > 0) {
+      // Can be placed inside its current container (same parent)
+      if (selectedParentId === targetContainer.get('id')) {
+        return true;
+      }
+      // Can be placed inside its parent container (if it has one)
+      if (selectedParentId && selectedParentId === targetContainer.get('id')) {
+        return true;
+      }
+      // Can be placed at top level
+      if (targetLevel === 0) {
+        return true;
+      }
+      return false; // Cannot be placed inside different containers (would be two-step move)
+    }
+
+    return false;
   },
 
   removeChildrenHighlight() {
