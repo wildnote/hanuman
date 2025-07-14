@@ -1847,15 +1847,15 @@ export default Component.extend({
               if (canPlaceInside) {
                 // Green drop zone - "Inside" option is available
                 shouldShowContainerDropZone = true;
-              } else if (isContainer) {
-                // Blue drop zone for containers when "Inside" is not available
-                shouldShowRegularDropZone = true;
-              } else if (isInSameContainer) {
-                // Blue drop zone for repositioning within same container
-                shouldShowRegularDropZone = true;
-              } else if (!questionParentId) {
-                // Blue drop zone for moving to top level
-                shouldShowRegularDropZone = true;
+              } else {
+                // Check if we can place relative to this item (above/below)
+                const canPlaceRelative = this.canPlaceItemRelativeTo(selectedItem, question, this.get('items'));
+                
+                if (canPlaceRelative) {
+                  // Green drop zone for above/below placement
+                  shouldShowRegularDropZone = true;
+                }
+                // If canPlaceRelative is false, no dropzone will be shown
               }
             }
 
@@ -2575,5 +2575,38 @@ export default Component.extend({
         }
       }, 300);
     }, 4000);
+  },
+
+  // Helper method to determine if an item can be placed above/below a target item
+  canPlaceItemRelativeTo(selectedItem, targetItem, items) {
+    const selectedParentId = selectedItem.get('parentId');
+    const targetParentId = targetItem.get('parentId');
+    const isSelectedContainer = selectedItem.get('isARepeater') || selectedItem.get('isContainer');
+    const isTargetContainer = targetItem.get('isARepeater') || targetItem.get('isContainer');
+    
+    // If target is a container, we might want to insert into it instead of placing relative to it
+    if (isTargetContainer) {
+      return false; // Let the "Inside" logic handle container placement
+    }
+
+    // Top-level items can be placed relative to any top-level item
+    if (!selectedParentId) {
+      return !targetParentId; // Can only place relative to other top-level items
+    }
+
+    // Items inside containers can be placed relative to:
+    // 1. Top-level items (to move to top level)
+    // 2. Items in the same container (to reposition within container)
+    if (selectedParentId) {
+      if (!targetParentId) {
+        return true; // Can move to top level
+      }
+      if (selectedParentId === targetParentId) {
+        return true; // Can reposition within same container
+      }
+      return false; // Cannot move relative to items in other containers
+    }
+
+    return false;
   }
 });
