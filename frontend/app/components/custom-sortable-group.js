@@ -2729,7 +2729,17 @@ export default Component.extend({
       return true;
     }
     
-    // If target is a container, we might want to insert into it instead of placing relative to it
+    // Handle container-to-container relative placement for nested containers
+    if (isSelectedContainer && isTargetContainer) {
+      // If both are containers, check if they are siblings (same parent)
+      if (selectedParentId === targetParentId) {
+        return true; // Allow placing above/below sibling containers
+      }
+      // If they have different parents, don't allow relative placement
+      return false;
+    }
+    
+    // If target is a container but selected is not, we might want to insert into it instead of placing relative to it
     if (isTargetContainer) {
       return false; // Let the "Inside" logic handle container placement
     }
