@@ -957,7 +957,10 @@ export default Component.extend({
               // If the dragged question's current index is less than the target, subtract 1 to account for removal
               const currentIndex = freshItems.indexOf(question);
               let finalTargetIndex = freshTargetIndex;
-              if (currentIndex < freshTargetIndex) {
+              
+              // NEW: Only apply adjustment if NOT moving to the very bottom
+              const isMovingToBottom = freshTargetIndex >= freshItems.length;
+              if (currentIndex < freshTargetIndex && !isMovingToBottom) {
                 finalTargetIndex = freshTargetIndex - 1;
               }
               console.log('[CUSTOM DRAG] Moving question to fresh target position:', finalTargetIndex);
