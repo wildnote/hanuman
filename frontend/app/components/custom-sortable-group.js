@@ -740,8 +740,31 @@ export default Component.extend({
         }
         
         if (lastDescendantIndex !== -1) {
-          targetIndex = lastDescendantIndex + 1; // Place after the last descendant
-          console.log('[CUSTOM DRAG] Found last descendant at index', lastDescendantIndex, 'updating targetIndex to:', targetIndex);
+          // Place after the last descendant
+          targetIndex = lastDescendantIndex + 1;
+          
+          // BUT: Check if there are other questions in the same section after this position
+          // If so, we need to place BEFORE those questions, not after them
+          const containerParentId = container.get('parentId');
+          const questionsInSameSection = items.filter(item => item.get('parentId') === containerParentId);
+          
+          // Find the next section question that comes after our target position
+          let nextSectionQuestionIndex = -1;
+          for (let i = targetIndex; i < items.length; i++) {
+            const item = items[i];
+            if (item.get('parentId') === containerParentId && item.get('id') !== question.get('id')) {
+              nextSectionQuestionIndex = i;
+              break;
+            }
+          }
+          
+          if (nextSectionQuestionIndex !== -1) {
+            // There's a section question after our target - place before it
+            targetIndex = nextSectionQuestionIndex;
+            console.log('[CUSTOM DRAG] Found section question after target, placing before it at index:', targetIndex);
+          } else {
+            console.log('[CUSTOM DRAG] No section questions after target, placing at index:', targetIndex);
+          }
         }
       } else {
         // No descendants, place right after the container
@@ -791,22 +814,37 @@ export default Component.extend({
 
       question.set('parentId', containerParentId);
       
-      // Calculate the correct sort order within the parent section's range
+      // Calculate the correct sort order based on where the question will actually be placed
       const parentSectionId = containerParentId;
       const questionsInSameSection = items.filter(item => item.get('parentId') === parentSectionId);
       
-      // Find the maximum sort order in the section
-      let maxSortOrder = 0;
-      questionsInSameSection.forEach(item => {
-        if (item.get('sortOrder') > maxSortOrder) {
-          maxSortOrder = item.get('sortOrder');
-        }
-      });
+      // Find the container's sort order
+      const containerSortOrder = container.get('sortOrder');
       
-      // Set sort order to be after the last item in the section
-      const newSortOrder = maxSortOrder + 1;
+      // Find questions that come after the container in the same section
+      const questionsAfterContainer = questionsInSameSection.filter(item => 
+        item.get('sortOrder') > containerSortOrder && item.get('id') !== question.get('id')
+      );
+      
+      let newSortOrder;
+      if (questionsAfterContainer.length > 0) {
+        // There are questions after the container - place between container and next question
+        const nextQuestion = questionsAfterContainer.reduce((min, item) => 
+          item.get('sortOrder') < min.get('sortOrder') ? item : min
+        );
+        const nextQuestionSortOrder = nextQuestion.get('sortOrder');
+        
+        // Place between container and next question
+        newSortOrder = containerSortOrder + (nextQuestionSortOrder - containerSortOrder) / 2;
+        console.log('[CUSTOM DRAG] Questions after container found, placing between container (', containerSortOrder, ') and next question (', nextQuestionSortOrder, ') at sort order:', newSortOrder);
+      } else {
+        // No questions after container - place after the container
+        newSortOrder = containerSortOrder + 1;
+        console.log('[CUSTOM DRAG] No questions after container, placing after container (', containerSortOrder, ') at sort order:', newSortOrder);
+      }
+      
       question.set('sortOrder', newSortOrder);
-      console.log('[CUSTOM DRAG] Section max sort order:', maxSortOrder, 'setting question sort order to:', newSortOrder);
+      console.log('[CUSTOM DRAG] Final sort order set to:', newSortOrder);
 
       // Save the question to persist the ancestry change
       question
