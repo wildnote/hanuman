@@ -744,7 +744,10 @@ export default Component.extend({
                   items.removeAt(currentIndex);
                   // Adjust target index if we removed an item before the target position
                   let adjustedTargetIndex = targetIndex;
-                  if (currentIndex < targetIndex) {
+                  
+                  // NEW: Only apply adjustment if NOT moving to the very bottom
+                  const isMovingToBottom = targetIndex >= items.length;
+                  if (currentIndex < targetIndex && !isMovingToBottom) {
                     adjustedTargetIndex = targetIndex - 1;
                     console.log(
                       '[CUSTOM DRAG] Adjusted target index from',
@@ -865,6 +868,7 @@ export default Component.extend({
                       'due to removal'
                     );
                   }
+                  console.log('[CUSTOM DRAG] About to insert at index:', adjustedTargetIndex, 'array length:', freshItems.length);
                   freshItems.insertAt(adjustedTargetIndex, question);
                 }
 
@@ -975,7 +979,22 @@ export default Component.extend({
                   freshItems.removeAt(currentIndex);
                   // Adjust target index if we removed an item before the target position
                   let adjustedTargetIndex = finalTargetIndex;
-                  if (currentIndex < finalTargetIndex) {
+                  // NEW: Check if target question is the last item in its container or top level
+                  const targetParentId = targetQuestion.get('parentId');
+                  let isMovingToBottom;
+                  
+                  if (targetParentId === null) {
+                    // For top-level items (parentId is null)
+                    const topLevelItems = freshItems.filter(item => item.get('parentId') === null);
+                    const lastTopLevelItem = topLevelItems[topLevelItems.length - 1];
+                    isMovingToBottom = targetQuestion.get('id') === lastTopLevelItem.get('id');
+                  } else {
+                    // For items inside containers
+                    const itemsInSameContainer = freshItems.filter(item => item.get('parentId') === targetParentId);
+                    const lastItemInContainer = itemsInSameContainer[itemsInSameContainer.length - 1];
+                    isMovingToBottom = targetQuestion.get('id') === lastItemInContainer.get('id');
+                  }
+                  console.log('[CUSTOM DRAG] DEBUG - finalTargetIndex:', finalTargetIndex, 'freshItems.length:', freshItems.length, 'isMovingToBottom:', isMovingToBottom, 'targetQuestion index:', freshItems.indexOf(targetQuestion), 'targetQuestion sortOrder:', targetQuestion.get('sortOrder'));                  if (currentIndex < finalTargetIndex && !isMovingToBottom) {
                     adjustedTargetIndex = finalTargetIndex - 1;
                     console.log(
                       '[CUSTOM DRAG] Adjusted target index from',
@@ -985,6 +1004,13 @@ export default Component.extend({
                       'due to removal'
                     );
                   }
+                  
+                  // NEW: Clamp index to array length to prevent out of bounds
+                  if (adjustedTargetIndex >= freshItems.length) {
+                    adjustedTargetIndex = freshItems.length;
+                    console.log('[CUSTOM DRAG] Clamped target index to array length:', adjustedTargetIndex);
+                  }
+                  console.log('[CUSTOM DRAG] About to insert at index:', adjustedTargetIndex, 'array length:', freshItems.length);
                   freshItems.insertAt(adjustedTargetIndex, question);
                 }
 
