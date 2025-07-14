@@ -644,36 +644,41 @@ export default Component.extend({
       const items = this.get('items');
       const containerIndex = items.indexOf(container);
 
-      // Find the last child of the container to place after it
+      // Find the last descendant of the container to place after it
       let targetIndex = containerIndex + 1;
       const containerId = container.get('id');
 
-      // Look for all children of this container and find the last one
+      // Get all descendants of this container (including nested children)
+      const allDescendants = this.getAllDescendants(containerId, items);
       console.log(
-        '[CUSTOM DRAG] Looking for children of container:',
+        '[CUSTOM DRAG] Looking for descendants of container:',
         container.get('questionText'),
         'with ID:',
-        containerId
+        containerId,
+        'Found',
+        allDescendants.length,
+        'descendants'
       );
-      for (let i = containerIndex + 1; i < items.length; i++) {
-        const item = items.objectAt(i);
-        console.log(
-          '[CUSTOM DRAG] Checking item at index',
-          i,
-          ':',
-          item.get('questionText'),
-          'parentId:',
-          item.get('parentId')
-        );
 
-        if (item.get('parentId') === containerId) {
-          targetIndex = i + 1; // Place after this child
-          console.log('[CUSTOM DRAG] Found child, updating targetIndex to:', targetIndex);
-        } else if (!item.get('parentId')) {
-          // We've reached a top-level item, stop looking
-          console.log('[CUSTOM DRAG] Reached top-level item, stopping search');
-          break;
+      if (allDescendants.length > 0) {
+        // Find the last descendant in the items array
+        let lastDescendantIndex = -1;
+        for (let i = 0; i < allDescendants.length; i++) {
+          const descendant = allDescendants[i];
+          const descendantIndex = items.indexOf(descendant);
+          if (descendantIndex > lastDescendantIndex) {
+            lastDescendantIndex = descendantIndex;
+          }
         }
+        
+        if (lastDescendantIndex !== -1) {
+          targetIndex = lastDescendantIndex + 1; // Place after the last descendant
+          console.log('[CUSTOM DRAG] Found last descendant at index', lastDescendantIndex, 'updating targetIndex to:', targetIndex);
+        }
+      } else {
+        // No descendants, place right after the container
+        targetIndex = containerIndex + 1;
+        console.log('[CUSTOM DRAG] No descendants found, placing right after container at index:', targetIndex);
       }
 
       console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for container at index:', containerIndex);
