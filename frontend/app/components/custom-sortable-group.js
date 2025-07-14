@@ -646,7 +646,21 @@ export default Component.extend({
       // Calculate the correct sort order based on where the question will actually be placed
       const sortItems = this.get('items');
       const sortTargetIndex = this.calculateAdjustedTargetIndex(container, sortItems, 'above');
-      const newSortOrder = sortTargetIndex + 1; // Convert 0-indexed array position to 1-indexed sort order
+      let newSortOrder;
+      
+      if (sortTargetIndex === 0) {
+        // Moving to first position - use a sort order less than the target's current sort order
+        const targetSortOrder = container.get('sortOrder');
+        newSortOrder = Math.max(1, targetSortOrder - 1);
+        
+        // Also update the target container's sort order to push it down
+        container.set('sortOrder', targetSortOrder + 1);
+        container.save();
+      } else {
+        // Normal case - convert 0-indexed array position to 1-indexed sort order
+        newSortOrder = sortTargetIndex + 1;
+      }
+      
       question.set('sortOrder', newSortOrder);
       console.log('[CUSTOM DRAG] Set sort order to:', newSortOrder, 'based on target index:', sortTargetIndex);
 
