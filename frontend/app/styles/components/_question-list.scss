@@ -229,8 +229,8 @@
   text-align: left;
   
   &:hover {
-    border-color: #5a87cf;
-    background-color: #f8f9ff;
+    border-color: #28a745;
+    background-color: #f8fff9;
   }
   
   .icon {
@@ -246,8 +246,23 @@
     line-height: 1.2;
   }
   
-  // Inside options (green theme)
+  // Inside options now use green theme (dark green)
   &.inside {
+    border-color: #1e7e34;
+    background-color: #e8f5e8;
+    
+    &:hover {
+      border-color: #155724;
+      background-color: #d4edda;
+    }
+    
+    .text {
+      color: #155724;
+    }
+  }
+  
+  // Outside options now use green theme (light green)
+  &.outside {
     border-color: #28a745;
     background-color: #f8fff9;
     
@@ -258,21 +273,6 @@
     
     .text {
       color: #155724;
-    }
-  }
-  
-  // Outside options (blue theme)
-  &.outside {
-    border-color: #007bff;
-    background-color: #f8f9ff;
-    
-    &:hover {
-      border-color: #0056b3;
-      background-color: #e8f2ff;
-    }
-    
-    .text {
-      color: #004085;
     }
   }
 }
