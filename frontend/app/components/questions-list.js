@@ -178,6 +178,10 @@ export default Component.extend({
         } else {
           alert('Form Integrity Check Passed - No issues found!');
         }
+        
+        // Refresh the survey template data after alert is dismissed
+        yield surveyTemplate.reload();
+        yield this.get('surveyTemplate.questions').forEach(question => question.reload());
       }
     } catch (e) {
       this.get('notify').alert('There was an error checking the template');
