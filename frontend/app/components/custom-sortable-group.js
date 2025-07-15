@@ -931,7 +931,30 @@ export default Component.extend({
                   if (adjustedTargetIndex >= 0 && adjustedTargetIndex <= freshItems.length) {
                     freshItems.insertAt(adjustedTargetIndex, question);
                   } else {
-                    console.error('[CUSTOM DRAG] Invalid adjustedTargetIndex for insertAt:', adjustedTargetIndex, 'array length:', freshItems.length);
+                    // Log error to Honeybadger - this indicates a logic issue in target index calculation
+                    const errorInfo = {
+                      message: 'Target index calculation error in placeAboveQuestion',
+                      details: {
+                        adjustedTargetIndex,
+                        freshItemsLength: freshItems.length,
+                        finalTargetIndex,
+                        currentIndex,
+                        questionId: question.get('id'),
+                        questionText: question.get('questionText'),
+                        targetQuestionId: targetQuestion.get('id'),
+                        targetQuestionText: targetQuestion.get('questionText'),
+                        targetParentId: targetQuestion.get('parentId')
+                      }
+                    };
+                    console.error('[CUSTOM DRAG] Target index calculation error:', errorInfo);
+                    
+                    // Send to Honeybadger if available
+                    if (window.Honeybadger) {
+                      window.Honeybadger.notify(new Error('Target index calculation error in placeAboveQuestion'), {
+                        context: errorInfo
+                      });
+                    }
+                    
                     // Fallback: insert at the end
                     freshItems.pushObject(question);
                   }
@@ -1072,6 +1095,31 @@ export default Component.extend({
                   
                   // NEW: Clamp index to array length to prevent out of bounds
                   if (adjustedTargetIndex >= freshItems.length) {
+                    // Log error to Honeybadger - this indicates a logic issue in target index calculation
+                    const errorInfo = {
+                      message: 'Target index calculation error in placeBelowQuestion',
+                      details: {
+                        adjustedTargetIndex,
+                        freshItemsLength: freshItems.length,
+                        finalTargetIndex,
+                        currentIndex,
+                        questionId: question.get('id'),
+                        questionText: question.get('questionText'),
+                        targetQuestionId: targetQuestion.get('id'),
+                        targetQuestionText: targetQuestion.get('questionText'),
+                        isMovingToBottom,
+                        targetParentId: targetQuestion.get('parentId')
+                      }
+                    };
+                    console.error('[CUSTOM DRAG] Target index calculation error:', errorInfo);
+                    
+                    // Send to Honeybadger if available
+                    if (window.Honeybadger) {
+                      window.Honeybadger.notify(new Error('Target index calculation error in placeBelowQuestion'), {
+                        context: errorInfo
+                      });
+                    }
+                    
                     adjustedTargetIndex = freshItems.length;
                     console.log('[CUSTOM DRAG] Clamped target index to array length:', adjustedTargetIndex);
                   }
