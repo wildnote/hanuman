@@ -33,7 +33,7 @@ module Hanuman
 
     def check_template
       survey_template = SurveyTemplate.find(params[:id])
-      errors = survey_template.check_structure_and_rules
+      errors = survey_template.check_form_integrity
       render json: errors.to_json
     end
 
@@ -47,15 +47,28 @@ module Hanuman
     end
 
     def resort_questions
-      survey_template = SurveyTemplate.find(params[:id])
-      single_update_statement = {}
+      Rails.logger.info "=== RESORT_QUESTIONS DEBUG ==="
+      Rails.logger.info "Params: #{params.inspect}"
+      Rails.logger.info "IDs: #{params[:ids].inspect}"
+      
       if params[:ids].present?
         params[:ids].each_with_index do |id, i|
-          single_update_statement[id] = { sort_order: i + 1 }
+          new_sort_order = i + 1
+          Rails.logger.info "Updating question #{id} to sort_order #{new_sort_order}"
+          
+          # Use find and save to ensure delta generation works
+          question = Question.find(id)
+          if question.sort_order != new_sort_order
+            question.sort_order = new_sort_order
+            question.save!
+          end
+          
+          # Verify the update
+          Rails.logger.info "Question #{id} sort_order after update: #{question.sort_order}"
         end
-        Question.update(single_update_statement.keys, single_update_statement.values)
       end
-      respond_with survey_template
+      
+      head :no_content
     end
 
     def available_tags

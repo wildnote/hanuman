@@ -1,4 +1,6 @@
 .li-question {
+  cursor: default;
+  
   &.highlighted {
     background-color: #fff2ac;
     background-image: linear-gradient(to right, #ffe359 0%, #fff2ac 100%);
@@ -18,19 +20,74 @@
   &.is-dragging {
     background-color: white;
     z-index: 9999999999;
+    opacity: 0.8;
+    transform: rotate(5deg);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
   }
 
   &.dragging-coming-active {
-    background-color: #466873;
-    color: white;
+    background-color: #466873 !important;
+    color: white !important;
+    border: 2px dashed #ff0000 !important;
     .draggable-target-message {
-      display: inline;
+      display: inline !important;
     }
   }
   &.dragging-coming-active.dragging-over {
     background-color: #b9b508 !important;
+    border: 2px solid #ff0000 !important;
     .draggable-target-message {
       background-color: #b15959 !important;
+    }
+  }
+
+  // Add drop zone indicators
+  &.sortable-item {
+    position: relative;
+    cursor: default;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background-color: transparent;
+      transition: background-color 0.2s ease;
+    }
+    
+    &.dragging-coming-active::before {
+      background-color: #ff0000;
+    }
+  }
+
+  // Custom drag-and-drop styles - green theme
+  &.drop-zone-active {
+    background-color: #f8fff9 !important;
+    border: 2px dashed #28a745 !important;
+    cursor: pointer;
+    
+    &::before {
+      background-color: #28a745 !important;
+    }
+    
+    &:hover {
+      background-color: #d4edda !important;
+      border-color: #1e7e34 !important;
+      
+      &::before {
+        background-color: #1e7e34 !important;
+      }
+    }
+  }
+  
+  &.drop-zone-highlighted {
+    background-color: #c3e6cb !important;
+    border-color: #1e7e34 !important;
+    
+    &::before {
+      background-color: #1e7e34 !important;
     }
   }
 
@@ -44,17 +101,72 @@
     color: #9c9c9c;
   }
 
-  .glyphicons-sunglasses,
+  // Improved icon styling
+  .icon-spacing {
+    margin-right: 8px;
+    font-size: 16px;
+    color: #666;
+    transition: color 0.2s ease, transform 0.1s ease;
+    display: inline-block;
+    vertical-align: middle;
+    
+    &:hover {
+      color: #333;
+      transform: scale(1.1);
+    }
+    
+    &.icon-disabled {
+      color: #ccc;
+      cursor: not-allowed;
+      
+      &:hover {
+        color: #ccc;
+        transform: none;
+      }
+    }
+  }
+
+  .glyphicons-move {
+    color: rgb(143, 98, 71);
+    cursor: default;
+    font-size: 16px;
+    transition: color 0.2s ease, transform 0.1s ease;
+    display: inline-block;
+    vertical-align: middle;
+    
+    &:hover {
+      color: rgba(143, 98, 71, 0.6);
+      transform: scale(1.1);
+      cursor: move;
+    }
+    
+    &.icon-disabled {
+      color: #ccc;
+      cursor: not-allowed;
+      
+      &:hover {
+        color: #ccc;
+        transform: none;
+        cursor: not-allowed;
+      }
+    }
+  }
+
   .glyphicon.glyphicon-collapse-up,
   .glyphicon.glyphicon-collapse-down {
     color: rgb(143, 98, 71) !important;
     cursor: pointer;
-    font-size: 15px;
-    margin-right: 5px;
+    font-size: 16px;
+    transition: color 0.2s ease, transform 0.1s ease;
+    display: inline-block;
+    vertical-align: middle;
+    
     &:hover {
       color: rgba(143, 98, 71, 0.6) !important;
+      transform: scale(1.1);
     }
   }
+
   .gly-spin.glyphicons-refresh {
     margin-right: 10px;
   }
@@ -70,21 +182,30 @@
     opacity: 0.9;
   }
 
-  &.has-ancestry-1 {
-    margin-left: -5px;
+  // Override Bootstrap row margin for our custom sortable items
+  // This removes the default -15px margin that Bootstrap adds
+  &.row {
+    margin-left: 0;
+    margin-right: 0;
+    cursor: default;
   }
-  &.has-ancestry-2 {
-    margin-left: 5px;
-  }
-  &.has-ancestry-3 {
-    margin-left: 15px;
-  }
-  &.has-ancestry-4 {
-    margin-left: 25px;
-  }
-  &.has-ancestry-5 {
-    margin-left: 35px;
-  }
+
+  // Old indentation system disabled - using new custom indentation
+  // &.has-ancestry-1 {
+  //   margin-left: 20px;
+  // }
+  // &.has-ancestry-2 {
+  //   margin-left: 40px;
+  // }
+  // &.has-ancestry-3 {
+  //   margin-left: 60px;
+  // }
+  // &.has-ancestry-4 {
+  //   margin-left: 80px;
+  // }
+  // &.has-ancestry-5 {
+  //   margin-left: 100px;
+  // }
   .glyphicons-sorting,
   .glyphicons-move-square {
     font-size: 14px;
@@ -98,6 +219,10 @@
   .delete-confirm {
     display: none;
     top: -50px !important;
+    
+    &.show {
+      display: block;
+    }
   }
   .preview-section {
     padding: 10px 20px 10px 20px;

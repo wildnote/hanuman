@@ -54,6 +54,8 @@ export default Component.extend({
     },
     deleteRule() {
       this.rule.destroyRecord();
+      // Clear validation errors after deleting the rule
+      this.question.get('errors').clear();
     },
     editorReady(editor) {
       editor.getSession().setUseWorker(false);

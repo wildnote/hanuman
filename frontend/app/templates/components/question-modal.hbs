@@ -74,7 +74,7 @@
                   {{#if showQuestionTypePlaceholder}}
                     <option disabled selected>Please select</option>
                   {{/if}}
-                  {{#each groupedAnswerTypes as |group|}}
+                  {{#each sortedGroupedAnswerTypes as |group|}}
                     <optgroup label={{group.value}}>
                       {{#each group.items as |answerType|}}
                         <option value={{answerType.id}} title={{answerType.name}} selected={{eq question.answerType.id answerType.id}}>{{answerType.displayName}}</option>
@@ -304,7 +304,7 @@
                         <td></td>
                         <td><b>Custom Sort Order</b></td>
                       </tr>
-                      {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction=(action 'sortAnswerChoices') enableSort=true useSwap=true}}
+                      {{#sortable-objects-tbody sortableObjectList=question.answerChoices sortEndAction=(action 'sortAnswerChoices') enableSort=true useSwap=true handle='.answer-draggable-handle'}}
                         {{#each answerChoicesToShow as |answerChoice|}}
                           {{answer-choice-row
                             content=answerChoice
@@ -410,6 +410,13 @@
             {{/each}}
           {{/liquid-unless}}
 
+          {{!-- Validation error for incomplete lookup rules --}}
+          {{#if (and hasIncompleteLookupRules question.errors.rules)}}
+            <div class="alert alert-danger" role="alert" style="margin-top: 10px;">
+              The rule needs at least one condition. Either add a condition or delete the rule.
+            </div>
+          {{/if}}
+
           <hr style="margin-top: 20px;" />
         {{/if}}
 
@@ -441,6 +448,14 @@
             {{rule-panel question=question conditionalQuestions=conditionalQuestions rule=question.visibilityRule }}
           {{/liquid-unless}}
         {{/if}}
+        
+        {{!-- Consolidated validation error for rules and conditions --}}
+        {{#if (or (and hasIncompleteVisibilityRules question.errors.rules) hasInvalidConditions)}}
+          <div class="alert alert-danger" role="alert" style="margin-top: 10px;">
+            Please fix all rule issues: ensure rules have conditions and all conditions have required answers.
+          </div>
+        {{/if}}
+        
         <hr/>
 
         {{#if (or question.isContainer question.isARepeater) }}
@@ -522,6 +537,7 @@
     </div>
 
     <hr/>
+    
     <div class="row">
       <div class="form-group">
         <div class="col-sm-12">

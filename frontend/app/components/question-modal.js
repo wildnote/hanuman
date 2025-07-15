@@ -28,69 +28,89 @@ export default Component.extend({
   sortedAnswerTypes: sort('answerTypes', 'sortTypesBy'),
   groupedAnswerTypes: groupBy('sortedAnswerTypes', 'groupType'),
 
+  // Custom order for answer type groups
+  sortedGroupedAnswerTypes: computed('groupedAnswerTypes.[]', function() {
+    const groupedAnswerTypes = this.get('groupedAnswerTypes');
+
+    return groupedAnswerTypes.sortBy('value'); // Sort alphabetically by group name
+  }),
+
   init() {
     this._super(...arguments);
-    this.setProperties({ answerChoicesPendingSave: [] });
+    this.setProperties({
+      answerChoicesPendingSave: [],
+      hasInvalidConditions: false
+    });
   },
+
+  filteredAnswerTypes: computed('answerTypes', function() {
+    const answerTypes = this.get('answerTypes');
+    if (this.get('isSuperUser')) {
+      return answerTypes;
+    }
+    return answerTypes.filter((answerType) => {
+      return !answerType.get('name').includes('taxon');
+    });
+  }),
 
   didInsertElement() {
     this._super(...arguments);
-    
+
     run.scheduleOnce('afterRender', this, function() {
       this.get('remodal').open('question-modal');
-      
+
       // Function to initialize popovers when content is ready
       const initializePopovers = () => {
         // Check for popover elements
         const $popovers = $(this.element).find('.bootstrap-popover');
-        
+
         // Also check in the entire document for popovers that might be in the modal
         const $allPopovers = $('.bootstrap-popover');
-        
+
         // Check if the modal content is in a different location
         const $modalContent = $('.remodal-wrapper, .remodal, [data-remodal-id="question-modal"]');
-        
+
         // Check if the modal is actually visible/open
-        const $visibleModal = $('.remodal.remodal-is-opened, .remodal.remodal-is-visible');
-        
+        const $visibleModal = $('.remodal.remodal-is-opened, .remodal.remodal-visible');
+
         // Use visible modal content if available, otherwise use component element
         const $targetElement = $visibleModal.length > 0 ? $visibleModal : $(this.element);
         const $targetPopovers = $targetElement.find('.bootstrap-popover');
-        
+
         if ($targetPopovers.length === 0) {
           this.retryCount = (this.retryCount || 0) + 1;
-          
+
           // Limit retries to prevent infinite loop
           if (this.retryCount > 50) {
             return;
           }
-          
+
           setTimeout(() => {
             initializePopovers.call(this);
           }, 100);
           return;
         }
-        
+
         // Use the target popovers instead of the original ones
         const $finalPopovers = $targetPopovers;
-        
+
         const $dataTogglePopovers = $targetElement.find('[data-toggle="popover"]');
-        
+
         // Try to initialize popovers
         try {
           $finalPopovers.popover({
             container: 'body',
             html: true
           });
-          
+
           // Fix z-index issue by setting higher z-index for popovers when they're shown
           $finalPopovers.on('shown.bs.popover', function() {
             const $popover = $('.popover').last(); // Get the most recently shown popover
-            const $modal = $('.remodal.remodal-is-opened, .remodal.remodal-is-visible');
+            const $modal = $('.remodal.remodal-is-opened, .remodal.remodal-visible');
             const modalZIndex = parseInt($modal.css('z-index')) || 0;
             const newZIndex = Math.max(modalZIndex + 10000, 999999);
             $popover.css('z-index', newZIndex);
-            
+
             // Add scrollable content for tall popovers
             const $content = $popover.find('.popover-content');
             if ($content.height() > 300) {
@@ -101,20 +121,20 @@ export default Component.extend({
               });
             }
           });
-          
+
           $dataTogglePopovers.popover({
             container: 'body',
             html: true
           });
-          
+
           // Fix z-index issue for data-toggle popovers too
           $dataTogglePopovers.on('shown.bs.popover', function() {
             const $popover = $('.popover').last();
-            const $modal = $('.remodal.remodal-is-opened, .remodal.remodal-is-visible');
+            const $modal = $('.remodal.remodal-is-opened, .remodal.remodal-visible');
             const modalZIndex = parseInt($modal.css('z-index')) || 0;
             const newZIndex = Math.max(modalZIndex + 10000, 999999);
             $popover.css('z-index', newZIndex);
-            
+
             // Add scrollable content for tall popovers
             const $content = $popover.find('.popover-content');
             if ($content.height() > 300) {
@@ -125,18 +145,17 @@ export default Component.extend({
               });
             }
           });
-          
+
           // Test click events (for debugging if needed)
           $finalPopovers.on('click', function(e) {
             // Popover click event - can be used for debugging if needed
           });
-          
+
           // Test manual trigger (removed for production)
-          
         } catch (error) {
           // Silently handle popover initialization errors
         }
-        
+
         // Handle tabs
         const tabs = this.element.querySelectorAll('a[data-toggle="tab"]');
         tabs.forEach((tab) => {
@@ -157,7 +176,7 @@ export default Component.extend({
           });
         });
       };
-      
+
       // Start the initialization process
       setTimeout(initializePopovers, 100);
     });
@@ -166,20 +185,9 @@ export default Component.extend({
   },
 
   willDestroyElement() {
-    
     document.removeEventListener('keydown', bind(this, this._escapeHandler));
     this._super(...arguments);
   },
-
-  filteredAnswerTypes: computed('answerTypes', function() {
-    const answerTypes = this.get('answerTypes');
-    if (this.get('isSuperUser')) {
-      return answerTypes;
-    }
-    return answerTypes.filter((answerType) => {
-      return !answerType.get('name').includes('taxon');
-    });
-  }),
 
   answerChoicesToShow: computed('question.answerChoices.@each.{isNew,isDeleted}', 'question.{isNew}', function() {
     const answerChoices = this.question.get('answerChoices').filter((answerChoice) => !answerChoice.isDeleted);
@@ -225,6 +233,28 @@ export default Component.extend({
   showQuestionTypePlaceholder: computed('question.{isNew,answerType.id}', function() {
     let question = this.get('question');
     return question.get('isNew') && question.get('answerType.id') === undefined;
+  }),
+
+  // Check for incomplete lookup rules specifically
+  hasIncompleteLookupRules: computed('question.lookupRules.@each.{conditions,conditionsPendingSave}', function() {
+    const lookupRules = this.get('question.lookupRules') || [];
+    return lookupRules.any((rule) => {
+      const savedConditions = rule.get('conditions') || [];
+      const pendingConditions = rule.get('conditionsPendingSave') || [];
+      const totalConditions = savedConditions.length + pendingConditions.length;
+      return totalConditions === 0;
+    });
+  }),
+
+  // Check for incomplete visibility rules specifically
+  hasIncompleteVisibilityRules: computed('question.visibilityRule.{conditions,conditionsPendingSave}', function() {
+    const visibilityRule = this.get('question.visibilityRule');
+    if (!visibilityRule) return false;
+
+    const savedConditions = visibilityRule.get('conditions') || [];
+    const pendingConditions = visibilityRule.get('conditionsPendingSave') || [];
+    const totalConditions = savedConditions.length + pendingConditions.length;
+    return totalConditions === 0;
   }),
 
   // If a question has a rule associated with it, it should automatically be set to Hidden
@@ -308,9 +338,33 @@ export default Component.extend({
     let question = this.get('question');
     let surveyTemplate = this.get('surveyTemplate');
     question.set('surveyTemplate', surveyTemplate);
+
+    // Clear any previous validation errors
+    this.set('hasInvalidConditions', false);
+
+    // Validate all conditions for all rules before saving
+    let allConditionsValid = true;
+    let rules = question.get('rules') || [];
+    rules.forEach((rule) => {
+      let conditions = rule.get('conditions') || [];
+      conditions.forEach((condition) => {
+        if (!condition.validate()) {
+          allConditionsValid = false;
+        }
+      });
+    });
+
+    // Set a property to show validation error in template
+    this.set('hasInvalidConditions', !allConditionsValid);
+
+    if (!allConditionsValid) {
+      return;
+    }
+
     if (!question.validate()) {
       return;
     }
+
     if (question.get('isNew') && isBlank(question.get('sortOrder'))) {
       question.set('wasNew', true);
       this._sortOrder(question);
@@ -454,16 +508,18 @@ export default Component.extend({
     sortAnswerChoices() {
       let question = this.get('question');
       let answerChoices = question.get('answerChoices');
+
+      // Update sort orders based on current array position
       answerChoices.forEach((answerChoice, index) => {
-        let newSortOrder = index + 1;
-        answerChoice.set('sortOrder', newSortOrder);
-        if (!answerChoice.get('isNew')) {
-          answerChoice.save();
+        const newSortOrder = index + 1;
+        if (answerChoice.get('sortOrder') !== newSortOrder) {
+          answerChoice.set('sortOrder', newSortOrder);
+          // Save the answer choice to persist the sort order change
+          if (!answerChoice.get('isNew')) {
+            answerChoice.save();
+          }
         }
       });
-      if (!question.get('isNew')) {
-        question.reload();
-      }
     },
 
     ancestryChange(newAncestryId) {
@@ -508,7 +564,7 @@ export default Component.extend({
           .filter((answerChoice) => answerChoice.isNew)
           .forEach((answerChoice) => answerChoice.destroyRecord());
         this.get('remodal').close('question-modal');
-        this.sendAction('transitionToSurveyStep');
+        this.get('transitionToSurveyStep')();
         if (question.get('wasNew')) {
           if (testing) {
             return question.set('wasNew', false);
@@ -520,7 +576,7 @@ export default Component.extend({
             },
             500
           );
-          // Question is no longer new after shwoing the visual effect.
+          // Question is no longer new after showing the visual effect.
           run.later(
             this,
             function() {
@@ -530,6 +586,11 @@ export default Component.extend({
           );
         }
       }
+    },
+
+    // Clear invalid conditions error when conditions are updated
+    clearInvalidConditionsError() {
+      this.set('hasInvalidConditions', false);
     }
   }
 });

@@ -1,0 +1,44 @@
+{{yield (hash
+  item=(component "custom-sortable-item" onSelect=(action "selectItem") selectedItem=selectedItem selectedIndex=selectedIndex)
+)}}
+
+{{#if showPlacementOptions}}
+  <div class="placement-modal-overlay">
+    <div class="placement-modal">
+      <div class="placement-modal-header">
+        <h4>Place "{{placementQuestion.questionText}}"</h4>
+        <button class="close-btn" {{action "hidePlacementModal"}}>&times;</button>
+      </div>
+      <div class="placement-modal-body">
+        <p>Where would you like to place this question relative to "{{placementContainer.questionText}}"?</p>
+        <div class="placement-options">
+          {{#if (eq placementType "container")}}
+            {{!-- Container placement options (Above/Below/Inside) --}}
+            <button class="placement-btn outside above" {{action "placeAboveContainer"}}>
+              <span class="icon">⬆️</span>
+              <span class="text">Above "{{placementContainer.questionText}}"</span>
+            </button>
+            <button class="placement-btn inside inside-top" {{action "placeInsideTop"}}>
+              <span class="icon">⬆️</span>
+              <span class="text">Inside "{{placementContainer.questionText}}" at top</span>
+            </button>
+            <button class="placement-btn outside below" {{action "placeBelowContainer"}}>
+              <span class="icon">⬇️</span>
+              <span class="text">Below "{{placementContainer.questionText}}"</span>
+            </button>
+          {{else}}
+            {{!-- Question placement options (Above/Below only) --}}
+            <button class="placement-btn outside above" {{action "placeAboveQuestion"}}>
+              <span class="icon">⬆️</span>
+              <span class="text">Above "{{placementContainer.questionText}}"</span>
+            </button>
+            <button class="placement-btn outside below" {{action "placeBelowQuestion"}}>
+              <span class="icon">⬇️</span>
+              <span class="text">Below "{{placementContainer.questionText}}"</span>
+            </button>
+          {{/if}}
+        </div>
+      </div>
+    </div>
+  </div>
+{{/if}} 
