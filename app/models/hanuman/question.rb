@@ -232,6 +232,10 @@ module Hanuman
       Rails.logger.info "Starting dup_and_save for question #{self.id}"
       self.single_cloning = true
       new_q = self.amoeba_dup
+      
+      # Add "-cloned" to the question text for cloned questions
+      new_q.question_text = "#{new_q.question_text} -cloned"
+      
       Rails.logger.info "After amoeba_dup - New question ID: #{new_q.id}"
       Rails.logger.info "New question duped_question_id: #{new_q.duped_question_id}"
       Rails.logger.info "New question attributes: #{new_q.attributes.inspect}"
@@ -304,6 +308,10 @@ module Hanuman
 
       # Duplicate the section question
       new_section_q = section_q.amoeba_dup
+      
+      # Add "-cloned" to the section question text
+      new_section_q.question_text = "#{new_section_q.question_text} -cloned"
+      
       new_section_q.sort_order = new_section_q.sort_order + increment_sort_by
       
       # Clear api_column_name and db_column_name for cloned section question
@@ -331,6 +339,10 @@ module Hanuman
         new_child_parent.save
         new_sort_order = q.sort_order + increment_sort_by
         new_q = q.amoeba_dup
+        
+        # Add "-cloned" to the descendant question text
+        new_q.question_text = "#{new_q.question_text} -cloned"
+        
         new_q.sort_order = new_sort_order
         new_q.parent = new_child_parent
         

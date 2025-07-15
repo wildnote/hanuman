@@ -1052,10 +1052,15 @@ export default Component.extend({
               const freshItems = this.get('items');
               // For placeBelowQuestion, ensure we always insert immediately after the target
               const freshTargetIndex = this.calculateAdjustedTargetIndex(targetQuestion, freshItems, 'below');
-              // For "below" placement, use the calculated target index directly
-              // The adjustment logic below is incorrect for "below" placement
               const currentIndex = freshItems.indexOf(question);
               let finalTargetIndex = freshTargetIndex;
+              
+              // Apply adjustment logic for "below" placement when moving within the same container
+              // This is needed to account for the item being removed from its current position
+              if (currentIndex < freshTargetIndex) {
+                finalTargetIndex = freshTargetIndex - 1;
+                console.log('[CUSTOM DRAG] Adjusted target index from', freshTargetIndex, 'to', finalTargetIndex, 'due to removal');
+              }
               
               console.log('[CUSTOM DRAG] Using calculated target index for below placement:', finalTargetIndex);
               console.log('[CUSTOM DRAG] Moving question to fresh target position:', finalTargetIndex);
