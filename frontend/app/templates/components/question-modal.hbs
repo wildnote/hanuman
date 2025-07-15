@@ -410,6 +410,13 @@
             {{/each}}
           {{/liquid-unless}}
 
+          {{!-- Validation error for incomplete lookup rules --}}
+          {{#if (and hasIncompleteLookupRules question.errors.rules)}}
+            <div class="alert alert-danger" role="alert" style="margin-top: 10px;">
+              The rule needs at least one condition. Either add a condition or delete the rule.
+            </div>
+          {{/if}}
+
           <hr style="margin-top: 20px;" />
         {{/if}}
 
@@ -441,6 +448,14 @@
             {{rule-panel question=question conditionalQuestions=conditionalQuestions rule=question.visibilityRule }}
           {{/liquid-unless}}
         {{/if}}
+        
+        {{!-- Validation error for incomplete rules --}}
+        {{#if (and hasIncompleteVisibilityRules question.errors.rules)}}
+          <div class="alert alert-danger" role="alert" style="margin-top: 10px;">
+            The rule needs at least one condition. Either add a condition or delete the rule.
+          </div>
+        {{/if}}
+        
         <hr/>
 
         {{#if (or question.isContainer question.isARepeater) }}
@@ -522,6 +537,7 @@
     </div>
 
     <hr/>
+    
     <div class="row">
       <div class="form-group">
         <div class="col-sm-12">

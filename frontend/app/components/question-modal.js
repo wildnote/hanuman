@@ -40,6 +40,16 @@ export default Component.extend({
     this.setProperties({ answerChoicesPendingSave: [] });
   },
 
+  filteredAnswerTypes: computed('answerTypes', function() {
+    const answerTypes = this.get('answerTypes');
+    if (this.get('isSuperUser')) {
+      return answerTypes;
+    }
+    return answerTypes.filter((answerType) => {
+      return !answerType.get('name').includes('taxon');
+    });
+  }),
+
   didInsertElement() {
     this._super(...arguments);
 
@@ -58,7 +68,7 @@ export default Component.extend({
         const $modalContent = $('.remodal-wrapper, .remodal, [data-remodal-id="question-modal"]');
 
         // Check if the modal is actually visible/open
-        const $visibleModal = $('.remodal.remodal-is-opened, .remodal.remodal-is-visible');
+        const $visibleModal = $('.remodal.remodal-is-opened, .remodal.remodal-visible');
 
         // Use visible modal content if available, otherwise use component element
         const $targetElement = $visibleModal.length > 0 ? $visibleModal : $(this.element);
@@ -93,7 +103,7 @@ export default Component.extend({
           // Fix z-index issue by setting higher z-index for popovers when they're shown
           $finalPopovers.on('shown.bs.popover', function() {
             const $popover = $('.popover').last(); // Get the most recently shown popover
-            const $modal = $('.remodal.remodal-is-opened, .remodal.remodal-is-visible');
+            const $modal = $('.remodal.remodal-is-opened, .remodal.remodal-visible');
             const modalZIndex = parseInt($modal.css('z-index')) || 0;
             const newZIndex = Math.max(modalZIndex + 10000, 999999);
             $popover.css('z-index', newZIndex);
@@ -117,7 +127,7 @@ export default Component.extend({
           // Fix z-index issue for data-toggle popovers too
           $dataTogglePopovers.on('shown.bs.popover', function() {
             const $popover = $('.popover').last();
-            const $modal = $('.remodal.remodal-is-opened, .remodal.remodal-is-visible');
+            const $modal = $('.remodal.remodal-is-opened, .remodal.remodal-visible');
             const modalZIndex = parseInt($modal.css('z-index')) || 0;
             const newZIndex = Math.max(modalZIndex + 10000, 999999);
             $popover.css('z-index', newZIndex);
@@ -176,16 +186,6 @@ export default Component.extend({
     this._super(...arguments);
   },
 
-  filteredAnswerTypes: computed('answerTypes', function() {
-    const answerTypes = this.get('answerTypes');
-    if (this.get('isSuperUser')) {
-      return answerTypes;
-    }
-    return answerTypes.filter((answerType) => {
-      return !answerType.get('name').includes('taxon');
-    });
-  }),
-
   answerChoicesToShow: computed('question.answerChoices.@each.{isNew,isDeleted}', 'question.{isNew}', function() {
     const answerChoices = this.question.get('answerChoices').filter((answerChoice) => !answerChoice.isDeleted);
     if (this.question.isNew) {
@@ -230,6 +230,28 @@ export default Component.extend({
   showQuestionTypePlaceholder: computed('question.{isNew,answerType.id}', function() {
     let question = this.get('question');
     return question.get('isNew') && question.get('answerType.id') === undefined;
+  }),
+
+  // Check for incomplete lookup rules specifically
+  hasIncompleteLookupRules: computed('question.lookupRules.@each.{conditions,conditionsPendingSave}', function() {
+    const lookupRules = this.get('question.lookupRules') || [];
+    return lookupRules.any(rule => {
+      const savedConditions = rule.get('conditions') || [];
+      const pendingConditions = rule.get('conditionsPendingSave') || [];
+      const totalConditions = savedConditions.length + pendingConditions.length;
+      return totalConditions === 0;
+    });
+  }),
+
+  // Check for incomplete visibility rules specifically
+  hasIncompleteVisibilityRules: computed('question.visibilityRule.{conditions,conditionsPendingSave}', function() {
+    const visibilityRule = this.get('question.visibilityRule');
+    if (!visibilityRule) return false;
+    
+    const savedConditions = visibilityRule.get('conditions') || [];
+    const pendingConditions = visibilityRule.get('conditionsPendingSave') || [];
+    const totalConditions = savedConditions.length + pendingConditions.length;
+    return totalConditions === 0;
   }),
 
   // If a question has a rule associated with it, it should automatically be set to Hidden
@@ -313,9 +335,11 @@ export default Component.extend({
     let question = this.get('question');
     let surveyTemplate = this.get('surveyTemplate');
     question.set('surveyTemplate', surveyTemplate);
+    
     if (!question.validate()) {
       return;
     }
+    
     if (question.get('isNew') && isBlank(question.get('sortOrder'))) {
       question.set('wasNew', true);
       this._sortOrder(question);
@@ -429,7 +453,7 @@ export default Component.extend({
       // if (equal('question.answerType.name', 'counter')) {
       //   value = value.replace(/[^0-9-]/g, '').replace(/(?!^)-/g, ''); // only allow positive and negative integers
       //   set(this.question, 'defaultAnswer', value);
-      //   $('[name='defaultAnswer']').val(value);
+      //   $('[name="defaultAnswer"]').val(value);
       // }
     },
 
