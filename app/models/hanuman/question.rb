@@ -270,6 +270,13 @@ module Hanuman
       Rails.logger.info "After saving new question - duped_question_id: #{new_q.duped_question_id}"
       Rails.logger.info "After saving - New question attributes: #{new_q.attributes.inspect}"
       
+      # Copy tags from original question to cloned question
+      if self.tag_list.present?
+        new_q.tag_list.add(self.tag_list, parse: true)
+        new_q.save!
+        Rails.logger.info "Copied tags from original question #{self.id} to cloned question #{new_q.id}: #{self.tag_list}"
+      end
+      
       # Update question_id references in conditions
       new_q.rules.each do |rule|
         rule.conditions.each do |condition|
@@ -320,6 +327,13 @@ module Hanuman
       
       new_section_q.save
 
+      # Copy tags from original section question to cloned section question
+      if section_q.tag_list.present?
+        new_section_q.tag_list.add(section_q.tag_list, parse: true)
+        new_section_q.save!
+        Rails.logger.info "Copied tags from original section question #{section_q.id} to cloned section question #{new_section_q.id}: #{section_q.tag_list}"
+      end
+
       # Update conditions for the section question
       new_section_q.rules.each do |rule|
         rule.conditions.each do |condition|
@@ -351,6 +365,13 @@ module Hanuman
         new_q.db_column_name = nil
         
         new_q.save
+
+        # Copy tags from original descendant question to cloned descendant question
+        if q.tag_list.present?
+          new_q.tag_list.add(q.tag_list, parse: true)
+          new_q.save!
+          Rails.logger.info "Copied tags from original descendant question #{q.id} to cloned descendant question #{new_q.id}: #{q.tag_list}"
+        end
 
         # Update conditions for each descendant
         new_q.rules.each do |rule|
