@@ -40,46 +40,50 @@
       {{/form-field}}
     </td>
     <td>
-      {{#if useDropDownAnswerSelect}}
-        {{#form-field for='answer'}}
-          {{#if (or loadLocations.isRunning loadDataSources.isRunning)}}
-            Loading...
-          {{else}}
-            <select
-              data-test="condition-answer-choice-dropdown"
-              class="form-control"
-              onchange={{action "setConditionAnswer" value="target.value"}}
-            >
-              <option value="" selected={{eq condition.answer ""}}></option>
-              {{#if currentQuestion.isLocationSelect}}
-                {{#each locations as |location|}}
-                  <option value={{location.name}} selected={{eq condition.answer location.name}}>{{location.name}}</option>
-                {{/each}}
-              {{else if currentQuestion.isTaxonType}}
-                {{#each (sort-by "formatted_answer_choice_with_symbol" dataSources) as |source|}}
-                  <option
-                    value={{source.formatted_answer_choice_with_symbol}}
-                    selected={{eq condition.answer source.formatted_answer_choice_with_symbol}}
-                  >
-                    {{source.formatted_answer_choice_with_symbol}}
-                  </option>
-                {{/each}}
-              {{else}}
-                {{#each questionAnswerChoices as |answerChoice|}}
-                  <option value={{answerChoice.optionText}} selected={{eq condition.answer answerChoice.optionText}}>{{answerChoice.optionText}}</option>
-                {{/each}}
-              {{/if}}
-            </select>
-          {{/if}}
-        {{/form-field}}
-      {{else}}
-        {{#form-field for='answer'}}
-          <input type="text"
-                data-test="condition.answer"
+      {{#if showAnswerField}}
+        {{#if useDropDownAnswerSelect}}
+          {{#form-field for='answer'}}
+            {{#if (or loadLocations.isRunning loadDataSources.isRunning)}}
+              Loading...
+            {{else}}
+              <select
+                data-test="condition-answer-choice-dropdown"
                 class="form-control"
-                value={{condition.answer}}
-                oninput={{action (mut condition.answer) value="target.value"}} />
-        {{/form-field}}
+                onchange={{action "setConditionAnswer" value="target.value"}}
+              >
+                <option value="" selected={{eq condition.answer ""}}>Please select an answer</option>
+                {{#if currentQuestion.isLocationSelect}}
+                  {{#each locations as |location|}}
+                    <option value={{location.name}} selected={{eq condition.answer location.name}}>{{location.name}}</option>
+                  {{/each}}
+                {{else if currentQuestion.isTaxonType}}
+                  {{#each (sort-by "formatted_answer_choice_with_symbol" dataSources) as |source|}}
+                    <option
+                      value={{source.formatted_answer_choice_with_symbol}}
+                      selected={{eq condition.answer source.formatted_answer_choice_with_symbol}}
+                    >
+                      {{source.formatted_answer_choice_with_symbol}}
+                    </option>
+                  {{/each}}
+                {{else}}
+                  {{#each questionAnswerChoices as |answerChoice|}}
+                    <option value={{answerChoice.optionText}} selected={{eq condition.answer answerChoice.optionText}}>{{answerChoice.optionText}}</option>
+                  {{/each}}
+                {{/if}}
+              </select>
+            {{/if}}
+          {{/form-field}}
+        {{else}}
+          {{#form-field for='answer'}}
+            <input type="text"
+                  data-test="condition.answer"
+                  class="form-control"
+                  value={{condition.answer}}
+                  oninput={{action (mut condition.answer) value="target.value"}} />
+          {{/form-field}}
+        {{/if}}
+      {{else}}
+        <span class="text-muted">No answer needed for this operator</span>
       {{/if}}
     </td>
   {{/unless}}
@@ -130,7 +134,13 @@
     </td>
     {{#unless rule.isCalculationRule}}
       <td><span class="label label-default">{{condition.operator}}</span></td>
-      <td><span data-test="condition.answer">{{condition.answer}}</span></td>
+      <td>
+        {{#if showAnswerInDisplay}}
+          <span data-test="condition.answer">{{condition.answer}}</span>
+        {{else}}
+          <span class="text-muted">No answer needed</span>
+        {{/if}}
+      </td>
     {{/unless}}
     <td>
       <a disabled={{question.surveyTemplate.lock}} class="btn btn-success btn-sm" data-test="edit-condition-link" onclick={{action 'toggleForm'}}>

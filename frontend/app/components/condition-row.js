@@ -149,6 +149,16 @@ export default Component.extend({
     return value;
   }),
 
+  showAnswerField: computed('condition.operator', function() {
+    // Don't show answer field for operators that don't need answers
+    return !Condition.OPERATORS_WITHOUT_ANSWER.includes(this.get('condition.operator'));
+  }),
+
+  showAnswerInDisplay: computed('condition.operator', function() {
+    // Don't show answer field for operators that don't need answers
+    return !Condition.OPERATORS_WITHOUT_ANSWER.includes(this.get('condition.operator'));
+  }),
+
   setNewCondition() {
     let condition = this.get('question').store.createRecord('condition', {
       questionId: this.get('questions.firstObject.id'),
@@ -172,6 +182,13 @@ export default Component.extend({
       let answer = condition.get('answer') || '';
       condition.set('answer', answer.trim());
 
+      console.log('Saving condition:', {
+        operator: condition.get('operator'),
+        answer: condition.get('answer'),
+        answerLength: condition.get('answer').length,
+        needsAnswer: !Condition.OPERATORS_WITHOUT_ANSWER.includes(condition.get('operator'))
+      });
+
       if (condition.validate()) {
         condition.set('rule', this.rule);
         this.saveTask.perform(condition, this.rule);
@@ -179,6 +196,8 @@ export default Component.extend({
           this.set('condition', null);
         }
         this.send('toggleForm');
+      } else {
+        console.log('Validation failed:', condition.errors);
       }
     },
 
@@ -189,6 +208,11 @@ export default Component.extend({
 
     setConditionOperator(operator) {
       this.set('condition.operator', operator);
+      
+      // Clear answer field if switching to an operator that doesn't need an answer
+      if (Condition.OPERATORS_WITHOUT_ANSWER.includes(operator)) {
+        this.set('condition.answer', '');
+      }
     },
     setConditionQuestion(questionId) {
       this.set('condition.questionId', questionId);

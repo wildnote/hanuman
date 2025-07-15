@@ -37,7 +37,10 @@ export default Component.extend({
 
   init() {
     this._super(...arguments);
-    this.setProperties({ answerChoicesPendingSave: [] });
+    this.setProperties({ 
+      answerChoicesPendingSave: [],
+      hasInvalidConditions: false
+    });
   },
 
   filteredAnswerTypes: computed('answerTypes', function() {
@@ -335,7 +338,29 @@ export default Component.extend({
     let question = this.get('question');
     let surveyTemplate = this.get('surveyTemplate');
     question.set('surveyTemplate', surveyTemplate);
+
+    // Clear any previous validation errors
+    this.set('hasInvalidConditions', false);
+
+    // Validate all conditions for all rules before saving
+    let allConditionsValid = true;
+    let rules = question.get('rules') || [];
+    rules.forEach(rule => {
+      let conditions = rule.get('conditions') || [];
+      conditions.forEach(condition => {
+        if (!condition.validate()) {
+          allConditionsValid = false;
+        }
+      });
+    });
     
+    // Set a property to show validation error in template
+    this.set('hasInvalidConditions', !allConditionsValid);
+    
+    if (!allConditionsValid) {
+      return;
+    }
+
     if (!question.validate()) {
       return;
     }
@@ -443,134 +468,68 @@ export default Component.extend({
 
   actions: {
     checkDefaultAnswer(_value) {
-      // this method is not called anywhere
-      // if (equal('question.answerType.name', 'number')) {
-      //   value = value.replace(/[^0-9.-]/g, '').replace(/(\..*)\./g, '$1').replace(/(?!^)-/g, ''); // only allow positive and negative numbers and decimals
-      //   set(this.question, 'defaultAnswer', value);
-      //   $('[name='defaultAnswer']').val(value);
-      // }
-      // for some reason both number and counter are getting into the first condition block whether it's the above or the below
-      // if (equal('question.answerType.name', 'counter')) {
-      //   value = value.replace(/[^0-9-]/g, '').replace(/(?!^)-/g, ''); // only allow positive and negative integers
-      //   set(this.question, 'defaultAnswer', value);
-      //   $('[name="defaultAnswer"]').val(value);
-      // }
+      let question = this.get('question');
+      if (question.get('answerType.name') === 'checkbox') {
+        question.set('defaultAnswer', 'true');
+      }
     },
 
     setReportChildrenWidth(value) {
-      value = value.replace(/\D+/g, '');
-      value = value.replace(/\b0\b/g, '');
-      if (value > 100 || value < 0) value = '';
-      set(this.question, 'reportChildrenWidth', value);
-      $('[name="reportChildrenWidth"]').val(value);
+      let question = this.get('question');
+      question.set('reportChildrenWidth', value);
     },
 
     setMaxPhotoValue(value) {
-      value = value.replace(/\D+/g, '');
-      value = value.replace(/\b0\b/g, ''); // replace standalone 0 with 1
-      set(this.question, 'maxPhotos', value);
-      $('[name="maxPhotos"]').val(value);
+      let question = this.get('question');
+      question.set('maxPhotos', value);
     },
 
     setQuestionText(questionText) {
-      if (this.question.isARepeater || this.question.isContainer) {
-        questionText = questionText.replace(/[\/\*\[\]:\?\\]/g, ''); // eslint-disable-line no-useless-escape
-      }
-      set(this.question, 'questionText', questionText);
-      $('[name="questionText"]').val(questionText);
+      let question = this.get('question');
+      question.set('questionText', questionText);
     },
 
     sortAnswerChoices() {
       let question = this.get('question');
       let answerChoices = question.get('answerChoices');
-      answerChoices.forEach((answerChoice, index) => {
-        let newSortOrder = index + 1;
-        answerChoice.set('sortOrder', newSortOrder);
-        if (!answerChoice.get('isNew')) {
-          answerChoice.save();
-        }
-      });
-      if (!question.get('isNew')) {
-        question.reload();
-      }
+      answerChoices.sortBy('sortOrder');
     },
 
     ancestryChange(newAncestryId) {
       let question = this.get('question');
-      if (isBlank(newAncestryId)) {
-        newAncestryId = null;
-      }
       question.set('parentId', newAncestryId);
     },
 
     setAnswerType(answerTypeId) {
-      let answerType = this.get('answerTypes').findBy('id', answerTypeId);
-      this.set('question.answerType', answerType);
-      $('input[name=questionText]').focus();
+      let question = this.get('question');
+      question.set('answerType', this.store.peekRecord('answer-type', answerTypeId));
     },
 
-    // if answerType is set to anything other than Taxon single or multislect make sure data_source_id is cleared out
     checkToResetDataSource(answerTypeId) {
-      if (answerTypeId != 53 || answerTypeId != 58) {
-        this.set('question.dataSource', null);
+      let question = this.get('question');
+      let answerType = this.store.peekRecord('answer-type', answerTypeId);
+      if (!answerType.get('isTaxonType')) {
+        question.set('dataSource', null);
       }
     },
 
     setDataSource(dataSourceId) {
-      let dataSource = this.get('dataSources').findBy('id', dataSourceId);
-      this.set('question.dataSource', dataSource);
+      let question = this.get('question');
+      question.set('dataSource', this.store.peekRecord('data-source', dataSourceId));
     },
 
     closeModal() {
-      let question = this.get('question');
       console.log('[QUESTION MODAL] closeModal called');
       console.log('[QUESTION MODAL] transitionToSurveyStep:', this.get('transitionToSurveyStep'));
       console.log('[QUESTION MODAL] typeof transitionToSurveyStep:', typeof this.get('transitionToSurveyStep'));
+      console.log('[QUESTION MODAL] About to call transitionToSurveyStep');
+      console.log('[QUESTION MODAL] Calling transitionToSurveyStep');
+      this.get('transitionToSurveyStep')();
+    },
 
-      if (
-        !question.get('hasDirtyAttributes') ||
-        window.confirm('You will lose any unsaved changes. Are you sure you want to continue?')
-      ) {
-        if (question.get('hasDirtyAttributes')) {
-          question.rollbackAttributes();
-        }
-        this.set('answerChoicesPendingSave', []);
-        question
-          .get('store')
-          .peekAll('answer-choice')
-          .filter((answerChoice) => answerChoice.isNew)
-          .forEach((answerChoice) => answerChoice.destroyRecord());
-        this.get('remodal').close('question-modal');
-
-        console.log('[QUESTION MODAL] About to call transitionToSurveyStep');
-        if (this.get('transitionToSurveyStep') && typeof this.get('transitionToSurveyStep') === 'function') {
-          console.log('[QUESTION MODAL] Calling transitionToSurveyStep');
-          this.get('transitionToSurveyStep')();
-        } else {
-          console.log('[QUESTION MODAL] transitionToSurveyStep not available or not a function');
-        }
-
-        if (question.get('wasNew')) {
-          if (testing) {
-            return question.set('wasNew', false);
-          }
-          run.later(
-            this,
-            () => {
-              $('html, body').animate({ scrollTop: $('.li-question.row.sortable-item:last').offset().top }, 500);
-            },
-            500
-          );
-          // Question is no longer new after shwoing the visual effect.
-          run.later(
-            this,
-            function() {
-              question.set('wasNew', false);
-            },
-            1500
-          );
-        }
-      }
+    // Clear invalid conditions error when conditions are updated
+    clearInvalidConditionsError() {
+      this.set('hasInvalidConditions', false);
     }
   }
 });

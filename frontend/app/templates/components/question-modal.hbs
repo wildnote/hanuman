@@ -456,6 +456,13 @@
           </div>
         {{/if}}
         
+        {{!-- Validation error for invalid conditions --}}
+        {{#if hasInvalidConditions}}
+          <div class="alert alert-danger" role="alert" style="margin-top: 10px;">
+            Some conditions require answers. Please fill in all required condition answers before saving.
+          </div>
+        {{/if}}
+        
         <hr/>
 
         {{#if (or question.isContainer question.isARepeater) }}
