@@ -960,7 +960,13 @@ export default Component.extend({
                   }
                 }
 
-                this.send('updateContainerChildrenAncestry', question, freshItems, childrenBeforeMove);
+                // For empty containers, use moveQuestionToPosition instead of updateContainerChildrenAncestry
+                if (childrenBeforeMove.length === 0) {
+                  console.log('[CUSTOM DRAG] Empty container - using moveQuestionToPosition instead of updateContainerChildrenAncestry');
+                  this.send('moveQuestionToPosition', question, finalTargetIndex);
+                } else {
+                  this.send('updateContainerChildrenAncestry', question, freshItems, childrenBeforeMove);
+                }
               } else {
                 // For non-containers, use moveQuestionToPosition to handle the positioning
                 this.send('moveQuestionToPosition', question, finalTargetIndex);
@@ -1046,15 +1052,12 @@ export default Component.extend({
               const freshItems = this.get('items');
               // For placeBelowQuestion, ensure we always insert immediately after the target
               const freshTargetIndex = this.calculateAdjustedTargetIndex(targetQuestion, freshItems, 'below');
-              // If the dragged question's current index is less than the target, subtract 1 to account for removal
+              // For "below" placement, use the calculated target index directly
+              // The adjustment logic below is incorrect for "below" placement
               const currentIndex = freshItems.indexOf(question);
               let finalTargetIndex = freshTargetIndex;
               
-              // NEW: Only apply adjustment if NOT moving to the very bottom
-              const isMovingToBottom = freshTargetIndex >= freshItems.length;
-              if (currentIndex < freshTargetIndex && !isMovingToBottom) {
-                finalTargetIndex = freshTargetIndex - 1;
-              }
+              console.log('[CUSTOM DRAG] Using calculated target index for below placement:', finalTargetIndex);
               console.log('[CUSTOM DRAG] Moving question to fresh target position:', finalTargetIndex);
 
               // Check if the moved item is a container and handle children ancestry updates
@@ -1250,7 +1253,8 @@ export default Component.extend({
               const parentComponent = this.get('parentView');
               if (parentComponent && parentComponent.get('updateSortOrderTask')) {
                 console.log('[CUSTOM DRAG] Forcing UI refresh after ancestry change');
-                parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), true);
+                console.log('[custom-sortable-group] moveToPosition calling updateSortOrderTask with fullQuestions, reSort: false');
+                parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false);
               }
 
               // Now perform the move
@@ -1460,6 +1464,7 @@ export default Component.extend({
         }
 
         // For non-container moves, perform the update and ensure selection is cleared after completion
+        console.log('[custom-sortable-group] performMoveLogic calling updateSortOrderTask with', items.length, 'items');
         parentComponent
           .get('updateSortOrderTask')
           .perform(items, false)
@@ -1536,9 +1541,10 @@ export default Component.extend({
         // Even if no direct children, still refresh UI and clear flags
         const parentComponent = this.get('parentView');
         if (parentComponent && parentComponent.get('updateSortOrderTask')) {
+          console.log('[custom-sortable-group] updateContainerChildrenAncestry calling updateSortOrderTask with fullQuestions, reSort: false (no children)');
           parentComponent
             .get('updateSortOrderTask')
-            .perform(parentComponent.get('fullQuestions'), true)
+            .perform(parentComponent.get('fullQuestions'), false)
             .then(() => {
               this.set('isSettingAncestry', false);
               this.set('isMovingContainer', false);
