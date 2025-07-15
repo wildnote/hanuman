@@ -6,6 +6,62 @@
   opacity: 0.2;
 }
 
+// Custom sortable drop zones - both green with different shades
+.drop-zone-active {
+  border: 2px dashed #28a745;
+  background-color: #f8fff9;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: #1e7e34;
+    background-color: #d4edda;
+  }
+}
+
+.drop-zone-highlighted {
+  border: 2px solid #1e7e34 !important;
+  background-color: #c3e6cb !important;
+  transform: scale(1.02);
+}
+
+// Container drop zones for ancestry - darker green
+.container-drop-zone-active {
+  border: 2px dashed #0d4a1a;
+  background-color: #d4e8d4;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    border-color: #0a3a15;
+    background-color: #a8c8a8;
+  }
+}
+
+.container-drop-zone-highlighted {
+  border: 2px solid #0a3a15 !important;
+  background-color: #8fb88f !important;
+  transform: scale(1.02);
+}
+
+// Selected item styling
+.sortable-item.selected {
+  background-color: #fff3cd;
+  border: 2px solid #ffc107;
+  
+  // Container styling when selected
+  &.container-selected {
+    cursor: pointer;
+    background-color: #fff3cd;
+    border: 2px solid #28a745;
+    
+    &:hover {
+      background-color: #d4edda;
+      border-color: #1e7e34;
+    }
+  }
+}
+
 .header-selected {
   text-rendering: optimizeLegibility;
   background-color: #5a87cf;
@@ -85,5 +141,159 @@
   &.top-level {
     display: block;
     top: 18px;
+  }
+}
+
+// Placement modal styles
+.placement-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.placement-modal {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.placement-modal-header {
+  background: #f8f9fa;
+  padding: 20px;
+  border-bottom: 1px solid #dee2e6;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  h4 {
+    margin: 0;
+    color: #333;
+    font-size: 18px;
+  }
+  
+  .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #666;
+    cursor: pointer;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    &:hover {
+      color: #333;
+    }
+  }
+}
+
+.placement-modal-body {
+  padding: 20px;
+  
+  p {
+    margin: 0 0 20px 0;
+    color: #666;
+    font-size: 14px;
+  }
+}
+
+.placement-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.placement-btn {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  
+  &:hover {
+    border-color: #28a745;
+    background-color: #f8fff9;
+  }
+  
+  .icon {
+    font-size: 20px;
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+  
+  .text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    line-height: 1.2;
+  }
+  
+  // Inside options now use green theme (dark green)
+  &.inside {
+    border-color: #1e7e34;
+    background-color: #e8f5e8;
+    
+    &:hover {
+      border-color: #155724;
+      background-color: #d4edda;
+    }
+    
+    .text {
+      color: #155724;
+    }
+  }
+  
+  // Outside options now use green theme (light green)
+  &.outside {
+    border-color: #28a745;
+    background-color: #f8fff9;
+    
+    &:hover {
+      border-color: #1e7e34;
+      background-color: #e8f5e8;
+    }
+    
+    .text {
+      color: #155724;
+    }
+  }
+}
+
+// Children highlight when container is selected
+.children-highlight {
+  background-color: #fff3cd !important;
+  border: 2px solid #ffc107 !important;
+  position: relative;
+  
+  &::before {
+    content: "→ Child";
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    background: #ffc107;
+    color: #333;
+    font-size: 10px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 3px;
+    z-index: 10;
   }
 }

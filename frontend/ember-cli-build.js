@@ -9,9 +9,7 @@ module.exports = function(defaults) {
     'ember-cli-babel': {
       includePolyfill: true,
       compileModules: true,
-      plugins: [
-        require.resolve('babel-plugin-transform-object-rest-spread')
-      ]
+      plugins: [require.resolve('babel-plugin-transform-object-rest-spread')]
     },
     eslint: {
       testGenerator: 'qunit',
@@ -31,7 +29,7 @@ module.exports = function(defaults) {
       implementation: require('sass')
     },
     storeConfigInMeta: false,
-    generateAssetMap: true,
+    generateAssetMap: true
   });
 
   app.import('node_modules/animate.css/animate.min.css');

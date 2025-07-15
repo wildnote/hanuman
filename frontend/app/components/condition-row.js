@@ -17,12 +17,18 @@ export default Component.extend({
   tagName: 'tr',
   attributeBindings: ['condition.id:data-condition-id'],
   classNameBindings: ['isNewCondition:no-hover'],
+  classNames: ['condition-row'],
   isEditingCondition: false,
 
   didInsertElement() {
     this._super(...arguments);
     run.scheduleOnce('afterRender', this, function() {
-      if (this.condition && isBlank(this.condition.questionId) && this.availableQuestions && this.availableQuestions[0]) {
+      if (
+        this.condition &&
+        isBlank(this.condition.questionId) &&
+        this.availableQuestions &&
+        this.availableQuestions[0]
+      ) {
         this.set('condition.questionId', this.availableQuestions[0].id);
       }
 
@@ -32,7 +38,8 @@ export default Component.extend({
         if (currentQuestion.isLocationSelect && isBlank(this.locations)) {
           this.loadLocations.perform();
         }
-        if (currentQuestion.isTaxonType) { // Assuming dataSources load has internal checks or is safe to call
+        if (currentQuestion.isTaxonType) {
+          // Assuming dataSources load has internal checks or is safe to call
           this.loadDataSources.perform();
         }
       }
@@ -45,8 +52,18 @@ export default Component.extend({
       projectId = window.location.href.split('/')[6];
     }
     if (projectId || testing) {
-      const response = yield this.ajax.request(`/locations?project_id=${projectId}`);
-      this.set('locations', response.locations);
+      try {
+        // Add timeout to prevent hanging on large datasets
+        const response = yield this.ajax.request(`/locations?project_id=${projectId}`, {
+          timeout: 30000 // 30 second timeout
+        });
+        this.set('locations', response.locations || []);
+      } catch (error) {
+        console.error('Error loading locations:', error);
+        this.set('locations', []);
+        // Set an error state that can be displayed in the template
+        this.set('locationsError', 'Failed to load locations. Please try again.');
+      }
     } else {
       this.set('locations', []);
     }
@@ -56,8 +73,18 @@ export default Component.extend({
     const currentQuestion = this.get('currentQuestion');
     const dataSourceId = currentQuestion.belongsTo('dataSource').id();
     if (dataSourceId) {
-      const response = yield this.ajax.request(`/data_sources/${dataSourceId}/data_source_taxon_mappings`);
-      this.set('dataSources', response.data_sources);
+      try {
+        // Add timeout to prevent hanging on large datasets
+        const response = yield this.ajax.request(`/data_sources/${dataSourceId}/data_source_taxon_mappings`, {
+          timeout: 30000 // 30 second timeout
+        });
+        this.set('dataSources', response.data_source_taxon_mappings || []);
+      } catch (error) {
+        console.error('Error loading data sources:', error);
+        this.set('dataSources', []);
+        // Set an error state that can be displayed in the template
+        this.set('dataSourcesError', 'Failed to load data sources. Please try again.');
+      }
     } else {
       this.set('dataSources', []);
     }
@@ -122,25 +149,39 @@ export default Component.extend({
   }),
 
   questionAnswerChoices: computed('currentQuestion', function() {
-    return this.get('currentQuestion.answerChoices');
+    const answerChoices = this.get('currentQuestion.answerChoices');
+    return answerChoices;
   }),
 
   useDropDownAnswerSelect: computed('currentQuestion', 'condition.operator', function() {
     let currentQuestion = this.get('currentQuestion');
     let conditionOperator = this.get('condition.operator');
+
     let value =
       conditionOperator !== 'contains' &&
       currentQuestion &&
       (currentQuestion.hasMany('answerChoices').ids().length > 1 ||
         currentQuestion.isLocationSelect ||
         currentQuestion.isTaxonType);
-    if (currentQuestion.isLocationSelect && isBlank(this.locations)) {
+
+    // Only trigger loads if we don't already have the data and we're not already loading
+    if (currentQuestion.isLocationSelect && isBlank(this.locations) && !this.loadLocations.isRunning) {
       this.loadLocations.perform();
     }
-    if (currentQuestion.isTaxonType) {
+    if (currentQuestion.isTaxonType && isBlank(this.dataSources) && !this.loadDataSources.isRunning) {
       this.loadDataSources.perform();
     }
     return value;
+  }),
+
+  showAnswerField: computed('condition.operator', function() {
+    // Don't show answer field for operators that don't need answers
+    return !Condition.OPERATORS_WITHOUT_ANSWER.includes(this.get('condition.operator'));
+  }),
+
+  showAnswerInDisplay: computed('condition.operator', function() {
+    // Don't show answer field for operators that don't need answers
+    return !Condition.OPERATORS_WITHOUT_ANSWER.includes(this.get('condition.operator'));
   }),
 
   setNewCondition() {
@@ -173,6 +214,8 @@ export default Component.extend({
           this.set('condition', null);
         }
         this.send('toggleForm');
+      } else {
+        console.log('Validation failed:', condition.errors);
       }
     },
 
@@ -183,9 +226,17 @@ export default Component.extend({
 
     setConditionOperator(operator) {
       this.set('condition.operator', operator);
+
+      // Clear answer field if switching to an operator that doesn't need an answer
+      if (Condition.OPERATORS_WITHOUT_ANSWER.includes(operator)) {
+        this.set('condition.answer', '');
+      }
     },
     setConditionQuestion(questionId) {
       this.set('condition.questionId', questionId);
+      // Clear any previous error states when switching questions
+      this.set('locationsError', null);
+      this.set('dataSourcesError', null);
     },
     setConditionAnswer(answer) {
       this.set('condition.answer', answer);

@@ -83,11 +83,9 @@
             {{/if}}
             {{if allCollapsed 'Collapse' 'Expand'}} Questions
           </button>
-          {{#if isSuperUser}}
-            <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform checkTemplate}}>
-              <span class="glyphicons glyphicons-check"></span>Check Form
-            </button>
-          {{/if}}
+          <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform checkTemplate}}>
+            <span class="glyphicons glyphicons-check"></span>Check Form
+          </button>
         </div>
       </div>
 
@@ -107,12 +105,35 @@
         </div>
       </div>
       <div class="{{if isPerformingBulk 'opacited'}}">
-        {{#sortable-group tagName="ul" class="sortable ui-sortable" onChange="sortedDropped" as |group|}}
+        <style>
+          .completely-hidden {
+            display: none !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            visibility: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+          }
+          
+          /* Hide collapsed questions but keep them in DOM for drag-and-drop */
+          .li-question.collapsed {
+            display: none !important;
+            height: 0 !important;
+            overflow: hidden !important;
+            position: absolute !important;
+            visibility: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            border: none !important;
+          }
+        </style>
+        {{#custom-sortable-group items=dragDropQuestions isFullyEditable=canMoveQuestions onChange=(action "sortedDropped") as |group|}}
           <!-- hardcode survey date row here -->
           <li class="li-question row question-border">
             <div class="row">
               <div class="col-sm-4" data-test="question.answerType.displayName">
-                <span class="glyphicons glyphicons-sorting text-muted"></span>
                 Survey Date
               </div>
               <div class="col-sm-2">Date</div>
@@ -127,37 +148,28 @@
               {{/if}}
             </div>
           </li>
-          {{#each sortedQuestions as |question|}}
+          {{#each dragDropQuestions as |question index|}}
             {{#if (not question.isLoading)}}
-              {{#sortable-item tagName="li" class="li-question row question-border item" model=question group=group handle=".glyphicons-sorting"}}
-                {{#if question.supportAncestry}}
-                  {{#draggable-object-target action=(perform setAncestryTask) acenstry=question dragOverAction=(action 'dragOver') dragOutAction=(action 'dragOut')}}
-                    {{question-row
-                      question=question
-                      otherQuetions=surveyTemplate.questions
-                      deleteQuestion='deleteQuestion'
-                      toggleQuestion=(action "toggleQuestion")
-                      isFullyEditable=isFullyEditable
-                      ancestrable=true
-                      selectedQuestions=selectedQuestions
-                    }}
-                  {{/draggable-object-target}}
+              {{#group.item model=question index=index class=(if question.ancestryCollapsed "completely-hidden")}}
+                {{#if (or (not question.ancestryCollapsed) (eq question.parentId null))}}
+                  {{question-row
+                    question=question
+                    index=index
+                    otherQuetions=surveyTemplate.questions
+                    deleteQuestion=(action "deleteQuestion")
+                    toggleQuestion=(action "toggleQuestion")
+                    isFullyEditable=canMoveQuestions
+                    ancestrable=true
+                    selectedQuestions=selectedQuestions
+                  }}
                 {{else}}
-                  {{#draggable-object content=question dragStartHook=(action 'dragStarted' question) dragEndHook=(action 'dragEnded') dragHandle='.glyphicons-move-square'}}
-                    {{question-row
-                      question=question
-                      otherQuetions=surveyTemplate.questions
-                      deleteQuestion='deleteQuestion'
-                      toggleQuestion=(action "toggleQuestion")
-                      isFullyEditable=isFullyEditable
-                      selectedQuestions=selectedQuestions
-                    }}
-                  {{/draggable-object}}
+                  <!-- Hidden item for drag-and-drop - completely invisible -->
+                  <div style="display: none; height: 0; overflow: hidden; position: absolute; visibility: hidden;"></div>
                 {{/if}}
-              {{/sortable-item}}
+              {{/group.item}}
             {{/if}}
           {{/each}}
-        {{/sortable-group}}
+        {{/custom-sortable-group}}
 
         {{!-- Add new question --}}
         <ul class="sortable ui-sortable ember-view add-new-question {{if (and (or surveyTemplate.lock (not surveyTemplate.fullyEditable)) (not isSuperUser)) 'icon-disabled'}}">

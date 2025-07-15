@@ -163,6 +163,34 @@ export default Model.extend(Validator, {
     return allowableTypes.includes(this.get('answerType').get('name'));
   }),
 
+  // Check for incomplete rules (rules with no conditions)
+  hasIncompleteRules: computed('rules.@each.{conditions,conditionsPendingSave}', function() {
+    const rules = this.get('rules') || [];
+
+    // If there are no rules at all, there are no incomplete rules
+    if (rules.length === 0) {
+      return false;
+    }
+
+    return rules.any((rule) => {
+      const savedConditions = rule.get('conditions') || [];
+      const pendingConditions = rule.get('conditionsPendingSave') || [];
+      const totalConditions = savedConditions.length + pendingConditions.length;
+      return totalConditions === 0;
+    });
+  }),
+
+  // Get incomplete rules for display purposes
+  incompleteRules: computed('rules.@each.{conditions,conditionsPendingSave}', function() {
+    const rules = this.get('rules') || [];
+    return rules.filter((rule) => {
+      const savedConditions = rule.get('conditions') || [];
+      const pendingConditions = rule.get('conditionsPendingSave') || [];
+      const totalConditions = savedConditions.length + pendingConditions.length;
+      return totalConditions === 0;
+    });
+  }),
+
   // Custom actions
   duplicate: memberAction({ path: 'duplicate', type: 'post' }),
   processQuestionChanges: memberAction({ path: 'process_question_changes', type: 'post' }),
@@ -196,6 +224,25 @@ export default Model.extend(Validator, {
         message: 'This question has children questions, therefore the question type must be section or repeater.'
       }
     },
+    apiColumnName: {
+      custom: {
+        validation(_key, value, model) {
+          if (!value) return true;
+          let surveyTemplate = model.get('surveyTemplate');
+          if (!surveyTemplate) return true;
+          let questions = surveyTemplate.get('questions');
+          let currentId = model.get('id');
+          let conflict = questions.any(
+            (q) =>
+              q.get('id') !== currentId &&
+              q.get('apiColumnName') &&
+              q.get('apiColumnName').toLowerCase() === value.toLowerCase()
+          );
+          return !conflict;
+        },
+        message: 'API Column Name must be unique within this form.'
+      }
+    },
     answerChoices: {
       custom: {
         validation(_key, _value, model) {
@@ -212,6 +259,29 @@ export default Model.extend(Validator, {
         if(object, validator, model) {
           return model.get('isTaxonType');
         }
+      }
+    },
+    rules: {
+      custom: {
+        validation(_key, _value, model) {
+          const rules = model.get('rules') || [];
+
+          // If there are no rules at all, that's fine
+          if (rules.length === 0) {
+            return true;
+          }
+
+          // Check if any rules have no conditions
+          const incompleteRules = rules.filter((rule) => {
+            const savedConditions = rule.get('conditions') || [];
+            const pendingConditions = rule.get('conditionsPendingSave') || [];
+            const totalConditions = savedConditions.length + pendingConditions.length;
+            return totalConditions === 0;
+          });
+
+          return incompleteRules.length === 0;
+        },
+        message: 'Rules must have at least one condition.'
       }
     }
   }

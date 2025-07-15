@@ -16,6 +16,9 @@ const OPERATORS = [
   'contains'
 ];
 
+// Operators that don't require an answer
+const OPERATORS_WITHOUT_ANSWER = ['is empty', 'is not empty'];
+
 const Condition = Model.extend(Validator, {
   // Attributes
   operator: attr('string', { defaultValue: 'is equal to' }),
@@ -38,12 +41,25 @@ const Condition = Model.extend(Validator, {
       inclusion: {
         in: OPERATORS
       }
+    },
+    answer: {
+      custom: {
+        validation(_key, value, model) {
+          if (OPERATORS_WITHOUT_ANSWER.includes(model.get('operator'))) {
+            return true;
+          }
+          // This will catch null, undefined, and empty string (even with spaces)
+          return value && value.trim().length > 0;
+        },
+        message: 'Answer is required for this operator.'
+      }
     }
   }
 });
 
 Condition.reopenClass({
-  OPERATORS
+  OPERATORS,
+  OPERATORS_WITHOUT_ANSWER
 });
 
 export default Condition;

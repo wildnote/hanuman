@@ -232,6 +232,10 @@ module Hanuman
       Rails.logger.info "Starting dup_and_save for question #{self.id}"
       self.single_cloning = true
       new_q = self.amoeba_dup
+      
+      # Add "-cloned" to the question text for cloned questions
+      new_q.question_text = "#{new_q.question_text} -cloned"
+      
       Rails.logger.info "After amoeba_dup - New question ID: #{new_q.id}"
       Rails.logger.info "New question duped_question_id: #{new_q.duped_question_id}"
       Rails.logger.info "New question attributes: #{new_q.attributes.inspect}"
@@ -239,17 +243,39 @@ module Hanuman
       if new_sort_order.present?
         new_q.sort_order = new_sort_order
       else
-        new_q.sort_order = self.sort_order.to_i
+        # For single question cloning, increment sort order and shift other questions
+        original_sort_order = self.sort_order.to_i
+        new_q.sort_order = original_sort_order + 1
+        
+        # Shift all questions with higher sort orders to make space
+        self.survey_template.questions
+          .where("sort_order > ?", original_sort_order)
+          .where.not(id: new_q.id) # Exclude the new question
+          .each do |question|
+            question.sort_order = question.sort_order + 1
+            question.save!
+          end
       end
 
       if new_parent.present?
         new_q.parent = new_parent
       end
 
+      # Clear api_column_name and db_column_name for cloned questions
+      new_q.api_column_name = nil
+      new_q.db_column_name = nil
+
       Rails.logger.info "Before saving new question - duped_question_id: #{new_q.duped_question_id}"
       new_q.save
       Rails.logger.info "After saving new question - duped_question_id: #{new_q.duped_question_id}"
       Rails.logger.info "After saving - New question attributes: #{new_q.attributes.inspect}"
+      
+      # Copy tags from original question to cloned question
+      if self.tag_list.present?
+        new_q.tag_list.add(self.tag_list, parse: true)
+        new_q.save!
+        Rails.logger.info "Copied tags from original question #{self.id} to cloned question #{new_q.id}: #{self.tag_list}"
+      end
       
       # Update question_id references in conditions
       new_q.rules.each do |rule|
@@ -289,8 +315,24 @@ module Hanuman
 
       # Duplicate the section question
       new_section_q = section_q.amoeba_dup
+      
+      # Add "-cloned" to the section question text
+      new_section_q.question_text = "#{new_section_q.question_text} -cloned"
+      
       new_section_q.sort_order = new_section_q.sort_order + increment_sort_by
+      
+      # Clear api_column_name and db_column_name for cloned section question
+      new_section_q.api_column_name = nil
+      new_section_q.db_column_name = nil
+      
       new_section_q.save
+
+      # Copy tags from original section question to cloned section question
+      if section_q.tag_list.present?
+        new_section_q.tag_list.add(section_q.tag_list, parse: true)
+        new_section_q.save!
+        Rails.logger.info "Copied tags from original section question #{section_q.id} to cloned section question #{new_section_q.id}: #{section_q.tag_list}"
+      end
 
       # Update conditions for the section question
       new_section_q.rules.each do |rule|
@@ -311,9 +353,25 @@ module Hanuman
         new_child_parent.save
         new_sort_order = q.sort_order + increment_sort_by
         new_q = q.amoeba_dup
+        
+        # Add "-cloned" to the descendant question text
+        new_q.question_text = "#{new_q.question_text} -cloned"
+        
         new_q.sort_order = new_sort_order
         new_q.parent = new_child_parent
+        
+        # Clear api_column_name and db_column_name for cloned descendant questions
+        new_q.api_column_name = nil
+        new_q.db_column_name = nil
+        
         new_q.save
+
+        # Copy tags from original descendant question to cloned descendant question
+        if q.tag_list.present?
+          new_q.tag_list.add(q.tag_list, parse: true)
+          new_q.save!
+          Rails.logger.info "Copied tags from original descendant question #{q.id} to cloned descendant question #{new_q.id}: #{q.tag_list}"
+        end
 
         # Update conditions for each descendant
         new_q.rules.each do |rule|

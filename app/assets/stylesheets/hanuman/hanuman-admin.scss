@@ -13,6 +13,30 @@
 
 .ui-sortable { list-style-type: none; margin: 0; padding: 0; }
 
+/* Ember-sortable visual feedback */
+.ui-sortable-placeholder {
+  background: #f0f0f0;
+  border: 2px dashed #ccc;
+  height: 60px;
+  margin: 2px 0;
+  visibility: visible !important;
+}
+
+.ui-sortable-helper {
+  background: white;
+  border: 1px solid #ddd;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  z-index: 1000;
+}
+
+.sortable-item {
+  cursor: move;
+}
+
+.sortable-item.is-dragging {
+  opacity: 0.5;
+}
+
 .delete-confirm {
   display: none;
   position: absolute;

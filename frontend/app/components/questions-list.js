@@ -19,7 +19,36 @@ export default Component.extend({
   questionsSorting: ['sortOrder'],
   fullQuestions: sort('surveyTemplate.questionsNotDeleted', 'questionsSorting'),
   sortedQuestions: sort('surveyTemplate.filteredQuestions', 'questionsSorting'),
+
+  // Computed property that includes all questions for drag-and-drop but maintains visual collapse
+  dragDropQuestions: computed('fullQuestions.[]', 'sortedQuestions.[]', function() {
+    const fullQuestions = this.get('fullQuestions');
+    const sortedQuestions = this.get('sortedQuestions');
+    const dragDropArray = A();
+
+    // Add all questions in their proper order
+    fullQuestions.forEach((question) => {
+      dragDropArray.addObject(question);
+    });
+
+    return dragDropArray;
+  }),
+
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
+
+  // Computed property that allows superusers to move questions even when survey is locked
+  canMoveQuestions: computed('isFullyEditable', 'isSuperUser', function() {
+    const isFullyEditable = this.get('isFullyEditable');
+    const isSuperUser = this.get('isSuperUser');
+
+    // Superusers can always move questions, even when survey is locked or has existing data
+    if (isSuperUser) {
+      return true;
+    }
+
+    // Regular users can only move questions when survey is fully editable
+    return isFullyEditable;
+  }),
 
   init() {
     this._super(...arguments);
@@ -49,7 +78,7 @@ export default Component.extend({
     if (row) {
       const confirmEl = row.querySelector('.delete-confirm');
       if (confirmEl) {
-        confirmEl.style.display = 'none';
+        confirmEl.classList.remove('show');
       }
     }
   }),
@@ -100,6 +129,10 @@ export default Component.extend({
       );
       yield surveyTemplate.reload();
       yield surveyTemplate.hasMany('questions').reload();
+
+      // Trigger a resort to ensure proper ordering after cloning
+      yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
+
       this.get('notify').success('Questions successfully duplicated');
     } catch (e) {
       this.get('notify').alert('There was an error trying to duplicate questions');
@@ -109,7 +142,7 @@ export default Component.extend({
   }).drop(),
 
   setAncestryTask: task(function*(question, opts) {
-    const ancestryQuestion = opts.target.acenstry;
+    const ancestryQuestion = opts.target.ancestry;
     if (ancestryQuestion.collapsed) {
       this.get('collapsible').toggleCollapsed(ancestryQuestion);
       yield waitForProperty(ancestryQuestion, 'pendingRecursive', (v) => v === 0);
@@ -137,10 +170,32 @@ export default Component.extend({
     try {
       const surveyTemplate = this.surveyTemplate;
       surveyTemplate.set('checkingTemplate', true);
-      const errors = yield surveyTemplate.checkTemplate();
-      if (errors) {
+      const result = yield surveyTemplate.checkTemplate();
+
+      if (result) {
         surveyTemplate.set('checkingTemplate', false);
-        alert('Errors by question:' + '\n' + errors.ancestry + '\n' + errors.rule + '\n' + errors.condition);
+
+        let message = '';
+
+        if (result.errors && result.errors.length > 0) {
+          message += 'ERRORS:\n' + result.errors.join('\n') + '\n\n';
+        }
+
+        if (result.warnings && result.warnings.length > 0) {
+          message += 'WARNINGS:\n' + result.warnings.join('\n');
+        }
+
+        if (result.valid === false) {
+          alert('Form Integrity Check Failed:\n\n' + message);
+        } else if (result.warnings && result.warnings.length > 0) {
+          alert('Form Integrity Check Completed with Warnings:\n\n' + message);
+        } else {
+          alert('Form Integrity Check Passed - No issues found!');
+        }
+
+        // Refresh the survey template data after alert is dismissed
+        yield surveyTemplate.reload();
+        yield this.get('surveyTemplate.questions').forEach((question) => question.reload());
       }
     } catch (e) {
       this.get('notify').alert('There was an error checking the template');
@@ -226,7 +281,8 @@ export default Component.extend({
     sortedDropped(viewableSortedQuestions, _draggedQuestion) {
       const allQuestions = A(this.get('surveyTemplate.questionsNotDeleted')).sortBy('sortOrder');
       const sortableQuestions = A();
-      // Handle collapsed question. When there are questions collapsed we completely removed them from the DOM
+
+      // Handle collapsed questions. When there are questions collapsed we completely removed them from the DOM
       // so we have to re-add them so we can update the sort order attributes
       viewableSortedQuestions.forEach((viewableQuestion) => {
         sortableQuestions.addObject(viewableQuestion);
@@ -242,6 +298,7 @@ export default Component.extend({
           sortableQuestions.addObjects(collapsedChild);
         }
       });
+
       this.get('updateSortOrderTask').perform(sortableQuestions);
     },
 
