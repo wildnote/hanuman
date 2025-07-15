@@ -153,6 +153,23 @@ module Hanuman
         # Check ancestry and sort order relationships
         check_ancestry_and_sort_order_integrity(result, questions)
         
+        # Check for containers without children
+        containers = questions.select { |q| q.answer_type&.name&.in?(['section', 'repeater']) }
+        containers.each do |container|
+          container_children = questions.select { |q| q.parent_id == container.id }
+          if container_children.empty?
+            warning_message = "Container question #{container.id} (#{container.question_text}) has no children"
+            result[:warnings] << warning_message
+            Rails.logger.info warning_message
+            result[:details][:empty_containers] ||= []
+            result[:details][:empty_containers] << {
+              container_id: container.id,
+              container_text: container.question_text,
+              container_type: container.answer_type.name
+            }
+          end
+        end
+        
         # Check each question
         questions.each do |question|
           # Check question structure
