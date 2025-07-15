@@ -449,17 +449,10 @@
           {{/liquid-unless}}
         {{/if}}
         
-        {{!-- Validation error for incomplete rules --}}
-        {{#if (and hasIncompleteVisibilityRules question.errors.rules)}}
+        {{!-- Consolidated validation error for rules and conditions --}}
+        {{#if (or (and hasIncompleteVisibilityRules question.errors.rules) hasInvalidConditions)}}
           <div class="alert alert-danger" role="alert" style="margin-top: 10px;">
-            The rule needs at least one condition. Either add a condition or delete the rule.
-          </div>
-        {{/if}}
-        
-        {{!-- Validation error for invalid conditions --}}
-        {{#if hasInvalidConditions}}
-          <div class="alert alert-danger" role="alert" style="margin-top: 10px;">
-            Some conditions require answers. Please fill in all required condition answers before saving.
+            Please fix all rule issues: ensure rules have conditions and all conditions have required answers.
           </div>
         {{/if}}
         
