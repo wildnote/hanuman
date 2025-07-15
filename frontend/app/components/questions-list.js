@@ -40,12 +40,12 @@ export default Component.extend({
   canMoveQuestions: computed('isFullyEditable', 'isSuperUser', function() {
     const isFullyEditable = this.get('isFullyEditable');
     const isSuperUser = this.get('isSuperUser');
-    
+
     // Superusers can always move questions, even when survey is locked or has existing data
     if (isSuperUser) {
       return true;
     }
-    
+
     // Regular users can only move questions when survey is fully editable
     return isFullyEditable;
   }),
@@ -129,10 +129,10 @@ export default Component.extend({
       );
       yield surveyTemplate.reload();
       yield surveyTemplate.hasMany('questions').reload();
-      
+
       // Trigger a resort to ensure proper ordering after cloning
       yield this.get('updateSortOrderTask').perform(this.get('fullQuestions'), true);
-      
+
       this.get('notify').success('Questions successfully duplicated');
     } catch (e) {
       this.get('notify').alert('There was an error trying to duplicate questions');
@@ -171,20 +171,20 @@ export default Component.extend({
       const surveyTemplate = this.surveyTemplate;
       surveyTemplate.set('checkingTemplate', true);
       const result = yield surveyTemplate.checkTemplate();
-      
+
       if (result) {
         surveyTemplate.set('checkingTemplate', false);
-        
+
         let message = '';
-        
+
         if (result.errors && result.errors.length > 0) {
           message += 'ERRORS:\n' + result.errors.join('\n') + '\n\n';
         }
-        
+
         if (result.warnings && result.warnings.length > 0) {
           message += 'WARNINGS:\n' + result.warnings.join('\n');
         }
-        
+
         if (result.valid === false) {
           alert('Form Integrity Check Failed:\n\n' + message);
         } else if (result.warnings && result.warnings.length > 0) {
@@ -192,10 +192,10 @@ export default Component.extend({
         } else {
           alert('Form Integrity Check Passed - No issues found!');
         }
-        
+
         // Refresh the survey template data after alert is dismissed
         yield surveyTemplate.reload();
-        yield this.get('surveyTemplate.questions').forEach(question => question.reload());
+        yield this.get('surveyTemplate.questions').forEach((question) => question.reload());
       }
     } catch (e) {
       this.get('notify').alert('There was an error checking the template');
@@ -342,8 +342,6 @@ export default Component.extend({
           parent.classList.remove('dragging-over');
         }
       });
-    },
-
-
+    }
   }
 });

@@ -50,10 +50,10 @@ export default Component.extend({
 
         this.set('selectedItem', item);
         this.set('selectedIndex', index);
-        
+
         // Show timed prompt
         this.showMovePrompt();
-        
+
         this.createDropZones();
 
         // Only highlight children if this is a container
@@ -132,7 +132,7 @@ export default Component.extend({
 
       // Use the same validation logic as the dropzone creation
       const canPlaceInside = this.canPlaceInside(selectedItem, containerQuestion, items);
-      
+
       if (!canPlaceInside) {
         console.log('[CUSTOM DRAG] Cannot place inside this container based on nesting rules');
         return;
@@ -417,11 +417,18 @@ export default Component.extend({
 
                     if (containerChildren.length > 0) {
                       // Sort children by their sortOrder to find the actual first child
-                      const sortedChildren = containerChildren.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
+                      const sortedChildren = containerChildren
+                        .slice()
+                        .sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
                       const firstChild = sortedChildren[0];
                       const firstChildIndex = fullQuestions.indexOf(firstChild);
                       insertIndex = firstChildIndex;
-                      console.log('[CUSTOM DRAG] Inserting question before first child at index:', insertIndex, 'first child sortOrder:', firstChild.get('sortOrder'));
+                      console.log(
+                        '[CUSTOM DRAG] Inserting question before first child at index:',
+                        insertIndex,
+                        'first child sortOrder:',
+                        firstChild.get('sortOrder')
+                      );
                     } else {
                       // No children, insert right after the container
                       insertIndex = containerIndex + 1;
@@ -497,7 +504,7 @@ export default Component.extend({
 
     continueWithPlaceInsideTop(question, container, parentComponent) {
       console.log('[CUSTOM DRAG] Continuing with place inside top positioning');
-      
+
       // Reload the question to ensure we have fresh data
       question
         .reload()
@@ -528,14 +535,16 @@ export default Component.extend({
               const firstChild = sortedChildren[0];
               const firstChildIndex = fullQuestions.indexOf(firstChild);
               insertIndex = firstChildIndex;
-              console.log('[CUSTOM DRAG] Inserting question before first child at index:', insertIndex, 'first child sortOrder:', firstChild.get('sortOrder'));
+              console.log(
+                '[CUSTOM DRAG] Inserting question before first child at index:',
+                insertIndex,
+                'first child sortOrder:',
+                firstChild.get('sortOrder')
+              );
             } else {
               // No children, insert right after the container
               insertIndex = containerIndex + 1;
-              console.log(
-                '[CUSTOM DRAG] No children, inserting question after container at index:',
-                insertIndex
-              );
+              console.log('[CUSTOM DRAG] No children, inserting question after container at index:', insertIndex);
             }
 
             fullQuestions.insertAt(insertIndex, question);
@@ -544,9 +553,7 @@ export default Component.extend({
 
           // For inside top placement, we need to call updateSortOrderTask to normalize sortOrders
           // but we need to ensure the question stays as the first child
-          console.log(
-            '[CUSTOM DRAG] Calling updateSortOrderTask for inside top placement with integer sortOrders'
-          );
+          console.log('[CUSTOM DRAG] Calling updateSortOrderTask for inside top placement with integer sortOrders');
           console.log(
             '[CUSTOM DRAG] Array order before updateSortOrderTask:',
             fullQuestions.map((q, i) => ({
@@ -642,17 +649,17 @@ export default Component.extend({
       );
 
       question.set('parentId', containerParentId);
-      
+
       // Calculate the correct sort order based on where the question will actually be placed
       const sortItems = this.get('items');
       const sortTargetIndex = this.calculateAdjustedTargetIndex(container, sortItems, 'above');
       let newSortOrder;
-      
+
       if (sortTargetIndex === 0) {
         // Moving to first position - use a sort order less than the target's current sort order
         const targetSortOrder = container.get('sortOrder');
         newSortOrder = Math.max(1, targetSortOrder - 1);
-        
+
         // Also update the target container's sort order to push it down
         container.set('sortOrder', targetSortOrder + 1);
         container.save();
@@ -660,7 +667,7 @@ export default Component.extend({
         // Normal case - convert 0-indexed array position to 1-indexed sort order
         newSortOrder = sortTargetIndex + 1;
       }
-      
+
       question.set('sortOrder', newSortOrder);
       console.log('[CUSTOM DRAG] Set sort order to:', newSortOrder, 'based on target index:', sortTargetIndex);
 
@@ -765,7 +772,7 @@ export default Component.extend({
       );
 
       question.set('parentId', containerParentId);
-      
+
       // Calculate the correct sort order based on where the question will actually be placed
       const sortItems = this.get('items');
       const sortTargetIndex = this.calculateAdjustedTargetIndex(container, sortItems, 'below');
@@ -789,7 +796,12 @@ export default Component.extend({
               console.log('[CUSTOM DRAG] Calculating target position for below container placement');
               const freshItems = this.get('items');
               const targetIndex = this.calculateAdjustedTargetIndex(container, freshItems, 'below');
-              console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for container at index:', freshItems.indexOf(container));
+              console.log(
+                '[CUSTOM DRAG] Target position calculated:',
+                targetIndex,
+                'for container at index:',
+                freshItems.indexOf(container)
+              );
 
               // Check if the moved item is a container and handle children ancestry updates
               if (isContainer) {
@@ -802,7 +814,7 @@ export default Component.extend({
                   freshItems.removeAt(currentIndex);
                   // Adjust target index if we removed an item before the target position
                   let adjustedTargetIndex = targetIndex;
-                  
+
                   // NEW: Only apply adjustment if NOT moving to the very bottom
                   const isMovingToBottom = targetIndex >= freshItems.length;
                   if (currentIndex < targetIndex && !isMovingToBottom) {
@@ -845,7 +857,12 @@ export default Component.extend({
 
       // Calculate target position - account for containers with children
       const targetIndex = this.calculateAdjustedTargetIndex(targetQuestion, this.get('items'), 'above');
-      console.log('[CUSTOM DRAG] Target position calculated:', targetIndex, 'for question at index:', this.get('items').indexOf(targetQuestion));
+      console.log(
+        '[CUSTOM DRAG] Target position calculated:',
+        targetIndex,
+        'for question at index:',
+        this.get('items').indexOf(targetQuestion)
+      );
 
       // Store targetIndex and placement type for use in children update
       this.set('targetIndex', targetIndex);
@@ -926,7 +943,12 @@ export default Component.extend({
                       'due to removal'
                     );
                   }
-                  console.log('[CUSTOM DRAG] About to insert at index:', adjustedTargetIndex, 'array length:', freshItems.length);
+                  console.log(
+                    '[CUSTOM DRAG] About to insert at index:',
+                    adjustedTargetIndex,
+                    'array length:',
+                    freshItems.length
+                  );
                   // Safety check for insertAt
                   if (adjustedTargetIndex >= 0 && adjustedTargetIndex <= freshItems.length) {
                     freshItems.insertAt(adjustedTargetIndex, question);
@@ -947,14 +969,14 @@ export default Component.extend({
                       }
                     };
                     console.error('[CUSTOM DRAG] Target index calculation error:', errorInfo);
-                    
+
                     // Send to Honeybadger if available
                     if (window.Honeybadger) {
                       window.Honeybadger.notify(new Error('Target index calculation error in placeAboveQuestion'), {
                         context: errorInfo
                       });
                     }
-                    
+
                     // Fallback: insert at the end
                     freshItems.pushObject(question);
                   }
@@ -962,7 +984,9 @@ export default Component.extend({
 
                 // For empty containers, use moveQuestionToPosition instead of updateContainerChildrenAncestry
                 if (childrenBeforeMove.length === 0) {
-                  console.log('[CUSTOM DRAG] Empty container - using moveQuestionToPosition instead of updateContainerChildrenAncestry');
+                  console.log(
+                    '[CUSTOM DRAG] Empty container - using moveQuestionToPosition instead of updateContainerChildrenAncestry'
+                  );
                   this.send('moveQuestionToPosition', question, finalTargetIndex);
                 } else {
                   this.send('updateContainerChildrenAncestry', question, freshItems, childrenBeforeMove);
@@ -1054,14 +1078,20 @@ export default Component.extend({
               const freshTargetIndex = this.calculateAdjustedTargetIndex(targetQuestion, freshItems, 'below');
               const currentIndex = freshItems.indexOf(question);
               let finalTargetIndex = freshTargetIndex;
-              
+
               // Apply adjustment logic for "below" placement when moving within the same container
               // This is needed to account for the item being removed from its current position
               if (currentIndex < freshTargetIndex) {
                 finalTargetIndex = freshTargetIndex - 1;
-                console.log('[CUSTOM DRAG] Adjusted target index from', freshTargetIndex, 'to', finalTargetIndex, 'due to removal');
+                console.log(
+                  '[CUSTOM DRAG] Adjusted target index from',
+                  freshTargetIndex,
+                  'to',
+                  finalTargetIndex,
+                  'due to removal'
+                );
               }
-              
+
               console.log('[CUSTOM DRAG] Using calculated target index for below placement:', finalTargetIndex);
               console.log('[CUSTOM DRAG] Moving question to fresh target position:', finalTargetIndex);
 
@@ -1078,19 +1108,31 @@ export default Component.extend({
                   // NEW: Check if target question is the last item in its container or top level
                   const targetParentId = targetQuestion.get('parentId');
                   let isMovingToBottom;
-                  
+
                   if (targetParentId === null) {
                     // For top-level items (parentId is null)
-                    const topLevelItems = freshItems.filter(item => item.get('parentId') === null);
+                    const topLevelItems = freshItems.filter((item) => item.get('parentId') === null);
                     const lastTopLevelItem = topLevelItems[topLevelItems.length - 1];
                     isMovingToBottom = targetQuestion.get('id') === lastTopLevelItem.get('id');
                   } else {
                     // For items inside containers
-                    const itemsInSameContainer = freshItems.filter(item => item.get('parentId') === targetParentId);
+                    const itemsInSameContainer = freshItems.filter((item) => item.get('parentId') === targetParentId);
                     const lastItemInContainer = itemsInSameContainer[itemsInSameContainer.length - 1];
                     isMovingToBottom = targetQuestion.get('id') === lastItemInContainer.get('id');
                   }
-                  console.log('[CUSTOM DRAG] DEBUG - finalTargetIndex:', finalTargetIndex, 'freshItems.length:', freshItems.length, 'isMovingToBottom:', isMovingToBottom, 'targetQuestion index:', freshItems.indexOf(targetQuestion), 'targetQuestion sortOrder:', targetQuestion.get('sortOrder'));                  if (currentIndex < finalTargetIndex && !isMovingToBottom) {
+                  console.log(
+                    '[CUSTOM DRAG] DEBUG - finalTargetIndex:',
+                    finalTargetIndex,
+                    'freshItems.length:',
+                    freshItems.length,
+                    'isMovingToBottom:',
+                    isMovingToBottom,
+                    'targetQuestion index:',
+                    freshItems.indexOf(targetQuestion),
+                    'targetQuestion sortOrder:',
+                    targetQuestion.get('sortOrder')
+                  );
+                  if (currentIndex < finalTargetIndex && !isMovingToBottom) {
                     adjustedTargetIndex = finalTargetIndex - 1;
                     console.log(
                       '[CUSTOM DRAG] Adjusted target index from',
@@ -1100,7 +1142,7 @@ export default Component.extend({
                       'due to removal'
                     );
                   }
-                  
+
                   // NEW: Clamp index to array length to prevent out of bounds
                   if (adjustedTargetIndex >= freshItems.length) {
                     // Log error to Honeybadger - this indicates a logic issue in target index calculation
@@ -1120,23 +1162,33 @@ export default Component.extend({
                       }
                     };
                     console.error('[CUSTOM DRAG] Target index calculation error:', errorInfo);
-                    
+
                     // Send to Honeybadger if available
                     if (window.Honeybadger) {
                       window.Honeybadger.notify(new Error('Target index calculation error in placeBelowQuestion'), {
                         context: errorInfo
                       });
                     }
-                    
+
                     adjustedTargetIndex = freshItems.length;
                     console.log('[CUSTOM DRAG] Clamped target index to array length:', adjustedTargetIndex);
                   }
-                  console.log('[CUSTOM DRAG] About to insert at index:', adjustedTargetIndex, 'array length:', freshItems.length);
+                  console.log(
+                    '[CUSTOM DRAG] About to insert at index:',
+                    adjustedTargetIndex,
+                    'array length:',
+                    freshItems.length
+                  );
                   // Safety check for insertAt
                   if (adjustedTargetIndex >= 0 && adjustedTargetIndex <= freshItems.length) {
                     freshItems.insertAt(adjustedTargetIndex, question);
                   } else {
-                    console.error('[CUSTOM DRAG] Invalid adjustedTargetIndex for insertAt:', adjustedTargetIndex, 'array length:', freshItems.length);
+                    console.error(
+                      '[CUSTOM DRAG] Invalid adjustedTargetIndex for insertAt:',
+                      adjustedTargetIndex,
+                      'array length:',
+                      freshItems.length
+                    );
                     // Fallback: insert at the end
                     freshItems.pushObject(question);
                   }
@@ -1258,7 +1310,9 @@ export default Component.extend({
               const parentComponent = this.get('parentView');
               if (parentComponent && parentComponent.get('updateSortOrderTask')) {
                 console.log('[CUSTOM DRAG] Forcing UI refresh after ancestry change');
-                console.log('[custom-sortable-group] moveToPosition calling updateSortOrderTask with fullQuestions, reSort: false');
+                console.log(
+                  '[custom-sortable-group] moveToPosition calling updateSortOrderTask with fullQuestions, reSort: false'
+                );
                 parentComponent.get('updateSortOrderTask').perform(parentComponent.get('fullQuestions'), false);
               }
 
@@ -1546,7 +1600,9 @@ export default Component.extend({
         // Even if no direct children, still refresh UI and clear flags
         const parentComponent = this.get('parentView');
         if (parentComponent && parentComponent.get('updateSortOrderTask')) {
-          console.log('[custom-sortable-group] updateContainerChildrenAncestry calling updateSortOrderTask with fullQuestions, reSort: false (no children)');
+          console.log(
+            '[custom-sortable-group] updateContainerChildrenAncestry calling updateSortOrderTask with fullQuestions, reSort: false (no children)'
+          );
           parentComponent
             .get('updateSortOrderTask')
             .perform(parentComponent.get('fullQuestions'), false)
@@ -1708,7 +1764,9 @@ export default Component.extend({
           const containerPosition = arrayToUse.findIndex((q) => q.get('id') === container.get('id'));
 
           // Insert descendants in the order of their sort orders to preserve hierarchical structure
-          const sortedDescendantsForInsertion = allDescendants.slice().sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
+          const sortedDescendantsForInsertion = allDescendants
+            .slice()
+            .sort((a, b) => a.get('sortOrder') - b.get('sortOrder'));
           sortedDescendantsForInsertion.forEach((descendant, index) => {
             const insertIndex = containerPosition + 1 + index;
             arrayToUse.insertAt(insertIndex, descendant);
@@ -1939,9 +1997,9 @@ export default Component.extend({
       const isSelectedInsideContainer = selectedParentId !== null;
 
       // Get all descendants of selected container (if it's a container)
-      const selectedContainerDescendants = isSelectedContainer ? 
-        this.getAllDescendants(selectedItem.get('id'), this.get('items')).map(item => item.get('id')) : 
-        [];
+      const selectedContainerDescendants = isSelectedContainer
+        ? this.getAllDescendants(selectedItem.get('id'), this.get('items')).map((item) => item.get('id'))
+        : [];
 
       items.forEach((element, index) => {
         // Don't create drop zones for the selected item
@@ -1977,14 +2035,14 @@ export default Component.extend({
             if (question) {
               // Check if we can place inside this container
               const canPlaceInside = this.canPlaceInside(selectedItem, question, this.get('items'));
-              
+
               if (canPlaceInside) {
                 // Green drop zone - "Inside" option is available
                 shouldShowContainerDropZone = true;
               } else {
                 // Check if we can place relative to this item (above/below)
                 const canPlaceRelative = this.canPlaceItemRelativeTo(selectedItem, question, this.get('items'));
-                
+
                 if (canPlaceRelative) {
                   // Green drop zone for above/below placement
                   shouldShowRegularDropZone = true;
@@ -1994,70 +2052,70 @@ export default Component.extend({
             }
 
             if (shouldShowContainerDropZone) {
-            // Add green drop zone for containers (ancestry functionality)
-            element.classList.add('container-drop-zone-active');
+              // Add green drop zone for containers (ancestry functionality)
+              element.classList.add('container-drop-zone-active');
 
-            // Remove any existing handlers first
-            if (element._containerDropClickHandler) {
-              element.removeEventListener('click', element._containerDropClickHandler);
-            }
-
-            // Add click handler for container drop
-            const clickHandler = (event) => {
-              // Prevent event bubbling
-              event.preventDefault();
-              event.stopPropagation();
-
-              this.send('moveToContainer', index);
-            };
-
-            // Use safe event listener to prevent duplicates
-            this.safeAddEventListener(element, 'click', clickHandler);
-
-            // Add mouse enter/leave for visual feedback
-            const enterHandler = () => this.highlightContainerDropZone(element);
-            const leaveHandler = () => this.unhighlightContainerDropZone(element);
-
-            this.safeAddEventListener(element, 'mouseenter', enterHandler);
-            this.safeAddEventListener(element, 'mouseleave', leaveHandler);
-          } else if (shouldShowRegularDropZone) {
-            // Add blue drop zone for regular positioning
-            element.classList.add('drop-zone-active');
-
-            // Remove any existing handlers first
-            if (element._dropClickHandler) {
-              element.removeEventListener('click', element._dropClickHandler);
-            }
-
-            // Add click handler for drop
-            const clickHandler = (event) => {
-              // Prevent event bubbling
-              event.preventDefault();
-              event.stopPropagation();
-
-              // Show placement modal for questions (Above/Below options)
-              const selectedItem = this.get('selectedItem');
-              const targetQuestion = this.get('items').objectAt(index);
-
-              if (selectedItem && targetQuestion) {
-                this.send('showPlacementModal', selectedItem, targetQuestion, 'question');
+              // Remove any existing handlers first
+              if (element._containerDropClickHandler) {
+                element.removeEventListener('click', element._containerDropClickHandler);
               }
-            };
 
-            // Use safe event listener to prevent duplicates
-            this.safeAddEventListener(element, 'click', clickHandler);
+              // Add click handler for container drop
+              const clickHandler = (event) => {
+                // Prevent event bubbling
+                event.preventDefault();
+                event.stopPropagation();
 
-            // Add mouse enter/leave for visual feedback
-            const enterHandler = () => this.highlightDropZone(element);
-            const leaveHandler = () => this.unhighlightDropZone(element);
+                this.send('moveToContainer', index);
+              };
 
-            this.safeAddEventListener(element, 'mouseenter', enterHandler);
-            this.safeAddEventListener(element, 'mouseleave', leaveHandler);
+              // Use safe event listener to prevent duplicates
+              this.safeAddEventListener(element, 'click', clickHandler);
+
+              // Add mouse enter/leave for visual feedback
+              const enterHandler = () => this.highlightContainerDropZone(element);
+              const leaveHandler = () => this.unhighlightContainerDropZone(element);
+
+              this.safeAddEventListener(element, 'mouseenter', enterHandler);
+              this.safeAddEventListener(element, 'mouseleave', leaveHandler);
+            } else if (shouldShowRegularDropZone) {
+              // Add blue drop zone for regular positioning
+              element.classList.add('drop-zone-active');
+
+              // Remove any existing handlers first
+              if (element._dropClickHandler) {
+                element.removeEventListener('click', element._dropClickHandler);
+              }
+
+              // Add click handler for drop
+              const clickHandler = (event) => {
+                // Prevent event bubbling
+                event.preventDefault();
+                event.stopPropagation();
+
+                // Show placement modal for questions (Above/Below options)
+                const selectedItem = this.get('selectedItem');
+                const targetQuestion = this.get('items').objectAt(index);
+
+                if (selectedItem && targetQuestion) {
+                  this.send('showPlacementModal', selectedItem, targetQuestion, 'question');
+                }
+              };
+
+              // Use safe event listener to prevent duplicates
+              this.safeAddEventListener(element, 'click', clickHandler);
+
+              // Add mouse enter/leave for visual feedback
+              const enterHandler = () => this.highlightDropZone(element);
+              const leaveHandler = () => this.unhighlightDropZone(element);
+
+              this.safeAddEventListener(element, 'mouseenter', enterHandler);
+              this.safeAddEventListener(element, 'mouseleave', leaveHandler);
+            }
           }
         }
-      }
+      });
     });
-  });
 
     // Register timeout for cleanup
     this.registerTimeout(timeout, 'dropZone');
@@ -2171,15 +2229,15 @@ export default Component.extend({
     if (isSelectedContainer) {
       const selectedId = selectedItem.get('id');
       const targetId = targetContainer.get('id');
-      
+
       // Can't place inside itself
       if (selectedId === targetId) {
         return false;
       }
-      
+
       // Can't place inside any of its descendants
       const descendants = this.getAllDescendants(selectedId, items);
-      const hasDescendant = descendants.some(descendant => descendant.get('id') === targetId);
+      const hasDescendant = descendants.some((descendant) => descendant.get('id') === targetId);
       if (hasDescendant) {
         return false;
       }
@@ -2200,15 +2258,15 @@ export default Component.extend({
     if (isSelectedContainer && selectedLevel === 0) {
       // Check if this container has container children
       const selectedDescendants = this.getAllDescendants(selectedItem.get('id'), items);
-      const hasContainerChildren = selectedDescendants.some(descendant => 
-        descendant.get('isARepeater') || descendant.get('isContainer')
+      const hasContainerChildren = selectedDescendants.some(
+        (descendant) => descendant.get('isARepeater') || descendant.get('isContainer')
       );
-      
+
       if (hasContainerChildren) {
         // Cannot be placed inside other containers (would violate two-level rule)
         return false;
       }
-      
+
       // Can be placed inside other top level containers (only if it doesn't have container children)
       return targetLevel === 0;
     }
@@ -2244,10 +2302,10 @@ export default Component.extend({
       if (selectedParentId) {
         const currentContainer = items.findBy('id', selectedParentId);
         if (currentContainer) {
-          const childContainers = this.getAllDescendants(selectedParentId, items).filter(item => 
-            item.get('isARepeater') || item.get('isContainer')
+          const childContainers = this.getAllDescendants(selectedParentId, items).filter(
+            (item) => item.get('isARepeater') || item.get('isContainer')
           );
-          const isChildContainer = childContainers.some(child => child.get('id') === targetContainer.get('id'));
+          const isChildContainer = childContainers.some((child) => child.get('id') === targetContainer.get('id'));
           if (isChildContainer) {
             return true;
           }
@@ -2695,7 +2753,7 @@ export default Component.extend({
         Click on a drop zone to move this question
       </div>
     `;
-    
+
     // Add CSS animation
     const style = document.createElement('style');
     style.textContent = `
@@ -2721,10 +2779,10 @@ export default Component.extend({
       }
     `;
     document.head.appendChild(style);
-    
+
     // Add to DOM
     document.body.appendChild(prompt);
-    
+
     // Remove after 4 seconds
     setTimeout(() => {
       prompt.style.animation = 'slideOut 0.3s ease-in';
@@ -2740,12 +2798,12 @@ export default Component.extend({
   calculateAdjustedTargetIndex(targetItem, items, placementType = 'below') {
     const targetIndex = items.indexOf(targetItem);
     const isTargetContainer = targetItem.get('isARepeater') || targetItem.get('isContainer');
-    
+
     if (isTargetContainer && placementType === 'below') {
       // Find all descendants of this container
       const containerId = targetItem.get('id');
       const allDescendants = this.getAllDescendants(containerId, items);
-      
+
       if (allDescendants.length > 0) {
         // Find the actual last descendant position in the array
         let lastDescendantIndex = -1;
@@ -2756,13 +2814,18 @@ export default Component.extend({
             lastDescendantIndex = descendantIndex;
           }
         }
-        
+
         // Place after the last descendant
         const adjustedIndex = lastDescendantIndex + 1;
-        
+
         console.log('[CUSTOM DRAG] Container with', allDescendants.length, 'descendants');
-        console.log('[CUSTOM DRAG] Last descendant at index:', lastDescendantIndex, 'Adjusted targetIndex:', adjustedIndex);
-        
+        console.log(
+          '[CUSTOM DRAG] Last descendant at index:',
+          lastDescendantIndex,
+          'Adjusted targetIndex:',
+          adjustedIndex
+        );
+
         return adjustedIndex;
       } else {
         // No descendants, place right after the container
@@ -2771,7 +2834,7 @@ export default Component.extend({
         return adjustedIndex;
       }
     }
-    
+
     // For non-containers or 'above' placement, just place after/before the item
     return placementType === 'below' ? targetIndex + 1 : targetIndex;
   },
@@ -2782,12 +2845,12 @@ export default Component.extend({
     const targetParentId = targetItem.get('parentId');
     const isSelectedContainer = selectedItem.get('isARepeater') || selectedItem.get('isContainer');
     const isTargetContainer = targetItem.get('isARepeater') || targetItem.get('isContainer');
-    
+
     // Allow top-level containers to be placed above/below other top-level containers
     if (isSelectedContainer && isTargetContainer && !selectedParentId && !targetParentId) {
       return true;
     }
-    
+
     // Handle container-to-container relative placement for nested containers
     if (isSelectedContainer && isTargetContainer) {
       // If both are containers, check if they are siblings (same parent)
@@ -2797,7 +2860,7 @@ export default Component.extend({
       // If they have different parents, don't allow relative placement
       return false;
     }
-    
+
     // If target is a container but selected is not, we might want to insert into it instead of placing relative to it
     if (isTargetContainer) {
       return false; // Let the "Inside" logic handle container placement

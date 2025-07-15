@@ -27,14 +27,14 @@ module('Unit | Model | condition', function(hooks) {
   test('requires answer for operators that need answers', function(assert) {
     const operatorsThatNeedAnswers = [
       'is equal to',
-      'is not equal to', 
+      'is not equal to',
       'is greater than',
       'is less than',
       'starts with',
       'contains'
     ];
 
-    operatorsThatNeedAnswers.forEach(operator => {
+    operatorsThatNeedAnswers.forEach((operator) => {
       let condition = this.owner.lookup('service:store').createRecord('condition', {
         operator: operator,
         answer: '',
@@ -49,7 +49,7 @@ module('Unit | Model | condition', function(hooks) {
   test('does not require answer for operators that do not need answers', function(assert) {
     const operatorsThatDontNeedAnswers = ['is empty', 'is not empty'];
 
-    operatorsThatDontNeedAnswers.forEach(operator => {
+    operatorsThatDontNeedAnswers.forEach((operator) => {
       let condition = this.owner.lookup('service:store').createRecord('condition', {
         operator: operator,
         answer: '',
@@ -64,14 +64,14 @@ module('Unit | Model | condition', function(hooks) {
   test('is valid with answer for operators that need answers', function(assert) {
     const operatorsThatNeedAnswers = [
       'is equal to',
-      'is not equal to', 
+      'is not equal to',
       'is greater than',
       'is less than',
       'starts with',
       'contains'
     ];
 
-    operatorsThatNeedAnswers.forEach(operator => {
+    operatorsThatNeedAnswers.forEach((operator) => {
       let condition = this.owner.lookup('service:store').createRecord('condition', {
         operator: operator,
         answer: 'some answer',
@@ -81,4 +81,4 @@ module('Unit | Model | condition', function(hooks) {
       assert.ok(condition.validate(), `Should be valid with answer for operator: ${operator}`);
     });
   });
-}); 
+});

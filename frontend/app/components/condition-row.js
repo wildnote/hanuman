@@ -156,14 +156,14 @@ export default Component.extend({
   useDropDownAnswerSelect: computed('currentQuestion', 'condition.operator', function() {
     let currentQuestion = this.get('currentQuestion');
     let conditionOperator = this.get('condition.operator');
-    
+
     let value =
       conditionOperator !== 'contains' &&
       currentQuestion &&
       (currentQuestion.hasMany('answerChoices').ids().length > 1 ||
         currentQuestion.isLocationSelect ||
         currentQuestion.isTaxonType);
-    
+
     // Only trigger loads if we don't already have the data and we're not already loading
     if (currentQuestion.isLocationSelect && isBlank(this.locations) && !this.loadLocations.isRunning) {
       this.loadLocations.perform();
@@ -226,7 +226,7 @@ export default Component.extend({
 
     setConditionOperator(operator) {
       this.set('condition.operator', operator);
-      
+
       // Clear answer field if switching to an operator that doesn't need an answer
       if (Condition.OPERATORS_WITHOUT_ANSWER.includes(operator)) {
         this.set('condition.answer', '');

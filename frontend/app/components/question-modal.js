@@ -31,13 +31,13 @@ export default Component.extend({
   // Custom order for answer type groups
   sortedGroupedAnswerTypes: computed('groupedAnswerTypes.[]', function() {
     const groupedAnswerTypes = this.get('groupedAnswerTypes');
-    
+
     return groupedAnswerTypes.sortBy('value'); // Sort alphabetically by group name
   }),
 
   init() {
     this._super(...arguments);
-    this.setProperties({ 
+    this.setProperties({
       answerChoicesPendingSave: [],
       hasInvalidConditions: false
     });
@@ -238,7 +238,7 @@ export default Component.extend({
   // Check for incomplete lookup rules specifically
   hasIncompleteLookupRules: computed('question.lookupRules.@each.{conditions,conditionsPendingSave}', function() {
     const lookupRules = this.get('question.lookupRules') || [];
-    return lookupRules.any(rule => {
+    return lookupRules.any((rule) => {
       const savedConditions = rule.get('conditions') || [];
       const pendingConditions = rule.get('conditionsPendingSave') || [];
       const totalConditions = savedConditions.length + pendingConditions.length;
@@ -250,7 +250,7 @@ export default Component.extend({
   hasIncompleteVisibilityRules: computed('question.visibilityRule.{conditions,conditionsPendingSave}', function() {
     const visibilityRule = this.get('question.visibilityRule');
     if (!visibilityRule) return false;
-    
+
     const savedConditions = visibilityRule.get('conditions') || [];
     const pendingConditions = visibilityRule.get('conditionsPendingSave') || [];
     const totalConditions = savedConditions.length + pendingConditions.length;
@@ -345,18 +345,18 @@ export default Component.extend({
     // Validate all conditions for all rules before saving
     let allConditionsValid = true;
     let rules = question.get('rules') || [];
-    rules.forEach(rule => {
+    rules.forEach((rule) => {
       let conditions = rule.get('conditions') || [];
-      conditions.forEach(condition => {
+      conditions.forEach((condition) => {
         if (!condition.validate()) {
           allConditionsValid = false;
         }
       });
     });
-    
+
     // Set a property to show validation error in template
     this.set('hasInvalidConditions', !allConditionsValid);
-    
+
     if (!allConditionsValid) {
       return;
     }
@@ -364,7 +364,7 @@ export default Component.extend({
     if (!question.validate()) {
       return;
     }
-    
+
     if (question.get('isNew') && isBlank(question.get('sortOrder'))) {
       question.set('wasNew', true);
       this._sortOrder(question);
@@ -492,7 +492,7 @@ export default Component.extend({
     sortAnswerChoices() {
       let question = this.get('question');
       let answerChoices = question.get('answerChoices');
-      
+
       // Update sort orders based on current array position
       answerChoices.forEach((answerChoice, index) => {
         const newSortOrder = index + 1;

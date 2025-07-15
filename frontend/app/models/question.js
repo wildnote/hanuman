@@ -166,13 +166,13 @@ export default Model.extend(Validator, {
   // Check for incomplete rules (rules with no conditions)
   hasIncompleteRules: computed('rules.@each.{conditions,conditionsPendingSave}', function() {
     const rules = this.get('rules') || [];
-    
+
     // If there are no rules at all, there are no incomplete rules
     if (rules.length === 0) {
       return false;
     }
-    
-    return rules.any(rule => {
+
+    return rules.any((rule) => {
       const savedConditions = rule.get('conditions') || [];
       const pendingConditions = rule.get('conditionsPendingSave') || [];
       const totalConditions = savedConditions.length + pendingConditions.length;
@@ -183,7 +183,7 @@ export default Model.extend(Validator, {
   // Get incomplete rules for display purposes
   incompleteRules: computed('rules.@each.{conditions,conditionsPendingSave}', function() {
     const rules = this.get('rules') || [];
-    return rules.filter(rule => {
+    return rules.filter((rule) => {
       const savedConditions = rule.get('conditions') || [];
       const pendingConditions = rule.get('conditionsPendingSave') || [];
       const totalConditions = savedConditions.length + pendingConditions.length;
@@ -232,10 +232,11 @@ export default Model.extend(Validator, {
           if (!surveyTemplate) return true;
           let questions = surveyTemplate.get('questions');
           let currentId = model.get('id');
-          let conflict = questions.any(q =>
-            q.get('id') !== currentId &&
-            q.get('apiColumnName') &&
-            q.get('apiColumnName').toLowerCase() === value.toLowerCase()
+          let conflict = questions.any(
+            (q) =>
+              q.get('id') !== currentId &&
+              q.get('apiColumnName') &&
+              q.get('apiColumnName').toLowerCase() === value.toLowerCase()
           );
           return !conflict;
         },
@@ -264,20 +265,20 @@ export default Model.extend(Validator, {
       custom: {
         validation(_key, _value, model) {
           const rules = model.get('rules') || [];
-          
+
           // If there are no rules at all, that's fine
           if (rules.length === 0) {
             return true;
           }
-          
+
           // Check if any rules have no conditions
-          const incompleteRules = rules.filter(rule => {
+          const incompleteRules = rules.filter((rule) => {
             const savedConditions = rule.get('conditions') || [];
             const pendingConditions = rule.get('conditionsPendingSave') || [];
             const totalConditions = savedConditions.length + pendingConditions.length;
             return totalConditions === 0;
           });
-          
+
           return incompleteRules.length === 0;
         },
         message: 'Rules must have at least one condition.'
