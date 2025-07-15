@@ -83,11 +83,9 @@
             {{/if}}
             {{if allCollapsed 'Collapse' 'Expand'}} Questions
           </button>
-          {{#if isSuperUser}}
-            <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform checkTemplate}}>
-              <span class="glyphicons glyphicons-check"></span>Check Form
-            </button>
-          {{/if}}
+          <button data-test-process-question-changes class="btn btn-success btn-sm" onclick={{perform checkTemplate}}>
+            <span class="glyphicons glyphicons-check"></span>Check Form
+          </button>
         </div>
       </div>
 
