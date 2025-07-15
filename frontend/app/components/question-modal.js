@@ -492,7 +492,18 @@ export default Component.extend({
     sortAnswerChoices() {
       let question = this.get('question');
       let answerChoices = question.get('answerChoices');
-      answerChoices.sortBy('sortOrder');
+      
+      // Update sort orders based on current array position
+      answerChoices.forEach((answerChoice, index) => {
+        const newSortOrder = index + 1;
+        if (answerChoice.get('sortOrder') !== newSortOrder) {
+          answerChoice.set('sortOrder', newSortOrder);
+          // Save the answer choice to persist the sort order change
+          if (!answerChoice.get('isNew')) {
+            answerChoice.save();
+          }
+        }
+      });
     },
 
     ancestryChange(newAncestryId) {
