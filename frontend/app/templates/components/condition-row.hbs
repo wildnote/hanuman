@@ -44,7 +44,17 @@
         {{#if useDropDownAnswerSelect}}
           {{#form-field for='answer'}}
             {{#if (or loadLocations.isRunning loadDataSources.isRunning)}}
-              Loading...
+              <div class="text-muted">
+                <i class="glyphicon glyphicon-refresh spinning"></i> Loading options...
+              </div>
+            {{else if (or locationsError dataSourcesError)}}
+              <div class="text-danger">
+                <i class="glyphicon glyphicon-exclamation-sign"></i> 
+                {{or locationsError dataSourcesError}}
+                <button class="btn btn-xs btn-default" onclick={{action (perform (if currentQuestion.isLocationSelect loadLocations loadDataSources))}}>
+                  Retry
+                </button>
+              </div>
             {{else}}
               <select
                 data-test="condition-answer-choice-dropdown"

@@ -17,6 +17,7 @@ export default Component.extend({
   tagName: 'tr',
   attributeBindings: ['condition.id:data-condition-id'],
   classNameBindings: ['isNewCondition:no-hover'],
+  classNames: ['condition-row'],
   isEditingCondition: false,
 
   didInsertElement() {
@@ -51,8 +52,18 @@ export default Component.extend({
       projectId = window.location.href.split('/')[6];
     }
     if (projectId || testing) {
-      const response = yield this.ajax.request(`/locations?project_id=${projectId}`);
-      this.set('locations', response.locations);
+      try {
+        // Add timeout to prevent hanging on large datasets
+        const response = yield this.ajax.request(`/locations?project_id=${projectId}`, {
+          timeout: 30000 // 30 second timeout
+        });
+        this.set('locations', response.locations || []);
+      } catch (error) {
+        console.error('Error loading locations:', error);
+        this.set('locations', []);
+        // Set an error state that can be displayed in the template
+        this.set('locationsError', 'Failed to load locations. Please try again.');
+      }
     } else {
       this.set('locations', []);
     }
@@ -62,8 +73,18 @@ export default Component.extend({
     const currentQuestion = this.get('currentQuestion');
     const dataSourceId = currentQuestion.belongsTo('dataSource').id();
     if (dataSourceId) {
-      const response = yield this.ajax.request(`/data_sources/${dataSourceId}/data_source_taxon_mappings`);
-      this.set('dataSources', response.data_sources);
+      try {
+        // Add timeout to prevent hanging on large datasets
+        const response = yield this.ajax.request(`/data_sources/${dataSourceId}/data_source_taxon_mappings`, {
+          timeout: 30000 // 30 second timeout
+        });
+        this.set('dataSources', response.data_source_taxon_mappings || []);
+      } catch (error) {
+        console.error('Error loading data sources:', error);
+        this.set('dataSources', []);
+        // Set an error state that can be displayed in the template
+        this.set('dataSourcesError', 'Failed to load data sources. Please try again.');
+      }
     } else {
       this.set('dataSources', []);
     }
@@ -128,22 +149,26 @@ export default Component.extend({
   }),
 
   questionAnswerChoices: computed('currentQuestion', function() {
-    return this.get('currentQuestion.answerChoices');
+    const answerChoices = this.get('currentQuestion.answerChoices');
+    return answerChoices;
   }),
 
   useDropDownAnswerSelect: computed('currentQuestion', 'condition.operator', function() {
     let currentQuestion = this.get('currentQuestion');
     let conditionOperator = this.get('condition.operator');
+    
     let value =
       conditionOperator !== 'contains' &&
       currentQuestion &&
       (currentQuestion.hasMany('answerChoices').ids().length > 1 ||
         currentQuestion.isLocationSelect ||
         currentQuestion.isTaxonType);
-    if (currentQuestion.isLocationSelect && isBlank(this.locations)) {
+    
+    // Only trigger loads if we don't already have the data and we're not already loading
+    if (currentQuestion.isLocationSelect && isBlank(this.locations) && !this.loadLocations.isRunning) {
       this.loadLocations.perform();
     }
-    if (currentQuestion.isTaxonType) {
+    if (currentQuestion.isTaxonType && isBlank(this.dataSources) && !this.loadDataSources.isRunning) {
       this.loadDataSources.perform();
     }
     return value;
@@ -182,13 +207,6 @@ export default Component.extend({
       let answer = condition.get('answer') || '';
       condition.set('answer', answer.trim());
 
-      console.log('Saving condition:', {
-        operator: condition.get('operator'),
-        answer: condition.get('answer'),
-        answerLength: condition.get('answer').length,
-        needsAnswer: !Condition.OPERATORS_WITHOUT_ANSWER.includes(condition.get('operator'))
-      });
-
       if (condition.validate()) {
         condition.set('rule', this.rule);
         this.saveTask.perform(condition, this.rule);
@@ -216,6 +234,9 @@ export default Component.extend({
     },
     setConditionQuestion(questionId) {
       this.set('condition.questionId', questionId);
+      // Clear any previous error states when switching questions
+      this.set('locationsError', null);
+      this.set('dataSourcesError', null);
     },
     setConditionAnswer(answer) {
       this.set('condition.answer', answer);
