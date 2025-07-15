@@ -219,6 +219,10 @@
   .delete-confirm {
     display: none;
     top: -50px !important;
+    
+    &.show {
+      display: block;
+    }
   }
   .preview-section {
     padding: 10px 20px 10px 20px;

@@ -78,7 +78,7 @@ export default Component.extend({
     if (row) {
       const confirmEl = row.querySelector('.delete-confirm');
       if (confirmEl) {
-        confirmEl.style.display = 'none';
+        confirmEl.classList.remove('show');
       }
     }
   }),

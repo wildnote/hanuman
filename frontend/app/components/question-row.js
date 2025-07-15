@@ -104,14 +104,7 @@ export default Component.extend({
     return 0;
   }),
 
-  // Generate indentation style for the question text
-  indentationStyle: computed('indentationLevel', function() {
-    const level = this.get('indentationLevel');
-    const indentPixels = level * 20; // 20px per level
-    const style = `margin-left: ${indentPixels}px;`;
-    console.log('[INDENT] Generated style:', style, 'for level:', level);
-    return htmlSafe(style);
-  }),
+
 
   actions: {
     highlightConditional(questionId) {
@@ -135,14 +128,14 @@ export default Component.extend({
     confirm() {
       const confirmEl = this.element.querySelector('.delete-confirm');
       if (confirmEl) {
-        confirmEl.style.display = 'block';
+        confirmEl.classList.add('show');
       }
     },
 
     cancel() {
       const confirmEl = this.element.querySelector('.delete-confirm');
       if (confirmEl) {
-        confirmEl.style.display = 'none';
+        confirmEl.classList.remove('show');
       }
     },
 

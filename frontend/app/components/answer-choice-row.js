@@ -65,14 +65,14 @@ export default DraggableObject.extend({
     confirm() {
       const confirmEl = this.element.querySelector('.delete-confirm');
       if (confirmEl) {
-        confirmEl.style.display = 'block';
+        confirmEl.classList.add('show');
       }
     },
 
     cancel() {
       const confirmEl = this.element.querySelector('.delete-confirm');
       if (confirmEl) {
-        confirmEl.style.display = 'none';
+        confirmEl.classList.remove('show');
       }
     },
 

@@ -3,5 +3,9 @@
     display: none;
     top: initial !important;
     right: 50px !important;
+    
+    &.show {
+      display: block;
+    }
   }
 }
