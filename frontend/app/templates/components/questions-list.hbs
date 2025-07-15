@@ -131,7 +131,7 @@
             border: none !important;
           }
         </style>
-        {{#custom-sortable-group items=dragDropQuestions isFullyEditable=isFullyEditable onChange=(action "sortedDropped") as |group|}}
+        {{#custom-sortable-group items=dragDropQuestions isFullyEditable=canMoveQuestions onChange=(action "sortedDropped") as |group|}}
           <!-- hardcode survey date row here -->
           <li class="li-question row question-border">
             <div class="row">
@@ -160,7 +160,7 @@
                     otherQuetions=surveyTemplate.questions
                     deleteQuestion=(action "deleteQuestion")
                     toggleQuestion=(action "toggleQuestion")
-                    isFullyEditable=isFullyEditable
+                    isFullyEditable=canMoveQuestions
                     ancestrable=true
                     selectedQuestions=selectedQuestions
                   }}

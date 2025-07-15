@@ -6,10 +6,14 @@
       <span class="glyphicons gly-spin glyphicons-refresh"></span>
     {{else}}
       {{#if (or question.hasChild question.isContainer question.isARepeater)}}
-        <span class="glyphicons glyphicons-move icon-spacing {{if (not isFullyEditable) 'icon-disabled'}} {{if question.loading 'hide'}}">
+        <span class="glyphicons glyphicons-move icon-spacing {{if (and (not isFullyEditable) (not isSuperUser)) 'icon-disabled'}} {{if question.loading 'hide'}}">
           {{#tooltip-on-element duration=1500 side='right'}}
             {{#if (not isFullyEditable)}}
-              SURVEY LOCKED<br />CANNOT MOVE
+              {{#if isSuperUser}}
+                CLICK TO<br />SELECT FOR MOVING (Superuser)
+              {{else}}
+                SURVEY LOCKED<br />CANNOT MOVE
+              {{/if}}
             {{else}}
               CLICK TO<br />SELECT FOR MOVING
             {{/if}}
@@ -21,10 +25,14 @@
           {{/tooltip-on-element}}
         </span>
       {{else}}
-        <span class="glyphicons glyphicons-move icon-spacing {{if (not isFullyEditable) 'icon-disabled'}} {{if question.loading 'hide'}}">
+        <span class="glyphicons glyphicons-move icon-spacing {{if (and (not isFullyEditable) (not isSuperUser)) 'icon-disabled'}} {{if question.loading 'hide'}}">
           {{#tooltip-on-element duration=1500 side='right'}}
             {{#if (not isFullyEditable)}}
-              SURVEY LOCKED<br />CANNOT MOVE
+              {{#if isSuperUser}}
+                CLICK TO<br />SELECT FOR MOVING (Superuser)
+              {{else}}
+                SURVEY LOCKED<br />CANNOT MOVE
+              {{/if}}
             {{else}}
               CLICK TO<br />SELECT FOR MOVING
             {{/if}}

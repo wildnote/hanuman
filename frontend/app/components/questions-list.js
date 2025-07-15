@@ -36,6 +36,20 @@ export default Component.extend({
 
   isFullyEditable: alias('surveyTemplate.fullyEditable'),
 
+  // Computed property that allows superusers to move questions even when survey is locked
+  canMoveQuestions: computed('isFullyEditable', 'isSuperUser', function() {
+    const isFullyEditable = this.get('isFullyEditable');
+    const isSuperUser = this.get('isSuperUser');
+    
+    // Superusers can always move questions, even when survey is locked or has existing data
+    if (isSuperUser) {
+      return true;
+    }
+    
+    // Regular users can only move questions when survey is fully editable
+    return isFullyEditable;
+  }),
+
   init() {
     this._super(...arguments);
     this.selectedQuestions = A();
