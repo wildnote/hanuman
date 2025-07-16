@@ -2737,7 +2737,7 @@ export default Component.extend({
       <div style="
         position: fixed;
         top: 20px;
-        right: 20px;
+        left: 20px;
         background: #007bff;
         color: white;
         padding: 12px 20px;
@@ -2750,7 +2750,7 @@ export default Component.extend({
         animation: slideIn 0.3s ease-out;
       ">
         <span style="margin-right: 8px;">📋</span>
-        Click on a drop zone to move this question
+        Click on a green dropzone to move the question(s).
       </div>
     `;
 
@@ -2759,7 +2759,7 @@ export default Component.extend({
     style.textContent = `
       @keyframes slideIn {
         from {
-          transform: translateX(100%);
+          transform: translateX(-100%);
           opacity: 0;
         }
         to {
@@ -2773,7 +2773,7 @@ export default Component.extend({
           opacity: 1;
         }
         to {
-          transform: translateX(100%);
+          transform: translateX(-100%);
           opacity: 0;
         }
       }
