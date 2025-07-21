@@ -2225,6 +2225,16 @@ export default Component.extend({
       return false;
     }
 
+    // NEW VALIDATION: Prevent repeaters from being placed inside other repeaters
+    // Repeaters can only be placed inside section containers
+    const isSelectedRepeater = selectedItem.get('isARepeater');
+    const isTargetRepeater = targetContainer.get('isARepeater');
+    const isTargetSection = targetContainer.get('isContainer') && !targetContainer.get('isARepeater');
+    
+    if (isSelectedRepeater && isTargetRepeater) {
+      return false; // Cannot place repeater inside another repeater
+    }
+
     // CRITICAL: Prevent containers from being placed inside themselves or their descendants
     if (isSelectedContainer) {
       const selectedId = selectedItem.get('id');
