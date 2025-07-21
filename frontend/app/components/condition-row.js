@@ -200,6 +200,18 @@ export default Component.extend({
       }
     },
 
+    cancel() {
+      let condition = this.get('condition');
+      // If this is a new condition that was cancelled, remove it from pending save
+      if (this.get('isNewCondition') && condition) {
+        let rule = this.get('rule');
+        let conditionsPendingSave = rule.get('conditionsPendingSave') || [];
+        conditionsPendingSave.removeObject(condition);
+        condition.deleteRecord();
+      }
+      this.send('toggleForm');
+    },
+
     save() {
       let condition = this.get('condition');
 
