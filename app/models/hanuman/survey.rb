@@ -25,6 +25,7 @@ module Hanuman
     before_save :set_observations_unsorted, unless: :skip_sort?
 
     # after_commit :wetland_calcs_and_sorting_operations, on: [:create, :update], unless: :has_missing_questions
+    after_commit :sort_and_set_observation_visibility, on: [:create, :update], unless: :has_missing_questions
 
     after_commit :set_entries
 
@@ -40,6 +41,23 @@ module Hanuman
 
     # Delegations
     delegate :name, to: :survey_template, prefix: true
+
+    def sort_and_set_observation_visibility
+      reload
+      return if self.lock_callbacks || self.has_missing_questions
+
+      update_column(:lock_callbacks, true)
+
+      unless survey.observations_sorted
+        survey.sort_observations!
+      end
+  
+      unless survey.observation_visibility_set
+        survey.set_observation_visibility!
+      end
+
+      update_column(:lock_callbacks, false)
+    end
 
     def author
       versions.first.whodunnit unless versions.blank? rescue nil
