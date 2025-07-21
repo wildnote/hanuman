@@ -348,8 +348,17 @@ export default Component.extend({
     rules.forEach((rule) => {
       let conditions = rule.get('conditions') || [];
       conditions.forEach((condition) => {
-        if (!condition.validate()) {
-          allConditionsValid = false;
+        // For calculation rules, we need to allow conditions without answers
+        if (rule.get('type') === 'Hanuman::CalculationRule') {
+          // Only validate that the condition has a questionId
+          if (!condition.get('questionId')) {
+            allConditionsValid = false;
+          }
+        } else {
+          // For other rule types, use the standard validation
+          if (!condition.validate()) {
+            allConditionsValid = false;
+          }
         }
       });
     });
