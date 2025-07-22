@@ -45,6 +45,11 @@ const Condition = Model.extend(Validator, {
     answer: {
       custom: {
         validation(_key, value, model) {
+          // For calculation rules, we don't need answers at all
+          if (model.get('rule.type') === 'Hanuman::CalculationRule') {
+            return true;
+          }
+          
           if (OPERATORS_WITHOUT_ANSWER.includes(model.get('operator'))) {
             return true;
           }
