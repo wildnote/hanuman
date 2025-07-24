@@ -251,9 +251,6 @@ module Hanuman
       end
 
       # duktape doesn't have a method to inject a variable into the JS context, so we just build JS strings that assign the variable values, and then execute them
-      # Define Tree as a string variable to prevent Duktape reference error
-      context.exec_string('var Tree = "Tree";')
-      
       parameters.each do |param_name, param_value|
         if param_value.is_a?(Integer) || param_value.is_a?(Float) || param_value.is_a?(TrueClass) || param_value.is_a?(FalseClass)
           param_eval_string = "$#{param_name} = #{param_value};"
@@ -275,6 +272,8 @@ module Hanuman
           return
         end
 
+        # puts "DEBUG: Executing param_eval_string: #{param_eval_string}"
+        # puts "DEBUG: param_name: #{param_name}, param_value: #{param_value.inspect}"
         context.exec_string(param_eval_string)
       end
 
