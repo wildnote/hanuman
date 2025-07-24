@@ -281,7 +281,6 @@ function debugValidationErrors() {
   parsleyErrors.each(function() {
     var $errorField = $(this);
     var $container = $errorField.closest('.form-container-entry-item');
-    var fieldName = $errorField.attr('name') || $errorField.attr('id') || 'Unknown field';
     var errorText = $errorField.siblings('.parsley-errors-list').text() || 'No error message';
     
     // Get question text from the container
@@ -290,7 +289,7 @@ function debugValidationErrors() {
                       $container.find('h4, h5, h6').first().text().trim() ||
                       'Unknown question';
     
-    errorMessages.push(fieldName + ' (Question: ' + questionText + '): ' + errorText);
+    errorMessages.push(questionText + ': ' + errorText);
   });
   
   // Build debug message
@@ -298,7 +297,15 @@ function debugValidationErrors() {
   debugMessage += 'Failed Fields (' + failedFields.length + '):\n';
   
   failedFields.forEach(function(field) {
-    debugMessage += '- ' + field.name + ' (' + field.elementType + '): "' + field.value + '"\n';
+    // Get question text for failed fields
+    var $field = $('[name="' + field.name + '"], [id="' + field.name + '"]').first();
+    var $container = $field.closest('.form-container-entry-item');
+    var questionText = $container.find('label').first().text().trim() || 
+                      $container.find('.question-text').text().trim() ||
+                      $container.find('h4, h5, h6').first().text().trim() ||
+                      'Unknown question';
+    
+    debugMessage += '- ' + questionText + ' (' + field.elementType + '): "' + field.value + '"\n';
   });
   
   if (errorMessages.length > 0) {
@@ -310,7 +317,16 @@ function debugValidationErrors() {
   
   // Check for hidden required fields
   var hiddenRequired = $('[data-parsley-required="true"]').filter(function() {
-    return !$(this).is(':visible') || !$(this).closest('.form-container-entry-item').is(':visible');
+    var $field = $(this);
+    var fieldVisible = $field.is(':visible');
+    var containerVisible = $field.closest('.form-container-entry-item').is(':visible');
+    
+    // If field is hidden but has a visible selectize control, don't consider it hidden
+    if (!fieldVisible && $field.siblings('.selectize-control').is(':visible')) {
+      return false;
+    }
+    
+    return !fieldVisible || !containerVisible;
   });
   
   if (hiddenRequired.length > 0) {
@@ -326,7 +342,23 @@ function debugValidationErrors() {
                         $container.find('h4, h5, h6').first().text().trim() ||
                         'Unknown question';
       
-      debugMessage += '- ' + fieldName + ' (Question: ' + questionText + ')\n';
+      // Check why it's being detected as hidden
+      var fieldVisible = $field.is(':visible');
+      var containerVisible = $container.is(':visible');
+      var fieldDisplay = $field.css('display');
+      var containerDisplay = $container.css('display');
+      var fieldVisibility = $field.css('visibility');
+      var containerVisibility = $container.css('visibility');
+      
+      // Check if this is a selectize dropdown (hidden select with visible control)
+      var hasSelectizeControl = $field.siblings('.selectize-control').length > 0;
+      var selectizeControlVisible = $field.siblings('.selectize-control').is(':visible');
+      
+      debugMessage += '- ' + questionText + '\n';
+      debugMessage += '  Field visible: ' + fieldVisible + ', Container visible: ' + containerVisible + '\n';
+      debugMessage += '  Field display: ' + fieldDisplay + ', Container display: ' + containerDisplay + '\n';
+      debugMessage += '  Field visibility: ' + fieldVisibility + ', Container visibility: ' + containerVisibility + '\n';
+      debugMessage += '  Has selectize control: ' + hasSelectizeControl + ', Selectize visible: ' + selectizeControlVisible + '\n\n';
     });
   }
   
@@ -350,9 +382,14 @@ function debugValidationErrors() {
                         $container.find('h4, h5, h6').first().text().trim() ||
                         'Unknown question';
       
-      debugMessage += '- ' + fieldName + ' (Type: ' + fieldType + ', Validation: ' + validationType + ', Question: ' + questionText + ')\n';
+      debugMessage += '- ' + questionText + ' (Type: ' + fieldType + ', Validation: ' + validationType + ')\n';
     });
   }
   
-  alert('DEBUG VALIDATION ERRORS:\n\n' + debugMessage);
+  // Only show alert if there are actual issues to report
+  var hasIssues = failedFields.length > 0 || errorMessages.length > 0 || hiddenRequired.length > 0 || hiddenFieldsWithValidation.length > 0;
+  
+  if (hasIssues) {
+    alert('DEBUG VALIDATION ERRORS:\n\n' + debugMessage);
+  }
 }
