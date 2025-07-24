@@ -9,6 +9,11 @@ $(document).ready(function(){
   if ($('form.parsley-survey').length > 0 && $('[data-required=true]').length > 0) {
     $('input[type="submit"]').on('click', function(){
 
+      // DEBUG: Add validation debugging
+      setTimeout(function() {
+        debugValidationErrors();
+      }, 1000);
+
       // pulled from survey-status.js to determine current survey status to set required fields
       if ($('select#survey_survey_status_id').length > 0) {
         if ($('select#survey_survey_status_id').find(":selected").length > 0) {
@@ -233,3 +238,121 @@ window.Parsley.addValidator('latlong', {
     en: 'LatLog cordinates must be valid. EX: 35.22767235493586, -120.38131713867188',
   }
 });
+
+// DEBUG: Function to show all validation errors
+function debugValidationErrors() {
+  var form = $('form.parsley-survey');
+  var parsleyInstance = form.parsley();
+  
+  if (!parsleyInstance) {
+    alert('DEBUG: No parsley instance found on form');
+    return;
+  }
+  
+  var isValid = parsleyInstance.validate();
+  var failedFields = [];
+  
+  // Check all required fields
+  $('[data-parsley-required="true"]').each(function() {
+    var $field = $(this);
+    var fieldName = $field.attr('name') || $field.attr('id') || 'Unknown field';
+    var fieldValue = $field.val();
+    var fieldType = $field.attr('type') || $field.prop('tagName').toLowerCase();
+    
+    // Check if field is visible and not empty
+    var isVisible = $field.is(':visible') && $field.closest('.form-container-entry-item').is(':visible');
+    var isEmpty = !fieldValue || fieldValue === '' || fieldValue === 'Please select';
+    
+    if (isVisible && isEmpty) {
+      failedFields.push({
+        name: fieldName,
+        type: fieldType,
+        value: fieldValue,
+        visible: isVisible,
+        elementType: $field.closest('.form-container-entry-item').attr('data-element-type') || 'unknown'
+      });
+    }
+  });
+  
+  // Check for parsley error elements
+  var parsleyErrors = $('.parsley-error');
+  var errorMessages = [];
+  
+  parsleyErrors.each(function() {
+    var $errorField = $(this);
+    var $container = $errorField.closest('.form-container-entry-item');
+    var fieldName = $errorField.attr('name') || $errorField.attr('id') || 'Unknown field';
+    var errorText = $errorField.siblings('.parsley-errors-list').text() || 'No error message';
+    
+    // Get question text from the container
+    var questionText = $container.find('label').first().text().trim() || 
+                      $container.find('.question-text').text().trim() ||
+                      $container.find('h4, h5, h6').first().text().trim() ||
+                      'Unknown question';
+    
+    errorMessages.push(fieldName + ' (Question: ' + questionText + '): ' + errorText);
+  });
+  
+  // Build debug message
+  var debugMessage = 'Form Valid: ' + isValid + '\n\n';
+  debugMessage += 'Failed Fields (' + failedFields.length + '):\n';
+  
+  failedFields.forEach(function(field) {
+    debugMessage += '- ' + field.name + ' (' + field.elementType + '): "' + field.value + '"\n';
+  });
+  
+  if (errorMessages.length > 0) {
+    debugMessage += '\nParsley Error Messages:\n';
+    errorMessages.forEach(function(msg) {
+      debugMessage += '- ' + msg + '\n';
+    });
+  }
+  
+  // Check for hidden required fields
+  var hiddenRequired = $('[data-parsley-required="true"]').filter(function() {
+    return !$(this).is(':visible') || !$(this).closest('.form-container-entry-item').is(':visible');
+  });
+  
+  if (hiddenRequired.length > 0) {
+    debugMessage += '\nHidden Required Fields:\n';
+    hiddenRequired.each(function() {
+      var $field = $(this);
+      var $container = $field.closest('.form-container-entry-item');
+      var fieldName = $field.attr('name') || $field.attr('id') || 'Unknown field';
+      
+      // Get question text from the container
+      var questionText = $container.find('label').first().text().trim() || 
+                        $container.find('.question-text').text().trim() ||
+                        $container.find('h4, h5, h6').first().text().trim() ||
+                        'Unknown question';
+      
+      debugMessage += '- ' + fieldName + ' (Question: ' + questionText + ')\n';
+    });
+  }
+  
+  // Check for hidden fields with other validation (like number fields with text)
+  var hiddenFieldsWithValidation = $('input[type="number"], input[data-parsley-type], input[data-parsley-pattern]').filter(function() {
+    return !$(this).is(':visible') || !$(this).closest('.form-container-entry-item').is(':visible');
+  });
+  
+  if (hiddenFieldsWithValidation.length > 0) {
+    debugMessage += '\nHidden Fields with Validation:\n';
+    hiddenFieldsWithValidation.each(function() {
+      var $field = $(this);
+      var $container = $field.closest('.form-container-entry-item');
+      var fieldName = $field.attr('name') || $field.attr('id') || 'Unknown field';
+      var fieldType = $field.attr('type') || 'text';
+      var validationType = $field.attr('data-parsley-type') || $field.attr('data-parsley-pattern') || 'none';
+      
+      // Get question text from the container
+      var questionText = $container.find('label').first().text().trim() || 
+                        $container.find('.question-text').text().trim() ||
+                        $container.find('h4, h5, h6').first().text().trim() ||
+                        'Unknown question';
+      
+      debugMessage += '- ' + fieldName + ' (Type: ' + fieldType + ', Validation: ' + validationType + ', Question: ' + questionText + ')\n';
+    });
+  }
+  
+  alert('DEBUG VALIDATION ERRORS:\n\n' + debugMessage);
+}
