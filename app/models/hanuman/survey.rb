@@ -45,6 +45,7 @@ module Hanuman
     def sort_and_set_observation_visibility
       reload
       return if self.lock_callbacks || self.has_missing_questions
+      survey = self
 
       update_column(:lock_callbacks, true)
 
