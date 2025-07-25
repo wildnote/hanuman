@@ -924,11 +924,98 @@
     return stringValue;
   };
 
+  // Add: Only bind event handlers, do not run/hide/show anything
+  ConditionalLogic.prototype.bindConditionalLogic = function($context) {
+    var self = this;
+    $context.find("[data-rule!=''][data-rule]").each(function() {
+      var $ruleContainer = $(this);
+      var rules = $.parseJSON($ruleContainer.attr("data-rule"));
+      $(rules).each(function() {
+        var rule = this;
+        $(rule.conditions).each(function() {
+          var conditionQuestionId = this.question_id;
+          var $conditionContainer = $ruleContainer.siblings("[data-question-id=" + conditionQuestionId + "]");
+          if ($conditionContainer.length < 1) {
+            $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]");
+          }
+          var $conditionElement = $conditionContainer.find(".form-control");
+          if ($conditionElement.length < 1) {
+            $conditionElement = $conditionContainer.find(".form-control-static");
+          }
+          var ancestorId = rule.question_id;
+          if ($conditionElement.length < 2) {
+            self.bindConditions($conditionElement, rule, $ruleContainer, this.id);
+          } else {
+            if ($conditionElement.is(":checkbox")) {
+              if (rule.type !== 'Hanuman::CalculationRule') {
+                $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + this.answer.replace("/", "\\/").replace("'", "\\'") + "']");
+              }
+              self.bindConditions($conditionElement, rule, $ruleContainer, this.id);
+            } else {
+              $conditionElement.each(function(index, element) {
+                self.bindConditions($(element), rule, $ruleContainer, this.id);
+              });
+            }
+          }
+        });
+      });
+    });
+  };
+
+  // Add: Only run/hide/show logic, do not bind events
+  ConditionalLogic.prototype.runConditionalLogic = function(runCalcs, runConditionals, $context) {
+    var self = this;
+    $context.find("[data-rule!=''][data-rule]").each(function() {
+      var $ruleContainer = $(this);
+      var rules = $.parseJSON($ruleContainer.attr("data-rule"));
+      $(rules).each(function() {
+        var rule = this;
+        var matchType = rule.match_type;
+        $(rule.conditions).each(function() {
+          var inRepeater = false;
+          var $conditionContainer = $ruleContainer.siblings("[data-question-id=" + this.question_id + "]");
+          if ($conditionContainer.length < 1) {
+            $conditionContainer = $("[data-question-id=" + this.question_id + "]");
+          }
+          var $conditionElement = $conditionContainer.find(".form-control");
+          if ($conditionElement.length < 1) {
+            $conditionElement = $conditionContainer.find(".form-control-static");
+          }
+          var $repeater = $conditionElement.closest(".form-container-repeater");
+          if ($repeater.length > 0) {
+            inRepeater = true;
+          }
+          var ancestorId = rule.question_id;
+          if (rule.type !== "Hanuman::CalculationRule") {
+            if (runConditionals) {
+              self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true);
+            }
+          }
+        });
+        if (runCalcs && rule.type === "Hanuman::CalculationRule") {
+          self.updateCalculation(rule, $ruleContainer);
+        }
+      });
+    });
+  };
+
+  // Update: findRules now just calls both for backward compatibility
+  ConditionalLogic.prototype.findRules = function(runCalcs, runConditionals, $context) {
+    this.bindConditionalLogic($context);
+    this.runConditionalLogic(runCalcs, runConditionals, $context);
+  };
+
+  // Update: on document ready, call only bindConditionalLogic for large_edit, both for normal edit
   $(function() {
     var $context = $('.form-container-survey');
-    if ($('input#run_cl').length) {
+    var isLargeEdit = window.location.pathname.includes('large_edit');
+    if ($('input#run_cl').length || isLargeEdit) {
       var cl = new ConditionalLogic();
-      cl.findRules(false, true, $context);
+      if (isLargeEdit) {
+        cl.bindConditionalLogic($context);
+      } else {
+        cl.findRules(false, true, $context);
+      }
     }
   });
 
