@@ -303,6 +303,12 @@
       $container.find('input.cloudinary-fileupload').each(function() {
         $(this).attr('data-parsley-required', 'false');
       });
+      
+      // Set hidden field to true (if it exists)
+      var $hiddenField = $container.find('.hidden-field-observation-hidden');
+      if ($hiddenField.length > 0) {
+        $hiddenField.val('true');
+      }
     } else {
       $container.removeClass("conditional-logic-hidden");
 
@@ -314,6 +320,12 @@
         $container.find('input.cloudinary-fileupload').each(function() {
           $(this).attr('data-parsley-required', 'true');
         });
+      }
+      
+      // Set hidden field to false (if it exists)
+      var $hiddenField = $container.find('.hidden-field-observation-hidden');
+      if ($hiddenField.length > 0) {
+        $hiddenField.val('false');
       }
     }
 
