@@ -309,7 +309,7 @@ function debugValidationErrors() {
   });
   
   if (errorMessages.length > 0) {
-    debugMessage += '\nParsley Error Messages:\n';
+    debugMessage += '\nInfo:\n';
     errorMessages.forEach(function(msg) {
       debugMessage += '- ' + msg + '\n';
     });
