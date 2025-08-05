@@ -751,6 +751,14 @@
 
       // Get all of the parameter questions, inject them into the interpreter as $api_column_name variables.
       $.each(parameters, function(key, value) {
+        // Ensure numeric values are properly typed for calculations
+        if (typeof value === 'string' && $.isNumeric(value)) {
+          value = parseFloat(value);
+        }
+        // If value is an array with a single element, extract the single value
+        if (Array.isArray(value) && value.length === 1) {
+          value = value[0];
+        }
         interpreter.setProperty(globalObject, '$' + key, interpreter.nativeToPseudo(value));
       });
     });
