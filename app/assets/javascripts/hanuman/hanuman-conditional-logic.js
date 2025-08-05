@@ -755,8 +755,15 @@
         if (typeof value === 'string' && $.isNumeric(value)) {
           value = parseFloat(value);
         }
-        // If value is an array with a single element, extract the single value
-        if (Array.isArray(value) && value.length === 1) {
+        // Only extract single values from single-element arrays in large edit modal context
+        // Regular edit top-level calculations need arrays even for single repeaters
+        var isInLargeEditModal = $('#repeaterModal').length > 0 && ($('#repeaterModal').hasClass('in') || $('#repeaterModal').is(':visible'));
+        // Alternative detection: check if we're inside the modal context
+        var isInModalContext = $('.form-container-survey').closest('#repeaterModal').length > 0;
+        // Check if we're on large edit page and in a modal context
+        var isLargeEditPage = window.location.pathname.includes('/large_edit');
+        var isInModal = $('#repeaterModal').length > 0;
+        if ((isInLargeEditModal || isInModalContext || (isLargeEditPage && isInModal)) && Array.isArray(value) && value.length === 1) {
           value = value[0];
         }
         interpreter.setProperty(globalObject, '$' + key, interpreter.nativeToPseudo(value));
