@@ -67,6 +67,16 @@ module Hanuman
     def set_entries
       Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Starting set_entries for survey #{self.id}"
       Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Caller: #{caller[0..5].join("\n")}"
+      
+      # Check if all observations already have entry values set
+      observations_without_entry = self.observations.where(entry: nil).count
+      if observations_without_entry == 0
+        Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] All observations already have entry values set, skipping set_entries for survey #{self.id}"
+        return
+      end
+      
+      Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Found #{observations_without_entry} observations without entry values, proceeding with set_entries for survey #{self.id}"
+      
       first_of_type_repeater_ids = []
       first_of_type_captured_question_ids = []
 
