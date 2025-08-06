@@ -65,6 +65,8 @@ module Hanuman
     end
 
     def set_entries
+      Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Starting set_entries for survey #{self.id}"
+      Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Caller: #{caller[0..5].join("\n")}"
       first_of_type_repeater_ids = []
       first_of_type_captured_question_ids = []
 
@@ -84,7 +86,9 @@ module Hanuman
 
       first_entry_observations.each do |o|
         o.entry = 1
+        Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] set_entries: About to save observation #{o.id} (entry=1)"
         o.save
+        Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] set_entries: Completed save observation #{o.id}"
       end
 
       # Iterate through the remaining repeaters and increment the entry for each one
@@ -93,9 +97,12 @@ module Hanuman
         repeater_observations = self.observations.joins(:question).where('repeater_id = ? OR (parent_repeater_id = ? AND (repeater_id IS NULL OR repeater_id = 0))', observation.repeater_id, observation.repeater_id)
         repeater_observations.each do |o|
           o.entry = index + 2
+          Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] set_entries: About to save observation #{o.id} (entry=#{index + 2})"
           o.save
+          Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] set_entries: Completed save observation #{o.id}"
         end
       end
+      Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Completed set_entries for survey #{self.id}"
     end
 
     def set_observations_unsorted
