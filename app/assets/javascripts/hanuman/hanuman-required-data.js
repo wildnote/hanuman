@@ -43,6 +43,49 @@ $(document).ready(function(){
         }
       }
 
+      // Check for any hidden inputs with values (including dynamically created ones from dialog)
+      $('input[type=hidden]').each(function() {
+        var $hiddenInput = $(this);
+        var $fileContainer = $hiddenInput.closest('.file-upload-input-button');
+        
+        // If this hidden input has a value and is in a file upload container, remove parsley required
+        if ($hiddenInput.val() != "" && $fileContainer.length > 0) {
+          $fileContainer.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+        }
+      });
+
+      // Check for any file previews that indicate files have been uploaded
+      $('.photo-preview, .signature-preview, .document-preview').each(function() {
+        var $preview = $(this);
+        var $fileContainer = $preview.closest('.file-upload-input-button');
+        
+        if ($fileContainer.length > 0) {
+          $fileContainer.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+        }
+      });
+
+      // Check for any file upload containers that have hidden inputs with values
+      $('.file-upload-input-button').each(function() {
+        var $container = $(this);
+        var hasFileValues = false;
+        
+        // Check if any hidden inputs in this container have values
+        $container.find('input[type=hidden]').each(function() {
+          if ($(this).val() && $(this).val().trim() !== "") {
+            hasFileValues = true;
+            return false; // break the loop
+          }
+        });
+        
+        // Check if container has file previews (indicating files were uploaded)
+        var hasFilePreviews = $container.find('.photo-preview, .signature-preview, .document-preview').length > 0;
+        
+        // If container has file values or file previews, remove parsley required
+        if (hasFileValues || hasFilePreviews) {
+          $container.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+        }
+      });
+
 
       // special elements that don't work out of the box with parsley, having to write code to validate and position error messages
       setTimeout(function(){
@@ -176,6 +219,16 @@ $(document).ready(function(){
     $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
       $(e.target).siblings('ul.parsley-errors-list').remove()
       $(e.target).removeClass('parsley-error')
+      // Remove the parsley required attribute since file has been uploaded
+      $(e.target).removeAttr('data-parsley-required')
+    });
+
+    // listens to file upload and removes parsley errors (using event delegation for dynamically created elements)
+    $(document).on('cloudinarydone', '.cloudinary-fileupload', function(e, data) {
+      $(e.target).siblings('ul.parsley-errors-list').remove()
+      $(e.target).removeClass('parsley-error')
+      // Remove the parsley required attribute since file has been uploaded
+      $(e.target).removeAttr('data-parsley-required')
     });
 
 
@@ -217,6 +270,56 @@ $(document).ready(function(){
   })
 
 });
+
+// Function to validate file uploads - can be called from dialog initialization
+function validateFileUploads($context) {
+  if (!$context) {
+    $context = $('body');
+  }
+  
+  // Check for any hidden inputs with values (including dynamically created ones from dialog)
+  $context.find('input[type=hidden]').each(function() {
+    var $hiddenInput = $(this);
+    var $fileContainer = $hiddenInput.closest('.file-upload-input-button');
+    
+    // If this hidden input has a value and is in a file upload container, remove parsley required
+    if ($hiddenInput.val() != "" && $fileContainer.length > 0) {
+      $fileContainer.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+    }
+  });
+
+  // Check for any file previews that indicate files have been uploaded
+  $context.find('.photo-preview, .signature-preview, .document-preview').each(function() {
+    var $preview = $(this);
+    var $fileContainer = $preview.closest('.file-upload-input-button');
+    
+    if ($fileContainer.length > 0) {
+      $fileContainer.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+    }
+  });
+
+  // Check for any file upload containers that have hidden inputs with values
+  $context.find('.file-upload-input-button').each(function() {
+    var $container = $(this);
+    var hasFileValues = false;
+    
+    // Check if any hidden inputs in this container have values
+    $container.find('input[type=hidden]').each(function() {
+      if ($(this).val() && $(this).val().trim() !== "") {
+        hasFileValues = true;
+        return false; // break the loop
+      }
+    });
+    
+    // Check if container has file previews (indicating files were uploaded)
+    var hasFilePreviews = $container.find('.photo-preview, .signature-preview, .document-preview').length > 0;
+    
+    // If container has file values or file previews, remove parsley required
+    if (hasFileValues || hasFilePreviews) {
+      $container.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+    }
+  });
+}
 
 // custom parsley validation for date format:  MM/DD/YYYY.
 window.Parsley.addValidator('dateformat', {
