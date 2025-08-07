@@ -255,7 +255,15 @@ module Hanuman
         if param_value.is_a?(Integer) || param_value.is_a?(Float) || param_value.is_a?(TrueClass) || param_value.is_a?(FalseClass)
           param_eval_string = "$#{param_name} = #{param_value};"
         elsif param_value.is_a?(Array)
-          param_eval_string = "$#{param_name} = [#{param_value.map { |v| "#{v.to_s unless v.blank?}" }.join(',')}];"
+          # Filter out nil/blank values and properly quote strings
+          array_values = param_value.reject(&:blank?).map do |v|
+            if v.is_a?(String)
+              v.dump
+            else
+              v.to_s
+            end
+          end
+          param_eval_string = "$#{param_name} = [#{array_values.join(',')}];"
         elsif param_value.is_a?(Date)
           param_eval_string = "$#{param_name} = Date.parse('#{param_value}');"
         elsif !param_value.blank?
@@ -264,6 +272,8 @@ module Hanuman
           return
         end
 
+        # puts "DEBUG: Executing param_eval_string: #{param_eval_string}"
+        # puts "DEBUG: param_name: #{param_name}, param_value: #{param_value.inspect}"
         context.exec_string(param_eval_string)
       end
 

@@ -25,6 +25,7 @@ module Hanuman
     before_save :set_observations_unsorted, unless: :skip_sort?
 
     # after_commit :wetland_calcs_and_sorting_operations, on: [:create, :update], unless: :has_missing_questions
+    after_commit :sort_and_set_observation_visibility, on: [:create, :update], unless: :has_missing_questions
 
     after_commit :set_entries
 
@@ -41,11 +42,41 @@ module Hanuman
     # Delegations
     delegate :name, to: :survey_template, prefix: true
 
+    def sort_and_set_observation_visibility
+      reload
+      return if self.lock_callbacks || self.has_missing_questions
+      survey = self
+
+      update_column(:lock_callbacks, true)
+
+      unless survey.observations_sorted
+        survey.sort_observations!
+      end
+  
+      unless survey.observation_visibility_set
+        survey.set_observation_visibility!
+      end
+
+      update_column(:lock_callbacks, false)
+    end
+
     def author
       versions.first.whodunnit unless versions.blank? rescue nil
     end
 
     def set_entries
+      Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Starting set_entries for survey #{self.id}"
+      Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Caller: #{caller[0..5].join("\n")}"
+      
+      # Check if all observations already have entry values set
+      observations_without_entry = self.observations.where(entry: nil).count
+      if observations_without_entry == 0
+        Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] All observations already have entry values set, skipping set_entries for survey #{self.id}"
+        return
+      end
+      
+      Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Found #{observations_without_entry} observations without entry values, proceeding with set_entries for survey #{self.id}"
+      
       first_of_type_repeater_ids = []
       first_of_type_captured_question_ids = []
 
@@ -65,7 +96,9 @@ module Hanuman
 
       first_entry_observations.each do |o|
         o.entry = 1
+        Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] set_entries: About to save observation #{o.id} (entry=1)"
         o.save
+        Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] set_entries: Completed save observation #{o.id}"
       end
 
       # Iterate through the remaining repeaters and increment the entry for each one
@@ -74,9 +107,12 @@ module Hanuman
         repeater_observations = self.observations.joins(:question).where('repeater_id = ? OR (parent_repeater_id = ? AND (repeater_id IS NULL OR repeater_id = 0))', observation.repeater_id, observation.repeater_id)
         repeater_observations.each do |o|
           o.entry = index + 2
+          Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] set_entries: About to save observation #{o.id} (entry=#{index + 2})"
           o.save
+          Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] set_entries: Completed save observation #{o.id}"
         end
       end
+      Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Completed set_entries for survey #{self.id}"
     end
 
     def set_observations_unsorted

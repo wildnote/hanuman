@@ -157,10 +157,10 @@ $(document).ready(function(){
     $context = $('.form-container-survey')
     $contextForConditionals = $clonedContainer
     cl = new ConditionalLogic;
-    // bind CL on all context
-    cl.findRules(false, false, $context);
-    // run CDV only on new repeater context
-    cl.findRules(false, true, $contextForConditionals);
+    // bind CL on all context, repeater to top level
+    cl.findRules(true, false, $context);
+    // repeater to repeater
+    cl.findRules(true, true, $contextForConditionals);
 
     // bind wetland calcs
     // window.initializeCoverFields();
