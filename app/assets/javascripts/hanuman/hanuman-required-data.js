@@ -364,7 +364,17 @@ function debugValidationErrors() {
   parsleyErrors.each(function() {
     var $errorField = $(this);
     var $container = $errorField.closest('.form-container-entry-item');
-    var errorText = $errorField.siblings('.parsley-errors-list').text() || 'No error message';
+    var errorText = $errorField.siblings('.parsley-errors-list').text();
+    
+    // If no error text found, provide a logical message based on field type
+    if (!errorText || errorText.trim() === '') {
+      var elementType = $container.attr('data-element-type');
+      if (elementType === 'multiselect') {
+        errorText = 'This field is required - please select at least one option';
+      } else {
+        errorText = 'This field is required';
+      }
+    }
     
     // Get question text from the container
     var questionText = $container.find('label').first().text().trim() || 
