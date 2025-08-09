@@ -298,11 +298,15 @@
       $container.addClass("conditional-logic-hidden");
       $container.find('input.form-control, textarea.form-control, select.form-control').each(function() {
         $(this).attr('data-parsley-required', 'false');
+        $(this).removeAttr('data-parsley-mincheck'); // Remove checkbox validation
       });
 
       $container.find('input.cloudinary-fileupload').each(function() {
         $(this).attr('data-parsley-required', 'false');
       });
+      
+      // Remove required attributes from lat/long fields
+      $container.find('.lat-entry, .long-entry').attr('data-parsley-required', 'false');
       
       // Set hidden field to true (if it exists)
       var $hiddenField = $container.find('.hidden-field-observation-hidden');
@@ -379,6 +383,12 @@
 
     // Trigger Parsley validation update for the container and its children
     $container.parsley();
+    
+    // Re-setup required fields for newly shown containers
+    if (!hideQuestions && $container.find('[data-required=true]').length > 0) {
+      console.log('Calling setupRequiredData on container with', $container.find('[data-required=true]').length, 'required fields');
+      setupRequiredData($container);
+    }
   };
 
   ConditionalLogic.prototype.clearQuestions = function(container) {

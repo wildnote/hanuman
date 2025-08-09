@@ -232,42 +232,9 @@ $(document).ready(function(){
     });
 
 
-    // reads dom for required fields
-    function setupRequiredData(){
-      var formValidator = $('form.parsley-survey');
 
-      // loop through all form inputs with data-required=true and pop data-parsley-required=true into the actual form element to get parsley to work
-      var formInputs = $('form.form-horizontal').find('[data-required=true]');
-      if (formInputs.length > 0) {
-        formValidator.parsley();
-        for (var i = 0; i < formInputs.length; i++) {
-          var formControlElement = $(formInputs[i]).find('.form-control').not('.multiselect-search');
-          if (formControlElement) {
-            // Check if this is a point question type (has lat/long inputs)
-            var hasLatLongInputs = $(formInputs[i]).find('.lat-entry, .long-entry').length > 0;
-            
-            if (hasLatLongInputs) {
-              // For point questions, only require lat and long inputs
-              $(formInputs[i]).find('.lat-entry, .long-entry').attr('data-parsley-required','true');
-            } else {
-              // For all other question types, require all form-control elements as before
-              formControlElement.attr('data-parsley-required','true');
-              // for checkboxes set to min 1
-              if ($(formInputs[i]).attr('data-element-type') === 'checkboxes') {
-                formControlElement.attr('data-parsley-mincheck','1');
-              }
-            }
-          }
-          // find photo, document and video upload buttons
-          var fileElement = $(formInputs[i]).find('input[type=file]');
-          if (formControlElement) {
-            fileElement.attr('data-parsley-required','true');
-          }
-        }
-      }
-    }
 
-    setupRequiredData();
+    window.setupRequiredData();
   }
 
   // this listener runs parsley validate on date fields everytime user interacts with the input to give instant feedback on any misformatted dates.
@@ -279,6 +246,45 @@ $(document).ready(function(){
   })
 
 });
+
+// reads dom for required fields - can be called from conditional logic
+window.setupRequiredData = function($context){
+  console.log('setupRequiredData called with context:', $context);
+  var formValidator = $('form.parsley-survey');
+
+  // loop through all form inputs with data-required=true and pop data-parsley-required=true into the actual form element to get parsley to work
+  var formInputs = ($context || $('form.form-horizontal')).find('[data-required=true]');
+  if (formInputs.length > 0) {
+    formValidator.parsley();
+    for (var i = 0; i < formInputs.length; i++) {
+      // Only set as required if the container is not hidden by conditional logic
+      if (!$(formInputs[i]).hasClass('conditional-logic-hidden')) {
+        var formControlElement = $(formInputs[i]).find('.form-control').not('.multiselect-search');
+        if (formControlElement) {
+          // Check if this is a point question type (has lat/long inputs)
+          var hasLatLongInputs = $(formInputs[i]).find('.lat-entry, .long-entry').length > 0;
+          
+          if (hasLatLongInputs) {
+            // For point questions, only require lat and long inputs
+            $(formInputs[i]).find('.lat-entry, .long-entry').attr('data-parsley-required','true');
+          } else {
+            // For all other question types, require all form-control elements as before
+            formControlElement.attr('data-parsley-required','true');
+            // for checkboxes set to min 1
+            if ($(formInputs[i]).attr('data-element-type') === 'checkboxes') {
+              formControlElement.attr('data-parsley-mincheck','1');
+            }
+          }
+        }
+        // find photo, document and video upload buttons
+        var fileElement = $(formInputs[i]).find('input[type=file]');
+        if (formControlElement) {
+          fileElement.attr('data-parsley-required','true');
+        }
+      }
+    }
+  }
+};
 
 // Function to validate file uploads - can be called from dialog initialization
 function validateFileUploads($context) {
