@@ -243,10 +243,19 @@ $(document).ready(function(){
         for (var i = 0; i < formInputs.length; i++) {
           var formControlElement = $(formInputs[i]).find('.form-control').not('.multiselect-search');
           if (formControlElement) {
-            formControlElement.attr('data-parsley-required','true');
-            // for checkboxes set to min 1
-            if ($(formInputs[i]).attr('data-element-type') === 'checkboxes') {
-              formControlElement.attr('data-parsley-mincheck','1');
+            // Check if this is a point question type (has lat/long inputs)
+            var hasLatLongInputs = $(formInputs[i]).find('.lat-entry, .long-entry').length > 0;
+            
+            if (hasLatLongInputs) {
+              // For point questions, only require lat and long inputs
+              $(formInputs[i]).find('.lat-entry, .long-entry').attr('data-parsley-required','true');
+            } else {
+              // For all other question types, require all form-control elements as before
+              formControlElement.attr('data-parsley-required','true');
+              // for checkboxes set to min 1
+              if ($(formInputs[i]).attr('data-element-type') === 'checkboxes') {
+                formControlElement.attr('data-parsley-mincheck','1');
+              }
             }
           }
           // find photo, document and video upload buttons
@@ -361,18 +370,35 @@ function debugValidationErrors() {
   var parsleyErrors = $('.parsley-error');
   var errorMessages = [];
   
+  var processedContainers = new Set();
+  
   parsleyErrors.each(function() {
     var $errorField = $(this);
     var $container = $errorField.closest('.form-container-entry-item');
+    var containerKey = $container.attr('data-question-id') || $container.index();
+    
+    // Skip if we've already processed this container (for lat/long fields)
+    if (processedContainers.has(containerKey)) {
+      return;
+    }
+    
     var errorText = $errorField.siblings('.parsley-errors-list').text();
     
-    // If no error text found, provide a logical message based on field type
-    if (!errorText || errorText.trim() === '') {
-      var elementType = $container.attr('data-element-type');
-      if (elementType === 'multiselect') {
-        errorText = 'This field is required - please select at least one option';
-      } else {
-        errorText = 'This field is required';
+    // Check if this is a lat/long container with multiple errors
+    var latLongErrors = $container.find('.lat-entry.parsley-error, .long-entry.parsley-error');
+    if (latLongErrors.length > 0) {
+      // Mark this container as processed to avoid duplicates
+      processedContainers.add(containerKey);
+      errorText = 'Latitude and longitude are required';
+    } else {
+      // If no error text found, provide a logical message based on field type
+      if (!errorText || errorText.trim() === '') {
+        var elementType = $container.attr('data-element-type');
+        if (elementType === 'multiselect') {
+          errorText = 'This field is required - please select at least one option';
+        } else {
+          errorText = 'This field is required';
+        }
       }
     }
     
