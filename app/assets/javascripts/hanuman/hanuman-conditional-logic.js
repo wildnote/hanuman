@@ -1042,17 +1042,14 @@
     this.runConditionalLogic(runCalcs, runConditionals, $context);
   };
 
-  // Update: on document ready, call only bindConditionalLogic for large_edit, both for normal edit
+  // Initialize conditional logic for both normal edit and large edit modes
   $(function() {
     var $context = $('.form-container-survey');
     var isLargeEdit = window.location.pathname.includes('large_edit');
     if ($('input#run_cl').length || isLargeEdit) {
       var cl = new ConditionalLogic();
-      if (isLargeEdit) {
-        cl.bindConditionalLogic($context);
-      } else {
-        cl.findRules(false, true, $context);
-      }
+      // Both modes use the same initialization: bind handlers and run initial evaluation
+      cl.findRules(false, true, $context);
     }
   });
 
