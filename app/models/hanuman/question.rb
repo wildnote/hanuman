@@ -354,8 +354,8 @@ module Hanuman
         new_sort_order = q.sort_order + increment_sort_by
         new_q = q.amoeba_dup
         
-        # Add "-cloned" to the descendant question text
-        new_q.question_text = "#{new_q.question_text} -cloned"
+        # Don't add "-cloned" to descendant questions when cloning a container
+        # Only the container question should get "-cloned" added
         
         new_q.sort_order = new_sort_order
         new_q.parent = new_child_parent
