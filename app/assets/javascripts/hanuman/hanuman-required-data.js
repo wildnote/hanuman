@@ -9,6 +9,11 @@ $(document).ready(function(){
   if ($('form.parsley-survey').length > 0 && $('[data-required=true]').length > 0) {
     $('input[type="submit"]').on('click', function(){
 
+      // DEBUG: Add validation debugging
+      setTimeout(function() {
+        debugValidationErrors();
+      }, 1000);
+
       // pulled from survey-status.js to determine current survey status to set required fields
       if ($('select#survey_survey_status_id').length > 0) {
         if ($('select#survey_survey_status_id').find(":selected").length > 0) {
@@ -37,6 +42,49 @@ $(document).ready(function(){
           }
         }
       }
+
+      // Check for any hidden inputs with values (including dynamically created ones from dialog)
+      $('input[type=hidden]').each(function() {
+        var $hiddenInput = $(this);
+        var $fileContainer = $hiddenInput.closest('.file-upload-input-button');
+        
+        // If this hidden input has a value and is in a file upload container, remove parsley required
+        if ($hiddenInput.val() != "" && $fileContainer.length > 0) {
+          $fileContainer.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+        }
+      });
+
+      // Check for any file previews that indicate files have been uploaded
+      $('.photo-preview, .signature-preview, .document-preview').each(function() {
+        var $preview = $(this);
+        var $fileContainer = $preview.closest('.file-upload-input-button');
+        
+        if ($fileContainer.length > 0) {
+          $fileContainer.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+        }
+      });
+
+      // Check for any file upload containers that have hidden inputs with values
+      $('.file-upload-input-button').each(function() {
+        var $container = $(this);
+        var hasFileValues = false;
+        
+        // Check if any hidden inputs in this container have values
+        $container.find('input[type=hidden]').each(function() {
+          if ($(this).val() && $(this).val().trim() !== "") {
+            hasFileValues = true;
+            return false; // break the loop
+          }
+        });
+        
+        // Check if container has file previews (indicating files were uploaded)
+        var hasFilePreviews = $container.find('.photo-preview, .signature-preview, .document-preview').length > 0;
+        
+        // If container has file values or file previews, remove parsley required
+        if (hasFileValues || hasFilePreviews) {
+          $container.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+        }
+      });
 
 
       // special elements that don't work out of the box with parsley, having to write code to validate and position error messages
@@ -171,36 +219,22 @@ $(document).ready(function(){
     $('.cloudinary-fileupload').bind('cloudinarydone', function(e, data) {
       $(e.target).siblings('ul.parsley-errors-list').remove()
       $(e.target).removeClass('parsley-error')
+      // Remove the parsley required attribute since file has been uploaded
+      $(e.target).removeAttr('data-parsley-required')
+    });
+
+    // listens to file upload and removes parsley errors (using event delegation for dynamically created elements)
+    $(document).on('cloudinarydone', '.cloudinary-fileupload', function(e, data) {
+      $(e.target).siblings('ul.parsley-errors-list').remove()
+      $(e.target).removeClass('parsley-error')
+      // Remove the parsley required attribute since file has been uploaded
+      $(e.target).removeAttr('data-parsley-required')
     });
 
 
-    // reads dom for required fields
-    function setupRequiredData(){
-      var formValidator = $('form.parsley-survey');
 
-      // loop through all form inputs with data-required=true and pop data-parsley-required=true into the actual form element to get parsley to work
-      var formInputs = $('form.form-horizontal').find('[data-required=true]');
-      if (formInputs.length > 0) {
-        formValidator.parsley();
-        for (var i = 0; i < formInputs.length; i++) {
-          var formControlElement = $(formInputs[i]).find('.form-control').not('.multiselect-search');
-          if (formControlElement) {
-            formControlElement.attr('data-parsley-required','true');
-            // for checkboxes set to min 1
-            if ($(formInputs[i]).attr('data-element-type') === 'checkboxes') {
-              formControlElement.attr('data-parsley-mincheck','1');
-            }
-          }
-          // find photo, document and video upload buttons
-          var fileElement = $(formInputs[i]).find('input[type=file]');
-          if (formControlElement) {
-            fileElement.attr('data-parsley-required','true');
-          }
-        }
-      }
-    }
 
-    setupRequiredData();
+    window.setupRequiredData();
   }
 
   // this listener runs parsley validate on date fields everytime user interacts with the input to give instant feedback on any misformatted dates.
@@ -212,6 +246,95 @@ $(document).ready(function(){
   })
 
 });
+
+// reads dom for required fields - can be called from conditional logic
+window.setupRequiredData = function($context){
+  console.log('setupRequiredData called with context:', $context);
+  var formValidator = $('form.parsley-survey');
+
+  // loop through all form inputs with data-required=true and pop data-parsley-required=true into the actual form element to get parsley to work
+  var formInputs = ($context || $('form.form-horizontal')).find('[data-required=true]');
+  if (formInputs.length > 0) {
+    formValidator.parsley();
+    for (var i = 0; i < formInputs.length; i++) {
+      // Only set as required if the container is not hidden by conditional logic
+      if (!$(formInputs[i]).hasClass('conditional-logic-hidden')) {
+        var formControlElement = $(formInputs[i]).find('.form-control').not('.multiselect-search');
+        if (formControlElement) {
+          // Check if this is a point question type (has lat/long inputs)
+          var hasLatLongInputs = $(formInputs[i]).find('.lat-entry, .long-entry').length > 0;
+          
+          if (hasLatLongInputs) {
+            // For point questions, only require lat and long inputs
+            $(formInputs[i]).find('.lat-entry, .long-entry').attr('data-parsley-required','true');
+          } else {
+            // For all other question types, require all form-control elements as before
+            formControlElement.attr('data-parsley-required','true');
+            // for checkboxes set to min 1
+            if ($(formInputs[i]).attr('data-element-type') === 'checkboxes') {
+              formControlElement.attr('data-parsley-mincheck','1');
+            }
+          }
+        }
+        // find photo, document and video upload buttons
+        var fileElement = $(formInputs[i]).find('input[type=file]');
+        if (formControlElement) {
+          fileElement.attr('data-parsley-required','true');
+        }
+      }
+    }
+  }
+};
+
+// Function to validate file uploads - can be called from dialog initialization
+function validateFileUploads($context) {
+  if (!$context) {
+    $context = $('body');
+  }
+  
+  // Check for any hidden inputs with values (including dynamically created ones from dialog)
+  $context.find('input[type=hidden]').each(function() {
+    var $hiddenInput = $(this);
+    var $fileContainer = $hiddenInput.closest('.file-upload-input-button');
+    
+    // If this hidden input has a value and is in a file upload container, remove parsley required
+    if ($hiddenInput.val() != "" && $fileContainer.length > 0) {
+      $fileContainer.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+    }
+  });
+
+  // Check for any file previews that indicate files have been uploaded
+  $context.find('.photo-preview, .signature-preview, .document-preview').each(function() {
+    var $preview = $(this);
+    var $fileContainer = $preview.closest('.file-upload-input-button');
+    
+    if ($fileContainer.length > 0) {
+      $fileContainer.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+    }
+  });
+
+  // Check for any file upload containers that have hidden inputs with values
+  $context.find('.file-upload-input-button').each(function() {
+    var $container = $(this);
+    var hasFileValues = false;
+    
+    // Check if any hidden inputs in this container have values
+    $container.find('input[type=hidden]').each(function() {
+      if ($(this).val() && $(this).val().trim() !== "") {
+        hasFileValues = true;
+        return false; // break the loop
+      }
+    });
+    
+    // Check if container has file previews (indicating files were uploaded)
+    var hasFilePreviews = $container.find('.photo-preview, .signature-preview, .document-preview').length > 0;
+    
+    // If container has file values or file previews, remove parsley required
+    if (hasFileValues || hasFilePreviews) {
+      $container.find('.cloudinary-fileupload').removeAttr('data-parsley-required');
+    }
+  });
+}
 
 // custom parsley validation for date format:  MM/DD/YYYY.
 window.Parsley.addValidator('dateformat', {
@@ -233,3 +356,147 @@ window.Parsley.addValidator('latlong', {
     en: 'LatLog cordinates must be valid. EX: 35.22767235493586, -120.38131713867188',
   }
 });
+
+// DEBUG: Function to show all validation errors
+// This function checks for validation issues and flags potentially problematic hidden fields.
+// Hidden fields with visible widgets (like multiselect widgets) are considered valid.
+// Only truly hidden fields with no visible widget are flagged as potentially problematic.
+function debugValidationErrors() {
+  var form = $('form.parsley-survey');
+  var parsleyInstance = form.parsley();
+  
+  if (!parsleyInstance) {
+    alert('DEBUG: No parsley instance found on form');
+    return;
+  }
+  
+  var isValid = parsleyInstance.validate();
+  
+  // Check for parsley error elements
+  var parsleyErrors = $('.parsley-error');
+  var errorMessages = [];
+  
+  var processedContainers = new Set();
+  
+  parsleyErrors.each(function() {
+    var $errorField = $(this);
+    var $container = $errorField.closest('.form-container-entry-item');
+    var containerKey = $container.attr('data-question-id') || $container.index();
+    
+    // Skip if we've already processed this container (for lat/long fields)
+    if (processedContainers.has(containerKey)) {
+      return;
+    }
+    
+    var errorText = $errorField.siblings('.parsley-errors-list').text();
+    
+    // Check if this is a lat/long container with multiple errors
+    var latLongErrors = $container.find('.lat-entry.parsley-error, .long-entry.parsley-error');
+    if (latLongErrors.length > 0) {
+      // Mark this container as processed to avoid duplicates
+      processedContainers.add(containerKey);
+      errorText = 'Latitude and longitude are required';
+    } else {
+      // If no error text found, provide a logical message based on field type
+      if (!errorText || errorText.trim() === '') {
+        var elementType = $container.attr('data-element-type');
+        if (elementType === 'multiselect') {
+          errorText = 'This field is required - please select at least one option';
+        } else {
+          errorText = 'This field is required';
+        }
+      }
+    }
+    
+    // Get question text from the container
+    var questionText = $container.find('label').first().text().trim() || 
+                      $container.find('.question-text').text().trim() ||
+                      $container.find('h4, h5, h6').first().text().trim() ||
+                      'Unknown question';
+    
+    errorMessages.push(questionText + ': ' + errorText);
+  });
+  
+  // Build debug message
+  var debugMessage = 'Form Valid: ' + isValid + '\n\n';
+  
+  if (errorMessages.length > 0) {
+    debugMessage += 'Validation Errors:\n';
+    errorMessages.forEach(function(msg) {
+      debugMessage += '- ' + msg + '\n';
+    });
+    debugMessage += '\n';
+  }
+  
+  // Check for hidden fields that might be problematic
+  var hiddenProblematicFields = [];
+  
+  // Check for hidden required fields
+  $('[data-parsley-required="true"]').each(function() {
+    var $field = $(this);
+    var fieldVisible = $field.is(':visible');
+    var containerVisible = $field.closest('.form-container-entry-item').is(':visible');
+    
+    // If field is hidden but has a visible widget, it's not problematic
+    var hasVisibleWidget = $field.siblings('.selectize-control').is(':visible') ||
+                          $field.siblings('.chosen-container').is(':visible') ||
+                          $field.siblings('.btn-group').is(':visible') ||
+                          $field.siblings('.ms-parent').is(':visible');
+    
+    // Only consider it problematic if it's hidden AND has no visible widget
+    if ((!fieldVisible || !containerVisible) && !hasVisibleWidget) {
+      hiddenProblematicFields.push({
+        field: $field,
+        type: 'required',
+        reason: 'Hidden required field with no visible widget'
+      });
+    }
+  });
+  
+  // Check for hidden fields with validation rules
+  $('input[type="number"], input[data-parsley-type], input[data-parsley-pattern]').each(function() {
+    var $field = $(this);
+    var fieldVisible = $field.is(':visible');
+    var containerVisible = $field.closest('.form-container-entry-item').is(':visible');
+    
+    // Skip if already included as a required field
+    var isAlreadyIncluded = hiddenProblematicFields.some(function(item) {
+      return item.field[0] === $field[0];
+    });
+    
+    if (!isAlreadyIncluded && (!fieldVisible || !containerVisible)) {
+      var fieldType = $field.attr('type') || 'text';
+      var validationType = $field.attr('data-parsley-type') || $field.attr('data-parsley-pattern') || 'none';
+      
+      hiddenProblematicFields.push({
+        field: $field,
+        type: 'validation',
+        reason: 'Hidden field with validation rules (Type: ' + fieldType + ', Validation: ' + validationType + ')'
+      });
+    }
+  });
+  
+  if (hiddenProblematicFields.length > 0) {
+    debugMessage += '\nHidden Fields (Potentially Problematic):\n';
+    debugMessage += 'These fields are hidden and may indicate a setup issue.\n';
+    hiddenProblematicFields.forEach(function(item) {
+      var $field = item.field;
+      var $container = $field.closest('.form-container-entry-item');
+      
+      // Get question text from the container
+      var questionText = $container.find('label').first().text().trim() || 
+                        $container.find('.question-text').text().trim() ||
+                        $container.find('h4, h5, h6').first().text().trim() ||
+                        'Unknown question';
+      
+      debugMessage += '- ' + questionText + ' (' + item.reason + ')\n';
+    });
+  }
+  
+  // Only show alert if there are actual issues to report
+  var hasIssues = errorMessages.length > 0 || hiddenProblematicFields.length > 0;
+  
+  if (hasIssues) {
+    alert('DEBUG VALIDATION ERRORS:\n\n' + debugMessage);
+  }
+}
