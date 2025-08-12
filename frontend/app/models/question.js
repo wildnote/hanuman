@@ -232,15 +232,30 @@ export default Model.extend(Validator, {
           if (!surveyTemplate) return true;
           let questions = surveyTemplate.get('questions');
           let currentId = model.get('id');
-          let conflict = questions.any(
+          
+          // Find the conflicting question
+          let conflictingQuestion = questions.find(
             (q) =>
               q.get('id') !== currentId &&
               q.get('apiColumnName') &&
               q.get('apiColumnName').toLowerCase() === value.toLowerCase()
           );
-          return !conflict;
+          
+          if (conflictingQuestion) {
+            // Set the message to include the conflicting question ID
+            model.set('_conflictingQuestionId', conflictingQuestion.get('id'));
+            return false;
+          }
+          
+          return true;
         },
-        message: 'API Column Name must be unique within this form.'
+        message: function() {
+          let conflictingId = this.get('_conflictingQuestionId');
+          if (conflictingId) {
+            return `API Column Name must be unique within this form. Conflicts with question ID: ${conflictingId}`;
+          }
+          return 'API Column Name must be unique within this form.';
+        }
       }
     },
     answerChoices: {

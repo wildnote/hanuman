@@ -298,11 +298,21 @@
       $container.addClass("conditional-logic-hidden");
       $container.find('input.form-control, textarea.form-control, select.form-control').each(function() {
         $(this).attr('data-parsley-required', 'false');
+        $(this).removeAttr('data-parsley-mincheck'); // Remove checkbox validation
       });
 
       $container.find('input.cloudinary-fileupload').each(function() {
         $(this).attr('data-parsley-required', 'false');
       });
+      
+      // Remove required attributes from lat/long fields
+      $container.find('.lat-entry, .long-entry').attr('data-parsley-required', 'false');
+      
+      // Set hidden field to true (if it exists)
+      var $hiddenField = $container.find('.hidden-field-observation-hidden');
+      if ($hiddenField.length > 0) {
+        $hiddenField.val('true');
+      }
     } else {
       $container.removeClass("conditional-logic-hidden");
 
@@ -314,6 +324,12 @@
         $container.find('input.cloudinary-fileupload').each(function() {
           $(this).attr('data-parsley-required', 'true');
         });
+      }
+      
+      // Set hidden field to false (if it exists)
+      var $hiddenField = $container.find('.hidden-field-observation-hidden');
+      if ($hiddenField.length > 0) {
+        $hiddenField.val('false');
       }
     }
 
@@ -367,6 +383,12 @@
 
     // Trigger Parsley validation update for the container and its children
     $container.parsley();
+    
+    // Re-setup required fields for newly shown containers
+    if (!hideQuestions && $container.find('[data-required=true]').length > 0) {
+      console.log('Calling setupRequiredData on container with', $container.find('[data-required=true]').length, 'required fields');
+      setupRequiredData($container);
+    }
   };
 
   ConditionalLogic.prototype.clearQuestions = function(container) {
@@ -739,6 +761,21 @@
 
       // Get all of the parameter questions, inject them into the interpreter as $api_column_name variables.
       $.each(parameters, function(key, value) {
+        // Ensure numeric values are properly typed for calculations
+        if (typeof value === 'string' && $.isNumeric(value)) {
+          value = parseFloat(value);
+        }
+        // Only extract single values from single-element arrays in large edit modal context
+        // Regular edit top-level calculations need arrays even for single repeaters
+        var isInLargeEditModal = $('#repeaterModal').length > 0 && ($('#repeaterModal').hasClass('in') || $('#repeaterModal').is(':visible'));
+        // Alternative detection: check if we're inside the modal context
+        var isInModalContext = $('.form-container-survey').closest('#repeaterModal').length > 0;
+        // Check if we're on large edit page and in a modal context
+        var isLargeEditPage = window.location.pathname.includes('/large_edit');
+        var isInModal = $('#repeaterModal').length > 0;
+        if ((isInLargeEditModal || isInModalContext || (isLargeEditPage && isInModal)) && Array.isArray(value) && value.length === 1) {
+          value = value[0];
+        }
         interpreter.setProperty(globalObject, '$' + key, interpreter.nativeToPseudo(value));
       });
     });
@@ -924,10 +961,94 @@
     return stringValue;
   };
 
+  // Add: Only bind event handlers, do not run/hide/show anything
+  ConditionalLogic.prototype.bindConditionalLogic = function($context) {
+    var self = this;
+    $context.find("[data-rule!=''][data-rule]").each(function() {
+      var $ruleContainer = $(this);
+      var rules = $.parseJSON($ruleContainer.attr("data-rule"));
+      $(rules).each(function() {
+        var rule = this;
+        $(rule.conditions).each(function() {
+          var conditionQuestionId = this.question_id;
+          var $conditionContainer = $ruleContainer.siblings("[data-question-id=" + conditionQuestionId + "]");
+          if ($conditionContainer.length < 1) {
+            $conditionContainer = $("[data-question-id=" + conditionQuestionId + "]");
+          }
+          var $conditionElement = $conditionContainer.find(".form-control");
+          if ($conditionElement.length < 1) {
+            $conditionElement = $conditionContainer.find(".form-control-static");
+          }
+          var ancestorId = rule.question_id;
+          if ($conditionElement.length < 2) {
+            self.bindConditions($conditionElement, rule, $ruleContainer, this.id);
+          } else {
+            if ($conditionElement.is(":checkbox")) {
+              if (rule.type !== 'Hanuman::CalculationRule') {
+                $conditionElement = $conditionContainer.find(".form-control[data-label-value='" + this.answer.replace("/", "\\/").replace("'", "\\'") + "']");
+              }
+              self.bindConditions($conditionElement, rule, $ruleContainer, this.id);
+            } else {
+              $conditionElement.each(function(index, element) {
+                self.bindConditions($(element), rule, $ruleContainer, this.id);
+              });
+            }
+          }
+        });
+      });
+    });
+  };
+
+  // Add: Only run/hide/show logic, do not bind events
+  ConditionalLogic.prototype.runConditionalLogic = function(runCalcs, runConditionals, $context) {
+    var self = this;
+    $context.find("[data-rule!=''][data-rule]").each(function() {
+      var $ruleContainer = $(this);
+      var rules = $.parseJSON($ruleContainer.attr("data-rule"));
+      $(rules).each(function() {
+        var rule = this;
+        var matchType = rule.match_type;
+        $(rule.conditions).each(function() {
+          var inRepeater = false;
+          var $conditionContainer = $ruleContainer.siblings("[data-question-id=" + this.question_id + "]");
+          if ($conditionContainer.length < 1) {
+            $conditionContainer = $("[data-question-id=" + this.question_id + "]");
+          }
+          var $conditionElement = $conditionContainer.find(".form-control");
+          if ($conditionElement.length < 1) {
+            $conditionElement = $conditionContainer.find(".form-control-static");
+          }
+          var $repeater = $conditionElement.closest(".form-container-repeater");
+          if ($repeater.length > 0) {
+            inRepeater = true;
+          }
+          var ancestorId = rule.question_id;
+          if (rule.type !== "Hanuman::CalculationRule") {
+            if (runConditionals) {
+              self.checkConditionsAndHideShow(rule.conditions, ancestorId, $ruleContainer, $ruleContainer, inRepeater, matchType, rule, true);
+            }
+          }
+        });
+        if (runCalcs && rule.type === "Hanuman::CalculationRule") {
+          self.updateCalculation(rule, $ruleContainer);
+        }
+      });
+    });
+  };
+
+  // Update: findRules now just calls both for backward compatibility
+  ConditionalLogic.prototype.findRules = function(runCalcs, runConditionals, $context) {
+    this.bindConditionalLogic($context);
+    this.runConditionalLogic(runCalcs, runConditionals, $context);
+  };
+
+  // Initialize conditional logic for both normal edit and large edit modes
   $(function() {
     var $context = $('.form-container-survey');
-    if ($('input#run_cl').length) {
+    var isLargeEdit = window.location.pathname.includes('large_edit');
+    if ($('input#run_cl').length || isLargeEdit) {
       var cl = new ConditionalLogic();
+      // Both modes use the same initialization: bind handlers and run initial evaluation
       cl.findRules(false, true, $context);
     }
   });
