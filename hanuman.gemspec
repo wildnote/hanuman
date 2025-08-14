@@ -17,15 +17,15 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   # Rails and its components - use ~> to allow RailsLTS versions
-  s.add_dependency 'rails',            '~> 5.2.7'
-  s.add_dependency 'actionmailer',     '~> 5.2.7'
-  s.add_dependency 'actionpack',       '~> 5.2.7'
-  s.add_dependency 'activemodel',      '~> 5.2.7'
-  s.add_dependency 'activerecord',     '~> 5.2.7'
-  s.add_dependency 'activesupport',    '~> 5.2.7'
-  s.add_dependency 'railties',         '~> 5.2.7'
-  s.add_dependency 'actionview',       '~> 5.2.7'
-  s.add_dependency 'activejob',        '~> 5.2.7'
+  s.add_dependency 'rails',            '~> 8.0.2'
+  s.add_dependency 'actionmailer',     '~> 8.0.2'
+  s.add_dependency 'actionpack',       '~> 8.0.2'
+  s.add_dependency 'activemodel',      '~> 8.0.2'
+  s.add_dependency 'activerecord',     '~> 8.0.2'
+  s.add_dependency 'activesupport',    '~> 8.0.2'
+  s.add_dependency 'railties',         '~> 8.0.2'
+  s.add_dependency 'actionview',       '~> 8.0.2'
+  s.add_dependency 'activejob',        '~> 8.0.2'
 
   # Use a version of ember-cli-rails that supports both Rails 4.2 and Ruby 3
   s.add_dependency 'ember-cli-rails', '0.12.0'
