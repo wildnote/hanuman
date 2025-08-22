@@ -418,85 +418,17 @@ function debugValidationErrors() {
   });
   
   // Build debug message
-  var debugMessage = 'Form Valid: ' + isValid + '\n\n';
+  var debugMessage = 'Survey Valid: ' + isValid + '\n\n';
   
   if (errorMessages.length > 0) {
     debugMessage += 'Validation Errors:\n';
     errorMessages.forEach(function(msg) {
       debugMessage += '- ' + msg + '\n';
     });
-    debugMessage += '\n';
   }
   
-  // Check for hidden fields that might be problematic
-  var hiddenProblematicFields = [];
-  
-  // Check for hidden required fields
-  $('[data-parsley-required="true"]').each(function() {
-    var $field = $(this);
-    var fieldVisible = $field.is(':visible');
-    var containerVisible = $field.closest('.form-container-entry-item').is(':visible');
-    
-    // If field is hidden but has a visible widget, it's not problematic
-    var hasVisibleWidget = $field.siblings('.selectize-control').is(':visible') ||
-                          $field.siblings('.chosen-container').is(':visible') ||
-                          $field.siblings('.btn-group').is(':visible') ||
-                          $field.siblings('.ms-parent').is(':visible');
-    
-    // Only consider it problematic if it's hidden AND has no visible widget
-    if ((!fieldVisible || !containerVisible) && !hasVisibleWidget) {
-      hiddenProblematicFields.push({
-        field: $field,
-        type: 'required',
-        reason: 'Hidden required field with no visible widget'
-      });
-    }
-  });
-  
-  // Check for hidden fields with validation rules
-  $('input[type="number"], input[data-parsley-type], input[data-parsley-pattern]').each(function() {
-    var $field = $(this);
-    var fieldVisible = $field.is(':visible');
-    var containerVisible = $field.closest('.form-container-entry-item').is(':visible');
-    
-    // Skip if already included as a required field
-    var isAlreadyIncluded = hiddenProblematicFields.some(function(item) {
-      return item.field[0] === $field[0];
-    });
-    
-    if (!isAlreadyIncluded && (!fieldVisible || !containerVisible)) {
-      var fieldType = $field.attr('type') || 'text';
-      var validationType = $field.attr('data-parsley-type') || $field.attr('data-parsley-pattern') || 'none';
-      
-      hiddenProblematicFields.push({
-        field: $field,
-        type: 'validation',
-        reason: 'Hidden field with validation rules (Type: ' + fieldType + ', Validation: ' + validationType + ')'
-      });
-    }
-  });
-  
-  if (hiddenProblematicFields.length > 0) {
-    debugMessage += '\nHidden Fields (Potentially Problematic):\n';
-    debugMessage += 'These fields are hidden and may indicate a setup issue.\n';
-    hiddenProblematicFields.forEach(function(item) {
-      var $field = item.field;
-      var $container = $field.closest('.form-container-entry-item');
-      
-      // Get question text from the container
-      var questionText = $container.find('label').first().text().trim() || 
-                        $container.find('.question-text').text().trim() ||
-                        $container.find('h4, h5, h6').first().text().trim() ||
-                        'Unknown question';
-      
-      debugMessage += '- ' + questionText + ' (' + item.reason + ')\n';
-    });
-  }
-  
-  // Only show alert if there are actual issues to report
-  var hasIssues = errorMessages.length > 0 || hiddenProblematicFields.length > 0;
-  
-  if (hasIssues) {
-    alert('DEBUG VALIDATION ERRORS:\n\n' + debugMessage);
+  // Only show alert if the form is invalid
+  if (!isValid) {
+    alert(debugMessage);
   }
 }
