@@ -1,7 +1,7 @@
 (function() {
   function ConditionalLogic() {
     this.boundElements = [];
-    this.allowCascade = false;
+    this.allowCascade = true;
   }
 
   ConditionalLogic.prototype.findRules = function(runCalcs, runConditionals, $context) {
