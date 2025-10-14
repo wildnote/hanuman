@@ -1,3 +1,9 @@
 {
-  "ignore_dirs": ["tmp", "dist"]
+  "ignore_dirs": [
+    "node_modules",
+    "tmp",
+    "dist",
+    ".git",
+    "vendor"
+  ]
 }
