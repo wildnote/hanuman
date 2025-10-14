@@ -751,7 +751,8 @@ $(document).ready(function(){
         $(this).val("");
 
         // if we don't add please select at this point the dropdown will show blank with no prompt
-        if ($(this).find('option:contains("Please select")').length < 1) {
+        // Only add to single-select dropdowns, not multiselects
+        if (!$(this).is('[multiple]') && $(this).find('option:contains("Please select")').length < 1) {
           $(this).prepend("<option value>Please select</option>");
         }
 
