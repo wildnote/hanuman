@@ -115,6 +115,12 @@ module Hanuman
       Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Completed set_entries for survey #{self.id}"
     end
 
+    def reset_entries!
+      Rails.logger.info "[#{Time.current.strftime('%Y-%m-%d %H:%M:%S.%L')}] Starting reset_entries! for survey #{self.id}"
+      self.observations.update_all(entry: nil)
+      set_entries
+    end
+
     def set_observations_unsorted
       self.observations_sorted = false
       self.observation_visibility_set = false
