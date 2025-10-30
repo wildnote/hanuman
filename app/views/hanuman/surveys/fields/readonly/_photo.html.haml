@@ -71,5 +71,17 @@
         =p.public_id
       %br
       %br
+
+      - unless p.location_metadata.blank?
+        %label
+          Photo Location Metadata (JSON)
+        %br
+        %small.text-muted Enhanced metadata from EXIF
+        %br
+        - p.location_metadata.each do |key, value|
+          %strong= key.to_s.titleize + ":"
+          = value.is_a?(Numeric) ? value.round(6).to_s : value.to_s
+          %br
+
       %hr
       %br
