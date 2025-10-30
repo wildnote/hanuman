@@ -74,6 +74,16 @@
                   Public ID:
                   =p.public_id
 
+            - unless p.location_metadata.blank?
+              = label_tag "Photo Location Metadata (JSON)", nil, style: "margin-top: 15px;"
+              .form-group
+                .col-sm-7
+                  %small.text-muted Enhanced metadata from EXIF
+                - p.location_metadata.each do |key, value|
+                  .col-sm-7
+                    %strong= key.to_s.titleize + ":"
+                    = value.is_a?(Numeric) ? value.round(6).to_s : value.to_s
+
             %hr
       - unless @survey_readonly
         .photo-preview-container
