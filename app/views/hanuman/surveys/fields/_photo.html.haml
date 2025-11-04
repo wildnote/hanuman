@@ -75,12 +75,15 @@
                   =p.public_id
 
             - unless p.location_metadata.blank?
-              = label_tag "Photo Location Metadata (JSON)", nil, style: "margin-top: 15px;"
+              = label_tag "Full Photo Location Metadata (JSON)", nil, style: "margin-top: 15px;"
               .form-group
                 .col-sm-7
-                  %small.text-muted Raw JSON for QA
-                  %pre
-                    = JSON.pretty_generate(p.location_metadata)
+                  %a{ "data-toggle" => "collapse", href: "#photo-meta-#{p.id}", "aria-expanded" => "false", "aria-controls" => "photo-meta-#{p.id}", style: "cursor: pointer;" }
+                    %span.glyphicons.glyphicons-chevron-right
+                  %div.collapse{ id: "photo-meta-#{p.id}" }
+                    %small.text-muted Raw JSON for QA
+                    %pre
+                      = JSON.pretty_generate(p.location_metadata)
 
             %hr
       - unless @survey_readonly
