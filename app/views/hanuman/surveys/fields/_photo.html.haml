@@ -75,16 +75,12 @@
                   =p.public_id
 
             - unless p.location_metadata.blank?
-              = label_tag "Photo Location Metadata", nil, style: "margin-top: 15px;"
+              = label_tag "Photo Location Metadata (JSON)", nil, style: "margin-top: 15px;"
               .form-group
                 .col-sm-7
-                  %small.text-muted Includes all captured metadata. Fields shown above are omitted below to avoid duplication.
-                - displayed_keys = %w(latitude longitude altitude speed direction accuracy datum utm_zone utm_easting utm_northing public_id)
-                - p.location_metadata.sort_by { |k, _| k.to_s }.each do |key, value|
-                  - next if displayed_keys.include?(key.to_s)
-                  .col-sm-7
-                    %strong= key.to_s.titleize + ":"
-                    = value.is_a?(Numeric) ? value.round(6).to_s : value.to_s
+                  %small.text-muted Raw JSON for QA
+                  %pre
+                    = JSON.pretty_generate(p.location_metadata)
 
             %hr
       - unless @survey_readonly

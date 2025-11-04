@@ -74,16 +74,12 @@
 
       - unless p.location_metadata.blank?
         %label
-          Photo Location Metadata
+          Photo Location Metadata (JSON)
         %br
-        %small.text-muted Includes all captured metadata. Fields shown above are omitted below to avoid duplication.
+        %small.text-muted Raw JSON for QA
         %br
-        - displayed_keys = %w(latitude longitude altitude speed direction accuracy datum utm_zone utm_easting utm_northing public_id)
-        - p.location_metadata.sort_by { |k, _| k.to_s }.each do |key, value|
-          - next if displayed_keys.include?(key.to_s)
-          %strong= key.to_s.titleize + ":"
-          = value.is_a?(Numeric) ? value.round(6).to_s : value.to_s
-          %br
+        %pre
+          = JSON.pretty_generate(p.location_metadata)
 
       %hr
       %br
