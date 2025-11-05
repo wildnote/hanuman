@@ -83,7 +83,7 @@
                   %div.collapse{ id: "photo-meta-#{p.id}" }
                     %small.text-muted Raw JSON for QA
                     %pre
-                      = JSON.pretty_generate(p.location_metadata)
+                      = JSON.pretty_generate(p.location_metadata.sort.to_h)
 
             %hr
       - unless @survey_readonly
