@@ -7,6 +7,11 @@ module Hanuman
     def extension_white_list
       %w(jpg png gif jpeg heic)
     end
+    
+    # Request EXIF metadata from Cloudinary on upload
+    def cloudinary_transformation
+      { image_metadata: true }
+    end
 
     # overriding method so that we don't delete files on cloudinary when they are deleted on rails app
     # doing this to handle situation where the we have a duplicate survey because initial sync didn't return back to native app successful create of a survey,

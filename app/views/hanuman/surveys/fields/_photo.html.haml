@@ -16,9 +16,9 @@
                 = p.photo.my_public_id + "." + p.photo.format + " | this photo failed to upload successfully, please retry upload or remove"
             - else
               .img-rotate-container
-                = link_to cl_image_tag(p.photo, :crop => :fill, :width => 350, :sign_url => true, angle: p.rotation, class: 'img-rotate'), cloudinary_url(p.photo, :sign_url => true, angle: p.rotation), html_options = {"data-gallery" => "", class: "gallery-item gallery-photo", id: "photo_" + p.id.to_s, :"data-content-type" => p.photo.resource_type, :"data-download-url" => cloudinary_url(p.photo, :sign_url => true, angle: p.rotation), :"data-file-name" => p.photo.public_id}
+                = link_to cl_image_tag(p.photo, :crop => :fill, :width => 350, :sign_url => true, angle: p.rotation, class: 'img-rotate'), cloudinary_url(p.photo, :sign_url => true, angle: p.rotation), html_options = {"data-gallery" => "", class: "gallery-item gallery-photo", id: "photo_" + p.id.to_s, :"data-content-type" => p.photo.resource_type, :"data-download-url" => cloudinary_url(p.photo, :sign_url => true), :"data-file-name" => p.photo.public_id}
               %p
-                = link_to p.photo.my_public_id + "." + p.photo.format + " | download file", cloudinary_url(p.photo, attachment: true, :sign_url => true, angle: p.rotation), html_options = { download: true }
+                = link_to p.photo.my_public_id + "." + p.photo.format + " | download file", cloudinary_url(p.photo, attachment: true, :sign_url => true), html_options = { download: true }
             - unless @survey_readonly
               %p.delete-box
                 = fff.check_box :_destroy, class:"hidden delete-checkbox"
@@ -73,6 +73,17 @@
                 .col-sm-7
                   Public ID:
                   =p.public_id
+
+            - unless p.location_metadata.blank?
+              = label_tag "Full Photo Location Metadata (JSON)", nil, style: "margin-top: 15px;"
+              .form-group
+                .col-sm-7
+                  %a{ "data-toggle" => "collapse", href: "#photo-meta-#{p.id}", "aria-expanded" => "false", "aria-controls" => "photo-meta-#{p.id}", style: "cursor: pointer;" }
+                    %span.glyphicons.glyphicons-chevron-right
+                  %div.collapse{ id: "photo-meta-#{p.id}" }
+                    %small.text-muted Raw JSON for QA
+                    %pre
+                      = JSON.pretty_generate(p.location_metadata.sort_by { |k, v| k.to_s }.to_h)
 
             %hr
       - unless @survey_readonly
