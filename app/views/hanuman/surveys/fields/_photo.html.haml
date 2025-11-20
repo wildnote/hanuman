@@ -89,20 +89,28 @@
             %hr
       - unless @survey_readonly
         .photo-preview-container
-        .edit-mode-file
-        = ff.fields_for :observation_photos, o.observation_photos.build do |fff|
-          = fff.cl_image_upload(:photo, :format => :jpg, :html => { :multiple => true , :class => "photo-upload survey-photo-upload"})
-        .photo-upload-error
-        .progress.hidden
-          .progress-bar.progress-bar-success.photo-progress-bar
+        .photo-drop-zone
+          .photo-drop-zone-content
+            %i.glyphicons.glyphicons-cloud-upload{style: "font-size: 48px; color: #5bc0de; margin-bottom: 10px;"}
+            %p.photo-drop-zone-text Drag photos here or
+            %p.photo-drop-zone-subtext Click to browse
+          .edit-mode-file
+          = ff.fields_for :observation_photos, o.observation_photos.build do |fff|
+            = fff.cl_image_upload(:photo, :format => :jpg, :html => { :multiple => true , :class => "photo-upload survey-photo-upload"})
+          .photo-upload-error
+        .photo-upload-queue
     - elsif !@survey_readonly
-      .edit-mode-file
-      = ff.fields_for :observation_photos do |fff|
-        .photo-preview-container.preview-container
-        = fff.cl_image_upload(:photo, :format => :jpg, :html => { :multiple => true , :class => "photo-upload survey-photo-upload"})
-        .photo-upload-error
-        .progress.hidden
-          .progress-bar.progress-bar-success.photo-progress-bar
+      .photo-drop-zone
+        .photo-drop-zone-content
+          %i.glyphicons.glyphicons-cloud-upload{style: "font-size: 48px; color: #5bc0de; margin-bottom: 10px;"}
+          %p.photo-drop-zone-text Drag photos here or
+          %p.photo-drop-zone-subtext Click to browse
+        .edit-mode-file
+        = ff.fields_for :observation_photos do |fff|
+          .photo-preview-container.preview-container
+          = fff.cl_image_upload(:photo, :format => :jpg, :html => { :multiple => true , :class => "photo-upload survey-photo-upload"})
+          .photo-upload-error
+        .photo-upload-queue
 
   - if o.question.max_photos.present?
     #max-photos-alert.form-control-static.col-sm-12.col-sm-offset-5= "Maximum of #{o.question.max_photos} photo(s) allowed."
