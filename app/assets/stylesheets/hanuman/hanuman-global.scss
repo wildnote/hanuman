@@ -165,6 +165,7 @@ input[type="checkbox"] {
   cursor: pointer;
   position: relative;
   margin-bottom: 15px;
+  min-height: 120px; // Ensure drop zone has minimum height even when empty
 
   &:hover {
     border-color: #5bc0de;
@@ -179,8 +180,19 @@ input[type="checkbox"] {
   }
 
   .photo-drop-zone-content {
-    pointer-events: none;
     user-select: none;
+    pointer-events: auto; // Allow clicks on the content area itself
+    position: relative;
+    z-index: 1;
+  }
+  
+  // Ensure photos/previews that might be inside don't interfere with drop zone clicks
+  // But photos should be outside the drop zone after upload anyway
+  .photo-preview-container,
+  .photo-preview,
+  .upload-view-mode {
+    cursor: default; // Not a clickable area for file upload
+    pointer-events: auto; // Allow normal interactions with photos
   }
 
   .photo-drop-zone-text {

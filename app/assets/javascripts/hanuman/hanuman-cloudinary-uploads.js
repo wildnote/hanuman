@@ -85,6 +85,8 @@ addTexareaForUpload = function(file, data, idx, $previewContainer) {
 // ***** PHOTOS *****
 // Track active uploads by file name and size to prevent duplicates
 var activePhotoUploads = {};
+// Track photo indices to prevent race conditions with simultaneous uploads
+var photoIndexCounter = {};
 
 var createUploadCard = function(file, uploadId) {
   var reader = new FileReader();
@@ -123,7 +125,29 @@ var formatFileSize = function(bytes) {
 };
 
 var getFileKey = function(file) {
-  return file.name + '_' + file.size + '_' + file.lastModified;
+  // Include a unique timestamp to ensure uniqueness even for same-named files
+  // This prevents race conditions when multiple photos upload simultaneously
+  if (!file._uploadTimestamp) {
+    file._uploadTimestamp = Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  }
+  return file.name + '_' + file.size + '_' + file.lastModified + '_' + file._uploadTimestamp;
+};
+
+var getNextPhotoIndex = function($container) {
+  // Get a unique, sequential index for the photo
+  // This prevents race conditions when multiple photos upload simultaneously
+  var containerId = $container.closest('.photo-column').attr('id') || 
+                    $container.closest('.file-upload-input-button').index() || 
+                    'default';
+  
+  if (!photoIndexCounter[containerId]) {
+    // Initialize counter based on existing photos
+    var existingPhotos = $container.closest('.photo-column').find('.photo-preview, .upload-view-mode:visible').length;
+    photoIndexCounter[containerId] = existingPhotos;
+  }
+  
+  photoIndexCounter[containerId]++;
+  return photoIndexCounter[containerId];
 };
 
 var setupPhotoDropZone = function($dropZone, $fileInput) {
@@ -225,10 +249,31 @@ var setupPhotoDropZone = function($dropZone, $fileInput) {
   });
   
   // Click to browse - trigger the file input click
+  // Only trigger when clicking on the drop zone content itself, not on photos/previews
   $dropZone.on('click', function(e) {
-    // Don't trigger if clicking on the file input itself
-    if (!$(e.target).is('input[type="file"]') && !$(e.target).closest('.cloudinary-fileupload').length) {
+    var $target = $(e.target);
+    
+    // Don't trigger file browser if clicking on:
+    // - The file input itself
+    // - Photos/previews (uploaded photos)
+    // - Photo preview containers
+    // - Upload queue cards
+    // - Form inputs (captions, textareas, etc.)
+    // - Clickable elements (buttons, links, etc.)
+    // - Saved photo view mode
+    var isOnClickableElement = $target.closest('a, button, input:not([type="file"]), textarea, select').length > 0;
+    var isOnPhotoPreview = $target.closest('.photo-preview, .photo-preview-container, .photo-upload-card, .upload-view-mode, .img-rotate-container, .delete-box, .photo-actions-container').length > 0;
+    var isOnDropZoneContent = $target.closest('.photo-drop-zone-content').length > 0;
+    
+    // Only trigger file browser if clicking on the drop zone content area itself
+    // and NOT on any photos, previews, or interactive elements
+    if (!isOnClickableElement && 
+        !isOnPhotoPreview && 
+        isOnDropZoneContent &&
+        !$target.is('input[type="file"]') && 
+        !$target.closest('.cloudinary-fileupload').length) {
       e.preventDefault();
+      e.stopPropagation();
       $fileInput.trigger('click');
     }
   });
@@ -271,19 +316,24 @@ var handlePhotoFiles = function(files, $fileInput, $uploadQueue, skipUpload) {
     return;
   }
   
-  // Create upload cards for each file
-  validFiles.forEach(function(file) {
+  // Create upload cards for each file and assign photo indices
+  var $photoColumn = $fileInput.closest('.photo-column');
+  validFiles.forEach(function(file, index) {
     var fileKey = getFileKey(file);
-    var uploadId = 'upload_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    var uploadId = 'upload_' + Date.now() + '_' + index + '_' + Math.random().toString(36).substr(2, 9);
     activePhotoUploads[fileKey] = uploadId;
+    
+    // Pre-assign photo index to prevent race conditions
+    var photoIdx = getNextPhotoIndex($photoColumn);
     
     var cardHtml = createUploadCard(file, uploadId);
     $uploadQueue.append(cardHtml);
     
-    // Store file reference in card for later upload tracking
+    // Store file reference and assigned index in card for later upload tracking
     var $card = $('.photo-upload-card[data-upload-id="' + uploadId + '"]');
     $card.data('file', file);
     $card.data('fileKey', fileKey);
+    $card.data('photoIndex', photoIdx); // Store the assigned index
   });
   
   // If not skipping upload, create a FileList with all valid files and let Cloudinary handle it
@@ -349,20 +399,51 @@ this.bindPhotoUploads = function() {
   $('.cloudinary-fileupload.survey-photo-upload').bind('fileuploadadd', function(e, data) {
     $('.survey-save-button').attr("disabled", "disabled");
     var file = data.files[0];
+    
+    // Try to find the upload card by matching file properties
+    // Cloudinary might pass a slightly different file object, so we match by name/size/modified
+    var baseFileKey = file.name + '_' + file.size + '_' + file.lastModified;
+    var uploadId = null;
+    
+    // First try exact match
     var fileKey = getFileKey(file);
-    var uploadId = activePhotoUploads[fileKey];
+    uploadId = activePhotoUploads[fileKey];
+    
+    // If not found, try to match by base properties (in case timestamp wasn't preserved)
+    if (!uploadId) {
+      for (var key in activePhotoUploads) {
+        if (key.startsWith(baseFileKey + '_')) {
+          uploadId = activePhotoUploads[key];
+          break;
+        }
+      }
+    }
     
     if (uploadId) {
       var $card = $('.photo-upload-card[data-upload-id="' + uploadId + '"]');
       $card.find('.photo-upload-card-status').text('Uploading...');
       $card.data('uploadData', data);
+      // Store the actual file in data for later matching
+      $card.data('uploadFile', file);
     }
   });
   
   $('.cloudinary-fileupload.survey-photo-upload').bind('fileuploadprogress', function(e, data) {
     var file = data.files[0];
+    
+    // Match file using same logic as fileuploadadd
+    var baseFileKey = file.name + '_' + file.size + '_' + file.lastModified;
     var fileKey = getFileKey(file);
     var uploadId = activePhotoUploads[fileKey];
+    
+    if (!uploadId) {
+      for (var key in activePhotoUploads) {
+        if (key.startsWith(baseFileKey + '_')) {
+          uploadId = activePhotoUploads[key];
+          break;
+        }
+      }
+    }
     
     if (uploadId) {
       var $card = $('.photo-upload-card[data-upload-id="' + uploadId + '"]');
@@ -374,46 +455,94 @@ this.bindPhotoUploads = function() {
   
   $('.cloudinary-fileupload.survey-photo-upload').bind('cloudinarydone', function(e, data) {
     var file = data.files[0];
+    
+    // Match file using same logic - try exact match first, then base match
+    var baseFileKey = file.name + '_' + file.size + '_' + file.lastModified;
     var fileKey = getFileKey(file);
     var uploadId = activePhotoUploads[fileKey];
+    var matchedFileKey = fileKey;
+    
+    // If not found, try to match by base properties
+    if (!uploadId) {
+      for (var key in activePhotoUploads) {
+        if (key.startsWith(baseFileKey + '_')) {
+          uploadId = activePhotoUploads[key];
+          matchedFileKey = key; // Remember which key matched
+          break;
+        }
+      }
+    }
+    
+    // Find the photo preview container first (before removing tracking)
+    var $photoColumn = $(e.target).closest('.photo-column');
+    var $photoPreviewContainer = $photoColumn.find('.photo-preview-container');
+    
+    // If not found, try siblings approach
+    if ($photoPreviewContainer.length === 0) {
+      $photoPreviewContainer = $(e.target).siblings('.photo-preview-container');
+    }
+    
+    // Last resort: look for any preview container in the column
+    if ($photoPreviewContainer.length === 0) {
+      $photoPreviewContainer = $photoColumn.find('.preview-container');
+    }
+    
+    // Use the pre-assigned photo index from the upload card to prevent race conditions
+    var photoIdx;
+    var $card = null;
     
     if (uploadId) {
-      var $card = $('.photo-upload-card[data-upload-id="' + uploadId + '"]');
-      $card.find('.photo-upload-card-status').text('Upload complete!').addClass('text-success');
-      $card.find('.progress-bar').removeClass('progress-bar-animated').addClass('progress-bar-success');
+      $card = $('.photo-upload-card[data-upload-id="' + uploadId + '"]');
+      if ($card.length > 0) {
+        photoIdx = $card.data('photoIndex');
+      }
+    }
+    
+    // Fallback: calculate index if not found in card
+    if (!photoIdx) {
+      var imgCount = $photoColumn.find('.photo-preview, .upload-view-mode:visible').length;
+      if (imgCount === 0) {
+        photoIdx = 1;
+      } else {
+        // Add 1 to avoid conflicts, but this should rarely happen if pre-assignment worked
+        photoIdx = imgCount + 1;
+      }
+    }
+    
+    // Add the photo to the preview container BEFORE removing from tracking
+    // This ensures the photo is in the DOM before we clean up
+    if ($photoPreviewContainer.length > 0) {
+      $photoPreviewContainer.append("<div class='photo-preview'><div class='img-rotate-container'>" + $.cloudinary.image(data.result.public_id, {
+        format: data.result.format,
+        version: data.result.version,
+        crop: 'fill',
+        width: 350
+      }).prop('outerHTML') + "</div></div>");
+      addTexareaForUpload("photo", data, photoIdx, $photoPreviewContainer);
       
-      // Remove from active uploads and hide card after a brief delay
-      delete activePhotoUploads[fileKey];
-      setTimeout(function() {
-        $card.fadeOut(300, function() {
-          $(this).remove();
-        });
-      }, 1000);
+      // Only after photo is successfully added, update card status and clean up
+      if ($card && $card.length > 0) {
+        $card.find('.photo-upload-card-status').text('Upload complete!').addClass('text-success');
+        $card.find('.progress-bar').removeClass('progress-bar-animated').addClass('progress-bar-success');
+      }
+    }
+    
+    // Only remove from active uploads AFTER photo is added to DOM
+    // Use the matched key to ensure we delete the right entry
+    if (uploadId && matchedFileKey) {
+      delete activePhotoUploads[matchedFileKey];
+      
+      // Hide the upload card after a brief delay to show completion
+      if ($card && $card.length > 0) {
+        setTimeout(function() {
+          $card.fadeOut(300, function() {
+            $(this).remove();
+          });
+        }, 1000);
+      }
     }
     
     $('.survey-save-button').removeAttr("disabled");
-    
-    // Im setting the upload's index based on the count of existing attachements
-    var $photoPreviewContainer, imgCount, photoIdx;
-    imgCount = $(e.target).closest('.file-upload-input-button').find("img").length;
-    if (imgCount === 0) {
-      photoIdx = 1;
-    } else {
-      photoIdx = imgCount + 1;
-    }
-    
-    $photoPreviewContainer = $(e.target).siblings('.photo-preview-container');
-    if ($photoPreviewContainer.length === 0) {
-      $photoPreviewContainer = $(e.target).closest('.photo-column').find('.photo-preview-container');
-    }
-    
-    $photoPreviewContainer.append("<div class='photo-preview'><div class='img-rotate-container'>" + $.cloudinary.image(data.result.public_id, {
-      format: data.result.format,
-      version: data.result.version,
-      crop: 'fill',
-      width: 350
-    }).prop('outerHTML') + "</div></div>");
-    return addTexareaForUpload("photo", data, photoIdx, $photoPreviewContainer);
   });
   
   // handle errors
