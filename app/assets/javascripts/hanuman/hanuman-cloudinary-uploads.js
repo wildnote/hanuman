@@ -185,67 +185,8 @@ var setupPhotoDropZone = function($dropZone, $fileInput) {
   
   $dropZone.on('drop', function(e) {
     $(this).removeClass('photo-drop-zone-active');
-    var files = e.originalEvent.dataTransfer.files;
-    if (files.length > 0) {
-      var filesArray = Array.from(files);
-      var validFiles = [];
-      
-      // Filter valid image files
-      filesArray.forEach(function(file) {
-        var fileKey = getFileKey(file);
-        if (file.type.match('image.*') && !activePhotoUploads[fileKey]) {
-          validFiles.push(file);
-        }
-      });
-      
-      if (validFiles.length === 0) {
-        return;
-      }
-      
-      // Create cards for dropped files first (skipUpload = true to avoid setting files yet)
-      handlePhotoFiles(validFiles, $fileInput, $uploadQueue, true);
-      
-      // Now submit files to Cloudinary
-      // Cloudinary's fileupload plugin needs files to be submitted via its API
-      // The key issue: when we programmatically set files, Cloudinary doesn't automatically detect them
-      // We need to manually trigger Cloudinary to process the files
-      
-      // Set all files on the input at once
-      var dataTransfer = new DataTransfer();
-      validFiles.forEach(function(file) {
-        dataTransfer.items.add(file);
-      });
-      $fileInput[0].files = dataTransfer.files;
-      
-      // Now manually submit files to Cloudinary's fileupload plugin
-      // Cloudinary wraps blueimp fileupload, so we can access the underlying instance
-      // Try to get the blueimp fileupload instance from Cloudinary
-      var fileuploadInstance = $fileInput.data('blueimp-fileupload') || $fileInput.data('fileupload');
-      
-      if (fileuploadInstance && typeof fileuploadInstance.add === 'function') {
-        // Use blueimp fileupload's add method to manually queue files for upload
-        validFiles.forEach(function(file) {
-          try {
-            fileuploadInstance.add({ files: [file] });
-          } catch (err) {
-            console.error('Error adding file to Cloudinary queue:', err);
-          }
-        });
-      } else if (typeof $fileInput.fileupload === 'function') {
-        // Fallback: Try using fileupload method directly
-        validFiles.forEach(function(file) {
-          try {
-            $fileInput.fileupload('add', { files: [file] });
-          } catch (err) {
-            console.error('Error adding file via fileupload method:', err);
-          }
-        });
-      } else {
-        // Last resort: trigger change event - might work if Cloudinary is listening
-        // Note: This likely won't work for programmatically set files, but worth trying
-        $fileInput.trigger('change');
-      }
-    }
+    // Cloudinary will handle the file processing automatically since we initialized it with this dropZone
+    // Our fileuploadadd handler will create upload cards when files are added
   });
   
   // Click to browse - trigger the file input click
@@ -303,8 +244,8 @@ var handlePhotoFiles = function(files, $fileInput, $uploadQueue, skipUpload) {
       continue; // Skip duplicate
     }
     
-    // Check max photos limit
-    if (maxPhotos && (currentPhotoCount + activeUploadCount + validFiles.length) >= parseInt(maxPhotos)) {
+    // Check max photos limit - block if adding this file would exceed the limit
+    if (maxPhotos && (currentPhotoCount + activeUploadCount + validFiles.length + 1) > parseInt(maxPhotos)) {
       alert('You cannot upload more than ' + maxPhotos + ' photo(s).');
       break;
     }
@@ -348,17 +289,30 @@ var handlePhotoFiles = function(files, $fileInput, $uploadQueue, skipUpload) {
 };
 
 this.bindPhotoUploads = function() {
-  // Setup drop zones for all photo upload areas
-  $('.photo-drop-zone').each(function() {
-    var $dropZone = $(this);
-    var $fileInput = $dropZone.find('.survey-photo-upload');
-    if ($fileInput.length === 0) {
-      $fileInput = $dropZone.siblings('.edit-mode-file').find('.survey-photo-upload');
-    }
-    if ($fileInput.length === 0) {
-      $fileInput = $dropZone.closest('.photo-column').find('.survey-photo-upload');
-    }
-    if ($fileInput.length > 0) {
+  
+  // Initialize Cloudinary per question with scoped dropZones
+  // This ensures each question only handles drops within its own dropzone
+  $('.photo-column').each(function() {
+    var $photoColumn = $(this);
+    var $fileInput = $photoColumn.find('.survey-photo-upload');
+    var $dropZone = $photoColumn.find('.photo-drop-zone');
+    
+    if ($fileInput.length > 0 && $dropZone.length > 0) {
+      // Clean any existing Cloudinary initialization on this input
+      // This prevents double-initialization if bindPhotoUploads is called multiple times
+      if ($fileInput.data('blueimp-fileupload') || $fileInput.data('fileupload')) {
+        $fileInput.fileupload('destroy');
+      }
+      
+      // Initialize Cloudinary with THIS question's dropzone as the dropZone
+      // This restricts drops to only this specific dropzone - drops outside won't trigger uploads
+      if ($.fn.cloudinary_fileupload !== undefined) {
+        $fileInput.cloudinary_fileupload({
+          dropZone: $dropZone
+        });
+      }
+      
+      // Setup our custom drop zone handlers for visual feedback and upload card creation
       setupPhotoDropZone($dropZone, $fileInput);
     }
   });
@@ -396,35 +350,103 @@ this.bindPhotoUploads = function() {
   });
   
   // Track individual file upload progress
+  // With scoped dropZones, this should only fire for files dropped on THIS question's dropzone
   $('.cloudinary-fileupload.survey-photo-upload').bind('fileuploadadd', function(e, data) {
-    $('.survey-save-button').attr("disabled", "disabled");
     var file = data.files[0];
+    var $fileInput = $(e.target);
     
-    // Try to find the upload card by matching file properties
-    // Cloudinary might pass a slightly different file object, so we match by name/size/modified
-    var baseFileKey = file.name + '_' + file.size + '_' + file.lastModified;
-    var uploadId = null;
-    
-    // First try exact match
-    var fileKey = getFileKey(file);
-    uploadId = activePhotoUploads[fileKey];
-    
-    // If not found, try to match by base properties (in case timestamp wasn't preserved)
-    if (!uploadId) {
-      for (var key in activePhotoUploads) {
-        if (key.startsWith(baseFileKey + '_')) {
-          uploadId = activePhotoUploads[key];
-          break;
-        }
+    // Find the photo column and related elements for this specific question
+    var $photoColumn = $fileInput.closest('.photo-column');
+    if ($photoColumn.length === 0) {
+      e.preventDefault();
+      if (data.abort && typeof data.abort === 'function') {
+        data.abort();
       }
+      return false;
     }
     
+    // Check max photos for THIS specific question BEFORE proceeding
+    var $container = $photoColumn.closest('.file-upload');
+    var maxPhotos = $container.find('#max-photos').attr('data-max-photos');
+    var $dropZone = $fileInput.closest('.photo-drop-zone');
+    if ($dropZone.length === 0) {
+      $dropZone = $photoColumn.find('.photo-drop-zone');
+    }
+    var $uploadQueue = $dropZone.siblings('.photo-upload-queue');
+    if ($uploadQueue.length === 0) {
+      $uploadQueue = $photoColumn.find('.photo-upload-queue');
+    }
+    
+    // Count current photos and active uploads for THIS question only
+    var currentPhotoCount = $photoColumn.find('.photo-preview, .upload-view-mode:visible').length;
+    var activeUploadCount = $uploadQueue.find('.photo-upload-card').length;
+    
+    // Check max photos limit - enforce per question
+    if (maxPhotos && (currentPhotoCount + activeUploadCount) >= parseInt(maxPhotos)) {
+      alert('You cannot upload more than ' + maxPhotos + ' photo(s) for this question.');
+      e.preventDefault();
+      if (data.abort && typeof data.abort === 'function') {
+        data.abort();
+      }
+      return false;
+    }
+    
+    // Create upload card if one doesn't exist for this file in this question
+    var fileKey = getFileKey(file);
+    var uploadId = activePhotoUploads[fileKey];
+    var $existingCard = null;
+    
+    // Check if card already exists in this question's queue
+    $uploadQueue.find('.photo-upload-card').each(function() {
+      var $card = $(this);
+      if ($card.data('fileKey') === fileKey) {
+        $existingCard = $card;
+        uploadId = $card.attr('data-upload-id');
+        return false; // break
+      }
+    });
+    
+    // If no card exists, create one
+    if (!$existingCard && $uploadQueue.length > 0) {
+      // Temporarily remove from global tracking if it exists (from another question)
+      var wasInTracking = activePhotoUploads[fileKey];
+      if (wasInTracking) {
+        delete activePhotoUploads[fileKey];
+      }
+      
+      handlePhotoFiles([file], $fileInput, $uploadQueue, true);
+      
+      // Find the newly created card
+      $uploadQueue.find('.photo-upload-card').each(function() {
+        var $card = $(this);
+        if ($card.data('fileKey') === fileKey) {
+          uploadId = $card.attr('data-upload-id');
+          return false; // break
+        }
+      });
+    }
+    
+    $('.survey-save-button').attr("disabled", "disabled");
+    
     if (uploadId) {
-      var $card = $('.photo-upload-card[data-upload-id="' + uploadId + '"]');
-      $card.find('.photo-upload-card-status').text('Uploading...');
-      $card.data('uploadData', data);
-      // Store the actual file in data for later matching
-      $card.data('uploadFile', file);
+      // Find the card for THIS question's upload queue
+      var $card = $uploadQueue.find('.photo-upload-card[data-upload-id="' + uploadId + '"]');
+      if ($card.length === 0) {
+        // Fallback: find by fileKey in this queue
+        $uploadQueue.find('.photo-upload-card').each(function() {
+          var $testCard = $(this);
+          if ($testCard.data('fileKey') === fileKey) {
+            $card = $testCard;
+            uploadId = $testCard.attr('data-upload-id');
+            return false; // break
+          }
+        });
+      }
+      if ($card.length > 0) {
+        $card.find('.photo-upload-card-status').text('Uploading...');
+        $card.data('uploadData', data);
+        $card.data('uploadFile', file);
+      }
     }
   });
   
@@ -950,11 +972,11 @@ $(function() {
   }
   // unbind
   $.cleanData($('input.cloudinary-fileupload[type=file]'));
-  // rebind cloudinary
+  // rebind cloudinary - only for non-photo inputs (photos are handled per-question in bindPhotoUploads)
   if ($.fn.cloudinary_fileupload !== void 0) {
-    $('input.cloudinary-fileupload[type=file]').cloudinary_fileupload();
+    $('input.cloudinary-fileupload[type=file]:not(.survey-photo-upload)').cloudinary_fileupload();
   }
-  // rebind our custom code
+  // rebind our custom code (this will initialize photo uploads per-question with scoped dropZones)
   bindPhotoUploads();
   bindPhotoRotation();
   bindVideoUploads();
