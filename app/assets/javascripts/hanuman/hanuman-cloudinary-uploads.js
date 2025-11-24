@@ -520,25 +520,24 @@ this.bindPhotoUploads = function() {
       }).prop('outerHTML') + "</div></div>");
       addTexareaForUpload("photo", data, photoIdx, $photoPreviewContainer);
       
-      // Only after photo is successfully added, update card status and clean up
-      if ($card && $card.length > 0) {
-        $card.find('.photo-upload-card-status').text('Upload complete!').addClass('text-success');
-        $card.find('.progress-bar').removeClass('progress-bar-animated').addClass('progress-bar-success');
+      // Remove the upload card immediately after photo is added to prevent double-counting
+      // Use the matched key to ensure we delete the right entry
+      if (uploadId && matchedFileKey) {
+        delete activePhotoUploads[matchedFileKey];
       }
-    }
-    
-    // Only remove from active uploads AFTER photo is added to DOM
-    // Use the matched key to ensure we delete the right entry
-    if (uploadId && matchedFileKey) {
-      delete activePhotoUploads[matchedFileKey];
       
-      // Hide the upload card after a brief delay to show completion
+      // Remove the upload card from DOM immediately so it's not counted in checkMaxPhotos
       if ($card && $card.length > 0) {
-        setTimeout(function() {
-          $card.fadeOut(300, function() {
-            $(this).remove();
-          });
-        }, 1000);
+        $card.remove();
+      }
+      
+      // Check max photos limit after upload completes and update UI (hide dropzone if at limit)
+      // Do this AFTER removing the card so it's not counted in activeUploadCount
+      var $fileUploadContainer = $photoColumn.closest('.file-upload');
+      var maxPhotos = $fileUploadContainer.find('#max-photos').attr('data-max-photos');
+      if (maxPhotos) {
+        var currentPhotoCount = $photoColumn.find('.photo-preview, .upload-view-mode:visible').length;
+        checkMaxPhotos($fileUploadContainer[0], parseInt(maxPhotos), currentPhotoCount);
       }
     }
     
