@@ -112,9 +112,9 @@ $(document).ready(function(){
       }
     });
 
-    // rebind cloudinary
+    // rebind cloudinary - only for non-photo inputs (photos are handled per-question in bindPhotoUploads)
     if ($.fn.cloudinary_fileupload != undefined) {
-      $('input.cloudinary-fileupload[type=file]').cloudinary_fileupload()
+      $('input.cloudinary-fileupload[type=file]:not(.survey-photo-upload)').cloudinary_fileupload()
     }
 
     bindPhotoUploads()
