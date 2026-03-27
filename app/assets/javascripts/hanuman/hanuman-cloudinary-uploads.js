@@ -220,12 +220,20 @@ var setupPhotoDropZone = function($dropZone, $fileInput) {
   });
 };
 
+// In repeaters, each row has its own #max-photos (duplicate IDs). Scope to the repeater row so we read the correct limit.
+var getMaxPhotosForColumn = function($photoColumn) {
+  var $row = $photoColumn.closest('.form-container-entry-item');
+  var $scope = $row.length ? $row : $photoColumn.closest('.file-upload');
+  var $el = $scope.find('[id="max-photos"]').first();
+  return $el.length ? $el.attr('data-max-photos') : undefined;
+};
+
 var handlePhotoFiles = function(files, $fileInput, $uploadQueue, skipUpload) {
   if (skipUpload === undefined) skipUpload = false;
   
   var validFiles = [];
   var $container = $fileInput.closest('.photo-column');
-  var maxPhotos = $container.closest('.file-upload').find('#max-photos').attr('data-max-photos');
+  var maxPhotos = getMaxPhotosForColumn($container);
   var currentPhotoCount = $container.find('.photo-preview, .upload-view-mode:visible').length;
   var activeUploadCount = $uploadQueue.find('.photo-upload-card').length;
   
@@ -288,38 +296,39 @@ var handlePhotoFiles = function(files, $fileInput, $uploadQueue, skipUpload) {
   }
 };
 
-this.bindPhotoUploads = function() {
-  
+this.bindPhotoUploads = function($scope) {
+  var $columns = ($scope && $scope.length) ? $scope.find('.photo-column') : $('.photo-column');
+  var visible = $scope ? true : null;
+
   // Initialize Cloudinary per question with scoped dropZones
-  // This ensures each question only handles drops within its own dropzone
-  $('.photo-column').each(function() {
+  $columns.each(function() {
     var $photoColumn = $(this);
+    if (!visible && !$photoColumn.is(':visible')) {
+      return;
+    }
     var $fileInput = $photoColumn.find('.survey-photo-upload');
     var $dropZone = $photoColumn.find('.photo-drop-zone');
     
     if ($fileInput.length > 0 && $dropZone.length > 0) {
-      // Clean any existing Cloudinary initialization on this input
-      // This prevents double-initialization if bindPhotoUploads is called multiple times
       if ($fileInput.data('blueimp-fileupload') || $fileInput.data('fileupload')) {
         $fileInput.fileupload('destroy');
       }
-      
-      // Initialize Cloudinary with THIS question's dropzone as the dropZone
-      // This restricts drops to only this specific dropzone - drops outside won't trigger uploads
       if ($.fn.cloudinary_fileupload !== undefined) {
         $fileInput.cloudinary_fileupload({
           dropZone: $dropZone
         });
       }
-      
-      // Setup our custom drop zone handlers for visual feedback and upload card creation
       setupPhotoDropZone($dropZone, $fileInput);
     }
   });
-  
-  // Handle file input changes (click to browse)
-  // Create upload cards when files are selected via click
-  $('.survey-photo-upload').on('change', function(e) {
+};
+
+// Delegated handlers so add-repeater rows work (events fire for elements added after page load)
+function bindSurveyPhotoUploadDelegatedHandlers() {
+  if (bindSurveyPhotoUploadDelegatedHandlers._bound) return;
+  bindSurveyPhotoUploadDelegatedHandlers._bound = true;
+
+  $(document).on('change', '.survey-photo-upload', function(e) {
     var files = Array.from(this.files);
     if (files.length > 0) {
       var $fileInput = $(this);
@@ -331,8 +340,6 @@ this.bindPhotoUploads = function() {
       if ($uploadQueue.length === 0) {
         $uploadQueue = $fileInput.closest('.photo-column').find('.photo-upload-queue');
       }
-      
-      // Create cards for files that don't already have cards
       var filesToProcess = [];
       for (var i = 0; i < files.length; i++) {
         var fileKey = getFileKey(files[i]);
@@ -340,18 +347,13 @@ this.bindPhotoUploads = function() {
           filesToProcess.push(files[i]);
         }
       }
-      
       if (filesToProcess.length > 0) {
         handlePhotoFiles(filesToProcess, $fileInput, $uploadQueue, true);
       }
-      
-      // Cloudinary will handle the upload automatically via its plugin
     }
   });
-  
-  // Track individual file upload progress
-  // With scoped dropZones, this should only fire for files dropped on THIS question's dropzone
-  $('.cloudinary-fileupload.survey-photo-upload').bind('fileuploadadd', function(e, data) {
+
+  $(document).on('fileuploadadd', '.cloudinary-fileupload.survey-photo-upload', function(e, data) {
     var file = data.files[0];
     var $fileInput = $(e.target);
     
@@ -365,9 +367,8 @@ this.bindPhotoUploads = function() {
       return false;
     }
     
-    // Check max photos for THIS specific question BEFORE proceeding
-    var $container = $photoColumn.closest('.file-upload');
-    var maxPhotos = $container.find('#max-photos').attr('data-max-photos');
+    // Check max photos for THIS row (repeater) or question - scope to row when duplicate IDs exist
+    var maxPhotos = getMaxPhotosForColumn($photoColumn);
     var $dropZone = $fileInput.closest('.photo-drop-zone');
     if ($dropZone.length === 0) {
       $dropZone = $photoColumn.find('.photo-drop-zone');
@@ -449,8 +450,8 @@ this.bindPhotoUploads = function() {
       }
     }
   });
-  
-  $('.cloudinary-fileupload.survey-photo-upload').bind('fileuploadprogress', function(e, data) {
+
+  $(document).on('fileuploadprogress', '.cloudinary-fileupload.survey-photo-upload', function(e, data) {
     var file = data.files[0];
     
     // Match file using same logic as fileuploadadd
@@ -474,8 +475,8 @@ this.bindPhotoUploads = function() {
       $card.find('.photo-upload-card-status').text('Uploading... ' + percent + '%');
     }
   });
-  
-  $('.cloudinary-fileupload.survey-photo-upload').bind('cloudinarydone', function(e, data) {
+
+  $(document).on('cloudinarydone', '.cloudinary-fileupload.survey-photo-upload', function(e, data) {
     var file = data.files[0];
     
     // Match file using same logic - try exact match first, then base match
@@ -555,40 +556,34 @@ this.bindPhotoUploads = function() {
       
       // Check max photos limit after upload completes and update UI (hide dropzone if at limit)
       // Do this AFTER removing the card so it's not counted in activeUploadCount
-      var $fileUploadContainer = $photoColumn.closest('.file-upload');
-      var maxPhotos = $fileUploadContainer.find('#max-photos').attr('data-max-photos');
+      var maxPhotos = getMaxPhotosForColumn($photoColumn);
       if (maxPhotos) {
         var currentPhotoCount = $photoColumn.find('.photo-preview, .upload-view-mode:visible').length;
+        var $fileUploadContainer = $photoColumn.closest('.file-upload');
         checkMaxPhotos($fileUploadContainer[0], parseInt(maxPhotos), currentPhotoCount);
       }
     }
     
     $('.survey-save-button').removeAttr("disabled");
   });
-  
-  // handle errors
-  return $('.cloudinary-fileupload.survey-photo-upload').bind('fileuploadfail', function(e, data) {
+
+  $(document).on('fileuploadfail', '.cloudinary-fileupload.survey-photo-upload', function(e, data) {
     var file = data.files[0];
     var fileKey = getFileKey(file);
     var uploadId = activePhotoUploads[fileKey];
-    
     if (uploadId) {
       var $card = $('.photo-upload-card[data-upload-id="' + uploadId + '"]');
       $card.find('.photo-upload-card-status').text('Upload failed').addClass('text-danger');
       $card.find('.progress-bar').removeClass('progress-bar-animated').addClass('progress-bar-danger');
-      
-      // Remove from active uploads
       delete activePhotoUploads[fileKey];
     }
-    
     $('.survey-save-button').removeAttr("disabled");
-    // append error message
     $(e.target).siblings('.photo-upload-error').append("<p> Failed to upload photo, please try again</p>");
-    return $(".survey-photo-upload").on('click', function(e, data) {
-      return $(e.target).siblings('.photo-upload-error').find('p').remove();
+    $(".survey-photo-upload").on('click', function(evt) {
+      $(evt.target).siblings('.photo-upload-error').find('p').remove();
     });
   });
-};
+}
 
 // ***** VIDEOS *****
 this.bindVideoUploads = function() {
@@ -976,7 +971,7 @@ $(function() {
   if ($.fn.cloudinary_fileupload !== void 0) {
     $('input.cloudinary-fileupload[type=file]:not(.survey-photo-upload)').cloudinary_fileupload();
   }
-  // rebind our custom code (this will initialize photo uploads per-question with scoped dropZones)
+  bindSurveyPhotoUploadDelegatedHandlers();
   bindPhotoUploads();
   bindPhotoRotation();
   bindVideoUploads();

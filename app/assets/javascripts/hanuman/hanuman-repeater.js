@@ -72,9 +72,19 @@ $(document).ready(function(){
     stringifyAndResetContainer($clonedContainer);
     $(container).after($clonedContainer);
 
+    // Re-run updateDom so the clone's inputs get unique ids/names (stringify replaced nodes and reset them).
+    // Without this, the clone has duplicate ids — Cloudinary or getElementById can then target the wrong row.
+    var newContainerItems = $clonedContainer.find('.form-container-entry-item');
+    updateDom(newContainerItems, $clonedContainer);
+
     $newClone = $(".new-clone");
 
-    $newClone.delay("100").fadeIn(1000).removeClass("new-clone");
+    $newClone.delay("100").fadeIn(1000, function() {
+      $(this).removeClass("new-clone");
+      if (typeof bindPhotoUploads === 'function') {
+        bindPhotoUploads($(this));
+      }
+    });
 
     setTimeout(function() {
       $("html, body").animate({
@@ -117,7 +127,20 @@ $(document).ready(function(){
       $('input.cloudinary-fileupload[type=file]:not(.survey-photo-upload)').cloudinary_fileupload()
     }
 
-    bindPhotoUploads()
+    // New repeater has 0 photos: clear copied photo DOM and show upload UI BEFORE bindPhotoUploads so max-photos count is correct.
+    // When the source row was at its max_photos limit, its drop zone may be hidden and it had .upload-view-mode/.photo-preview; we clear that.
+    $clonedContainer.find('.file-upload').each(function() {
+      var $fu = $(this);
+      $fu.find('.photo-upload').show().css('display', '');
+      $fu.find('.photo-drop-zone').show().css('display', '');
+      $fu.find('#too-many-photos-alert').hide();
+      $fu.find('#max-photos-alert').show();
+      $fu.find('.upload-view-mode').remove();
+      $fu.find('.photo-preview').remove();
+      $fu.find('.photo-preview-container').empty();
+    });
+
+    bindPhotoUploads();
     bindVideoUploads()
     bindSignatureUploads()
     bindDocumentUploads()
@@ -148,7 +171,6 @@ $(document).ready(function(){
       maxPhotos = $(self).find('#max-photos').attr("data-max-photos");
       if (maxPhotos) {
         addedPhotos = $(self).find('.gallery-item').find("img").length;
-        console.log(maxPhotos + ' ' + addedPhotos);
         checkMaxPhotos(this, maxPhotos, addedPhotos);
       }
     });

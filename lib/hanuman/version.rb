@@ -1,3 +1,3 @@
 module Hanuman
-  VERSION = "6.3.5"
+  VERSION = "6.4.1"
 end
