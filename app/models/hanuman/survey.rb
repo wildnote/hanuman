@@ -27,7 +27,7 @@ module Hanuman
     # after_commit :wetland_calcs_and_sorting_operations, on: [:create, :update], unless: :has_missing_questions
     after_commit :sort_and_set_observation_visibility, on: [:create, :update], unless: :has_missing_questions
 
-    after_commit :set_entries
+    after_commit :set_entries, on: [:create, :update]
 
     default_scope { where('(hanuman_surveys.marked_for_deletion = false OR hanuman_surveys.marked_for_deletion IS NULL)') }
 
